@@ -4,17 +4,17 @@
     <string name="app_name">मॉस्प्रेस्सो</string>
     <string name="unknown_person">अपरिचित</string>
     <string name="resend_email">रीसेंड ईमेल</string>
-    <string name="groups_sections_polls">POLLS</string>
+    <string name="groups_sections_polls">राय दें</string>
     <string name="groups_sections_myfeed">मेरी फीड </string>
     <string name="write_review_prompt">आप क्या रिव्यू करना चाहते हैं?</string>
 
     <string name="loading_txt">लोडिंग&#8230;</string>
     <string name="groups.other_groups">अन्य ग्रुप्स </string>
-    <string name="groups_enable_notification">नोटिफिकेशन  सक्षम करें</string>
+    <string name="groups_enable_notification">नोटिफिकेशन सक्षम करेंं</string>
 
-    <string name="groups_sections_ask">ASK AN EXPERT</string>
+    <string name="groups_sections_ask">एक्सपर्ट से पूछें</string>
     <string name="view_more_profile">view more</string>
-    <string name="campaign_maybe_later_text">Maybe later</string>
+    <string name="campaign_maybe_later_text">शायद बाद में</string>
 
     <string name="subcategoryName">सब केटेगरी</string>
     <string name="location_info">व्यक्तिगत परिणाम के लिए, अपनी लोकेशन चुने</string>
@@ -271,13 +271,14 @@
         <item>9 भाषाओं में से किसी भी भाषा  में ब्लॉग का आनंद लें</item>
         <item>वीडियो देखें</item>
         <item>सपोर्ट ग्रुप्स  के साथ, आप अकेले नहीं हैं</item>
-        <item>Start earning with MyMoney!</item>
+        <item>MyMoney के ज़रिये कमाई शुरू करें !</item>
     </string-array>
 
     <string name="onboarding.desc_1">हर माँ की अपनी एक कहानी है। आपकी क्या है? उसे ब्लॉग पोस्ट या वीडियो के रूप में शेयर  करें।</string>
     <string name="onboarding.desc_2">अंग्रेजी, हिंदी, बांग्ला, मराठी, तमिल, तेलुगु, कन्नड़ और मलयालम में से चुनें।</string>
     <string name="onboarding.desc_3">मॉम्सप्रेस्सो टीवी में आपके लिए हैं  खूबसूरत , प्रेरणादायक, उपयोगी और मज़ेदार वीडियो । सभी वीडियो एक साथ ही मंच पर!</string>
     <string name="onboarding.desc_4">हमारी माँओं की कम्यूनिटी को सशक्त बनायें  .  अपने सवाल साझा करें और दूसरों की मदद करें!</string>
+    <string name="onbording.desc_5">ब्रांड कैम्पेन्स में हिस्सा लेकर कमाई करें !</string>
 
     <string name="onboarding_desc_array.tutorial_1.blogs">ब्लोग्स</string>
     <string name="onboarding_desc_array.tutorial_1.videos">मोमवलोग</string>
@@ -810,7 +811,7 @@
     <string name="short_s.choose_one_genre">अपनी  कहानी का बेहतर तरीके से वर्णन करने के लिए एक विशिष्ट कैटेगरी का चुनाव करें । आप केवल 1 ही कैटेगरी चुन सकते हैं</string>
     <string name="short_s.no_drafts">अभी तक कोई छोटी कहानी तैयार नहीं की गई है</string>
     <string name="short_s.no_published">अभी तक कोई छोटी कहानी प्रकाशित नहीं की गई है</string>
-    <string name="short_s.view_replies">View replies</string>
+    <string name="short_s.view_replies">जवाब देखें</string>
     <string name="short_s.choose_topic">Please choose at least one topic to continue</string>
     <string name="short_s.add_comment_fail">Failed to add comment. Please try again</string>
     <string name="short_s.edit_comment_fail">Failed to edit comment. Please try again</string>
@@ -866,7 +867,7 @@
     <string name="search">कोई भी लेख या लेखक खोजें</string>
     <string name="new_label">नया</string>
     <string name="view_profile">प्रोफाइल देखिये</string>
-    <string name="choose_video_category">Choose Video Category</string>
+    <string name="choose_video_category">वीडियो कैटेगरी चुनें</string>
     <string name="enter_valid_email">Please enter valid email id</string>
     <string name="time_limit">(अधिकतम समय %1$s)</string>
     <string name="upload_larger_video">ओह ! आपका वीडियो कम से कम 5 सेकेंड लंबा होना चाहिए।</string>
@@ -881,7 +882,7 @@
     <string name="edit_comment">EDIT COMMENT</string>
     <string name="report">REPORT</string>
     <string name="select_atleast_one_topic">कम से कम एक केटेगरी का चुनाव अवश्य करें</string>
-    <string name="your_article_is_successfully_bookmarked">Your article is successfully bookmarked.</string>
+    <string name="your_article_is_successfully_bookmarked">आपका लेख सफलतापूर्वक बुकमार्क किया गया है</string>
     <string name="successfully_updated">Successfully updated!</string>
 
     <string name="submit_story_text">अपनी कहानी को प्रस्तुत करें</string>
@@ -938,7 +939,7 @@
     <string name="rewards_not_working">"गैर कामकाजी "</string>
     <string name="reply_groups">रिप्लाई करें</string>
     <string name="view_group">View</string>
-    <string name="replies">Replies</string>
+    <string name="replies">जवाब दें</string>
 
     <string name="rewards_are_expecing">क्या आप माँ बनने वाली हैं ?</string>
 
@@ -957,13 +958,13 @@
 
     //new Video Challenge Ui Strings
     <string name="video_challenge_live_text">LIVE</string>l
-    <string name="video_challenge_text">CHALLENGES</string>
-    <string name="choose_video_categories_text">CATEGORIES</string>
+    <string name="video_challenge_text">चैलेंजस</string>
+    <string name="choose_video_categories_text">कैटेगरीज़</string>
 
 
     //groupdetail Activity toast String
     <string name="group_detail_activity_toast_text">You can also post anonymously </string>
-    <string name="group_add_comment_text">ADD COMMENT</string>
+    <string name="group_add_comment_text">कमेंट करें</string>
     <string name="group_invite_text">आमंत्रित करें</string>
     <string name="group_comment_type_here_text">Type here</string>
     <string name="group_comment_be_the_first_text">सबसे पहले कमेंट करें</string>
@@ -976,80 +977,81 @@
     <string name="add_youtube">यूट्यूब चैनल का लिंक जोड़ें</string>
     <string name="add_twitter">ट्विटर हैंडल डालें</string>
     <string name="language">भाषा</string>
-    <string name="group_comment_start_type_here_text">Start Typing</string>
+    <string name="group_comment_start_type_here_text">टाइप करना शुरू करें</string>
+    <string name="notification">नोटिफिकेशन</string>
 
 
     <string name="about_video">चैलेंज के बारे में</string>
     <string name="myprofile.section.mom_bottom_label">मोम व्लॉग</string>
-    <string name="all_videos.toolbar.title.homepage">Videos</string>
+    <string name="all_videos.toolbar.title.homepage">वीडियोज</string>
     <string name="moderation_message">100WordStory under moderation.\n
 Thank you! We will be reviewing your story. You can expect to hear from us within the next 48 working hours. Meanwhile, you can still share your story with your friends!</string>
 
 
-    <string name="drawer_referra_mymoney">Refer MyMoney</string>
-    <string name="referral_screen_text">Invite a friend to join MyMoney by sharing your referral code. Both of you will earn Rs. 25 once she has successfully completed a MyMoney campaign.</string>
-    <string name="share_referral_screen">Share your referral code and start earning</string>
+    <string name="drawer_referra_mymoney">MyMoney को रेफ़र करें</string>
+    <string name="referral_screen_text">अपने दोस्त को अपने रेफ़रल कोड द्वारा MyMoney में हिस्सा लेने के लिए आमंत्रित करें . उसके MyMoney कैम्पेन को सफलतापूर्वक पूरा करने पर आप दोनों को 25 रुपये के हक़दार होंगे.</string>
+    <string name="share_referral_screen">अपना रेफरल कोड शेयर करें और कमाना शुरू करें</string>
     <string name="referral_screen_whatsapp">WhatsApp</string>
     <string name="referral_screen_facebook">Facebook</string>
-    <string name="rewards_tab_fragment_personalInfo_text">PERSONAL INFO</string>
-    <string name="rewards_tab_fragment_socialLink_text">SOCIAL LINKS</string>
-    <string name="rewards_tab_fragment_paymentMode">PAYMENT MODE</string>
-    <string name="rewards_tab_fragment_panCard">PAN CARD DETAILS</string>
-    <string name="rewards_tab_fragment_myEarning">MY EARNING</string>
-    <string name="rewards_tab_fragment_referrer_myMoney">refer mymoney</string>
+    <string name="rewards_tab_fragment_personalInfo_text">व्यक्तिगत जानकारी</string>
+    <string name="rewards_tab_fragment_socialLink_text">सोशल लिंक्स</string>
+    <string name="rewards_tab_fragment_paymentMode">पेमेंट मोड</string>
+    <string name="rewards_tab_fragment_panCard">पैन कार्ड डिटेल्स</string>
+    <string name="rewards_tab_fragment_myEarning">मेरी कमाई</string>
+    <string name="rewards_tab_fragment_referrer_myMoney">MyMoney को रेफ़र करें</string>
     <string name="rewards_pancard_toolbar_text">PAN CARD DETAIL</string>
-    <string name="reawrds_pancard_detail_text">Please enter your PAN card details</string>
-    <string name="rewards_pancard_note_detail">In case of Invalid/No Pan card attached, 20% tax will be deducted from the payment.</string>
+    <string name="reawrds_pancard_detail_text">कृपया अपने पैन कार्ड की डिटेल्स दर्ज करें</string>
+    <string name="rewards_pancard_note_detail">अमान्य / कोई पैन कार्ड संलग्न नहीं होने की स्थिति में पेमेंट में से 20% टैक्स काटा जाएगा</string>
     <string name="rewards_pancard_Note_textview">NOTE :</string>
-    <string name="rewards_payment_submission_enter_bank_detail_text">PLEASE ENTER YOUR BANK DETAILS</string>
-    <string name="rewards_bank_detail_holder_nmae_text">Account Holder’s Name</string>
-    <string name="rewards_bank_detail_select_bank_text">Select Bank Name</string>
-    <string name="rewards_bank_detail_account_number">Account Number</string>
-    <string name="rewards_bank_detail_confirm_account_number">Confirm Account Number</string>
-    <string name="rewards_bank_detail_ifsc_text">IFSC Code</string>
+    <string name="rewards_payment_submission_enter_bank_detail_text">कृपया अपनी बैंक डिटेल्स दर्ज करें</string>
+    <string name="rewards_bank_detail_holder_nmae_text">अकाउंट होल्डर का नाम</string>
+    <string name="rewards_bank_detail_select_bank_text">बैंक का नाम चुनें</string>
+    <string name="rewards_bank_detail_account_number">अकाउंट नम्बर</string>
+    <string name="rewards_bank_detail_confirm_account_number">अकाउंट नम्बर की पुष्टि करें</string>
+    <string name="rewards_bank_detail_ifsc_text">IFSC कोड</string>
     <string name="rewards_add_detail">ADD DETAILS</string>
-    <string name="rewards_payment_history">Payment History</string>
+    <string name="rewards_payment_history">पेमेंट डिटेल्स</string>
     <string name="participate_on_this_campaign">Please participate in ongoing campaigns to start earning</string>
     <string name="participate_now">Participate now</string>
 
-    <string name="campaign_details_applied">APPLIED</string>
+    <string name="campaign_details_applied">एप्लाई हो गया है</string>
 
 
-    <string name="congratulation_text">CONGRATULATIONS!</string>
-    <string name="thanks_for_submitting">Thanks for submitting proof and payment details</string>
-    <string name="be_in_touch_text">We will review and be in touch in next 7 working days till then you can take part in other interesting campaigns</string>
-    <string name="share_joy">SHARE THE JOY</string>
-    <string name="continue_browsing_campaign">CONTINUE BROWSING CAMPAIGNS</string>
+    <string name="congratulation_text">बधाई हो!</string>
+    <string name="thanks_for_submitting">प्रूफ्स  और पेमेंट डिटेल्स सबमिट करने के लिए धन्यवाद</string>
+    <string name="be_in_touch_text">हम आपके एप्लीकेशन की स्थिति पर 7 दिनों के भीतर आपको सूचित करेंगे</string>
+    <string name="share_joy">अपनी सफलता शेयर करें</string>
+    <string name="continue_browsing_campaign">कैम्पेन्स ब्राउज़िंग करना जारी रखें</string>
 
 
     //campaigndetails
     <string name="campaign_proofs_approved">PROOFS APPROVED</string>
-    <string name="campaign_detail_toolbar_text">CAMPAIGN DETAILS</string>
-    <string name="campaign_read_this_first">READ THIS FIRST"</string>
-    <string name="campaign_discription">DESCRIPTION</string>
-    <string name="deliverable_types">DELIVERABLE TERMS</string>
+    <string name="campaign_detail_toolbar_text">कैम्पेन डिटेल्स</string>
+    <string name="campaign_read_this_first">पहले इसे पढ़ें"</string>
+    <string name="campaign_discription">विवरण</string>
+    <string name="deliverable_types">वितरित करने योग्य शर्तें</string>
     <string name="referral_code_option">REFERRAL CODE(Optional)</string>
-    <string name="campaign_details_apply_now">APPLY NOW</string>
-    <string name="campaign_details_submission_open">SUBMIT PROOF</string>
-    <string name="campaign_details_application_full">APPLICATION FULL</string>
+    <string name="campaign_details_apply_now">अभी एप्लाई करें</string>
+    <string name="campaign_details_submission_open">प्रूफ सबमित करें</string>
+    <string name="campaign_details_application_full">एप्लीकेशन पूर्ण</string>
     <string name="campaign_details_approved">APPROVED</string>
-    <string name="campaign_details_expired">EXPIRED</string>
-    <string name="campaign_details_completed">COMPLETED</string>
-    <string name="campaign_details_invite_only">INVITATION ONLY</string>
-    <string name="campaign_details_rejected">REJECTED</string>
-    <string name="campaign_list_proof_moderation">PROOF SUBMITTED</string>
+    <string name="campaign_details_expired">समय सीमा समाप्त</string>
+    <string name="campaign_details_completed">प्रक्रिया पूर्ण</string>
+    <string name="campaign_details_invite_only">केवल आमन्त्रण द्वारा</string>
+    <string name="campaign_details_rejected">अनुचित</string>
+    <string name="campaign_list_proof_moderation">प्रू्फ सबमित हो गए हैं</string>
     <string name="campaign_list_proof_reject">PROOF REJECTED</string>
     <string name="end_date">End Date</string>
-    <string name="start_date">Start Date</string>
+    <string name="start_date">आवेदन की शुरुआत की तारीख</string>
     <string name="campaign_details_not_eligible">Not Eligible</string>
 
     <string name="label_campaign_expired">This campaign is now closed.</string>
     <string name="label_campaign_not_eligible">Share the campaign with your friends.</string>
     <string name="label_campaign_checking_eligiblity">We are checking for your eligibility. Please try again after sometime</string>
     <string name="label_campaign_full">Share Momspresso MyMoney with your friends.</string>
-    <string name="label_campaign_open">By clicking on Apply Now, you agree to the Terms &amp; Conditions.</string>
+    <string name="label_campaign_open">अप्लाई नाउ पर क्लिक करके, आप नियम और शर्तों से सहमत होते हैं</string>
     <string name="label_campaign_applied">We will notify you within 7 days on the status of your application.</string>
-    <string name="label_campaign_apply"><![CDATA[By clicking on Apply Now, you agree to the <a href="https://www.momspresso.com/home/terms">Terms &amp; Conditions</a>.]]></string>
+    <string name="label_campaign_apply"><![CDATA[अप्लाई नाउ पर क्लिक करके, आप <a href="https://www.momspresso.com/home/terms"> नियम और शर्तों </a> से सहमत होते हैं ]]></string>
     <string name="label_campaign_completed">Congratulations! Your submission is approved. Your payment will be processed within 14 days.</string>
 
 
@@ -1063,7 +1065,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
     <string name="toast_campaign_full">Oops! Entries to this campaign are now closed.</string>
     <string name="toast_campaign_open">Thank you for applying to the campaign.</string>
-    <string name="toast_campaign_applied">Thank you for applying. We will notify you within 7 days on the status of your application.</string>
+    <string name="toast_campaign_applied">हम आपके एप्लीकेशन की स्थिति पर 7 दिनों के भीतर आपको सूचित करेंगे</string>
     <string name="toast_campaign_not_started">Congratulations! Your application is approved. Please wait for campaign to start to submit proofs.</string>
     <string name="toast_campaign_started">Congratulations! Your application is approved.</string>
     <string name="toast_campaign_reject">Sorry, we have not been able to approve your application.</string>
@@ -1072,66 +1074,66 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="toast_campaign_proof_moderation">We will check your submitted proofs within 7 days. </string>
     <string name="toast_campaign_proof_reject">Your proof was rejected!</string>
 
-    <string name="detail_bottom_apply_now">APPLY NOW</string>
-    <string name="detail_bottom_applied">APPLIED</string>
+    <string name="detail_bottom_apply_now">अभी एप्लाई करें</string>
+    <string name="detail_bottom_applied">एप्लाई हो गया है</string>
     <string name="application_under_review">APPLICATION UNDER REVIEW</string>
     <string name="proofs_under_review">PROOFS UNDER REVIEW</string>
-    <string name="detail_bottom_share">SHARE</string>
-    <string name="payment_in_progress">PAYMENT IN PROCESS</string>
+    <string name="detail_bottom_share">शेयर करें</string>
+    <string name="payment_in_progress">प्रक्रिया में</string>
     <string name="detail_bottom_share_momspresso_reward">Share MyMoney</string>
     <string name="detail_bottom_view_other">VIEW OTHER CAMPAIGNS</string>
     <string name="payment_done">PAYMENT DONE</string>
     <string name="proof_sublitted">"PROOFS SUBMITTED"</string>
-    <string name="detail_bottom_submit_proof">SUBMIT PROOF</string>
+    <string name="detail_bottom_submit_proof">प्रूफ सबमित करें</string>
 
 
     //campaigndetaildialog
     <string name="dialog_based_on_profile">Based on your Profile</string>
     <string name="dialog_you_can_get_reward_of">You can get reward of</string>
-    <string name="campaign_starts_on">Starts On</string>
-    <string name="campaign_ends_on">Ends On</string>
-    <string name="view_mymoney">View MyMoney for this campaign</string>
+    <string name="campaign_starts_on">आरम्भ होने की तिथि</string>
+    <string name="campaign_ends_on">समाप्त होने की तिथि</string>
+    <string name="view_mymoney">इस कैम्पेन के लिए MyMoney को देखें</string>
     <string name="dialog_thanks_for_interest">Thanks for your interest!</string>
-    <string name="dialog_proof_submitted_congo_text">Congratulations!</string>
+    <string name="dialog_proof_submitted_congo_text">बधाई हो!</string>
     <string name="dialog_register_for_mymoney">For applying to the campaign, you first need to register for Momspresso MyMoney.</string>
     <string name="register_now">REGISTER NOW</string>
     <string name="dialog_continue">CONTINUE</string>
     <string name="dialog_share_your_campaign_detail_text">Please share your payment details so that we can process your payment faster.</string>
     <string name="dialog_register_proof_submitted_text">Your proofs have been submitted.</string>
     <string name="apply_refer_code">HAVE A REFERRAL CODE?</string>
-    <string name="get_help">Get Help</string>
+    <string name="get_help">मदद लें</string>
     <string name="refer_code">REFERRAL CODE</string>
     <string name="apply_code_error">Code already used. Please enter a different one</string>
-    <string name="dialog_congratulations">Congratulations!</string>
-    <string name="dialog_you_can_earn">You can earn</string>
+    <string name="dialog_congratulations">बधाई हो!</string>
+    <string name="dialog_you_can_earn">आप कमा सकते हैं</string>
     <string name="invite_only_header">This campaign is by invite only.</string>
     <string name="invite_only_interested">I\'M INTERESTED</string>
     <string name="dialog_invite_only_subtext">Click below to apply for future ‘invite only’ campaigns.</string>
     <string name="title_activity_tracker">TrackerActivity</string>
     <string name="action_settings">Settings</string>
-    <string name="my_money_dashboard">MY MONEY DASHBOARD</string>
-    <string name="total_earning">Total Earnings</string>
+    <string name="my_money_dashboard">MyMoney डैशबोर्ड</string>
+    <string name="total_earning">कुल कमाई</string>
 
 
-    <string name="social_page_add_social_accounts">ADD SOCIAL ACCOUNTS</string>
+    <string name="social_page_add_social_accounts">सोशल हैंडल्स ऐड करें</string>
     <string name="social_page_add_website_hint">www.momvlogger.com/sheetal</string>
-    <string name="social_page_add_website">ADD WEBSITE</string>
+    <string name="social_page_add_website">वेबसाइट ऐड करें</string>
 
 
     //campaignListing
-    <string name="campaign_listing_mymoney_campaign_toolbar_text">MYMONEY CAMPAIGNS</string>
-    <string name="brows_participate_earn_text">Browse. Participate. Earn</string>
+    <string name="campaign_listing_mymoney_campaign_toolbar_text">MyMoney कैम्पेन्स</string>
+    <string name="brows_participate_earn_text">ब्राउज .हिस्सा लें .कमायें</string>
     <string name="participate_text">REGISTER</string>
-    <string name="total_payout">Total Payout</string>
+    <string name="total_payout">कुल भुुगतान</string>
 
 
     //addProof
-    <string name="add_proof">ADD PROOF</string>
-    <string name="please_add_image_proof">Please add image proofs</string>
+    <string name="add_proof">प्रूफ़ सबमिट करें</string>
+    <string name="please_add_image_proof">कृपया इमेज प्रूफ़ ऐड करें</string>
     <string name="please_submit">Please submit</string>
-    <string name="please_add_link">Please add a link</string>
+    <string name="please_add_link">कृपया लिंक  ऐड करें</string>
     <string name="proof_instructions">Proof Instructions</string>
-    <string name="faq">FAQS</string>
+    <string name="faq">सामान्यतया पूछे जाने वाले प्रश्न</string>
 
     //trackerActivity
     <string name="tracker_Activity_submit_corrected_proof">Please submit corrected proofs again.</string>
@@ -1140,11 +1142,11 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
 
     //rewardsCampaignString
-    <string name="reward_campaign_add_proof">ADD PROOF</string>
+    <string name="reward_campaign_add_proof">प्रूफ़ सबमिट करें</string>
     <string name="select_payment_method">SELECT YOUR \n PREFERRED METHOD OF PAYMENT</string>
 
 
-    <string name="rewards_link_social">Link Account</string>
+    <string name="rewards_link_social">अकाउंट लिंक करें</string>
     <string name="submit_video_text">SUBMIT YOUR VIDEO </string>
     <string name="no_video.be_first">Be the first one to upload videos in this category!</string>
     <string name="your_mom_vlog">WHAT\'S YOUR MOMVLOG</string>
@@ -1182,7 +1184,28 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="write_something">कुछ लिखें</string>
     <string name="join_dialog_post">प्रकाशित</string>
     <string name="spell_check_error">We found a few errors in the article</string>
-    <string name="application_end_date">Application End Date</string>
-    <string name="submission_end_date">Submission End Date</string>
+    <string name="application_end_date">आवेदन की अंतिम तिथि</string>
+    <string name="submission_end_date">सबमिट करने की अंतिम तिथि</string>
     <string name="submit_article">Submit Your Article</string>
+
+    <!--pending-->
+    <string name="participate_earn_mymoney">MyMoney कैम्पेन्स में भाग लें और कमाई करें</string>
+    <string name="tap_to_create">पोस्ट करने के लिए यहाँ क्लिक करें</string>
+    <string name="private_profile_read_article">पोस्ट्स पढ़ें</string>
+    <string name="mymoney_profile">MyMoney प्रोफाइल</string>
+    <string name="capture_from_camera"></string>
+    <string name="choose_from_gallery"></string>
+    <string name="add_a_choice"></string>
+    <string name="invite_referral_screen">आमंत्रित करें और कमायें MyMoney</string>
+
+    <string name="rewards_edit">एडिट करें</string>
+    <string name="rewards_yes">हाँ</string>
+    <string name="rewards_no">नहीं</string>
+    <string name="rewards_expected_date_delivery">डिलीवरी की संभावित तिथि</string>
+    <string name="add_instagram_handle">इंस्टाग्राम हैंडल ऐड करें</string>
+    <string name="enter_paytm_number">कृपया अपना पेटीएम रजिस्टर्ड मोबाइल नंबर दर्ज करें</string>
+    <string name="note_detail_in_english">कृपया अपनी बैंक डिटेल्स केवल अंग्रेजी में दर्ज करें</string>
+    <string name="campaign_details_ineligible">अयोग्य</string>
+    <string name="track_status">स्टेट्स ट्रैक करें</string>
+
 </resources>

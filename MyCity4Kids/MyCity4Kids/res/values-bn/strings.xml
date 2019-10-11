@@ -5,11 +5,11 @@
     <string name="unknown_person">অজানা</string>
     <string name="resend_email">ইমেল পুনরায় পাঠান</string>
     <string name="groups.other_groups">অন্যান্য গ্রুপস </string>
-    <string name="groups_enable_notification">নোটিফিকেশন সক্রিয় করুন </string>
+    <string name="groups_enable_notification">নোটিফিকেশনটিকে সক্রিয় করুন</string>
 
     <string name="view_more_profile">view more</string>
 
-    <string name="groups_sections_ask">ASK AN EXPERT</string>
+    <string name="groups_sections_ask">এক্সপার্টকে প্রশ্ন করুন</string>
 
     <string name="write_review_prompt">আপনি কি পর্যালোচনা করতে চান ?</string>
     <string name="groups_sections_polls">পোল</string>
@@ -154,8 +154,8 @@
     <string name="ad.view_all_tags.text">সব দেখ</string>
     <string name="ad.tags_title.text">এই নিবন্ধটি নীচের বিভাগে পোস্ট করা হয়েছে</string>
     <string name="ad.tags_subtitle.text">অনুরূপ পোস্ট পড়তে তাদের অনুসরণ করুন</string>
-    <string name="ad.follow_author">অনুসরণ করা</string>
-    <string name="ad.following_author">অনুসরণ</string>
+    <string name="ad.follow_author">ফলো করুন</string>
+    <string name="ad.following_author">ফলো করছেন</string>
     <string name="ad.comments.title">মন্তব্য</string>
     <string name="ad.comments.no_comments">কোন মন্তব্য নেই</string>
     <string name="ad.comments.view_comment">মন্তব্য</string>
@@ -269,13 +269,14 @@
         <item>৬টি ভাষায় আপনার লেখা পাঠাতে পারেন</item>
         <item>আমাদের ভিডিও দেখুন</item>
         <item>আপনি একা নন,আমাদের সাপোর্ট গ্রূপ আছে আপনার সাথে</item>
-        <item>Start earning with MyMoney!</item>
+        <item>MyMoney তে উপার্জন করা শুরু করুন</item>
     </string-array>
 
     <string name="onboarding.desc_1">প্রত্যেক মায়েরই কিছু গল্প আছে,আপনার গল্পটি কি? আপনি তা লিখে বা ভিডিওর মাধ্যমে পাঠাতে পারেন |</string>
     <string name="onboarding.desc_2">ইংরেজী,হিন্দি,বাংলা, মারাঠি,তামিল, কন্নড, মালয়ালম এবং তেলেগু তে আমরা উপলব্ধ |</string>
     <string name="onboarding.desc_3">মম্স্প্রেস্সো টিভি আপনাদের জন্য নিয়ে এসেছে অনুপ্রেরণাকারী,প্রয়োজনীয়,সুন্দর এবং মজাদার ভিডিও, একই মঞ্চে |</string>
     <string name="onboarding.desc_4">আপনার যেকোনো প্রশ্নের উত্তর পাওয়ার জন্য ও অন্য একজন মা\'কে আপনার অভিজ্ঞতা দিয়ে সাহায্য করার জন্য,মায়েদের শক্তির সাথে যুক্ত হোন |</string>
+    <string name="onbording.desc_5">ব্র্যান্ড ক্যাম্পেনে অংশগ্রহণ করুন এবং উপার্জন করুন </string>
 
     <string name="onboarding_desc_array.tutorial_1.blogs">ব্লগ</string>
     <string name="onboarding_desc_array.tutorial_1.videos">মায়েদের ব্লগস</string>
@@ -314,11 +315,11 @@
     <string name="signin.login_via_facebook">ফেসবুকের মাধ্যমে লগইন</string>
     <string name="signin.login_via_google">গুগলের মাধ্যমে লগইন</string>
     <string name="signin.login_via_email">ইমেল আইডির মাধ্যমে লগইন</string>
-    <string name="signin.login_via_phone">LOGIN USING PHONE</string>
+    <string name="signin.login_via_phone">ফোনের মাধ্যমে লগ ইন করুন </string>
 
     <string name="signup.connect_via_facebook">ফেসবুকের মাধ্যমে সাইন আপ করুন</string>
     <string name="signup.connect_via_google">গুগলের মাধ্যমে সাইন আপ করুন</string>
-    <string name="signup.connect_via_phone">CONNECT USING PHONE</string>
+    <string name="signup.connect_via_phone">ফোনের মাধ্যমে যুক্ত করুন</string>
 
     <string name="for_you.reason.why_label">কেন আমি এটা দেখছি ?</string>
     <string name="for_you.reason.dont_want_to_see">এটা দেখতে চাইনা</string>
@@ -357,7 +358,7 @@
     <string name="myprofile.section.signout_label">সাইন আউট</string>
     <string name="myprofile.rank_label">র‍্যাঙ্ক</string>
 
-    <string name="blogger_profile.follow_button">অনুসরণ করা</string>
+    <string name="blogger_profile.follow_button">ফলো করুন</string>
     <string name="blogger_profile.rank_in">র্যাঙ্ক ইন</string>
     <string name="blogger_profile.unfollow_button">অনুসরণ</string>
     <string name="blogger_profile.view_count_label">দৃশ্য সংখ্যা</string>
@@ -376,7 +377,7 @@
     <string name="user_article.draft.edit">ড্রাফটটি এডিট করুন</string>
     <string name="user_article.draft.untitled_draft">নাম নেই ড্রাফটগুলো</string>
     <string name="user_article.published.edit">সম্পাদন করা</string>
-    <string name="user_article.published.no_published_article">You have not published any article yet.</string>
+    <string name="user_article.published.no_published_article">আপনি এখনো অবধি কোন আর্টিকেল পাবলিশ করেন নি</string>
     <string name="user_article.draft.status_pending_approval">PENDING FOR APPROVAL</string>
     <string name="user_article.draft.status_unapproved">অননুমোদিত</string>
     <string name="user_article.draft.status_unpublished">UNPUBLISHED</string>
@@ -475,7 +476,7 @@
     <string name="add_article_topics.max_topics">You can choose a maximum of 8 topics</string>
     <string name="add_article_topics.apply">প্রয়োগ</string>
 
-    <string name="choose_article_image.toolbar.title">CHOOSE IMAGE</string>
+    <string name="choose_article_image.toolbar.title">ছবি বেছে নিন</string>
     <string name="choose_article_image.upload_photo">CLICK TO UPLOAD PHOTO</string>
     <string name="choose_article_image.publish">পাবলিশ</string>
 
@@ -548,7 +549,7 @@
     <string name="user_activities.tabs.bookmark">বুকমার্কগুলো</string>
     <string name="user_activities.tabs.watch_later">পরে দেখুন</string>
     <string name="user_activities.tabs.comment">মন্তব্য</string>
-    <string name="user_activities.bookmarks.remove">REMOVE</string>
+    <string name="user_activities.bookmarks.remove">রিমুভ করুন</string>
     <string name="user_activities.bookmarks.by">By</string>
     <string name="user_activities.comments.saved_on">সর্বশেষ সংরক্ষিত:</string>
     <string name="user_activities.comments.edit">সম্পাদন করা</string>
@@ -814,7 +815,7 @@
     <string name="short_s.choose_one_genre">আপনার গল্পটি যে ধারা বা অনুভূতি কে সবচেয়ে বেশি প্রকাশ করে,সেটি পছন্দ করুন । আপনি কেবলমাত্র একটি ধারা পছন্দ করতে পারেন ।</string>
     <string name="short_s.no_drafts">কোনো ছোট গল্প এখনও ড্রাফ্ট হয়নি</string>
     <string name="short_s.no_published">কোনো ছোট গল্প এখনও পাবলিশ হয়নি</string>
-    <string name="short_s.view_replies">View replies</string>
+    <string name="short_s.view_replies">উত্তরগুলি দেখুন</string>
     <string name="short_s.choose_topic">নূন্যতম একটি ক্যাটাগরি চয়ন করুন</string>
     <string name="short_s.add_comment_fail">Failed to add comment. Please try again</string>
     <string name="short_s.edit_comment_fail">Failed to edit comment. Please try again</string>
@@ -870,7 +871,7 @@
     <string name="search">Search Any article or author</string>
     <string name="new_label">নতুন</string>
     <string name="view_profile">view profile</string>
-    <string name="choose_video_category">Choose Video Category</string>
+    <string name="choose_video_category">ভিডিও ক্যাটিগরী বেছে নিন</string>
     <string name="enter_valid_email">Please enter valid email id</string>
     <string name="time_limit">(সর্বোচ্চ সময় %1$s)</string>
     <string name="upload_larger_video">দুঃখিত! আপনার ভিডিওটি অন্তত 5 সেকেন্ডের বেশি হতে হবে </string>
@@ -885,7 +886,7 @@
     <string name="edit_comment">EDIT COMMENT</string>
     <string name="report">REPORT</string>
     <string name="select_atleast_one_topic">নূন্যতম একটি ক্যাটাগরি চয়ন করুন </string>
-    <string name="your_article_is_successfully_bookmarked">Your article is successfully bookmarked.</string>
+    <string name="your_article_is_successfully_bookmarked">আপনার আর্টিকেলটি বুকমার্ক হয়ে গেছে</string>
     <string name="successfully_updated">Successfully updated!</string>
 
     <string name="submit_story_text">আপনার গল্প জমা দিন</string>
@@ -955,37 +956,38 @@
 </string>
     //new Video Challenge Ui Strings
     <string name="video_challenge_live_text">LIVE</string>
-    <string name="video_challenge_text">CHALLENGES</string>
-    <string name="choose_video_categories_text">CATEGORIES</string>
+    <string name="video_challenge_text">চ্যালেঞ্জ</string>
+    <string name="choose_video_categories_text">ক্যাটিগরী</string>
 
     //groupdetail Activity toast String
-    <string name="group_detail_activity_toast_text">You can also post anonymously </string>
+    <string name="group_detail_activity_toast_text">আপনি অজ্ঞাতনামা হয়েও পোস্ট করতে পারেন</string>
     <string name="group_add_comment_text">কমেন্টস লিখুন</string>
     <string name="group_invite_text">আমন্ত্রণ</string>
     <string name="group_comment_type_here_text">Type here</string>
     <string name="group_comment_be_the_first_text">আপনি প্রথম কমেন্টটি লিখুন</string>
 
     //tooltip groups
-    <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>
+    <string name="add_text_or_media_group_post_activity_tooltip_text">অডিও পোস্ট করার চেষ্টা করুন</string>
     <string name="dialog_header_choose_sort_type">ক্রমানুসার</string>
     <string name="rewards_instagram_handler">ইনস্টাগ্রাম হ্যান্ডেল যোগ করুন</string>
     <string name="rewards_facebook_handler">ফেসবুকে সংযোগ করুন</string>
     <string name="add_youtube">"ইউটিউব চ্যানেলের লিঙ্ক যোগ করুন "</string>
     <string name="add_twitter">টুইটার হ্যান্ডেল যোগ করুন</string>
+    <string name="notification">নোটিফিকেশন</string>
 
     <string name="language">ভাষা</string>
 
-    <string name="group_comment_start_type_here_text">Start Typing</string>
+    <string name="group_comment_start_type_here_text">টাইপ করা শুরু করুন</string>
 
 
     <string name="about_video">চ্যালেঞ্জ সংক্রান্ত তথ্য</string>
     <string name="myprofile.section.mom_bottom_label">"মায়েদের ভিডিও ব্লগস "</string>
-    <string name="all_videos.toolbar.title.homepage">Videos</string>
+    <string name="all_videos.toolbar.title.homepage">ভিডিও</string>
     <string name="moderation_message">100WordStory under moderation.\n
 Thank you! We will be reviewing your story. You can expect to hear from us within the next 48 working hours. Meanwhile, you can still share your story with your friends!</string>
 
 
-    <string name="drawer_referra_mymoney">Refer MyMoney</string>
+    <string name="drawer_referra_mymoney">MyMoney উল্লেখ করুন</string>
     <string name="referral_screen_text">Invite a friend to join MyMoney by sharing your referral code. Both of you will earn Rs. 25 once she has successfully completed a MyMoney campaign.</string>
     <string name="share_referral_screen">Share your referral code and start earning</string>
     <string name="referral_screen_whatsapp">WhatsApp</string>
@@ -1178,4 +1180,16 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="application_end_date">Application End Date</string>
     <string name="submission_end_date">Submission End Date</string>
     <string name="submit_article">Submit Your Article</string>
+
+    <!--pending-->
+    <string name="participate_earn_mymoney">MyMoney ক্যাম্পেনে অংশগ্রহণ করুন এবং উপার্জন করুন </string>
+    <string name="tap_to_create">ভিডিওটি তৈরী করতে ক্লিক করুন </string>
+    <string name="slide_to_cancel">ক্যানসেল করতে স্লাইড করুন</string>
+    <string name="private_profile_read_article">আর্টিকেলটি পড়ুন</string>
+    <string name="mymoney_profile">MyMoney প্রোফাইল</string>
+    <string name="capture_from_camera">ক্যামেরার সাহায্যে ছবিটি তুলুন</string>
+    <string name="choose_from_gallery">গ্যালারী থেকে ছবি বেছে নিন</string>
+    <string name="add_a_choice"></string>
+    <string name="invite_referral_screen">Invite &amp; Earn MyMoney!</string>
+
 </resources>

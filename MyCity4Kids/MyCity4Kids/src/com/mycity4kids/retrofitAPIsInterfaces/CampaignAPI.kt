@@ -108,5 +108,8 @@ interface CampaignAPI {
     @GET("rewards/v1/campaigns/proofs/instructions/{campaignId}")
     fun getProofInstruction(@Path("campaignId") campaignId: Int): Observable<BaseResponseGeneric<ProofInstructionResult>>
 
+    @POST("/rewards/v1/campaigns/participations/withdraws/")
+    fun unapplyCampaign(@Body body: CampaignParticipate)
+            : Call<ParticipateCampaignResponse>
 
 }

@@ -19,9 +19,9 @@
     <string name="please_wait">कृपया थांबा ...</string>
     <string name="no_result_txt">निकाल उपलब्ध नाही</string>
     <string name="went_wrong">काहीतरी चुकलंय </string>
-    <string name="group_comment_start_type_here_text">Start Typing</string>
+    <string name="group_comment_start_type_here_text">टाइप करण्यास प्रारंभ करा</string>
 
-    <string name="groups_sections_ask">ASK AN EXPERT</string>
+    <string name="groups_sections_ask">एक प्रयोग विचारा</string>
 
     <string name="server_went_wrong">सर्वर मध्ये काहीतरी चुकलंय </string>
     <string name="no_data">डेटा उपलब्ध नाही </string>
@@ -152,8 +152,8 @@
     <string name="ad.view_all_tags.text">सर्व पहा </string>
     <string name="ad.tags_title.text">हा लेख खालील श्रेणी मध्ये प्रकाशित झाले </string>
     <string name="ad.tags_subtitle.text">ह्या सारखे लेख वाचण्यासाठी फॉलो करा </string>
-    <string name="ad.follow_author">फॉलो </string>
-    <string name="ad.following_author">फॉलोविंग </string>
+    <string name="ad.follow_author">अनुसरण करा</string>
+    <string name="ad.following_author">खालील</string>
     <string name="ad.comments.title">टिप्पणी </string>
     <string name="ad.comments.no_comments">टिप्पणी जोडलेल्या नाहीत </string>
     <string name="ad.comments.view_comment">टिप्पणी</string>
@@ -268,13 +268,14 @@
         <item>9 भाषेतून वैविद्यपूर्ण ब्लॉग तुमच्या साठी</item>
         <item>पहा व्हिडिओ</item>
         <item>एकटीच नाही तू आता,  सपोर्ट ग्रुप बरोबर असताना एकटेपणाची कशाला भीती</item>
-        <item>Start earning with MyMoney!</item>
+        <item>मायमनीसह कमाई करण्यास प्रारंभ करा!</item>
     </string-array>
 
     <string name="onboarding.desc_1">प्रत्येक आईच्या \'आईपणाची\'  ची कहाणी.  तुमचीही  आहे ना? शेअर करा लिखीत व व्हिडीओच्या माध्यमातून</string>
     <string name="onboarding.desc_2">निवडा तुमची भाषा इंग्रजी, हिन्दी , बंगाल , मराठी, तामिळ, तेलगू, कन्नड आणि मल्याळम.</string>
     <string name="onboarding.desc_3">Momspresso TV च्या  माध्यमातून पहा   सुंदर, प्रेरणादायी, माहितीपूर्ण , मजेशीर व्हिडीओ खास तुमच्यासाठी.</string>
     <string name="onboarding.desc_4">\'ती\' च्या  अस्तित्वाचा लढा  सशक्त करू. चला शेअर करा तुमच्या सूचना , कलपना आणि लिहित्या व्हा.</string>
+    <string name="onbording.desc_5">ब्रँड मोहिमांमध्ये भाग घेऊन कमवा</string>
 
     <string name="onboarding_desc_array.tutorial_1.blogs">ब्लॉग्स </string>
     <string name="onboarding_desc_array.tutorial_1.videos">मॉम वि लॉग्स </string>
@@ -375,7 +376,7 @@
     <string name="user_article.draft.edit">या तारखेला सेव केले आहे </string>
     <string name="user_article.draft.untitled_draft">निनावी मसुदा </string>
     <string name="user_article.published.edit">संपादित करा </string>
-    <string name="user_article.published.no_published_article">तुम्ही अजून एकही लेख प्रकाशित केला नाही आहे </string>
+    <string name="user_article.published.no_published_article">आपण अद्याप कोणताही लेख प्रकाशित केलेला नाही</string>
     <string name="user_article.draft.status_pending_approval">मंजुरी साठी प्रलंबित </string>
     <string name="user_article.draft.status_unapproved">नामंजूर </string>
     <string name="user_article.draft.status_unpublished">अप्रकाशित </string>
@@ -577,7 +578,7 @@
     <string name="article_listing.toolbar.title_popular">लोकप्रिय </string>
     <string name="article_listing.toolbar.title_trending">ट्रेंडिंग</string>
     <string name="article_listing.toolbar.title_for_you">तुमच्या साठी </string>
-    <string name="article_listing.toolbar.title_todays_best">आजचे बेस्ट</string>
+    <string name="article_listing.toolbar.title_todays_best">आजचा सर्वोत्तम</string>
     <string name="article_listing.toolbar.title_editor_picks">संपादकांची निवड </string>
 
     <string name="sort.recent">नवीन</string>
@@ -620,7 +621,7 @@
 
     <string name="article_listing.type.trending_label">ट्रेंडिंग</string>
     <string name="article_listing.type.editor_label">संपादकांची निवड</string>
-    <string name="article_listing.type.todays_best_label">आजचे बेस्ट</string>
+    <string name="article_listing.type.todays_best_label">आजचा सर्वोत्तम</string>
     <string name="article_listing.type.short_story_label">100 शब्दांची गोष्ट</string>
     <string name="article_listing.type.for_you_label">ुमच्या साठी</string>
     <string name="article_listing.type.languages_label">भाषा </string>
@@ -693,7 +694,7 @@
     <!--<string name="groups.add_image">ADD IMAGE</string>-->
     <!--<string name="groups.image_poll">IMAGE POLL</string>-->
     <!--<string name="groups.text_poll">TEXT POLL</string>-->
-    <!--<string name="groups.join_label">GROUPS YOU ARE A MEMBER OF</string>-->
+
     <!--<string name="groups.sections.about">ABOUT</string>-->
     <!--<string name="groups.sections.discussions">DISCUSSION</string>-->
     <!--<string name="groups.sections.blogs">BLOGS</string>-->
@@ -718,6 +719,7 @@
     <!--<string name="groups.anonymous">ANONYMOUS</string>-->
     <!--<string name="groups.membership_request_msg">We have received your request for joining this group. Your membership will be confirmed once it is approved by the moderators of this group.</string>-->
 
+    <string name="groups.join_label">आपण ज्या गटांचे सदस्य आहात</string>
     <string name="groups.moderator_invitation">Invite To Be a Moderator</string>
     <string name="groups.unblock_member">Unblock Member</string>
     <string name="groups.block_member">Block Member</string>
@@ -735,7 +737,7 @@
     <string name="groups.all_groups">ALL GROUPS</string>
     <string name="groups.groups">ग्रुप्स</string>
     <string name="groups_sections_polls">मतदान</string>
-    <string name="groups_sections_myfeed">My Feed</string>
+    <string name="groups_sections_myfeed">माझी फीड</string>
     <string name="groups.reported_by">Reported By</string>
     <string name="groups.persons">Persons</string>
     <string name="groups.no_action">No Action</string>
@@ -752,24 +754,24 @@
     <string name="groups.membership_req">MEMBERSHIP REQUEST</string>
     <string name="groups.now_member_gp">You are now member of the group</string>
     <string name="groups.approval_req_sent">Your request has been sent to group admin for approval</string>
-    <string name="groups.support_groups">Support Groups</string>
+    <string name="groups.support_groups">समर्थन गट</string>
     <string name="groups.post_helpful"></string>
     <string name="groups.post_nothelpful"></string>
     <string name="groups.summary">SUMMARY</string>
     <string name="groups.add_image">ADD IMAGE</string>
-    <string name="groups.image_poll">IMAGE POLL</string>
+    <string name="groups.image_poll">प्रतिमा पोल</string>
     <string name="groups.text_poll">TEXT POLL</string>
-    <string name="groups.anonymous">ANONYMOUS</string>
+    <string name="groups.anonymous">अनोखा</string>
     <string name="groups.anyone_join">Anyone can join</string>
     <string name="groups.closed_gp">Closed group</string>
     <string name="groups.invitation_only_gp">Invitation only group</string>
     <string name="groups.created">Created</string>
     <string name="groups.member_label">MEMBERS</string>
-    <string name="groups.sections.about">ABOUT</string>
-    <string name="groups.sections.discussions">DISCUSSION</string>
-    <string name="groups.sections.blogs">BLOGS</string>
+    <string name="groups.sections.about">बद्दल</string>
+    <string name="groups.sections.discussions">चर्चा</string>
+    <string name="groups.sections.blogs">ब्लॉग</string>
     <string name="groups.sections.photos">PHOTOS</string>
-    <string name="groups.sections.videos">VIDEOS</string>
+    <string name="groups.sections.videos">व्हिडिओ</string>
     <string name="groups.sections.top_posts">TOP POSTS</string>
     <string name="groups.sections.polls">मतदान</string>
     <string name="groups.search_in">Search</string>
@@ -784,7 +786,7 @@
     <string name="groups.user_membership_rejected_msg">Your membership has been rejected for this group</string>
     <string name="groups.join_group">JOIN GROUP</string>
     <string name="groups.ask_something">गटामध्ये सामील व्हा ...</string>
-    <string name="groups.post_label">POST</string>
+    <string name="groups.post_label">पोस्ट करा</string>
     <string name="groups.edit_post">EDIT POST</string>
     <string name="groups.total_votes">एकूण मते: %1$s</string>
 
@@ -802,7 +804,7 @@
     <string name="short_s.choose_one_genre">तुमच्या कथेची शैली निवडा जी तुमच्या कथेचे खूप चांगल्या प्रकारे विश्लेषण करू शकेल. तुम्ही कोणतीही १ शैली निवडा.</string>
     <string name="short_s.no_drafts">आतापर्यंत कोणतीही छोटी कथा तयार केली गेली नाहीये.</string>
     <string name="short_s.no_published">आतापर्यंत कोणतीही छोटी कथा प्रकाशित केली गेली नाहीये.</string>
-    <string name="short_s.view_replies">View replies</string>
+    <string name="short_s.view_replies">प्रत्युत्तरे पहा</string>
     <string name="short_s.choose_topic">Please choose at least one topic to continue</string>
     <string name="short_s.add_comment_fail">Failed to add comment. Please try again</string>
     <string name="short_s.edit_comment_fail">Failed to edit comment. Please try again</string>
@@ -824,13 +826,14 @@
     <string name="read_more">Read More</string>
     <string name="read_less">Read Less</string>
     <string name="profile_completion">Profile Completion</string>
+    <string name="update">अद्यतनित करा</string>
     <string name="improve_reachability">Improve the reachability by updating the bio.</string>
     <string name="choose_account">Choose an account to continue</string>
     <string name="create_content">Every mother has a story. What\'s yours? Pour out yours like a Blog, a 100 Word Story, or a Video.</string>
     <string name="write_about_yourself">Write about yourself</string>
-    <string name="child_details">Child Details</string>
-    <string name="add_child_details">Add Child Details</string>
-    <string name="contact_details">Contact Details</string>
+    <string name="child_details">मुलांचे तपशील</string>
+    <string name="add_child_details">मुलांचे  तपशील जोडा</string>
+    <string name="contact_details">संपर्काची माहिती</string>
 
     <string name="navigation_bar.home">होम</string>
     <string name="navigation_bar.discover">शोध</string>
@@ -848,18 +851,18 @@
     <string name="coachmark.publish">तुमचे विचार  प्रसिद्ध करा: बघा व प्रकाशित करा तुमचे  लेख, गोष्टी, आणि मॉम्स व्हिडिओलॉग एकाच ठिकाणी.</string>
     <string name="mobile">MOBILE NO</string>
     <string name="continue_writing">Continue Writing(Drafts)</string>
-    <string name="app_settings">App Settings</string>
+    <string name="app_settings">अ‍ॅप सेटिंग्ज</string>
     <string name="create_new">Create New</string>
     <string name="name_optional">NAME (optional)</string>
     <string name="name">NAME</string>
     <string name="updated">Updated :</string>
-    <string name="full_name">FULL NAME</string>
-    <string name="email_and_password">EMAIL AND PASSWORD</string>
-    <string name="location">LOCATION</string>
+    <string name="full_name">पूर्ण नाव</string>
+    <string name="email_and_password">ईमेल आणि संकेतशब्द</string>
+    <string name="location">स्थान</string>
     <string name="search">Search any article or author</string>
     <string name="new_label">NEW</string>
     <string name="view_profile">view profile</string>
-    <string name="choose_video_category">Choose Video Category</string>
+    <string name="choose_video_category">व्हिडिओ श्रेणी निवडा</string>
     <string name="enter_valid_email">Please enter valid email id</string>
     <string name="time_limit">(जास्तीत जास्त वेळ %1$s)</string>
     <string name="upload_larger_video">Please upload a video greater than 5 seconds</string>
@@ -874,7 +877,7 @@
     <string name="edit_comment">EDIT COMMENT</string>
     <string name="report">REPORT</string>
     <string name="select_atleast_one_topic">किमान एक श्रेणी निवडा</string>
-    <string name="your_article_is_successfully_bookmarked">Your article is successfully bookmarked.</string>
+    <string name="your_article_is_successfully_bookmarked">आपला लेख यशस्वीरित्या बुकमार्क झाला आहे</string>
     <string name="successfully_updated">Successfully updated!</string>
 
     <string name="submit_story_text">SUBMIT YOUR STORY </string>
@@ -892,7 +895,7 @@
     <string name="DOB">जन्म तिथि</string>
     <string name="add">जोडा</string>
     <string name="hold_to_release">रेकॉर्ड करण्यासाठी होल्ड करा, पाठविण्यासाठी रिलीझ करा.</string>
-    <string name="slide_to_cancel">रद्द करण्यासाठी स्लाइड</string>
+    <string name="slide_to_cancel">रद्द करण्यासाठी स्लाइड करा</string>
     <string name="stop_recording">प्रथम रेकॉर्डिंग थांबवा मग सेव्ह करा.</string>
     <string name="cancel_audio">रद्द</string>
 
@@ -938,9 +941,8 @@
     <string name="rewards_expected_date">अपेक्षित तारीख</string>
     <string name="rewards_mobile_number_verified">मोबाईल नंबर तपासून पहा.</string>
     <string name="rewards_have_children">तुम्हाला मुलं आहेत का?</string>
-    <string name="groups_section_myfeed">My Feed</string>
-    <string name="groups_enable_notification">सूचना सक्षम करा
-</string>
+    <string name="groups_section_myfeed">माझी फीड</string>
+    <string name="groups_enable_notification">सूचना सक्षम करा</string>
 
     <string name="rewards_tab_detail">MyMoney</string>
     <string name="rewards_add_child">मुलांची माहिती</string>
@@ -951,19 +953,19 @@
     <string name="reward_welcome">Welcome to Momspresso MyMoney!</string>
     //new Video Challenge Ui Strings
     <string name="video_challenge_live_text">LIVE</string>
-    <string name="video_challenge_text">CHALLENGES</string>
-    <string name="choose_video_categories_text">CATEGORIES</string>
-    <string name="groups.other_groups">OTHER GROUPS</string>
+    <string name="video_challenge_text">आव्हाने</string>
+    <string name="choose_video_categories_text">कॅटेगरीज</string>
+    <string name="groups.other_groups">इतर गट</string>
 
     //groupdetail Activity toast String
-    <string name="group_detail_activity_toast_text">You can also post anonymously </string>
+    <string name="group_detail_activity_toast_text">आपण अज्ञात पोस्ट देखील करू शकता </string>
     <string name="group_add_comment_text">टिप्पण्या जोडा</string>
     <string name="group_invite_text">आमंत्रण</string>
     <string name="group_comment_type_here_text">Type here</string>
     <string name="group_comment_be_the_first_text">प्रथम टिप्पणी करणारे व्हा</string>
 
     //tooltip groups
-    <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>
+    <string name="add_text_or_media_group_post_activity_tooltip_text">ऑडिओ पोस्ट प्रयत्न करा</string>
     <string name="dialog_header_choose_sort_type">"क्रमवारी लावा "</string>
     <string name="rewards_instagram_handler">Instagram हँडल जोडा</string>
     <string name="rewards_facebook_handler">फेसबुक कनेक्ट करा</string>
@@ -973,13 +975,13 @@
     <string name="about_video">विषयी</string>
     <string name="myprofile.section.mom_bottom_label">मॉम वलॉग्स</string>
     <string name="all_videos.toolbar.title.homepage">Videos</string>
+    <string name="notification">सूचना</string>
+
     <string name="moderation_message">100WordStory under moderation.\n
 Thank you! We will be reviewing your story. You can expect to hear from us within the next 48 working hours. Meanwhile, you can still share your story with your friends!</string>
 
 
-
-
-    <string name="drawer_referra_mymoney">Refer MyMoney</string>
+    <string name="drawer_referra_mymoney">माझे पैसे संदर्भित करा</string>
     <string name="referral_screen_text">Invite a friend to join MyMoney by sharing your referral code. Both of you will earn Rs. 25 once she has successfully completed a MyMoney campaign.</string>
     <string name="share_referral_screen">Share your referral code and start earning</string>
     <string name="referral_screen_whatsapp">WhatsApp</string>
@@ -1007,13 +1009,11 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="campaign_details_applied">APPLIED</string>
 
 
-
     <string name="congratulation_text">CONGRATULATIONS!</string>
     <string name="thanks_for_submitting">Thanks for submitting proof and payment details</string>
     <string name="be_in_touch_text">We will review and be in touch in next 7 working days till then you can take part in other interesting campaigns</string>
     <string name="share_joy">SHARE THE JOY</string>
     <string name="continue_browsing_campaign">CONTINUE BROWSING CAMPAIGNS</string>
-
 
 
     //campaigndetails
@@ -1150,9 +1150,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="not_working">Not Working</string>
     <string name="working">Working</string>
 
-    <string name="voise_post_group">Use your voice\nRecord your thoughts or ask a question in your voice</string>
-    <string name="poll_post_group">Create a poll\nGet community’s opinion on what matters to you</string>
-    <string name="blog_post_group">Write something\nAsk a question or share your thought</string>
+    <string name="voise_post_group">आपला आवाज वापरा\nआपले विचार रेकॉर्ड करा किंवा आपल्या आवाजात प्रश्न विचारा. </string>
+    <string name="poll_post_group">मतदान करा\nआपल्यासाठी काय महत्त्वाचे आहे यावर समुदायाचे मत मिळवा </string>
+    <string name="blog_post_group">काहीतरी लिहा \nएक प्रश्न विचारा किंवा आपला विचार सामायिक करा. </string>
 
     <string name="mom_vlog_banner_title">या आठवड्याचे आव्हान घ्या.</string>
     <string name="mom_vlog_banner_subtitle">आणि जिंका रु. १०,०००/_ ची बक्षीसे!</string>
@@ -1174,4 +1174,15 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="application_end_date">Application End Date</string>
     <string name="submission_end_date">Submission End Date</string>
     <string name="submit_article">Submit Your Article</string>
+
+    <!--pending-->
+    <string name="participate_earn_mymoney">मायमनी मोहिमांमध्ये भाग घ्या आणि कमवा</string>
+    <string name="tap_to_create">तयार करण्यासाठी टॅप करा</string>
+    <string name="private_profile_read_article">लेख वाचा</string>
+    <string name="mymoney_profile">मायमनी प्रोफाइल</string>
+    <string name="capture_from_camera">कॅमेर्‍यावरून प्रतिमा कॅप्चर करा</string>
+    <string name="choose_from_gallery">गॅलरीमधून प्रतिमा निवडा</string>
+    <string name="add_a_choice">निवड जोडा</string>
+    <string name="invite_referral_screen">Invite &amp; Earn MyMoney!</string>
+
 </resources>

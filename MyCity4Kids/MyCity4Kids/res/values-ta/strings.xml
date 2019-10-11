@@ -4,7 +4,7 @@
     <string name="app_name">மாம்ஸ்ப்ரெஸ்ஸோ</string>
     <string name="unknown_person">தெரியாத</string>
     <string name="resend_email">ஈ-மெயிலை மீண்டும் அனுப்பவும்</string>
-    <string name="group_comment_start_type_here_text">Start Typing</string>
+    <string name="group_comment_start_type_here_text">தட்டச்சு செய்ய துவங்குங்கள்</string>
 
 
     <string name="write_review_prompt">நீங்கள் எதை விமர்சனம் செய்ய விரும்புகிறீர்கள்?</string>
@@ -22,7 +22,7 @@
     <string name="no_result_txt">முடிவு ஒன்றும் கிடைக்கவில்லை</string>
     <string name="went_wrong">ஏதோ தவறு நடந்துவிட்டது</string>
     <string name="server_went_wrong">ஸர்வரில் ஏதோ தவறு நடந்துவிட்டது</string>
-    <string name="groups_sections_ask">ASK AN EXPERT</string>
+    <string name="groups_sections_ask">நிபுணரை கேளுங்கள்</string>
 
     <string name="no_data">தகவல் ஒன்றும் கிடைக்கவில்லை</string>
     <string name="toast_network_error">கருவி நெட்வொர்க் கவரேஜிற்கு வெளியே உள்ளது</string>
@@ -153,8 +153,8 @@
     <string name="ad.view_all_tags.text">அனைத்தையும் காட்டு</string>
     <string name="ad.tags_title.text">இந்த கட்டுரை கீழே உள்ள பிரிவுகளில் வெளியிடப்பட்டது</string>
     <string name="ad.tags_subtitle.text">இதேபோன்ற போஸ்டுகளைப் படிக்க அவர்களைப் பின்தொடரவும்</string>
-    <string name="ad.follow_author">பின்தொடரவும்</string>
-    <string name="ad.following_author">பின்தொடர்கிறீர்</string>
+    <string name="ad.follow_author">பின்பற்று்க</string>
+    <string name="ad.following_author">பின்பற்றுகிறேன்</string>
     <string name="ad.comments.title">கருத்துகள்</string>
     <string name="ad.comments.no_comments">கருத்துகள் சேர்க்கப்படவில்லை</string>
     <string name="ad.comments.view_comment">கருத்துகள்</string>
@@ -171,7 +171,7 @@
     <string name="ad.bottom_bar.bookmark">அடையாளக்குறிப்பு செய்க</string>
     <string name="ad.bottom_bar.like">லைக் செய்</string>
     <string name="ad.recent_logs_from.title">ஆசிரியரிடமிருந்து மேலும்</string>
-    <string name="ad.share.follow_author">பின்தொடரவும் %1$s</string>
+    <string name="ad.share.follow_author">பின்பற்று்க</string>
     <string name="ad.trending.title">டிரெண்டிங் ப்ளாகுகள்</string>
     <string name="ad.write_blog">ஒரு ப்ளாகை எழுதுங்கள்</string>
     <string name="ad.tts.toast_unplayable_article">இந்த கட்டுரையை இயக்க முடியவில்லை</string>
@@ -269,13 +269,14 @@
         <item>9 மொழிகளில் ப்ளாக்களை படித்து மகிழுவும்</item>
         <item>பயணத்திலும் வீடியோக்களைப் பார்க்கவும்</item>
         <item>நீங்கள் தனியாக இல்லை, ஆதரவு குழுக்கள் உண்டு</item>
-        <item>Start earning with MyMoney!</item>
+        <item>MyMoney உடன் இணைந்து சம்பாதிக்க துவங்குங்கள்</item>
     </string-array>
 
     <string name="onboarding.desc_1">ஒவ்வொரு அம்மாவுக்கும் ஒரு கதை உண்டு. உங்களுடையது என்ன? அதை உரை அல்லது வீடியோவில் பகிர்ந்து கொள்ளுங்கள்</string>
     <string name="onboarding.desc_2">ஆங்கிலம், ஹிந்தி, வங்காளம், மராத்தி, தமிழ், தெலுங்கு, கன்னடம் மற்றும் மலையாளம் மொழியிலிருந்து தேர்வு செய்யவும்.</string>
     <string name="onboarding.desc_3">மாம்ஸ்ப்ரெஸ்ஸோ டீவி உங்களுக்கு அழகான, ஊக்கமளிக்கும், பயனுள்ள மற்றும் வேடிக்கையான வீடியோக்களை வழங்குகிறது. எல்லாம் ஒரே இடத்தில்.</string>
     <string name="onboarding.desc_4">எங்கள் அன்னையர் சமூகத்தின் சக்தியில் சேரவும். உங்கள் கேள்விகளைப் பகிர்ந்து கொள்ளவும். மற்றவர்களுக்கு உதவவும்</string>
+    <string name="onbording.desc_5">பிராண்ட் பிரச்சாரங்களில் பங்கேற்று சம்பாதியுங்கள்</string>
 
     <string name="onboarding_desc_array.tutorial_1.blogs">பதிவுகள்</string>
     <string name="onboarding_desc_array.tutorial_1.videos">மாம்விலாக்ஸ்</string>
@@ -346,7 +347,7 @@
     <string name="subscribe_topics.save">சேமிக்க</string>
     <string name="subscribe_topics.toast_topic_updated">பின்வரும் தலைப்புகளின் பட்டியலை வெற்றிகரமாக புதுப்பிக்கப்பட்டது </string>
 
-    <string name="myprofile.following_label">பின்தொடர்கிறீர்</string>st
+    <string name="myprofile.following_label">பின்பற்றுகிறேன்</string>st
     <string name="myprofile.followers_label">பின்தொடர்பவர்கள்</string>
     <string name="myprofile.section.articles_label">கட்டுரை</string>
     <string name="myprofile.section.short_story_label">100 வார்த்தை கதை</string>
@@ -359,7 +360,7 @@
 
     <string name="blogger_profile.follow_button">பின்தொடர்</string>
     <string name="blogger_profile.rank_in">ரேங்க்</string>
-    <string name="blogger_profile.unfollow_button">பின்தொடர்கிறீர்</string>
+    <string name="blogger_profile.unfollow_button">பின்பற்றுகிறேன்</string>
     <string name="blogger_profile.view_count_label">பக்கப்  பார்வைகள்</string>
     <string name="blogger_profile.article_count_label">போஸ்டுகள் </string>
     <string name="blogger_profile.section.articles_label">கட்டுரைகள்</string>
@@ -376,7 +377,7 @@
     <string name="user_article.draft.edit">மாதிரி வரைவை திருத்தவும்</string>
     <string name="user_article.draft.untitled_draft">பெயரிடப்படாத வரைவு</string>
     <string name="user_article.published.edit">திருத்து</string>
-    <string name="user_article.published.no_published_article">நீங்கள் இதுவரை எந்த கட்டுரையும் வெளியிடவில்லை</string>
+    <string name="user_article.published.no_published_article">நீங்கள் இதுவரை எந்த பதிவையும் வெளியிடவில்லை</string>
     <string name="user_article.draft.status_pending_approval">ஒப்புதலுக்காக நிலுவையில் உள்ளது</string>
     <string name="user_article.draft.status_unapproved">அங்கீகரிக்கப்படாதது</string>
     <string name="user_article.draft.status_unpublished">வெளியிடப்படாதது</string>
@@ -577,7 +578,7 @@
     <string name="article_listing.toolbar.title_popular">பிரபலமான</string>
     <string name="article_listing.toolbar.title_trending">டிரெண்டிங்</string>
     <string name="article_listing.toolbar.title_for_you">உங்களுக்காக</string>
-    <string name="article_listing.toolbar.title_todays_best">TODAY\'S BEST</string>
+    <string name="article_listing.toolbar.title_todays_best">இன்றைய சிறந்தது</string>
     <string name="article_listing.toolbar.title_editor_picks">ஆசிரியரின் தேர்வு </string>
 
     <string name="sort.recent">அண்மையில்</string>
@@ -622,7 +623,7 @@
 
     <string name="article_listing.type.trending_label">ட்ரென்டிங்</string>
     <string name="article_listing.type.editor_label">EDITOR\'S PICK</string>
-    <string name="article_listing.type.todays_best_label">TODAY\'S BEST</string>
+    <string name="article_listing.type.todays_best_label">இன்றைய சிறந்தது</string>
     <string name="article_listing.type.for_you_label">உங்களுக்காக</string>
     <string name="article_listing.type.short_story_label">100 வார்த்தை கதை</string>
     <string name="article_listing.type.languages_label">உங்களுக்காக</string>
@@ -676,10 +677,10 @@
     <string name="guide.sub_topics_list_tour">Click here to look at more categories</string>
     <string name="guide.share_like_bookmark_tour">Share, Bookmark and Love this post</string>
     <string name="guide.listen_tour">Click here to listen to this blog</string>
-    <string name="guide.groups_tour">Join Support Groups. Ask questions (even anonymously) \nand get answers from the community.</string>
+    <string name="guide.groups_tour">ஆதரவு குழுக்களில் இணையுங்கள். கேள்விகளை கேட்டு (பெயர் குறிப்பிடாமல்) \nகுழுக்களிலிருந்து பதில்களை பெறுங்கள்</string>
     <string name="guide.vlogs_tour">உங்களுக்கு பிடித்தமான மாம்  வ்லாக்ஸை பாருங்கள்.\n வாராவாரம் வீடியோ சவால்களில் பங்குபெருங்கள்.</string>
 
-    <string name="author_type.blogger">பதிவர்</string>
+    <string name="author_type.blogger">வலைப்பதிவர்</string>
     <string name="author_type.editor">ஆசிரியர்</string>
     <string name="author_type.editorial">ஆசிரியர் குழு</string>
     <string name="author_type.expert">நிபுணர்</string>
@@ -694,7 +695,6 @@
     <!--<string name="groups.add_image">ADD IMAGE</string>-->
     <!--<string name="groups.image_poll">IMAGE POLL</string>-->
     <!--<string name="groups.text_poll">TEXT POLL</string>-->
-    <!--<string name="groups.join_label">GROUPS YOU ARE A MEMBER OF</string>-->
     <!--<string name="groups.sections.about">ABOUT</string>-->
     <!--<string name="groups.sections.discussions">DISCUSSION</string>-->
     <!--<string name="groups.sections.blogs">BLOGS</string>-->
@@ -719,6 +719,7 @@
     <!--<string name="groups.anonymous">ANONYMOUS</string>-->
     <!--<string name="groups.membership_request_msg">We have received your request for joining this group. Your membership will be confirmed once it is approved by the moderators of this group.</string>-->
 
+    <string name="groups.join_label">நீங்கள் உறுப்பினராக உள்ள குழுக்கள்</string>
     <string name="groups.moderator_invitation">மாடரேட்டராக இருக்க அழைக்கவும்</string>
     <string name="groups.unblock_member">உறுப்பினரை அண்-ப்லாக் செய்யவும்</string>
     <string name="groups.block_member">உறுப்பினரை ப்லாக் செய்யவும்</string>
@@ -806,7 +807,7 @@
     <string name="short_s.choose_one_genre">Choose the genre that best describes the content of your story. You can choose only 1 genre.</string>
     <string name="short_s.no_drafts">-இது வரை சிறுகதை எழுதப்படவில்லை </string>
     <string name="short_s.no_published">-இது வரை சிறுகதை பிரசுரிக்கப்படவில்லை</string>
-    <string name="short_s.view_replies">View replies</string>
+    <string name="short_s.view_replies">பதில்களை பார்க்கவும்</string>
     <string name="short_s.choose_topic">Please choose at least one topic to continue</string>
     <string name="short_s.add_comment_fail">Failed to add comment. Please try again</string>
     <string name="short_s.edit_comment_fail">Failed to edit comment. Please try again</string>
@@ -824,14 +825,14 @@
     <string name="read_more">மேலும் வாசிக்க</string>
     <string name="read_less">மேலும் குறைவாக</string>
     <string name="profile_completion">Profile Completion</string>
-    <string name="update">UPDATE</string>
+    <string name="update">மேம்படுத்தல்</string>
     <string name="improve_reachability">Improve the reachability by updating the bio.</string>
     <string name="choose_account">Choose an account to continue</string>
     <string name="create_content">Every mother has a story. What\'s yours? Pour out yours like a Blog, a 100 Word Story, or a Video.</string>
     <string name="write_about_yourself">Write about yourself</string>
-    <string name="child_details">Child Details</string>
-    <string name="add_child_details">Add Child Details</string>
-    <string name="contact_details">Contact Details</string>
+    <string name="child_details">குழந்தைகள் பற்றிய விவரங்கள்</string>
+    <string name="add_child_details">குழந்தைகள் பற்றிய விவரங்களை சேர்க்க</string>
+    <string name="contact_details">தொடர்புகொள்ள முகவரி</string>
 
     <string name="navigation_bar.home">முகப்பு</string>
     <string name="navigation_bar.discover">கண்டறிய</string>
@@ -854,13 +855,13 @@
     <string name="name_optional">NAME (optional)</string>
     <string name="name">NAME</string>
     <string name="updated">Updated :</string>
-    <string name="full_name">FULL NAME</string>
-    <string name="email_and_password">EMAIL AND PASSWORD</string>
-    <string name="location">LOCATION</string>
+    <string name="full_name">முழுப்பெயர்</string>
+    <string name="email_and_password">இமெயில் மற்றும் கடவுச்சொல்</string>
+    <string name="location">இடம்</string>
     <string name="search">Search Any article or author</string>
     <string name="new_label">புதிய</string>
     <string name="view_profile">view profile</string>
-    <string name="choose_video_category">Choose Video Category</string>
+    <string name="choose_video_category">காணொளி வகையை தேர்வு செய்யவும்</string>
     <string name="enter_valid_email">Please enter valid email id</string>
     <string name="time_limit">(அதிகபட்ச நேரம் %1$s)</string>
     <string name="upload_larger_video">அடடா! உங்கள் வீடியோ குறைந்தது 5 வினாடிகள் இருக்க வேண்டும்.</string>
@@ -875,7 +876,7 @@
     <string name="edit_comment">EDIT COMMENT</string>
     <string name="report">REPORT</string>
     <string name="select_atleast_one_topic">குறைந்தது ஒரு வகையை தேர்வு செய்யவும்</string>
-    <string name="your_article_is_successfully_bookmarked">Your article is successfully bookmarked.</string>
+    <string name="your_article_is_successfully_bookmarked">உங்கள் பதிவு வெற்றிகரமாக அடையாள குறியிடப்பட்டது</string>
     <string name="successfully_updated">Successfully updated!</string>
 
     <string name="submit_story_text">உங்கள் கதை சமர்ப்பிக்கவும்
@@ -928,7 +929,7 @@
     <string name="rewards_not_working">வேலைக்கு செல்லாதவர்</string>
     <string name="reply_groups">பதிலளி</string>
     <string name="view_group">View</string>
-    <string name="replies">Replies</string>
+    <string name="replies">பதில்கள்</string>
 
     <string name="rewards_are_expecing">குழந்தையை எதிர்பார்ப்பவர்</string>
     <string name="cannot_be_left_blank">%1$s காலியாக விடமுடியாது</string>
@@ -944,40 +945,41 @@
     <string name="rewards_momspresso">மாம்ஸ்ப்ரெஸ்ஸோ வெகுமதிகள்</string>
     <string name="reward_welcome">Welcome to Momspresso MyMoney!</string>
     <string name="groups_section_myfeed">నా గురించి </string>
-    <string name="groups_enable_notification">நோட்டிஃபிகேஷனை செயல்படுத்தவும்</string>
+    <string name="groups_enable_notification">அறிவிப்பை செயல்படுத்துங்கள்</string>
 
 
     //new Video Challenge Ui Strings
     <string name="video_challenge_live_text">LIVE</string>
-    <string name="video_challenge_text">CHALLENGES</string>
-    <string name="choose_video_categories_text">CATEGORIES</string>
-    <string name="groups.other_groups">OTHER GROUPS</string>
+    <string name="video_challenge_text">சவால்கள்</string>
+    <string name="choose_video_categories_text">வகைகள்</string>
+    <string name="groups.other_groups">இதர குழுக்கள்</string>
 
 
     //groupdetail Activity toast String
-    <string name="group_detail_activity_toast_text">You can also post anonymously </string>
+    <string name="group_detail_activity_toast_text">பெயர் குறிப்பிடாமல் பதிவிடலாம் </string>
     <string name="group_add_comment_text">கமென்ட்ஸ் சேர்க்கவும்</string>
     <string name="group_invite_text">அழைக்கவும்</string>
     <string name="group_comment_type_here_text">Type here</string>
     <string name="group_comment_be_the_first_text">முதலில் கருத்து தெரிவிக்கவும்</string>
 
     //tooltip groups
-    <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>
+    <string name="add_text_or_media_group_post_activity_tooltip_text">ஒலிப்பதிவை முயற்சி செய்யுங்கள்</string>
     <string name="dialog_header_choose_sort_type">வரிசைப்படுத்து</string>
     <string name="rewards_instagram_handler">இன்ஸ்டாக்ராம் ஹான்டிலை சேர்க்கவும்</string>
     <string name="rewards_facebook_handler">"ஃபேஸ்புக்கை இணைக்கவும் "</string>
     <string name="add_youtube">யூட்யூப் சேனல் லிங்க்கை சேர்க்கவும்</string>
-    <string name="language">LANGUAGE</string>
+    <string name="language">மொழி</string>
+    <string name="notification">அறிவிப்புகள்</string>
 
     <string name="add_twitter">ட்விட்டர் ஹான்டிலை சேர்க்கவும்</string>
     <string name="about_video">இதைப் பற்றி</string>
     <string name="myprofile.section.mom_bottom_label">மாம் விலாக்ஸ்</string>
-    <string name="all_videos.toolbar.title.homepage">Videos</string>
+    <string name="all_videos.toolbar.title.homepage">காணொளி</string>
     <string name="moderation_message">100WordStory under moderation.\n
 Thank you! We will be reviewing your story. You can expect to hear from us within the next 48 working hours. Meanwhile, you can still share your story with your friends!</string>
 
 
-    <string name="drawer_referra_mymoney">Refer MyMoney</string>
+    <string name="drawer_referra_mymoney">MyMoney யை ரெஃபெர் செய்யுங்கள்</string>
     <string name="referral_screen_text">Invite a friend to join MyMoney by sharing your referral code. Both of you will earn Rs. 25 once she has successfully completed a MyMoney campaign.</string>
     <string name="share_referral_screen">Share your referral code and start earning</string>
     <string name="referral_screen_whatsapp">WhatsApp</string>
@@ -1165,9 +1167,21 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="select_thumbnail">உங்கள் வ்ளாகிற்கு தம்ப்நெயிலைத் தேர்வு செய்</string>
     <string name="audio_delay_msg">உங்கள் ஆடியோ லோட் செய்யப்படும் போது காத்திரு.</string>
     <string name="write_something">ஏதாவது எழுது</string>
-    <string name="join_dialog_post">வெளியிட</string>
+    <string name="join_dialog_post">பதிவுகள்</string>
     <string name="spell_check_error">We found a few errors in the article</string>
     <string name="application_end_date">Application End Date</string>
     <string name="submission_end_date">Submission End Date</string>
     <string name="submit_article">Submit Your Article</string>
+
+    <!--pending-->
+    <string name="participate_earn_mymoney">MyMoney பிரச்சாரங்களில் பங்கேற்று சம்பாதியுங்கள்</string>
+    <string name="tap_to_create">உருவாக்க இங்கு அழுத்தவும்</string>
+    <string name="slide_to_cancel">ரத்து செய்ய சொடுக்கவும்</string>
+    <string name="private_profile_read_article">பதிவுகளைப் படிக்க</string>
+    <string name="mymoney_profile">MyMoney-க்கான சுயவிபரங்கள்</string>
+    <string name="capture_from_camera">கேமராவை பயன்படுத்தி புகைப்படத்தை பதிவேற்றவும்</string>
+    <string name="choose_from_gallery">கேலரியில் இருந்து புகைப்படத்தை பதிவேற்றவும்</string>
+    <string name="add_a_choice">தெரிவை சேர்க்கவும்</string>
+    <string name="invite_referral_screen">Invite &amp; Earn MyMoney!</string>
+
 </resources>

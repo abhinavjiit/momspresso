@@ -1317,5 +1317,14 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <!--Unapply Campaign-->
     <string name="unapply_campaign_dialog">Are you sure you want to cancel the application for this campaign ?</string>
 
+    <string name="rewards_edit">Edit</string>
+    <string name="rewards_yes">Edit</string>
+    <string name="rewards_no">Edit</string>
+    <string name="rewards_expected_date_delivery">EXPECTED DATE OF DELIVERY</string>
+    <string name="add_instagram_handle">Add Instagram handle e.g. ritu_mommy</string>
+    <string name="enter_paytm_number">Please enter your paytm registered mobile number</string>
+    <string name="note_detail_in_english">Note: Please enter your bank information in English only</string>
+    <string name="track_status">TRACK STATUS</string>
+
 </resources>
 

@@ -67,7 +67,7 @@
                 android:paddingTop="5dp"
                 android:paddingRight="10dp"
                 android:paddingBottom="5dp"
-                android:text="TRACK STATUS"
+                android:text="@string/track_status"
                 android:textColor="@color/white"
                 android:textSize="10sp"
                 android:visibility="visible"
