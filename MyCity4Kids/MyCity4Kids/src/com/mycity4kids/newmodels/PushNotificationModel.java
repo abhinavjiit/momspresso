@@ -26,8 +26,10 @@ public class PushNotificationModel implements Parcelable {
     private String blogTitleSlug;
     private String titleSlug;
     private int campaign_id;
+    private String mapped_category;
     private String rich_image_url;
     private String sound;
+    private String challengeId;
 
     public String getSound() {
         return sound;
@@ -63,6 +65,14 @@ public class PushNotificationModel implements Parcelable {
 
     public String getId() {
         return id;
+    }
+
+    public String getChallengeId() {
+        return challengeId;
+    }
+
+    public void setChallengeId(String challengeId) {
+        this.challengeId = challengeId;
     }
 
     public void setId(String id) {
@@ -161,6 +171,14 @@ public class PushNotificationModel implements Parcelable {
         return filter_type;
     }
 
+    public String getMapped_category() {
+        return mapped_category;
+    }
+
+    public void setMapped_category(String mapped_category) {
+        this.mapped_category = mapped_category;
+    }
+
     public void setFilter_type(String filter_type) {
         this.filter_type = filter_type;
     }
@@ -214,6 +232,10 @@ public class PushNotificationModel implements Parcelable {
         blog_name = in.readString();
         blogTitleSlug = in.readString();
         titleSlug = in.readString();
+        rich_image_url = in.readString();
+        challengeId = in.readString();
+        mapped_category = in.readString();
+
     }
 
 
@@ -236,6 +258,9 @@ public class PushNotificationModel implements Parcelable {
         dest.writeString(blog_name);
         dest.writeString(blogTitleSlug);
         dest.writeString(titleSlug);
+        dest.writeString(rich_image_url);
+        dest.writeString(challengeId);
+        dest.writeString(mapped_category);
     }
 
     public static Parcelable.Creator<PushNotificationModel> CREATOR = new Parcelable.Creator<PushNotificationModel>() {

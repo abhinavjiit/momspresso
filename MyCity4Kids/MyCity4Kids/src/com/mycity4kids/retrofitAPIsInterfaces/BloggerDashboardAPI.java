@@ -65,10 +65,9 @@ public interface BloggerDashboardAPI {
     Call<ArticleListingResponse> getUsersWatchLaterVideos(@Query("limit") int limit,
                                                           @Query("pagination") String pagination);
 
-    @GET("v1/comments/{userId}")
-    Call<UserCommentsResponse> getUsersComments(@Path("userId") String userId,
-                                                @Query("limit") int limit,
-                                                @Query("pagination") String pagination);
+    @GET("v3/comments/{userId}")
+    Call<UserCommentsResponse> getUsersComments(@Path("userId") String userId
+    );
 
 
     @GET("v1/users/suggestBlogTitle/")

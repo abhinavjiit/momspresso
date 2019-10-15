@@ -195,18 +195,10 @@ public class VlogsListingAdapter extends BaseAdapter {
                         Intent intent = new Intent(mContext, NewVideoChallengeActivity.class);
                         if (videoAd.getExtraData() != null && videoAd.getExtraData().size() != 0) {
                             Topics.ExtraData extraData = videoAd.getExtraData().get(0);
-                            intent.putExtra("Display_Name", new ArrayList<>(Arrays.asList(videoAd.getDisplay_name())));
-                            intent.putExtra("screenName", "MomVlogs");
-                            intent.putExtra("challenge", new ArrayList<>(Arrays.asList(videoAd.getId())));
-                            intent.putExtra("position", 0);
-                            intent.putExtra("StreamUrl", new ArrayList<>(Arrays.asList(extraData.getChallenge().getVideoUrl())));
-                            intent.putExtra("rules", new ArrayList<>(Arrays.asList(extraData.getChallenge().getRules())));
-                            intent.putExtra("maxDuration", extraData.getChallenge().getMax_duration());
-                            intent.putExtra("mappedCategory", new ArrayList<>(Arrays.asList(extraData.getChallenge().getMapped_category())));
-                            intent.putExtra("topics", videoAd.getParentName());
-                            intent.putExtra("parentId", videoAd.getParentId());
-                            intent.putExtra("StringUrl", new ArrayList<>(Arrays.asList(extraData.getChallenge().getImageUrl())));
-                            intent.putExtra("Topic", new Gson().toJson(videoAd));
+                            intent.putExtra("challenge", videoAd.getId());
+                            intent.putExtra("mappedId", videoAd.getExtraData().get(0).getChallenge().getMapped_category());
+                            intent.putExtra("comingFrom", "vlog_listing");
+
                             mContext.startActivity(intent);
                         }
                     }

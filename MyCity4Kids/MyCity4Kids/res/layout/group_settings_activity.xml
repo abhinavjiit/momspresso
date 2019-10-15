@@ -149,7 +149,7 @@
             android:id="@+id/disableNotificationTitleLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ENABLE NOTIFICATION"
+            android:text="@string/groups_enable_notification"
             android:textColor="@color/app_red"
             android:textSize="15sp"
             app:fontName="oswald_regular.ttf" />

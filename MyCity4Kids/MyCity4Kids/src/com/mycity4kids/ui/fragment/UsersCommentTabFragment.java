@@ -3,10 +3,12 @@ package com.mycity4kids.ui.fragment;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -109,7 +111,7 @@ public class UsersCommentTabFragment extends BaseFragment implements UsersCommen
 //            showToast(getString(R.string.error_network));
             return;
         }
-        Call<UserCommentsResponse> call = getCommentsAPI.getUsersComments(authorId, limit, paginationValue);
+        Call<UserCommentsResponse> call = getCommentsAPI.getUsersComments(authorId);
         call.enqueue(usersCommentsResponseListener);
     }
 

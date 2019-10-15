@@ -445,15 +445,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 //        }
 //    }
 
-    private void hitBookmarkFollowingStatusAPI() {
-        ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
-        articleDetailRequest.setArticleId(videoId);
-        Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        VlogsListingAndDetailsAPI bookmarFollowingStatusAPI = retro.create(VlogsListingAndDetailsAPI.class);
 
-        Call<ArticleDetailResponse> callBookmark = bookmarFollowingStatusAPI.checkFollowingBookmarkStatus(videoId, authorId);
-        callBookmark.enqueue(isBookmarkedFollowedResponseCallback);
-    }
 
     private void hitRelatedArticleAPI() {
 //        String url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_ARTICLE + "trending" +
@@ -532,7 +524,6 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 updateUIfromResponse(responseData.getData().getResult());
                 if (StringUtils.isNullOrEmpty(authorId)) {
                     authorId = responseData.getData().getResult().getAuthor().getId();
-                    hitBookmarkFollowingStatusAPI();
                 }
                 hitRelatedArticleAPI();
                 commentURL = responseData.getData().getResult().getCommentUri();
@@ -1597,7 +1588,6 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         this.menu = menu;
 //        menu.getItem(0).setEnabled(false);
         if (!StringUtils.isNullOrEmpty(authorId)) {
-            hitBookmarkFollowingStatusAPI();
         }
         return true;
     }

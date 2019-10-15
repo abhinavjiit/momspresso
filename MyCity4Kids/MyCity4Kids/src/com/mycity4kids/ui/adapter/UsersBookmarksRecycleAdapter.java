@@ -1,7 +1,6 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,8 @@ import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by hemant on 19/7/17.
@@ -94,9 +95,9 @@ public class UsersBookmarksRecycleAdapter extends RecyclerView.Adapter<RecyclerV
                 articleViewHolder.recommendCountTextView.setText(articleDataModelsNew.get(position).getLikesCount());
             }
             try {
-                if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getVideoUrl())
+                if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getClientApp())
                         && (articleDataModelsNew.get(position).getImageUrl().getThumbMax() == null || articleDataModelsNew.get(position).getImageUrl().getThumbMax().endsWith("default.jpg"))) {
-                    Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURLMomspresso(articleDataModelsNew.get(position).getVideoUrl())).placeholder(R.drawable.default_article).into(articleViewHolder.articleImageView);
+                    Picasso.with(mContext).load((articleDataModelsNew.get(position).getImageUrl().getClientApp())).placeholder(R.drawable.default_article).into(articleViewHolder.articleImageView);
                 } else {
                     if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getThumbMax())) {
                         Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getThumbMax())

@@ -121,7 +121,7 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
         View fragmentView = inflater.inflate(R.layout.fragment_groupspoll, container, false);
         recyclerView = (RecyclerView) fragmentView.findViewById(R.id.recyclerView);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
         postList = new ArrayList<>();
         myFeedPollGenericRecyclerAdapter = new MyFeedPollGenericRecyclerAdapter(getContext(), this, selectedGroup, memberType);

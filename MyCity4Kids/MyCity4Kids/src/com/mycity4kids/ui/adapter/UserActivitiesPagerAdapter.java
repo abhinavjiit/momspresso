@@ -1,12 +1,12 @@
 package com.mycity4kids.ui.adapter;
 
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.ui.fragment.UsersBookmarkTabFragment;
 import com.mycity4kids.ui.fragment.UsersCommentTabFragment;
 import com.mycity4kids.ui.fragment.UsersRecommendationTabFragment;
 import com.mycity4kids.ui.fragment.UsersWatchLaterTabFragment;
@@ -21,7 +21,6 @@ public class UserActivitiesPagerAdapter extends FragmentStatePagerAdapter {
     private boolean isPrivateProfile;
 
     private UsersRecommendationTabFragment usersRecommendationTabFragment;
-    private UsersBookmarkTabFragment usersBookmarkTabFragment;
     private UsersWatchLaterTabFragment usersWatchLaterTabFragment;
     private UsersCommentTabFragment usersCommentTabFragment;
 
@@ -45,27 +44,14 @@ public class UserActivitiesPagerAdapter extends FragmentStatePagerAdapter {
                 }
                 usersRecommendationTabFragment.setArguments(bundle);
                 return usersRecommendationTabFragment;
-            case 1:
-                if (isPrivateProfile) {
-                    if (usersBookmarkTabFragment == null) {
-                        usersBookmarkTabFragment = new UsersBookmarkTabFragment();
-                    }
-                    usersBookmarkTabFragment.setArguments(bundle);
-                    return usersBookmarkTabFragment;
-                } else {
-                    if (usersCommentTabFragment == null) {
-                        usersCommentTabFragment = new UsersCommentTabFragment();
-                    }
-                    usersCommentTabFragment.setArguments(bundle);
-                    return usersCommentTabFragment;
-                }
+
             case 2:
                 if (usersWatchLaterTabFragment == null) {
                     usersWatchLaterTabFragment = new UsersWatchLaterTabFragment();
                 }
                 usersWatchLaterTabFragment.setArguments(bundle);
                 return usersWatchLaterTabFragment;
-            case 3:
+            case 1:
                 if (usersCommentTabFragment == null) {
                     usersCommentTabFragment = new UsersCommentTabFragment();
                 }

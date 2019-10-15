@@ -3,9 +3,6 @@ package com.mycity4kids.ui.fragment;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,13 +27,15 @@ import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
-import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.UserActivitiesActivity;
 import com.mycity4kids.ui.adapter.UsersBookmarksRecycleAdapter;
 import com.mycity4kids.utils.AppUtils;
 
 import java.util.ArrayList;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -216,7 +215,19 @@ public class UsersWatchLaterTabFragment extends BaseFragment implements UsersBoo
                 adapter.notifyDataSetChanged();
                 break;
             case R.id.rootView:
-                Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
+             /*   Intent intent = new Intent(getActivity(), ParallelFeedActivity.class);
+
+                intent.putExtra(Constants.VIDEO_ID, watchLaterList.get(position).getId());
+                intent.putExtra(Constants.STREAM_URL, parentingListData.getUrl());
+                intent.putExtra(Constants.AUTHOR_ID, parentingListData.getAuthor().getId());
+                intent.putExtra(Constants.FROM_SCREEN, "My Funny Videos Screen");
+                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "My Funny Videos");
+                intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
+                intent.putExtra(Constants.AUTHOR, parentingListData.getAuthor().getId() + "~" + parentingListData.getAuthor().getFirstName() + " " + parentingListData.getAuthor().getLastName());
+                startActivity(intent);*/
+
+
+               /* Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
                 intent.putExtra(Constants.ARTICLE_ID, watchLaterList.get(position).getId());
                 intent.putExtra(Constants.AUTHOR_ID, watchLaterList.get(position).getUserId());
                 intent.putExtra(Constants.BLOG_SLUG, watchLaterList.get(position).getBlogPageSlug());
@@ -225,7 +236,7 @@ public class UsersWatchLaterTabFragment extends BaseFragment implements UsersBoo
                 intent.putExtra(Constants.FROM_SCREEN, "PrivateActivityScreen");
                 intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
                 intent.putExtra(Constants.AUTHOR, watchLaterList.get(position).getUserId() + "~" + watchLaterList.get(position).getUserName());
-                startActivity(intent);
+                startActivity(intent);*/
                 break;
         }
     }

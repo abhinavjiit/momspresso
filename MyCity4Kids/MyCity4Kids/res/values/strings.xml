@@ -179,15 +179,7 @@
     <string name="vd.recent_videos_from.title">RECENT VIDEOS FROM</string>
     <string name="vd.trending.title">TRENDING VIDEOS</string>
 
-    <string-array name="improve_page_views_array">
-        <item>Interlink your article to other blog posts</item>
-        <item>Be consistent and write weekly</item>
-        <item>Make a point in every blog post that you publish</item>
-        <item>Use catchy titles</item>
-        <item>Spell check and double check your blog posts for any errors</item>
-        <item>Focus on the tone and the words that you use</item>
-        <item>Respond to blog comments</item>
-    </string-array>
+    <string name="confirmation_dialog.delete_draft.message">Are you sure you want to delete your draft?</string>
 
     public static final String LOCALE_ENGLISH = "en";
     public static final String LOCALE_HINDI = "hi";
@@ -201,111 +193,23 @@
     public static final String LOCALE_PUNJABI= "pa";
 
 
-    <string-array name="popup_language_list">
-        <item>English</item>
-        <item>हिंदी</item>
-        <item>मराठी</item>
-        <item>বাংলা</item>
-        <item>தமிழ்</item>
-        <item>తెలుగు</item>
-        <item>ಕನ್ನಡ</item>
-        <item>മലയാളം</item>
-        <item>ગુજરાતી</item>
-        <item>ਪੰਜਾਬੀ</item>
-    </string-array>
-
-
-    <string-array name="popup_durables_list">
-        <item>Air Conditioner</item>
-        <item>Refrigerator</item>
-        <item>Car</item>
-        <item>Two wheeler</item>
-        <item>Air Purifier</item>
-        <item>Washing Machine</item>
-        <item>TV</item>
-        <item>Music System</item>
-        <item>Water Heater</item>
-        <item>Mobile phone</item>
-        <item>Camera</item>
-        <item>Microwave Oven</item>
-        <item>Laptop</item>
-    </string-array>
-
-    <string-array name="household_income">
-        <item>Select</item>
-        <item>Less than 1 lakh</item>
-        <item>1 lakh to 2.5 lakhs</item>
-        <item>2.5 lakhs to 5 lakhs</item>
-        <item>5 lakhs to 10 lakhs</item>
-        <item>10 lakhs to 20 lakhs</item>
-        <item>Above 20 lakhs</item>
-    </string-array>
-
-    <string-array name="number_of_child">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-    </string-array>
-
-    <string-array name="profession">
-        <item>Select</item>
-        <item>Full-time employee</item>
-        <item>Part-time employee</item>
-        <item>Business woman/ Entrepreneur</item>
-        <item>Freelancer</item>
-    </string-array>
-
-    <string-array name="popup_interest_list">
-        <item>Beauty and personal care</item>
-        <item>Child’s education</item>
-        <item>Family matters</item>
-        <item>Finances</item>
-        <item>Food (restaurants, new recipes etc.)</item>
-        <item>Health</item>
-        <item>Home care</item>
-        <item>Hygiene</item>
-        <item>Parenting</item>
-        <item>Travel</item>
-        <item>Upcoming social events</item>
-    </string-array>
-
-    <string-array name="rank_calculation_array">
-        <item>Your rank is calculated by a state-of-the-art algorithm which takes in the number of views your article has got, the number of times it has been shared on social media, number of comments it has got on different platforms and the number of articles you have written in the past week.</item>
-    </string-array>
-
-    <string-array name="improve_rank_array">
-        <item>Be consistent in your blogging - post a blog weekly</item>
-        <item>Promote your blog post on all the Facebook groups that you are part of</item>
-        <item>Seek an opinion from peers and edit the blog post accordingly</item>
-    </string-array>
-
-    <string-array name="improve_social_share_array">
-        <item>Share blog posts using the buttons for social sharing in your blog post</item>
-        <item>Add Social Plugins to your profile e.g. www.twitter.com/bloggername</item>
-        <item>Try to edit and focus on the content while sharing your blog post</item>
-        <item>Use appropriate hashtags</item>
-    </string-array>
-
-    <string-array name="increase_followers_array">
-        <item>Add a line urging readers to follow you at the end of every blog, if they enjoyed reading it</item>
-        <item>Ask readers who frequently engage with your blog through comments, to follow you</item>
-        <item>Share your blog across all networks you are a part of, such as Facebook, Whatsapp and so on</item>
-    </string-array>
-
-    <string name="confirmation_dialog.delete_draft.message">Are you sure you want to delete your draft?</string>
     <string name="confirmation_dialog.no">NO</string>
+
+
     <string name="confirmation_dialog.yes">YES</string>
 
     <string name="editor.spell_check.title">Spellcheck</string>
+
     <string name="editor.spell_check.message">Are you sure you have completed the spellcheck?</string>
+
     <string name="editor.spell_check.no">NO</string>
+
     <string name="editor.spell_check.continue">YES CONTINUE PUBLISHING</string>
+
     <string name="editor.banner.message">Blog in a language of your choice</string>
+
     <string name="editor.last_saved_at">Last saved at %1$s</string>
+
     <string name="editor.last_saved_on">Last saved on %1$s</string>
 
     <string name="dob">Date of Birth</string>
@@ -316,25 +220,26 @@
 
     <string name="publish_article.upload_image.change_photo">Change Image</string>
     <string name="publish_article.upload_image.please_upload_or_choose_image">Please upload a picture or choose from the images shown below to continue</string>
-
     <string name="change_city.fetch_available_cities">Please wait while we fetch the list of available cities</string>
-
     <string name="permision_available_storage">Storage Permission has been granted.</string>
     <string name="permision_available_camera">Camera Permission has been granted. Preview can now be opened.</string>
     <string name="permissions_not_granted">Required permissions were not granted.</string>
     <string name="permission_camera_rationale">Camera permission is needed to show the camera preview.</string>
+
     <string name="permission_audio_rationale">Audio permission is needed to record Audio.</string>
+
     <string name="permission_storage_rationale">Storage permission is needed to pick files.</string>
     <string name="permission_location_rationale">Location permission is required to show relevant events and articles.</string>
     <string name="permission_phone_state_rationale">Phone state permission is required to keep you updated with latest content via notifications.</string>
+
     <string name="permision_available_init">All required permissions have been granted.</string>
     <string name="permission_calendar_rationale">Calendar permission is needed to add a reminder.</string>
+
     <string name="permission_storage_story">Storage permission is required for publishing story.</string>
 
     <string name="home.toolbar.title">TRENDING</string>
     <string name="explore_listing.explore_categories.title">YOU COULD ALSO EXPLORE THE CATEGORIES</string>
     <string name="explore_listing.explore_categories.meet_contributor">Meet Our Contributors</string>
-
     <string name="home_screen.trending.title">TRENDING</string>
     <string name="home_screen.notification.title">NOTIFICATIONS</string>
     <string name="home_screen.group.title">JOIN A GROUP</string>
@@ -343,26 +248,19 @@
     <string name="home_screen.select_an_option.title">DISCOVER</string>
     <string name="home_screen.trending.become_blogger">SHARE YOUR STORY</string>
     <string name="home_screen.trending.first_video_upload">VIDEOS</string>
+
     <string name="home_screen.explore.title">EXPLORE</string>
     <string name="home_screen.upcoming_events.title">UPCOMING EVENTS</string>
     <string name="home_screen.kids_res.title">KIDS RESOURCES</string>
+
     <string name="home_screen.trending_list_header.title">CHOOSE THE TOPICS THAT YOU ARE INTERESTED IN LIKE</string>
     <string name="home_screen.trending_list_header.topics_label">GETTING PREGNANT, POST PARTUM DEPRESSION ETC.</string>
     <string name="home_screen.trending_list_header.take_me_there">OKAY GOT IT! TAKE ME THERE</string>
-
-    <string-array name="onboarding_title_array">
-        <item>Create a Blog</item>
-        <item>Enjoy Blogs in any of 9 Languages</item>
-        <item>Upload your Mom Vlogs or watch on the go</item>
-        <item>With Support Groups, you are not alone</item>
-        <item>Start earning with MyMoney!</item>
-    </string-array>
-
     <string name="onboarding.desc_1">Every mom has a story. What\'s yours? Share it in text or video.</string>
     <string name="onboarding.desc_2">Choose from English, Hindi, Bangla, Marathi, Tamil, Telugu, Kannada and Malayalam.</string>
     <string name="onboarding.desc_3">Share your home videos in Mom Vlogs or watch beautiful, inspiring, useful and funny videos on Momspresso TV.</string>
     <string name="onboarding.desc_4">Harness the power of our mom community. Share your queries and help others!</string>
-
+    <string name="onbording.desc_5">Earn by participating in brand campaigns</string>
 
     <string name="onboarding_desc_array.tutorial_1.blogs">BLOGS</string>
     <string name="onboarding_desc_array.tutorial_1.videos">MOMVLOGS</string>
@@ -371,14 +269,17 @@
     <string name="onboarding_desc_array.tutorial_2.bengali">BENGALI</string>
     <string name="onboarding_desc_array.tutorial_2.marathi">MARATHI</string>
     <string name="onboarding_desc_array.tutorial_2.tamil">TAMIL</string>
+
     <string name="onboarding_desc_array.tutorial_2.telugu">TELUGU</string>
+
     <string name="onboarding_desc_array.tutorial_3.parenting">MUMS LIFE</string>
     <string name="onboarding_desc_array.tutorial_3.recipe">RECIPES</string>
     <string name="onboarding_desc_array.tutorial_3.expert_advice">EXPERT ADVICE</string>
     <string name="onboarding_desc_array.tutorial_4.editorial">CURATED LISTS</string>
+
+
     <string name="onboarding_desc_array.tutorial_4.events">EVENTS</string>
     <string name="onboarding_desc_array.tutorial_4.resources">RESOURCES</string>
-
     <string name="onboarding.signin">SIGN IN</string>
     <string name="onboarding.already_member">Already a member?</string>
     <string name="onboarding.get_started">GET STARTED</string>
@@ -386,18 +287,15 @@
     <string name="sign_in.desc">Discover the joy of motherhood.\n Join our Mum community to find inspiration &amp; hope.</string>
     <string name="sign_in.no_account">Don\'t have an account?\u0020</string>
     <string name="sign_in.sign_up_btn">SIGNUP</string>
-
     <string name="sign_up.welcome_back">SIGN UP</string>
     <string name="sign_up.desc">Discover the joy of motherhood.\n Join our Mum community to find inspiration &amp; hope.</string>
     <string name="sign_up.already_account">Already have an account?\u0020</string>
     <string name="sign_up.sign_in_btn">SIGNIN</string>
-
     <string name="login_email.login">LOGIN</string>
+
     <string name="login_email.forgot_password">Forgot Password?</string>
     <string name="login_email.username_hint">Email</string>
     <string name="login_email.password_hint">Password</string>
-
-
     <string name="signin.login_via_facebook">LOGIN USING FACEBOOK</string>
     <string name="signin.login_via_google">LOGIN USING GOOGLE</string>
     <string name="signin.login_via_email">LOGIN USING EMAIL</string>
@@ -406,47 +304,50 @@
     <string name="signup.connect_via_facebook">CONNECT USING FACEBOOK</string>
     <string name="signup.connect_via_google">CONNECT USING GOOGLE</string>
     <string name="signup.connect_via_phone">CONNECT USING PHONE</string>
-
     <string name="for_you.reason.why_label">Why am I seeing this?</string>
+
     <string name="for_you.reason.dont_want_to_see">Don\'t want to see this</string>
     <string name="for_you.reason.okay">OKAY</string>
-
     <string name="lang_specific.toolbar.title">LANGUAGES</string>
-
     <string name="lang_setting.stories_label">Stories</string>
+
 
     <string name="search.article_label">ARTICLE</string>
     <string name="search.author_label">AUTHOR</string>
     <string name="search.topic_label">TOPIC</string>
     <string name="search.video_label">VIDEO</string>
+
     <string name="search.show_more">SHOW MORE</string>
     <string name="search.article_topic_tab_label">ARTICLES</string>
     <string name="search.author_tab_label">AUTHORS</string>
+
     <string name="search.article_no_result">No topics found.</string>
     <string name="search.author_no_result">No authors found.</string>
-
     <string name="search_topics.toolbar_title">SELECT CATEGORIES</string>
+
     <string name="search_topics.hint">Search with Topics</string>
+
     <string name="search_topics.title">CATEGORIES</string>
 
     <string name="subscribe_topics.toolbar.title">SELECT CATEGORIES</string>
     <string name="subscribe_topics.cancel">CANCEL</string>
     <string name="subscribe_topics.save">SAVE</string>
     <string name="subscribe_topics.toast_topic_updated">Successfully updated the list of followed topics.</string>
-
     <string name="myprofile.following_label">FOLLOWING</string>
     <string name="myprofile.followers_label">FOLLOWERS</string>
     <string name="myprofile.section.articles_label">ARTICLES</string>
     <string name="myprofile.section.short_story_label">100 WORD STORY</string>
     <string name="myprofile.section.videos_label">MOM VLOGS</string>
+
     <string name="myprofile.section.mom_bottom_label">Mom vlogs</string>
     <string name="myprofile.section.activity_label">ACTIVITY</string>
     <string name="myprofile.section.myranking_label">MY RANKING</string>
+
     <string name="myprofile.section.settings_label">SETTINGS</string>
     <string name="myprofile.section.signout_label">SIGNOUT</string>
     <string name="myprofile.rank_label">RANK</string>
-
     <string name="blogger_profile.follow_button">FOLLOW</string>
+
     <string name="blogger_profile.rank_in">RANK IN</string>
     <string name="blogger_profile.unfollow_button">FOLLOWING</string>
     <string name="blogger_profile.view_count_label">VIEWS</string>
@@ -457,8 +358,8 @@
     <string name="blogger_profile.section.myranking_label">MY RANKING</string>
     <string name="blogger_profile.top_3_article">TOP 3 ARTICLES</string>
     <string name="blogger_profile.rank_label">RANK</string>
-
     <string name="user_article.toolbar.title">ARTICLES</string>
+
     <string name="user_article.tabbar.published_label">PUBLISHED</string>
     <string name="user_article.tabbar.draft_label">DRAFTS</string>
     <string name="user_article.draft.saved_on">Saved on</string>
@@ -469,13 +370,12 @@
     <string name="user_article.draft.status_pending_approval">PENDING FOR APPROVAL</string>
     <string name="user_article.draft.status_unapproved">UNAPPROVED</string>
     <string name="user_article.draft.status_unpublished">UNPUBLISHED</string>
-
     <string name="app_settings.toolbar.title">SETTINGS</string>
+
     <string name="app_settings.tabbar.edit_prefs">EDIT PREFERENCES</string>
     <string name="app_settings.tabbar.lang_prefs">LANGUAGE PREFERENCES</string>
     <string name="app_settings.tabbar.change_password">CHANGE PASSWORD</string>
     <string name="app_settings.tabbar.edit_profile">EDIT PROFILE</string>
-
     <string name="app_settings.edit_profile.hint_fn">First Name</string>
     <string name="app_settings.edit_profile.hint_ln">Last Name</string>
     <string name="app_settings.edit_profile.hint_phone">Phone</string>
@@ -483,11 +383,13 @@
     <string name="app_settings.edit_profile.blog_title_label">Blog Heading</string>
     <string name="app_settings.edit_profile.family_detail_label">Family Details</string>
     <string name="app_settings.edit_profile.family_detail_desc">This is just to serve you better and provide you what really suits you. This info would just remain in our records.</string>
+
     <string name="app_settings.edit_profile.how_many_child">How many children do you have?</string>
     <string name="app_settings.edit_profile.gender">Gender</string>
     <string name="app_settings.edit_profile.dob">Date of Birth</string>
     <string name="app_settings.edit_profile.save">SAVE</string>
     <string name="app_settings.edit_profile.update_success">User profile updated successfully</string>
+
     <string name="app_settings.edit_profile.toast_fn_empty">First Name cannot be empty</string>
     <string name="app_settings.edit_profile.toast_blog_title_empty">Blog Title cannot be empty</string>
     <string name="app_settings.edit_profile.toast_user_bio_empty">Tell us ABOUT YOURSELF</string>
@@ -496,7 +398,6 @@
     <string name="app_settings.edit_profile.toast_incorrect_date">Please enter a valid date for kids birthday</string>
     <string name="app_settings.edit_profile.toast_empty_name_kid">Please enter a valid name for your kid</string>
     <string name="app_settings.edit_profile.toast_choose_gender">Please choose your child\'s gender</string>
-
     <string name="app_settings.edit_prefs.notifications">NOTIFICATIONS</string>
     <string name="app_settings.edit_prefs.subscriptions">SUBSCRIPTIONS</string>
     <string name="app_settings.edit_prefs.add_account">ADD ACCOUNTS</string>
@@ -509,11 +410,11 @@
     <string name="app_settings.edit_prefs.add_topics">ADD TOPICS</string>
     <string name="app_settings.edit_prefs.more_topics">MORE...</string>
     <string name="app_settings.edit_prefs.pref_lang">PREFERRED LANGUAGES</string>
+
     <string name="app_settings.edit_prefs.subscribe_top_reads">Subscribe to the Top Reads Of The Month</string>
     <string name="app_settings.edit_prefs.subscribe_trending_blog">Subscribe to the Trending Blog Of The Day</string>
     <string name="app_settings.edit_prefs.subscribe_momspresso">Subscribe to the Momspresso TV</string>
     <string name="app_settings.edit_prefs.subscribe_city_best">Subscribe to the Best In Your City</string>
-
     <string name="app_settings.change_pass.hint_current_pass">Current Password</string>
     <string name="app_settings.change_pass.hint_new_pass">New Password</string>
     <string name="app_settings.change_pass.hint_confirm_pass">Confirm Password</string>
@@ -523,10 +424,10 @@
     <string name="app_settings.change_pass.toast_confirm_pass_match">New passwords do not match</string>
     <string name="app_settings.change_pass.pass_update_fail">Current password is incorrect</string>
     <string name="app_settings.change_pass.pass_update_success">Password updated successfully</string>
-
     <string name="blog_setup.toolbar.title">SETUP A BLOG</string>
     <string name="blog_setup.get_started_label">LET\'S GET YOU STARTED FOR YOUR FIRST BLOG</string>
     <string name="blog_setup.one_time_label">Setup a blog is a one time process.</string>
+
     <string name="blog_setup.okay">OKAY</string>
     <string name="blog_setup.blog_title_label">BLOG TITLE</string>
     <string name="blog_setup.blog_title_desc">This is like a title of your digital book and encompasses a description of all your blog posts that you\'ll be publishing here. Eg: Mums diary, My monologue.</string>
@@ -536,9 +437,9 @@
     <string name="blog_setup.profile_pic_label">PROFILE PICTURE</string>
     <string name="blog_setup.profile_pic_desc">This is visible to your readers and helps them associate with your writing.</string>
     <string name="blog_setup.your_details">YOUR DETAILS</string>
+
     <string name="blog_setup.hint_phone">Phone Number</string>
     <string name="blog_setup.save_publish">SAVE &amp; PUBLISH</string>
-
     <string name="ranking.toolbar.title">MY RANKING</string>
     <string name="ranking.improve_view.title">ABOUT</string>
     <string name="ranking.tabs_your_rank_label">YOUR RANK</string>
@@ -551,6 +452,7 @@
     <string name="ranking.page_views_label">PAGE VIEWS: </string>
     <string name="ranking.engagement">ENGAGEMENTS</string>
     <string name="ranking.stats_like">LIKES</string>
+
     <string name="ranking.stats_shares">SHARES</string>
     <string name="ranking.stats_comments">COMMENTS</string>
     <string name="ranking.how_calculated">How is this calculated?</string>
@@ -558,38 +460,22 @@
     <string name="ranking.followers_label">FOLLOWERS</string>
     <string name="ranking.in">IN</string>
     <string name="ranking.toast_start_end_date">Start date must be less than end date</string>
-
     <string name="editor.publish">PUBLISH</string>
-
     <string name="add_article_topics.toolbar.title">CHOOSE TOPICS</string>
     <string name="add_article_topics.clear_all">CLEAR ALL</string>
     <string name="add_article_topics.min_topics">Please select atleast one topic to continue</string>
     <string name="add_article_topics.max_topics">You can choose a maximum of 8 topics</string>
     <string name="add_article_topics.apply">APPLY</string>
-
     <string name="choose_article_image.toolbar.title">CHOOSE IMAGE</string>
     <string name="choose_article_image.upload_photo">CLICK TO UPLOAD PHOTO</string>
     <string name="choose_article_image.publish">PUBLISH</string>
-
-    <string name="add_article_or_video.upload_video">ADD VIDEO</string>
+    <string name="add_article_or_video.upload_video">ADD VIDEO</string>`
     <string name="add_article_or_video.write_article">WRITE AN ARTICLE</string>
     <string name="add_article_or_video.suggested_topic">SUGGESTED TOPICS</string>
+
     <string name="add_article_or_video.become_blogger">BECOME A BLOGGER</string>
 
     <string name="become_blogger.get_started">LET\'S GET STARTED</string>
-    <string-array name="become_blogger_title_array">
-        <item>BECOME A BLOGGER</item>
-        <item>HOW CAN YOU CONTRIBUTE?</item>
-        <item>DO YOU GET PAID FOR YOUR CONTRIBUTION?</item>
-        <item>WHO CAN CONTRIBUTE?</item>
-    </string-array>
-    <string-array name="become_blogger_desc_array">
-        <item>You are one click away from sharing your thoughts, opinions, and stories on India\'s largest parenting community, in the language of your choice. With a reach of over 8 million Mums per month, your voice can be the source of hope, inspiration, comfort and knowledge.</item>
-        <item>You can share your parenting stories via the website or our iOS and Android app. Express yourself in the language of your choice - English, Hindi, Bengali, Marathi, Telugu or Tamil.</item>
-        <item>Momspresso does not pay each blogger on publishing their own posts. We do however offer paid writing assignments which are commissioned by brands. This is offered to bloggers based on the quality of content they produce.</item>
-        <item>Whether your story is about parenthood, womanhood, relationships, struggles, joys or personal well-being, this is the platform to write about it. Join the 5000+ Mums in seeking &amp; sharing advice, opinions and recommendations.\n Do refrain from publishing copied or \'slightly modified\' content.</item>
-    </string-array>
-
     <string name="upload_video.title">SHARE A MomVlog\n THAT CAPTURES #MOMLIFE</string>
     <string name="upload_video.desc">Parenting, Work, Relationships, Fitness, Recipes, Beauty&#8230; basically anything Inspiring from day to day life.</string>
     <string name="upload_video.desc1">Shoot the video and upload it right away from your Mobile.</string>
@@ -598,25 +484,27 @@
     <string name="moderation_or_share.way_to_go">WAY TO GO!</string>
     <string name="moderation_or_share.moderation_message">Your article is up for moderation. You\'ll receive an email within 24 hours regarding the status of the blog</string>
     <string name="moderation_or_share.publish_message">Congrats! Your blog has been published.\n Share it with your friends and family.</string>
+
     <string name="moderation_message">100WordStory under moderation.\n
 Thank you! We will be reviewing your story. You can expect to hear from us within the next 48 working hours. Meanwhile, you can still share your story with your friends!</string>
-
     <string name="moderation_or_share.later">MAYBE LATER</string>
     <string name="moderation_or_share.okay">OKAY</string>
     <string name="moderation_or_share.gplus_fail">Unable to share with google plus.</string>
+
     <string name="moderation_or_share.whatsapp_fail">Unable to share with whatsapp.</string>
     <string name="moderation_or_share.facebook_fail">Unable to share with facebook.</string>
     <string name="moderation_or_share.insta_fail">Unable to share with instagram.</string>
+
     <string name="moderation_or_share.whatsapp_not_installed">Whatsapp has not been installed.</string>
     <string name="moderation_or_share.insta_not_installed">Instagram has not been installed.</string>
     <string name="moderation_or_share.twitter_fail">Unable to share with twitter.</string>
-
     <string name="complete_blogger_profile.complete_label">COMPLETE YOUR BLOGGERS PROFILE</string>
+
     <string name="complete_blogger_profile.paid_eligibility">Be eligible for paid writing assignments.\n All this information is safe with us.</string>
     <string name="complete_blogger_profile.save">SAVE</string>
     <string name="complete_blogger_profile.incorrect_date">Please choose correct date for date of birth.</string>
-
     <string name="add_video_details.title_hint">ENTER A TITLE FOR THE VIDEO</string>
+
     <string name="add_video_details.mute_label">MUTE SOUND</string>
     <string name="add_video_details.add_music">ADD MUSIC</string>
     <string name="add_video_details.remove">REMOVE</string>
@@ -624,23 +512,24 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="add_video_details.save_upload">SAVE &amp; UPLOAD</string>
     <string name="add_video_details.toolbar.title">UPLOAD A VIDEO</string>
     <string name="add_video_details.audio_picker.title">ADD MUSIC</string>
-
     <string name="video_progress.uploading_label">UPLOADING ...</string>
     <string name="video_progress.uploading_msg">Please do not exit or kill the app, it will cancel the upload automatically.</string>
+
     <string name="video_progress.way_to_go">Way to go!</string>
     <string name="video_progress.success_msg">Video has been successfully uploaded and will be moderated within 2 working days. We will notify you once it is moderated.
 </string>
     <string name="video_progress.okay">Okay, got it.</string>
     <string name="video_progress.uploading_failed">Uploading Failed.</string>
+
     <string name="video_progress.uploading_error">Error occurred while uploading your video. Please try again.</string>
     <string name="video_progress.progress_lost_msg">Your upload progress will be lost. Are you sure you want to exit?</string>
-
     <string name="user_activities.toolbar.title">SUGGESTED TOPICS</string>
     <string name="user_activities.tabs.recommended">LIKED</string>
     <string name="user_activities.tabs.bookmark">BOOKMARKS</string>
     <string name="user_activities.tabs.watch_later">WATCH LATER</string>
     <string name="user_activities.tabs.comment">COMMENTS</string>
     <string name="user_activities.bookmarks.remove">REMOVE</string>
+
     <string name="user_activities.bookmarks.by">By</string>
     <string name="user_activities.comments.saved_on">Saved on:</string>
     <string name="user_activities.comments.edit">EDIT</string>
@@ -648,61 +537,62 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="user_activities.recommended.no_recommendations">You have not recommended any article yet.</string>
     <string name="user_activities.bookmarks.no_bookmarks">No article has been bookmarked yet.</string>
     <string name="user_activities.watch_later.no_watch_later">You have not saved any videos yet.</string>
-
     <string name="explore.section.events">EVENTS</string>
+
     <string name="explore.section.resources">RESOURCES</string>
     <string name="explore.section.top_things">TOP THINGS TO DO</string>
     <string name="explore.section.no_resources">We do not have any events or resources for your city at present.</string>
     <string name="explore.events.trending_lbl">TRENDING EVENTS</string>
     <string name="explore.events.featured_lbl">FEATURED EVENTS</string>
     <string name="explore.events.upcoming_lbl">UPCOMING EVENTS</string>
-
     <string name="all_videos.toolbar.title">VIDEOS</string>
     <string name="all_videos.toolbar.title.homepage">Videos</string>
     <string name="all_videos.tabbar.momspresso_label">MOMSPRESSO TV</string>
     <string name="all_videos.tabbar.funny_label">MOM VLOGS</string>
     <string name="all_videos.funny_videos.no_videos">No mom vlogs added.</string>
-
     <string name="notification.read_all">Read All</string>
     <string name="notification.no_notification">No notifications</string>
 
     <string name="user_funny_video.toolbar.title">MOM VLOGS</string>
     <string name="user_funny_video.published_on">Published on: %1$s</string>
-
     <string name="article_listing.toolbar.title_recent">RECENT</string>
     <string name="article_listing.toolbar.title_popular">POPULAR</string>
     <string name="article_listing.toolbar.title_trending">TRENDING</string>
     <string name="article_listing.toolbar.title_for_you">FOR YOU</string>
     <string name="article_listing.toolbar.title_todays_best">TODAY\'S BEST</string>
-    <string name="article_listing.toolbar.title_editor_picks">EDITOR\'S PICKS</string>
 
+    <string name="article_listing.toolbar.title_editor_picks">EDITOR\'S PICKS</string>
     <string name="sort.recent">RECENT</string>
     <string name="sort.popular">POPULAR</string>
-
     <string name="city_picker.toolbar.title">Choose City</string>
-
     <string name="rate_now">RATE NOW</string>
+
     <string name="rate_us.dialog.title">RATE OUR APP?</string>
     <string name="rate_us.dialog.not_now">NOT NOW</string>
+
     <string name="rate_us.dialog.message1">If you enjoy using the Momspresso app, please take a moment to rate it.</string>
     <string name="rate_us.dialog.message2">Thank you for your support !!!</string>
 
     <string name="suggested_topic.start_writing">START WRITING</string>
-
     <string name="no_articles_found">No articles found</string>
     <string name="check_out_blog">Momspresso\n\nCheck out this interesting blog post\n</string>
     <string name="check_out_short_story">Momspresso\n\nCheck out this interesting short story\n</string>
     <string name="contributors">Contributors</string>
     <string name="contributor_in">Contributors in</string>
+
     <string name="recent_article">RELATED ARTICLES</string>
     <string name="upload_bigger_image">Please upload bigger image</string>
+
     <string name="upload_min_width">Please upload image with minimum width of 720 pixels</string>
+
     <string name="image_upload_wait">Please wait while image is being uploaded</string>
     <string name="editor_title_empty">Title can\'t be empty</string>
     <string name="editor_body_empty">Body can\'t be empty</string>
     <string name="editor_title_char_limit">Unable to publish. Title should smaller than 150 characters</string>
     <string name="editor_body_min_words">Please write atleast 300 words to publish</string>
+
     <string name="draft_oops">Oops!</string>
+
     <string name="draft_not_saved">Draft could not be saved, your current changes will be lost if you exit now. Would you like to exit?</string>
     <string name="draft_save_success">Draft Successfully saved</string>
     <string name="verify_email">Mail sent to email address. Please click and verify</string>
@@ -714,7 +604,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="image_upload_fail">unable to upload image, please try again later</string>
     <string name="android_version_unsupported">This version of android is no more supported.</string>
     <string name="choose_mp4_file">please choose a .mp4 format file</string>
-
     <string name="article_listing.type.trending_label">TRENDING</string>
     <string name="article_listing.type.editor_label">EDITOR\'S PICKS</string>
     <string name="article_listing.type.todays_best_label">TODAY\'S BEST</string>
@@ -723,23 +612,22 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="article_listing.type.languages_label">LANGUAGES</string>
     <string name="article_listing.type.videos_label">VIDEOS</string>
     <string name="article_listing.type.recent_label">RECENT</string>
-
     <string name="lang_sel.welcome_msg">WELCOME TO MOMSPRESSO</string>
     <string name="lang_sel.sel_lang">SELECT A LANGUAGE TO VIEW YOUR APP</string>
     <string name="lang_sel.curr_lang">Current Language</string>
     <string name="lang_sel.app_lang_desc">You are using english as current language. Would you like to view this application in the same language?</string>
     <string name="lang_sel.yes">YES</string>
     <string name="lang_sel.select_more">SELECT MORE</string>
+
     <string name="lang_sel.continue">CONTINUE</string>
     <string name="lang_sel.choose_lang_toast">Please choose a language to continue</string>
-
     <string name="all_categories_label">ALL</string>
     <string name="view_more_profile">view more</string>
     <string name="campaign_maybe_later_text">Maybe later</string>
-
     <string name="language_label.english">English</string>
     <string name="language_label.hindi">हिंदी</string>
     <string name="language_label.marathi">मराठी</string>
+
     <string name="language_label.bengali">বাংলা</string>
     <string name="language_label.tamil">தமிழ்</string>
     <string name="language_label.telegu">తెలుగు</string>
@@ -747,13 +635,12 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="language_label.malayalam">മലയാളം</string>
     <string name="language_label.gujarati">ગુજરાતી </string>
     <string name="language_label.punjabi">ਪੰਜਾਬੀ</string>
-
-
     <string name="choose_pref_lang">Choose your preferred language</string>
-    <string name="choose_pref_lang.cancel">CANCEL</string>
 
+    <string name="choose_pref_lang.cancel">CANCEL</string>
     <string name="guide.language_tour">You can view this app in any \nlanguage of your choice</string>
     <string name="guide.settings_tour">Manage the languages you want to read the \narticles in</string>
+
     <string name="guide.trending_tour">Tap here to access the menu</string>
     <string name="guide.quick_link_tour">With our new quick links, you can discover content easier and faster!</string>
     <string name="guide.topics_tour">These topics allow you to read\n and explore all facets of parenting</string>
@@ -762,16 +649,33 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="guide.listen_tour">Click here to listen to this blog</string>
     <string name="guide.groups_tour">Join Support Groups. Ask questions (even anonymously) \nand get answers from the community.</string>
     <string name="guide.vlogs_tour">Watch your favourite Mom Vlogs. \nTake part in weekly video challenges.</string>
-
     <string name="author_type.blogger">BLOGGER</string>
     <string name="author_type.editor">EDITOR</string>
+
+
     <string name="author_type.editorial">EDITORIAL TEAM</string>
     <string name="author_type.collaboration">VIDEO COLLABORATOR</string>
+
     <string name="author_type.expert">EXPERT</string>
     <string name="author_type.featured">FEATURED AUTHOR</string>
     <string name="author_type.user">USER</string>
-
     <string name="no_article.be_first">Be the first one to write articles in this category!</string>
+    <string name="groups.join_label">GROUPS YOU ARE A MEMBER OF</string>
+    <string name="groups.reported_content">REPORTED CONTENT</string>
+    <string name="groups.moderator_invitation">INVITE TO BE A MODERATOR</string>
+    <string name="groups.unblock_member">UNBLOCK MEMBER</string>
+    <string name="groups.block_member">BLOCK MEMBER</string>
+    <string name="groups.remove_post">REMOVE POST</string>
+
+    <string name="groups.save_post">SAVE POST</string>
+    <string name="groups.delete_post">DELETE POST</string>
+    <string name="groups.turn_notification_on">Turn On Notification</string>
+    <string name="groups.turn_notification_off">Turn Off Notification</string>
+    <string name="groups.enable_comment">ENABLE COMMENTS</string>
+    <string name="groups.disable_comment">DISABLE COMMENTS</string>
+    <string name="groups.report_post">REPORT THIS POST</string>
+
+    <string name="groups.block_this_user">BLOCK THIS USER</string>
 
     <!--<string name="groups.sections.about">ABOUT</string>-->
     <!--<string name="groups.sections.discussions">DISCUSSION</string>-->
@@ -796,27 +700,12 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <!--<string name="groups.anonymous">ANONYMOUS</string>-->
     <!--<string name="groups.membership_request_msg">We have received your request for joining this group. Your membership will be confirmed once it is approved by the moderators of this group.</string>-->
 
-    <string name="groups.join_label">GROUPS YOU ARE A MEMBER OF</string>
-    <string name="groups.reported_content">REPORTED CONTENT</string>
-    <string name="groups.moderator_invitation">INVITE TO BE A MODERATOR</string>
-    <string name="groups.unblock_member">UNBLOCK MEMBER</string>
-    <string name="groups.block_member">BLOCK MEMBER</string>
-    <string name="groups.remove_post">REMOVE POST</string>
-    <string name="groups.save_post">SAVE POST</string>
-    <string name="groups.delete_post">DELETE POST</string>
-    <string name="groups.turn_notification_on">Turn On Notification</string>
-    <string name="groups.turn_notification_off">Turn Off Notification</string>
-    <string name="groups.enable_comment">ENABLE COMMENTS</string>
-    <string name="groups.disable_comment">DISABLE COMMENTS</string>
-    <string name="groups.report_post">REPORT THIS POST</string>
-    <string name="groups.block_this_user">BLOCK THIS USER</string>
     <string name="groups.pin_post">PIN THIS POST TO TOP</string>
     <string name="groups.unpin_post">UNPIN THIS POST</string>
     <string name="groups.all_groups">ALL GROUPS</string>
     <string name="groups.other_groups">OTHER GROUPS</string>
     <string name="groups_groups_myfeed">GROUPS</string>
     <string name="groups_enable_notification">ENABLE NOTIFICATION</string>
-
     <string name="groups.groups">GROUPS</string>
     <string name="groups.reported_by">Reported By</string>
     <string name="groups.persons">Persons</string>
@@ -831,6 +720,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="groups.exit_gp">You can choose to exit group at any point in time</string>
     <string name="groups.sure_leave_gp">Are you sure you want to leave this group</string>
     <string name="groups.view_all_reported">View all the reported content for this group</string>
+
     <string name="groups.leave">LEAVE</string>
     <string name="groups.membership_req">MEMBERSHIP REQUEST</string>
     <string name="groups.now_member_gp">You are now member of the group</string>
@@ -872,9 +762,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="groups.post_label">POST</string>
     <string name="groups.edit_post">EDIT POST</string>
     <string name="groups.total_votes">TOTAL VOTES: %1$s</string>
-
     <string name="no_story.be_first">Be the first one to write stories in this category!</string>
-
     <string name="random_text">Your trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight or through the road. Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
     <string name="random_100_words">Trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
     <string name="short_s.add_story">WRITE A 100 WORD STORY</string>
@@ -888,7 +776,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="short_s.no_drafts">No short story drafted as yet</string>
     <string name="short_s.no_published">No short story published as yet</string>
     <string name="view_group">View</string>
+
     <string name="replies">Replies</string>
+
     <string name="short_s.view_replies">View replies</string>
     <string name="short_s.choose_topic">Please choose at least one topic to continue</string>
     <string name="short_s.add_comment_fail">Failed to add comment. Please try again</string>
@@ -897,7 +787,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="short_s.add_reply_fail">Failed to add reply. Please try again</string>
     <string name="short_s.edit_reply_fail">Failed to edit reply. Please try again</string>
     <string name="short_s.delete_reply_fail">Failed to delete reply. Please try again</string>
-
     <string name="report.reason">Report Content because</string>
     <string name="report.abuse">It\'s abusive</string>
     <string name="report.religious">It hurts religious feeling</string>
@@ -905,23 +794,22 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="report.spam">It\'s Spam</string>
     <string name="report.not_relevant">Any other</string>
     <string name="reply">Reply</string>
-
     <string name="reported.spam">Reported as Spam</string>
     <string name="reported.abuse">Reported as Abusive</string>
     <string name="reported.uninteresting">Reported as Inappropriate</string>
     <string name="reported.religious">Reported as Hurts Religious Sentiment</string>
     <string name="reported.other">Reported as Other</string>
-
     <string name="groups.join_support_gp">JOIN SUPPORT GROUP</string>
     <string name="groups.not_alone">#YOUARENOTALONE</string>
-    <string name="choose_account">Choose an account to continue</string>
 
+    <string name="choose_account">Choose an account to continue</string>
     <string name="read_more">Read More</string>
     <string name="read_less">Read Less</string>
     <string name="profile_completion">Profile Completion</string>
     <string name="update">UPDATE</string>
     <string name="improve_reachability">Improve the reachability by updating the bio.</string>
     <string name="profile">Profile</string>
+
     <string name="create_content">Every mother has a story. What\'s yours? Share it as a Blog, a 100 Word Story, or a Video.</string>
     <string name="write_about_yourself">Write about yourself</string>
     <string name="child_details">Child Details</string>
@@ -931,9 +819,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="navigation_bar.home">Home</string>
     <string name="navigation_bar.discover">Discover</string>
     <string name="navigation_bar.create">Create</string>
+
     <string name="navigation_bar.notifications">Notifications</string>
     <string name="navigation_bar.groups">Groups</string>
-
     <string name="coachmark.home">Welcome to Momspresso! You can explore the app in the language of your choice.</string>
     <string name="coachmark.explore">What do you want to do today? Read a 100 Word Story or watch Videos. You can also explore the various categories and read blogs</string>
     <string name="coachmark.create">Add your #100WordStory, blog post, or your videos. View/ edit your drafts too.</string>
@@ -943,11 +831,13 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="coachmark.app_setting">You can edit your app preferences and language preferences at one place. Subscribe to notifications and categories here.</string>
     <string name="coachmark.publish">View your published articles, stories, and mom vlogs at one place.</string>
     <string name="mobile">MOBILE NO</string>
+
     <string name="continue_writing">Continue Writing(Drafts)</string>
     <string name="app_settings">App Settings</string>
     <string name="create_new">Create New</string>
     <string name="name_optional">NAME (optional)</string>
     <string name="name">Name</string>
+
     <string name="updated">Updated :</string>
     <string name="full_name">FULL NAME</string>
     <string name="email_and_password">EMAIL AND PASSWORD</string>
@@ -956,6 +846,20 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="new_label">NEW</string>
     <string name="view_profile">view profile</string>
     <string name="enter_valid_email">Please enter valid email id</string>
+    <string name="short_seconds">sec</string>
+    <string name="megabyte">MB</string>
+    <string name="kilobyte">KB</string>
+    <string name="choose_video_category">Choose Video Category</string>
+    <string name="time_limit">(Maximum Time %1$s)</string>
+    <string name="upload_larger_video">Oops! Your video should be at least 5 seconds long.</string>
+    <string name="seconds_label">seconds</string>
+    <string name="minutes_label">minutes</string>
+    <string name="women_only">Oops! This section is for women only. You can, however, continue to read our other content</string>
+    <string name="check_out_momvlog">Momspresso\n\nCheck out this interesting video\n</string>
+    <string name="take_picture_from_camera">Take picture from camera</string>
+    <string name="select_an_image">Select an image</string>
+    <string name="related_videos">RELATED VIDEOS</string>
+    <string name="popular_videos">POPULAR VIDEOS</string>
 
 
     <!--<string name="application_name">ExoPlayer</string>-->
@@ -985,27 +889,12 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <!--<string name="random_abr">Enable random ABR</string>-->
     <!--<string name="choose_video_category">Choose Video Category</string>-->
 
-    <string name="short_seconds">sec</string>
-    <string name="megabyte">MB</string>
-    <string name="kilobyte">KB</string>
-    <string name="choose_video_category">Choose Video Category</string>
-    <string name="time_limit">(Maximum Time %1$s)</string>
-    <string name="upload_larger_video">Oops! Your video should be at least 5 seconds long.</string>
-    <string name="seconds_label">seconds</string>
-    <string name="minutes_label">minutes</string>
-    <string name="women_only">Oops! This section is for women only. You can, however, continue to read our other content</string>
-    <string name="check_out_momvlog">Momspresso\n\nCheck out this interesting video\n</string>
-    <string name="take_picture_from_camera">Take picture from camera</string>
-    <string name="select_an_image">Select an image</string>
-    <string name="related_videos">RELATED VIDEOS</string>
-    <string name="popular_videos">POPULAR VIDEOS</string>
     <string name="delete_comment">DELETE COMMENT</string>
     <string name="edit_comment">EDIT COMMENT</string>
     <string name="report">REPORT</string>
     <string name="select_atleast_one_topic">Please choose atleast one topic to continue</string>
     <string name="your_article_is_successfully_bookmarked">Your article is successfully bookmarked.</string>
     <string name="successfully_updated">Successfully updated!</string>
-
     <string name="submit_story_text">SUBMIT YOUR STORY </string>
     <string name="this_week_challenge">This Week\'s Challenge</string>
     <string name="previous_week_challenge">Previous Week\'s Challenges</string>
@@ -1014,19 +903,14 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="challenge_write_story_for_this_picture">Write Your Story Around This Picture</string>
     <string name="choose_challenge_label">TAKE THE CHALLENGE</string>
     <string name="start_writing">Start Writing </string>
-
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="DOB">Date Of Birth</string>
-
-    <!--video challenges-->
-
     <string name="submit_video_text">SUBMIT YOUR VIDEO </string>
     <string name="no_video.be_first">Be the first one to upload videos in this category!</string>
     <string name="your_mom_vlog">WHAT\'S YOUR MOMVLOG</string>
+
     <string name="use_picture_word_to_upload_one">Use The Picture ,Word, Phrase Or Video Given Below To Upload One</string>
-
-
     <string name="last_name">LAST NAME</string>
     <string name="first_name">FIRST NAME</string>
     <string name="phone">PHONE</string>
@@ -1034,15 +918,18 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="not_working">Not Working</string>
     <string name="working">Working</string>
     <string name="save_continue"><![CDATA[SAVE & CONTINUE]]></string>
+
     <string name="momspresso_rewards">MyMoney</string>
     <string name="rewards_program">MyMoney</string>
     <string name="mymoney_profile">MyMoney Profile</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!--video challenges-->
+
     <string name="add_website">ADD WEBSITE</string>
     <string name="add_youtube">Add Youtube channel link</string>
     <string name="add_twitter">Add Twitter handle</string>
     <string name="kids_number">"KID %d DETAIL</string>
+
 
     <string name="hold_to_release">Hold to record, Release to send</string>
     <string name="slide_to_cancel">Slide to cancel</string>
@@ -1054,10 +941,13 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="rewards_enter_otp">Enter OTP</string>
     <string name="rewards_confirm">Confirm</string>
     <string name="rewards_first_name">First Name</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="rewards_last_name">Last Name</string>
     <string name="rewards_verify">Verify</string>
     <string name="rewards_phone">Phone</string>
     <string name="rewards_email">Email</string>
+
     <string name="rewards_male">Male</string>
     <string name="rewards_female">Female</string>
     <string name="rewards_location">Location</string>
@@ -1093,48 +983,42 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="rewards_add_child">Add More</string>
     <string name="rewards_kid_detail">Child detail</string>
     <string name="app_name">Momspresso</string>
-
-
-    //new Video Challenge Ui Strings
     <string name="video_challenge_live_text">LIVE</string>
     <string name="video_challenge_text">CHALLENGES</string>
     <string name="choose_video_categories_text">CATEGORIES</string>
     <string name="dialog_header_choose_sort_type">Sort by</string>
     <string name="reply_groups">Reply</string>
-
-
-    //groupdetail Activity toast String
     <string name="group_detail_activity_toast_text">You can also post anonymously </string>
     <string name="group_add_comment_text">ADD COMMENT</string>
     <string name="group_invite_text">Invite</string>
     <string name="group_comment_type_here_text">Type here</string>
     <string name="group_comment_start_type_here_text">Start typing</string>
     <string name="group_comment_be_the_first_text">Be the first one to comment</string>
-
-    //unsupported image
     <string name="unsupported_image">We are not able to support this image. Please try again with a different one.</string>
-
-    //tooltip groups
     <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>
     <string name="audio_post">AUDIO</string>
+
+
+    //new Video Challenge Ui Strings
     <string name="rewards_instagram_handler">Enter your Instagram handle</string>
     <string name="rewards_facebook_handler">Connect your Facebook</string>
     <string name="rewards_participate_and_earn"><![CDATA[Participate & Earn]]></string>
     <string name="notification">Notification</string>
     <string name="about_video">About</string>
+
+
+    //groupdetail Activity toast String
     <string name="story_text_title_hindi">विचारसागर</string>
     <string name="story_text_description_hindi">यहाँ आप सुविचार (कोट्स) लिख सकते हैं.</string>
     <string name="campaign_name">Campaign Name \n Facebook Campaign</string>
-
-
-    //rewardsCampaignString
     <string name="reward_campaign_add_proof">ADD PROOF</string>
     <string name="select_payment_method">SELECT YOUR \n PREFERRED METHOD OF PAYMENT</string>
-
-
-    //campaigndetails
     <string name="campaign_proofs_approved">PROOFS APPROVED</string>
+
+    //unsupported image
     <string name="campaign_detail_toolbar_text">CAMPAIGN DETAILS</string>
+
+    //tooltip groups
     <string name="campaign_read_this_first">READ THIS FIRST"</string>
     <string name="campaign_discription">DESCRIPTION</string>
     <string name="deliverable_types">DELIVERABLE TERMS</string>
@@ -1145,8 +1029,14 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="campaign_details_approved">APPROVED</string>
     <string name="campaign_details_applied">APPLIED</string>
     <string name="campaign_details_expired">EXPIRED</string>
+
+
+    //rewardsCampaignString
     <string name="campaign_details_completed">COMPLETED</string>
     <string name="campaign_details_invite_only">INVITATION ONLY</string>
+
+
+    //campaigndetails
     <string name="campaign_details_rejected">REJECTED</string>
     <string name="campaign_list_proof_moderation">PROOF SUBMITTED</string>
     <string name="campaign_list_proof_reject">PROOF REJECTED</string>
@@ -1154,7 +1044,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="start_date">Start Date</string>
     <string name="campaign_details_not_eligible">Not Eligible</string>
     <string name="campaign_details_ineligible">INELIGIBLE</string>
-
     <string name="label_campaign_expired">This campaign is now closed.</string>
     <string name="label_campaign_not_eligible">Share the campaign with your friends.</string>
     <string name="label_campaign_checking_eligiblity">We are checking for your eligibility. Please try again after sometime</string>
@@ -1163,13 +1052,10 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="label_campaign_applied">We will notify you within 7 days on the status of your application.</string>
     <string name="label_campaign_apply"><![CDATA[By clicking on Apply Now, you agree to the <a href="https://www.momspresso.com/home/terms">Terms &amp; Conditions</a>.]]></string>
     <string name="label_campaign_completed">Congratulations! Your submission is approved. Your payment will be processed within 14 days.</string>
-
-
     <string name="label_campaign_not_started">Campaign starts on </string>
     <string name="label_campaign_reject">Please explore other campaigns to participate and earn.</string>
     <string name="label_campaign_proof_moderation">We will check your submitted proofs within 7 days. To add more, you can click below.</string>
     <string name="label_campaign_proof_reject">Your proofs were rejected. Please check email for details.To resubmit after corrections, click below.</string>
-
     <string name="toast_not_elegible">Sorry, you are not eligible for this campaign.</string>
     <string name="checking_elegiblity">We are checking your eligiblity</string>
 
@@ -1181,13 +1067,16 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="toast_campaign_reject">Sorry, we have not been able to approve your application.</string>
     <string name="toast_campaign_invite">Sorry, this campaign is by invitation only.</string>
     <string name="toast_campaign_invite_thankyou">Thank you, we will get in touch with you.</string>
+
+
     <string name="toast_campaign_proof_moderation">We will check your submitted proofs within 7 days. </string>
     <string name="toast_campaign_proof_reject">Your proof was rejected!</string>
-
     <string name="detail_bottom_apply_now">APPLY NOW</string>
     <string name="detail_bottom_applied">APPLIED</string>
+
     <string name="application_under_review">APPLICATION UNDER REVIEW</string>
     <string name="proofs_under_review">PROOFS UNDER REVIEW</string>
+
     <string name="detail_bottom_share">SHARE</string>
     <string name="payment_in_progress">PAYMENT IN PROCESS</string>
     <string name="detail_bottom_share_momspresso_reward">Share MyMoney</string>
@@ -1195,12 +1084,10 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="payment_done">PAYMENT DONE</string>
     <string name="proof_sublitted">"PROOFS SUBMITTED"</string>
     <string name="detail_bottom_submit_proof">SUBMIT PROOF</string>
-
-
-    //campaigndetaildialog
     <string name="dialog_based_on_profile">Based on your Profile</string>
     <string name="dialog_you_can_get_reward_of">You can get reward of</string>
     <string name="campaign_starts_on">Starts On</string>
+
     <string name="campaign_ends_on">Ends On</string>
     <string name="view_mymoney">View MyMoney for this campaign</string>
     <string name="dialog_thanks_for_interest">Thanks for your interest!</string>
@@ -1212,6 +1099,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="dialog_register_proof_submitted_text">Your proofs have been submitted.</string>
     <string name="apply_refer_code">HAVE A REFERRAL CODE?</string>
     <string name="get_help">Get Help</string>
+
+
+    //campaigndetaildialog
     <string name="refer_code">REFERRAL CODE</string>
     <string name="apply_code_error">Code already used. Please enter a different one</string>
     <string name="dialog_congratulations">Congratulations!</string>
@@ -1223,13 +1113,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="action_settings">Settings</string>
     <string name="my_money_dashboard">MY MONEY DASHBOARD</string>
     <string name="total_earning">Total Earnings</string>
-
-
     <string name="social_page_add_social_accounts">ADD SOCIAL ACCOUNTS</string>
     <string name="social_page_add_website_hint">www.momvlogger.com/sheetal</string>
     <string name="social_page_add_website">ADD WEBSITE</string>
-
-
     <string name="drawer_referra_mymoney">Refer MyMoney</string>
     <string name="referral_screen_text">Invite a friend to join MyMoney by sharing your referral code. Both of you will earn Rs. 25 once she has successfully completed a MyMoney campaign.</string>
     <string name="share_referral_screen">Share your referral code and start earning</string>
@@ -1241,9 +1127,13 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="rewards_tab_fragment_panCard">PAN CARD DETAILS</string>
     <string name="rewards_tab_fragment_myEarning">MY EARNING</string>
     <string name="rewards_tab_fragment_referrer_myMoney">refer mymoney</string>
+
+
     <string name="rewards_pancard_toolbar_text">PAN CARD DETAIL</string>
     <string name="reawrds_pancard_detail_text">Please enter your PAN card details</string>
     <string name="rewards_pancard_note_detail">In case of Invalid/No Pan card attached, 20% tax will be deducted from the payment.</string>
+
+
     <string name="rewards_pancard_Note_textview">NOTE :</string>
     <string name="rewards_payment_submission_enter_bank_detail_text">PLEASE ENTER YOUR BANK DETAILS</string>
     <string name="rewards_bank_detail_holder_nmae_text">Account Holder’s Name</string>
@@ -1255,67 +1145,192 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="rewards_payment_history">Payment History</string>
     <string name="participate_on_this_campaign">Please participate in ongoing campaigns to start earning</string>
     <string name="participate_now">Participate now</string>
-
-
-    //campaignListing
     <string name="campaign_listing_mymoney_campaign_toolbar_text">MYMONEY CAMPAIGNS</string>
     <string name="brows_participate_earn_text">Browse. Participate. Earn</string>
     <string name="participate_text">REGISTER</string>
     <string name="total_payout">Total Payout</string>
-
-
-    //addProof
     <string name="add_proof">ADD PROOF</string>
     <string name="please_add_image_proof">Please add image proofs</string>
     <string name="please_submit">Please submit</string>
     <string name="please_add_link">Please add a link</string>
     <string name="proof_instructions">Proof Instructions</string>
     <string name="faq">FAQS</string>
-
-    //cangratulaTION Screen
     <string name="congratulation_text">CONGRATULATIONS!</string>
     <string name="thanks_for_submitting">Thanks for submitting proof and payment details</string>
     <string name="be_in_touch_text">We will review and be in touch in next 7 working days till then you can take part in other interesting campaigns</string>
     <string name="share_joy">SHARE THE JOY</string>
+
+
+    //campaignListing
     <string name="continue_browsing_campaign">CONTINUE BROWSING CAMPAIGNS</string>
-
-
-    //trackerActivity
     <string name="tracker_Activity_submit_corrected_proof">Please submit corrected proofs again.</string>
     <string name="tracker_Activity_expected_date">Expected Date</string>
     <string name="tracker_activity_proof_submitted_rejected">PROOFS SUBMITTED REJECTED</string>
 
+
+    //addProof
     <string name="voise_post_group">Use your voice\nRecord your thoughts or ask a question in your voice</string>
     <string name="poll_post_group">Create a poll\nGet community’s opinion on what matters to you</string>
     <string name="blog_post_group">Write something\nAsk a question or share your thought</string>
-
     <string name="mom_vlog_banner_title">Mom Vlogs Challenge Alert</string>
     <string name="mom_vlog_banner_subtitle">Win prizes up to Rs. 10,000</string>
     <string name="mom_vlog_banner_button">Upload Video</string>
 
+    //cangratulaTION Screen
     <string name="join_group">Join Group</string>
-
-    //Join group dialog screen
     <string name="join_dialog_heading">Write your first post</string>
     <string name="join_dialog_ask_question">Ask a question or share your thoughts</string>
-
     <string name="user_funny_video.edit_title">Edit Title</string>
     <string name="user_funny_video.disable_comment">Disable Comments</string>
+
+
+    //trackerActivity
     <string name="user_funny_video.vlog_title_hint">Your Vlog Title Here</string>
     <string name="editor_saving">Saving &#8230;</string>
     <string name="select_thumbnail">Select a thumbnail for your vlog</string>
+
     <string name="audio_delay_msg">Please wait while your audio is loaded.</string>
     <string name="write_something">Write Something</string>
     <string name="join_dialog_post">POST</string>
+
     <string name="spell_check_error">We found a few errors in the article</string>
     <string name="application_end_date">Application End Date</string>
     <string name="submission_end_date">Submission End Date</string>
+
     <string name="speech_prompt">Say something&#8230;</string>
+
+    //Join group dialog screen
     <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
     <string name="submit_article">Submit Your Article</string>
 
-    <!--Unapply Campaign-->
     <string name="unapply_campaign_dialog">Are you sure you want to cancel the application for this campaign ?</string>
+    <string name="tap_to_create">Tap to Create</string>
+    <string name="private_profile_read_article">Read Articles</string>
+    <string name="participate_earn_mymoney">Participate and earn in MyMoney campaigns</string>
+    <string-array name="improve_page_views_array">
+        <item>Interlink your article to other blog posts</item>
+        <item>Be consistent and write weekly</item>
+        <item>Make a point in every blog post that you publish</item>
+        <item>Use catchy titles</item>
+        <item>Spell check and double check your blog posts for any errors</item>
+        <item>Focus on the tone and the words that you use</item>
+        <item>Respond to blog comments</item>
+    </string-array>
+    <string-array name="popup_language_list">
+        <item>English</item>
+        <item>हिंदी</item>
+        <item>मराठी</item>
+        <item>বাংলা</item>
+        <item>தமிழ்</item>
+        <item>తెలుగు</item>
+        <item>ಕನ್ನಡ</item>
+        <item>മലയാളം</item>
+        <item>ગુજરાતી</item>
+        <item>ਪੰਜਾਬੀ</item>
+    </string-array>
+    <string-array name="popup_durables_list">
+        <item>Air Conditioner</item>
+        <item>Refrigerator</item>
+        <item>Car</item>
+        <item>Two wheeler</item>
+        <item>Air Purifier</item>
+        <item>Washing Machine</item>
+        <item>TV</item>
+        <item>Music System</item>
+        <item>Water Heater</item>
+        <item>Mobile phone</item>
+        <item>Camera</item>
+        <item>Microwave Oven</item>
+        <item>Laptop</item>
+    </string-array>
+    <string-array name="household_income">
+        <item>Select</item>
+        <item>Less than 1 lakh</item>
+        <item>1 lakh to 2.5 lakhs</item>
+        <item>2.5 lakhs to 5 lakhs</item>
+        <item>5 lakhs to 10 lakhs</item>
+        <item>10 lakhs to 20 lakhs</item>
+        <item>Above 20 lakhs</item>
+    </string-array>
+    <string-array name="number_of_child">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+    <string-array name="profession">
+        <item>Select</item>
+        <item>Full-time employee</item>
+        <item>Part-time employee</item>
+        <item>Business woman/ Entrepreneur</item>
+        <item>Freelancer</item>
+    </string-array>
+    <string-array name="popup_interest_list">
+        <item>Beauty and personal care</item>
+        <item>Child’s education</item>
+        <item>Family matters</item>
+        <item>Finances</item>
+        <item>Food (restaurants, new recipes etc.)</item>
+        <item>Health</item>
+        <item>Home care</item>
+        <item>Hygiene</item>
+        <item>Parenting</item>
+        <item>Travel</item>
+        <item>Upcoming social events</item>
+    </string-array>
+    <string-array name="rank_calculation_array">
+        <item>Your rank is calculated by a state-of-the-art algorithm which takes in the number of views your article has got, the number of times it has been shared on social media, number of comments it has got on different platforms and the number of articles you have written in the past week.</item>
+    </string-array>
+    <string-array name="improve_rank_array">
+        <item>Be consistent in your blogging - post a blog weekly</item>
+        <item>Promote your blog post on all the Facebook groups that you are part of</item>
+        <item>Seek an opinion from peers and edit the blog post accordingly</item>
+    </string-array>
+
+    <!--Unapply Campaign-->
+    <string-array name="improve_social_share_array">
+        <item>Share blog posts using the buttons for social sharing in your blog post</item>
+        <item>Add Social Plugins to your profile e.g. www.twitter.com/bloggername</item>
+        <item>Try to edit and focus on the content while sharing your blog post</item>
+        <item>Use appropriate hashtags</item>
+    </string-array>
+
+
+    <string-array name="increase_followers_array">
+        <item>Add a line urging readers to follow you at the end of every blog, if they enjoyed reading it</item>
+        <item>Ask readers who frequently engage with your blog through comments, to follow you</item>
+        <item>Share your blog across all networks you are a part of, such as Facebook, Whatsapp and so on</item>
+    </string-array>
+    <string-array name="onboarding_title_array">
+        <item>Create a Blog</item>
+        <item>Enjoy Blogs in any of 9 Languages</item>
+        <item>Upload your Mom Vlogs or watch on the go</item>
+        <item>With Support Groups, you are not alone</item>
+        <item>Start earning with MyMoney!</item>
+    </string-array>
+    <string-array name="become_blogger_title_array">
+        <item>BECOME A BLOGGER</item>
+        <item>HOW CAN YOU CONTRIBUTE?</item>
+        <item>DO YOU GET PAID FOR YOUR CONTRIBUTION?</item>
+        <item>WHO CAN CONTRIBUTE?</item>
+    </string-array>
+    <string-array name="become_blogger_desc_array">
+        <item>You are one click away from sharing your thoughts, opinions, and stories on India\'s largest parenting community, in the language of your choice. With a reach of over 8 million Mums per month, your voice can be the source of hope, inspiration, comfort and knowledge.</item>
+        <item>You can share your parenting stories via the website or our iOS and Android app. Express yourself in the language of your choice - English, Hindi, Bengali, Marathi, Telugu or Tamil.</item>
+        <item>Momspresso does not pay each blogger on publishing their own posts. We do however offer paid writing assignments which are commissioned by brands. This is offered to bloggers based on the quality of content they produce.</item>
+        <item>Whether your story is about parenthood, womanhood, relationships, struggles, joys or personal well-being, this is the platform to write about it. Join the 5000+ Mums in seeking &amp; sharing advice, opinions and recommendations.\n Do refrain from publishing copied or \'slightly modified\' content.</item>
+    </string-array>
+
+
+
+
+
+    <string name="choose_from_gallery">Choose image from gallery</string>
+    <string name="capture_from_camera">Capture image from camera</string>
+    <string name="add_a_choice">Add a choice</string>
 
 </resources>
 

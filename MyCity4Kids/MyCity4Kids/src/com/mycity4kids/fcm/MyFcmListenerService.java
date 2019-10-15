@@ -42,6 +42,7 @@ import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.activity.SplashActivity;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
+import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -204,6 +205,33 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     String title = remoteMessage.getNotification().getTitle();
                     String body = remoteMessage.getNotification().getBody();
                     prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+
+                } else if (type.equalsIgnoreCase("momvlog_challenge_details")) {
+                    Intent intent;
+                    PendingIntent contentIntent;
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
+                        intent = new Intent(getApplicationContext(), SplashActivity.class);
+                        intent.putExtra("fromNotification", true);
+                        contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    } else {
+                        intent = new Intent(getApplicationContext(), NewVideoChallengeActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("fromNotification", true);
+                        intent.putExtra(Constants.CHALLENGE_ID, "" + pushNotificationModel.getChallengeId());
+                        intent.putExtra("mappedId", pushNotificationModel.getMapped_category());
+                        intent.putExtra("comingFrom", "vlog_listing");
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        // Adds the back stack
+                        stackBuilder.addParentStack(ArticleDetailsContainerActivity.class);
+                        // Adds the Intent to the top of the stack
+                        stackBuilder.addNextIntent(intent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    }
+                    String title = remoteMessage.getNotification().getTitle();
+                    String body = remoteMessage.getNotification().getBody();
+                    prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+
+
                 } else if (type.equalsIgnoreCase("article_details")) {
                     Intent intent;
                     PendingIntent contentIntent;

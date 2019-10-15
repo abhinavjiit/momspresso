@@ -7,8 +7,17 @@ public class ArticleDetailRequest {
     private String articleId;
     private String contentType;
     private String authorId;
+    private String type;
+    private String id;
     private String disableComment;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getDisableComment() {
         return disableComment;
@@ -40,5 +49,14 @@ public class ArticleDetailRequest {
 
     public void setAuthorId(String authorId) {
         this.authorId = authorId;
+    }
+
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

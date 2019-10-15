@@ -8,13 +8,17 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+
 import androidx.annotation.NonNull;
+
 import com.google.android.material.snackbar.Snackbar;
+
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -429,19 +433,9 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
             case R.id.tagImageView:
             case R.id.topicContainer:
                 Intent intent = new Intent(this, NewVideoChallengeActivity.class);
-                intent.putExtra("Display_Name", Display_Name);
-                intent.putExtra("screenName", "creation");
-                intent.putExtra("challenge", challengeId);
-                intent.putExtra("position", position);
-                intent.putExtra("maxDuration", max_Duration);
-                intent.putExtra("StreamUrl", activeStreamUrl);
-                intent.putExtra("topics", articledatamodelsnew.getParentName());
-                intent.putExtra("parentId", articledatamodelsnew.getParentId());
-                intent.putExtra("mappedCategory", mappedCategory);
-                intent.putExtra("StringUrl", activeImageUrl);
-                intent.putExtra("rules", info);
+                intent.putExtra("challenge", challengeId.get(position));
                 intent.putExtra("comingFrom", "chooseVideoCategory");
-                intent.putExtra("Topic", new Gson().toJson(articledatamodelsnew));
+                intent.putExtra("mappedId", mappedCategory.get(position));
                 startActivity(intent);
                 Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Listing_challenge_container", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_challenge_detail", "", challengeId.toString());
 

@@ -24,6 +24,7 @@ public class VlogsListingAndDetailResult {
     private String like_count;
     private String comment_count;
     private String is_liked;
+    private String bookmark_id;
     private String is_bookmark;
     private Boolean isLiked = false;
     private boolean isBookmarked = false;
@@ -38,6 +39,7 @@ public class VlogsListingAndDetailResult {
     public void setSharing_url(String sharing_url) {
         this.sharing_url = sharing_url;
     }
+
     public int getWinner() {
         return winner;
     }
@@ -63,6 +65,13 @@ public class VlogsListingAndDetailResult {
         isLiked = liked;
     }
 
+    public String getBookmark_id() {
+        return bookmark_id;
+    }
+
+    public void setBookmark_id(String bookmark_id) {
+        this.bookmark_id = bookmark_id;
+    }
 
     public boolean isBookmarked() {
         return isBookmarked;

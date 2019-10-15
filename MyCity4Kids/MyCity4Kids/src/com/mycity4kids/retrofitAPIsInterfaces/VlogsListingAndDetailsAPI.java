@@ -27,7 +27,9 @@ import java.util.List;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -39,6 +41,10 @@ import retrofit2.http.Url;
  * Created by hemant on 3/5/16.
  */
 public interface VlogsListingAndDetailsAPI {
+
+
+    @GET("/v2/categories")
+    Call<Topics> getVlogChallengeDetails(@Query("id") String id);
 
     @GET("/v2/videos/{videoId}")
     Call<VlogsDetailResponse> getVlogDetail(@Path("videoId") String videoId);
@@ -101,9 +107,8 @@ public interface VlogsListingAndDetailsAPI {
     @GET("/v1/articles/doc/")
     Call<ArticleDetailResponse> getArticleDetailsFromWebservice(@Query("articleId") String articleId);
 
-    @GET("v1/users/checkFollowingBookmarkStatus/")
-    Call<ArticleDetailResponse> checkFollowingBookmarkStatus(@Query("articleId") String articleId,
-                                                             @Query("authorId") String authorId);
+    @GET("v1/users/vlog/bookmarkVideo/")
+    Call<AddBookmarkResponse> checkFollowingBookmarkStatus(@Body ArticleDetailRequest articleDetailRequest);
 
     @GET
     Call<ResponseBody> getComments(@Url String url);
@@ -119,11 +124,11 @@ public interface VlogsListingAndDetailsAPI {
     Call<AddCommentResponse> editComment(@Path("commentId") String commentId,
                                          @Body AddCommentRequest body);
 
-    @POST("v1/users/bookmark/")
+    @POST("v1/users/vlog/bookmarkVideo/")
     Call<AddBookmarkResponse> addBookmark(@Body ArticleDetailRequest body);
 
-    @POST("v1/users/deleteBookmark/")
-    Call<AddBookmarkResponse> deleteBookmark(@Body DeleteBookmarkRequest body);
+    @HTTP(method = "DELETE", path = "v1/users/vlog/deleteBookmarkVideo/", hasBody = true)
+    Call<AddBookmarkResponse> deleteBookmark(@Body ArticleDetailRequest body);
 
     @POST("/v1/users/isBookmarkVideo/")
     Call<ArticleDetailResponse> checkBookmarkVideoStatus(@Body ArticleDetailRequest body);

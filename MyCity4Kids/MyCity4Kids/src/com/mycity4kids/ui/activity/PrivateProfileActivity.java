@@ -468,14 +468,10 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                 SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "Profile", true);
                 break;
             case R.id.editProfileImageView:
+            case R.id.editProfileTextView:
                 Intent intent = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
                 intent.putExtra("isRewardAdded", isRewardsAdded);
                 startActivity(intent);
-                break;
-            case R.id.editProfileTextView:
-                Intent intent1 = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
-                intent1.putExtra("isRewardAdded", isRewardsAdded);
-                startActivity(intent1);
                 break;
             case R.id.updateProfileTextView: {
                 Intent intent2 = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);

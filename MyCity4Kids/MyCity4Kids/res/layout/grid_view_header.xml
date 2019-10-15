@@ -492,7 +492,7 @@
             android:background="@color/white"
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
-            android:text="Participate and earn in MyMoney campaigns"
+            android:text="@string/participate_earn_mymoney"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:visibility="visible"

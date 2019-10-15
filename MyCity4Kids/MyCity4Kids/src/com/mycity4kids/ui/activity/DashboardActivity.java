@@ -29,19 +29,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
@@ -53,6 +40,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
@@ -137,6 +125,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
@@ -165,17 +165,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private ArrayList<String> deepLinkDisplayName;
     private ArrayList<String> deepLinkImageUrl;
     private ArrayList<Topics> shortStoriesTopicList;
-    private ArrayList<String> branchDisplay_Name;
-    private ArrayList<String> branchChallengeId;
-    private ArrayList<String> branchActiveStreamUrl;
-    private ArrayList<String> branchRules;
-    private ArrayList<String> branchMappedCategory;
-    private ArrayList<String> branchImageUrl;
     int groupId;
     Map<String, String> image;
     public boolean filter = false;
     Tracker t;
-    Topics branchArticledatamodal;
     private String deepLinkUrl;
     private String mToolbarTitle = "";
     private String fragmentToLoad = "";
@@ -233,6 +226,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private String UPDATE_APP_POPUP_KEY = "latest_app_version";
     private int frequecy;
     private String UPDATE_APP_FREQUENCY_KEY = "app_update_frequency";
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -243,7 +237,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         BaseApplication.startSocket();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(720).build();
@@ -1296,7 +1291,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                 } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_MOMVLOGS)) {
                     String challengeId = branchModel.getId();
-                    getChallenges(challengeId.trim());
+                    Intent challengeIntent = new Intent(DashboardActivity.this, NewVideoChallengeActivity.class);
+                    challengeIntent.putExtra("challenge", challengeId);
+                    challengeIntent.putExtra("mappedId", branchModel.getMapped_category());
+                    challengeIntent.putExtra("comingFrom", "branch_deep_link");
+                    startActivity(challengeIntent);
 
                 } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_PERSONALINFO)) {
 
@@ -2331,11 +2330,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 hideCreateContentView();
                 return;
             }
-          /*  if (chooseLayout.getVisibility() == View.VISIBLE) {
-                chooseLayout.setVisibility(View.INVISIBLE);
-                return;
-            }*/
-
             if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
                 finish();
             } else {
@@ -3021,89 +3015,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-
-    private void getChallenges(String branchVideoChallengeId) {
-        this.branchVideoChallengeId = branchVideoChallengeId;
-        branchDisplay_Name = new ArrayList<>();
-        branchChallengeId = new ArrayList<>();
-        branchActiveStreamUrl = new ArrayList<>();
-        branchRules = new ArrayList<>();
-        branchMappedCategory = new ArrayList<>();
-        branchImageUrl = new ArrayList<>();
-        showProgressDialog(getApplicationContext().getResources().getString(R.string.please_wait));
-
-        if (!ConnectivityUtils.isNetworkEnabled(DashboardActivity.this)) {
-            removeProgressDialog();
-            return;
-        }
-
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
-        Call<TopicsResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogChallenges();
-        callRecentVideoArticles.enqueue(vlogChallengeResponseCallBack);
-    }
-
-    private Callback<TopicsResponse> vlogChallengeResponseCallBack = new Callback<TopicsResponse>() {
-        @Override
-        public void onResponse(Call<TopicsResponse> call, retrofit2.Response<TopicsResponse> response) {
-            if (response == null || null == response.body()) {
-                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
-                return;
-            }
-            if (response.isSuccessful()) {
-                removeProgressDialog();
-                try {
-                    TopicsResponse responseData = response.body();
-                    if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                        for (int i = 0; i < responseData.getData().size(); i++) {
-
-                            if (responseData.getData().get(i).getId().equals(branchVideoChallengeId)) {
-
-
-                                branchDisplay_Name.add(responseData.getData().get(i).getDisplay_name());
-                                branchChallengeId.add(responseData.getData().get(i).getId());
-                                branchActiveStreamUrl.add(responseData.getData().get(i).getExtraData().get(0).getChallenge().getVideoUrl());
-                                branchRules.add(responseData.getData().get(i).getExtraData().get(0).getChallenge().getRules());
-                                branchMappedCategory.add(responseData.getData().get(i).getExtraData().get(0).getChallenge().getMapped_category());
-                                branchImageUrl.add(responseData.getData().get(i).getExtraData().get(0).getChallenge().getImageUrl());
-                                branchArticledatamodal = responseData.getData().get(i);
-
-
-                                Intent intent = new Intent(DashboardActivity.this, NewVideoChallengeActivity.class);
-                                intent.putExtra("Display_Name", branchDisplay_Name);
-                                intent.putExtra("screenName", "MomVlogs");
-                                intent.putExtra("challenge", branchChallengeId);
-                                intent.putExtra("position", 0);
-                                intent.putExtra("StreamUrl", branchActiveStreamUrl);
-                                intent.putExtra("rules", branchRules);
-                                intent.putExtra("maxDuration", responseData.getData().get(i).getExtraData().get(0).getChallenge().getMax_duration());
-                                intent.putExtra("mappedCategory", branchMappedCategory);
-                                intent.putExtra("topics", branchArticledatamodal.getParentName());
-                                intent.putExtra("parentId", branchArticledatamodal.getParentId());
-                                intent.putExtra("StringUrl", branchImageUrl);
-                                intent.putExtra("Topic", new Gson().toJson(branchArticledatamodal));
-                                startActivity(intent);
-                            }
-                        }
-
-
-                    }
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                    //   removeProgressDialog();
-                    Log.d("MC4kException", Log.getStackTraceString(e));
-                }
-            }
-
-
-        }
-
-        @Override
-        public void onFailure(Call<TopicsResponse> call, Throwable t) {
-
-        }
-    };
 
     public void showChooseLayoutForShortStory() {
         chooseLayout.setVisibility(View.VISIBLE);

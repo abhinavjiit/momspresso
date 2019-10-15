@@ -265,7 +265,7 @@
                 android:paddingLeft="23dp"
                 android:paddingRight="23dp"
                 android:paddingTop="10dp"
-                android:text="Capture image from camera"
+                android:text="@string/capture_from_camera"
                 android:textColor="@color/videos.upload_option.camera"
                 android:textSize="18sp"
                 app:fontName="oswald.ttf" />
@@ -278,7 +278,7 @@
                 android:paddingLeft="23dp"
                 android:paddingRight="23dp"
                 android:paddingTop="10dp"
-                android:text="Choose image from gallery"
+                android:text="@string/choose_from_gallery"
                 android:textColor="@color/videos.upload_option.camera"
                 android:textSize="18sp"
                 app:fontName="oswald.ttf" />

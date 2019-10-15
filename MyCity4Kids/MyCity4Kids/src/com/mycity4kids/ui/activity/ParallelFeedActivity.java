@@ -22,14 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -52,11 +44,9 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.ArticleDetailRequest;
-import com.mycity4kids.models.request.DeleteBookmarkRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
-import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
@@ -92,6 +82,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -279,10 +276,12 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     public void hitBookmarkFollowingStatusAPI(String vidId) {
         ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
         articleDetailRequest.setArticleId(vidId);
+        articleDetailRequest.setContentType("vlogs");
+        articleDetailRequest.setType("video");
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI bookmarFollowingStatusAPI = retro.create(VlogsListingAndDetailsAPI.class);
 
-        Call<ArticleDetailResponse> callBookmark = bookmarFollowingStatusAPI.checkFollowingBookmarkStatus(vidId, bookmarkAuthorId);
+        Call<AddBookmarkResponse> callBookmark = bookmarFollowingStatusAPI.checkFollowingBookmarkStatus(articleDetailRequest);
         callBookmark.enqueue(isBookmarkedFollowedResponseCallback);
     }
 
@@ -613,46 +612,25 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         }
     };
 
-    private Callback<ArticleDetailResponse> isBookmarkedFollowedResponseCallback = new Callback<ArticleDetailResponse>() {
+    private Callback<AddBookmarkResponse> isBookmarkedFollowedResponseCallback = new Callback<AddBookmarkResponse>() {
         @Override
-        public void onResponse(Call<ArticleDetailResponse> call, retrofit2.Response<ArticleDetailResponse> response) {
+        public void onResponse(Call<AddBookmarkResponse> call, retrofit2.Response<AddBookmarkResponse> response) {
             if (response == null || null == response.body()) {
                 showToast(getString(R.string.server_went_wrong));
                 return;
             }
-            ArticleDetailResponse responseData = response.body();
+            AddBookmarkResponse responseData = response.body();//AddBookmarkResponse
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                bookmarkId = responseData.getData().getResult().getBookmarkId();
-                delete();
+                bookmarkId = responseData.getData().getArticleId();
+                delete(bookmarkId);
             } else {
                 showToast(getString(R.string.server_went_wrong));
             }
 
-
-            /*ArticleDetailResponse responseData = response.body();
-            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                if (SharedPrefUtils.getUserDetailModel(ParallelFeedActivity.this).getDynamoId().equals(authorId)) {
-                    followClick.setVisibility(View.INVISIBLE);
-                } else {
-                    if ("0".equals(responseData.getData().getResult().getIsFollowed())) {
-                        dataList.get(followPos).setFollowed(false);
-                        isFollowing = false;
-                    } else if ("1".equals(responseData.getData().getResult().getIsFollowed())) {
-                        dataList.get(followPos).setFollowed(true);
-                        isFollowing = true;
-                    } else if ("0".equals(responseData.getData().getResult().getBookmarkStatus())) {
-                        dataList.get(followPos).setBookmarked(true);
-                    } else if ("1".equals(responseData.getData().getResult().getBookmarkStatus())) {
-                        dataList.get(followPos).setBookmarked(true);
-                    }
-                }
-            } else {
-                showToast(getString(R.string.server_went_wrong));
-            }*/
         }
 
         @Override
-        public void onFailure(Call<ArticleDetailResponse> call, Throwable t) {
+        public void onFailure(Call<AddBookmarkResponse> call, Throwable t) {
             handleExceptions(t);
         }
     };
@@ -1214,20 +1192,20 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             Utils.pushBookmarkArticleEvent(this, "DetailArticleScreen", userDynamoId + "", bookmarkStatus, authorId + "~" + author);
 
         } else {
-            hitBookmarkFollowingStatusAPI(videoId);
+            if (StringUtils.isNullOrEmpty(finalList.get(updateBookmarkPos).getBookmark_id())) {
+                hitBookmarkFollowingStatusAPI(videoId);
+
+            } else {
+                delete(finalList.get(updateBookmarkPos).getBookmark_id());
+
+            }
+
+            //        hitBookmarkFollowingStatusAPI(videoId);
 //            hitBookmarkVideoStatusAPI(videoId,bookmarkId);
         }
 
     }
 
-
-    private void hitBookmarkVideoStatusAPI(String videoId, String authorId) {
-        ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
-        articleDetailRequest.setArticleId(videoId);
-
-        Call<ArticleDetailResponse> callBookmark = vlogsListingAndDetailsAPI.checkBookmarkVideoStatus(articleDetailRequest);
-        callBookmark.enqueue(isBookmarkedVideoResponseCallback);
-    }
 
     private Callback<AddBookmarkResponse> addBookmarkResponseCallback = new Callback<AddBookmarkResponse>() {
         @Override
@@ -1237,8 +1215,9 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 return;
             }
             AddBookmarkResponse responseData = response.body();
-            updateBookmarkStatus(ADD_BOOKMARK, responseData);
+            //  updateBookmarkStatus(ADD_BOOKMARK, responseData);
             if (bookmarkStatus.equals("1")) {
+                finalList.get(updateBookmarkPos).setBookmark_id(responseData.getData().getArticleId());
                 finalList.get(updateBookmarkPos).setIs_bookmark("1");
             } else {
                 finalList.get(updateBookmarkPos).setIs_bookmark("0");
@@ -1253,53 +1232,19 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     };
 
 
-    private Callback<ArticleDetailResponse> isBookmarkedVideoResponseCallback = new Callback<ArticleDetailResponse>() {
-        @Override
-        public void onResponse(Call<ArticleDetailResponse> call, retrofit2.Response<ArticleDetailResponse> response) {
-            if (response == null || null == response.body()) {
-                showToast(getString(R.string.server_went_wrong));
-                return;
-            }
+    private void delete(String bookmarkId) {
 
-            ArticleDetailResponse responseData = response.body();
-            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                bookmarkId = responseData.getData().getResult().getBookmarkId();
-                delete();
-            } else {
-                showToast(getString(R.string.server_went_wrong));
-            }
+        if (StringUtils.isNullOrEmpty(bookmarkId)) {
+        } else {
+            ArticleDetailRequest deleteBookmarkRequest = new ArticleDetailRequest();
+            deleteBookmarkRequest.setId(bookmarkId);
+            deleteBookmarkRequest.setContentType("vlogs");
+            deleteBookmarkRequest.setType("video");
+            Call<AddBookmarkResponse> call = vlogsListingAndDetailsAPI.deleteBookmark(deleteBookmarkRequest);
+            call.enqueue(addBookmarkResponseCallback);
         }
-
-        @Override
-        public void onFailure(Call<ArticleDetailResponse> call, Throwable t) {
-            handleExceptions(t);
-        }
-    };
-
-    private void delete() {
-        DeleteBookmarkRequest deleteBookmarkRequest = new DeleteBookmarkRequest();
-        deleteBookmarkRequest.setId(bookmarkId);
-        Call<AddBookmarkResponse> call = vlogsListingAndDetailsAPI.deleteBookmark(deleteBookmarkRequest);
-        call.enqueue(addBookmarkResponseCallback);
         Utils.pushUnbookmarkArticleEvent(this, "DetailArticleScreen", userDynamoId + "", bookmarkStatus, authorId + "~" + author);
 
-    }
-
-    private void updateBookmarkStatus(int status, AddBookmarkResponse responseData) {
-
-        if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-            if (status == ADD_BOOKMARK) {
-                bookmarkId = responseData.getData().getResult().getBookmarkId();
-            } else {
-                bookmarkId = null;
-            }
-        } else {
-            if (StringUtils.isNullOrEmpty(responseData.getReason())) {
-//                showToast(responseData.getReason());
-            } else {
-//                showToast(getString(R.string.went_wrong));
-            }
-        }
     }
 
 

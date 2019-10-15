@@ -119,7 +119,7 @@
             android:paddingTop="@dimen/space_5"
             android:paddingRight="@dimen/space_20"
             android:paddingBottom="@dimen/space_5"
-            android:text="Tap to create"
+            android:text="@string/tap_to_create"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:visibility="invisible"
@@ -289,7 +289,7 @@
                 android:paddingRight="@dimen/space_20"
                 android:paddingBottom="@dimen/space_5"
 
-                android:text="Tap to create"
+                android:text="@string/tap_to_create"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 app:fontName="oswald.ttf" />

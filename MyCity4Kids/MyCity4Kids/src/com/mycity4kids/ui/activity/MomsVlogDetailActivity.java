@@ -11,11 +11,13 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.fragment.app.FragmentManager;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -287,15 +289,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
         call.enqueue(vlogDetailResponseCallback);
     }
 
-    private void hitBookmarkFollowingStatusAPI() {
-        ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
-        articleDetailRequest.setArticleId(videoId);
-        Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        VlogsListingAndDetailsAPI bookmarFollowingStatusAPI = retro.create(VlogsListingAndDetailsAPI.class);
 
-        Call<ArticleDetailResponse> callBookmark = bookmarFollowingStatusAPI.checkFollowingBookmarkStatus(videoId, authorId);
-        callBookmark.enqueue(isBookmarkedFollowedResponseCallback);
-    }
 
     private void hitRelatedArticleAPI() {
 
@@ -350,7 +344,6 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
                 VlogsDetailResponse responseData = response.body();
                 updateUIfromResponse(responseData.getData().getResult());
                 authorId = responseData.getData().getResult().getAuthor().getId();
-                hitBookmarkFollowingStatusAPI();
                 hitRelatedArticleAPI();
                 commentURL = responseData.getData().getResult().getCommentUri();
                 commentMainUrl = responseData.getData().getResult().getCommentUri();

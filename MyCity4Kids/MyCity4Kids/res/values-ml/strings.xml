@@ -6,9 +6,9 @@
 
     <string name="resend_email">Resend Email</string>
     <string name="groups_sections_polls">പോൾ</string>
-    <string name="groups_sections_myfeed">My Feed</string>
+    <string name="groups_sections_myfeed">എന്റെ ഫീഡ്</string>
 
-    <string name="groups.other_groups">OTHER GROUPS</string>
+    <string name="groups.other_groups">മറ്റ് ഗ്രൂപ്പുകൾ</string>
     <string name="groups_enable_notification">നോട്ടിഫിക്കേഷൻ സാധ്യമാക്കൂ </string>
 
     <string name="facebook_app_id">206155642763202</string>
@@ -20,11 +20,11 @@
 
     <string name="write_review_prompt">What would you like to review?</string>
 
-    <string name="groups_sections_ask">ASK AN EXPERT</string>
+    <string name="groups_sections_ask">വിദഗ്ദ്ധരോട് ചോദിക്കാം</string>
     <string name="view_more_profile">view more</string>
 
     <string name="loading_txt">Loading&#8230;</string>
-    <string name="group_comment_start_type_here_text">Start Typing</string>
+    <string name="group_comment_start_type_here_text">ടൈപ്പ് ചെയ്തു തുടങ്ങുക</string>
 
     <string name="reward_welcome">Welcome to Momspresso MyMoney!</string>
     <string name="subcategoryName">subCategory</string>
@@ -162,8 +162,8 @@
     <string name="ad.view_all_tags.text">എല്ലാം കാണുക </string>
     <string name="ad.tags_title.text">ഈ ലേഖനം താഴെപ്പറയുന്ന വിഭാഗങ്ങളിൽ പോസ്റ്റ് ചെയ്യപ്പെട്ടതാണ്</string>
     <string name="ad.tags_subtitle.text">ഇത്തരം പോസ്റ്റുകൾ വായിക്കാൻ ഈ വിഭാഗങ്ങൾ ഫോളോ ചെയ്യൂ</string>
-    <string name="ad.follow_author">പിന്തുടരൂ</string>
-    <string name="ad.following_author">നിങ്ങൾ പിന്തുടരുന്നത്</string>
+    <string name="ad.follow_author">പിന്തുടരുക</string>
+    <string name="ad.following_author">പിന്തുടരുന്നു</string>
     <string name="ad.comments.title">അഭിപ്രായങ്ങൾ</string>
     <string name="ad.comments.no_comments">അഭിപ്രായങ്ങൾ ഇല്ല</string>
     <string name="ad.comments.view_comment">അഭിപ്രായങ്ങൾ</string>
@@ -279,13 +279,14 @@
         <item>9 ഭാഷകളിൽ ബ്ലോഗുകൾ ആസ്വദിക്കൂ</item>
         <item>യാത്രക്കിടയിൽ വിഡിയോകൾ കാണൂ</item>
         <item>സപ്പോർട്ട് ഗ്രൂപ്പുകൾ ഉള്ളപ്പോൾ നിങ്ങൾ ഒറ്റയ്ക്കല്ല </item>
-        <item>Start earning with MyMoney!</item>
+        <item>മൈമണി ഉപയോഗിച്ച് പണം സമ്പാദിക്കാൻ തുടങ്ങൂ!</item>
     </string-array>
 
     <string name="onboarding.desc_1">എല്ലാ അമ്മമാർക്കും ഒരു കഥ ഉണ്ട്. എന്താണ് താങ്കളുടെ കഥ? എഴുത്തായോ വീഡിയോ ആയോ ഷെയർ ചെയ്യൂ</string>
     <string name="onboarding.desc_2">ഇനി ഇംഗ്ലീഷ്, ഹിന്ദി, ബംഗ്ലാ, മറാഠി, തമിഴ്, തെലുങ്ക്, കന്നഡ, മലയാളം എന്നീ ഭാഷകളിൽ നിന്ന് തിരഞ്ഞെടുക്കൂ</string>
     <string name="onboarding.desc_3">മംസ്പ്രെസ്സോ ടീവി താങ്കൾക്കായി എത്തിക്കുന്നു, മനോഹരവും ഉപയോഗപ്രദവും രസകരവുമായ വിഡിയോകൾ. എല്ലാം ഒരു സ്ഥലത്ത്!</string>
     <string name="onboarding.desc_4">അമ്മമാരുടെ ഈ സമൂഹത്തെ ശക്തമാക്കുക. നിങ്ങളുടെ ചോദ്യങ്ങൾ പങ്കിടൂ, അതു വഴി മറ്റുള്ളവരെ സഹായിക്കൂ </string>
+    <string name="onbording.desc_5">ബ്രാൻഡ് ക്യാമ്പയിനുകളിൽ പങ്കെടുക്കൂ, പണം നേടൂ.</string>
 
 
     <string name="onboarding_desc_array.tutorial_1.blogs">ബ്ലോഗുകൾ</string>
@@ -726,7 +727,7 @@
     <!--<string name="groups.anonymous">ANONYMOUS</string>-->
     <!--<string name="groups.membership_request_msg">We have received your request for joining this group. Your membership will be confirmed once it is approved by the moderators of this group.</string>-->
 
-    <string name="groups.join_label">GROUPS YOU ARE A MEMBER OF</string>
+    <string name="groups.join_label">താങ്കൾ അംഗമായ ഗ്രൂപ്പുകൾ</string>
     <string name="groups.reported_content">REPORTED CONTENT</string>
     <string name="groups.moderator_invitation">INVITE TO BE A MODERATOR</string>
     <string name="groups.unblock_member">UNBLOCK MEMBER</string>
@@ -740,7 +741,7 @@
     <string name="groups.turn_notification_off">Turn Off Notification</string>
     <string name="groups.enable_comment">ENABLE COMMENTS</string>
     <string name="groups.disable_comment">DISABLE COMMENTS</string>
-    <string name="groups.report_post">REPORT THIS POST</string>
+    <string name="groups.report_post">ഈ പോസ്റ്റിനെക്കുറിച്ച് പരാതിപ്പെടാം</string>
     <string name="groups.block_this_user">BLOCK THIS USER</string>
     <string name="groups.pin_post">PIN THIS POST TO TOP</string>
     <string name="groups.unpin_post">UNPIN THIS POST</string>
@@ -751,12 +752,12 @@
     <string name="groups.no_action">NO ACTION</string>
     <string name="groups.block_user">BLOCK USER</string>
     <string name="groups.hide_content">HIDE CONTENT</string>
-    <string name="groups.invite_members">INVITE MEMBERS</string>
-    <string name="groups.invite_family">You can invite your friends and family to this group</string>
+    <string name="groups.invite_members">പുതിയ അംഗങ്ങളെ ക്ഷണിക്കാം</string>
+    <string name="groups.invite_family">ഈ ഗ്രൂപ്പിലേക്ക് സുഹൃത്തുക്കളെയോ ബന്ധുക്കളെയോ ക്ഷണിക്കാം</string>
     <string name="groups.disable_notification">DISABLE NOTIFICATIONS</string>
     <string name="groups.disable_notification_this_gp">Disable notifications from this group</string>
-    <string name="groups.leave_group">LEAVE GROUP</string>
-    <string name="groups.exit_gp">You can choose to exit group at any point in time</string>
+    <string name="groups.leave_group">ഗ്രൂപ്പിൽ നിന്ന് ഒഴിവാകാം</string>
+    <string name="groups.exit_gp">ഗ്രൂപ്പിൽ നിന്ന് ഏത് സമയത്തും ഒഴിവാകാം</string>
     <string name="groups.sure_leave_gp">Are you sure you want to leave this group</string>
     <string name="groups.view_all_reported">View all the reported content for this group</string>
     <string name="groups.leave">LEAVE</string>
@@ -770,16 +771,16 @@
 
     <string name="groups.summary">SUMMARY</string>
     <string name="groups.add_image">ADD IMAGE</string>
-    <string name="groups.image_poll">IMAGE POLL</string>
+    <string name="groups.image_poll">ചിത്രം ഉപയോഗച്ചുള്ള അഭിപ്രായ വോട്ടെടുപ്പ്</string>
     <string name="groups.text_poll">TEXT POLL</string>
-    <string name="groups.anonymous">ANONYMOUS</string>
+    <string name="groups.anonymous">അജ്ഞാതൻ</string>
     <string name="groups.anyone_join">Anyone can join</string>
     <string name="groups.closed_gp">Closed group</string>
     <string name="groups.invitation_only_gp">Invitation only group</string>
     <string name="groups.created">Created</string>
     <string name="groups.member_label">MEMBERS</string>
     <string name="groups.sections.about">സംബന്ധിച്ച്</string>
-    <string name="groups.sections.discussions">DISCUSSION</string>
+    <string name="groups.sections.discussions">ചർച്ചാവേദി</string>
     <string name="groups.sections.blogs">ബ്ലോഗുകൾ</string>
     <string name="groups.sections.photos">PHOTOS</string>
     <string name="groups.sections.videos">വിഡിയോകൾ</string>
@@ -796,10 +797,10 @@
     <string name="groups.user_blocked_msg">You have been blocked from this group</string>
     <string name="groups.user_membership_rejected_msg">Your membership has been rejected for this group</string>
     <string name="groups.join_group">ഗ്രൂപ്പിൽ ചേരൂ</string>
-    <string name="groups.ask_something">Ask something ...</string>
+    <string name="groups.ask_something">എന്തെങ്കിലും ചോദിക്കാം ...</string>
     <string name="groups.post_label">എഴുത്ത്</string>
     <string name="groups.edit_post">EDIT POST</string>
-    <string name="groups.total_votes">TOTAL VOTES: %1$s</string>
+    <string name="groups.total_votes">മൊത്തം വോട്ടുകൾ: %1$s</string>
 
     <string name="no_story.be_first">Be the first one to write stories in this category!</string>
 
@@ -814,8 +815,8 @@
     <string name="short_s.choose_genre">നിങ്ങളുടെ കഥയുടെ ഇനം തിരഞ്ഞെടുക്കുക </string>
     <string name="short_s.choose_one_genre">Choose the genre that best describes the content of your story. You can choose only 1 genre.</string>
     <string name="short_s.no_drafts">ഇതുവരെ ഒരു ചെറുകഥയും എഴുതിയിട്ടില്ല</string>
-    <string name="short_s.no_published">No short story published as yet</string>
-    <string name="short_s.view_replies">View replies</string>
+    <string name="short_s.no_published">ഇതുവരെ ചെറുകഥകൾ ഒന്നും പ്രസിദ്ധീകരിച്ചിട്ടില്ല</string>
+    <string name="short_s.view_replies">മറുപടികൾ കാണുക</string>
     <string name="short_s.choose_topic">Please choose at least one topic to continue</string>
     <string name="short_s.add_comment_fail">Failed to add comment. Please try again</string>
     <string name="short_s.edit_comment_fail">Failed to edit comment. Please try again</string>
@@ -830,7 +831,7 @@
     <string name="report.inappro">ഇത് അനുചിതമാണ്</string>
     <string name="report.spam">ഇത് അനാവശ്യമാണ്</string>
     <string name="report.not_relevant">മറ്റെന്തെങ്കിലും</string>
-    <string name="reply">മറുപടി </string>
+    <string name="reply">മറുപടി</string>
 
     <string name="reported.spam">Reported as Spam</string>
     <string name="reported.abuse">Reported as Abusive</string>
@@ -966,9 +967,11 @@
     <string name="rewards_non_working">"ജോലി ചെയ്യുന്നില്ല "</string>
     <string name="rewards_language">"ഭാഷ "</string>
     <string name="rewards_save_continue">"സേവ് ചെയ്ത് തുടരൂ "</string>
-    <string name="reply_groups">Reply</string>
-    <string name="view_group">View</string>
-    <string name="replies">Replies</string>
+    <string name="reply_groups">മറുപടി കൊടുക്കാം</string>
+    <string name="view_group">കാണുക</string>
+    <string name="replies">മറുപടികൾ</string>
+    <string name="tap_to_create">സൃഷ്ടികൾ പങ്കുവയ്ക്കാൻ ഇവിടെ തൊടുക</string>
+
 
     <string name="momspresso_rewards">MyMoney</string>
     <string name="rewards_participate">പ്രൊഫൈൽ പൂരിപ്പിക്കൂ, ഇതിൽ പങ്ക് ചേരൂ, സമ്പാദിക്കാൻ തുടങ്ങൂ!</string>
@@ -999,18 +1002,18 @@
 
     //new Video Challenge Ui Strings
     <string name="video_challenge_live_text">LIVE</string>
-    <string name="video_challenge_text">CHALLENGES</string>
-    <string name="choose_video_categories_text">CATEGORIES</string>
+    <string name="video_challenge_text">ചാലഞ്ചുകൾ</string>
+    <string name="choose_video_categories_text">വിഭാഗങ്ങൾ</string>
 
     //groupdetail Activity toast String
-    <string name="group_detail_activity_toast_text">You can also post anonymously </string>
+    <string name="group_detail_activity_toast_text">അജ്ഞാതനായി പോസ്റ്റ് ചെയ്യാം</string>
     <string name="group_add_comment_text">ADD COMMENT</string>
     <string name="group_invite_text">ക്ഷണിക്കൂ</string>
-    <string name="group_comment_type_here_text">Type here</string>
+    <string name="group_comment_type_here_text">ഇവിടെ ടൈപ്പ് ചെയ്യുക</string>
     <string name="group_comment_be_the_first_text">Be the first one to comment</string>
 
     //tooltip groups
-    <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>
+    <string name="add_text_or_media_group_post_activity_tooltip_text">ശബ്ദശകലം ഉപയോഗിക്കാം</string>
     <string name="dialog_header_choose_sort_type">തിരിക്കൂ</string>
     <string name="rewards_instagram_handler">ഇൻസ്റ്റാഗ്രാം ഹാൻഡിൽ ചേർക്കൂ</string>
     <string name="rewards_facebook_handler">ഫേസ്ബുക്ക് കണക്ട് ചെയ്യൂ</string>
@@ -1019,7 +1022,7 @@
     <string name="language">LANGUAGE</string>
     <string name="about_video">ഇതിനെക്കുറിച്ച്</string>
     <string name="myprofile.section.mom_bottom_label">അമ്മമാരുടെ വിലോഗുകൾ</string>
-    <string name="all_videos.toolbar.title.homepage">Videos</string>
+    <string name="all_videos.toolbar.title.homepage">വീഡിയോകൾ</string>
 
     <string name="moderation_message">100WordStory under moderation.\n
 Thank you! We will be reviewing your story. You can expect to hear from us within the next 48 working hours. Meanwhile, you can still share your story with your friends!</string>
@@ -1196,9 +1199,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="not_working">Not Working</string>
     <string name="working">Working</string>
 
-    <string name="voise_post_group">Use your voice\nRecord your thoughts or ask a question in your voice</string>
-    <string name="poll_post_group">Create a poll\nGet community’s opinion on what matters to you</string>
-    <string name="blog_post_group">Write something\nAsk a question or share your thought</string>
+    <string name="voise_post_group">താങ്കളുടെ ശബ്ദം ഉപയോഗിക്കാം. ശബ്ദ ശകലം ഉപയോഗിച്ച് ആശയങ്ങൾ പങ്കുവയ്ക്കുകയോ ചോദ്യങ്ങൾ ചോദിക്കുകയോ ചെയ്യാം</string>
+    <string name="poll_post_group">അഭിപ്രായ വോട്ടെടുപ്പ് നടത്താം. താങ്കളുടെ ചോദ്യത്തിന് വായനക്കാർ എന്ത് പറയുന്നുവെന്ന് നോക്കാം</string>
+    <string name="blog_post_group">എന്തെങ്കിലും എഴുതാം. ചോദ്യങ്ങൾ ചോദിക്കുകയോ ആശയങ്ങൾ പങ്കു വയ്ക്കുകയോ ചെയ്യാം</string>
 
     <string name="mom_vlog_banner_title">എടുക്കുക  ചാലഞ്ച</string>
     <string name="mom_vlog_banner_subtitle">10,000 രൂപ വിലമതിക്കുന്ന സമ്മാനങ്ങൾ</string>
@@ -1220,4 +1223,15 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="application_end_date">Application End Date</string>
     <string name="submission_end_date">Submission End Date</string>
     <string name="submit_article">Submit Your Article</string>
+
+    <string name="participate_earn_mymoney">മൈമണി ക്യാമ്പയിനുകളിൽ പങ്കെടുക്കൂ, പണം നേടൂ.</string>
+    <string name="choose_from_gallery">ഫോട്ടോ ഗ്യാലറിയിൽ നിന്ന് ചിത്രം തിരഞ്ഞെടുക്കാം</string>
+    <string name="capture_from_camera">ക്യാമറ ഉപയോഗിച്ച് ഫോട്ടോ എടുക്കാം</string>
+    <string name="slide_to_cancel">റദ്ദാക്കാൻ സ്ലൈഡ് ചെയ്യുക</string>
+    <string name="add_a_choice">തിരഞ്ഞെടുക്കലുകൾ ചേർക്കാം</string>
+    <string name="private_profile_read_article">ലേഖനങ്ങൾ വായിക്കാം</string>
+    <string name="mymoney_profile">മൈ മണി പ്രൊഫൈൽ</string>
+
+
+
 </resources>

@@ -272,10 +272,10 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             mImgBookmark.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (responseData.getIs_bookmark() != null && responseData.getIs_bookmark().equals("1")) {
-                        bookmarkStatus = "0";
-                    } else {
+                    if (responseData.getIs_bookmark() != null && responseData.getIs_bookmark().equals("0")) {
                         bookmarkStatus = "1";
+                    } else {
+                        bookmarkStatus = "0";
                         Utils.momVlogEvent(mContext, "Video Detail", "Bookmark", "", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
                     }
                     ((ParallelFeedActivity) mContext).addRemoveBookmark(bookmarkStatus, position, responseData.getAuthor().getId(), responseData.getId());

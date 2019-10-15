@@ -156,7 +156,7 @@
     <string name="ad.follow_author">ਫੋਲੋ</string>
     <string name="ad.following_author">ਫਾਲੋਵਿੰਗ</string>
     <string name="ad.comments.title">ਕਮੈਂਟਸ</string>
-    <string name="ad.comments.no_comments">NO COMMENTS ADDED</string>
+    <string name="ad.comments.no_comments">ਕੋਈ ਕਮੈਂਟ ਨਹੀਂ ਲਿਖਿਆ ਗਿਆ</string>
     <string name="ad.comments.view_comment">ਕਮੈਂਟਸ</string>
     <string name="ad.comments.fb_comment">ਫੇਸਬੁੱਕ ਕਮੈਂਟ</string>
     <string name="ad.comments.edit_label">ਬਦਲਾਵ</string>
@@ -165,6 +165,8 @@
     <string name="ad.comments.toolbar.title">ਕਮੈਂਟਸ</string>
     <string name="ad.comments.replying_to">ਤੁਸੀਂ ਜਵਾਬ ਦੇ ਰਹੇ ਹੋ %1$s</string>
     <string name="ad.bottom_bar.facebook">ਫੇਸਬੁੱਕ</string>
+    <string name="tap_to_create">ਬਣਾਉਣ ਲਈ ਟੈਪ ਕਰੋ</string>
+
     <string name="ad.bottom_bar.whatsapp">ਵਹਟਸਐਪ</string>
     <string name="ad.bottom_bar.email">ਈ-ਮੇਲ</string>
     <string name="ad.bottom_bar.generic_share">ਸ਼ੇਅਰ</string>
@@ -344,7 +346,7 @@
     <string name="home_screen.explore.title">ਅਕਸਪਲੋਰ</string>
     <string name="home_screen.upcoming_events.title">ਆਉਣ ਵਾਲੇ ਪ੍ਰੋਗਰਾਮ</string>
     <string name="home_screen.kids_res.title">KIDS RESOURCES</string>
-    <string name="home_screen.trending_list_header.title">CHOOSE THE TOPICS THAT YOU ARE INTERESTED IN LIKE</string>
+    <string name="home_screen.trending_list_header.title">ਉਹ ਵਿਸ਼ੇ ਚੁਣੋ ਜਿਨ੍ਹਾਂ ਵਿੱਚ ਤੁਸੀਂ ਦਿਲਚਸਪੀ ਰੱਖਦੇ ਹੋ</string>
     <string name="home_screen.trending_list_header.topics_label">ਗਰਭਵਤੀ ਹੋਣਾ, ਪੋਸਟ ਪਾਰ੍ਟਮ ਇਸ਼ੂ ਆਦਿ</string>
     <string name="home_screen.trending_list_header.take_me_there">ਠੀਕ ਹੈ ਸਮਝ ਗਿਆ! ਮੈਨੂੰ ਉੱਥੇ ਲੈ ਜਾਓ</string>
 
@@ -360,6 +362,7 @@
     <string name="onboarding.desc_2">ਅੰਗਰੇਜ਼ੀ, ਹਿੰਦੀ, ਬੰਗਲਾ, ਮਰਾਠੀ, ਤਮਿਲ, ਤੇਲਗੂ, ਮਲਿਆਲਮ ਅਤੇ ਕੰਨੜ ਵਿਚੋਂ ਚੁਣੋ</string>
     <string name="onboarding.desc_3">ਆਪਣੇ ਘਰੇਲੂ ਵੀਡੀਓਜ਼ ਨੂੰ ਸਾਂਝਾ ਕਰੋ ਜਾਂ ਮੋਮਸਪ੍ਰੈਸੋ ਟੀਵੀ ਤੇ ਸੁੰਦਰ, ਪ੍ਰੇਰਨਾਦਾਇਕ, ਉਪਯੋਗੀ ਅਤੇ ਮਜ਼ੇਦਾਰ ਵੀਡੀਓ ਦੇਖੋ</string>
     <string name="onboarding.desc_4">ਸਾਡੀ ਮਾਂ ਕਮਿਊਨਟੀ ਦੀ ਤਾਕਤ ਦਾ ਇਸਤੇਮਾਲ ਕਰੋ ਆਪਣੇ ਸਵਾਲ ਸਾਂਝੇ ਕਰੋ ਅਤੇ ਦੂਜਿਆਂ ਦੀ ਮਦਦ ਕਰੋ!</string>
+    <string name="onbording.desc_5">ਬ੍ਰਾਂਡ ਕੈੰਪੇਨ ਵਿੱਚ ਹਿੱਸਾ ਲੈ ਕੇ ਕਮਾਈ ਕਰੋ</string>
 
 
     <string name="onboarding_desc_array.tutorial_1.blogs">ਬਲੋਗਸ</string>
@@ -688,8 +691,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="suggested_topic.start_writing">ਲਿਖਣ ਦੀ ਸ਼ੁਰੂਆਤ ਕਰੋ</string>
 
     <string name="no_articles_found">ਕੋਈ ਆਰਟੀਕਲ ਨਹੀਂ ਮਿਲਿਆ</string>
-    <string name="check_out_blog">Momspresso\n\nCheck out this interesting blog post\n</string>
-    <string name="check_out_short_story">Momspresso\n\nCheck out this interesting short story\n</string>
+    <string name="check_out_blog">ਮੋਮਸਪ੍ਰੈਸੋ\n\nCheck out this interesting blog post\n</string>
+    <string name="check_out_short_story">ਮੋਮਸਪ੍ਰੈਸੋ\n\nCheck out this interesting short story\n</string>
     <string name="contributors">Contributors</string>
     <string name="contributor_in">Contributors in</string>
     <string name="recent_article">ਸਬੰਧਤ ਅਰਟਿਕਲ</string>
@@ -864,8 +867,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="short_s.no_drafts">ਅਜੇ ਤਕ ਕੋਈ ਲਘੂ ਕਹਾਣੀ ਡ੍ਰਾਫ਼੍ਟ ਨਹੀਂ ਕੀਤੀ ਗਈ</string>
     <string name="short_s.no_published">ਹਾਲੇ ਤੱਕ ਕੋਈ ਲਘੂ ਕਹਾਣੀ ਪ੍ਰਕਾਸ਼ਿਤ ਨਹੀਂ ਹੋਈ</string>
     <string name="view_group">ਵਿਊ</string>
-    <string name="replies">Replies</string>
-    <string name="short_s.view_replies">View replies</string>
+    <string name="replies">ਜਵਾਬ</string>
+    <string name="short_s.view_replies">ਜਵਾਬ ਦੇਖੋ</string>
     <string name="short_s.choose_topic">Please choose at least one topic to continue</string>
     <string name="short_s.add_comment_fail">Failed to add comment. Please try again</string>
     <string name="short_s.edit_comment_fail">Failed to edit comment. Please try again</string>
@@ -913,7 +916,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="coachmark.home">ਮੋਮਸਪਰੇਸੋ ਤੇ ਸੁਆਗਤ ਹੈ! ਤੁਸੀਂ ਆਪਣੀ ਪਸੰਦ ਦੀ ਭਾਸ਼ਾ ਵਿੱਚ ਐਪ ਦੀ ਖੋਜ ਕਰ ਸਕਦੇ ਹੋ.</string>
     <string name="coachmark.explore">ਤੁਸੀਂ ਅੱਜ ਕੀ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ? 100 ਸ਼ਬਦਾਂ ਦੀ ਕਹਾਣੀ ਪੜ੍ਹੋ ਜਾਂ ਵੀਡਿਓ ਦੇਖੋ। ਤੁਸੀਂ ਵੱਖ ਵੱਖ ਸ਼੍ਰੇਣੀਆਂ ਨੂੰ ਅਕਸਪਲੋਰ ਵੀ ਕਰ ਸਕਦੇ ਹੋ ਅਤੇ ਬਲੌਗ ਪੜ ਸਕਦੇ ਹੋ</string>
     <string name="coachmark.create"> # 100ਸ਼ਬਦਾਂਦੀ ਕਹਾਣੀ, ਬਲੌਗ ਪੋਸਟ ਜਾਂ ਆਪਣੇ ਵੀਡੀਓਜ਼ ਨੂੰ ਸ਼ਾਮਿਲ ਕਰੋ। ਆਪਣੇ ਡਰਾਫਟ ਨੂੰ ਵੀ ਵੇਖੋ / ਬਦਲਾਵ ਕਰੋ</string>
-    <string name="coachmark.menu">Browse, participate, earn in MyMoney campaigns</string>
+    <string name="coachmark.menu">ਬ੍ਰਾਊਜ ਕਰੋ, ਹਿੱਸਾ ਲਵੋ, MyMoney ਕੈੰਪੇਨ ਵਿੱਚ ਕਮਾਈ ਕਰੋ</string>
     <string name="coachmark.drawer">ਆਪਣੀ ਵਿਅਕਤੀਗਤ ਪ੍ਰੋਫਾਈਲ ਵੇਖੋ ਅਤੇ ਆਪਣੇ ਸਾਰੇ ਬਲੌਗ, 100 ਸ਼ਬਦ ਦੀਆਂ ਕਹਾਣੀਆਂ ਅਤੇ ਤੇ ਮੋਮ ਵਲੋਗਸ ਇਕੋ ਥਾਂ ਤੇ ਦੇਖੋ.</string>
     <string name="coachmark.edit_profile">ਬਲੌਗਰ ਮੀਟ ਅਤੇ ਸਪੌਂਸਰ ਕੀਤੇ ਲੇਖਾਂ ਤੇ ਅਪਡੇਟ ਰਹਿਣ ਲਈ ਆਪਣੇ ਪ੍ਰੋਫਾਈਲ ਨੂੰ ਐਡਿਟ ਅਤੇ ਅਪਡੇਟ ਕਰੋ.</string>
     <string name="coachmark.app_setting">ਤੁਸੀਂ ਇਕ ਜਗ੍ਹਾ ਤੇ ਆਪਣੀ ਐਪ ਤਰਜੀਹਾਂ ਅਤੇ ਭਾਸ਼ਾ ਤਰਜੀਹਾਂ ਨੂੰ ਐਡਿਟ ਕਰ ਸਕਦੇ ਹੋ। ਇੱਥੇ ਸੂਚਨਾਵਾਂ ਅਤੇ ਸ਼੍ਰੇਣੀਆਂ ਨੂੰ ਸਬਸਕ੍ਰਾਇਬ ਕਰੋ।.</string>
@@ -938,12 +941,12 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="megabyte">MB</string>
     <string name="kilobyte">KB</string>
     <string name="choose_video_category">ਵੀਡੀਓ ਦੀ ਸ਼੍ਰੇਣੀ ਚੁਣੋ</string>
-    <string name="time_limit">(Maximum Time %1$s)</string>
+    <string name="time_limit">(ਵੱਧ ਤੋਂ ਵੱਧ ਸਮਾਂ %1$s)</string>
     <string name="upload_larger_video">ਓਹੋ! ਤੁਹਾਡਾ ਵਿਡੀਓ ਘੱਟੋ ਘੱਟ 5 ਸਕਿੰਟ ਲੰਬਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ.</string>
     <string name="seconds_label">seconds</string>
     <string name="minutes_label">ਮਿੰਟ</string>
     <string name="women_only">ਓਹੋ! ਇਹ ਭਾਗ ਸਿਰਫ ਔਰਤਾਂ ਲਈ ਹੈ। ਹਾਲਾਂਕਿ, ਤੁਸੀਂ ਸਾਡੀ ਦੂਜੀ ਸਮਗਰੀ ਨੂੰ ਪੜ੍ਹਨਾ ਜਾਰੀ ਰੱਖ ਸਕਦੇ ਹੋ</string>
-    <string name="check_out_momvlog">Momspresso\n\nCheck out this interesting video\n</string>
+    <string name="check_out_momvlog">ਮੋਮਸਪ੍ਰੈਸੋ\n\nCheck out this interesting video\n</string>
     <string name="take_picture_from_camera">ਕੈਮਰੇ ਵਿਚੋਂ ਤਸਵੀਰ ਲਵੋ</string>
     <string name="select_an_image">ਇੱਕ ਚਿੱਤਰ ਚੁਣੋe</string>
     <string name="related_videos">ਸੰਬੰਧਿਤ ਵੀਡੀਓ</string>
@@ -1040,7 +1043,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="rewards_have_children">Do you have children?</string>
     <string name="rewards_add_child">Add More</string>
     <string name="rewards_kid_detail">Child detail</string>
-    <string name="app_name">Momspresso</string>
+    <string name="app_name">ਮੋਮਸਪ੍ਰੈਸੋ</string>
 
 
     //new Video Challenge Ui Strings
@@ -1179,7 +1182,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="referral_screen_text">Invite a friend to join MyMoney by sharing your referral code. Both of you will earn Rs. 25 once she has successfully completed a MyMoney campaign.</string>
     <string name="share_referral_screen">Share your referral code and start earning</string>
     <string name="referral_screen_whatsapp">WhatsApp</string>
-    <string name="referral_screen_facebook">Facebook</string>
+    <string name="referral_screen_facebook">ਫੇਸਬੁੱਕ</string>
     <string name="rewards_tab_fragment_personalInfo_text">PERSONAL INFO</string>
     <string name="rewards_tab_fragment_socialLink_text">SOCIAL LINKS</string>
     <string name="rewards_tab_fragment_paymentMode">PAYMENT MODE</string>
@@ -1254,5 +1257,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="application_end_date">Application End Date</string>
     <string name="submission_end_date">Submission End Date</string>
     <string name="submit_article">Submit Your Article</string>
+
+    <string name="participate_earn_mymoney">MyMoney ਕੈੰਪੇਨ ਵਿੱਚ ਹਿੱਸਾ ਲਵੋ ਅਤੇ ਕਮਾਈ ਕਰੋ</string>
+
 </resources>
 

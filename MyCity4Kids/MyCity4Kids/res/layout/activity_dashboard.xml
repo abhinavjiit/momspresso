@@ -2055,7 +2055,7 @@
                 android:paddingTop="7dp"
                 android:paddingRight="9dp"
                 android:paddingBottom="7dp"
-                android:text="Participate and earn in MyMoney campaigns"
+                android:text="@string/participate_earn_mymoney"
                 android:textColor="@color/black"
                 android:visibility="visible"
                 app:fontName="oswald.ttf" />

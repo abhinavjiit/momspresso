@@ -5,7 +5,18 @@ package com.mycity4kids.models.response;
  */
 public class AddBookmarkData {
     private String msg;
+    private String userId;
+    private String articleId;
     private AddBookmarkResult result;
+    private String id;
+
+    public String getArticleId() {
+        return id;
+    }
+
+    public void setArticleId(String id) {
+        this.id = id;
+    }
 
     public String getMsg() {
         return msg;

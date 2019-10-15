@@ -41,8 +41,11 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.VideoChallengeDetailListingAdapter;
+import com.mycity4kids.ui.fragment.ChallengeDetailFragment;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.MixPanelUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -233,7 +236,9 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
         @Override
         public void onResponse(Call<VlogsListingResponse> call, retrofit2.Response<VlogsListingResponse> response) {
             removeProgressDialog();
-
+            if (nextPageNumber == 1) {
+                EventBus.getDefault().post("showDialogBox");
+            }
             mLodingView.setVisibility(View.GONE);
             isReuqestRunning = false;
             if (response == null || null == response.body()) {
@@ -242,13 +247,8 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
                 return;
             }
             try {
-
                 VlogsListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    if (nextPageNumber == 1) {
-                        ((NewVideoChallengeActivity) getActivity()).showDialogBox();
-                    }
-                    //  ((NewVideoChallengeActivity) getActivity()).findViewById(R.id.tabs)
                     processResponse(responseData);
                     funnyvideosshimmer.stopShimmerAnimation();
                     funnyvideosshimmer.setVisibility(View.GONE);
@@ -348,4 +348,6 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
     protected void updateUi(Response response) {
 
     }
+
+
 }

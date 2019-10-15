@@ -20,6 +20,7 @@ public class Constants {
     public static final String EXTRA_TOP_PICKS_DATA_MODEL = "extra_top_picks_data_model";
     public static final String ARTICLES_DETAILS_DATA = "article_details_data";
     public static final String ARTICLE_ID = "article_id";
+    public static final String CHALLENGE_ID = "challenge";
     public static final String PARENT_ID = "parent_id";
     public static final String ARTICLE_BLOG_CONTENT = "articleContentId";
     public static final String PARENTING_TYPE = "parenting_type";

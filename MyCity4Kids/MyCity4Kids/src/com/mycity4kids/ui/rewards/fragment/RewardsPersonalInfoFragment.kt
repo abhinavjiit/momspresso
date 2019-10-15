@@ -61,8 +61,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.apmem.tools.layouts.FlowLayout
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**editLanguage
@@ -108,14 +106,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         newSelectedCityId = cityList.get(pos).getId()
     }
 
-//    fun setOtherCityName(pos: Int, cityName: String) {
-//        otherCityName = cityName
-//        cityList.get(pos).setCityName("Others($cityName)")
-//        editLocation.setText(cityList.get(pos).getCityName())
-//    }
-
     override fun onItemClick(language: String?) {
-        //editLanguage.setText(Constants.TypeOfLanguages.findById(language))
     }
 
     override fun updateUi(response: Response?) {
@@ -386,6 +377,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         editLocation = containerView.findViewById(R.id.editLocation)
         textApplyReferral = containerView.findViewById(R.id.textApplyReferral)
 
+
         editAddNumber.setOnClickListener {
             varifyNumberWithFacebookAccountKit()
         }
@@ -412,14 +404,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
         (containerView.findViewById<TextView>(R.id.textSaveAndContinue)).setOnClickListener {
             if (prepareDataForPosting()) {
-//                showProgressDialog(resources.getString(R.string.please_wait))
-//                var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-//                val retro = BaseApplication.getInstance().retrofit
-//                val campaignAPI = retro.create(RewardsAPI::class.java)
-//                val call = campaignAPI.sendRewardsapiDataTest(userId!!,apiGetResponse, pageValue = 4 )
-//                call.enqueue(postDataofRewardsToServer)
-
-
                 postDataofRewardsToServer()
             }
         }
@@ -637,13 +621,9 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             }
         }
 
-        if (editEmail.text.isNullOrEmpty()) {
-            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_email)), Toast.LENGTH_SHORT).show()
-            return false
-        } else if (isMailValid()) {
+        if (isvalid()) {
             apiGetResponse.email = editEmail.text.toString().trim()
         } else {
-            Toast.makeText(activity, resources.getString(R.string.please_enter_a_valid, resources.getString(R.string.rewards_email)), Toast.LENGTH_SHORT).show()
             return false
         }
 
@@ -658,8 +638,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
         apiGetResponse.latitude = lat
         apiGetResponse.longitude = lng
-
-
 
 
         if (radioGroupWorkingStatus.checkedRadioButtonId == R.id.radiokWorking) {
@@ -842,11 +820,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         fun profileOnSaveAndContinue()
     }
 
-
-    fun isMailValid(): Boolean {
-        return !editEmail.text.isNullOrBlank() && StringUtils.isValidEmail(editEmail.text.toString().trim())
-    }
-
     /*post data to server*/
     private fun postDataofRewardsToServer() {
         var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
@@ -881,16 +854,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
                 override fun onError(e: Throwable) {
                     removeProgressDialog()
-//                    var data = (e as IllegalStateException).response().errorBody()!!.byteStream()
-//
-//                    if (code == 400) {
-//                        var data = (e as HttpException).response().errorBody()!!.byteStream()
-//                        var jsonParser = JsonParser()
-//                        var jsonObject = jsonParser.parse(
-//                                InputStreamReader(data, "UTF-8")) as JsonObject
-//                        var reason = jsonObject.get("reason")
-//                        Toast.makeText(context, reason.asString, Toast.LENGTH_SHORT).show()
-//                    }
                     Log.e("exception in error", e.message.toString())
                 }
             })
@@ -910,41 +873,9 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
     }
 
-//    private val postDataofRewardsToServer = object : Callback<RewardsPersonalResponse> {
-//
-//        override fun onResponse(call: Call<RewardsPersonalResponse>, response: retrofit2.Response<RewardsPersonalResponse>) {
-//            removeProgressDialog()
-//            if (response == null || null == response.body()) {
-//                val nee = NetworkErrorException(response.raw().toString())
-//                Crashlytics.logException(nee)
-//                return
-//            }
-//            try {
-//                val responseData = response.body()
-////                if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-////                    if (responseData.data!!.result!!.size > 0) {
-////                        campaignList.addAll(responseData.data!!.result as ArrayList<CampaignDataListResult>)
-////                        adapter.notifyDataSetChanged()
-////                    }
-////                } else {
-////                }
-//            } catch (e: Exception) {
-//                Crashlytics.logException(e)
-//                Log.d("MC4kException", Log.getStackTraceString(e))
-//            }
-//        }
-//
-//        override fun onFailure(call: Call<RewardsPersonalResponse>, t: Throwable) {
-//            removeProgressDialog()
-//            Crashlytics.logException(t)
-//            Log.d("MC4kException", Log.getStackTraceString(t))
-//        }
-//    }
-
     /*fetch data from server*/
     private fun fetchRewardsData() {
         var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-//        var userId = "218f7fd8fe914c3887f508486fc9cf8e"
         if (userId != null) {
             showProgressDialog(resources.getString(R.string.please_wait))
             BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData(userId!!, 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
@@ -1080,30 +1011,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 //                    //RewardsPersonalInfoFragment.textView.setText("" + current_day + "-" + (current_month + 1) + "-" + curent_year)
 //                }
             }
-        }
-
-        fun chkTime(time: String): Boolean {
-            var result = true
-            val currentime = "" + System.currentTimeMillis() / 1000
-            if (Integer.parseInt(currentime) < Integer.parseInt(convertDate(time)))
-                result = false
-
-            return result
-        }
-
-        fun convertDate(convertdate: String): String {
-            var timestamp = ""
-            try {
-                val formatter = SimpleDateFormat("dd-MM-yyyy")
-                val dateobj = formatter.parse(convertdate)
-                timestamp = "" + dateobj.time / 1000
-                return timestamp
-            } catch (e: ParseException) {
-                // TODO Auto-generated catch block
-                e.printStackTrace()
-            }
-
-            return timestamp
         }
     }
 
@@ -1311,25 +1218,24 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                     Log.e("exception in error", e.message.toString())
                 }
             })
+
+
         }
+
+
     }
 
-/*    fun fetchLangLat(address: String) {
-        val coder = Geocoder(activity as RewardsContainerActivity)
-        var addresses: List<Address>
-        (activity as RewardsContainerActivity).runOnUiThread {
-            addresses = coder.getFromLocationName(address, 5)
-            if (addresses == null || addresses.isNotEmpty() || addresses.isNullOrEmpty()) {
+    fun isvalid(): Boolean {
+        var mail = editEmail.text.toString().trim()
 
-            } else {
-                val location: Address = addresses.get(0)
-                lat = location.getLatitude()
-                lng = location.getLongitude()
-                Log.i("lat", lat.toString())
-                Log.i("lat", lng.toString())
-            }
+        if (mail.isNullOrEmpty() || !StringUtils.isValidEmail(mail)) run {
+            editEmail.setFocusableInTouchMode(true)
+            editEmail.setError(getString(R.string.enter_valid_email))
+            editEmail.requestFocus()
+            return false
         }
-    }*/
+        return true
+    }
 
 }
 
