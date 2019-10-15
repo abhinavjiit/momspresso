@@ -169,7 +169,8 @@
                     android:layout_marginRight="10dp"
                     android:background="@drawable/button_round"
                     android:gravity="center"
-                    android:text="Edit"
+                    android:textAllCaps="false"
+                    android:text="@string/rewards_edit"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     app:fontName="oswald_regular.ttf" />
@@ -424,7 +425,7 @@
                         android:layout_marginRight="4dp"
                         android:background="@drawable/shape_red_border"
                         android:gravity="center"
-                        android:text="EDIT"
+                        android:text="@string/rewards_edit"
                         android:textColor="@color/app_red"
                         android:textSize="14sp"
                         android:visibility="gone"
@@ -563,7 +564,7 @@
                             android:layout_alignParentStart="true"
                             android:layout_alignParentLeft="true"
                             android:buttonTint="@color/app_red"
-                            android:text="Yes"
+                            android:text="@string/rewards_yes"
                             android:textColor="@color/app_light_black" />
 
                         <androidx.appcompat.widget.AppCompatRadioButton
@@ -586,7 +587,7 @@
                             android:layout_marginLeft="20dp"
                             android:layout_toRightOf="@+id/radioExpecting"
                             android:buttonTint="@color/app_red"
-                            android:text="No"
+                            android:text="@string/rewards_no"
                             android:textColor="@color/app_light_black" />
                     </RadioGroup>
                 </RelativeLayout>
@@ -697,7 +698,7 @@
                         android:id="@+id/textDateOfDelivery"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="EXPECTED DATE OF DELIVERY"
+                        android:text="@string/rewards_expected_date_delivery"
                         android:textColor="@color/app_grey"
                         app:fontName="oswald_regular.ttf" />
 
@@ -757,7 +758,7 @@
                         android:layout_marginRight="4dp"
                         android:background="@drawable/shape_red_border"
                         android:gravity="center"
-                        android:text="EDIT"
+                        android:text="@string/rewards_edit"
                         android:textColor="@color/app_red"
                         android:textSize="14sp"
                         android:visibility="gone"

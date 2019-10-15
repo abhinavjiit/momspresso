@@ -285,7 +285,7 @@ public class BaseApplication extends Application {
 
     public Retrofit getCampaignRetrofit() {
         if (null == campaignRewards) {
-            createRetrofitInstanceForCampaign("https://testingapi.momspresso.com/");
+            createRetrofitInstanceForCampaign("https://devapi.momspresso.com");
         }
         return campaignRewards;
     }

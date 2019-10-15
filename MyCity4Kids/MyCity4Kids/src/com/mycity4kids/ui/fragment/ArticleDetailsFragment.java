@@ -376,7 +376,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 mWebView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        return false;
+                        return true;
                     }
                 });
             } else {

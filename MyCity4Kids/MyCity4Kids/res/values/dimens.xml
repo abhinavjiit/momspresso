@@ -81,4 +81,5 @@
     <dimen name="space_48">48dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="space_90">90dp</dimen>
+    <dimen name="space_44">44dp</dimen>
 </resources>
