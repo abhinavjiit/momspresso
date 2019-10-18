@@ -1,19 +1,5 @@
 package com.mycity4kids.ui.campaign.fragment
 
-/*import android.support.constraint.ConstraintLayout
-import android.support.v4.app.ShareCompat
-import android.support.v4.widget.NestedScrollView
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar*/
-
-/*import android.support.constraint.ConstraintLayout
-import android.support.v4.app.ShareCompat
-import android.support.v4.widget.NestedScrollView
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar*/
-
 import android.accounts.NetworkErrorException
 import android.app.Activity
 import android.app.Dialog

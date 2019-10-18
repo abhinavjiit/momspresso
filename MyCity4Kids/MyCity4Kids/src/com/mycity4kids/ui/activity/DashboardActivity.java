@@ -110,7 +110,6 @@ import com.mycity4kids.ui.fragment.ExploreFragment;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
-import com.mycity4kids.ui.fragment.GroupsFragment;
 import com.mycity4kids.ui.fragment.GroupsViewFragment;
 import com.mycity4kids.ui.fragment.NotificationFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
@@ -679,7 +678,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 break;
                             case R.id.action_location:
                                 hideCreateContentView();
-                                if (topFragment instanceof GroupsFragment) {
+                                if (topFragment instanceof GroupsViewFragment) {
                                     return true;
                                 }
                                 Utils.groupsEvent(DashboardActivity.this, "Home Screen", "Group_bottom_nav", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Group_listing", "", "");
