@@ -100,10 +100,10 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
             if (matchStart != null && matchEnd != null) {
                 spannable!!.setSpan(clickableSpan, matchStart, matchEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             };
-            (view.deliverable_text).setText(spannable)
+            (view.deliverable_text).text = spannable
             (view.deliverable_text).isClickable = true
-            (view.deliverable_text).setMovementMethod(LinkMovementMethod.getInstance());
-            (view.deliverable_text).setHighlightColor(Color.TRANSPARENT);
+            (view.deliverable_text).movementMethod = LinkMovementMethod.getInstance()
+//            (view.deliverable_text).setHighlightColor(Color.TRANSPARENT);
         }
 
         fun getDate(milliSeconds: Long, dateFormat: String): String {

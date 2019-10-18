@@ -19,7 +19,6 @@
         android:textSize="17sp"
         app:fontName="oswald_regular.ttf" />
 
-
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/deliverable_text"
         android:layout_width="match_parent"
@@ -30,8 +29,9 @@
         android:layout_marginEnd="@dimen/space_15"
         android:layout_marginRight="@dimen/space_15"
         android:autoLink="web"
-        android:textColorLink="#0000ee"
         android:textColor="@color/campaign_4A4A4A"
+        android:textColorLink="#0000ee"
+        android:textIsSelectable="true"
         android:textSize="15sp"
         app:fontName="open_sans.ttf" />
 
@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/space_15"
-        android:visibility="gone"
-        android:background="#E5E5E5" />
+        android:background="#E5E5E5"
+        android:visibility="gone" />
 
 </LinearLayout>

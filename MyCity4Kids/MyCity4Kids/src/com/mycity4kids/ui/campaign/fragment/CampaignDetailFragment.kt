@@ -384,9 +384,9 @@ class CampaignDetailFragment : BaseFragment() {
         if (matchStart != null && matchEnd != null) {
             spannable!!.setSpan(clickableSpan, matchStart, matchEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         };
-        textView.setText(spannable)
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
-        textView.setHighlightColor(Color.TRANSPARENT);
+        textView.text = spannable
+        textView.movementMethod = LinkMovementMethod.getInstance()
+//        textView.highlightColor = Color.TRANSPARENT
     }
 
     private fun setClickAction() {
