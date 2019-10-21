@@ -8,17 +8,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-
-import androidx.annotation.NonNull;
-
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,8 +18,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
@@ -130,19 +127,10 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
         if (comingFrom.equals("Challenge")) {
             challengeId = intent.getStringExtra("selectedId");
             challengeName = intent.getStringExtra("selectedName");
-
-        } else if (comingFrom.equals("createDashboardIcon")) {
+        } else if (comingFrom.equals("createDashboardIcon") || "notification".equals(comingFrom)) {
             draftsShimmerLayout.setVisibility(View.VISIBLE);
-            //        Bundle extras = getIntent().getExtras();
-            //   if (intent != null) {
-            // jasonMyObject = intent.getStringExtra("currentChallengesTopic");
-
-            //   }
-
-            //   videoChallengeTopics = new Gson().fromJson(jasonMyObject, Topics.class);
             categoriesTextView.setVisibility(View.VISIBLE);
             challengesTextView.setVisibility(View.VISIBLE);
-
             horizontalRecyclerViewForVideoChallenge.setVisibility(View.VISIBLE);
             linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             horizontalRecyclerViewForVideoChallenge.setLayoutManager(linearLayoutManager);
@@ -164,7 +152,6 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
             gridview.setAdapter(adapter);
             gridview.setExpanded(true);
             adapter.setDatalist(mainTopicsList);
-//            adapter.setVideoFlag();
         } catch (FileNotFoundException e) {
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
@@ -184,7 +171,6 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
                         adapter = new ParentTopicsGridAdapter(null);
                         gridview.setAdapter(adapter);
                         adapter.setDatalist(mainTopicsList);
-//                        adapter.setVideoFlag();
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
@@ -218,10 +204,6 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
 
                 launchAddVideoOptions();
                 Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Category_Name", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_upload_video", categoryId, "");
-
-//                Intent intent = new Intent(ChooseVideoCategoryActivity.this, TopicsListingActivity.class);
-//                intent.putExtra("parentTopicId", topic.getId());
-//                startActivity(intent);
             }
         });
     }
@@ -263,19 +245,10 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
     }
 
     public void requestPermissions(final String imageFrom) {
-        // BEGIN_INCLUDE(contacts_permission_request)
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example, if the request has been denied previously.
-            Log.i("Permissions",
-                    "Displaying storage permission rationale to provide additional context.");
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
             Snackbar.make(rootLayout, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
@@ -287,8 +260,6 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
                     .show();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
             Snackbar.make(rootLayout, R.string.permission_camera_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
@@ -318,16 +289,10 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
         }
     }
 
-    /**
-     * Callback received when a permissions request has been completed.
-     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            Log.i("Permissions", "Received response for camera permissions request.");
-
             if (PermissionUtil.verifyPermissions(grantResults)) {
                 Snackbar.make(rootLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
@@ -335,15 +300,12 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
                 Intent videoCapture = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                 startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
             } else {
-                Log.i("Permissions", "storage permissions were NOT granted.");
                 Snackbar.make(rootLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
                         .show();
             }
 
         } else if (requestCode == REQUEST_GALLERY_PERMISSION) {
-            Log.i("Permissions", "Received response for storage permissions request.");
-
             if (PermissionUtil.verifyPermissions(grantResults)) {
                 Snackbar.make(rootLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
@@ -354,12 +316,10 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
             } else {
-                Log.i("Permissions", "storage permissions were NOT granted.");
                 Snackbar.make(rootLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
                         .show();
             }
-
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -411,13 +371,8 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
         } else {
             intent.putExtra("comingFrom", "notFromChallenge");
         }
-
-        // if (null != filepath && (filepath.endsWith(".mp4") || filepath.endsWith(".MP4"))) {
         intent.putExtra("EXTRA_VIDEO_PATH", FileUtils.getPath(this, uri));
         startActivity(intent);
-       /* } else {
-            showToast(getString(R.string.choose_mp4_file));
-        }*/
     }
 
     @Override
@@ -426,9 +381,8 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
     }
 
     @Override
-    public void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> info, ArrayList<String> mappedCategory, int max_Duration) {
-
-
+    public void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew
+            , ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> info, ArrayList<String> mappedCategory, int max_Duration) {
         switch (view.getId()) {
             case R.id.tagImageView:
             case R.id.topicContainer:
@@ -438,13 +392,9 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
                 intent.putExtra("mappedId", mappedCategory.get(position));
                 startActivity(intent);
                 Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Listing_challenge_container", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_challenge_detail", "", challengeId.toString());
-
                 break;
-
-
             case R.id.info:
                 if (info != null) {
-
                     if (info.size() > position) {
                         if (!StringUtils.isNullOrEmpty(info.get(position))) {
                             challengeRulesInDialogBox = info.get(position);
@@ -456,23 +406,16 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
                             WebView webView = (WebView) dialog.findViewById(R.id.videoChallengeRulesWebView);
                             webView.loadData(challengeRulesInDialogBox, "text/html", "UTF-8");
                             imageView.setOnClickListener(view2 -> dialog.dismiss());
-
                             dialog.show();
                             Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Challenge_info", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_challenge_detail", "", challengeId.toString());
-
                         }
                     }
                 }
                 break;
         }
-
-
     }
 
-
     private void getChallengeData() {
-
-
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
             removeProgressDialog();
             return;
@@ -501,16 +444,12 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
                     if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                         videoChallengeTopicsAdapter.setData(responseData.getData());
                         videoChallengeTopicsAdapter.notifyDataSetChanged();
-
-
                     }
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
             }
-
-
         }
 
         @Override

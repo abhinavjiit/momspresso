@@ -19,6 +19,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -36,6 +37,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -72,22 +74,12 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_video_listing_detail);
         rootLayout = (CoordinatorLayout) findViewById(R.id.mainprofile_parent_layout);
-
         frameLayout = findViewById(R.id.container_layout);
-
-
         Intent intent = getIntent();
         if (intent != null) {
             if (intent.hasExtra("comingFrom")) {
                 comingFrom = intent.getStringExtra("comingFrom");
             }
-
-            try {
-                mappedCategory = intent.getStringExtra("mappedId");
-            } catch (NullPointerException e) {
-                mappedCategory = "category-6dfcf8006c794d4e852343776302f588";
-            }
-
             challengeId = intent.getStringExtra("challenge");
         }
         fetchChallengeDetail(challengeId);
@@ -144,6 +136,11 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
                         selectedStreamUrl = responseData.getExtraData().get(0).getChallenge().getVideoUrl();
                         challengeRules = responseData.getExtraData().get(0).getChallenge().getRules();
                         max_Duration = responseData.getExtraData().get(0).getChallenge().getMax_duration();
+                        if (StringUtils.isNullOrEmpty(responseData.getExtraData().get(0).getChallenge().getMapped_category())) {
+                            mappedCategory = "category-6dfcf8006c794d4e852343776302f588";
+                        } else {
+                            mappedCategory = responseData.getExtraData().get(0).getChallenge().getMapped_category();
+                        }
 
                         Bundle bundle = new Bundle();
                         bundle.putString("selected_Name", selected_Name);

@@ -327,6 +327,7 @@
                     android:autoLink="web"
                     android:textColor="@color/campaign_list_buttons"
                     android:textColorLink="#0000ee"
+                    android:textIsSelectable="true"
                     android:textSize="15sp"
                     app:fontName="open_sans.ttf"
                     app:layout_constraintStart_toStartOf="@id/read_this_box" />
@@ -390,13 +391,11 @@
                 android:lineSpacingExtra="1.6dp"
                 android:textColor="@color/campaign_4A4A4A"
                 android:textColorLink="#0000ee"
+                android:textIsSelectable="true"
                 android:textSize="15sp"
                 app:fontName="open_sans.ttf"
-                app:layout_constraintEnd_toEndOf="@id/img"
                 app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@id/img"
                 app:layout_constraintTop_toBottomOf="@+id/desc_header" />
-
 
             <View
                 android:id="@+id/view_1"
@@ -417,7 +416,6 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view_1" />
-
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/term_header"
@@ -449,6 +447,7 @@
                 android:autoLink="web"
                 android:textColor="@color/campaign_4A4A4A"
                 android:textColorLink="#0000ee"
+                android:textIsSelectable="true"
                 android:textSize="15sp"
                 app:fontName="open_sans.ttf"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -646,17 +645,17 @@
             android:id="@+id/unapply_campaign"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/space_25"
             android:drawablePadding="2dp"
             android:padding="4dp"
-            android:visibility="gone"
             android:src="@drawable/ic_more_vert_black_24dp"
             android:text="@string/campaign_details_applied"
             android:textColor="@color/white"
             android:textSize="8sp"
-            android:tint="@color/white" />
+            android:tint="@color/white"
+            android:visibility="gone" />
     </RelativeLayout>
 
 

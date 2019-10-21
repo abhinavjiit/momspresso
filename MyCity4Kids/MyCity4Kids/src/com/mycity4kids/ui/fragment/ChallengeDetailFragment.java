@@ -1,6 +1,5 @@
 package com.mycity4kids.ui.fragment;
 
-import android.Manifest;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
@@ -13,6 +12,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
@@ -36,13 +42,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
 public class ChallengeDetailFragment extends Fragment implements View.OnClickListener {
 
 
@@ -56,10 +55,6 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
     com.getbase.floatingactionbutton.FloatingActionButton saveTextView;
     TabLayout tabs;
     private ViewPager viewPager;
-    private static final int REQUEST_CAMERA_PERMISSION = 1;
-    private static final int REQUEST_GALLERY_PERMISSION = 2;
-    private static String[] PERMISSIONS_STORAGE_CAMERA = {Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
     private Toolbar toolbar;
     private String selectedId, mappedId;
     String screen;
@@ -73,7 +68,6 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
     private ImageView thumbNail, back;
     private String comingFrom = "";
     private CoordinatorLayout momVlogCoachMark;
-
 
     @Nullable
     @Override
@@ -226,8 +220,9 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
             viewPager.setCurrentItem(0);
             saveTextView.setVisibility(View.VISIBLE);
             ((NewVideoChallengeActivity) getActivity()).chooseAndpermissionDialog(max_Duration);
-
-
+        } else if ("notification".equals(comingFrom)) {
+            viewPager.setCurrentItem(0);
+            saveTextView.setVisibility(View.VISIBLE);
         } else {
             viewPager.setCurrentItem(1);
             saveTextView.setVisibility(View.VISIBLE);

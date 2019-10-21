@@ -1,19 +1,5 @@
 package com.mycity4kids.ui.campaign.fragment
 
-/*import android.support.constraint.ConstraintLayout
-import android.support.v4.app.ShareCompat
-import android.support.v4.widget.NestedScrollView
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar*/
-
-/*import android.support.constraint.ConstraintLayout
-import android.support.v4.app.ShareCompat
-import android.support.v4.widget.NestedScrollView
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar*/
-
 import android.accounts.NetworkErrorException
 import android.app.Activity
 import android.app.Dialog
@@ -398,9 +384,9 @@ class CampaignDetailFragment : BaseFragment() {
         if (matchStart != null && matchEnd != null) {
             spannable!!.setSpan(clickableSpan, matchStart, matchEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         };
-        textView.setText(spannable)
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
-        textView.setHighlightColor(Color.TRANSPARENT);
+        textView.text = spannable
+        textView.movementMethod = LinkMovementMethod.getInstance()
+//        textView.highlightColor = Color.TRANSPARENT
     }
 
     private fun setClickAction() {

@@ -3,7 +3,6 @@ package com.mycity4kids.ui.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.utils.DateTimeUtils;
@@ -50,7 +51,7 @@ import com.mycity4kids.ui.activity.TopicsShortStoriesContainerFragment;
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
-import com.mycity4kids.ui.fragment.GroupsFragment;
+import com.mycity4kids.ui.fragment.GroupsViewFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.squareup.picasso.Picasso;
 
@@ -581,7 +582,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "groupListing");
-                    GroupsFragment fragment0 = new GroupsFragment();
+                    GroupsViewFragment fragment0 = new GroupsViewFragment();
                     Bundle mBundle0 = new Bundle();
                     fragment0.setArguments(mBundle0);
                     ((DashboardActivity) mContext).addFragment(fragment0, mBundle0, true);

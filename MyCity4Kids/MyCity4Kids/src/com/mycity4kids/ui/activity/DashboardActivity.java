@@ -29,6 +29,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
@@ -97,7 +110,6 @@ import com.mycity4kids.ui.fragment.ExploreFragment;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
-import com.mycity4kids.ui.fragment.GroupsFragment;
 import com.mycity4kids.ui.fragment.GroupsViewFragment;
 import com.mycity4kids.ui.fragment.NotificationFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
@@ -125,18 +137,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
@@ -678,7 +678,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 break;
                             case R.id.action_location:
                                 hideCreateContentView();
-                                if (topFragment instanceof GroupsFragment) {
+                                if (topFragment instanceof GroupsViewFragment) {
                                     return true;
                                 }
                                 Utils.groupsEvent(DashboardActivity.this, "Home Screen", "Group_bottom_nav", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Group_listing", "", "");
@@ -981,6 +981,31 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                     jsonObject.put("type", "campaign_listing");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("choose_video_category")) {
+                Intent createVideoIntent = new Intent(this, ChooseVideoCategoryActivity.class);
+                createVideoIntent.putExtra("comingFrom", "notification");
+                startActivity(createVideoIntent);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "choose_video_category");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("video_challenge_details")) {
+                Intent videoChallengeIntent = new Intent(this, NewVideoChallengeActivity.class);
+                videoChallengeIntent.putExtra(Constants.CHALLENGE_ID, "" + notificationExtras.getString("challengeId"));
+                videoChallengeIntent.putExtra("comingFrom", "notification");
+                startActivity(videoChallengeIntent);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "video_challenge_details");
                     mMixpanel.track("PushNotification", jsonObject);
                 } catch (Exception e) {
                     e.printStackTrace();

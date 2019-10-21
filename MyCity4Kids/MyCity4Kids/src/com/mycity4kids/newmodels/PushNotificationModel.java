@@ -13,6 +13,7 @@ public class PushNotificationModel implements Parcelable {
     private String calendar_items = "";
     private String todo_items = "";
     private String title;
+    private String body;
     private String share_content;
     private String message_id;
     private String userId;
@@ -30,6 +31,7 @@ public class PushNotificationModel implements Parcelable {
     private String rich_image_url;
     private String sound;
     private String challengeId;
+    private String comingFrom;
 
     public String getSound() {
         return sound;
@@ -105,6 +107,14 @@ public class PushNotificationModel implements Parcelable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
     }
 
     public void setMessage_id(String message_id) {
@@ -207,6 +217,14 @@ public class PushNotificationModel implements Parcelable {
         this.titleSlug = titleSlug;
     }
 
+    public String getComingFrom() {
+        return comingFrom;
+    }
+
+    public void setComingFrom(String comingFrom) {
+        this.comingFrom = comingFrom;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -235,9 +253,9 @@ public class PushNotificationModel implements Parcelable {
         rich_image_url = in.readString();
         challengeId = in.readString();
         mapped_category = in.readString();
-
+        body = in.readString();
+        comingFrom = in.readString();
     }
-
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -261,6 +279,8 @@ public class PushNotificationModel implements Parcelable {
         dest.writeString(rich_image_url);
         dest.writeString(challengeId);
         dest.writeString(mapped_category);
+        dest.writeString(body);
+        dest.writeString(comingFrom);
     }
 
     public static Parcelable.Creator<PushNotificationModel> CREATOR = new Parcelable.Creator<PushNotificationModel>() {

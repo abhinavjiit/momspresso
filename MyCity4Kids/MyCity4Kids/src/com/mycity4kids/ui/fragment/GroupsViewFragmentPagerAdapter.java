@@ -39,18 +39,4 @@ public class GroupsViewFragmentPagerAdapter extends FragmentPagerAdapter {
         return mNumOfTabs;
     }
 
-    /*@Override
-    public CharSequence getPageTitle(int position) {
-        return mFragmentTitleList.get(position);
-    }
-
-    public void addFrag(Fragment fragment) {
-        mFragmentList.add(fragment);
-        mFragmentTitleList.add("");
-    }
-
-    public void addFrag(Fragment fragment, String title) {
-        mFragmentList.add(fragment);
-        mFragmentTitleList.add(title);
-    }*/
 }
