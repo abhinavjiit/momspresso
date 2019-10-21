@@ -612,7 +612,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         resultIntent = new Intent(getApplicationContext(), CampaignContainerActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         resultIntent.putExtra("fromNotification", true);
-                        resultIntent.putExtra("campaign_id", pushNotificationModel.getCampaign_id());
+                        resultIntent.putExtra("campaign_id", ""+pushNotificationModel.getCampaign_id());
+                        resultIntent.putExtra("campaign_detail","campaign_detail");
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         stackBuilder.addNextIntentWithParentStack(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
