@@ -1259,6 +1259,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="submit_article">Submit Your Article</string>
 
     <string name="participate_earn_mymoney">MyMoney ਕੈੰਪੇਨ ਵਿੱਚ ਹਿੱਸਾ ਲਵੋ ਅਤੇ ਕਮਾਈ ਕਰੋ</string>
+    <string name="please_apply">Please Apply First</string>
+    <string name="referral_code_alert_message">The referral code you entered was incorrect. Click OK to continue without referral code.</string>
+    <string name="alert_message_title">Message</string>
 
 </resources>
 
