@@ -17,6 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatSpinner
@@ -31,15 +32,17 @@ import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.location.places.AutocompleteFilter
 import com.google.android.gms.location.places.ui.PlaceAutocomplete
-import com.google.gson.Gson
 import com.kelltontech.network.Response
+import com.kelltontech.ui.BaseActivity
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.DateTimeUtils
 import com.kelltontech.utils.StringUtils
+import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.listener.OnButtonClicked
 import com.mycity4kids.models.campaignmodels.ReferralCodeResult
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.CityInfoItem
@@ -78,6 +81,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     private var lng: Double = 0.0
     private var myClipboard: ClipboardManager? = null
     private var myClip: ClipData? = null
+    private var validReferralCode: String = "empty"
+    private lateinit var Continue: String
 
     private lateinit var editReferralCode1: EditText
 
@@ -231,18 +236,19 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         } else {
             referralMainLayout.visibility = View.VISIBLE
         }
-        if (!apiGetResponse.referred_by.isNullOrEmpty()) {
-            editReferralCode.setText(apiGetResponse.referred_by)
+        /*  if (!apiGetResponse.referred_by.isNullOrEmpty()) {
+              editReferralCode.setText(apiGetResponse.referred_by)
+              editReferralCode.isEnabled = true
+          }*/
+
+        if (!referralCode.trim().isNullOrEmpty()) {
+            editReferralCode.setText(referralCode)
             editReferralCode.isEnabled = true
+            //  apiGetResponse.referred_by = referralCode
         } else {
-            if (!referralCode.trim().isNullOrEmpty()) {
-                editReferralCode.setText(referralCode)
-                editReferralCode.isEnabled = true
-                apiGetResponse.referred_by = referralCode
-            } else {
-                apiGetResponse.referred_by = null
-            }
+            apiGetResponse.referred_by = null
         }
+
         if (!apiGetResponse.firstName.isNullOrBlank()) editFirstName.setText(apiGetResponse.firstName)
         if (!apiGetResponse.lastName.isNullOrBlank()) editLastName.setText(apiGetResponse.lastName)
         if (!apiGetResponse.contact.isNullOrBlank()) {
@@ -736,8 +742,44 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         } else {
             apiGetResponse.kidsInfo = null
         }
+        if (referralMainLayout.visibility == View.VISIBLE) {
+            if (validReferralCode.equals("valid")) {
+                editReferralCode.isEnabled = true
+                apiGetResponse.referred_by = editReferralCode.text.toString()
+            } else if (validReferralCode.equals("notValid")) {
+                (activity as BaseActivity).showAlertDialog(
+                        getString(R.string.alert_message_title),
+                        getString(R.string.referral_code_alert_message),
+                        OnButtonClicked {
+                            editReferralCode.text = null
+                            validReferralCode = "valid"
+                            if (prepareDataForPosting()) {
+                                postDataofRewardsToServer()
+                            }
+                        }
+                )
+                return false
+            } else if (validReferralCode.equals("empty")) {
+
+                if (!editReferralCode.text.toString().isNullOrEmpty()) {
+
+
+                    editReferralCode.setFocusableInTouchMode(true)
+                    editReferralCode.setError(getString(R.string.please_apply))
+                    editReferralCode.requestFocus()
+                    return false
+
+                } else {
+                    apiGetResponse.referred_by = null
+                }
+            }
+        }
+
+
+
         return true
     }
+
 
     private fun varifyNumberWithFacebookAccountKit() {
         val intent = Intent(activity, AccountKitActivity::class.java)
@@ -1152,9 +1194,12 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                             textReferCodeError.setText("Successfully Applied")
                             editReferralCode.isEnabled = true
                             textApplyReferral.isEnabled = false
+                            validReferralCode = "valid"
+
                         } else {
                             textReferCodeError.visibility = View.VISIBLE
                             textReferCodeError.setText("Code is not valid")
+                            validReferralCode = "notValid"
                             textReferCodeError.setTextColor(activity!!.resources.getColor(R.color.campaign_refer_code_error))
                         }
                     }
