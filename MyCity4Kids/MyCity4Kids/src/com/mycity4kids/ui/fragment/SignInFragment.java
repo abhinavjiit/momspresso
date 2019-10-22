@@ -10,16 +10,20 @@ import android.widget.RelativeLayout;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
+import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ActivityLogin;
+import com.mycity4kids.ui.activity.CustomSignUpActivity;
 import com.mycity4kids.widget.CustomFontTextView;
 
 /**
  * Created by hemant on 5/6/17.
  */
 public class SignInFragment extends BaseFragment implements View.OnClickListener {
+
+    private int count = 0;
 
     private View view;
     private RelativeLayout lnrRoot;
@@ -29,6 +33,7 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
     private CustomFontTextView loginEmailTextView;
     private CustomFontTextView signupTextView;
     private CustomFontTextView phoneLoginTextView;
+    private CustomFontTextView welcomeTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,6 +42,7 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
         mInflator = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         lnrRoot = (RelativeLayout) view.findViewById(R.id.rootLayout);
+        welcomeTextView = (CustomFontTextView) view.findViewById(R.id.welcomeTextView);
         facebookLoginTextView = (CustomFontTextView) view.findViewById(R.id.connect_facebook);
         googleLoginTextView = (CustomFontTextView) view.findViewById(R.id.connect_googleplus);
         loginEmailTextView = (CustomFontTextView) view.findViewById(R.id.loginEmailTextView);
@@ -48,6 +54,7 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
         loginEmailTextView.setOnClickListener(this);
         phoneLoginTextView.setOnClickListener(this);
         signupTextView.setOnClickListener(this);
+        welcomeTextView.setOnClickListener(this);
 
         return view;
     }
@@ -56,6 +63,15 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
     public void onClick(View v) {
         Intent intent = null;
         switch (v.getId()) {
+            case R.id.welcomeTextView:
+                if (count == 7) {
+                    count = 0;
+                    Intent signUpSIntent = new Intent(getActivity(), CustomSignUpActivity.class);
+                    startActivity(signUpSIntent);
+                } else {
+                    count++;
+                }
+                break;
             case R.id.connect_phone:
                 ((ActivityLogin) getActivity()).fbAccountKitVerification();
                 break;
@@ -70,14 +86,12 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
                 Bundle mBundle = new Bundle();
                 emailLoginFragment.setArguments(mBundle);
                 ((ActivityLogin) getActivity()).replaceFragmentWithAnimation(emailLoginFragment, mBundle, true);
-
                 break;
             case R.id.signupTextView:
                 SignUpFragment signUpFragment = new SignUpFragment();
                 Bundle bundle = new Bundle();
                 signUpFragment.setArguments(bundle);
                 ((ActivityLogin) getActivity()).replaceFragmentWithAnimation(signUpFragment, bundle, true);
-
                 break;
             default:
                 break;

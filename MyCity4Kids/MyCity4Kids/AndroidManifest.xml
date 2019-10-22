@@ -530,6 +530,9 @@
         <activity
             android:name=".ui.activity.ArticleChallengesActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.CustomSignUpActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="io.branch.sdk.BranchKey"
