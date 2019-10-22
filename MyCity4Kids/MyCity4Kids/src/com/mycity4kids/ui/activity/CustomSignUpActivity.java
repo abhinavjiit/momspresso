@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -193,6 +194,8 @@ public class CustomSignUpActivity extends BaseActivity implements View.OnClickLi
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     model.setIsValidated("1");
                     SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), model);
+                    Intent intent1 = new Intent(CustomSignUpActivity.this, LoadingActivity.class);
+                    startActivity(intent1);
                 }
             } catch (Exception e) {
                 Log.d("MC4kException", Log.getStackTraceString(e));
