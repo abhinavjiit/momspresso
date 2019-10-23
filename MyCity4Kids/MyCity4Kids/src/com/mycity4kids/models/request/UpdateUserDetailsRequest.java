@@ -19,6 +19,7 @@ public class UpdateUserDetailsRequest {
     private String cityName;
     private String blogTitle;
     private String subscriptionEmail;
+    private String isValidated;
     private ArrayList<AddRemoveKidsRequest> kids;
 
     public String getFirstName() {
@@ -115,6 +116,14 @@ public class UpdateUserDetailsRequest {
 
     public void setSubscriptionEmail(String subscriptionEmail) {
         this.subscriptionEmail = subscriptionEmail;
+    }
+
+    public String getIsValidated() {
+        return isValidated;
+    }
+
+    public void setIsValidated(String isValidated) {
+        this.isValidated = isValidated;
     }
 
     public ArrayList<AddRemoveKidsRequest> getKids() {

@@ -10,6 +10,7 @@ import com.mycity4kids.models.response.ChangePasswordResponse;
 import com.mycity4kids.models.response.FBPhoneLoginResponse;
 import com.mycity4kids.models.response.ForgotPasswordResponse;
 import com.mycity4kids.models.response.UserDetailResponse;
+import com.mycity4kids.ui.activity.CustomSignUpActivity;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -28,6 +29,9 @@ public interface LoginRegistrationAPI {
 
     @POST("v1/users/")
     Call<UserDetailResponse> login(@Body LoginRegistrationRequest body);
+
+    @POST("v1/users/")
+    Call<UserDetailResponse> customRegistration(@Body CustomSignUpActivity.RegistrationRequest body);
 
     @PUT("v1/users/email/")
     Call<UserDetailResponse> addFacebookEmail(@Body LoginRegistrationRequest body);
