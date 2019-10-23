@@ -17,7 +17,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatSpinner
@@ -37,7 +36,6 @@ import com.kelltontech.ui.BaseActivity
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.DateTimeUtils
 import com.kelltontech.utils.StringUtils
-import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
@@ -123,6 +121,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     private lateinit var saveAndContinueListener: SaveAndContinueListener
     private lateinit var editFirstName: EditText
     private lateinit var editLastName: EditText
+    private lateinit var labelFirstName: TextView
+    private lateinit var labelLastName: TextView
     private lateinit var editPhone: TextView
     private lateinit var editAddNumber: TextView
     private lateinit var editEmail: EditText
@@ -151,6 +151,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     private lateinit var radioYes: AppCompatRadioButton
     private lateinit var radioNo: AppCompatRadioButton
     private lateinit var radioExpecting: AppCompatRadioButton
+    private lateinit var layoutWorking: RelativeLayout
     private lateinit var linearKidsDetail: LinearLayout
     private lateinit var radioGroupWorkingStatus: RadioGroup
     private var preSelectedInterest = ArrayList<String>()
@@ -169,6 +170,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     private lateinit var layoutDynamicNumberOfKids: LinearLayout
     private lateinit var textDeleteChild: TextView
     private lateinit var linearKidsEmptyView: LinearLayout
+    private lateinit var langLayout: RelativeLayout
+    private lateinit var interestLayout: RelativeLayout
     private lateinit var editKidsName: EditText
     private var isComingFromCampaign = false
     private var isComingFromRewards = false
@@ -241,6 +244,15 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
               editReferralCode.isEnabled = true
           }*/
 
+        if (isNewRegistration) {
+            labelFirstName.visibility = View.GONE
+            labelLastName.visibility = View.GONE
+            editFirstName.visibility = View.GONE
+            editLastName.visibility = View.GONE
+            layoutWorking.visibility = View.GONE
+            editKidsName.visibility = View.GONE
+        }
+
         if (!referralCode.trim().isNullOrEmpty()) {
             editReferralCode.setText(referralCode)
             editReferralCode.isEnabled = true
@@ -273,7 +285,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 checkJoint.isChecked = true
             }
         }
-        if (apiGetResponse.preferred_languages != null && apiGetResponse.preferred_languages!!.size > 0) {
+        if (!isNewRegistration && apiGetResponse.preferred_languages != null && apiGetResponse.preferred_languages!!.size > 0) {
             floatingLanguage.removeAllViews()
             textEditLanguage.visibility = View.VISIBLE
             editLanguage.visibility = View.GONE
@@ -290,13 +302,14 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 }
             }
         } else {
-            editLanguage.visibility = View.VISIBLE
+            langLayout.visibility = View.GONE
+            editLanguage.visibility = View.GONE
             linearLanguage.visibility = View.GONE
             textEditLanguage.visibility = View.GONE
 
         }
 
-        if (apiGetResponse.interest != null && apiGetResponse.interest!!.isNotEmpty()) {
+        if (!isNewRegistration && apiGetResponse.interest != null && apiGetResponse.interest!!.isNotEmpty()) {
             floatingInterest.removeAllViews()
             textEditInterest.visibility = View.VISIBLE
             editInterest.visibility = View.GONE
@@ -313,7 +326,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 }
             }
         } else {
-            editInterest.visibility = View.VISIBLE
+            interestLayout.visibility = View.GONE
+            editInterest.visibility = View.GONE
             linearInterest.visibility = View.GONE
             textEditInterest.visibility = View.GONE
 
@@ -367,6 +381,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     private fun initializeXMLComponents() {
         editFirstName = containerView.findViewById(R.id.editFirstName)
         editLastName = containerView.findViewById(R.id.editLastName)
+        labelFirstName = containerView.findViewById(R.id.labelFirstName)
+        labelLastName = containerView.findViewById(R.id.labelLastName)
         editPhone = containerView.findViewById(R.id.editPhone)
         editAddNumber = containerView.findViewById(R.id.editAddNumber)
         editFirstName = containerView.findViewById(R.id.editFirstName)
@@ -406,6 +422,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
 
         editExpectedDate = containerView.findViewById(R.id.editExpectedDate)
+        layoutWorking = containerView.findViewById(R.id.layoutWorking)
         radioGroupWorkingStatus = containerView.findViewById(R.id.radioGroupWorkingStatus)
         genderSpinner = containerView.findViewById(R.id.genderSpinner)
         spinnerGender = containerView.findViewById(R.id.spinnerGender)
@@ -433,6 +450,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         RewardsPersonalInfoFragment.textDOB = containerView.findViewById(R.id.textDOB)
         textDeleteChild = containerView.findViewById(R.id.textDeleteChild)
         linearKidsEmptyView = containerView.findViewById(R.id.linearKidsEmptyView)
+        langLayout = containerView.findViewById(R.id.langLayout)
+        interestLayout = containerView.findViewById(R.id.interestLayout)
 
         textDeleteChild.setOnClickListener {
             if (linearKidsDetail.childCount > 0) {

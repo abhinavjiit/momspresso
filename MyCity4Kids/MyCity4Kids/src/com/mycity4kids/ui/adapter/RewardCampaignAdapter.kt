@@ -65,7 +65,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
             Picasso.with(view.context).load(campaignList.brandDetails.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(view.brand_img)
             (view.brand_name).setText(campaignList.brandDetails.name)
             (view.campaign_name).setText(campaignList.name)
-            (view.amount).setText("Rs. " + campaignList.totalPayout)
+            (view.amount).setText("" + (campaignList.maxSlots - campaignList.totalUsedSlots))
             setTextAndColor(campaignList.campaignStatus)
             compareDate(campaignList.campaignStatus)
         }

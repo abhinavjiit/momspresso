@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.Window
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -211,6 +212,13 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
                     }
                 }
             } else {
+                if (currentFragment is CampaignDetailFragment) {
+                    var frameLayout: FrameLayout = currentFragment.demoVideoLayout()
+                    if (frameLayout.visibility == View.VISIBLE) {
+                        frameLayout.visibility = View.GONE
+                        return
+                    }
+                }
                 super.onBackPressed()
             }
         }

@@ -55,23 +55,39 @@
                 android:layout_alignParentBottom="true"
                 android:background="@color/grey_light" />
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/txtTrackerStatus"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="12dp"
-                android:background="@drawable/campaign_feed_register_textview_bg"
-                android:paddingLeft="10dp"
-                android:paddingTop="5dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="5dp"
-                android:text="@string/track_status"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                android:visibility="visible"
-                app:fontName="oswald_regular.ttf" />
+                android:layout_alignParentRight="true">
+
+                <ImageView
+                    android:id="@+id/play_demo_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/space_5"
+                    android:padding="@dimen/space_10"
+                    android:src="@drawable/play"
+                    android:visibility="gone" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/txtTrackerStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="12dp"
+                    android:background="@drawable/campaign_feed_register_textview_bg"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/track_status"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"
+                    android:visibility="visible"
+                    app:fontName="oswald_regular.ttf" />
+            </LinearLayout>
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 
@@ -190,7 +206,7 @@
                 android:layout_marginTop="@dimen/space_15"
                 android:layout_marginEnd="@dimen/space_25"
                 android:layout_marginRight="@dimen/space_25"
-                android:text="@string/total_payout"
+                android:text="@string/slots_left"
                 android:textColor="@color/campaign_515151"
                 android:textSize="11sp"
                 app:fontName="open_sans.ttf"
@@ -296,18 +312,44 @@
                 app:layout_constraintStart_toEndOf="@+id/view5"
                 app:layout_constraintTop_toBottomOf="@+id/end_date" />
 
+            <RelativeLayout
+                android:id="@+id/demo_upload_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_15"
+                android:layout_marginEnd="@dimen/space_15"
+                android:background="@drawable/demo_upload_bg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view5">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/demo_upload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:drawableLeft="@drawable/play"
+                    android:drawablePadding="@dimen/space_10"
+                    android:padding="@dimen/space_10"
+                    android:text="@string/campaign_demo_upload"
+                    android:textColor="@color/campaign_list_buttons"
+                    android:textSize="18sp"
+                    app:fontName="oswald_regular.ttf" />
+            </RelativeLayout>
+
             <LinearLayout
                 android:id="@+id/read_this_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_15"
+                android:layout_marginTop="@dimen/space_20"
                 android:layout_marginEnd="@dimen/space_15"
                 android:background="@drawable/read_this_background"
                 android:orientation="vertical"
                 android:padding="@dimen/space_10"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view5">
+                app:layout_constraintTop_toBottomOf="@+id/demo_upload_layout">
 
 
                 <com.mycity4kids.widget.CustomFontTextView
@@ -658,6 +700,40 @@
             android:visibility="gone" />
     </RelativeLayout>
 
+    <FrameLayout
+        android:id="@+id/demo_video_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent_color"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/cross_demo"
+                android:layout_width="@dimen/space_25"
+                android:layout_height="@dimen/space_25"
+                android:layout_gravity="right"
+                android:src="@drawable/cross_icon" />
+
+            <VideoView
+                android:id="@+id/videoView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/space_10" />
+        </LinearLayout>
+    </FrameLayout>
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer1"
@@ -665,6 +741,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
         android:background="@color/white"
+        android:visibility="gone"
         app:duration="1000">
 
         <LinearLayout
