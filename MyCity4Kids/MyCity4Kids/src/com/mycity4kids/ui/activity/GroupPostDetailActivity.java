@@ -8,14 +8,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -83,7 +75,6 @@ import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
 import com.mycity4kids.ui.fragment.TaskFragment;
 import com.mycity4kids.ui.fragment.ViewGroupPostCommentsRepliesDialogFragment;
 import com.mycity4kids.utils.AppUtils;
-import com.mycity4kids.utils.EndlessScrollListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -114,7 +105,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
     private int totalPostCount;
     private int skip = 0;
-    private int limit = 150;
+    private int limit = 10;
     int count = 0;
     private ArrayList<GroupPostCommentResult> completeResponseList;
     private String postType;
@@ -122,6 +113,9 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private int postId;
     private UserPostSettingResult currentPostPrefsForUser;
     private boolean commentDisableFlag;
+    private int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private boolean isReuqestRunning = false;
+    private boolean isLastPageReached = false;
 
     private Animation slideAnim, fadeAnim;
 
@@ -150,6 +144,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private MediaPlayer mMediaplayer;
     private String userDynamoId;
     private RelativeLayout root;
+    private View mLodingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,6 +162,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mLodingView = findViewById(R.id.relativeLoadingView);
         postSettingsContainer = (LinearLayout) findViewById(R.id.postSettingsContainer);
         postSettingsContainerMain = (RelativeLayout) findViewById(R.id.postSettingsContainerMain);
         overlayView = findViewById(R.id.overlayView);
@@ -215,11 +211,23 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
         groupMembershipStatus.checkMembershipStatus(groupId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
 
-
-        recyclerView.setOnScrollListener(new EndlessScrollListener(new LinearLayoutManager(GroupPostDetailActivity.this)) {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                getPostComments();
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) //check for scroll down
+                {
+                    visibleItemCount = llm.getChildCount();
+                    totalItemCount = llm.getItemCount();
+                    pastVisiblesItems = llm.findFirstVisibleItemPosition();
+
+                    if (!isReuqestRunning && !isLastPageReached) {
+                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                            isReuqestRunning = true;
+                            mLodingView.setVisibility(View.VISIBLE);
+                            getPostComments();
+                        }
+                    }
+                }
             }
         });
     }
@@ -243,6 +251,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             }
             try {
                 if (response.isSuccessful()) {
+                    findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(GroupPostDetailActivity.this, R.anim.rotate_indefinitely));
                     GroupPostResponse groupPostResponse = response.body();
                     postData = groupPostResponse.getData().get(0).getResult().get(0);
 
@@ -367,6 +376,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private Callback<GroupPostCommentResponse> postCommentCallback = new Callback<GroupPostCommentResponse>() {
         @Override
         public void onResponse(Call<GroupPostCommentResponse> call, retrofit2.Response<GroupPostCommentResponse> response) {
+            mLodingView.setVisibility(View.GONE);
+            isReuqestRunning = false;
             if (response.body() == null) {
                 if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
@@ -389,6 +400,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
         @Override
         public void onFailure(Call<GroupPostCommentResponse> call, Throwable t) {
+            isReuqestRunning = false;
+            mLodingView.setVisibility(View.GONE);
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
@@ -398,6 +411,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         totalPostCount = response.getTotal();
         ArrayList<GroupPostCommentResult> dataList = (ArrayList<GroupPostCommentResult>) response.getData().get(0).getResult();
         if (dataList.size() == 0) {
+            isLastPageReached = true;
             if (null != completeResponseList && !completeResponseList.isEmpty()) {
                 //No more next results for search from pagination
             } else {
@@ -656,9 +670,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             Call<GroupsActionResponse> call = groupsAPI.addCommentAction(groupCommentActionsRequest);
             call.enqueue(groupActionResponseCallback);
         }
-
     }
-
 
     private Callback<GroupsActionResponse> groupActionResponseCallback = new Callback<GroupsActionResponse>() {
         @Override
@@ -702,8 +714,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             }
             try {
                 if (response.isSuccessful()) {
-
-
                     GroupsActionResponse groupsActionResponse = response.body();
                     if (groupsActionResponse.getData().getResult().size() == 1) {
                         if (groupsActionResponse.getData().getResult().get(0).getResponseId() == 0) {
@@ -711,12 +721,9 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                                 if (groupsActionResponse.getData().getResult().get(0).getType().equals(AppConstants.PUBLIC_VISIBILITY)) {
                                     postData.setHelpfullCount(postData.getHelpfullCount() + 1);
                                     postData.setMarkedHelpful(1);
-
-
                                 } else {
                                     postData.setNotHelpfullCount(postData.getNotHelpfullCount() + 1);
                                     postData.setMarkedHelpful(0);
-
                                 }
                                 Intent intent = new Intent();
                                 intent.putExtra("postDatas", postData);
@@ -731,7 +738,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                                     } else {
                                         completeResponseList.get(i).setNotHelpfullCount(completeResponseList.get(i).getNotHelpfullCount() + 1);
                                         completeResponseList.get(i).setMarkedHelpful(0);
-
                                     }
                                 }
                             }
@@ -1661,7 +1667,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     Crashlytics.logException(nee);
                 }
                 showToast("Failed to edit reply. Please try again");
-
                 return;
             }
             try {
@@ -1672,11 +1677,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     if (viewGroupPostCommentsRepliesDialogFragment != null) {
                         viewGroupPostCommentsRepliesDialogFragment.dismiss();
                     }
-
                     postData.setResponseCount(postData.getResponseCount() - 1 - childCount);
-
                     groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
-//                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId, articleId, "edit", "reply");
                 } else {
                     showToast("Failed to edit reply. Please try again");
                 }
@@ -1704,7 +1706,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     Crashlytics.logException(nee);
                 }
                 showToast("Failed to edit reply. Please try again");
-
                 return;
             }
             try {
@@ -1718,8 +1719,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                             viewGroupPostCommentsRepliesDialogFragment.dismiss();
                         }
                     }
+                    postData.setResponseCount(postData.getResponseCount() - 1);
                     groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
-//                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId, articleId, "edit", "reply");
                 } else {
                     showToast("Failed to edit reply. Please try again");
                 }
@@ -1867,7 +1868,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         }
     }
 
-
     public void processImage(Uri imageUri) {
         android.app.FragmentManager fm = getFragmentManager();
         mTaskFragment = null;
@@ -1897,7 +1897,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     public void onPostExecute(Bitmap image) {
         Fragment prev = getSupportFragmentManager().findFragmentByTag("Add Comment");
         if (prev == null) {
-
         } else {
             String path = MediaStore.Images.Media.insertImage(getContentResolver(), image, "Title", null);
             Uri imageUriTemp = Uri.parse(path);
@@ -1905,7 +1904,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             removeProgressDialog();
             ((AddGpPostCommentReplyDialogFragment) prev).sendUploadProfileImageRequest(file2);
         }
-
     }
 
     @Override
@@ -1917,6 +1915,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         intent.putExtra("completeResponseList", completeResponseList);
         intent.putExtra("postId", postId);
         intent.putExtra("replyCount", count);
+        intent.putExtra("responseCount", postData.getResponseCount());
+
         setResult(RESULT_OK, intent);
 
         super.onBackPressed();
@@ -1951,7 +1951,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     public void replyDataUpdate(ArrayList<GroupPostCommentResult> repliesList, int position) {
 
     }
-
 
     public void update(ArrayList<GroupPostCommentResult> repliesList, int position) {
         Intent intent = getIntent();

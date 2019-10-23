@@ -351,9 +351,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                 } else {
                     SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
                 }
-
-
-
                 break;
             case R.id.publishTextView:
                 if (!isRequestRunning && validateParams()) {

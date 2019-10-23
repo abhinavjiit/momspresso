@@ -411,9 +411,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
             isReuqestRunning = false;
             progressBar.setVisibility(View.GONE);
-            if (mLodingView.getVisibility() == View.VISIBLE) {
-                mLodingView.setVisibility(View.GONE);
-            }
+            mLodingView.setVisibility(View.GONE);
             if (response.body() == null) {
                 return;
             }
@@ -433,9 +431,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
 
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            if (mLodingView.getVisibility() == View.VISIBLE) {
-                mLodingView.setVisibility(View.GONE);
-            }
+            mLodingView.setVisibility(View.GONE);
             isReuqestRunning = false;
             progressBar.setVisibility(View.GONE);
             Crashlytics.logException(t);

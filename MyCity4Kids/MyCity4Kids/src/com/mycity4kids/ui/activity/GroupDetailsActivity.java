@@ -98,6 +98,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -2061,7 +2062,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                             break;
                         }
                     }
-
                 }
                 if (data != null && data.getParcelableArrayListExtra("completeResponseList") != null && data.getIntExtra("postId", -1) != -1) {
                     ArrayList<GroupPostCommentResult> completeCommentResponseList = data.getParcelableArrayListExtra("completeResponseList");
@@ -2105,22 +2105,16 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 selectedPost.setMediaUrls(editedPost.getMediaUrls());
                 selectedPost.setContent(editedPost.getContent());
                 selectedPost.setType(editedPost.getType());
-//                selectedPost.setContent(data.getStringExtra("updatedContent"));
                 groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
             } else if (requestCode == 2222) {
-              /*  Intent intent = getIntent();
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                finish();
-                startActivity(intent);*/
                 if (data != null && data.getParcelableArrayListExtra("completeResponseList") != null && data.getIntExtra("postId", -1) != -1 && data.getIntExtra("replyCount", -1) != -1) {
                     ArrayList<GroupPostCommentResult> completeCommentResponseList = data.getParcelableArrayListExtra("completeResponseList");
                     int postId = data.getIntExtra("postId", -1);
                     int replyCount = data.getIntExtra("replyCount", -1);
-
+                    int responseCount = data.getIntExtra("responseCount", -1);
                     for (int i = 0; i < postList.size(); i++) {
-
                         if (postList.get(i).getId() == postId) {
-                            postList.get(i).setResponseCount(completeCommentResponseList.size() - 1 + replyCount);
+                            postList.get(i).setResponseCount(responseCount);
                             groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
                             break;
                         }

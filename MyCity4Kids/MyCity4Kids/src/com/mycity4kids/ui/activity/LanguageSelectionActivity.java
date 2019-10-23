@@ -2,8 +2,10 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -80,7 +82,6 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
             case R.id.continueTextView:
                 if (StringUtils.isNullOrEmpty(selectedLang)) {
                     showToast(getString(R.string.lang_sel_choose_lang_toast));
@@ -98,7 +99,8 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
         BaseApplication.setTopicsMap(null);
         BaseApplication.setShortStoryTopicList(null);
         LocaleManager.setNewLocale(this, language);
-
+        Utils.initialLanguageSelection(this, "LanguageSelectionActivity", "App_Launch", "Continue", "android"
+                , language, "NA", String.valueOf(System.currentTimeMillis()), "Initial_language_selection");
         Intent i = new Intent(this, TutorialActivity.class);
         startActivity(i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
         if (restartProcess) {

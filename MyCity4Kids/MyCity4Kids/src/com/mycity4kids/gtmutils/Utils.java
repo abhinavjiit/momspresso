@@ -23,6 +23,34 @@ public class Utils {
         // private constructor.G
     }
 
+    public static void initialLanguageSelection(Context context, String currentScreen, String source, String CTA, String platform, String lang, String userId, String timestamp, String event) {
+        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
+        dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, event, GTMTags.Current_Screen, currentScreen, GTMTags.Source, source, GTMTags.CTA, CTA, GTMTags.Platform, platform, GTMTags.Language, lang, GTMTags.USER_ID, userId, GTMTags.Timestamp, timestamp));
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(GTMTags.Current_Screen, currentScreen);
+            jsonObject.put(GTMTags.Source, source);
+            jsonObject.put(GTMTags.CTA, CTA);
+            jsonObject.put(GTMTags.Platform, platform);
+            jsonObject.put(GTMTags.Language, lang);
+            jsonObject.put(GTMTags.USER_ID, userId);
+            jsonObject.put(GTMTags.Timestamp, timestamp);
+            mixpanel.track(event, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+        Bundle bundle = new Bundle();
+        bundle.putString(GTMTags.Current_Screen, currentScreen);
+        bundle.putString(GTMTags.Source, source);
+        bundle.putString(GTMTags.CTA, CTA);
+        bundle.putString(GTMTags.Platform, platform);
+        bundle.putString(GTMTags.Language, lang);
+        bundle.putString(GTMTags.USER_ID, userId);
+        bundle.putString(GTMTags.Timestamp, timestamp);
+        mFirebaseAnalytics.logEvent(event, bundle);
+    }
 
     public static void campaignEvent(Context context, String currentScreen, String source, String CTA, String campaignName, String platform, String lang, String userId, String timestamp, String event) {
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
