@@ -23,7 +23,7 @@
     <string name="error_network">Device is out of network coverage.</string>
     <string name="please_wait">Please Wait...</string>
     <string name="no_result_txt">No result found.</string>
-    <string name="invite_referral_screen">Invite &amp; Earn MyMoney!</string>
+    <string name="invite_referral_screen">Give 25, Get 25!</string>
     <string name="went_wrong">Something went wrong.</string>
     <string name="server_went_wrong">Something went wrong at the server.</string>
     <string name="no_data">Data not found.</string>
@@ -182,19 +182,7 @@
 
     <string name="confirmation_dialog.delete_draft.message">Are you sure you want to delete your draft?</string>
 
-    public static final String LOCALE_ENGLISH = "en";
-    public static final String LOCALE_HINDI = "hi";
-    public static final String LOCALE_MARATHI = "mr";
-    public static final String LOCALE_BENGALI = "bn";
-    public static final String LOCALE_TAMIL = "ta";
-    public static final String LOCALE_TELUGU = "te";
-    public static final String LOCALE_KANNADA = "kn";
-    public static final String LOCALE_MALAYALAM = "ml";
-    public static final String LOCAL_GUJARATI="gu"
-
-
     <string name="confirmation_dialog.no">NO</string>
-
 
     <string name="confirmation_dialog.yes">YES</string>
 
@@ -268,7 +256,6 @@
     <string name="onboarding_desc_array.tutorial_2.english">અંગ્રેજી</string>
     <string name="onboarding_desc_array.tutorial_2.hindi">હિન્દી </string>
     <string name="onboarding_desc_array.tutorial_2.bengali">બંગાળી </string>
-
 
     <string name="onboarding_desc_array.tutorial_2.marathi">મરાઠી </string>
 

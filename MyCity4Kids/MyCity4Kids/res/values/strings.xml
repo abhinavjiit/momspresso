@@ -24,7 +24,7 @@
     <string name="error_network">Device is out of network coverage.</string>
     <string name="please_wait">Please Wait...</string>
     <string name="no_result_txt">No result found.</string>
-    <string name="invite_referral_screen">Invite &amp; Earn MyMoney!</string>
+    <string name="invite_referral_screen">Give 25, Get 25!</string>
     <string name="went_wrong">Something went wrong.</string>
     <string name="server_went_wrong">Something went wrong at the server.</string>
     <string name="no_data">Data not found.</string>
@@ -1020,6 +1020,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
     //tooltip groups
     <string name="campaign_read_this_first">READ THIS FIRST"</string>
+    <string name="campaign_demo_upload">See how MyMoney works.</string>
     <string name="campaign_discription">DESCRIPTION</string>
     <string name="deliverable_types">DELIVERABLE TERMS</string>
     <string name="referral_code_option">REFERRAL CODE(Optional)</string>
@@ -1340,6 +1341,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="enter_paytm_number">Please enter your paytm registered mobile number</string>
     <string name="note_detail_in_english">Note: Please enter your bank information in English only</string>
     <string name="track_status">TRACK STATUS</string>
+    <string name="slots_left">Slots Left</string>
     <string name="please_apply">Please Apply First</string>
     <string name="referral_code_alert_message">The referral code you entered was incorrect. Click OK to continue without referral code.</string>
     <string name="alert_message_title">Message</string>

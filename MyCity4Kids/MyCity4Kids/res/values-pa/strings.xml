@@ -23,7 +23,7 @@
     <string name="error_network">ਉਪਕਰਣ ਨੈਟਵਰਕ ਖੇਤਰ ਤੋਂ ਬਾਹਰ ਹੈ.</string>
     <string name="please_wait">ਕਿਰਪਾ ਕਰਕੇ ਇੰਤਜ਼ਾਰ ਕਰੋ...</string>
     <string name="no_result_txt">No result found.</string>
-    <string name="invite_referral_screen">Invite &amp; Earn MyMoney!</string>
+    <string name="invite_referral_screen">Give 25, Get 25!</string>
     <string name="went_wrong">ਕੁਝ ਗਲਤ ਹੋ ਗਿਆ.</string>
     <string name="server_went_wrong">ਸਰਵਰ ਤੇ ਕੁਝ ਗਲਤ ਹੋ ਗਿਆ.</string>
     <string name="no_data">Data not found.</string>
@@ -190,16 +190,6 @@
         <item>ਟੋਨ ਅਤੇ ਤੁਸੀਂ ਜੋ ਸ਼ਬਦ ਵਰਤਦੇ ਹੋ ਉਸ ਤੇ ਫੋਕਸ ਕਰੋ</item>
         <item>ਬਲੌਗ ਦੇ ਕਮੈਂਟਸ ਦਾ ਜਵਾਬ ਦਿਉ</item>
     </string-array>
-
-    public static final String LOCALE_ENGLISH = "en";
-    public static final String LOCALE_HINDI = "hi";
-    public static final String LOCALE_MARATHI = "mr";
-    public static final String LOCALE_BENGALI = "bn";
-    public static final String LOCALE_TAMIL = "ta";
-    public static final String LOCALE_TELUGU = "te";
-    public static final String LOCALE_KANNADA = "kn";
-    public static final String LOCALE_MALAYALAM = "ml";
-
 
     <string-array name="popup_language_list">
         <item>English</item>
@@ -1272,4 +1262,3 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="try_following_campaign">Try the following campaign instead!</string>
 
 </resources>
-

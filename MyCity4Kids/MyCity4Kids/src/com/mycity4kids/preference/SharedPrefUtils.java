@@ -125,6 +125,7 @@ public class SharedPrefUtils {
     private static final String USER_SKIPPED_FOLLOW_TOPIC_FLAG = "userSkippedFollowTopicFlag";
     private static final String HAS_TOPIC_SELECTION_CHANGED = "topicSelectionChangeFlag";
     private static final String FIREBASE_REMOTE_CONFIG_UPDATE_FLAG = "firebaseRemoteConfigUpdateFlag";
+    private static final String DEMO_VIDEO_SEEN = "demovideoseen";
 
     /**
      * this shared preference save current versions for control city,locality,category APIs .
@@ -665,6 +666,19 @@ public class SharedPrefUtils {
     public static boolean getFirstVideoUploadFlag(Context context) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         boolean flag = (_sharedPref.getBoolean(FIRST_VIDEO_UPLOAD_FLAG, false));
+        return flag;
+    }
+
+    public static void setDemoVideoSeen(Context pContext, boolean flag) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putBoolean(DEMO_VIDEO_SEEN, flag);
+        _editor.commit();
+    }
+
+    public static boolean getDemoVideoSeen(Context context) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        boolean flag = (_sharedPref.getBoolean(DEMO_VIDEO_SEEN, false));
         return flag;
     }
 

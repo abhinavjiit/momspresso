@@ -46,6 +46,12 @@ public class CampaignDataListResult {
     @SerializedName("total_payout")
     @Expose
     private int totalPayout;
+    @SerializedName("max_slots")
+    @Expose
+    private int maxSlots;
+    @SerializedName("total_used_slots")
+    @Expose
+    private int totalUsedSlots;
 
     public BrandDetails getBrandDetails() {
         return brandDetails;
@@ -151,4 +157,19 @@ public class CampaignDataListResult {
         this.totalPayout = totalPayout;
     }
 
+    public int getMaxSlots() {
+        return maxSlots;
+    }
+
+    public void setMaxSlots(int maxSlots) {
+        this.maxSlots = maxSlots;
+    }
+
+    public int getTotalUsedSlots() {
+        return totalUsedSlots;
+    }
+
+    public void setTotalUsedSlots(int totalUsedSlots) {
+        this.totalUsedSlots = totalUsedSlots;
+    }
 }

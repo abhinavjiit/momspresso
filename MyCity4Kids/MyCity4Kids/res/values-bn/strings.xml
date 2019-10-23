@@ -1190,7 +1190,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="capture_from_camera">ক্যামেরার সাহায্যে ছবিটি তুলুন</string>
     <string name="choose_from_gallery">গ্যালারী থেকে ছবি বেছে নিন</string>
     <string name="add_a_choice"></string>
-    <string name="invite_referral_screen">Invite &amp; Earn MyMoney!</string>
+    <string name="invite_referral_screen">Give 25, Get 25!</string>
     <string name="please_apply">Please Apply First</string>
     <string name="referral_code_alert_message">The referral code you entered was incorrect. Click OK to continue without referral code.</string>
     <string name="alert_message_title">Message</string>

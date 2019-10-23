@@ -101,9 +101,17 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var viewLine: View
     private lateinit var getHelp: TextView
     private lateinit var referCodeHeader: TextView
+    private lateinit var demoUpload: TextView
     private lateinit var readThisBox: LinearLayout
     private lateinit var detail_recyclerview: RecyclerView
     private lateinit var txtTrackerStatus: TextView
+    private lateinit var crossDemo: ImageView
+    private lateinit var demoVideoLayout: FrameLayout
+    private lateinit var videoView: VideoView
+    private lateinit var demoUploadLayout: RelativeLayout
+    private lateinit var playDemoIcon: ImageView
+    private var position: Int = 0;
+    private var mediaController: MediaController? = null
     private var forYouStatus: Int = 0
     private var userId: String? = null
     private lateinit var defaultCampaignPopUp: View
@@ -158,6 +166,10 @@ class CampaignDetailFragment : BaseFragment() {
         initializeXml()
         backIcon = containerView.findViewById(R.id.back)
         linearLayoutManager = LinearLayoutManager(activity as Context?, RecyclerView.VERTICAL, false)
+        if (SharedPrefUtils.getDemoVideoSeen(BaseApplication.getAppContext())) {
+            demoUploadLayout.visibility = View.GONE
+            playDemoIcon.visibility = View.VISIBLE
+        }
         backIcon.setOnClickListener {
             Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "Back", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
             activity!!.onBackPressed()
@@ -204,9 +216,45 @@ class CampaignDetailFragment : BaseFragment() {
             applyCode()
         }
 
+
         cancel.setOnClickListener {
             defaultCampaignPopUp.visibility = View.GONE
         }
+
+        crossDemo.setOnClickListener {
+            if (videoView.isPlaying)
+                videoView.stopPlayback()
+            demoVideoLayout.visibility = View.GONE
+        }
+
+        // Set the media controller buttons
+        if (mediaController == null) {
+            mediaController = MediaController(activity);
+
+            // Set the videoView that acts as the anchor for the MediaController.
+            mediaController!!.setAnchorView(videoView);
+
+
+            // Set MediaController for VideoView
+            videoView.setMediaController(mediaController);
+        }
+
+        demoUpload.setOnClickListener {
+            demoVideoLayout.visibility = View.VISIBLE
+            demoUploadLayout.visibility = View.GONE
+            playDemoIcon.visibility = View.VISIBLE
+            SharedPrefUtils.setDemoVideoSeen(BaseApplication.getAppContext(), true)
+            playVideo()
+//            (activity as CampaignContainerActivity).addCampaignDemoUploadFragment()
+        }
+
+        playDemoIcon.setOnClickListener {
+            demoVideoLayout.visibility = View.VISIBLE
+            playVideo()
+        }
+
+
+
 
         referCode.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
@@ -224,6 +272,31 @@ class CampaignDetailFragment : BaseFragment() {
         })
 
         return containerView
+    }
+
+    private fun playVideo() {
+        try {
+            // ID of video file.
+            var videoUrl: String = "https://static.momspresso.com/mymoney/assets/how-to.mp4"
+            var video: Uri
+            video = Uri.parse(videoUrl);
+            videoView.setVideoURI(video);
+
+        } catch (e: Exception) {
+            Crashlytics.logException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
+        }
+
+/*
+        videoView.setOnPreparedListener { mp ->
+            mp.isLooping = true
+        }*/
+        videoView.start();
+
+        videoView.setOnCompletionListener { mp ->
+            mp.isLooping = false
+            demoVideoLayout.visibility = View.GONE
+        }
     }
 
     private fun applyCode() {
@@ -280,7 +353,12 @@ class CampaignDetailFragment : BaseFragment() {
         toolbar = containerView.findViewById(R.id.toolbar)
         scrollView2 = containerView.findViewById(R.id.scrollView2)
         shimmer1 = containerView.findViewById(R.id.shimmer1)
-
+        demoUpload = containerView.findViewById(R.id.demo_upload)
+        crossDemo = containerView.findViewById(R.id.cross_demo)
+        demoVideoLayout = containerView.findViewById(R.id.demo_video_layout)
+        videoView = containerView.findViewById(R.id.videoView)
+        demoUploadLayout = containerView.findViewById(R.id.demo_upload_layout)
+        playDemoIcon = containerView.findViewById(R.id.play_demo_icon)
     }
 
     private fun fetchCampaignDetail() {
@@ -322,7 +400,7 @@ class CampaignDetailFragment : BaseFragment() {
         Picasso.with(context).load(apiGetResponse!!.brandDetails!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(brandImg)
         brandName.setText(apiGetResponse!!.brandDetails!!.name)
         campaignName.setText(apiGetResponse!!.name)
-        amount.setText("Rs. " + apiGetResponse!!.totalPayout?.toInt())
+        amount.setText("" + (apiGetResponse!!.maxSlots?.minus(apiGetResponse!!.totalUsedSlots!!)))
         startDateText.setText(getDate(apiGetResponse!!.startTime!!, "dd MMM yyyy"))
         endDateText.setText(getDate(apiGetResponse!!.endTime!!, "dd MMM yyyy"))
 
@@ -423,6 +501,12 @@ class CampaignDetailFragment : BaseFragment() {
         textView.text = spannable
         textView.movementMethod = LinkMovementMethod.getInstance()
 //        textView.highlightColor = Color.TRANSPARENT
+    }
+
+    fun demoVideoLayout(): FrameLayout {
+        if (videoView.isPlaying)
+            videoView.stopPlayback()
+        return demoVideoLayout
     }
 
     private fun setClickAction() {
@@ -676,6 +760,7 @@ class CampaignDetailFragment : BaseFragment() {
                 labelText.text = it.resources.getString(R.string.label_campaign_not_started) + " " + getDate(apiGetResponse!!.startTime!!, "dd MMM yyyy") + ". Please wait for campaign to start to submit proofs."
             }
             appliedTag.visibility = View.VISIBLE
+            unapplyCampaign.visibility = View.VISIBLE
         } else if (status == 22 || status == 16 || status == 17) {
             hideShowReferral(status)
             applicationStatus.setBackgroundResource(R.drawable.campaign_subscription_open)
