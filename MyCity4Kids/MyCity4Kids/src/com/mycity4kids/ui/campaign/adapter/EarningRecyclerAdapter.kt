@@ -18,6 +18,7 @@ class EarningRecyclerAdapter(
     : RecyclerView.Adapter<EarningRecyclerAdapter.ViewHolder>() {
     private val mOnClickListener: View.OnClickListener
     private var payoutsList: List<AllCampaignTotalPayoutResponse.TotalPayoutResult>? = null
+    private var totalEarning: Double = 0.0
 
     init {
         payoutsList = payoutList
@@ -42,11 +43,48 @@ class EarningRecyclerAdapter(
             holder.settleAmount.setText("\u20b9" + item.final_payout)
             holder.brandName.setText(item.campaignDetails.brandDetails.name)
             holder.campaignName.setText(item.campaignDetails.name)
-            holder.totalAmount.setText("\u20b9" + item.final_payout)
-            holder.netAmount.setText("\u20b9" + item.payment_meta.net_amount)
-            holder.tds.setText("TDS (" + item.payment_meta.tax_percentage + "%)")
-            holder.paymentStatus.setText(setStatus(item.payment_status, holder))
-            holder.taxAmount.setText("- \u20b9" + item.payment_meta.tax_amount)
+
+            if (item.payment_meta.size == 1) {
+                if (item.payment_meta[0].source.equals("rewards")) {
+                    holder.relativeFour.visibility = View.GONE
+                    holder.totalAmount.setText("\u20b9" + item.payment_meta[0].total_amount.toString())
+                    holder.netAmount.setText("\u20b9" + item.payment_meta[0].net_amount)
+                    holder.tds.setText("TDS (" + item.payment_meta[0].tax_percentage + "%)")
+                    holder.paymentStatus.setText(setStatus(item.payment_status, holder))
+                    holder.taxAmount.setText("- \u20b9" + item.payment_meta[0].tax_amount)
+                    holder.earningss.visibility = View.VISIBLE
+                    holder.Tds.visibility = View.VISIBLE
+                } else {
+                    holder.reimbursementAmount.text = item.payment_meta[0].total_amount.toString()
+                    holder.earningss.visibility = View.GONE
+                    holder.Tds.visibility = View.GONE
+                    holder.relativeFour.visibility = View.VISIBLE
+                    holder.netAmount.setText("\u20b9" + item.payment_meta[0].net_amount)
+                    holder.paymentStatus.setText(setStatus(item.payment_status, holder))
+
+                }
+            } else {
+                for (i in 0 until item.payment_meta.size) {
+                    if (item.payment_meta[i].source.equals("rewards")) {
+                        holder.totalAmount.setText("\u20b9" + item.payment_meta[0].total_amount.toString())
+
+                        totalEarning = totalEarning + item.payment_meta[i].net_amount
+                        holder.tds.setText("TDS (" + item.payment_meta[i].tax_percentage + "%)")
+                        holder.paymentStatus.setText(setStatus(item.payment_status, holder))
+                        holder.taxAmount.setText("- \u20b9" + item.payment_meta[i].tax_amount)
+                    } else {
+                        holder.reimbursementAmount.text = item.payment_meta[i].total_amount.toString()
+                        holder.paymentStatus.setText(setStatus(item.payment_status, holder))
+                        totalEarning = totalEarning + item.payment_meta[i].net_amount
+
+                    }
+
+                }
+                holder.netAmount.setText("\u20b9" + totalEarning)
+
+            }
+
+
             holder.relativeOne.setOnClickListener {
                 if (holder.relativeTwo.visibility == View.GONE) {
                     holder.relativeTwo.visibility = View.VISIBLE
@@ -87,6 +125,11 @@ class EarningRecyclerAdapter(
         var taxAmount: TextView = mView.tds_amount
         var relativeOne: RelativeLayout = mView.first
         var relativeTwo: RelativeLayout = mView.second
+        var relativeFour: RelativeLayout = mView.relative_four
+        var reimbursementAmount: TextView = mView.reimbursement_amount
+        var reimbursementText: TextView = mView.reimbursement
+        var earningss: RelativeLayout = mView.relative_one
+        var Tds: RelativeLayout = mView.relative_two
 
     }
 }

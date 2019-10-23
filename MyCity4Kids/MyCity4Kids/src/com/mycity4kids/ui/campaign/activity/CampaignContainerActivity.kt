@@ -164,11 +164,13 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
 
     fun addCampaginDetailFragment(id: Int) {
+
         campaignDetailFragment = CampaignDetailFragment.newInstance(id, fromNotification)
         val campaignFrag = campaignDetailFragment as Fragment
         supportFragmentManager.beginTransaction().replace(R.id.container, campaignFrag,
                 CampaignDetailFragment::class.java.simpleName).addToBackStack("campaignDetailFragment")
                 .commit()
+
     }
 
 
@@ -209,6 +211,18 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
                     for (i in fragmentManager.backStackEntryCount downTo 2) {
                         supportFragmentManager.popBackStack()
                     }
+                }
+
+
+            } else if (currentFragment is CampaignDetailFragment) {
+
+                if (fragmentManager.backStackEntryCount == 3) {
+                    for (i in fragmentManager.backStackEntryCount downTo 2) {
+                        supportFragmentManager.popBackStack()
+                    }
+                } else {
+                    super.onBackPressed()
+
                 }
             } else {
                 super.onBackPressed()

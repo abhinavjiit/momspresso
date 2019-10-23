@@ -15,6 +15,11 @@ import retrofit2.http.*
 
 interface CampaignAPI {
 
+    @GET("/rewards/v1/campaigns/generic/")
+    fun getDefaultCampaignDetail()
+            : Observable<BaseResponseGeneric<CampaignDetailResult>>
+
+
     @GET("/rewards/v1/campaigns/recommendations/{userId}")
     fun getCampaignList(@Path("userId") userId: String? = null,
                         @Query("start") start: Int,
@@ -95,12 +100,12 @@ interface CampaignAPI {
     @POST("/payments/v1/user/pan/")
     fun addPanNumber(@Body proofPostModel: ProofPostModel): Observable<BaseResponseGeneric<ProofPostModel>>
 
-    @GET("/rewards/v1/users/payments/counts/{userId}")
+    @GET("/rewards/v2/users/payments/counts/{userId}")
     fun getTotalPayout(@Path("userId") userId: String? = null)
             : Call<TotalPayoutResponse>
 
 
-    @GET("/rewards/v1/users/payments/{userId}")
+    @GET("/rewards/v2/users/payments/{userId}")
     fun getAllCampaignTotalPayout(@Path("userId") userId: String? = null)
             : Call<AllCampaignTotalPayoutResponse>
 

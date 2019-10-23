@@ -5,8 +5,8 @@ import android.os.Parcelable;
 
 public class BranchModel implements Parcelable {
 
-    String type;
-    String id;
+    private String type;
+    private String id;
     private String mapped_category;
 
     public String getType() {

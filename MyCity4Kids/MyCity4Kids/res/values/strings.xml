@@ -1343,6 +1343,14 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="please_apply">Please Apply First</string>
     <string name="referral_code_alert_message">The referral code you entered was incorrect. Click OK to continue without referral code.</string>
     <string name="alert_message_title">Message</string>
+    <string name="it_is_a_long_established_fact_that_a_reader">It is a long established fact that a reader.</string>
+    <string name="lorem_ipsum">Lorem Ipsum</string>
+    <string name="click_here_to_participate">Click here to participate</string>
+    <string name="check_ypur_eligibility">CHECK YOUR ELIGIBILITY NOW</string>
+    <string name="check_campaigns_available_for_you">Check campaigns available for you</string>
+    <string name="earnings_reimbursement">Reimbursement</string>
+    <string name="sorry_not_eligible">Sorry, you\'re not eligible.</string>
+    <string name="try_following_campaign">Try the following campaign instead!</string>
 
 </resources>
 

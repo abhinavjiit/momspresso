@@ -139,11 +139,19 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             } else if (status == 5) {
-                (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_ineligible))
-                (view.submission_status).setBackgroundResource(R.drawable.campaign_expired)
-                (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
-                (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
-                (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
+                if (SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext()).equals("0")) {
+                    (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_apply_now))
+                    (view.submission_status).setBackgroundResource(R.drawable.subscribe_now)
+                    (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
+                    (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
+                    (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
+                } else {
+                    (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_ineligible))
+                    (view.submission_status).setBackgroundResource(R.drawable.campaign_expired)
+                    (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
+                    (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
+                    (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
+                }
             } else if (status == 6) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_list_proof_reject))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_rejected)

@@ -624,7 +624,7 @@ public class AppUtils {
                     ((TextView) tabViewChild).setTypeface(myTypeface, Typeface.NORMAL);
                     if (((TextView) tabViewChild).getText().toString().equals("Challenges") || ((TextView) tabViewChild).getText().toString().equals("challenges") || ((TextView) tabViewChild).getText().toString().equals("चैलेंज") || ((TextView) tabViewChild).getText().toString().equals("চ্যালেঞ্জ") || ((TextView) tabViewChild).getText().toString().equals("ചാലഞ്ച്") || ((TextView) tabViewChild).getText().toString().equals("चॅलेंज") || ((TextView) tabViewChild).getText().toString().equals("சவால்கள்") || ((TextView) tabViewChild).getText().toString().equals("ఛాలెంజ్") || ((TextView) tabViewChild).getText().toString().equals("ಸವಾಲು") || ((TextView) tabViewChild).getText().toString().equals("પડકારો") || ((TextView) tabViewChild).getText().toString().equals("ਚੈਲੇੰਜਸ")) {
                         Drawable drawable = tabLayout.getContext().getResources().getDrawable(R.drawable.ic_winner_tablayout_icon);
-                        drawable.setTint(ContextCompat.getColor(tabLayout.getContext(), R.color.topic_articles_tabbar_text));
+                       // drawable.setTint(ContextCompat.getColor(tabLayout.getContext(), R.color.topic_articles_tabbar_text));
                         ((TextView) tabViewChild).setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
                         ((TextView) tabViewChild).setCompoundDrawablePadding(15);
                     }

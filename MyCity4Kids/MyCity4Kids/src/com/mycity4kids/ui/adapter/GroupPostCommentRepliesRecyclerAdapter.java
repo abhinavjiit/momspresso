@@ -9,9 +9,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
@@ -49,6 +46,10 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by hemant on 23/5/18.
@@ -215,7 +216,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                     }
                 }
             });
-            commentsViewHolder.upvoteCommentCountTextView.setText(repliesList.get(position).getHelpfullCount()+"");
+            commentsViewHolder.upvoteCommentCountTextView.setText(repliesList.get(position).getHelpfullCount() + "");
             commentsViewHolder.downvoteCommentCountTextView.setText(repliesList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             commentsViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
             Linkify.addLinks(commentsViewHolder.commentDataTextView, Linkify.WEB_URLS);
@@ -346,7 +347,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                 audioCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
                 audioCommentViewHolder.replyCountTextView.setText("View (" + repliesList.get(position).getChildCount() + ") replies");
             }
-            audioCommentViewHolder.upvoteCommentCountTextView.setText(repliesList.get(position).getHelpfullCount()+"");
+            audioCommentViewHolder.upvoteCommentCountTextView.setText(repliesList.get(position).getHelpfullCount() + "");
             audioCommentViewHolder.downvoteCommentCountTextView.setText(repliesList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
 
 
@@ -441,7 +442,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                     }
                 }
             });
-            repliesViewHolder.upvoteReplyCountTextView.setText(repliesList.get(position).getHelpfullCount()+"");
+            repliesViewHolder.upvoteReplyCountTextView.setText(repliesList.get(position).getHelpfullCount() + "");
             repliesViewHolder.downvoteReplyCountTextView.setText(repliesList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             repliesViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
             Linkify.addLinks(repliesViewHolder.commentDataTextView, Linkify.WEB_URLS);

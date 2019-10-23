@@ -42,9 +42,17 @@ public class AllCampaignTotalPayoutResponse extends BaseResponse {
 
         private CampaignDetail campaign_details;
         private int final_payout;
-        private PaymentMeta payment_meta;
+        private int reimbursement;
+        private List<PaymentMeta> payment_meta;
         private int payment_status;
 
+        public int getReimbursement() {
+            return reimbursement;
+        }
+
+        public void setReimbursement(int reimbursement) {
+            this.reimbursement = reimbursement;
+        }
 
         public CampaignDetail getCampaignDetails() {
             return campaign_details;
@@ -55,18 +63,18 @@ public class AllCampaignTotalPayoutResponse extends BaseResponse {
         }
 
         public int getFinal_payout() {
-            return final_payout;
+            return final_payout + reimbursement;
         }
 
         public void setFinal_payout(int final_payout) {
             this.final_payout = final_payout;
         }
 
-        public PaymentMeta getPayment_meta() {
+        public List<PaymentMeta> getPayment_meta() {
             return payment_meta;
         }
 
-        public void setPayment_meta(PaymentMeta payment_meta) {
+        public void setPayment_meta(List<PaymentMeta> payment_meta) {
             this.payment_meta = payment_meta;
         }
 

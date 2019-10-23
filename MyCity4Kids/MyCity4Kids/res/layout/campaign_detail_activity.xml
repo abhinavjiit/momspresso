@@ -8,6 +8,63 @@
     android:visibility="visible">
 
 
+    <RelativeLayout
+        android:id="@+id/bottom_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_20"
+        android:background="@drawable/campaign_detail_bottom_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+        <ImageView
+            android:id="@+id/unapply_campaign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/space_25"
+            android:drawablePadding="2dp"
+            android:padding="4dp"
+            android:src="@drawable/ic_more_vert_black_24dp"
+            android:text="@string/campaign_details_applied"
+            android:textColor="@color/white"
+            android:textSize="8sp"
+            android:tint="@color/white"
+            android:visibility="gone" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/submit_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="@dimen/space_13"
+            android:paddingBottom="@dimen/space_13"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/applied_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/space_25"
+            android:background="@drawable/white_rectangle_gb"
+            android:drawableLeft="@drawable/ic_applied_icon"
+            android:drawablePadding="2dp"
+            android:padding="4dp"
+            android:text="@string/campaign_details_applied"
+            android:textColor="@color/white"
+            android:textSize="8sp"
+            android:visibility="gone"
+            app:fontName="oswald_regular.ttf" />
+    </RelativeLayout>
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -35,6 +92,12 @@
                 android:src="@drawable/back_xxhdpi"
                 android:tint="@color/black" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/grey_light" />
+
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/toolbarTitle"
                 android:layout_width="wrap_content"
@@ -48,12 +111,6 @@
                 android:textColor="@color/home.toolbar.titlecolor"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/grey_light" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/txtTrackerStatus"
@@ -74,6 +131,7 @@
                 app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
+
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView2"
@@ -101,6 +159,142 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <LinearLayout
+                android:id="@+id/read_this_box"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_15"
+                android:layout_marginEnd="@dimen/space_15"
+                android:background="@drawable/read_this_background"
+                android:orientation="vertical"
+                android:padding="@dimen/space_10"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view5">
+
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/space_5"
+                    android:text="@string/campaign_read_this_first"
+                    android:textColor="@color/campaign_515151"
+                    android:textSize="17sp"
+                    app:fontName="oswald_regular.ttf"
+                    app:layout_constraintStart_toStartOf="@id/read_this_box" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/read_this_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="web"
+                    android:textColor="@color/campaign_list_buttons"
+                    android:textColorLink="#0000ee"
+                    android:textSize="15sp"
+                    app:fontName="open_sans.ttf"
+                    app:layout_constraintStart_toStartOf="@id/read_this_box" />
+            </LinearLayout>
+
+
+            <View
+                android:id="@+id/view4"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="@dimen/space_10"
+                android:alpha="0.5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/campaign_name" />
+
+
+            <View
+                android:id="@+id/view5"
+                android:layout_width="0.1dp"
+                android:layout_height="80dp"
+                app:layout_constraintBottom_toBottomOf="@id/view4"
+                app:layout_constraintEnd_toEndOf="@+id/view4"
+                app:layout_constraintStart_toStartOf="@id/view4"
+                app:layout_constraintTop_toBottomOf="@+id/campaign_name"
+
+                app:layout_constraintTop_toTopOf="@id/view4" />
+
+            <View
+                android:id="@+id/view_1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/space_15"
+                android:background="#E5E5E5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/desc_text" />
+
+            <View
+                android:id="@+id/view_6"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/space_15"
+                android:background="#E5E5E5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/term_text" />
+
+            <View
+                android:id="@+id/view_7"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/space_15"
+                android:background="#E5E5E5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/get_help" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/detail_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_1" />
+
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/brand_img"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="@dimen/space_20"
+                android:layout_marginLeft="@dimen/space_20"
+                android:layout_marginTop="@dimen/space_7"
+                app:civ_border_color="#E0E0E0"
+                app:civ_border_width="1dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/header_img" />
+
+            <com.mycity4kids.widget.CustomFontEditText
+                android:id="@+id/refer_code_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_15"
+                android:layout_marginLeft="@dimen/space_15"
+                android:layout_marginTop="@dimen/space_5"
+                android:background="@drawable/campaign_detail_refer_code_text_bg"
+                android:hint="@string/referral_code_option"
+                android:inputType="textCapCharacters"
+                android:lineSpacingExtra="2.2dp"
+                android:paddingLeft="@dimen/space_30"
+                android:paddingTop="@dimen/space_10"
+                android:paddingBottom="@dimen/space_10"
+                android:textColor="@color/campaign_4A4A4A"
+                android:textSize="15sp"
+                app:fontName="oswald_regular.ttf"
+                app:layout_constraintEnd_toStartOf="@id/refer_code_apply"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/refer_header" />
+
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/share"
                 android:layout_width="wrap_content"
@@ -123,20 +317,6 @@
                 app:fontName="oswald.ttf"
                 app:layout_constraintEnd_toEndOf="@+id/header_img"
                 app:layout_constraintTop_toTopOf="@+id/header_img" />
-
-
-            <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/brand_img"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_marginStart="@dimen/space_20"
-                android:layout_marginLeft="@dimen/space_20"
-                android:layout_marginTop="@dimen/space_7"
-                app:civ_border_color="#E0E0E0"
-                app:civ_border_width="1dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/header_img" />
-
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/application_status"
@@ -209,27 +389,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/earn_upto" />
 
-            <View
-                android:id="@+id/view4"
-                android:layout_width="0dp"
-                android:layout_height="80dp"
-                android:layout_marginTop="@dimen/space_10"
-                android:alpha="0.5"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/campaign_name" />
-
-            <View
-                android:id="@+id/view5"
-                android:layout_width="0.1dp"
-                android:layout_height="80dp"
-                app:layout_constraintBottom_toBottomOf="@id/view4"
-                app:layout_constraintEnd_toEndOf="@+id/view4"
-                app:layout_constraintStart_toStartOf="@id/view4"
-                app:layout_constraintTop_toBottomOf="@+id/campaign_name"
-
-                app:layout_constraintTop_toTopOf="@id/view4" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/start_date"
@@ -244,6 +403,7 @@
 
                 app:layout_constraintStart_toStartOf="@+id/view4"
                 app:layout_constraintTop_toTopOf="@+id/view5" />
+
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/start_date_text"
@@ -262,6 +422,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/view5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/start_date" />
+
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/end_date"
@@ -296,42 +457,6 @@
                 app:layout_constraintStart_toEndOf="@+id/view5"
                 app:layout_constraintTop_toBottomOf="@+id/end_date" />
 
-            <LinearLayout
-                android:id="@+id/read_this_box"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_15"
-                android:layout_marginEnd="@dimen/space_15"
-                android:background="@drawable/read_this_background"
-                android:orientation="vertical"
-                android:padding="@dimen/space_10"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view5">
-
-
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/space_5"
-                    android:text="@string/campaign_read_this_first"
-                    android:textColor="@color/campaign_515151"
-                    android:textSize="17sp"
-                    app:fontName="oswald_regular.ttf"
-                    app:layout_constraintStart_toStartOf="@id/read_this_box" />
-
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/read_this_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:autoLink="web"
-                    android:textColor="@color/campaign_list_buttons"
-                    android:textColorLink="#0000ee"
-                    android:textIsSelectable="true"
-                    android:textSize="15sp"
-                    app:fontName="open_sans.ttf"
-                    app:layout_constraintStart_toStartOf="@id/read_this_box" />
-            </LinearLayout>
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/show_reward_text"
@@ -357,7 +482,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/read_this_box" />
 
-
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/desc_header"
                 android:layout_width="match_parent"
@@ -376,7 +500,6 @@
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/show_reward_text" />
-
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/desc_text"
@@ -397,25 +520,6 @@
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintTop_toBottomOf="@+id/desc_header" />
 
-            <View
-                android:id="@+id/view_1"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/space_15"
-                android:background="#E5E5E5"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/desc_text" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/detail_recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_1" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/term_header"
@@ -454,17 +558,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/term_header" />
 
-            <View
-                android:id="@+id/view_6"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/space_15"
-                android:background="#E5E5E5"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/term_text" />
-
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/get_help"
                 android:layout_width="match_parent"
@@ -488,16 +581,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view_6" />
 
-            <View
-                android:id="@+id/view_7"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/space_15"
-                android:background="#E5E5E5"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/get_help" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/refer_header"
@@ -516,29 +599,6 @@
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view_7" />
-
-
-            <com.mycity4kids.widget.CustomFontEditText
-                android:id="@+id/refer_code_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_15"
-                android:layout_marginLeft="@dimen/space_15"
-                android:layout_marginTop="@dimen/space_5"
-                android:background="@drawable/campaign_detail_refer_code_text_bg"
-                android:hint="@string/referral_code_option"
-                android:inputType="textCapCharacters"
-                android:lineSpacingExtra="2.2dp"
-                android:paddingLeft="@dimen/space_30"
-                android:paddingTop="@dimen/space_10"
-                android:paddingBottom="@dimen/space_10"
-                android:textColor="@color/campaign_4A4A4A"
-                android:textSize="15sp"
-                app:fontName="oswald_regular.ttf"
-                app:layout_constraintEnd_toStartOf="@id/refer_code_apply"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/refer_header" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/refer_code_apply"
@@ -584,80 +644,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/label_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_15"
-        android:background="@drawable/campaign_label_bg"
-        android:gravity="center"
-        android:lineSpacingExtra="1.2dp"
-        android:paddingTop="@dimen/space_10"
-        android:paddingBottom="@dimen/space_10"
-        android:textColor="#4A4A4A"
-        android:textSize="12sp"
-        app:fontName="open_sans_bold.ttf"
-        app:layout_constraintBottom_toTopOf="@id/bottom_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <RelativeLayout
-        android:id="@+id/bottom_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_20"
-        android:background="@drawable/campaign_detail_bottom_btn"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/applied_tag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/space_25"
-            android:background="@drawable/white_rectangle_gb"
-            android:drawableLeft="@drawable/ic_applied_icon"
-            android:drawablePadding="2dp"
-            android:padding="4dp"
-            android:text="@string/campaign_details_applied"
-            android:textColor="@color/white"
-            android:textSize="8sp"
-            android:visibility="gone"
-            app:fontName="oswald_regular.ttf" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/submit_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_centerHorizontal="true"
-            android:paddingTop="@dimen/space_13"
-            android:paddingBottom="@dimen/space_13"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            app:fontName="oswald_regular.ttf" />
-
-        <ImageView
-            android:id="@+id/unapply_campaign"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/space_25"
-            android:drawablePadding="2dp"
-            android:padding="4dp"
-            android:src="@drawable/ic_more_vert_black_24dp"
-            android:text="@string/campaign_details_applied"
-            android:textColor="@color/white"
-            android:textSize="8sp"
-            android:tint="@color/white"
-            android:visibility="gone" />
-    </RelativeLayout>
-
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer1"
@@ -681,4 +667,29 @@
         </LinearLayout>
 
     </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/label_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_15"
+        android:background="@drawable/campaign_label_bg"
+        android:gravity="center"
+        android:lineSpacingExtra="1.2dp"
+        android:paddingTop="@dimen/space_10"
+        android:paddingBottom="@dimen/space_10"
+        android:textColor="#4A4A4A"
+        android:textSize="12sp"
+        app:fontName="open_sans_bold.ttf"
+        app:layout_constraintBottom_toTopOf="@id/bottom_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/campaign_pop_up"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>

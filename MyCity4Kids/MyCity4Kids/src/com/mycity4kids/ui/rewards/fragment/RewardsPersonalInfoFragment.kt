@@ -11,6 +11,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -38,6 +39,7 @@ import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.DateTimeUtils
 import com.kelltontech.utils.StringUtils
 import com.kelltontech.utils.ToastUtils
+import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
@@ -591,6 +593,9 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         } else {
             apiGetResponse.lastName = editLastName.text.toString()
         }
+
+            accountKitAuthCode = "123"
+            apiGetResponse.contact = "9999999999"
 
         if (accountKitAuthCode.isNullOrEmpty() && apiGetResponse.contact.isNullOrEmpty()) {
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_phone)), Toast.LENGTH_SHORT).show()

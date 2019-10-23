@@ -53,7 +53,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
@@ -226,7 +225,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private String UPDATE_APP_POPUP_KEY = "latest_app_version";
     private int frequecy;
     private String UPDATE_APP_FREQUENCY_KEY = "app_update_frequency";
-    private FirebaseAnalytics mFirebaseAnalytics;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -238,7 +236,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         // Obtain the FirebaseAnalytics instance.
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         BaseApplication.startSocket();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(720).build();

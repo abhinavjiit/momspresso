@@ -24,6 +24,7 @@ import com.facebook.ads.AudienceNetworkAds;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mycity4kids.BuildConfig;
@@ -89,7 +90,7 @@ public class BaseApplication extends Application {
     private static HashMap<String, Topics> selectedTopicsMap;
     private String branchData = "";
     private Activity dashboardActivity;
-
+    private FirebaseAnalytics mFirebaseAnalytics;
     private Activity activity;
 
     /*
@@ -383,7 +384,7 @@ public class BaseApplication extends Application {
         Branch.enableLogging();
         // Branch object initialization
         Branch.getAutoInstance(this);
-       // Branch.setPlayStoreReferrerCheckTimeout(0);
+        // Branch.setPlayStoreReferrerCheckTimeout(0);
 
         PackageInfo pInfo = null;
         try {
