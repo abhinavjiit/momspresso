@@ -594,8 +594,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             apiGetResponse.lastName = editLastName.text.toString()
         }
 
-            accountKitAuthCode = "123"
-            apiGetResponse.contact = "9999999999"
+
 
         if (accountKitAuthCode.isNullOrEmpty() && apiGetResponse.contact.isNullOrEmpty()) {
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_phone)), Toast.LENGTH_SHORT).show()
