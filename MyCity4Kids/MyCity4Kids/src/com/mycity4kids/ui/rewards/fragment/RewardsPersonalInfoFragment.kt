@@ -597,14 +597,14 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     }
 
     fun prepareDataForPosting(): Boolean {
-        if (editFirstName.text.isNullOrEmpty()) {
+        if (!isNewRegistration && editFirstName.text.isNullOrEmpty()) {
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_first_name)), Toast.LENGTH_SHORT).show()
             return false
         } else {
             apiGetResponse.firstName = editFirstName.text.toString()
         }
 
-        if (editLastName.text.isNullOrEmpty()) {
+        if (!isNewRegistration && editLastName.text.isNullOrEmpty()) {
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_last_name)), Toast.LENGTH_SHORT).show()
             return false
         } else {
@@ -668,7 +668,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         preSelectedLanguage.removeAll(Collections.singleton(""))
 
 
-        if (preSelectedLanguage.isEmpty()) {
+        if (!isNewRegistration && preSelectedLanguage.isEmpty()) {
 
 
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_language)), Toast.LENGTH_SHORT).show()
@@ -1062,6 +1062,10 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             textDelete.visibility = View.VISIBLE
         } else {
             textDelete.visibility = View.GONE
+        }
+
+        if (isNewRegistration) {
+            editKidsName.visibility = View.GONE
         }
 
         textDelete.setOnClickListener {

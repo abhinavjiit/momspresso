@@ -199,6 +199,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="web"
+                    android:textIsSelectable="true"
                     android:textColor="@color/campaign_list_buttons"
                     android:textColorLink="#0000ee"
                     android:textSize="15sp"

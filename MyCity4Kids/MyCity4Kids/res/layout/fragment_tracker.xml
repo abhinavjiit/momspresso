@@ -69,7 +69,7 @@
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/textCampaign"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/space_145"
                     android:layout_height="wrap_content"
                     app:fontName="oswald.ttf"
                     android:textSize="10sp"
