@@ -222,17 +222,15 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
                         supportFragmentManager.popBackStack()
                     }
                 } else {
-                    super.onBackPressed()
-
-                }
-            } else {
-                if (currentFragment is CampaignDetailFragment) {
                     var frameLayout: FrameLayout = currentFragment.demoVideoLayout()
                     if (frameLayout.visibility == View.VISIBLE) {
                         frameLayout.visibility = View.GONE
                         return
                     }
+                    super.onBackPressed()
+
                 }
+            } else {
                 super.onBackPressed()
             }
         }
