@@ -227,18 +227,6 @@ class CampaignDetailFragment : BaseFragment() {
             demoVideoLayout.visibility = View.GONE
         }
 
-        // Set the media controller buttons
-        if (mediaController == null) {
-            mediaController = MediaController(activity);
-
-            // Set the videoView that acts as the anchor for the MediaController.
-            mediaController!!.setAnchorView(videoView);
-
-
-            // Set MediaController for VideoView
-            videoView.setMediaController(mediaController);
-        }
-
         demoUpload.setOnClickListener {
             demoVideoLayout.visibility = View.VISIBLE
             demoUploadLayout.visibility = View.GONE
@@ -274,6 +262,20 @@ class CampaignDetailFragment : BaseFragment() {
         return containerView
     }
 
+    private fun setController() {
+        // Set the media controller buttons
+        if (mediaController == null) {
+            mediaController = MediaController(activity);
+
+            // Set the videoView that acts as the anchor for the MediaController.
+            mediaController!!.setAnchorView(videoView);
+
+
+            // Set MediaController for VideoView
+            videoView.setMediaController(mediaController);
+        }
+    }
+
     private fun playVideo() {
         try {
             // ID of video file.
@@ -281,6 +283,7 @@ class CampaignDetailFragment : BaseFragment() {
             var video: Uri
             video = Uri.parse(videoUrl);
             videoView.setVideoURI(video);
+            setController()
 
         } catch (e: Exception) {
             Crashlytics.logException(e)
@@ -504,8 +507,10 @@ class CampaignDetailFragment : BaseFragment() {
     }
 
     fun demoVideoLayout(): FrameLayout {
-        if (videoView.isPlaying)
-            videoView.stopPlayback()
+//        if (videoView.isPlaying)
+        videoView.stopPlayback()
+        videoView.setMediaController(null)
+        mediaController = null
         return demoVideoLayout
     }
 
