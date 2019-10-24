@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
@@ -53,17 +54,19 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         Intent intent = null;
         switch (v.getId()) {
             case R.id.connect_phone:
+                Utils.pushGenericEvent(getActivity(), "SignUp_phone_click_event", "NA", "SignUpFragment");
                 ((ActivityLogin) getActivity()).fbAccountKitVerification();
                 break;
             case R.id.connect_facebook:
+                Utils.pushGenericEvent(getActivity(), "SignUp_facebook_click_event", "NA", "SignUpFragment");
                 ((ActivityLogin) getActivity()).loginWithFacebook();
                 break;
-
             case R.id.connect_googleplus:
+                Utils.pushGenericEvent(getActivity(), "SignUp_google_click_event", "NA", "SignUpFragment");
                 ((ActivityLogin) getActivity()).loginWithGplus();
                 break;
-
             case R.id.signinTextView:
+                Utils.pushGenericEvent(getActivity(), "Launch_sign_in_from_sign_up_event", "NA", "SignUpFragment");
                 SignInFragment signInFragment = new SignInFragment();
                 Bundle bundle = new Bundle();
                 signInFragment.setArguments(bundle);

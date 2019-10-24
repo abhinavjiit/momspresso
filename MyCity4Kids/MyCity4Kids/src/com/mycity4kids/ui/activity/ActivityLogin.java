@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AlertDialog;
@@ -100,7 +101,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     FacebookAddEmailDialogFragment dialogFragment;
 
     private String loginMode = "";
-    private View mLayout,root;
+    private View mLayout, root;
     private CallbackManager callbackManager;
 
     @Override
@@ -114,10 +115,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail().requestScopes(new Scope(Scopes.PLUS_ME))
                 .build();
-
-
-
-
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
@@ -139,10 +136,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
         mLayout = findViewById(R.id.rootLayout);
 
-//        /*fbAccessToken = AccessToken.getCurrentAccessToken();
-//        if (fbAccessToken != null) {
-//            Toast.makeText(this, (fbAccessToken).toString(), Toast.LENGTH_LONG).show();
-//        }*/
     }
 
     public void loginWithFacebook() {
@@ -215,23 +208,10 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder = new AccountKitConfiguration.AccountKitConfigurationBuilder(
                 LoginType.PHONE, AccountKitActivity.ResponseType.CODE); // or .ResponseType.CODE
 
-     /*   UIManager uiManager = new SkinManager(
-                SkinManager.Skin.CLASSIC,
-                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? getResources().getColor(R.color.app_red, null) : getResources().getColor(R.color.app_red)),
-                R.color.transparent,
-                SkinManager.Tint.WHITE,
-                0.55
-        );*/
-
-
-        //  UIManager uiManager1 = new SkinManager(SkinManager.Skin.CLASSIC, getResources().getColor(R.color.app_red), R.color.transparent, SkinManager.Tint.WHITE, 1.0);
-        /*If you want default country code*/
-        // configurationBuilder.setDefaultCountryCode("IN");
         int themeId = R.style.AppLoginTheme;
         final LoginType logintype = (LoginType.PHONE);
         UIManager themeManager = new ThemeUIManager(themeId);
         configurationBuilder.setUIManager(themeManager);
-        // configurationBuilder.setUIManager(uiManager1);
 
         intent.putExtra(AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION, configurationBuilder.build());
         startActivityForResult(intent, APP_REQUEST_CODE);
@@ -263,12 +243,8 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    //    /**
-//     * this is a call back method which will give facebook user details
-//     */
     @Override
     public void getFacebookUser(String user) {
-        //showProgressDialog(getString(R.string.please_wait));
         try {
             if (user != null) {
                 loginMode = "fb";
@@ -282,7 +258,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                 LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
                 Call<UserDetailResponse> call = loginRegistrationAPI.login(lr);
                 call.enqueue(onLoginResponseReceivedListener);
-
             }
         } catch (Exception e) {
             // e.printStackTrace();
@@ -291,7 +266,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    //@Override
     public void getGooglePlusInfo(GoogleSignInResult result) {
         try {
             if (isFinishing())
@@ -354,10 +328,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         model.setSessionId(userDetailResult.getSessionId());
         model.setIsLangSelection(userDetailResult.getIsLangSelection());
         model.setUserType(userDetailResult.getUserType());
-
-
         model.setBlogTitle(userDetailResult.getBlogTitle());
-
 
         int cityIdFromLocation = SharedPrefUtils.getCurrentCityModel(ActivityLogin.this).getId();
         if (cityIdFromLocation == AppConstants.OTHERS_CITY_ID) {
@@ -458,13 +429,8 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
         @Override
         protected String doInBackground(Void... params) {
-            // TODO Auto-generated method stub
-
             try {
-
                 googleToken = GoogleAuthUtil.getToken(ActivityLogin.this, googleEmailId, "oauth2:" + GooglePlusUtils.SCOPES);
-
-//                System.out.println("token " + googleToken);
                 return googleToken;
 
             } catch (UserRecoverableAuthException userAuthEx) {
@@ -481,10 +447,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
         @Override
         protected void onPostExecute(String result) {
-            // TODO Auto-generated method stub
             super.onPostExecute(result);
-
-            // check login here
             if (StringUtils.isNullOrEmpty(result))
                 return;
 
@@ -653,9 +616,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         try {
             kidsTable.beginTransaction();
             for (KidsInfo kids : kidsInfoArrayList) {
-
                 kidsTable.insertData(kids);
-
             }
             kidsTable.setTransactionSuccessful();
         } finally {

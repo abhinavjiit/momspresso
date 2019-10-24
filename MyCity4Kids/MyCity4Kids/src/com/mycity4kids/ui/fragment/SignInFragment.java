@@ -61,7 +61,6 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        Intent intent = null;
         switch (v.getId()) {
             case R.id.welcomeTextView:
                 if (count == 7) {
@@ -73,21 +72,26 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
                 }
                 break;
             case R.id.connect_phone:
+                Utils.pushGenericEvent(getActivity(), "SignIn_phone_click_event", "NA", "SignInFragment");
                 ((ActivityLogin) getActivity()).fbAccountKitVerification();
                 break;
             case R.id.connect_facebook:
+                Utils.pushGenericEvent(getActivity(), "SignIn_facebook_click_event", "NA", "SignInFragment");
                 ((ActivityLogin) getActivity()).loginWithFacebook();
                 break;
             case R.id.connect_googleplus:
+                Utils.pushGenericEvent(getActivity(), "SignIn_google_click_event", "NA", "SignInFragment");
                 ((ActivityLogin) getActivity()).loginWithGplus();
                 break;
             case R.id.loginEmailTextView:
+                Utils.pushGenericEvent(getActivity(), "Launch_email_sign_in_event", "NA", "SignInFragment");
                 EmailLoginFragment emailLoginFragment = new EmailLoginFragment();
                 Bundle mBundle = new Bundle();
                 emailLoginFragment.setArguments(mBundle);
                 ((ActivityLogin) getActivity()).replaceFragmentWithAnimation(emailLoginFragment, mBundle, true);
                 break;
             case R.id.signupTextView:
+                Utils.pushGenericEvent(getActivity(), "Launch_sign_up_from_sign_in_event", "NA", "SignInFragment");
                 SignUpFragment signUpFragment = new SignUpFragment();
                 Bundle bundle = new Bundle();
                 signUpFragment.setArguments(bundle);

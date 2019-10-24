@@ -80,13 +80,16 @@ public class EmailLoginFragment extends BaseFragment implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.loginEmailTextView:
+                Utils.pushGenericEvent(getActivity(), "Login_email_click_event", "NA", "EmailLoginFragment");
                 loginWithEmail();
                 break;
             case R.id.forgotPasswordTextView:
+                Utils.pushGenericEvent(getActivity(), "Launch_forgot_password_event", "NA", "EmailLoginFragment");
                 Intent intent = new Intent(getActivity(), ForgotPasswordActivity.class);
                 startActivity(intent);
                 break;
             case R.id.signupTextView:
+                Utils.pushGenericEvent(getActivity(), "Launch_sign_up_from_email_sign_in_event", "NA", "EmailLoginFragment");
                 SignUpFragment signUpFragment = new SignUpFragment();
                 Bundle bundle = new Bundle();
                 signUpFragment.setArguments(bundle);
