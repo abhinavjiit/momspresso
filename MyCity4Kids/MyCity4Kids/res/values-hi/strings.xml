@@ -1193,9 +1193,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="tap_to_create">पोस्ट करने के लिए यहाँ क्लिक करें</string>
     <string name="private_profile_read_article">पोस्ट्स पढ़ें</string>
     <string name="mymoney_profile">MyMoney प्रोफाइल</string>
-    <string name="capture_from_camera"></string>
-    <string name="choose_from_gallery"></string>
-    <string name="add_a_choice"></string>
+    <string name="choose_from_gallery">Choose image from gallery</string>
+    <string name="capture_from_camera">Capture image from camera</string>
+    <string name="add_a_choice">Add a choice</string>
     <string name="invite_referral_screen">Give 25, Get 25!</string>
 
     <string name="rewards_edit">एडिट करें</string>
