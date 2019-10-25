@@ -2,7 +2,9 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.viewpager.widget.ViewPager;
+
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -59,12 +61,14 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.signinTextView: {
+                Utils.pushGenericEvent(this, "Launch_sign_in_event", "NA", "TutorialActivity");
                 Intent intent = new Intent(this, ActivityLogin.class);
                 intent.putExtra(AppConstants.LAUNCH_FRAGMENT, AppConstants.FRAGMENT_SIGNIN);
                 startActivity(intent);
             }
             break;
             case R.id.getStartedTextView: {
+                Utils.pushGenericEvent(this, "Launch_sign_up_event", "NA", "TutorialActivity");
                 Intent intent = new Intent(this, ActivityLogin.class);
                 intent.putExtra(AppConstants.LAUNCH_FRAGMENT, AppConstants.FRAGMENT_SIGNUP);
                 startActivity(intent);

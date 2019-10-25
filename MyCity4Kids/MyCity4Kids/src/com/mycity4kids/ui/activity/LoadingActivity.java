@@ -20,6 +20,7 @@ import com.mycity4kids.asynctask.HeavyDbTask;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ConfigurationController;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnUIView;
 import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.MetroCity;
@@ -49,7 +50,7 @@ public class LoadingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Utils.pushGenericEvent(this, "Post_signup_singin_loading_event", SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "PhoneLoginUserDetailActivity");
         setContentView(R.layout.fetch_pincode_config);
         root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setView(root);

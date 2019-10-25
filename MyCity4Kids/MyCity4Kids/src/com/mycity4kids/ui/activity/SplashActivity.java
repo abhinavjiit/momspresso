@@ -572,18 +572,11 @@ public class SplashActivity extends BaseActivity {
         Log.d("GCM Token ", SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext()));
     }
 
-    /**
-     * Requests the Storage permissions.
-     * If the permission has been denied previously, a SnackBar will prompt the user to grant the
-     * permission, otherwise it is requested directly.
-     */
     private void requestLocationAndStoragePermissions() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION)
                 || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
             Snackbar.make(mLayout, R.string.permission_location_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
@@ -612,26 +605,20 @@ public class SplashActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-
         if (requestCode == REQUEST_INIT_PERMISSION) {
-            Log.i("Permissions", "Received response for storage permissions request.");
-
-            // We have requested multiple permissions for contacts, so all of them need to be
-            // checked.
             if (PermissionUtil.verifyPermissions(grantResults)) {
-                // All required permissions have been granted, display contacts fragment.
                 Snackbar.make(mLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
                         .show();
                 shouldResumeSplash = true;
+                Utils.pushGenericEvent(SplashActivity.this, "Location_permission_granted_event", "NA", "SplashActivity");
             } else {
-                Log.i("Permissions", "storage permissions were NOT granted.");
                 Snackbar.make(mLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
                         .show();
                 shouldResumeSplash = true;
+                Utils.pushGenericEvent(SplashActivity.this, "Location_permission_denied_event", "NA", "SplashActivity");
             }
-
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
