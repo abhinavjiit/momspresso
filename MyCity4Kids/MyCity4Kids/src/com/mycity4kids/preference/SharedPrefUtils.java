@@ -127,6 +127,9 @@ public class SharedPrefUtils {
     private static final String FIREBASE_REMOTE_CONFIG_UPDATE_FLAG = "firebaseRemoteConfigUpdateFlag";
     private static final String DEMO_VIDEO_SEEN = "demovideoseen";
 
+    private static final String DEFAULT_CAMPAIGN_SHOWN_FLAG = "defaultcampaignshownflag";
+
+
     /**
      * this shared preference save current versions for control city,locality,category APIs .
      *
@@ -849,4 +852,17 @@ public class SharedPrefUtils {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return _sharedPref.getBoolean(FIREBASE_REMOTE_CONFIG_UPDATE_FLAG, false);
     }
+
+    public static boolean isDefaultCampaignShown(Context pContext) {
+        SharedPreferences _sharedPref1 = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (_sharedPref1.getBoolean(DEFAULT_CAMPAIGN_SHOWN_FLAG, false));
+    }
+
+    public static void setDefaultCampaignShownFlag(Context pContext, boolean flag) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putBoolean(DEFAULT_CAMPAIGN_SHOWN_FLAG, flag);
+        _editor.commit();
+    }
+
 }

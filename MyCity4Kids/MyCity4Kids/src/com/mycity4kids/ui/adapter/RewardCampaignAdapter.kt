@@ -30,7 +30,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResult>, val context: Activity?) : RecyclerView.Adapter<RewardCampaignAdapter.RewardHolder>() {
+class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResult>, val context: Activity?, var forYouStatus: Int) : RecyclerView.Adapter<RewardCampaignAdapter.RewardHolder>() {
 
     private var campaignNewList: List<CampaignDataListResult>? = null
 
@@ -91,7 +91,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                 if (campaignList!!.campaignStatus == 8)
                     showInviteDialog()
                 else
-                    (context as CampaignContainerActivity).addCampaginDetailFragment(campaignList!!.id)
+                    (context as CampaignContainerActivity).addCampaginDetailFragment(campaignList!!.id, "")
             }
         }
 
@@ -139,7 +139,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             } else if (status == 5) {
-                if (SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext()).equals("0")) {
+                if (forYouStatus == 0) {
                     (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_apply_now))
                     (view.submission_status).setBackgroundResource(R.drawable.subscribe_now)
                     (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))

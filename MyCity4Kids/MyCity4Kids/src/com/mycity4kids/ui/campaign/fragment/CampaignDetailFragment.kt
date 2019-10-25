@@ -132,6 +132,7 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var default_participateTextView: TextView
     private lateinit var upperTextHeader: TextView
     private lateinit var lowerTextHeader: TextView
+    private var comingFrom: String? = null
 
 
     override fun updateUi(response: Response?) {
@@ -140,10 +141,11 @@ class CampaignDetailFragment : BaseFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(id: Int, fromNotification: Boolean = false) =
+        fun newInstance(id: Int, fromNotification: Boolean = false, comingFrom: String) =
                 CampaignDetailFragment().apply {
                     arguments = Bundle().apply {
                         this.putInt("id", id)
+                        this.putString("comingFrom", comingFrom)
                     }
                 }
     }
@@ -153,6 +155,7 @@ class CampaignDetailFragment : BaseFragment() {
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.campaign_detail_activity, container, false)
         id = arguments!!.getInt("id")
+        comingFrom = arguments!!.getString("comingFrom")
         userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         isRewardAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
         defaultCampaignPopUp = containerView.findViewById(R.id.include)
@@ -162,7 +165,6 @@ class CampaignDetailFragment : BaseFragment() {
         } else {
             fetchCampaignDetail()
         }
-
         initializeXml()
         backIcon = containerView.findViewById(R.id.back)
         linearLayoutManager = LinearLayoutManager(activity as Context?, RecyclerView.VERTICAL, false)
@@ -191,7 +193,7 @@ class CampaignDetailFragment : BaseFragment() {
 
             //  setResponseData(defaultapigetResponse)
 
-            (activity as CampaignContainerActivity).addCampaginDetailFragment(defaultapigetResponse?.id!!)
+            (activity as CampaignContainerActivity).addCampaginDetailFragment(defaultapigetResponse?.id!!, "defaultCampaign")
 
 
         }
@@ -294,7 +296,7 @@ class CampaignDetailFragment : BaseFragment() {
         videoView.setOnPreparedListener { mp ->
             mp.isLooping = true
         }*/
-        videoView.start();
+        videoView.start()
 
         videoView.setOnCompletionListener { mp ->
             mp.isLooping = false
@@ -519,6 +521,8 @@ class CampaignDetailFragment : BaseFragment() {
             showRewardDialog()
         } else if (submitBtn.text == resources.getString(R.string.detail_bottom_apply_now)) {
             Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "applyNow", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+            if ("defaultCampaign".equals(comingFrom))
+                SharedPrefUtils.setDefaultCampaignShownFlag(BaseApplication.getAppContext(), true)
 
             var participateRequest = CampaignParticipate()
             participateRequest!!.user_id = userId
@@ -588,7 +592,8 @@ class CampaignDetailFragment : BaseFragment() {
                     labelText.setText(resources.getString(R.string.label_campaign_applied))
                     unapplyCampaign.visibility = View.VISIBLE
                 } else {
-                    fetchDefaultCampaign()
+                    if (!SharedPrefUtils.isDefaultCampaignShown(BaseApplication.getAppContext()))
+                        fetchDefaultCampaign()
                     submitBtn.text = resources.getString(R.string.detail_bottom_share)
                     Toast.makeText(context, responseData.reason, Toast.LENGTH_SHORT).show()////////////////////////////////////////////////
                 }
@@ -623,10 +628,8 @@ class CampaignDetailFragment : BaseFragment() {
                 }
                 if (response != null && response.code == 200 && response.status == Constants.SUCCESS && response.data?.result != null) {
                     defaultapigetResponse = response.data!!.result
-                    if (defaultapigetResponse?.campaignStatus != 5) {
-                        defaultCampaignPopUp.visibility = View.VISIBLE
-                        setDefaultCampaignValues()
-                    }
+                    defaultCampaignPopUp.visibility = View.VISIBLE
+                    setDefaultCampaignValues()
 
 
                 } else if (response != null && response.code == 200 && response.status == Constants.SUCCESS && response.data?.result == null) {
@@ -650,7 +653,6 @@ class CampaignDetailFragment : BaseFragment() {
 
 
     fun setDefaultCampaignValues() {
-
         upperTextHeader.text = resources.getString(R.string.sorry_not_eligible)
         lowerTextHeader.text = resources.getString(R.string.try_following_campaign)
         Picasso.with(context).load(defaultapigetResponse!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(default_campaign_header)
@@ -658,7 +660,6 @@ class CampaignDetailFragment : BaseFragment() {
         default_brand_name.setText(defaultapigetResponse!!.brandDetails!!.name)
         default_campaign_name.setText(defaultapigetResponse!!.name)
         default_submission_status.text = resources.getString(R.string.campaign_details_apply_now)
-
     }
 
 

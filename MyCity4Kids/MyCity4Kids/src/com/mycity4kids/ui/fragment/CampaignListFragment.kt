@@ -28,6 +28,7 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.activity.EditProfileNewActivity
 import com.mycity4kids.ui.adapter.RewardCampaignAdapter
+import com.mycity4kids.ui.campaign.BasicResponse
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.utils.EndlessScrollListener
@@ -57,7 +58,7 @@ class CampaignListFragment : BaseFragment() {
     private lateinit var profileIcon: ImageView
     private lateinit var isRewardAdded: String
     private lateinit var registerRewards: TextView
-    private var forYouStatus: Int? = 0
+    private var forYouStatus: Int = 0
     private lateinit var defaultCampaignPopUp: View
     private var defaultapigetResponse: CampaignDetailResult? = null
     private lateinit var default_campaign_header: ImageView
@@ -109,14 +110,14 @@ class CampaignListFragment : BaseFragment() {
         lowerTextHeader = containerView.findViewById(R.id.lowerTextHeader)
         linearLayoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         recyclerView.layoutManager = linearLayoutManager
-        adapter = RewardCampaignAdapter(campaignList, activity)
+        adapter = RewardCampaignAdapter(campaignList, activity, forYouStatus)
         registerRewards = containerView.findViewById(R.id.bottomText)
         isRewardAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
         recyclerView.adapter = adapter
         campaignList.clear()
 //        if (campaignList.size == 0)
         fetchCampaignList(0)
-        //  fetchForYou()
+        fetchForYou()
         profileIcon.setOnClickListener {
             val intent = Intent(context, EditProfileNewActivity::class.java)
             intent.putExtra("isComingfromCampaign", true)
@@ -143,7 +144,7 @@ class CampaignListFragment : BaseFragment() {
             checkRewardForm()
         }
         default_participateTextView.setOnClickListener {
-            (activity as CampaignContainerActivity).addCampaginDetailFragment(defaultapigetResponse?.id!!)
+            (activity as CampaignContainerActivity).addCampaginDetailFragment(defaultapigetResponse?.id!!, "defaultCampaign")
         }
 
         cancel.setOnClickListener {
@@ -160,7 +161,7 @@ class CampaignListFragment : BaseFragment() {
                     fetchDefaultCampaign()
                     isRewardAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
                     if (isRewardAdded.isNotEmpty() || isRewardAdded.equals("1")) {
-                        //    fetchForYou()
+                        //  fetchForYou()
                         registerRewards.visibility = View.GONE
                     }
 
@@ -220,10 +221,8 @@ class CampaignListFragment : BaseFragment() {
                 }
                 if (response != null && response.code == 200 && response.status == Constants.SUCCESS && response.data?.result != null) {
                     defaultapigetResponse = response.data!!.result
-                    if (defaultapigetResponse?.campaignStatus != 5) {
-                        defaultCampaignPopUp.visibility = View.VISIBLE
-                        setDefaultCampaignValues()
-                    }
+                    defaultCampaignPopUp.visibility = View.VISIBLE
+                    setDefaultCampaignValues()
 
 
                 } else if (response != null && response.code == 200 && response.status == Constants.SUCCESS && response.data?.result == null) {
@@ -298,6 +297,37 @@ class CampaignListFragment : BaseFragment() {
         default_campaign_name.setText(defaultapigetResponse!!.name)
         default_submission_status.text = resources.getString(R.string.campaign_details_apply_now)
 
+    }
+
+
+    private fun fetchForYou() {
+        // showProgressDialog(resources.getString(R.string.please_wait))
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getForYouStatus(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BasicResponse> {
+            override fun onNext(response: BasicResponse) {
+                if (response.code == 200 && response.data != null && response.status == "success") {
+                    if (response.data.result != null && response.data.result.recm_status != null) {
+                        forYouStatus = response.data.result.recm_status
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+
+
+            }
+
+            override fun onComplete() {
+                //  removeProgressDialog()
+            }
+
+            override fun onSubscribe(d: Disposable) {
+            }
+
+
+            override fun onError(e: Throwable) {
+                // removeProgressDialog()
+            }
+
+
+        })
     }
 }
 

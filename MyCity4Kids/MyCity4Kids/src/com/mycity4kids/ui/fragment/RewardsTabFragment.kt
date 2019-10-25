@@ -45,7 +45,6 @@ class RewardsTabFragment : BaseFragment() {
     private lateinit var myEarningLayout: RelativeLayout
     private lateinit var relativeShareReferralCode: RelativeLayout
     private var totalPayout: Int = 0
-
     private var isRewardsAdded = "0"
 
 

@@ -110,13 +110,13 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
         if ((deeplinkCampaignId == -1 || deeplinkCampaignId == 0) && comingFrom.equals("deeplink")) {
             campaignListFragment()
         } else if (comingFrom.equals("campaign_detail")) {
-            addCampaginDetailFragment(deeplinkCampaignId)
+            addCampaginDetailFragment(deeplinkCampaignId, "")
 
         } else if (comingFrom.equals("campaign_submit_proof")) {
             showProgressDialog(resources.getString(R.string.please_wait))
             fetchCampaignDetail()
         } else {
-            addCampaginDetailFragment(deeplinkCampaignId)
+            addCampaginDetailFragment(deeplinkCampaignId, "")
         }
 
     }
@@ -164,9 +164,9 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     }
 
 
-    fun addCampaginDetailFragment(id: Int) {
+    fun addCampaginDetailFragment(id: Int, comingFrom: String) {
 
-        campaignDetailFragment = CampaignDetailFragment.newInstance(id, fromNotification)
+        campaignDetailFragment = CampaignDetailFragment.newInstance(id, fromNotification,comingFrom)
         val campaignFrag = campaignDetailFragment as Fragment
         supportFragmentManager.beginTransaction().replace(R.id.container, campaignFrag,
                 CampaignDetailFragment::class.java.simpleName).addToBackStack("campaignDetailFragment")
