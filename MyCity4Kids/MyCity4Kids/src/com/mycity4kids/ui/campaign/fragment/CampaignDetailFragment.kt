@@ -224,15 +224,17 @@ class CampaignDetailFragment : BaseFragment() {
         }
 
         crossDemo.setOnClickListener {
-            if (videoView.isPlaying)
-                videoView.stopPlayback()
+            //            if (videoView.isPlaying)
+            videoView.stopPlayback()
+            videoView.setMediaController(null)
+            mediaController = null
             demoVideoLayout.visibility = View.GONE
         }
 
         demoUpload.setOnClickListener {
             demoVideoLayout.visibility = View.VISIBLE
-            demoUploadLayout.visibility = View.GONE
-            playDemoIcon.visibility = View.VISIBLE
+//            demoUploadLayout.visibility = View.GONE
+//            playDemoIcon.visibility = View.VISIBLE
             SharedPrefUtils.setDemoVideoSeen(BaseApplication.getAppContext(), true)
             playVideo()
 //            (activity as CampaignContainerActivity).addCampaignDemoUploadFragment()
