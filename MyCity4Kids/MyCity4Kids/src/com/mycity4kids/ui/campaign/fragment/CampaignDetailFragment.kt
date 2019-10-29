@@ -45,6 +45,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.adapter.CampaignDetailAdapter
 import com.mycity4kids.ui.campaign.BasicResponse
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
+import com.mycity4kids.ui.campaign.activity.CampaignHowToVideoActivity
 import com.mycity4kids.ui.mymoneytracker.activity.TrackerActivity
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.utils.AppUtils
@@ -105,9 +106,6 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var readThisBox: LinearLayout
     private lateinit var detail_recyclerview: RecyclerView
     private lateinit var txtTrackerStatus: TextView
-    private lateinit var crossDemo: ImageView
-    private lateinit var demoVideoLayout: FrameLayout
-    private lateinit var videoView: VideoView
     private lateinit var demoUploadLayout: RelativeLayout
     private lateinit var playDemoIcon: ImageView
     private var position: Int = 0;
@@ -130,13 +128,12 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var default_submission_status: TextView
     private lateinit var cancel: ImageView
     private lateinit var default_participateTextView: TextView
+    private lateinit var mainLinearLayout: LinearLayout
     private lateinit var upperTextHeader: TextView
     private lateinit var lowerTextHeader: TextView
     private var comingFrom: String? = null
 
-
     override fun updateUi(response: Response?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     companion object {
@@ -152,7 +149,6 @@ class CampaignDetailFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.campaign_detail_activity, container, false)
         id = arguments!!.getInt("id")
         comingFrom = arguments!!.getString("comingFrom")
@@ -189,13 +185,8 @@ class CampaignDetailFragment : BaseFragment() {
             }
         }
 
-        default_participateTextView.setOnClickListener {
-
-            //  setResponseData(defaultapigetResponse)
-
+        mainLinearLayout.setOnClickListener {
             (activity as CampaignContainerActivity).addCampaginDetailFragment(defaultapigetResponse?.id!!, "defaultCampaign")
-
-
         }
 
         getHelp.setOnClickListener {
@@ -218,36 +209,18 @@ class CampaignDetailFragment : BaseFragment() {
             applyCode()
         }
 
-
         cancel.setOnClickListener {
             defaultCampaignPopUp.visibility = View.GONE
         }
 
-        crossDemo.setOnClickListener {
-            //            if (videoView.isPlaying)
-            videoView.stopPlayback()
-            videoView.setMediaController(null)
-            mediaController = null
-            demoVideoLayout.visibility = View.GONE
-        }
-
         demoUpload.setOnClickListener {
-            demoVideoLayout.visibility = View.VISIBLE
-//            demoUploadLayout.visibility = View.GONE
-//            playDemoIcon.visibility = View.VISIBLE
             SharedPrefUtils.setDemoVideoSeen(BaseApplication.getAppContext(), true)
             playVideo()
-//            (activity as CampaignContainerActivity).addCampaignDemoUploadFragment()
         }
 
         playDemoIcon.setOnClickListener {
-            demoVideoLayout.visibility = View.VISIBLE
             playVideo()
         }
-
-
-
-
         referCode.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
 
@@ -262,48 +235,12 @@ class CampaignDetailFragment : BaseFragment() {
             }
 
         })
-
         return containerView
     }
 
-    private fun setController() {
-        // Set the media controller buttons
-        if (mediaController == null) {
-            mediaController = MediaController(activity);
-
-            // Set the videoView that acts as the anchor for the MediaController.
-            mediaController!!.setAnchorView(videoView);
-
-
-            // Set MediaController for VideoView
-            videoView.setMediaController(mediaController);
-        }
-    }
-
     private fun playVideo() {
-        try {
-            // ID of video file.
-            var videoUrl: String = "https://static.momspresso.com/mymoney/assets/how-to.mp4"
-            var video: Uri
-            video = Uri.parse(videoUrl);
-            videoView.setVideoURI(video);
-            setController()
-
-        } catch (e: Exception) {
-            Crashlytics.logException(e)
-            Log.d("MC4kException", Log.getStackTraceString(e))
-        }
-
-/*
-        videoView.setOnPreparedListener { mp ->
-            mp.isLooping = true
-        }*/
-        videoView.start()
-
-        videoView.setOnCompletionListener { mp ->
-            mp.isLooping = false
-            demoVideoLayout.visibility = View.GONE
-        }
+        val intent = Intent(activity, CampaignHowToVideoActivity::class.java)
+        startActivity(intent)
     }
 
     private fun applyCode() {
@@ -327,6 +264,7 @@ class CampaignDetailFragment : BaseFragment() {
         default_campaign_name = containerView.findViewById(R.id.default_campaign_name)
         default_submission_status = containerView.findViewById(R.id.default_submission_status)
         default_participateTextView = containerView.findViewById(R.id.default_participateTextView)
+        mainLinearLayout = containerView.findViewById(R.id.mainLinearLayout)
         cancel = containerView.findViewById(R.id.cancel)
 
         bannerImg = containerView.findViewById(R.id.header_img)
@@ -361,16 +299,12 @@ class CampaignDetailFragment : BaseFragment() {
         scrollView2 = containerView.findViewById(R.id.scrollView2)
         shimmer1 = containerView.findViewById(R.id.shimmer1)
         demoUpload = containerView.findViewById(R.id.demo_upload)
-        crossDemo = containerView.findViewById(R.id.cross_demo)
-        demoVideoLayout = containerView.findViewById(R.id.demo_video_layout)
-        videoView = containerView.findViewById(R.id.videoView)
         demoUploadLayout = containerView.findViewById(R.id.demo_upload_layout)
         playDemoIcon = containerView.findViewById(R.id.play_demo_icon)
     }
 
     private fun fetchCampaignDetail() {
         BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getCampaignDetail(this!!.id!!, 2.0).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CampaignDetailResult>> {
-
 
             override fun onComplete() {
             }
@@ -461,13 +395,9 @@ class CampaignDetailFragment : BaseFragment() {
     }
 
     fun popupDisplay(): PopupWindow {
-
         val popupWindow = PopupWindow(context)
-
         val inflater = (context as CampaignContainerActivity).getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
         val view = inflater.inflate(R.layout.unapply_campaign_popup, null)
-
         val textView = view.findViewById<TextView>(R.id.unapply_text)
         textView.setOnClickListener {
             unapplyCampaignDialog()
@@ -478,7 +408,6 @@ class CampaignDetailFragment : BaseFragment() {
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT)
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT)
         popupWindow.setContentView(view)
-
         return popupWindow
     }
 
@@ -510,13 +439,12 @@ class CampaignDetailFragment : BaseFragment() {
 //        textView.highlightColor = Color.TRANSPARENT
     }
 
-    fun demoVideoLayout(): FrameLayout {
-//        if (videoView.isPlaying)
-        videoView.stopPlayback()
-        videoView.setMediaController(null)
-        mediaController = null
-        return demoVideoLayout
-    }
+//    fun demoVideoLayout(): FrameLayout {
+//        videoView.stopPlayback()
+//        videoView.setMediaController(null)
+//        mediaController = null
+//        return demoVideoLayout
+//    }
 
     private fun setClickAction() {
         if (submitBtn.text == resources.getString(R.string.check_ypur_eligibility)) {
@@ -533,10 +461,8 @@ class CampaignDetailFragment : BaseFragment() {
             val campaignAPI = retro.create(CampaignAPI::class.java)
             val call = campaignAPI.postRegisterCampaign(participateRequest)
             call.enqueue(participateCampaign)
-
         } else if (submitBtn.text == resources.getString(R.string.detail_bottom_share)) {
             Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "Share", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
-
             val shareIntent = ShareCompat.IntentBuilder
                     .from(activity)
                     .setType("text/plain")
@@ -549,14 +475,12 @@ class CampaignDetailFragment : BaseFragment() {
             }
         } else if (submitBtn.text == resources.getString(R.string.detail_bottom_share_momspresso_reward)) {
             Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "Share_Rewards_Sticky_Bottom", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "CTA_Momspresso_Rewards_Share")
-
             val shareIntent = ShareCompat.IntentBuilder
                     .from(activity)
                     .setType("text/plain")
                     .setChooserTitle("Share URL")
                     .setText("https://www.momspresso.com/mymoney?referrer=" + userId)
                     .intent
-
             if (shareIntent.resolveActivity(activity!!.packageManager) != null) {
                 context!!.startActivity(shareIntent)
             }
@@ -564,10 +488,8 @@ class CampaignDetailFragment : BaseFragment() {
         } else if (submitBtn.text == resources.getString(R.string.detail_bottom_view_other)) {
             (context as CampaignContainerActivity).onBackPressed()
             Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "View other campaigns", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
-
         } else if (submitBtn.text == resources.getString(R.string.detail_bottom_submit_proof)) {
             Utils.campaignEvent(activity, "Proof Submission", "Campaign Detail", "Submit Proof", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Submission")
-
             (activity as CampaignContainerActivity).addAddProofFragment(apiGetResponse!!.id!!, (apiGetResponse!!.deliverableTypes as ArrayList<Int>?)!!, status)
             if (apiGetResponse != null && apiGetResponse!!.totalPayout != null && apiGetResponse!!.id != null && apiGetResponse!!.nameSlug != null) {
                 (activity as CampaignContainerActivity).setTotalPayOut(apiGetResponse!!.totalPayout!!)
@@ -632,27 +554,18 @@ class CampaignDetailFragment : BaseFragment() {
                     defaultapigetResponse = response.data!!.result
                     defaultCampaignPopUp.visibility = View.VISIBLE
                     setDefaultCampaignValues()
-
-
                 } else if (response != null && response.code == 200 && response.status == Constants.SUCCESS && response.data?.result == null) {
                     defaultCampaignPopUp.visibility = View.GONE
-
                 }
-
-
             }
 
             override fun onError(e: Throwable) {
                 removeProgressDialog()
                 Crashlytics.logException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
-
             }
         })
-
-
     }
-
 
     fun setDefaultCampaignValues() {
         upperTextHeader.text = resources.getString(R.string.sorry_not_eligible)
@@ -799,8 +712,6 @@ class CampaignDetailFragment : BaseFragment() {
                 submitBtn.text = it.resources.getString(R.string.detail_bottom_share_momspresso_reward)
             }
         } else if (status == 5) {
-
-
             hideShowReferral(status)
             if (isRewardAdded.isEmpty() || isRewardAdded.equals("0")) {
                 applicationStatus.setBackgroundResource(R.drawable.subscribe_now)
@@ -904,7 +815,6 @@ class CampaignDetailFragment : BaseFragment() {
 
     fun showDialog() {
         Utils.campaignEvent(activity, "Campaign Detail", "Campaign Detail", "Show_Earnings", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "CTA_Show_Earnings")
-
         if (activity != null) {
             val dialog = Dialog(activity)
             dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
@@ -921,12 +831,10 @@ class CampaignDetailFragment : BaseFragment() {
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.show()
         }
-
     }
 
     fun unapplyCampaignDialog() {
         Utils.campaignEvent(activity, "Campaign Detail", "Campaign Detail", "Show_Earnings", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "CTA_Show_Earnings")
-
         if (activity != null) {
             val dialog = Dialog(activity)
             dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
@@ -934,7 +842,6 @@ class CampaignDetailFragment : BaseFragment() {
             dialog.setCancelable(true)
             val noBtn = dialog.findViewById<TextView>(R.id.btn_no)
             val yesBtn = dialog.findViewById<TextView>(R.id.btn_yes)
-
             noBtn.setOnClickListener {
                 dialog.dismiss()
             }
@@ -953,7 +860,6 @@ class CampaignDetailFragment : BaseFragment() {
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.show()
         }
-
     }
 
 
@@ -967,7 +873,6 @@ class CampaignDetailFragment : BaseFragment() {
 
     fun getDate(milliSeconds: Long, dateFormat: String): String {
         val formatter = SimpleDateFormat(dateFormat)
-
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = milliSeconds * 1000
         return formatter.format(calendar.time)
@@ -989,8 +894,6 @@ class CampaignDetailFragment : BaseFragment() {
                         val campaignAPI = retro.create(CampaignAPI::class.java)
                         val call = campaignAPI.postRegisterCampaign(participateRequest)
                         call.enqueue(participateCampaign)
-
-
                         //   fetchForYou()
                         defaultCampaignShow = true
                     }
@@ -1010,8 +913,6 @@ class CampaignDetailFragment : BaseFragment() {
                     }
                 }
                 fetchCampaignDetail()
-
-
             }
 
             override fun onComplete() {
@@ -1020,7 +921,6 @@ class CampaignDetailFragment : BaseFragment() {
 
             override fun onSubscribe(d: Disposable) {
             }
-
 
             override fun onError(e: Throwable) {
                 // removeProgressDialog()
@@ -1039,8 +939,6 @@ class CampaignDetailFragment : BaseFragment() {
         super.onStop()
         shimmer1.stopShimmerAnimation()
     }
-
-
 }
 
 

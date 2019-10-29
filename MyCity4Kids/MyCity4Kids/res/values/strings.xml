@@ -1058,7 +1058,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="label_campaign_proof_moderation">We will check your submitted proofs within 7 days. To add more, you can click below.</string>
     <string name="label_campaign_proof_reject">Your proofs were rejected. Please check email for details.To resubmit after corrections, click below.</string>
     <string name="toast_not_elegible">Sorry, you are not eligible for this campaign.</string>
-    <string name="checking_elegiblity">We are checking your eligiblity</string>
+    <string name="checking_elegiblity">We are checking your eligibility</string>
 
     <string name="toast_campaign_full">Oops! Entries to this campaign are now closed.</string>
     <string name="toast_campaign_open">Thank you for applying to the campaign.</string>

@@ -166,7 +166,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
     fun addCampaginDetailFragment(id: Int, comingFrom: String) {
 
-        campaignDetailFragment = CampaignDetailFragment.newInstance(id, fromNotification,comingFrom)
+        campaignDetailFragment = CampaignDetailFragment.newInstance(id, fromNotification, comingFrom)
         val campaignFrag = campaignDetailFragment as Fragment
         supportFragmentManager.beginTransaction().replace(R.id.container, campaignFrag,
                 CampaignDetailFragment::class.java.simpleName).addToBackStack("campaignDetailFragment")
@@ -222,13 +222,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
                         supportFragmentManager.popBackStack()
                     }
                 } else {
-                    var frameLayout: FrameLayout = currentFragment.demoVideoLayout()
-                    if (frameLayout.visibility == View.VISIBLE) {
-                        frameLayout.visibility = View.GONE
-                        return
-                    }
                     super.onBackPressed()
-
                 }
             } else {
                 super.onBackPressed()

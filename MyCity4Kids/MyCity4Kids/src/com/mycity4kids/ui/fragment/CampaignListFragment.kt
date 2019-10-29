@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -68,31 +69,24 @@ class CampaignListFragment : BaseFragment() {
     private lateinit var default_submission_status: TextView
     private lateinit var cancel: ImageView
     private lateinit var default_participateTextView: TextView
+    private lateinit var mainLinearLayout: LinearLayout
     private lateinit var upperTextHeader: TextView
     private lateinit var lowerTextHeader: TextView
 
-
     override fun updateUi(response: Response?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
 
     companion object {
         @JvmStatic
         fun newInstance() =
                 CampaignListFragment().apply {
                     arguments = Bundle().apply {
-
                     }
                 }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
-        Log.i("Fragment", "onCreateView")
-
-        // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.reward_campaign, container, false)
         backIcon = containerView.findViewById(R.id.back)
         ashimmerFrameLayout = containerView.findViewById(R.id.shimmer1)
@@ -105,6 +99,7 @@ class CampaignListFragment : BaseFragment() {
         default_campaign_name = containerView.findViewById(R.id.default_campaign_name)
         default_submission_status = containerView.findViewById(R.id.default_submission_status)
         default_participateTextView = containerView.findViewById(R.id.default_participateTextView)
+        mainLinearLayout = containerView.findViewById(R.id.mainLinearLayout)
         cancel = containerView.findViewById(R.id.cancel)
         upperTextHeader = containerView.findViewById(R.id.upperTextHeader)
         lowerTextHeader = containerView.findViewById(R.id.lowerTextHeader)
@@ -143,7 +138,7 @@ class CampaignListFragment : BaseFragment() {
         registerRewards.setOnClickListener {
             checkRewardForm()
         }
-        default_participateTextView.setOnClickListener {
+        mainLinearLayout.setOnClickListener {
             (activity as CampaignContainerActivity).addCampaginDetailFragment(defaultapigetResponse?.id!!, "defaultCampaign")
         }
 
@@ -164,8 +159,6 @@ class CampaignListFragment : BaseFragment() {
                         //  fetchForYou()
                         registerRewards.visibility = View.GONE
                     }
-
-
 //                    checkRewardForm()
                 }
             }
@@ -184,11 +177,7 @@ class CampaignListFragment : BaseFragment() {
     }
 
     private fun fetchCampaignList(startIndex: Int, shouldShowProgressbar: Boolean = false) {
-
-
-        //endIndex = startIndex + 10
-
-        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+        var userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
 
         val retro = BaseApplication.getInstance().retrofit
         val campaignAPI = retro.create(CampaignAPI::class.java)
@@ -199,8 +188,6 @@ class CampaignListFragment : BaseFragment() {
             val call = campaignAPI.getCampaignList(userId, startIndex + 1, startIndex + 10, 3.0)
             call.enqueue(getCampaignList)
         }
-
-
     }
 
     private fun fetchDefaultCampaign() {
@@ -223,25 +210,18 @@ class CampaignListFragment : BaseFragment() {
                     defaultapigetResponse = response.data!!.result
                     defaultCampaignPopUp.visibility = View.VISIBLE
                     setDefaultCampaignValues()
-
-
                 } else if (response != null && response.code == 200 && response.status == Constants.SUCCESS && response.data?.result == null) {
                     defaultCampaignPopUp.visibility = View.GONE
-
                 }
             }
 
             override fun onError(e: Throwable) {
-
                 removeProgressDialog()
                 Crashlytics.logException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         })
-
-
     }
-
 
     private val getCampaignList = object : Callback<AllCampaignDataResponse> {
         override fun onResponse(call: Call<AllCampaignDataResponse>, response: retrofit2.Response<AllCampaignDataResponse>) {
@@ -256,7 +236,6 @@ class CampaignListFragment : BaseFragment() {
                 if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
                     ashimmerFrameLayout.stopShimmerAnimation()
                     ashimmerFrameLayout.visibility = View.GONE
-
                     if (responseData.data!!.result!!.size > 0) {
                         campaignList.addAll(responseData.data!!.result as ArrayList<CampaignDataListResult>)
                         adapter.notifyDataSetChanged()
@@ -296,9 +275,7 @@ class CampaignListFragment : BaseFragment() {
         default_brand_name.setText(defaultapigetResponse!!.brandDetails!!.name)
         default_campaign_name.setText(defaultapigetResponse!!.name)
         default_submission_status.text = resources.getString(R.string.campaign_details_apply_now)
-
     }
-
 
     private fun fetchForYou() {
         // showProgressDialog(resources.getString(R.string.please_wait))
@@ -310,8 +287,6 @@ class CampaignListFragment : BaseFragment() {
                         adapter.notifyDataSetChanged()
                     }
                 }
-
-
             }
 
             override fun onComplete() {
@@ -321,12 +296,9 @@ class CampaignListFragment : BaseFragment() {
             override fun onSubscribe(d: Disposable) {
             }
 
-
             override fun onError(e: Throwable) {
                 // removeProgressDialog()
             }
-
-
         })
     }
 }
