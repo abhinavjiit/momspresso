@@ -1018,8 +1018,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
 
     <string name="congratulation_text">बधाई हो!</string>
-    <string name="thanks_for_submitting">प्रूफ्स  और पेमेंट डिटेल्स सबमिट करने के लिए धन्यवाद</string>
-    <string name="be_in_touch_text">हम आपके एप्लीकेशन की स्थिति पर 7 दिनों के भीतर आपको सूचित करेंगे</string>
+    <string name="thanks_for_submitting">प्रूफ्स सबमिट करने के लिए धन्यवाद</string>
+    <string name="be_in_touch_text">हम आपके एप्लीकेशन की स्थिति पर <font fgcolor="#D54058">7 दिनों के भीतर</font> आपको सूचित करेंगे</string>
     <string name="share_joy">अपनी सफलता शेयर करें</string>
     <string name="continue_browsing_campaign">कैम्पेन्स ब्राउज़िंग करना जारी रखें</string>
 

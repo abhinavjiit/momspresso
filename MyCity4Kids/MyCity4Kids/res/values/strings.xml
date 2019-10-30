@@ -1157,8 +1157,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="proof_instructions">Proof Instructions</string>
     <string name="faq">FAQS</string>
     <string name="congratulation_text">CONGRATULATIONS!</string>
-    <string name="thanks_for_submitting">Thanks for submitting proof and payment details</string>
-    <string name="be_in_touch_text">We will review and be in touch in next 7 working days till then you can take part in other interesting campaigns</string>
+    <string name="thanks_for_submitting">Thanks for submitting the proofs</string>
+    <string name="be_in_touch_text">We will review and be in touch in next <font fgcolor="#D54058">7 working days</font> till then you can take part in other interesting campaigns</string>
     <string name="share_joy">SHARE THE JOY</string>
 
 
@@ -1324,9 +1324,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
         <item>Momspresso does not pay each blogger on publishing their own posts. We do however offer paid writing assignments which are commissioned by brands. This is offered to bloggers based on the quality of content they produce.</item>
         <item>Whether your story is about parenthood, womanhood, relationships, struggles, joys or personal well-being, this is the platform to write about it. Join the 5000+ Mums in seeking &amp; sharing advice, opinions and recommendations.\n Do refrain from publishing copied or \'slightly modified\' content.</item>
     </string-array>
-
-
-
 
 
     <string name="choose_from_gallery">Choose image from gallery</string>

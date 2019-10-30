@@ -524,4 +524,6 @@
     <color name="color_A0A0A0">#A0A0A0</color>
     <color name="spell_check_error_highlight">#F9EAEE</color>
     <color name="campaign_listing_light_green_bottom">#4AC670</color>
+    <color name="color_37C4AC">#37C4AC</color>
+    <color name="color_EFF9F8">#EFF9F8</color>
 </resources>

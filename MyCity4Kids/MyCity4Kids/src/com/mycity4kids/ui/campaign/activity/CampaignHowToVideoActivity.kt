@@ -29,6 +29,7 @@ class CampaignHowToVideoActivity : BaseActivity() {
         videoView = findViewById(R.id.videoView)
         crossImageView = findViewById(R.id.crossImageView)
 
+
         crossImageView.setOnClickListener {
             videoView.stopPlayback()
             videoView.setMediaController(null)
@@ -37,6 +38,11 @@ class CampaignHowToVideoActivity : BaseActivity() {
         }
 
         SharedPrefUtils.setDemoVideoSeen(BaseApplication.getAppContext(), true)
+//        playVideo()
+    }
+
+    override fun onResume() {
+        super.onResume()
         playVideo()
     }
 
@@ -57,6 +63,7 @@ class CampaignHowToVideoActivity : BaseActivity() {
 
     private fun playVideo() {
         try {
+            showProgressDialog(resources.getString(R.string.please_wait))
             val videoUrl = "https://static.momspresso.com/mymoney/assets/how-to.mp4"
             val video = Uri.parse(videoUrl)
             videoView.setVideoURI(video)
@@ -66,6 +73,9 @@ class CampaignHowToVideoActivity : BaseActivity() {
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
         videoView.start()
+        videoView.setOnPreparedListener {
+            removeProgressDialog()
+        }
         videoView.setOnCompletionListener { mp ->
             mp.isLooping = false
             finish()
