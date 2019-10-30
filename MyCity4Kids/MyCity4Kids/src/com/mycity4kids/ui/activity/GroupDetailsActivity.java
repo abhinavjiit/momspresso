@@ -2110,13 +2110,14 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 if (data != null && data.getParcelableArrayListExtra("completeResponseList") != null && data.getIntExtra("postId", -1) != -1 && data.getIntExtra("replyCount", -1) != -1) {
                     ArrayList<GroupPostCommentResult> completeCommentResponseList = data.getParcelableArrayListExtra("completeResponseList");
                     int postId = data.getIntExtra("postId", -1);
-                    int replyCount = data.getIntExtra("replyCount", -1);
                     int responseCount = data.getIntExtra("responseCount", -1);
-                    for (int i = 0; i < postList.size(); i++) {
-                        if (postList.get(i).getId() == postId) {
-                            postList.get(i).setResponseCount(responseCount);
-                            groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
-                            break;
+                    if (responseCount != -1) {
+                        for (int i = 0; i < postList.size(); i++) {
+                            if (postList.get(i).getId() == postId) {
+                                postList.get(i).setResponseCount(responseCount);
+                                groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
+                                break;
+                            }
                         }
                     }
                 }

@@ -1915,7 +1915,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         intent.putExtra("completeResponseList", completeResponseList);
         intent.putExtra("postId", postId);
         intent.putExtra("replyCount", count);
-        intent.putExtra("responseCount", postData.getResponseCount());
+        if (postData != null)
+            intent.putExtra("responseCount", postData.getResponseCount());
 
         setResult(RESULT_OK, intent);
 
