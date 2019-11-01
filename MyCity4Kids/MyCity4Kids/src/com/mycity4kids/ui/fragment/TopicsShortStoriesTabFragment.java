@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -62,10 +61,7 @@ import com.mycity4kids.ui.activity.TopicsListingFragment;
 import com.mycity4kids.ui.adapter.ShortStoriesRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
-import com.mycity4kids.widget.FeedNativeAd;
 import com.mycity4kids.widget.TrackingData;
-
-import org.apmem.tools.layouts.FlowLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -97,31 +93,21 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private ArrayList<ArticleListingResult> mDatalist;
     private Topics currentSubTopic;
     private Topics selectedTopic;
-    private boolean isHeaderVisible = false;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
 
     private ShortStoriesRecyclerAdapter recyclerAdapter;
-//    private MainArticleListingAdapter adapter;
 
     private LinearLayoutManager llm;
     private RelativeLayout mLodingView;
-    private TextView noBlogsTextView;
-    private FlowLayout flowLayout;
-    private RelativeLayout headerRL;
-    private ImageView expandImageView;
     private FrameLayout frameLayout;
     private FloatingActionsMenu fabMenu;
     private FloatingActionButton popularSortFAB;
     private FloatingActionButton recentSortFAB;
     private FloatingActionButton fabSort;
     private RecyclerView recyclerView;
-    private FeedNativeAd feedNativeAd;
     private RelativeLayout guideOverlay;
     private RelativeLayout writeArticleCell;
-    private boolean showGuide = false;
     private String userDynamoId;
-    private View shareSSView;
-    private TextView titleTextView, bodyTextView, authorTextView;
     private ShortStoryAPI shortStoryAPI;
     Set<Integer> viewedStoriesSet = new HashSet<>();
     private boolean isRecommendRequestRunning;
@@ -143,15 +129,10 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 
         rootLayout = (RelativeLayout) view.findViewById(R.id.rootLayout);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         guideOverlay = (RelativeLayout) view.findViewById(R.id.guideOverlay);
         writeArticleCell = (RelativeLayout) view.findViewById(R.id.writeArticleCell);
         frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
-        shareSSView = view.findViewById(R.id.shareSSView);
-        titleTextView = (TextView) view.findViewById(R.id.titleTextView);
-        bodyTextView = (TextView) view.findViewById(R.id.bodyTextView);
-        authorTextView = (TextView) view.findViewById(R.id.authorTextView);
         pullToRefresh = view.findViewById(R.id.pullToRefresh);
 
         frameLayout.getBackground().setAlpha(0);
@@ -163,7 +144,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         guideOverlay.setOnClickListener(this);
         writeArticleCell.setOnClickListener(this);
         frameLayout.setVisibility(View.VISIBLE);
-        //fabSort.setVisibility(View.VISIBLE);
         popularSortFAB.setOnClickListener(this);
         recentSortFAB.setOnClickListener(this);
         fabMenu.setVisibility(View.GONE);
@@ -209,10 +189,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         shortStoryAPI = retro.create(ShortStoryAPI.class);
 
-       /* if (getArguments() != null) {
-            currentSubTopic = getArguments().getParcelable("currentSubTopic");
-            selectedTopic = currentSubTopic;
-        }*/
         Bundle extras = getArguments();
         if (extras != null) {
             jsonMyObject = extras.getString("currentSubTopic");
@@ -252,7 +228,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             }
         });
 
-        //Just For First Time -- Since complete text is not rendered in the bitmap
         return view;
     }
 
@@ -273,7 +248,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         int from = (nextPageNumber - 1) * limit + 1;
         if (selectedTopic != null) {
             Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopic.getId(), sortType, from, from + limit - 1, "0");
-
             filterCall.enqueue(articleListingResponseCallback);
         }
     }
@@ -285,7 +259,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 return;
             }
             try {

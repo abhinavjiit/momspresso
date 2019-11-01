@@ -678,6 +678,12 @@ public class AppConstants {
     public static final String MEDIUM_TWITTER = "twitter";
     public static final String ARTICLE_CHALLENGES_ID = "category-ee7ea82543bd4bc0a8dad288561f2beb";
     public static final String ARTICLE_LIST_TYPE = "articleListType";
+    public static final String VIDEO_UPLOAD_NOT_STARTED = "video_upload_not_started";
+    public static final String VIDEO_UPLOAD_IN_PROGRESS = "video_upload_in_progress";
+    public static final String VIDEO_UPLOAD_FAILED = "video_upload_failed";
+    public static final String VIDEO_UPLOAD_SUCCESS = "video_upload_success";
+    public static final String STATUS_FOLLOWING = "following";
+    public static final String STATUS_NOT_FOLLOWING = "not_following";
 
 
     enum SocialPlatformName {

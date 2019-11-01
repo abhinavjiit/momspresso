@@ -8,8 +8,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -70,7 +72,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private TusClient client;
     private TextView status, okayTextView, mTxtPercentage, mTxtVideoSize, mTxtVideoName, mTxtVideoExtension;
     private FirebaseAuth mAuth;
-//    private UploadTask uploadTask;
+    //    private UploadTask uploadTask;
     private boolean isUploading = false;
     private Uri contentURI;
     private String title;
@@ -88,6 +90,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private ImageView mImgCancelUpload;
     private com.google.firebase.storage.UploadTask uploadTask;
     private RelativeLayout root;
+    private String uploadStatus = AppConstants.VIDEO_UPLOAD_NOT_STARTED;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,7 +151,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("VideoUpload", "signInAnonymously:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            if (contentURI != null) {
+                            if (contentURI != null && AppConstants.VIDEO_UPLOAD_NOT_STARTED.equals(uploadStatus)) {
                                 uploadToFirebase(contentURI);
                             }
 
@@ -168,11 +171,9 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
 
     private void uploadToFirebase(Uri file2) {
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://api-project-3577377239.appspot.com");
-
+        uploadStatus = AppConstants.VIDEO_UPLOAD_IN_PROGRESS;
         final StorageReference storageRef = storage.getReference();
-//        extension = file2.substring(uri.lastIndexOf("."));
         suffixName = System.currentTimeMillis();
-//        Uri file = Uri.fromFile(file2);
         final StorageReference riversRef = storageRef.child("user/" + SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "/path/to/" + file2.getLastPathSegment() + "_" + suffixName);
         uploadTask = riversRef.putFile(file2);
 
@@ -183,6 +184,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
             public void onFailure(@NonNull Exception exception) {
                 // Handle unsuccessful uploads
                 isUploading = false;
+                uploadStatus = AppConstants.VIDEO_UPLOAD_FAILED;
                 MixPanelUtils.pushVideoUploadFailureEvent(mixpanel, title);
                 createRowForFailedAttempt(exception.getMessage());
 
@@ -195,12 +197,11 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                     @Override
                     public void onSuccess(Uri uri) {
                         isUploading = false;
+                        uploadStatus = AppConstants.VIDEO_UPLOAD_SUCCESS;
                         Uri downloadUri = uri;
                         publishVideo(uri);
                     }
                 });
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                // ...
             }
         });
 
@@ -270,8 +271,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             if (response == null || response.body() == null) {
                 if (response.errorBody() != null) {
-                    if(response.code()==409)
-                    {
+                    if (response.code() == 409) {
                         showToast("This title already exists. Kindly write a new title.");
                         finish();
                     }

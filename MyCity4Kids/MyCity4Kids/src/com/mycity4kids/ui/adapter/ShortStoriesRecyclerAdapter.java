@@ -52,7 +52,6 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
 
     @Override
     public void onBindViewHolder(ShortStoriesViewHolder holder, int position) {
-
         switch (position % 6) {
             case 0:
                 holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_1));
