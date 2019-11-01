@@ -112,7 +112,6 @@ public class AppConstants {
     public static final String EDIT_APPOINTMENT_URL = STAGING_INTERNAL_SERVER_URL + "apiappointments/add/";
     public static final String DELETE_APPOINTMENT_URL = STAGING_INTERNAL_SERVER_URL + "apiappointments/delete/";
 
-
     public static final String CREATE_TASK_URL = STAGING_INTERNAL_SERVER_URL + "apitasks/add/";
     public static final String EDIT_TASK_URL = STAGING_INTERNAL_SERVER_URL + "apitasks/add/";
     public static final String DELETE_TASK_URL = STAGING_INTERNAL_SERVER_URL + "apitasks/delete/";
@@ -684,7 +683,7 @@ public class AppConstants {
     public static final String VIDEO_UPLOAD_SUCCESS = "video_upload_success";
     public static final String STATUS_FOLLOWING = "following";
     public static final String STATUS_NOT_FOLLOWING = "not_following";
-
+    public static final String PLACES_API_KEY  = "AIzaSyATjKBk6YHXTxF0nuN6zCumLfq9JY4aBKU";
 
     enum SocialPlatformName {
 

@@ -9,12 +9,14 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,9 +28,12 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
@@ -38,6 +43,11 @@ import com.mycity4kids.ui.activity.BlogSetupActivity;
 import com.mycity4kids.ui.adapter.ChangeCityAdapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static com.crashlytics.android.core.CrashlyticsCore.TAG;
 
 /**
  * Created by user on 08-06-2015.
@@ -144,19 +154,20 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
     }
 
     private void showAddNewCityNameDialog(final int position) {
-        try {
-            AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
-                    .build();
-            Intent intent = new PlaceAutocomplete.IntentBuilder
-                    (PlaceAutocomplete.MODE_FULLSCREEN)
-                    .setFilter(typeFilter)
-                    .build(getActivity());
-            startActivityForResult(intent, REQUEST_SELECT_PLACE);
-        } catch (GooglePlayServicesRepairableException |
-                GooglePlayServicesNotAvailableException e) {
-            e.printStackTrace();
-        }
+//            AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+//                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+//                    .build();
+//            Intent intent = new PlaceAutocomplete.IntentBuilder
+//                    (PlaceAutocomplete.MODE_FULLSCREEN)
+//                    .setFilter(typeFilter)
+//                    .build(getActivity());
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
+        Intent intent = new Autocomplete.IntentBuilder(
+                AutocompleteActivityMode.FULLSCREEN, fields)
+                .setTypeFilter(TypeFilter.CITIES)
+                .build(getActivity());
+        startActivityForResult(intent, REQUEST_SELECT_PLACE);
+
 
     }
 
@@ -164,18 +175,21 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_SELECT_PLACE) {
-            Place place = PlaceAutocomplete.getPlace(getActivity(), data);
-            String cityNameVal = place.getName().toString();
+            Place place = Autocomplete.getPlaceFromIntent(data);
+            String cityNameVal = place.getName();
             if (StringUtils.isNullOrEmpty(cityNameVal)) {
                 ToastUtils.showToast(getActivity(), "Please enter the city name");
             } else {
                 updateOtherCity(9, cityNameVal);
             }
             dismiss();
+        } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+            Status status = Autocomplete.getStatusFromIntent(data);
+            Log.i(TAG, status.getStatusMessage());
+        } else if (resultCode == RESULT_CANCELED) {
+            // The user canceled the operation.
         }
-
     }
-
 
     @NonNull
     @Override

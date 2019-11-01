@@ -1196,5 +1196,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="check_campaigns_available_for_you">Check campaigns available for you</string>
     <string name="earnings_reimbursement">Reimbursement</string>
     <string name="sorry_not_eligible">Sorry, you\'re not eligible.</string>
+    <string name="campaign_list_sorry_not_eligible">Give MyMoney a try!</string>
     <string name="try_following_campaign">Try the following campaign instead!</string>
+    <string name="campaign_list_try_following_campaign">Participate in your first campaign now!</string>
 </resources>

@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.multidex.MultiDex;
+
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
@@ -24,6 +26,7 @@ import com.facebook.ads.AudienceNetworkAds;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.libraries.places.api.Places;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -52,7 +55,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import androidx.multidex.MultiDex;
 import io.branch.referral.Branch;
 import io.fabric.sdk.android.Fabric;
 import io.socket.client.IO;
@@ -355,6 +357,7 @@ public class BaseApplication extends Application {
             Class.forName("android.os.AsyncTask");
         } catch (ClassNotFoundException e) {
         }
+        Places.initialize(getApplicationContext(), AppConstants.PLACES_API_KEY);
 
         CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build();
         Fabric.with(this, new Crashlytics.Builder().core(core).build());

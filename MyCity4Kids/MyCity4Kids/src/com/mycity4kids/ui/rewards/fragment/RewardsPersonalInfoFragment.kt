@@ -3,6 +3,7 @@ package com.mycity4kids.ui.rewards.fragment
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Activity.RESULT_CANCELED
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.ClipData
@@ -29,8 +30,12 @@ import com.facebook.accountkit.ui.LoginType
 import com.facebook.accountkit.ui.ThemeUIManager
 import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
-import com.google.android.gms.location.places.AutocompleteFilter
-import com.google.android.gms.location.places.ui.PlaceAutocomplete
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.model.TypeFilter
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.AutocompleteActivity
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.ui.BaseFragment
@@ -76,8 +81,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
     private var isNewRegistration: Boolean = false
     var address: String? = null
-    private var lat: Double = 0.0
-    private var lng: Double = 0.0
+    private var lat: Double? = 0.0
+    private var lng: Double? = 0.0
     private var myClipboard: ClipboardManager? = null
     private var myClip: ClipData? = null
     private var validReferralCode: String = "empty"
@@ -400,14 +405,27 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             validateReferralCode()
         }
 
+        if (!Places.isInitialized()) {
+            Places.initialize(BaseApplication.getAppContext(), AppConstants.PLACES_API_KEY)
+        }
+
+
         editLocation.setOnClickListener {
 
-            val typeFilter = AutocompleteFilter.Builder()
-                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
-                    .build()
-            val intent = PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-                    .setFilter(typeFilter)
-                    .build(activity)
+            //            val typeFilter = AutocompleteFilter.Builder()
+//                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+//                    .build()
+//            val intent = PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+//                    .setFilter(typeFilter)
+//                    .build(activity)
+
+            // Start the autocomplete intent.
+//            List<Place.Field> fields = Arrays . asList (Place.Field.ID, Place.Field.NAME)
+            val fieldsArr = arrayOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG).asList()
+            val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fieldsArr)
+                    .setTypeFilter(TypeFilter.CITIES)
+                    .build(it.context)
+
             startActivityForResult(intent, REQUEST_SELECT_PLACE)
 
         }
@@ -612,10 +630,10 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             apiGetResponse.lastName = editLastName.text.toString()
         }
 
-        if (BuildConfig.DEBUG) {
-            accountKitAuthCode = "123"
-            apiGetResponse.contact = "9999999999"
-        }
+//        if (BuildConfig.DEBUG) {
+//            accountKitAuthCode = "123"
+//            apiGetResponse.contact = "9999999999"
+//        }
 
         if (accountKitAuthCode.isNullOrEmpty() && apiGetResponse.contact.isNullOrEmpty()) {
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_phone)), Toast.LENGTH_SHORT).show()
@@ -822,14 +840,13 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         if (resultCode == Activity.RESULT_OK && data != null) {
             when (requestCode) {
                 REQUEST_SELECT_PLACE -> {
-                    val place = PlaceAutocomplete.getPlace(activity, data)
+                    val place = Autocomplete.getPlaceFromIntent(data)
                     if (!place.name.toString().isNullOrEmpty()) {
                         cityName = place.name.toString()
                         editLocation.setText(cityName)
-                        lat = place.latLng.latitude
-                        lng = place.latLng.longitude
+                        lat = place.latLng?.latitude
+                        lng = place.latLng?.longitude
                         address = cityName
-
                     }
                 }
                 VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE -> {
@@ -841,6 +858,13 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                         textVerify.visibility = View.VISIBLE
                         editAddNumber.visibility = View.GONE
                     }
+                }
+                AutocompleteActivity.RESULT_ERROR -> {
+                    val status = Autocomplete.getStatusFromIntent(data)
+                    Log.i("DWADWAD", status.statusMessage)
+                }
+                RESULT_CANCELED -> {
+                    Log.i("DWADWAD", "DwDWDJIWODJ WDWOIDOIWOD")
                 }
             }
         }

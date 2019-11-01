@@ -70,19 +70,19 @@ class CampaignCongratulationFragment : BaseFragment() {
         }
 
         whatsappShareImageView.setOnClickListener {
-            val contentStr = String.format("Participate in this campaign. Earn upto Rs.%f \n https://www.momspresso.com/mymoney/%s/%d?referrer=" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                    (activity as CampaignContainerActivity).getTotalPayOut(), (activity as CampaignContainerActivity).getNameSlug(), (activity as CampaignContainerActivity).getIdCamp())
+            val contentStr = String.format("Participate in this campaign and earn Momspresso MyMoney now! \n https://www.momspresso.com/mymoney/%s/%d?referrer=" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                    (activity as CampaignContainerActivity).getNameSlug(), (activity as CampaignContainerActivity).getIdCamp())
             AppUtils.shareCampaignWithWhatsApp(activity as CampaignContainerActivity, contentStr, "campaignCongo", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
                     SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).name)
         }
         facebookShareImageView.setOnClickListener {
-            val contentStr = String.format("Participate in this campaign. Earn upto Rs.%f \n https://www.momspresso.com/mymoney/%s/%d?referrer=" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                    (activity as CampaignContainerActivity).getTotalPayOut(), (activity as CampaignContainerActivity).getNameSlug(), (activity as CampaignContainerActivity).getIdCamp())
+            val contentStr = String.format("Participate in this campaign and earn Momspresso MyMoney now! \n https://www.momspresso.com/mymoney/%s/%d?referrer=" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                    (activity as CampaignContainerActivity).getNameSlug(), (activity as CampaignContainerActivity).getIdCamp())
             AppUtils.shareFacebook(activity as CampaignContainerActivity, "", contentStr)
         }
         genricShareImageView.setOnClickListener {
-            val contentStr = String.format("Participate in this campaign. Earn upto Rs.%f \n https://www.momspresso.com/mymoney/%s/%d?referrer=" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                    (activity as CampaignContainerActivity).getTotalPayOut(), (activity as CampaignContainerActivity).getNameSlug(), (activity as CampaignContainerActivity).getIdCamp())
+            val contentStr = String.format("Participate in this campaign and earn Momspresso MyMoney now! \n https://www.momspresso.com/mymoney/%s/%d?referrer=" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                    (activity as CampaignContainerActivity).getNameSlug(), (activity as CampaignContainerActivity).getIdCamp())
             val shareIntent = ShareCompat.IntentBuilder.from(activity)
                     .setType("text/plain")
                     .setText(contentStr)

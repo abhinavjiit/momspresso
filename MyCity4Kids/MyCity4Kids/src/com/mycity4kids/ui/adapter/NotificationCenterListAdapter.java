@@ -162,15 +162,22 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "article_details");
+
+                    String authorId;
+                    if (StringUtils.isNullOrEmpty(notificationList.get(position).getAuthorId()) || "0".equals(notificationList.get(position).getAuthorId())) {
+                        authorId = notificationList.get(position).getUserId();
+                    } else {
+                        authorId = notificationList.get(position).getAuthorId();
+                    }
                     Intent intent = new Intent(mContext, ArticleDetailsContainerActivity.class);
                     intent.putExtra(Constants.ARTICLE_ID, notificationList.get(position).getArticleId());
-                    intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
+                    intent.putExtra(Constants.AUTHOR_ID, authorId);
                     intent.putExtra(Constants.BLOG_SLUG, notificationList.get(position).getBlogTitleSlug());
                     intent.putExtra(Constants.TITLE_SLUG, notificationList.get(position).getTitleSlug());
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "NotificationsScreen");
                     intent.putExtra(Constants.FROM_SCREEN, "NotificationsScreen");
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                    intent.putExtra(Constants.AUTHOR, notificationList.get(position).getUserId() + "~");
+                    intent.putExtra(Constants.AUTHOR, authorId + "~");
                     mContext.startActivity(intent);
                     try {
                         JSONObject jsonObject = new JSONObject();
@@ -222,7 +229,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
                     Bundle bundle = new Bundle();
                     bundle.putInt(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
-                    bundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity( BaseApplication.getAppContext()));
+                    bundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity(BaseApplication.getAppContext()));
                     bundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
                     fragment.setArguments(bundle);
                     ((DashboardActivity) mContext).addFragment(fragment, bundle, true);
@@ -246,12 +253,19 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "profile");
-                    if (notificationList.get(position).getAuthorId().equals(notificationList.get(position).getUserId())) {
+                    String authorId;
+                    if (StringUtils.isNullOrEmpty(notificationList.get(position).getAuthorId()) || "0".equals(notificationList.get(position).getAuthorId())) {
+                        authorId = notificationList.get(position).getUserId();
+                    } else {
+                        authorId = notificationList.get(position).getAuthorId();
+                    }
+
+                    if (SharedPrefUtils.getUserDetailModel(mContext).getDynamoId().equals(authorId)) {
                         Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
                         mContext.startActivity(pIntent);
                     } else {
                         Intent intent1 = new Intent(mContext, PublicProfileActivity.class);
-                        intent1.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, notificationList.get(position).getAuthorId());
+                        intent1.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, authorId);
                         intent1.putExtra(AppConstants.AUTHOR_NAME, "");
                         intent1.putExtra(Constants.FROM_SCREEN, "Notification Center List");
                         mContext.startActivity(intent1);
@@ -380,15 +394,21 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "shortStoryDetails");
+                    String authorId;
+                    if (StringUtils.isNullOrEmpty(notificationList.get(position).getAuthorId()) || "0".equals(notificationList.get(position).getAuthorId())) {
+                        authorId = notificationList.get(position).getUserId();
+                    } else {
+                        authorId = notificationList.get(position).getAuthorId();
+                    }
                     Intent intent = new Intent(mContext, ShortStoryContainerActivity.class);
                     intent.putExtra(Constants.ARTICLE_ID, notificationList.get(position).getArticleId());
-                    intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
+                    intent.putExtra(Constants.AUTHOR_ID, authorId);
                     intent.putExtra(Constants.BLOG_SLUG, notificationList.get(position).getBlogTitleSlug());
                     intent.putExtra(Constants.TITLE_SLUG, notificationList.get(position).getTitleSlug());
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "NotificationsScreen");
                     intent.putExtra(Constants.FROM_SCREEN, "NotificationsScreen");
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                    intent.putExtra(Constants.AUTHOR, notificationList.get(position).getUserId() + "~");
+                    intent.putExtra(Constants.AUTHOR, authorId + "~");
                     mContext.startActivity(intent);
                     try {
                         JSONObject jsonObject = new JSONObject();

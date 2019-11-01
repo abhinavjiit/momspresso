@@ -268,8 +268,8 @@ class CampaignListFragment : BaseFragment() {
 
 
     fun setDefaultCampaignValues() {
-        upperTextHeader.text = resources.getString(R.string.sorry_not_eligible)
-        lowerTextHeader.text = resources.getString(R.string.try_following_campaign)
+        upperTextHeader.text = resources.getString(R.string.campaign_list_sorry_not_eligible)
+        lowerTextHeader.text = resources.getString(R.string.campaign_list_try_following_campaign)
         Picasso.with(context).load(defaultapigetResponse!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(default_campaign_header)
         Picasso.with(context).load(defaultapigetResponse!!.brandDetails!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(default_brand_img)
         default_brand_name.setText(defaultapigetResponse!!.brandDetails!!.name)
