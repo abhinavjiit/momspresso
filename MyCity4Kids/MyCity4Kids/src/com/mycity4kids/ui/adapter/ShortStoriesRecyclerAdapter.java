@@ -145,12 +145,12 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
 
         @Override
         public void onClick(View v) {
-            mListener.onClick(v, getAdapterPosition());
+            mListener.onClick(v, getAdapterPosition(), whatsappShareImageView);
         }
     }
 
     public interface RecyclerViewClickListener {
-        void onClick(View view, int position);
+        void onClick(View view, int position, View shareImageView);
     }
 
 }

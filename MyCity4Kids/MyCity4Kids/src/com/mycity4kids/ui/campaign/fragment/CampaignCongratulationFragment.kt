@@ -34,7 +34,6 @@ class CampaignCongratulationFragment : BaseFragment() {
     private lateinit var submitListener: SubmitListener
     private lateinit var pendingTextView: TextView
     private lateinit var spannable: SpannableStringBuilder
-
     override fun updateUi(response: Response?) {
     }
 

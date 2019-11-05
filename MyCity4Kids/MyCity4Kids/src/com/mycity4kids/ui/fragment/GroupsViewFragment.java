@@ -2,25 +2,19 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.viewpager.widget.ViewPager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import com.google.android.material.tabs.TabLayout;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.ui.activity.GroupsListingActivity;
 import com.mycity4kids.utils.AppUtils;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
+import androidx.viewpager.widget.ViewPager;
 import static android.app.Activity.RESULT_OK;
 
 public class GroupsViewFragment extends BaseFragment {
@@ -47,11 +41,9 @@ public class GroupsViewFragment extends BaseFragment {
             startActivityForResult(intent, 2000);
         });
 
-
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.groups_groups_myfeed)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.groups_sections_myfeed)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.groups_sections_polls)));
-
         AppUtils.changeTabsFont(tabLayout);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
