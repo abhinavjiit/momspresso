@@ -2619,7 +2619,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         ((ArticleDetailsContainerActivity) getActivity()).showToast(responseData.getReason());
                     } else {
 
-                       // ((ArticleDetailsContainerActivity) getActivity()).showToast(responseData.getReason());
+                        // ((ArticleDetailsContainerActivity) getActivity()).showToast(responseData.getReason());
                     }
                 } else {
                     ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
@@ -2807,7 +2807,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         simpleTooltip = new SimpleTooltip.Builder(getContext())
                 .anchorView(whatsappShareTextView)
                 .backgroundColor(getResources().getColor(R.color.app_blue))
-                .text("TRY SHARE")
+                .text(getResources().getString(R.string.ad_bottom_bar_generic_share))
                 .textColor(getResources().getColor(R.color.white))
                 .arrowColor(getResources().getColor(R.color.app_blue))
                 .gravity(Gravity.TOP)

@@ -946,7 +946,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         simpleTooltip = new SimpleTooltip.Builder(getContext())
                 .anchorView(shareImageView)
                 .backgroundColor(getResources().getColor(R.color.app_blue))
-                .text("TRY SHARE")
+                .text(getResources().getString(R.string.ad_bottom_bar_generic_share))
                 .textColor(getResources().getColor(R.color.white))
                 .arrowColor(getResources().getColor(R.color.app_blue))
                 .gravity(Gravity.TOP)
