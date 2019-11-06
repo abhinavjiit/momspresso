@@ -3,13 +3,14 @@ package com.mycity4kids.ui.activity
 import android.accounts.NetworkErrorException
 import android.content.Intent
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
@@ -22,6 +23,7 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.mycity4kids.ui.campaign.adapter.EarningRecyclerAdapter
+import com.mycity4kids.ui.rewards.activity.RewardsShareReferralCodeActivity
 import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,7 +31,7 @@ import java.util.*
 
 class MyTotalEarningActivity : BaseActivity() {
 
-    private lateinit var recyclerEarnings: androidx.recyclerview.widget.RecyclerView
+    private lateinit var recyclerEarnings: RecyclerView
     private lateinit var earningRecyclerAdapter: EarningRecyclerAdapter
     private var totalPayout: Int = 0
     private lateinit var textTotalPayout: TextView
@@ -38,8 +40,9 @@ class MyTotalEarningActivity : BaseActivity() {
     private lateinit var startCampaignText: TextView
     private lateinit var backIcon: ImageView
     private lateinit var paymentHistory: TextView
+    private lateinit var referEarnContainerCL: ConstraintLayout
     private var totalPayoutResponse: ArrayList<AllCampaignTotalPayoutResponse.TotalPayoutResult> = arrayListOf()
-    private lateinit var root:LinearLayout
+    private lateinit var root: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,10 +54,11 @@ class MyTotalEarningActivity : BaseActivity() {
         totalPayout = intent.getIntExtra("totalPayout", 0)
 
         textTotalPayout = findViewById(R.id.total_amount)
-        recyclerEarnings = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerEarnings)
+        recyclerEarnings = findViewById(R.id.recyclerEarnings)
         profileImageView = findViewById(R.id.profileImageView)
         startCampaign = findViewById(R.id.start_campaign_cta)
         startCampaignText = findViewById(R.id.start_campaign_text)
+        referEarnContainerCL = findViewById(R.id.referEarnContainerCL)
         recyclerEarnings.layoutManager = LinearLayoutManager(this)
 
         paymentHistory = findViewById(R.id.payment_history)
@@ -77,13 +81,18 @@ class MyTotalEarningActivity : BaseActivity() {
             startActivity(intent)
         }
 
+        referEarnContainerCL.setOnClickListener {
+            val intent = Intent(this, RewardsShareReferralCodeActivity::class.java)
+            startActivity(intent)
+        }
+
         fetchAllCampaignPayout()
 
     }
 
     private fun fetchAllCampaignPayout() {
         showProgressDialog(resources.getString(R.string.please_wait))
-        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(this)?.dynamoId
+        var userId = SharedPrefUtils.getUserDetailModel(this)?.dynamoId
         val retro = BaseApplication.getInstance().retrofit
         val campaignAPI = retro.create(CampaignAPI::class.java)
         val call = campaignAPI.getAllCampaignTotalPayout(userId)

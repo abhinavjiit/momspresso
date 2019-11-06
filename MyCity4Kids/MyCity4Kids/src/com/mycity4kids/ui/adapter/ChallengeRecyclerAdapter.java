@@ -48,16 +48,13 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
 
     @Override
     public ChallengeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ChallengeViewHolder viewHolder = null;
         View view = mInflator.inflate(R.layout.challenge_short_story_recycle_adapter, parent, false);
-        viewHolder = new ChallengeViewHolder(view, recyclerViewClickListener);
+        ChallengeViewHolder viewHolder = new ChallengeViewHolder(view, recyclerViewClickListener);
         return viewHolder;
     }
 
     @Override
     public int getItemViewType(int position) {
-
-
         return position;
     }
 
@@ -101,7 +98,6 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
                     holder.imageBody.setImageDrawable(ContextCompat.getDrawable(mcontext, R.drawable.default_article));
                 }
                 break;
-
             default:
                 holder.rootView.setVisibility(View.VISIBLE);
                 if (position == 1) {
@@ -122,8 +118,6 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
                     holder.imageBody.setVisibility(View.GONE);
                     holder.imageBody.setImageDrawable(ContextCompat.getDrawable(mcontext, R.drawable.default_article));
                 }
-
-
         }
     }
 

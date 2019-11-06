@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
     android:versionCode="173"
-    android:versionName="12.2.0">
+    android:versionName="12.2.0.1">
 
     <uses-sdk tools:overrideLibrary="io.branch.referral, com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
     <!-- So that we can get the account name -->
@@ -443,6 +443,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.TopicsListingActivity"
+            android:parentActivityName=".ui.activity.DashboardActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.ExploreEventsResourcesActivity"
@@ -460,7 +461,9 @@
         <activity
             android:name=".ui.activity.NotificationActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.activity.PrivateProfileActivity" />
+        <activity
+            android:name=".ui.activity.PrivateProfileActivity"
+            android:parentActivityName=".ui.activity.DashboardActivity" />
         <activity android:name="com.facebook.accountkit.ui.AccountKitActivity" />
         <activity
             android:name=".ui.activity.UsersBookmarkListActivity"
@@ -477,6 +480,7 @@
         <activity android:name=".ui.activity.MomsVlogDetailActivity" />
         <activity
             android:name=".ui.activity.EditProfileNewActivity"
+            android:parentActivityName=".ui.activity.PrivateProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/EditorTheme" />
         <activity
@@ -509,6 +513,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.MyTotalEarningActivity"
+            android:parentActivityName=".ui.activity.EditProfileNewActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.ParallelFeedActivity"

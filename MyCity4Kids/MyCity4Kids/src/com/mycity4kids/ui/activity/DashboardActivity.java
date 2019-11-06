@@ -160,7 +160,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     ArrayList<String> Display_Name;
     private ArrayList<String> challengeId;
     private ArrayList<String> ImageUrl;
-    private ArrayList<String> deepLinkchallengeId;
+    private ArrayList<String> shortStoryChallengesList;
     private ArrayList<String> deepLinkDisplayName;
     private ArrayList<String> deepLinkImageUrl;
     private ArrayList<Topics> shortStoriesTopicList;
@@ -512,44 +512,34 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         selectedlangGuideTextView.setText(getString(R.string.language_label_english));
                     } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_hindi));
-
                         selectedlangGuideTextView.setText(getString(R.string.language_label_hindi));
                     } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_marathi));
-
                         selectedlangGuideTextView.setText(getString(R.string.language_label_marathi));
                     } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_bengali));
-
                         selectedlangGuideTextView.setText(getString(R.string.language_label_bengali));
                     } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_tamil));
-
                         selectedlangGuideTextView.setText(getString(R.string.language_label_tamil));
                     } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_telegu));
-
                         selectedlangGuideTextView.setText(getString(R.string.language_label_telegu));
                     } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         selectedLangTextView.setText(getString(R.string.language_label_kannada));
                         langTextView.setText(getString(R.string.language_label_kannada));
-
                         selectedlangGuideTextView.setText(getString(R.string.language_label_kannada));
                     } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_malayalam));
-
                         selectedlangGuideTextView.setText(getString(R.string.language_label_malayalam));
                     } else if (AppConstants.LOCAL_GUJARATI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_gujarati));
-
                         selectedlangGuideTextView.setText(getString(R.string.language_label_gujarati));
                     } else if (AppConstants.LOCAL_PUNJABI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_punjabi));
-
                         selectedlangGuideTextView.setText(getString(R.string.language_label_punjabi));
                     } else {
                         langTextView.setText(getString(R.string.language_label_english));
-
                         selectedlangGuideTextView.setText(getString(R.string.language_label_english));
                     }
                 }
@@ -566,44 +556,34 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     selectedlangGuideTextView.setText(getString(R.string.language_label_english));
                 } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_hindi));
-
                     selectedlangGuideTextView.setText(getString(R.string.language_label_hindi));
                 } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_marathi));
-
                     selectedlangGuideTextView.setText(getString(R.string.language_label_marathi));
                 } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_bengali));
-
                     selectedlangGuideTextView.setText(getString(R.string.language_label_bengali));
                 } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_tamil));
-
                     selectedlangGuideTextView.setText(getString(R.string.language_label_tamil));
                 } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_telegu));
-
                     selectedlangGuideTextView.setText(getString(R.string.language_label_telegu));
                 } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     selectedLangTextView.setText(getString(R.string.language_label_kannada));
                     langTextView.setText(getString(R.string.language_label_kannada));
-
                     selectedlangGuideTextView.setText(getString(R.string.language_label_kannada));
                 } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_malayalam));
-
                     selectedlangGuideTextView.setText(getString(R.string.language_label_malayalam));
                 } else if (AppConstants.LOCAL_GUJARATI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_gujarati));
-
                     selectedlangGuideTextView.setText(getString(R.string.language_label_gujarati));
                 } else if (AppConstants.LOCAL_PUNJABI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_punjabi));
-
                     selectedlangGuideTextView.setText(getString(R.string.language_label_punjabi));
                 } else {
                     langTextView.setText(getString(R.string.language_label_english));
-
                     selectedlangGuideTextView.setText(getString(R.string.language_label_english));
                 }
             }
@@ -684,13 +664,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 groupsFragment.setArguments(eBundle);
                                 addFragment(groupsFragment, eBundle, true);
                                 break;
-
                         }
                         return true;
                     }
                 });
-
-
         if (Constants.BUSINESS_EVENTLIST_FRAGMENT.equals(fragmentToLoad)) {
             setTitle("Upcoming Events");
             FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
@@ -757,7 +734,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         call.enqueue(draftsResponseCallback);
     }
 
-
     private void getUsersData() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
@@ -767,7 +743,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             call.enqueue(userDetailsResponseListener);
         }
     }
-
 
     private Callback<UserDetailResponse> userDetailsResponseListener = new Callback<UserDetailResponse>() {
         @Override
@@ -921,10 +896,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     //     The onNewIntent() is overridden to get and resolve the data for deep linking
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        Bundle notificationExtras = intent.getParcelableExtra("notificationExtras");
+    protected void onNewIntent(Intent _intent) {
+        super.onNewIntent(_intent);
+        Bundle notificationExtras = _intent.getParcelableExtra("notificationExtras");
         if (notificationExtras != null) {
+            try {
+                for (String key : notificationExtras.keySet()) {
+                    Log.e("notificationExtras", key + " : " + (notificationExtras.get(key) != null ? notificationExtras.get(key) : "NULL"));
+                }
+            } catch (Exception e) {
+
+            }
+
             if (notificationExtras.getString("type").equals("remote_config_silent_update")) {
                 showProgressDialog(getString(R.string.please_wait));
                 mFirebaseRemoteConfig.fetch(0).addOnCompleteListener(this, new OnCompleteListener<Void>() {
@@ -947,9 +930,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent1.putExtra(Constants.BLOG_SLUG, blogSlug);
                 intent1.putExtra(Constants.TITLE_SLUG, titleSlug);
                 intent1.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
-                intent.putExtra(Constants.FROM_SCREEN, "Notification");
+                intent1.putExtra(Constants.FROM_SCREEN, "Notification");
                 intent1.putExtra(Constants.ARTICLE_INDEX, "-1");
-                intent.putExtra(Constants.AUTHOR, authorId + "~");
+                intent1.putExtra(Constants.AUTHOR, authorId + "~");
                 startActivity(intent1);
                 try {
                     JSONObject jsonObject = new JSONObject();
@@ -1096,9 +1079,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent1.putExtra(Constants.VIDEO_ID, articleId);
                 intent1.putExtra(Constants.AUTHOR_ID, authorId);
                 intent1.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
-                intent.putExtra(Constants.FROM_SCREEN, "Notification");
+                intent1.putExtra(Constants.FROM_SCREEN, "Notification");
                 intent1.putExtra(Constants.ARTICLE_INDEX, "-1");
-                intent.putExtra(Constants.AUTHOR, authorId + "~");
+                intent1.putExtra(Constants.AUTHOR, authorId + "~");
                 startActivity(intent1);
                 try {
                     JSONObject jsonObject = new JSONObject();
@@ -1263,18 +1246,70 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(intent1);
                 try {
                     JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                     jsonObject.put("type", AppConstants.APP_SETTINGS_DEEPLINK);
                     mMixpanel.track("PushNotification", jsonObject);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("my_money_earnings")) {
+                Intent intent1 = new Intent(this, MyTotalEarningActivity.class);
+                startActivity(intent1);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("type", "my_money_earnings");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("my_money_profile")) {
+                Intent intent1 = new Intent(this, EditProfileNewActivity.class);
+                intent1.putExtra("isComingfromCampaign", true);
+                startActivity(intent1);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("type", "my_money_profile");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("category_listing")) {
+                Intent intent1 = new Intent(this, TopicsListingActivity.class);
+                intent1.putExtra("parentTopicId", notificationExtras.getString("categoryId"));
+                startActivity(intent1);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("type", "category_listing");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("shortStoryListing")) {
-                fragmentToLoad = Constants.SHORT_STOY_FRAGMENT;
+                Intent intent1 = new Intent(this, ShortStoriesListingContainerActivity.class);
+                intent1.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
+                intent1.putExtra("selectedTabCategoryId", notificationExtras.getString("categoryId"));
+                startActivity(intent1);
                 try {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                     jsonObject.put("type", "shortStoryListing");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("shortStoryListingInChallengeListing")) {
+                findValues(notificationExtras.getString("categoryId"));
+                Intent intent1 = new Intent(this, ChallnegeDetailListingActivity.class);
+                intent1.putExtra("Display_Name", deepLinkDisplayName);
+                intent1.putExtra("challenge", shortStoryChallengesList);
+                intent1.putExtra("position", 0);
+                intent1.putExtra("topics", shortStoriesTopicList.get(0).getDisplay_name());
+                intent1.putExtra("parentId", shortStoriesTopicList.get(0).getId());
+                intent1.putExtra("StringUrl", deepLinkImageUrl);
+                startActivity(intent1);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "shortStoryListingInChallenge");
                     mMixpanel.track("PushNotification", jsonObject);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1290,7 +1325,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     e.printStackTrace();
                 }
             }
-        } else if (intent.hasExtra("branchLink") || intent.hasExtra(AppConstants.BRANCH_DEEPLINK_URL)) {
+        } else if (_intent.hasExtra("branchLink") || _intent.hasExtra(AppConstants.BRANCH_DEEPLINK_URL)) {
             String branchdata = BaseApplication.getInstance().getBranchData();
             JsonParser parser = new JsonParser();
             JsonElement mJson = parser.parse(branchdata);
@@ -1322,7 +1357,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
             }
         } else {
-            String tempDeepLinkURL = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
+            String tempDeepLinkURL = _intent.getStringExtra(AppConstants.DEEP_LINK_URL);
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
@@ -1373,12 +1408,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId.equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
                         showAlertDialog("Message", "Logged in as " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name(), new OnButtonClicked() {
                             @Override
-
                             public void onButtonCLick(int buttonId) {
                                 fragmentToLoad = Constants.PROFILE_FRAGMENT;
                             }
-
-
                         });
                     } else {
                         fragmentToLoad = Constants.PROFILE_FRAGMENT;
@@ -1391,11 +1423,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         startActivity(ssIntent);
                     } else if (!deepLinkChallengeId.isEmpty()) {
                         findValues(deepLinkChallengeId);
-                        if (deepLinkchallengeId != null && deepLinkDisplayName != null && deepLinkImageUrl != null && shortStoriesTopicList != null && deepLinkchallengeId.size() != 0 && deepLinkDisplayName.size() != 0 && deepLinkImageUrl.size() != 0 && shortStoriesTopicList.size() != 0) {
+                        if (shortStoryChallengesList != null && deepLinkDisplayName != null && deepLinkImageUrl != null && shortStoriesTopicList != null && shortStoryChallengesList.size() != 0 && deepLinkDisplayName.size() != 0 && deepLinkImageUrl.size() != 0 && shortStoriesTopicList.size() != 0) {
                             Intent deepLinkIntent = new Intent(this, ChallnegeDetailListingActivity.class);
                             deepLinkIntent.putExtra("selectedrequest", FromDeepLink);
                             deepLinkIntent.putExtra("Display_Name", deepLinkDisplayName);
-                            deepLinkIntent.putExtra("challenge", deepLinkchallengeId);
+                            deepLinkIntent.putExtra("challenge", shortStoryChallengesList);
                             deepLinkIntent.putExtra("position", 0);
                             deepLinkIntent.putExtra("topics", shortStoriesTopicList.get(0).getDisplay_name());
                             deepLinkIntent.putExtra("parentId", shortStoriesTopicList.get(0).getId());
@@ -1406,7 +1438,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             Intent deepLinkIntent = new Intent(this, ChallnegeDetailListingActivity.class);
                             deepLinkIntent.putExtra("selectedrequest", FromDeepLink);
                             deepLinkIntent.putExtra("Display_Name", deepLinkDisplayName);
-                            deepLinkIntent.putExtra("challenge", deepLinkchallengeId);
+                            deepLinkIntent.putExtra("challenge", shortStoryChallengesList);
                             deepLinkIntent.putExtra("position", 0);
                             deepLinkIntent.putExtra("topics", shortStoriesTopicList.get(0).getDisplay_name());
                             deepLinkIntent.putExtra("parentId", shortStoriesTopicList.get(0).getId());
@@ -1415,8 +1447,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             ToastUtils.showToast(this, "server problem, please try again later");
                         }
                     }
-
-
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_EDIT_SHORT_DRAFT_URL)) {
                     final String draftId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
                     Intent ssIntent = new Intent(this, UserDraftsContentActivity.class);
@@ -1449,12 +1479,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     rewardForm.putExtra("pageNumber", 1);
                     rewardForm.putExtra("referral", referralCode);
                     startActivity(rewardForm);
-
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_MYMONEY)) {
                     Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
                     startActivity(campaignIntent);
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_CAMPAIGN)) {
-
                     if (tempDeepLinkURL.contains("?")) {
                         final String campaignID = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.indexOf("?"));
                         if (!StringUtils.isNullOrEmpty(campaignID)) {
@@ -1475,27 +1503,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     if (separated[separated.length - 1].startsWith("comment-")) {
                         String[] commArray = separated[separated.length - 1].split("-");
                         long commentId = AppUtils.getIdFromHash(commArray[1]);
-
                         String[] postArray = separated[separated.length - 2].split("-");
                         long postId = AppUtils.getIdFromHash(postArray[1]);
-
                         String[] groupArray = separated[separated.length - 3].split("-");
                         long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
-
                         Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
                         gpPostIntent.putExtra("postId", (int) postId);
                         gpPostIntent.putExtra("groupId", (int) groupId);
                         gpPostIntent.putExtra("responseId", (int) commentId);
                         startActivity(gpPostIntent);
-
                     } else if (separated[separated.length - 1].startsWith("post-")) {
-
                         String[] postArray = separated[separated.length - 1].split("-");
                         long postId = AppUtils.getIdFromHash(postArray[1]);
-
                         String[] groupArray = separated[separated.length - 2].split("-");
                         long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
-
                         Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
                         gpPostIntent.putExtra("postId", (int) postId);
                         gpPostIntent.putExtra("groupId", (int) groupId);
@@ -1503,7 +1524,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else if (separated[separated.length - 1].equals("join")) {
                         String[] groupArray = separated[separated.length - 2].split("-");
                         long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
-
                         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
                         groupMembershipStatus.checkMembershipStatus((int) groupId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                     } else {
@@ -1522,18 +1542,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         }
                         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
                         groupMembershipStatus.checkMembershipStatus((int) groupId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-
                     }
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_REFERRAL)) {
                     Intent intent1 = new Intent(this, RewardsContainerActivity.class);
                     intent1.putExtra("pageNumber", 1);
                     startActivity(intent1);
-
-
                 } else {
                     getDeepLinkData(tempDeepLinkURL);
                 }
-            } else if (Constants.BUSINESS_EVENTLIST_FRAGMENT.equals(intent.getStringExtra(Constants.LOAD_FRAGMENT))) {
+            } else if (Constants.BUSINESS_EVENTLIST_FRAGMENT.equals(_intent.getStringExtra(Constants.LOAD_FRAGMENT))) {
                 fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
                 setTitle("Upcoming Events");
                 FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
@@ -1544,7 +1561,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 fragment.setArguments(mBundle);
                 replaceFragment(fragment, mBundle, true);
             }
-            deepLinkUrl = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
+            deepLinkUrl = _intent.getStringExtra(AppConstants.DEEP_LINK_URL);
         }
     }
 
@@ -1552,7 +1569,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         try {
             //shortStoriesTopicList = BaseApplication.getShortStoryTopicList();
             if (shortStoriesTopicList != null && shortStoriesTopicList.size() != 0) {
-                deepLinkchallengeId = new ArrayList<>();
+                shortStoryChallengesList = new ArrayList<>();
                 deepLinkDisplayName = new ArrayList<>();
                 deepLinkImageUrl = new ArrayList<>();
                 num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
@@ -1562,12 +1579,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         for (int k = 0; k < num_of_challeneges; k++) {
                             if (deepLinkChallengeId.equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId())) {
                                 if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null && shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().size() != 0) {
-                                    //if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
-                                    deepLinkchallengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                    shortStoryChallengesList.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
                                     deepLinkDisplayName.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
                                     deepLinkImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
                                     break;
-                                    //}
                                 }
                             }
                         }
@@ -1585,7 +1600,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         shortStoriesTopicList.add(res.getData().get(i));
                     }
                 }
-                deepLinkchallengeId = new ArrayList<>();
+                shortStoryChallengesList = new ArrayList<>();
                 deepLinkDisplayName = new ArrayList<>();
                 deepLinkImageUrl = new ArrayList<>();
                 num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
@@ -1595,12 +1610,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         for (int k = 0; k < num_of_challeneges; k++) {
                             if (deepLinkChallengeId.equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId())) {
                                 if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null && shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().size() != 0) {
-                                    //if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
-                                    deepLinkchallengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                    shortStoryChallengesList.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
                                     deepLinkDisplayName.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
                                     deepLinkImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
                                     break;
-                                    //}
                                 }
                             }
                         }
@@ -1616,9 +1629,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             caller.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
-                    Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
-
+                    AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
                     try {
                         FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                         String fileContent = AppUtils.convertStreamToString(fileInputStream);
@@ -1630,7 +1641,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 shortStoriesTopicList.add(res.getData().get(i));
                             }
                         }
-                        deepLinkchallengeId = new ArrayList<>();
+                        shortStoryChallengesList = new ArrayList<>();
                         deepLinkDisplayName = new ArrayList<>();
                         deepLinkImageUrl = new ArrayList<>();
                         num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
@@ -1640,7 +1651,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 for (int k = 0; k < num_of_challeneges; k++) {
                                     if (deepLinkChallengeId.equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId())) {
                                         if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null && shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().size() != 0) {
-                                            deepLinkchallengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                            shortStoryChallengesList.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
                                             deepLinkDisplayName.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
                                             deepLinkImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
                                             break;
@@ -1649,8 +1660,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 }
                             }
                         }
-
-
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
@@ -1664,10 +1673,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
             });
         }
-
-
     }
-
 
     Callback<ShortStoryDetailResult> ssDetailResponseCallback = new Callback<ShortStoryDetailResult>() {
         @Override

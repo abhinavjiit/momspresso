@@ -72,6 +72,8 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
     private ImageView imageSortBy;
     private FloatingActionButton fabAdd, fabAddShortStory;
     private CoordinatorLayout root;
+    private String selectedTabCategoryId;
+    private int selectedTab = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,8 +152,8 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
             }
         });
 
-
         parentTopicId = getIntent().getStringExtra("parentTopicId");
+        selectedTabCategoryId = getIntent().getStringExtra("selectedTabCategoryId");
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -159,13 +161,10 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
         fabAddShortStory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 setResult(Activity.RESULT_OK);
                 finish();
-
             }
         });
-
 
         toolbarTitleTextView.setText(getString(R.string.article_listing_type_short_story_label));
         try {
@@ -237,6 +236,9 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
         }
         for (int i = 0; i < subTopicsList.size(); i++) {
             tabLayout.addTab(tabLayout.newTab().setText(subTopicsList.get(i).getDisplay_name()));
+            if (subTopicsList.get(i).getId().equals(selectedTabCategoryId)) {
+                selectedTab = i;
+            }
         }
         //  tabLayout.addTab(tabLayout.newTab().setText("Challenges"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
@@ -275,6 +277,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
 
             }
         });
+        viewPager.setCurrentItem(selectedTab);
     }
 
     private void createTopicsData(TopicsResponse responseData) {

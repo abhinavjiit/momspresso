@@ -11,7 +11,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/color_23CAAD"
+        android:background="@color/my_money_earning_toolbar_bg"
         android:minHeight="?attr/actionBarSize"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,6 +46,67 @@
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/referEarnContainerCL"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/referEarnTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/my_money_earnings_refer_earn_bg"
+                    android:gravity="end"
+                    android:paddingStart="20dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="REFER &amp; EARN"
+                    android:textColor="@color/my_money_earning_refer_earn_text"
+                    android:textSize="12sp"
+                    app:fontName="oswald_regular.ttf"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/costTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:background="#F9A51A"
+                    android:paddingEnd="2dp"
+                    android:text="   25"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:fontName="oswald_regular.ttf"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/referEarnTextView"
+                    app:layout_constraintStart_toStartOf="@+id/referEarnTextView"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/rupeeSymbolTextView"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/earnings_rupee_symbol_circular_bg"
+                    android:elevation="4dp"
+                    android:gravity="center"
+                    android:text="₹"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:fontName="oswald_regular.ttf"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/costTextView"
+                    app:layout_constraintStart_toStartOf="@+id/costTextView"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 
