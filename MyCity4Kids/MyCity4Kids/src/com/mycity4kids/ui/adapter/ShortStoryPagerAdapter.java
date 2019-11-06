@@ -44,7 +44,6 @@ public class ShortStoryPagerAdapter extends FragmentStatePagerAdapter {
         bundle.putInt("colorPosition", position);
         bundle.putBoolean("fromNotification", false);
         bundle.putBoolean("swipeNext", isSwipeNextAvailable);
-
         fragment.setArguments(bundle);
         return fragment;
     }

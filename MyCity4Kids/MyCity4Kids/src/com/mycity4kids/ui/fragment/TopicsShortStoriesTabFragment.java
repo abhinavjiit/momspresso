@@ -9,7 +9,9 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,16 +20,6 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -62,14 +54,20 @@ import com.mycity4kids.ui.adapter.ShortStoriesRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.widget.TrackingData;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -84,7 +82,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private static final long MIN_TIME_VIEW = 3;
-
     private int nextPageNumber = 1;
     private int limit = 15;
     private boolean isReuqestRunning = false;
@@ -118,6 +115,9 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private int sharedStoryPosition;
     private String shareMedium;
     private RelativeLayout rootLayout;
+    private SimpleTooltip simpleTooltip;
+    private int TOOLTIP_SHOW_TIMES = 0;
+    private Handler handler;
 
     @Nullable
     @Override
@@ -382,7 +382,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     }
 
     @Override
-    public void onClick(View view, final int position) {
+    public void onClick(View view, final int position, View shareImageView) {
         switch (view.getId()) {
             case R.id.storyOptionImageView: {
                 ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
@@ -416,6 +416,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                         currentShortStoryPosition = position;
                         recommendUnrecommentArticleAPI("0", mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
                     } else {
+                        tooltipForShare(shareImageView);
                         likeStatus = "1";
                         currentShortStoryPosition = position;
                         recommendUnrecommentArticleAPI("1", mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
@@ -579,7 +580,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                     }
                     recyclerAdapter.notifyDataSetChanged();
                     if (isAdded()) {
-                        ((ShortStoriesListingContainerActivity) getActivity()).showToast("" + responseData.getReason());
+                      //  ((ShortStoriesListingContainerActivity) getActivity()).showToast("" + responseData.getReason());
                     }
 
                 } else {
@@ -939,5 +940,30 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    private void tooltipForShare(View shareImageView) {
+        simpleTooltip = new SimpleTooltip.Builder(getContext())
+                .anchorView(shareImageView)
+                .backgroundColor(getResources().getColor(R.color.app_blue))
+                .text(getResources().getString(R.string.ad_bottom_bar_generic_share))
+                .textColor(getResources().getColor(R.color.white))
+                .arrowColor(getResources().getColor(R.color.app_blue))
+                .gravity(Gravity.TOP)
+                .arrowWidth(60)
+                .arrowHeight(20)
+                .animated(false)
+                .transparentOverlay(true)
+                .build();
+        simpleTooltip.show();
+        handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (simpleTooltip.isShowing())
+                    simpleTooltip.dismiss();
+            }
+        }, 3000);
+
     }
 }

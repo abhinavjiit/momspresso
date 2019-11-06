@@ -9,10 +9,10 @@
         android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/white">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -23,8 +23,8 @@
                 android:id="@+id/headerRelativeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
                 android:layout_marginTop="@dimen/space_10"
+                android:gravity="center_horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -161,9 +161,9 @@
                 android:paddingTop="@dimen/space_10"
                 android:paddingRight="@dimen/space_18"
                 android:paddingBottom="@dimen/space_10"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/pendingTextView">
 
                 <com.mycity4kids.widget.CustomFontTextView
@@ -202,10 +202,10 @@
                     android:shadowColor="#EBABB5"
                     android:shadowDx="0"
                     android:shadowDy="3"
-                    app:fontName="OpenSans-SemiBold.ttf"
                     android:text="@string/share_joy"
                     android:textColor="@color/white"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    app:fontName="OpenSans-SemiBold.ttf" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -88,7 +88,7 @@ interface CampaignAPI {
     fun addAccountDetail(@Body addAccountDetailModal: AddAccountDetailModal)
             : Observable<BaseResponseGeneric<DefaultData>>
 
-    @GET("/payments/v1/user/pan")
+    @GET("/payments/v1/user/pan/")
     fun getPanNumber(): Observable<BaseResponseGeneric<ProofPostModel>>
 
     @GET("/rewards/v1/campaigns/trackers/{campaignId}")

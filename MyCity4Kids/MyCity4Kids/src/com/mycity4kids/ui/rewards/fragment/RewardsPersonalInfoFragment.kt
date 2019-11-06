@@ -41,7 +41,6 @@ import com.kelltontech.ui.BaseActivity
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.DateTimeUtils
 import com.kelltontech.utils.StringUtils
-import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants

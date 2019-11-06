@@ -13,7 +13,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,12 +34,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.ads.Ad;
@@ -134,6 +130,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentTransaction;
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -148,11 +150,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     private final static int ADD_BOOKMARK = 1;
     private static final int RECOVERY_REQUEST = 1;
-
+    private SimpleTooltip simpleTooltip;
+    private int TOOLTIP_SHOW_TIMES = 0;
     private final static int REPLY_LEVEL_PARENT = 1;
     private final static int REPLY_LEVEL_CHILD = 2;
-
     private MixpanelAPI mixpanel;
+    private Handler handler;
     private ISwipeRelated iSwipeRelated;
     private ArticleDetailResult detailData;
     private Bitmap defaultBloggerBitmap;
@@ -635,6 +638,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void onDestroy() {
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+        }
         super.onDestroy();
     }
 
@@ -1266,6 +1272,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 case R.id.likeTextView: {
                     if (recommendStatus == 0) {
                         recommendStatus = 1;
+                        tooltipForShare();
                         Drawable top = ContextCompat.getDrawable(getActivity(), R.drawable.ic_recommended);
                         likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
                         recommendUnrecommentArticleAPI("1");
@@ -2611,7 +2618,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     if (null == responseData.getData() || responseData.getData().isEmpty()) {
                         ((ArticleDetailsContainerActivity) getActivity()).showToast(responseData.getReason());
                     } else {
-                        ((ArticleDetailsContainerActivity) getActivity()).showToast(responseData.getReason());
+
+                        // ((ArticleDetailsContainerActivity) getActivity()).showToast(responseData.getReason());
                     }
                 } else {
                     ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
@@ -2794,4 +2802,30 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private YouTubePlayer.Provider getYouTubePlayerProvider() {
         return youTubePlayerView;
     }
+
+    private void tooltipForShare() {
+        simpleTooltip = new SimpleTooltip.Builder(getContext())
+                .anchorView(whatsappShareTextView)
+                .backgroundColor(getResources().getColor(R.color.app_blue))
+                .text(getResources().getString(R.string.ad_bottom_bar_generic_share))
+                .textColor(getResources().getColor(R.color.white))
+                .arrowColor(getResources().getColor(R.color.app_blue))
+                .gravity(Gravity.TOP)
+                .arrowWidth(60)
+                .arrowHeight(20)
+                .animated(false)
+                .transparentOverlay(true)
+                .build();
+        simpleTooltip.show();
+        handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (simpleTooltip.isShowing())
+                    simpleTooltip.dismiss();
+            }
+        }, 3000);
+
+    }
+
 }

@@ -210,7 +210,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
 
         @Override
         public void onClick(View v) {
-            mListener.onClick(v, getAdapterPosition());
+            mListener.onClick(v, getAdapterPosition(),whatsappShareImageView);
         }
     }
 
@@ -242,19 +242,19 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
 
         @Override
         public void onClick(View v) {
-            mListener.onClick(v, getAdapterPosition());
+            mListener.onClick(v, getAdapterPosition(),v);
         }
 
 
         @Override
         public boolean onLongClick(View v) {
-            mListener.onClick(v, getAdapterPosition());
+            mListener.onClick(v, getAdapterPosition(),v);
             return true;
         }
     }
 
     public interface RecyclerViewClickListener {
-        void onClick(View view, int position);
+        void onClick(View view, int position,View whatsappShare);
     }
 
 }

@@ -7,7 +7,9 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,6 +75,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -85,7 +88,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         CommentOptionsDialogFragment.ICommentOptionAction {
 
     private static final int REQUEST_INIT_PERMISSION = 2;
-
+    private SimpleTooltip simpleTooltip;
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
@@ -99,7 +102,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private int downloadedComment = 0;
     private boolean isRecommendRequestRunning;
     private String likeStatus;
-
+    Handler handler;
     private ShortStoryAPI shortStoryAPI;
     private int bookmarkStatus;
     private int recommendStatus;
@@ -615,7 +618,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     }
 
     @Override
-    public void onClick(View view, int position) {
+    public void onClick(View view, int position, View whatsappShare) {
         switch (view.getId()) {
             case R.id.storyOptionImageView: {
                 ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
@@ -663,6 +666,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                         recommendUnrecommentArticleAPI();
                     } else {
                         likeStatus = "1";
+                        tooltipForShare(whatsappShare);
                         recommendUnrecommentArticleAPI();
                     }
                 }
@@ -1375,4 +1379,30 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
+
+
+    private void tooltipForShare(View shareImageView) {
+        simpleTooltip = new SimpleTooltip.Builder(getContext())
+                .anchorView(shareImageView)
+                .backgroundColor(getResources().getColor(R.color.app_blue))
+                .text(getResources().getString(R.string.ad_bottom_bar_generic_share))
+                .textColor(getResources().getColor(R.color.white))
+                .arrowColor(getResources().getColor(R.color.app_blue))
+                .gravity(Gravity.TOP)
+                .arrowWidth(60)
+                .arrowHeight(20)
+                .animated(false)
+                .transparentOverlay(true)
+                .build();
+        simpleTooltip.show();
+        handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (simpleTooltip.isShowing())
+                    simpleTooltip.dismiss();
+            }
+        }, 3000);
+
+    }
 }

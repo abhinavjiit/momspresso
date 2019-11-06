@@ -2,8 +2,6 @@ package com.mycity4kids.ui.activity;
 
 import android.os.Build;
 import android.os.Bundle;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,6 +19,9 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.ShortStoryPagerAdapter;
 
 import java.util.ArrayList;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * Created by hemant on 6/6/17.
@@ -49,10 +50,8 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
         root = findViewById(R.id.content_frame);
         ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
-
         userDynamoId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         Utils.pushOpenScreenEvent(this, "ShortStoryDetailContainerScreen", userDynamoId + "");
-
         mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);
         backNavigationImageView = (ImageView) findViewById(R.id.backNavigationImageView);
         playTtsTextView = (ImageView) findViewById(R.id.playTtsTextView);
