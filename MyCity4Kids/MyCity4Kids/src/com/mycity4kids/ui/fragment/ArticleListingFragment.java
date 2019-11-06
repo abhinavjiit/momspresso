@@ -16,10 +16,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
@@ -36,10 +32,13 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.campaignmodels.AllCampaignDataResponse;
+import com.mycity4kids.models.campaignmodels.CampaignDataListResult;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.RecommendationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
@@ -47,6 +46,7 @@ import com.mycity4kids.ui.activity.ExploreArticleListingTypeActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
+import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.GroupIdCategoryMap;
 import com.mycity4kids.utils.MixPanelUtils;
@@ -56,6 +56,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -68,6 +71,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
 
     private MainArticleRecyclerViewAdapter recyclerAdapter;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
+    private ArrayList<CampaignDataListResult> campaignListDataModels;
     private String sortType;
     private int nextPageNumber;
     private boolean isLastPageReached = false;
@@ -121,6 +125,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         }
 
         articleDataModelsNew = new ArrayList<>();
+        campaignListDataModels = new ArrayList<>();
         nextPageNumber = 1;
         hitArticleListingApi(nextPageNumber, sortType);
 
@@ -288,10 +293,15 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         } else if (Constants.KEY_TODAYS_BEST.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+            CampaignAPI campaignAPI = retrofit.create(CampaignAPI.class);
             int from = (nextPageNumber - 1) * LIMIT + 1;
             Call<ArticleListingResponse> filterCall = topicsAPI.getTodaysBestArticles(DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + System.currentTimeMillis()), from, from + LIMIT - 1,
                     SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
+
+            Call<AllCampaignDataResponse> campaignListCall = campaignAPI.getCampaignList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), 0, 5, 3.0);
+            campaignListCall.enqueue(getCampaignList);
+//            k
         } else if (Constants.KEY_TRENDING.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
@@ -406,6 +416,33 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
 
     }
 
+    private Callback<AllCampaignDataResponse> getCampaignList = new Callback<AllCampaignDataResponse>() {
+        @Override
+        public void onResponse(Call<AllCampaignDataResponse> call, retrofit2.Response<AllCampaignDataResponse> response) {
+            if (response.body() == null) {
+                return;
+            }
+            try {
+                AllCampaignDataResponse allCampaignDataResponse = response.body();
+                if (allCampaignDataResponse.getCode() == 200 && Constants.SUCCESS.equals(allCampaignDataResponse.getStatus())) {
+                    processCampaignListingResponse(allCampaignDataResponse);
+//                    ashimmerFrameLayout.stopShimmerAnimation();
+//                    ashimmerFrameLayout.setVisibility(View.GONE);
+                } else {
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+            }
+
+        }
+
+        @Override
+        public void onFailure(Call<AllCampaignDataResponse> call, Throwable t) {
+
+        }
+    };
+
     private Callback<ArticleListingResponse> articleListingResponseCallback = new Callback<ArticleListingResponse>() {
         @Override
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
@@ -472,6 +509,42 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
 
     }
 
+    private void processCampaignListingResponse(AllCampaignDataResponse responseData) {
+
+        ArrayList<CampaignDataListResult> dataList = responseData.getData().getResult();
+        campaignListDataModels.addAll(dataList);
+        recyclerAdapter.setCampaignList(campaignListDataModels);
+        recyclerAdapter.notifyDataSetChanged();
+/*
+        if (dataList.size() == 0) {
+            isLastPageReached = false;
+            if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
+                //No more next results for search from pagination
+                isLastPageReached = true;
+            } else {
+                // No results for search
+                noBlogsTextView.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+                noBlogsTextView.setText(getString(R.string.no_articles_found));
+                articleDataModelsNew = dataList;
+                recyclerAdapter.setNewListData(articleDataModelsNew);
+                recyclerAdapter.notifyDataSetChanged();
+            }
+        } else {
+            noBlogsTextView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            if (nextPageNumber == 1) {
+                articleDataModelsNew = dataList;
+            } else {
+                articleDataModelsNew.addAll(dataList);
+            }
+            recyclerAdapter.setNewListData(articleDataModelsNew);
+            nextPageNumber = nextPageNumber + 1;
+            recyclerAdapter.notifyDataSetChanged();
+        }*/
+
+    }
+
     @Override
     public void onRefresh() {
         if (!ConnectivityUtils.isNetworkEnabled(mContext)) {
@@ -530,6 +603,41 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
             case R.id.headerArticleView:
             case R.id.fbAdArticleView:
             case R.id.storyHeaderView:
+            case R.id.cardView1:
+                int campaignID = campaignListDataModels.get(0).getId();
+                Intent campaignIntent = new Intent(getActivity(), CampaignContainerActivity.class);
+                campaignIntent.putExtra("campaign_id", campaignListDataModels.get(0).getId() + "");
+                campaignIntent.putExtra("campaign_detail", "campaign_detail");
+                startActivity(campaignIntent);
+                break;
+            case R.id.cardView2:
+                int campaignID2 = campaignListDataModels.get(1).getId();
+                Intent campaignIntent2 = new Intent(getActivity(), CampaignContainerActivity.class);
+                campaignIntent2.putExtra("campaign_id", campaignListDataModels.get(1).getId() + "");
+                campaignIntent2.putExtra("campaign_detail", "campaign_detail");
+                startActivity(campaignIntent2);
+                break;
+            case R.id.cardView3:
+                int campaignID3 = campaignListDataModels.get(2).getId();
+                Intent campaignIntent3 = new Intent(getActivity(), CampaignContainerActivity.class);
+                campaignIntent3.putExtra("campaign_id", campaignListDataModels.get(2).getId() + "");
+                campaignIntent3.putExtra("campaign_detail", "campaign_detail");
+                startActivity(campaignIntent3);
+                break;
+            case R.id.cardView4:
+                int campaignID4 = campaignListDataModels.get(3).getId();
+                Intent campaignIntent4 = new Intent(getActivity(), CampaignContainerActivity.class);
+                campaignIntent4.putExtra("campaign_id", campaignListDataModels.get(3).getId() + "");
+                campaignIntent4.putExtra("campaign_detail", "campaign_detail");
+                startActivity(campaignIntent4);
+                break;
+            case R.id.cardView5:
+                int campaignID5 = campaignListDataModels.get(4).getId();
+                Intent campaignIntent5 = new Intent(getActivity(), CampaignContainerActivity.class);
+                campaignIntent5.putExtra("campaign_id", campaignListDataModels.get(4).getId() + "");
+                campaignIntent5.putExtra("campaign_detail", "campaign_detail");
+                startActivity(campaignIntent5);
+                break;
             default:
                 int limit;
                 if (Constants.KEY_FOR_YOU.equals(sortType)) {
