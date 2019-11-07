@@ -1046,7 +1046,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 try {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "campaign_submit_proof");
+                    jsonObject.put("type", "mymoney_pancard");
                     mMixpanel.track("PushNotification", jsonObject);
                 } catch (Exception e) {
                     e.printStackTrace();
