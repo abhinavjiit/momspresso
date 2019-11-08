@@ -258,13 +258,27 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                         articleDataModelsNew.get(position));
             }
         } else if (holder instanceof CampaignCarouselViewHolder) {
-            CampaignCarouselViewHolder campaignCarouselViewHolder = (CampaignCarouselViewHolder) holder;
+            CampaignCarouselViewHolder viewHolder = (CampaignCarouselViewHolder) holder;
 
-            addCampaignCard(campaignCarouselViewHolder.campaignHeader, campaignCarouselViewHolder.brandImg, campaignCarouselViewHolder.brandName, campaignCarouselViewHolder.campaignName, campaignCarouselViewHolder.campaignStatus, campaignListDataModels.get(0), position, campaignCarouselViewHolder);
-            addCampaignCard(campaignCarouselViewHolder.campaignHeader2, campaignCarouselViewHolder.brandImg2, campaignCarouselViewHolder.brandName2, campaignCarouselViewHolder.campaignName2, campaignCarouselViewHolder.campaignStatus2, campaignListDataModels.get(1), position, campaignCarouselViewHolder);
-            addCampaignCard(campaignCarouselViewHolder.campaignHeader3, campaignCarouselViewHolder.brandImg3, campaignCarouselViewHolder.brandName3, campaignCarouselViewHolder.campaignName3, campaignCarouselViewHolder.campaignStatus3, campaignListDataModels.get(2), position, campaignCarouselViewHolder);
-            addCampaignCard(campaignCarouselViewHolder.campaignHeader4, campaignCarouselViewHolder.brandImg4, campaignCarouselViewHolder.brandName4, campaignCarouselViewHolder.campaignName4, campaignCarouselViewHolder.campaignStatus4, campaignListDataModels.get(3), position, campaignCarouselViewHolder);
-            addCampaignCard(campaignCarouselViewHolder.campaignHeader5, campaignCarouselViewHolder.brandImg5, campaignCarouselViewHolder.brandName5, campaignCarouselViewHolder.campaignName5, campaignCarouselViewHolder.campaignStatus5, campaignListDataModels.get(4), position, campaignCarouselViewHolder);
+            addCampaignCard(viewHolder.campaignHeader, viewHolder.brandImg, viewHolder.brandName, viewHolder.campaignName, viewHolder.campaignStatus, campaignListDataModels.get(0), position, viewHolder);
+            addCampaignCard(viewHolder.campaignHeader2, viewHolder.brandImg2, viewHolder.brandName2, viewHolder.campaignName2, viewHolder.campaignStatus2, campaignListDataModels.get(1), position, viewHolder);
+            addCampaignCard(viewHolder.campaignHeader3, viewHolder.brandImg3, viewHolder.brandName3, viewHolder.campaignName3, viewHolder.campaignStatus3, campaignListDataModels.get(2), position, viewHolder);
+            addCampaignCard(viewHolder.campaignHeader4, viewHolder.brandImg4, viewHolder.brandName4, viewHolder.campaignName4, viewHolder.campaignStatus4, campaignListDataModels.get(3), position, viewHolder);
+            addCampaignCard(viewHolder.campaignHeader5, viewHolder.brandImg5, viewHolder.brandName5, viewHolder.campaignName5, viewHolder.campaignStatus5, campaignListDataModels.get(4), position, viewHolder);
+            if (AppConstants.CONTENT_TYPE_ARTICLE.equals(articleDataModelsNew.get(position).getContentType())) {
+                viewHolder.headerArticleView.setVisibility(View.VISIBLE);
+                viewHolder.storyHeaderView.setVisibility(View.GONE);
+
+                addArticleItem(viewHolder.txvArticleTitle, viewHolder.forYouInfoLL, viewHolder.viewCountTextView, viewHolder.commentCountTextView,
+                        viewHolder.recommendCountTextView, viewHolder.txvAuthorName, viewHolder.articleImageView, viewHolder.videoIndicatorImageView
+                        , viewHolder.bookmarkArticleImageView, viewHolder.watchLaterImageView, articleDataModelsNew.get(position), position, viewHolder);
+            } else {
+                viewHolder.headerArticleView.setVisibility(View.GONE);
+                viewHolder.storyHeaderView.setVisibility(View.VISIBLE);
+                addShortStoryItem(viewHolder.mainView, viewHolder.storyTitleTextView, viewHolder.storyBodyTextView, viewHolder.authorNameTextView,
+                        viewHolder.storyCommentCountTextView, viewHolder.storyRecommendationCountTextView, viewHolder.likeImageView,
+                        articleDataModelsNew.get(position));
+            }
         } else {
             ShortStoriesViewHolder viewHolder = (ShortStoriesViewHolder) holder;
             addShortStoryItem(viewHolder.mainView, viewHolder.storyTitleTextView, viewHolder.storyBodyTextView, viewHolder.authorNameTextView,
@@ -662,6 +676,33 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         TextView brandName, campaignName, campaignStatus, brandName2, campaignName2, campaignStatus2, brandName3, campaignName3, campaignStatus3, brandName4, campaignName4, campaignStatus4, brandName5, campaignName5, campaignStatus5;
         CardView cardView1, cardView2, cardView3, cardView4, cardView5;
 
+        FrameLayout headerArticleView;
+        TextView txvArticleTitle;
+        TextView txvAuthorName;
+        ImageView articleImageView;
+        ImageView videoIndicatorImageView;
+        LinearLayout forYouInfoLL;
+        TextView viewCountTextView;
+        TextView commentCountTextView;
+        TextView recommendCountTextView;
+        TextView authorTypeTextView;
+        ImageView bookmarkArticleImageView;
+        ImageView watchLaterImageView;
+        TextView viewCountTextView1;
+        TextView commentCountTextView1;
+        TextView recommendCountTextView1;
+
+        RelativeLayout storyHeaderView;
+        TextView storyTitleTextView;
+        TextView storyBodyTextView;
+        TextView authorNameTextView;
+        TextView storyCommentCountTextView;
+        LinearLayout storyRecommendationContainer, storyCommentContainer;
+        TextView storyRecommendationCountTextView;
+        ImageView storyOptionImageView, likeImageView;
+        ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView;
+        RelativeLayout mainView;
+
         CampaignCarouselViewHolder(View view) {
             super(view);
             campaignHeader = view.findViewById(R.id.campaign_header);
@@ -699,7 +740,52 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             cardView3.setOnClickListener(this);
             cardView4.setOnClickListener(this);
             cardView5.setOnClickListener(this);
+
+            viewCountTextView1 = (TextView) view.findViewById(R.id.viewCountTextView1);
+            commentCountTextView1 = (TextView) view.findViewById(R.id.commentCountTextView1);
+            recommendCountTextView1 = (TextView) view.findViewById(R.id.recommendCountTextView1);
+
+            headerArticleView = (FrameLayout) view.findViewById(R.id.headerArticleView);
+            txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
+            txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
+            articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
+            videoIndicatorImageView = (ImageView) view.findViewById(R.id.videoIndicatorImageView);
+            forYouInfoLL = (LinearLayout) view.findViewById(R.id.forYouInfoLL);
+            viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
+            commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
+            recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
+            authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
+            bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
+            watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
+
+            storyHeaderView = (RelativeLayout) view.findViewById(R.id.storyHeaderView);
+            mainView = (RelativeLayout) view.findViewById(R.id.mainView);
+            storyTitleTextView = (TextView) view.findViewById(R.id.storyTitleTextView);
+            storyBodyTextView = (TextView) view.findViewById(R.id.storyBodyTextView);
+            authorNameTextView = (TextView) view.findViewById(R.id.authorNameTextView);
+            storyRecommendationContainer = (LinearLayout) view.findViewById(R.id.storyRecommendationContainer);
+            storyCommentContainer = (LinearLayout) view.findViewById(R.id.storyCommentContainer);
+            storyCommentCountTextView = (TextView) view.findViewById(R.id.storyCommentCountTextView);
+            storyRecommendationCountTextView = (TextView) view.findViewById(R.id.storyRecommendationCountTextView);
+            storyOptionImageView = (ImageView) view.findViewById(R.id.storyOptionImageView);
+            likeImageView = (ImageView) view.findViewById(R.id.likeImageView);
+            facebookShareImageView = (ImageView) view.findViewById(R.id.facebookShareImageView);
+            whatsappShareImageView = (ImageView) view.findViewById(R.id.whatsappShareImageView);
+            instagramShareImageView = (ImageView) view.findViewById(R.id.instagramShareImageView);
+            genericShareImageView = (ImageView) view.findViewById(R.id.genericShareImageView);
+
             view.setOnClickListener(this);
+            headerArticleView.setOnClickListener(this);
+            whatsappShareImageView.setTag(view);
+            storyHeaderView.setOnClickListener(this);
+            storyRecommendationContainer.setOnClickListener(this);
+            facebookShareImageView.setOnClickListener(this);
+            whatsappShareImageView.setOnClickListener(this);
+            instagramShareImageView.setOnClickListener(this);
+            genericShareImageView.setOnClickListener(this);
+            authorNameTextView.setOnClickListener(this);
+            storyOptionImageView.setOnClickListener(this);
+
         }
 
         @Override
