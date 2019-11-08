@@ -71,9 +71,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
         setContentView(R.layout.activity_campaign_container)
         root = findViewById(R.id.container)
         (application as BaseApplication).activity = this
-
         deeplinkCampaignId = intent.getIntExtra("campaignID", -1)
-
         fromNotification = if (intent.hasExtra("fromNotification")) {//fromNotification
             intent.getBooleanExtra("fromNotification", false)
         } else {
@@ -82,9 +80,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
         if (intent.hasExtra("campaign_id") && intent.hasExtra("campaign_detail")) {
             notificationCampaignId = intent.getStringExtra("campaign_id")
-
             comingFrom = "campaign_detail"
-
         } else {
             notificationCampaignId = ""
         }
@@ -92,12 +88,9 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
         if (intent.hasExtra("campaign_Id") && intent.hasExtra("campaign_submit_proof")) {
             notificationCampaignSubmitProof = intent.getStringExtra("campaign_Id")
             comingFrom = "campaign_submit_proof"
-
         } else {
             notificationCampaignSubmitProof = ""
         }
-
-
 
         if (!notificationCampaignSubmitProof.equals("", true)) {
             deeplinkCampaignId = notificationCampaignSubmitProof.toInt()
@@ -111,31 +104,25 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
             campaignListFragment()
         } else if (comingFrom.equals("campaign_detail")) {
             addCampaginDetailFragment(deeplinkCampaignId, "")
-
         } else if (comingFrom.equals("campaign_submit_proof")) {
             showProgressDialog(resources.getString(R.string.please_wait))
             fetchCampaignDetail()
         } else {
             addCampaginDetailFragment(deeplinkCampaignId, "")
         }
-
     }
-
 
     private fun fetchCampaignDetail() {
         BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getCampaignDetail(deeplinkCampaignId, 2.0).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CampaignDetailResult>> {
-
 
             override fun onComplete() {
                 removeProgressDialog()
             }
 
             override fun onSubscribe(d: Disposable) {
-
             }
 
             override fun onNext(response: BaseResponseGeneric<CampaignDetailResult>) {
-
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.result != null) {
                     addAddProofFragment(deeplinkCampaignId, arrayList as ArrayList<Int>, response.data!!.result.campaignStatus!!)
                 } else {

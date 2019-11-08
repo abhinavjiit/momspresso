@@ -35,13 +35,17 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
-import com.mycity4kids.ui.activity.BusinessDetailsActivity;
+import com.mycity4kids.ui.activity.ChallnegeDetailListingActivity;
 import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.EditProfileNewActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
+import com.mycity4kids.ui.activity.MyTotalEarningActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.PublicProfileActivity;
+import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity;
 import com.mycity4kids.ui.activity.SplashActivity;
+import com.mycity4kids.ui.activity.TopicsListingActivity;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
@@ -53,7 +57,6 @@ import java.net.URL;
  * Created by anshul on 5/26/16.
  */
 public class MyFcmListenerService extends FirebaseMessagingService {
-    private static final String TAG = MyFcmListenerService.class.getSimpleName();
     Bitmap bitmap;
 
     @Override
@@ -127,8 +130,12 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (remoteMessage.getNotification() != null) {
                         String title = remoteMessage.getNotification().getTitle();
                         String body = remoteMessage.getNotification().getBody();
-                        Log.e("NOTIFICATION_TYPE", "upcoming_event_list ----- Notification Message");
-                        prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        Log.e("NOTIFICATION_TYPE", "upcoming_event_list ----- Notification Message --- " + remoteMessage.getNotification().getImageUrl());
+                        if (remoteMessage.getNotification().getImageUrl() != null) {
+                            prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
+                        } else {
+                            prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        }
                     } else {
                         Log.e("NOTIFICATION_TYPE", "upcoming_event_list ----- Notification Data");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
@@ -155,8 +162,12 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (remoteMessage.getNotification() != null) {
                         String title = remoteMessage.getNotification().getTitle();
                         String body = remoteMessage.getNotification().getBody();
-                        Log.e("NOTIFICATION_TYPE", "momvlog_challenge_details ----- Notification Message");
-                        prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        Log.e("NOTIFICATION_TYPE", "momvlog_challenge_details ----- Notification Message --- " + remoteMessage.getNotification().getImageUrl());
+                        if (remoteMessage.getNotification().getImageUrl() != null) {
+                            prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
+                        } else {
+                            prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        }
                     } else {
                         Log.e("NOTIFICATION_TYPE", "momvlog_challenge_details ----- Notification Data");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
@@ -181,8 +192,12 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (remoteMessage.getNotification() != null) {
                         String title = remoteMessage.getNotification().getTitle();
                         String body = remoteMessage.getNotification().getBody();
-                        Log.e("NOTIFICATION_TYPE", "momvlog_challenge_details ----- Notification Message");
-                        prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        Log.e("NOTIFICATION_TYPE", "momvlog_challenge_details ----- Notification Message --- " + remoteMessage.getNotification().getImageUrl());
+                        if (remoteMessage.getNotification().getImageUrl() != null) {
+                            prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
+                        } else {
+                            prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        }
                     } else {
                         Log.e("NOTIFICATION_TYPE", "momvlog_challenge_details ----- Notification Data");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
@@ -215,8 +230,12 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (remoteMessage.getNotification() != null) {
                         String title = remoteMessage.getNotification().getTitle();
                         String body = remoteMessage.getNotification().getBody();
-                        Log.e("NOTIFICATION_TYPE", "article_details ----- Notification Message");
-                        prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        Log.e("NOTIFICATION_TYPE", "article_details ----- Notification Message --- " + remoteMessage.getNotification().getImageUrl());
+                        if (remoteMessage.getNotification().getImageUrl() != null) {
+                            prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
+                        } else {
+                            prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        }
                     } else {
                         Log.e("NOTIFICATION_TYPE", "article_details ----- Notification Data");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
@@ -248,40 +267,14 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (remoteMessage.getNotification() != null) {
                         String title = remoteMessage.getNotification().getTitle();
                         String body = remoteMessage.getNotification().getBody();
-                        Log.e("NOTIFICATION_TYPE", "video_details ----- Notification Message");
-                        prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        Log.e("NOTIFICATION_TYPE", "video_details ----- Notification Messag --- " + remoteMessage.getNotification().getImageUrl());
+                        if (remoteMessage.getNotification().getImageUrl() != null) {
+                            prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
+                        } else {
+                            prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        }
                     } else {
                         Log.e("NOTIFICATION_TYPE", "video_details ----- Notification Data");
-                        prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
-                                , contentIntent, pushNotificationModel.getSound());
-                    }
-                } else if (type.equalsIgnoreCase("event_details")) {
-                    Intent resultIntent;
-                    PendingIntent contentIntent;
-                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
-                        resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
-                        resultIntent.putExtra("fromNotification", true);
-                        contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    } else {
-                        resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);
-                        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        resultIntent.putExtra("fromNotification", true);
-                        resultIntent.putExtra(Constants.CATEGORY_ID, SharedPrefUtils.getEventIdForCity(BaseApplication.getAppContext()));
-                        resultIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, pushNotificationModel.getId() + "");
-                        resultIntent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
-                        resultIntent.putExtra(Constants.DISTANCE, "0");
-                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                        stackBuilder.addParentStack(BusinessDetailsActivity.class);
-                        stackBuilder.addNextIntent(resultIntent);
-                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-                    }
-                    if (remoteMessage.getNotification() != null) {
-                        String title = remoteMessage.getNotification().getTitle();
-                        String body = remoteMessage.getNotification().getBody();
-                        Log.e("NOTIFICATION_TYPE", "event_details ----- Notification Message");
-                        prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
-                    } else {
-                        Log.e("NOTIFICATION_TYPE", "event_details ----- Notification Data");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
@@ -305,8 +298,12 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (remoteMessage.getNotification() != null) {
                         String title = remoteMessage.getNotification().getTitle();
                         String body = remoteMessage.getNotification().getBody();
-                        Log.e("NOTIFICATION_TYPE", "webView ----- Notification Message");
-                        prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        Log.e("NOTIFICATION_TYPE", "webView ----- Notification Message --- " + remoteMessage.getNotification().getImageUrl());
+                        if (remoteMessage.getNotification().getImageUrl() != null) {
+                            prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
+                        } else {
+                            prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        }
                     } else {
                         Log.e("NOTIFICATION_TYPE", "webView ----- Notification Data");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
@@ -334,8 +331,12 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (remoteMessage.getNotification() != null) {
                         String title = remoteMessage.getNotification().getTitle();
                         String body = remoteMessage.getNotification().getBody();
-                        Log.e("NOTIFICATION_TYPE", "profile ----- Notification Message");
-                        prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        Log.e("NOTIFICATION_TYPE", "profile ----- Notification Message --- " + remoteMessage.getNotification().getImageUrl());
+                        if (remoteMessage.getNotification().getImageUrl() != null) {
+                            prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
+                        } else {
+                            prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        }
                     } else {
                         Log.e("NOTIFICATION_TYPE", "profile ----- Notification Data");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
@@ -361,8 +362,12 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (remoteMessage.getNotification() != null) {
                         String title = remoteMessage.getNotification().getTitle();
                         String body = remoteMessage.getNotification().getBody();
-                        Log.e("NOTIFICATION_TYPE", "app_settings ----- Notification Message");
-                        prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        Log.e("NOTIFICATION_TYPE", "app_settings ----- Notification  --- " + remoteMessage.getNotification().getImageUrl());
+                        if (remoteMessage.getNotification().getImageUrl() != null) {
+                            prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
+                        } else {
+                            prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        }
                     } else {
                         Log.e("NOTIFICATION_TYPE", "app_settings ----- Notification Data");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
@@ -386,8 +391,12 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (remoteMessage.getNotification() != null) {
                         String title = remoteMessage.getNotification().getTitle();
                         String body = remoteMessage.getNotification().getBody();
-                        Log.e("NOTIFICATION_TYPE", "momsights_screen ----- Notification Message");
-                        prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        Log.e("NOTIFICATION_TYPE", "momsights_screen ----- Notification Message --- " + remoteMessage.getNotification().getImageUrl());
+                        if (remoteMessage.getNotification().getImageUrl() != null) {
+                            prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
+                        } else {
+                            prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        }
                     } else {
                         Log.e("NOTIFICATION_TYPE", "momsights_screen ----- Notification Data");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
@@ -412,26 +421,17 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (remoteMessage.getNotification() != null) {
                         String title = remoteMessage.getNotification().getTitle();
                         String body = remoteMessage.getNotification().getBody();
-                        Log.e("NOTIFICATION_TYPE", "campaign_listing ----- Notification Message");
-                        prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        Log.e("NOTIFICATION_TYPE", "campaign_listing ----- Notification Message --- " + remoteMessage.getNotification().getImageUrl());
+                        if (remoteMessage.getNotification().getImageUrl() != null) {
+                            prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
+                        } else {
+                            prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        }
                     } else {
                         Log.e("NOTIFICATION_TYPE", "campaign_listing ----- Notification Data");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
-//                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
-//                            R.drawable.ic_launcher);
-//                    NotificationCompat.Builder mBuilder =
-//                            new NotificationCompat.Builder(this)
-//                                    .setLargeIcon(icon)
-//                                    .setSmallIcon(R.drawable.icon_notify)
-//                                    .setContentTitle(title)
-//                                    .setContentIntent(contentIntent)
-//                                    .setContentText(body)
-//                                    .setAutoCancel(true);
-//                    NotificationManager mNotifyMgr =
-//                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//                    mNotifyMgr.notify(requestID, mBuilder.build());
                 } else if (type.equalsIgnoreCase("mymoney_pancard")) {
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
@@ -454,40 +454,27 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (remoteMessage.getNotification() != null) {
                         String title = remoteMessage.getNotification().getTitle();
                         String body = remoteMessage.getNotification().getBody();
-                        Log.e("NOTIFICATION_TYPE", "mymoney_pancard ----- Notification Message");
-                        prepareNotification(title, body, pushNotificationModel.getRich_image_url()
-                                , contentIntent, pushNotificationModel.getSound());
+                        Log.e("NOTIFICATION_TYPE", "mymoney_pancard ----- Notification Message --- " + remoteMessage.getNotification().getImageUrl());
+                        if (remoteMessage.getNotification().getImageUrl() != null) {
+                            prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
+                        } else {
+                            prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        }
                     } else {
                         Log.e("NOTIFICATION_TYPE", "mymoney_pancard ----- Notification Data");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
-//                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
-//                            R.drawable.ic_launcher);
-//                    NotificationCompat.Builder mBuilder =
-//                            new NotificationCompat.Builder(this)
-//                                    .setLargeIcon(icon)
-//                                    .setSmallIcon(R.drawable.icon_notify)
-//                                    .setContentTitle(title)
-//                                    .setContentIntent(contentIntent)
-//                                    .setContentText(body)
-//                                    .setAutoCancel(true);
-//                    NotificationManager mNotifyMgr =
-//                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//                    mNotifyMgr.notify(requestID, mBuilder.build());
                 } else if (type.equalsIgnoreCase("category_listing")) {
-                    int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                     } else {
-                        resultIntent = new Intent(getApplicationContext(), RewardsContainerActivity.class);
+                        resultIntent = new Intent(getApplicationContext(), TopicsListingActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        resultIntent.putExtra("isComingFromRewards", true);
-                        resultIntent.putExtra("pageLimit", 5);
-                        resultIntent.putExtra("pageNumber", 5);
+                        resultIntent.putExtra("parentTopicId", pushNotificationModel.getCategoryId());
                         resultIntent.putExtra("fromNotification", true);
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         stackBuilder.addParentStack(AppSettingsActivity.class);
@@ -497,29 +484,18 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (remoteMessage.getNotification() != null) {
                         String title = remoteMessage.getNotification().getTitle();
                         String body = remoteMessage.getNotification().getBody();
-                        Log.e("NOTIFICATION_TYPE", "category_listing ----- Notification Message");
-                        prepareNotification(title, body, pushNotificationModel.getRich_image_url()
-                                , contentIntent, pushNotificationModel.getSound());
+                        Log.e("NOTIFICATION_TYPE", "category_listing ----- Notification Message --- " + remoteMessage.getNotification().getImageUrl());
+                        if (remoteMessage.getNotification().getImageUrl() != null) {
+                            prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
+                        } else {
+                            prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        }
                     } else {
                         Log.e("NOTIFICATION_TYPE", "category_listing ----- Notification Data");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
-//                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
-//                            R.drawable.ic_launcher);
-//                    NotificationCompat.Builder mBuilder =
-//                            new NotificationCompat.Builder(this)
-//                                    .setLargeIcon(icon)
-//                                    .setSmallIcon(R.drawable.icon_notify)
-//                                    .setContentTitle(title)
-//                                    .setContentIntent(contentIntent)
-//                                    .setContentText(body)
-//                                    .setAutoCancel(true);
-//                    NotificationManager mNotifyMgr =
-//                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//                    mNotifyMgr.notify(requestID, mBuilder.build());
                 } else if (type.equalsIgnoreCase("campaign_submit_proof")) {
-                    int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
@@ -530,6 +506,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         resultIntent.putExtra("fromNotification", true);
                         resultIntent.putExtra("campaign_id", pushNotificationModel.getCampaign_id());
+                        resultIntent.putExtra("campaign_submit_proof", "campaign_submit_proof");
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         stackBuilder.addParentStack(AppSettingsActivity.class);
                         stackBuilder.addNextIntent(resultIntent);
@@ -538,28 +515,18 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (remoteMessage.getNotification() != null) {
                         String title = remoteMessage.getNotification().getTitle();
                         String body = remoteMessage.getNotification().getBody();
-                        Log.e("NOTIFICATION_TYPE", "campaign_submit_proof ----- Notification Message");
-                        prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        Log.e("NOTIFICATION_TYPE", "campaign_submit_proof ----- Notification Message --- " + remoteMessage.getNotification().getImageUrl());
+                        if (remoteMessage.getNotification().getImageUrl() != null) {
+                            prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
+                        } else {
+                            prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        }
                     } else {
                         Log.e("NOTIFICATION_TYPE", "campaign_submit_proof ----- Notification Data");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
-//                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
-//                            R.drawable.ic_launcher);
-//                    NotificationCompat.Builder mBuilder =
-//                            new NotificationCompat.Builder(this)
-//                                    .setLargeIcon(icon)
-//                                    .setSmallIcon(R.drawable.icon_notify)
-//                                    .setContentTitle(title)
-//                                    .setContentIntent(contentIntent)
-//                                    .setContentText(body)
-//                                    .setAutoCancel(true);
-//                    NotificationManager mNotifyMgr =
-//                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//                    mNotifyMgr.notify(requestID, mBuilder.build());
                 } else if (type.equalsIgnoreCase("mymoney_bankdetails")) {
-                    int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
@@ -581,28 +548,18 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (remoteMessage.getNotification() != null) {
                         String title = remoteMessage.getNotification().getTitle();
                         String body = remoteMessage.getNotification().getBody();
-                        Log.e("NOTIFICATION_TYPE", "mymoney_bankdetails ----- Notification Message");
-                        prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        Log.e("NOTIFICATION_TYPE", "mymoney_bankdetails ----- Notification Message --- " + remoteMessage.getNotification().getImageUrl());
+                        if (remoteMessage.getNotification().getImageUrl() != null) {
+                            prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
+                        } else {
+                            prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        }
                     } else {
                         Log.e("NOTIFICATION_TYPE", "mymoney_bankdetails ----- Notification Data");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
-//                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
-//                            R.drawable.ic_launcher);
-//                    NotificationCompat.Builder mBuilder =
-//                            new NotificationCompat.Builder(this)
-//                                    .setLargeIcon(icon)
-//                                    .setSmallIcon(R.drawable.icon_notify)
-//                                    .setContentTitle(title)
-//                                    .setContentIntent(contentIntent)
-//                                    .setContentText(body)
-//                                    .setAutoCancel(true);
-//                    NotificationManager mNotifyMgr =
-//                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//                    mNotifyMgr.notify(requestID, mBuilder.build());
                 } else if (type.equalsIgnoreCase("campaign_detail")) {
-                    int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
@@ -612,8 +569,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         resultIntent = new Intent(getApplicationContext(), CampaignContainerActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         resultIntent.putExtra("fromNotification", true);
-                        resultIntent.putExtra("campaign_id", ""+pushNotificationModel.getCampaign_id());
-                        resultIntent.putExtra("campaign_detail","campaign_detail");
+                        resultIntent.putExtra("campaign_id", "" + pushNotificationModel.getCampaign_id());
+                        resultIntent.putExtra("campaign_detail", "campaign_detail");
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         stackBuilder.addNextIntentWithParentStack(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -621,10 +578,131 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (remoteMessage.getNotification() != null) {
                         String title = remoteMessage.getNotification().getTitle();
                         String body = remoteMessage.getNotification().getBody();
-                        Log.e("NOTIFICATION_TYPE", "campaign_detail ----- Notification Message");
-                        prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        Log.e("NOTIFICATION_TYPE", "campaign_detail ----- Notification Message --- " + remoteMessage.getNotification().getImageUrl());
+                        if (remoteMessage.getNotification().getImageUrl() != null) {
+                            prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
+                        } else {
+                            prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        }
                     } else {
                         Log.e("NOTIFICATION_TYPE", "campaign_detail ----- Notification Data");
+                        prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
+                                , contentIntent, pushNotificationModel.getSound());
+                    }
+                } else if (type.equalsIgnoreCase("my_money_earnings")) {
+                    Intent resultIntent;
+                    PendingIntent contentIntent;
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
+                        resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
+                        contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    } else {
+                        resultIntent = new Intent(getApplicationContext(), MyTotalEarningActivity.class);
+                        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        resultIntent.putExtra("fromNotification", true);
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        stackBuilder.addNextIntentWithParentStack(resultIntent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    }
+                    if (remoteMessage.getNotification() != null) {
+                        String title = remoteMessage.getNotification().getTitle();
+                        String body = remoteMessage.getNotification().getBody();
+                        Log.e("NOTIFICATION_TYPE", "my_money_earnings ----- Notification Message --- " + remoteMessage.getNotification().getImageUrl());
+                        if (remoteMessage.getNotification().getImageUrl() != null) {
+                            prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
+                        } else {
+                            prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        }
+                    } else {
+                        Log.e("NOTIFICATION_TYPE", "my_money_earnings ----- Notification Data");
+                        prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
+                                , contentIntent, pushNotificationModel.getSound());
+                    }
+                } else if (type.equalsIgnoreCase("my_money_profile")) {
+                    Intent resultIntent;
+                    PendingIntent contentIntent;
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
+                        resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
+                        contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    } else {
+                        resultIntent = new Intent(getApplicationContext(), EditProfileNewActivity.class);
+                        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        resultIntent.putExtra("fromNotification", true);
+                        resultIntent.putExtra("isComingfromCampaign", true);
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        stackBuilder.addNextIntentWithParentStack(resultIntent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    }
+                    if (remoteMessage.getNotification() != null) {
+                        String title = remoteMessage.getNotification().getTitle();
+                        String body = remoteMessage.getNotification().getBody();
+                        Log.e("NOTIFICATION_TYPE", "my_money_profile ----- Notification Message --- " + remoteMessage.getNotification().getImageUrl());
+                        if (remoteMessage.getNotification().getImageUrl() != null) {
+                            prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
+                        } else {
+                            prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        }
+                    } else {
+                        Log.e("NOTIFICATION_TYPE", "my_money_profile ----- Notification Data");
+                        prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
+                                , contentIntent, pushNotificationModel.getSound());
+                    }
+                } else if (type.equalsIgnoreCase("shortStoryListing")) {
+                    Intent resultIntent;
+                    PendingIntent contentIntent;
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
+                        resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
+                        contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    } else {
+                        resultIntent = new Intent(getApplicationContext(), ShortStoriesListingContainerActivity.class);
+                        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        resultIntent.putExtra("fromNotification", true);
+                        resultIntent.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
+                        resultIntent.putExtra("selectedTabCategoryId", pushNotificationModel.getCategoryId());
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        stackBuilder.addNextIntentWithParentStack(resultIntent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    }
+                    if (remoteMessage.getNotification() != null) {
+                        String title = remoteMessage.getNotification().getTitle();
+                        String body = remoteMessage.getNotification().getBody();
+                        Log.e("NOTIFICATION_TYPE", "shortStoryListing ----- Notification Message --- " + remoteMessage.getNotification().getImageUrl());
+                        if (remoteMessage.getNotification().getImageUrl() != null) {
+                            prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
+                        } else {
+                            prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        }
+                    } else {
+                        Log.e("NOTIFICATION_TYPE", "shortStoryListing ----- Notification Data");
+                        prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
+                                , contentIntent, pushNotificationModel.getSound());
+                    }
+                } else if (type.equalsIgnoreCase("shortStoryListingInChallengeListing")) {
+                    Intent resultIntent;
+                    PendingIntent contentIntent;
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
+                        resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
+                        contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    } else {
+                        resultIntent = new Intent(getApplicationContext(), ChallnegeDetailListingActivity.class);
+                        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        resultIntent.putExtra("fromNotification", true);
+                        resultIntent.putExtra("challenge", pushNotificationModel.getCategoryId());
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        stackBuilder.addNextIntentWithParentStack(resultIntent);
+                        stackBuilder.editIntentAt(1).putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    }
+                    if (remoteMessage.getNotification() != null) {
+                        String title = remoteMessage.getNotification().getTitle();
+                        String body = remoteMessage.getNotification().getBody();
+                        Log.e("NOTIFICATION_TYPE", "shortStoryListingInChallengeListing ----- Notification Message --- " + remoteMessage.getNotification().getImageUrl());
+                        if (remoteMessage.getNotification().getImageUrl() != null) {
+                            prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
+                        } else {
+                            prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        }
+                    } else {
+                        Log.e("NOTIFICATION_TYPE", "shortStoryListingInChallengeListing ----- Notification Data");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
