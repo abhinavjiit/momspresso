@@ -105,11 +105,13 @@
 
                         <com.mycity4kids.widget.CustomFontTextView
                             android:id="@+id/campaign_name"
-                            android:layout_width="140dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="7dp"
                             android:layout_marginLeft="7dp"
                             android:layout_marginTop="4dp"
+                            android:paddingBottom="@dimen/space_10"
+                            android:minLines="2"
                             android:maxLines="2"
                             android:ellipsize="end"
                             android:textColor="#9B9B9B"
@@ -206,11 +208,13 @@
 
                         <com.mycity4kids.widget.CustomFontTextView
                             android:id="@+id/campaign_name2"
-                            android:layout_width="140dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="7dp"
                             android:layout_marginLeft="7dp"
                             android:layout_marginTop="4dp"
+                            android:paddingBottom="@dimen/space_10"
+                            android:minLines="2"
                             android:maxLines="2"
                             android:ellipsize="end"
                             android:textColor="#9B9B9B"
@@ -307,11 +311,13 @@
 
                         <com.mycity4kids.widget.CustomFontTextView
                             android:id="@+id/campaign_name3"
-                            android:layout_width="140dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="7dp"
                             android:layout_marginLeft="7dp"
                             android:layout_marginTop="4dp"
+                            android:paddingBottom="@dimen/space_10"
+                            android:minLines="2"
                             android:maxLines="2"
                             android:ellipsize="end"
                             android:textColor="#9B9B9B"
@@ -409,11 +415,13 @@
 
                         <com.mycity4kids.widget.CustomFontTextView
                             android:id="@+id/campaign_name4"
-                            android:layout_width="140dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="7dp"
                             android:layout_marginLeft="7dp"
                             android:layout_marginTop="4dp"
+                            android:paddingBottom="@dimen/space_10"
+                            android:minLines="2"
                             android:maxLines="2"
                             android:ellipsize="end"
                             android:textColor="#9B9B9B"
@@ -510,11 +518,13 @@
 
                         <com.mycity4kids.widget.CustomFontTextView
                             android:id="@+id/campaign_name5"
-                            android:layout_width="140dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="7dp"
                             android:layout_marginLeft="7dp"
                             android:layout_marginTop="4dp"
+                            android:paddingBottom="@dimen/space_10"
+                            android:minLines="2"
                             android:maxLines="2"
                             android:ellipsize="end"
                             android:textColor="#9B9B9B"
