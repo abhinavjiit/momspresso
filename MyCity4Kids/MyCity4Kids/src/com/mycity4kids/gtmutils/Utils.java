@@ -81,8 +81,6 @@ public class Utils {
         bundle.putString(GTMTags.USER_ID, userId);
         bundle.putString(GTMTags.Timestamp, timestamp);
         mFirebaseAnalytics.logEvent(event, bundle);
-
-
     }
 
     public static void momVlogEvent(Context context, String currentScreen, String CTA, String videoId, String platform, String lang, String userId, String timestamp, String event, String categoryId, String challengeId) {
