@@ -236,7 +236,6 @@ class CampaignListFragment : BaseFragment() {
                     ashimmerFrameLayout.visibility = View.GONE
                     if (responseData.data!!.result!!.size > 0) {
                         campaignList.addAll(responseData.data!!.result as ArrayList<CampaignDataListResult>)
-                        adapter.updateList(forYouStatus)
                         adapter.notifyDataSetChanged()
                     }
                 } else {
@@ -283,8 +282,8 @@ class CampaignListFragment : BaseFragment() {
                 if (response.code == 200 && response.data != null && response.status == "success") {
                     if (response.data.result != null && response.data.result.recm_status != null) {
                         forYouStatus = response.data.result.recm_status
+                        adapter.updateForYouStatus(forYouStatus)
                         fetchCampaignList(0)
-
                     }
                 }
             }

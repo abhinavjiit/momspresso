@@ -38,8 +38,8 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
         return RewardHolder(LayoutInflater.from(context).inflate(R.layout.campaign_list_recycler_adapter, parent, false))
     }
 
-     fun updateList(status: Int) {
-        forYouStatus = status
+    fun updateForYouStatus(forYouStatus: Int) {
+        this.forYouStatus = forYouStatus
     }
 
     override fun getItemCount(): Int = campaignList.size
