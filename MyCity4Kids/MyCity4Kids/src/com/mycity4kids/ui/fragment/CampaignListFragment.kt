@@ -236,7 +236,6 @@ class CampaignListFragment : BaseFragment() {
                     ashimmerFrameLayout.visibility = View.GONE
                     if (responseData.data!!.result!!.size > 0) {
                         campaignList.addAll(responseData.data!!.result as ArrayList<CampaignDataListResult>)
-                        adapter.updateList(forYouStatus)
                         adapter.notifyDataSetChanged()
                     }
                 } else {
