@@ -24,6 +24,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentManager;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -78,10 +82,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.FragmentManager;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -90,7 +90,7 @@ import retrofit2.Retrofit;
  * Created by hemant on 13/9/18.
  */
 
-public class PrivateProfileActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+public class N_PrivateProfileActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private static final int REQUEST_CAMERA = 0;
 
@@ -105,7 +105,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
     private TextView rankLanguageTextView;
     private TextView authorNameTextView, authorTypeTextView;
     private TextView authorBioTextView;
-    private TextView publishedSectionTextView, draftSectionTextView, activitySectionTextView, badgeSectionTextView, signoutSectionTextView, featurelist;
+    private TextView publishedSectionTextView, draftSectionTextView, activitySectionTextView, signoutSectionTextView;
     private View rootView;
     private ImageView backArrowImageView;
     private TextView updateProfileTextView;
@@ -122,7 +122,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.private_profile_activity);
+        setContentView(R.layout.r_private_profile_activity);
         ((BaseApplication) getApplication()).setActivity(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -139,121 +139,6 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         }
 
         rootView = findViewById(R.id.rootView);
-        menuCoachmark = (RelativeLayout) findViewById(R.id.menuCoachmark);
-        updateProfileTextView = (TextView) findViewById(R.id.updateProfileTextView);
-        backArrowImageView = (ImageView) findViewById(R.id.menuImageView);
-        authorNameTextView = (TextView) findViewById(R.id.nameTextView);
-        authorTypeTextView = (TextView) findViewById(R.id.authorTypeTextView);
-        authorBioTextView = (TextView) findViewById(R.id.userbioTextView);
-        followingCountTextView = (TextView) findViewById(R.id.followingCountTextView);
-        followerCountTextView = (TextView) findViewById(R.id.followerCountTextView);
-        rankCountTextView = (TextView) findViewById(R.id.rankCountTextView);
-        rankLanguageTextView = (TextView) findViewById(R.id.rankLanguageTextView);
-        featurelist = findViewById(R.id.featurelist);
-        publishedSectionTextView = (TextView) findViewById(R.id.publishedSectionTextView);
-        draftSectionTextView = (TextView) findViewById(R.id.draftSectionTextView);
-//        bookmarksSectionTextView = (TextView) findViewById(R.id.bookmarksSectionTextView);
-        activitySectionTextView = (TextView) findViewById(R.id.activitySectionTextView);
-        badgeSectionTextView = (TextView) findViewById(R.id.badgeSectionTextView);
-//        rankingSectionTextView = (TextView) findViewById(R.id.rankingSectionTextView);
-//        settingsSectionTextView = (TextView) findViewById(R.id.settingsSectionTextView);
-        signoutSectionTextView = (TextView) findViewById(R.id.signoutSectionTextView);
-        imgProfile = (ImageView) findViewById(R.id.profileImageView);
-//        settingImageView = (ImageView) findViewById(R.id.settingImageView);
-        followerContainer = (LinearLayout) findViewById(R.id.followerContainer);
-        followingContainer = (LinearLayout) findViewById(R.id.followingContainer);
-        rankContainer = (LinearLayout) findViewById(R.id.rankContainer);
-        profileCompletionBar = (RoundedHorizontalProgressBar) findViewById(R.id.progress_bar_1);
-        profilePercentageTextView = (TextView) findViewById(R.id.profilePercentageTextView);
-        editProfileImageView = (ImageView) findViewById(R.id.editProfileImageView);
-        editProfileTextView = (TextView) findViewById(R.id.editProfileTextView);
-        publishedSectionTextView1 = (TextView) findViewById(R.id.publishedSectionTextView1);
-        publishCoachmark1 = (LinearLayout) findViewById(R.id.publishCoachmark1);
-        publishCoachmark2 = (LinearLayout) findViewById(R.id.publishCoachmark2);
-        linearRewardsHeader = (LinearLayout) findViewById(R.id.linearRewardsHeader);
-        textHeaderUpdate = (TextView) findViewById(R.id.textHeaderUpdate);
-        relative_profile_progress = (RelativeLayout) findViewById(R.id.relative_profile_progress);
-        readArticlesTextView = findViewById(R.id.readArticles);
-        textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Utils.campaignEvent(PrivateProfileActivity.this, "Rewards 1st screen", "Profile", "Update", "", "android", SharedPrefUtils.getAppLocale(PrivateProfileActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
-                startActivity(new Intent(PrivateProfileActivity.this, RewardsContainerActivity.class));
-            }
-        });
-
-        String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext());
-        if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
-            linearRewardsHeader.setVisibility(View.VISIBLE);
-            relative_profile_progress.setVisibility(View.INVISIBLE);
-        } else {
-            relative_profile_progress.setVisibility(View.VISIBLE);
-            linearRewardsHeader.setVisibility(View.INVISIBLE);
-        }
-
-        linearRewardsHeader.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Dialog dialog = new Dialog(PrivateProfileActivity.this);
-                dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.dialog_rewards_sheet);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();
-
-                dialog.findViewById(R.id.textUpdate).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        startActivity(new Intent(PrivateProfileActivity.this, RewardsContainerActivity.class));
-                        dialog.cancel();
-                    }
-                });
-
-                dialog.show();
-            }
-        });
-
-        ((TextView) findViewById(R.id.profileCompletionLabel)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Intent intent = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
-//                startActivity(intent);
-            }
-        });
-        authorNameTextView.setOnClickListener(this);
-//        locationTextView.setOnClickListener(this);
-        authorBioTextView.setOnClickListener(this);
-        imgProfile.setOnClickListener(this);
-        publishedSectionTextView.setOnClickListener(this);
-        draftSectionTextView.setOnClickListener(this);
-//        bookmarksSectionTextView.setOnClickListener(this);
-        activitySectionTextView.setOnClickListener(this);
-        badgeSectionTextView.setOnClickListener(this);
-        featurelist.setOnClickListener(this);
-//        rankingSectionTextView.setOnClickListener(this);
-//        settingsSectionTextView.setOnClickListener(this);
-        signoutSectionTextView.setOnClickListener(this);
-//        settingImageView.setOnClickListener(this);
-        followingContainer.setOnClickListener(this);
-        followerContainer.setOnClickListener(this);
-        backArrowImageView.setOnClickListener(this);
-        updateProfileTextView.setOnClickListener(this);
-        editProfileTextView.setOnClickListener(this);
-        editProfileImageView.setOnClickListener(this);
-        menuCoachmark.setOnClickListener(this);
-        publishCoachmark1.setOnClickListener(this);
-        publishCoachmark2.setOnClickListener(this);
-        publishedSectionTextView1.setOnClickListener(this);
-        readArticlesTextView.setOnClickListener(this);
-
-        userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
-        if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))) {
-            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(R.drawable.family_xxhdpi)
-                    .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(imgProfile);
-        }
-
-        if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "Profile")) {
-            menuCoachmark.setVisibility(View.VISIBLE);
-        }
 
 
     }
@@ -318,7 +203,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                                 multipleRankList.add(responseData.getData().get(0).getResult().getRanks().get(i));
                             }
                         }
-                        MyCityAnimationsUtil.animate(PrivateProfileActivity.this, rankContainer, multipleRankList, 0, true);
+                        MyCityAnimationsUtil.animate(N_PrivateProfileActivity.this, rankContainer, multipleRankList, 0, true);
                     }
 
                     int followerCount = Integer.parseInt(responseData.getData().get(0).getResult().getFollowersCount());
@@ -341,28 +226,28 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                     switch (responseData.getData().get(0).getResult().getUserType()) {
                         case AppConstants.USER_TYPE_BLOGGER:
                             authorTypeTextView.setText(getString(R.string.author_type_blogger));
-                            rankContainer.setOnClickListener(PrivateProfileActivity.this);
+                            rankContainer.setOnClickListener(N_PrivateProfileActivity.this);
                             break;
                         case AppConstants.USER_TYPE_EDITOR:
                             authorTypeTextView.setText(getString(R.string.author_type_editor));
-                            rankContainer.setOnClickListener(PrivateProfileActivity.this);
+                            rankContainer.setOnClickListener(N_PrivateProfileActivity.this);
                             break;
                         case AppConstants.USER_TYPE_EDITORIAL:
                             authorTypeTextView.setText(getString(R.string.author_type_editorial));
-                            rankContainer.setOnClickListener(PrivateProfileActivity.this);
+                            rankContainer.setOnClickListener(N_PrivateProfileActivity.this);
                             break;
                         case AppConstants.USER_TYPE_EXPERT:
                             authorTypeTextView.setText(getString(R.string.author_type_expert));
-                            rankContainer.setOnClickListener(PrivateProfileActivity.this);
+                            rankContainer.setOnClickListener(N_PrivateProfileActivity.this);
                             break;
                         case AppConstants.USER_TYPE_FEATURED:
                             authorTypeTextView.setText(getString(R.string.author_type_featured));
-                            rankContainer.setOnClickListener(PrivateProfileActivity.this);
+                            rankContainer.setOnClickListener(N_PrivateProfileActivity.this);
                             break;
                         case AppConstants.USER_TYPE_USER:
                             authorTypeTextView.setText(getString(R.string.author_type_user));
                             if (AppConstants.DEBUGGING_USER_ID.contains(userId)) {
-                                rankContainer.setOnClickListener(PrivateProfileActivity.this);
+                                rankContainer.setOnClickListener(N_PrivateProfileActivity.this);
                             } else {
                                 rankContainer.setOnClickListener(null);
                             }
@@ -371,7 +256,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                     }
 
                     if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp())) {
-                        Picasso.with(PrivateProfileActivity.this).load(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp())
+                        Picasso.with(N_PrivateProfileActivity.this).load(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp())
                                 .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(imgProfile);
                     }
 
@@ -474,12 +359,12 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                 break;
             case R.id.editProfileImageView:
             case R.id.editProfileTextView:
-                Intent intent = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
+                Intent intent = new Intent(N_PrivateProfileActivity.this, EditProfileNewActivity.class);
                 intent.putExtra("isRewardAdded", isRewardsAdded);
                 startActivity(intent);
                 break;
             case R.id.updateProfileTextView: {
-                Intent intent2 = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
+                Intent intent2 = new Intent(N_PrivateProfileActivity.this, EditProfileNewActivity.class);
                 intent2.putExtra("isComingfromCampaign", true);
                 intent2.putExtra("isRewardAdded", SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext()));
                 startActivity(intent2);
@@ -489,7 +374,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                 onBackPressed();
                 break;
             case R.id.authorNameTextView: {
-                Intent intent3 = new Intent(this, PrivateProfileActivity.class);
+                Intent intent3 = new Intent(this, N_PrivateProfileActivity.class);
                 startActivity(intent3);
             }
             break;
@@ -530,14 +415,6 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                 startActivity(intent5);
             }
             break;
-            case R.id.badgeSectionTextView:
-                Intent badgeIntent = new Intent(this, BadgeActivity.class);
-                startActivity(badgeIntent);
-                break;
-            case R.id.featurelist:
-                Intent featureIntent = new Intent(this, FeaturedOnActivity.class);
-                startActivity(featureIntent);
-                break;
             case R.id.rankContainer:
                 if (AppConstants.DEBUGGING_USER_ID.contains(userId)) {
                     rankContainer.setOnLongClickListener(new View.OnLongClickListener() {
