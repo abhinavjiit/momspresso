@@ -28,7 +28,7 @@ class StickyRecyclerViewAdapter(private var mListener: RecyclerViewClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
-            HeaderDataImpl.HEADER_TYPE_1 -> return HeaderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.header1_item_recycler, parent, false))
+            HeaderDataImpl.HEADER_TYPE_1 -> return HeaderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.test_card, parent, false))
             HeaderDataImpl.HEADER_TYPE_2 -> return Header2ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.header2_item_recycler, parent, false))
             else ->
                 return if (viewType == CONTENT_TYPE_ARTICLE) {
@@ -58,14 +58,14 @@ class StickyRecyclerViewAdapter(private var mListener: RecyclerViewClickListener
     }
 
     internal inner class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvHeader: TextView
+//        var tvHeader: TextView
 
         init {
-            tvHeader = itemView.findViewById(R.id.usernameTextView)
+//            tvHeader = itemView.findViewById(R.id.usernameTextView)
         }
 
         fun bindData(position: Int) {
-            tvHeader.text = "dwadawd  dwa daw d wad wad wa da wd awd wad ad wad " + (position / 5).toString()
+//            tvHeader.text = "dwadawd  dwa daw d wad wad wa da wd awd wad ad wad " + (position / 5).toString()
         }
     }
 
