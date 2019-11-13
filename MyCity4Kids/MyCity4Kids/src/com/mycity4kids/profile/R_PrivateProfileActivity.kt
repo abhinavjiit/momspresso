@@ -1,7 +1,9 @@
 package com.mycity4kids.profile
 
 import android.accounts.NetworkErrorException
+import android.content.Context
 import android.graphics.Color
+import android.graphics.Rect
 import android.os.Bundle
 import android.text.Html
 import android.text.SpannableStringBuilder
@@ -50,6 +52,7 @@ class R_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
         var linearLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         setData(adapter)
 
+//        recyclerView.addItemDecoration(object : MyItemDecoration(this) {})
         recyclerView.adapter = adapter
 
         recyclerView.layoutManager = linearLayoutManager
@@ -61,8 +64,21 @@ class R_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
 
     }
 
+    open class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
+        private var offset: Int
+
+        init {
+            this.offset = 10
+        }
+
+        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+            outRect.set(offset, offset, offset, offset)
+        }
+    }
+
+
     private fun setData(adapter: StickyRecyclerViewAdapter) {
-        val headerData1 = HeaderDataImpl(HeaderDataImpl.HEADER_TYPE_1, R.layout.header1_item_recycler)
+        val headerData1 = HeaderDataImpl(HeaderDataImpl.HEADER_TYPE_1, R.layout.test_card)
         val headerData2 = HeaderDataImpl(HeaderDataImpl.HEADER_TYPE_2, R.layout.header2_item_recycler)
 
         recommendationsList?.toMutableList()?.let { adapter.setHeaderAndData(it, headerData1) }
