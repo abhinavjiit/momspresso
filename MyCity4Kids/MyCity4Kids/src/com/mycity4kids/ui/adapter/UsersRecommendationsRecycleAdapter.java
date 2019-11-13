@@ -1,7 +1,9 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +32,6 @@ public class UsersRecommendationsRecycleAdapter extends RecyclerView.Adapter<Rec
     private RecyclerViewClickListener mListener;
 
     public UsersRecommendationsRecycleAdapter(Context pContext, RecyclerViewClickListener listener) {
-
         density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
@@ -149,7 +150,7 @@ public class UsersRecommendationsRecycleAdapter extends RecyclerView.Adapter<Rec
         View separatorView1;
         View separatorView2;
 
-        public UserRecommendationsViewHolder(View itemView, RecyclerViewClickListener listener) {
+        UserRecommendationsViewHolder(View itemView, RecyclerViewClickListener listener) {
             super(itemView);
             txvArticleTitle = (TextView) itemView.findViewById(R.id.articleTitleTextView);
             articleImageView = (ImageView) itemView.findViewById(R.id.articleImageView);
@@ -177,7 +178,7 @@ public class UsersRecommendationsRecycleAdapter extends RecyclerView.Adapter<Rec
         ImageView shareArticleImageView;
         View separatorView2;
 
-        public UserRecommendedSSViewHolder(View itemView, RecyclerViewClickListener listener) {
+        UserRecommendedSSViewHolder(View itemView, RecyclerViewClickListener listener) {
             super(itemView);
             txvArticleTitle = (TextView) itemView.findViewById(R.id.articleTitleTextView);
             txvPublishDate = (TextView) itemView.findViewById(R.id.txvPublishDate);
