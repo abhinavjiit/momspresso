@@ -18,11 +18,13 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
     private ArrayList<String> data;
     public Resources res;
     LayoutInflater inflater;
+    private String from;
 
-    public CustomSpinnerAdapter(Context context, ArrayList<String> objects) {
+    public CustomSpinnerAdapter(Context context, ArrayList<String> objects, String from) {
         super(context, R.layout.spinner_row, objects);
         context1 = context;
         data = objects;
+        this.from = from;
         inflater = (LayoutInflater) context1
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -42,7 +44,16 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
     public View getCustomView(int position, View convertView, ViewGroup parent) {
         View row = inflater.inflate(R.layout.spinner_row, parent, false);
         TextView tvCategory = (TextView) row.findViewById(R.id.tvCategory);
-        tvCategory.setText(data.get(position).toString());
+        TextView reportSpamSpinnerText = row.findViewById(R.id.report_spam_spinner_text);
+        if (from.equals("ReportSpam")){
+            reportSpamSpinnerText.setVisibility(View.VISIBLE);
+            reportSpamSpinnerText.setText(data.get(position).toString());
+            tvCategory.setVisibility(View.GONE);
+        } else {
+            tvCategory.setVisibility(View.VISIBLE);
+            reportSpamSpinnerText.setVisibility(View.GONE);
+            tvCategory.setText(data.get(position).toString());
+        }
         return row;
     }
 }

@@ -497,6 +497,16 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginRight="20dp"
                 android:background="@color/light_grey1" />
+            <View
+                android:id="@+id/underline_5"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/badgeSectionTextView"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/light_grey1" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -704,10 +714,24 @@
                 app:fontName="oswald.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/signoutSectionTextView"
+                android:id="@+id/badgeSectionTextView"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_below="@+id/underline_4"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="-2dp"
+                android:drawableLeft="@drawable/ic_activity"
+                android:drawablePadding="20dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:text="Badge"
+                app:fontName="oswald.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/signoutSectionTextView"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_below="@+id/underline_5"
                 android:drawableLeft="@drawable/ic_sign_out"
                 android:drawablePadding="20dp"
                 android:gravity="center_vertical"
@@ -715,6 +739,17 @@
                 android:text="@string/myprofile.section.signout_label"
                 app:fontName="oswald.ttf" />
 
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/featurelist"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_below="@+id/signoutSectionTextView"
+                android:drawableLeft="@drawable/ic_sign_out"
+                android:drawablePadding="20dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:text="Feature"
+                app:fontName="oswald.ttf" />
         </RelativeLayout>
     </FrameLayout>
 </ScrollView>

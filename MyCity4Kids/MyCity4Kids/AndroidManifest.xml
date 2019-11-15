@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="175"
-    android:versionName="12.2.2">
+    android:versionCode="173"
+    android:versionName="12.2.0.1">
 
     <uses-sdk tools:overrideLibrary="io.branch.referral, com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
     <!-- So that we can get the account name -->
@@ -538,6 +538,21 @@
             android:name=".ui.campaign.activity.CampaignHowToVideoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent" />
+        <activity
+            android:name=".ui.activity.BadgeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ProfileSetting"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.NotificationProfileSetting"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ReportSpamActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.FeaturedOnActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="io.branch.sdk.BranchKey"

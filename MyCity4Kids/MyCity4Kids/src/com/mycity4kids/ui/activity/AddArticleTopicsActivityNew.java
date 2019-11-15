@@ -181,7 +181,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                     showToast(getString(R.string.add_article_topics_max_topics));
                     return;
                 }
-                Intent _intent = new Intent(AddArticleTopicsActivityNew.this, ArticleImageTagUploadActivity.class);
+                Intent _intent = new Intent(AddArticleTopicsActivityNew.this, BadgeActivity.class);
                 _intent.putExtra("draftItem", draftObject);
                 _intent.putExtra("imageUrl", imageURL);
                 _intent.putExtra("from", userNavigatingFrom);

@@ -104,7 +104,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
     private TextView rankLanguageTextView;
     private TextView authorNameTextView, authorTypeTextView;
     private TextView authorBioTextView;
-    private TextView publishedSectionTextView, draftSectionTextView, activitySectionTextView, signoutSectionTextView;
+    private TextView publishedSectionTextView, draftSectionTextView, activitySectionTextView, badgeSectionTextView, signoutSectionTextView, featurelist;
     private View rootView;
     private ImageView backArrowImageView;
     private TextView updateProfileTextView;
@@ -148,10 +148,12 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         followerCountTextView = (TextView) findViewById(R.id.followerCountTextView);
         rankCountTextView = (TextView) findViewById(R.id.rankCountTextView);
         rankLanguageTextView = (TextView) findViewById(R.id.rankLanguageTextView);
+        featurelist = findViewById(R.id.featurelist);
         publishedSectionTextView = (TextView) findViewById(R.id.publishedSectionTextView);
         draftSectionTextView = (TextView) findViewById(R.id.draftSectionTextView);
 //        bookmarksSectionTextView = (TextView) findViewById(R.id.bookmarksSectionTextView);
         activitySectionTextView = (TextView) findViewById(R.id.activitySectionTextView);
+        badgeSectionTextView = (TextView) findViewById(R.id.badgeSectionTextView);
 //        rankingSectionTextView = (TextView) findViewById(R.id.rankingSectionTextView);
 //        settingsSectionTextView = (TextView) findViewById(R.id.settingsSectionTextView);
         signoutSectionTextView = (TextView) findViewById(R.id.signoutSectionTextView);
@@ -224,6 +226,8 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         draftSectionTextView.setOnClickListener(this);
 //        bookmarksSectionTextView.setOnClickListener(this);
         activitySectionTextView.setOnClickListener(this);
+        badgeSectionTextView.setOnClickListener(this);
+        featurelist.setOnClickListener(this);
 //        rankingSectionTextView.setOnClickListener(this);
 //        settingsSectionTextView.setOnClickListener(this);
         signoutSectionTextView.setOnClickListener(this);
@@ -525,6 +529,14 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                 startActivity(intent5);
             }
             break;
+            case R.id.badgeSectionTextView:
+                Intent badgeIntent = new Intent(this, BadgeActivity.class);
+                startActivity(badgeIntent);
+                break;
+            case R.id.featurelist:
+                Intent featureIntent = new Intent(this, FeaturedOnActivity.class);
+                startActivity(featureIntent);
+                break;
             case R.id.rankContainer:
                 if (AppConstants.DEBUGGING_USER_ID.contains(userId)) {
                     rankContainer.setOnLongClickListener(new View.OnLongClickListener() {
