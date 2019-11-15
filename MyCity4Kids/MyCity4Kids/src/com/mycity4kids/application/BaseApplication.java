@@ -83,7 +83,7 @@ public class BaseApplication extends Application {
     private RequestQueue mRequestQueue;
     String data = "";
     private static BaseApplication mInstance;
-    private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit, campaignRewards, azureRetrofit;
+    private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit, campaignRewards, azureRetrofit, testRetrofit;
     private static OkHttpClient client, customTimeoutOkHttpClient;
 
     private static ArrayList<Topics> topicList;
@@ -661,6 +661,65 @@ public class BaseApplication extends Application {
         return azureRetrofit;
     }
 
+
+    public Retrofit createRetrofitTestInstance(String base_url) {
+
+        Interceptor mainInterceptor = new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+                HttpUrl originalHttpUrl = original.url();
+                Request.Builder requestBuilder = original.newBuilder();
+
+                requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
+                requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+                requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
+                requestBuilder.addHeader("agent", "android");
+                requestBuilder.addHeader("manufacturer", Build.MANUFACTURER);
+                requestBuilder.addHeader("model", Build.MODEL);
+                requestBuilder.addHeader("appVersion", appVersion);
+                requestBuilder.addHeader("latitude", SharedPrefUtils.getUserLocationLatitude(getApplicationContext()));
+                requestBuilder.addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
+                requestBuilder.addHeader("userPrint", "" + AppUtils.getDeviceId(getApplicationContext()));
+                Request request = requestBuilder.build();
+
+//                Response response = chain.proceed(request);
+//                Log.w("Retrofit@Response", response.body().string());
+                return chain.proceed(request);
+            }
+        };
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+// set your desired log level
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        if (BuildConfig.DEBUG) {
+            client = new OkHttpClient
+                    .Builder()
+                    .addInterceptor(mainInterceptor)
+                    .addInterceptor(logging)
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)
+                    .build();
+        } else {
+            client = new OkHttpClient
+                    .Builder()
+                    .addInterceptor(mainInterceptor)
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)
+                    .build();
+        }
+
+        testRetrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .addConverterFactory(buildGsonConverter())
+                .client(client)
+                .build();
+        return testRetrofit;
+    }
+
     private static GsonConverterFactory buildGsonConverter() {
         GsonBuilder gsonBuilder = new GsonBuilder();
 
@@ -687,6 +746,13 @@ public class BaseApplication extends Application {
             createRetrofitInstance(SharedPrefUtils.getRewardsBaseURL(this));
         }
         return retrofit;
+    }
+
+    public Retrofit getRetrofitTest() {
+        if (null == testRetrofit) {
+            createRetrofitTestInstance(SharedPrefUtils.getRewardsBaseURL(this));
+        }
+        return testRetrofit;
     }
 
     public Retrofit getAzureRetrofit() {
