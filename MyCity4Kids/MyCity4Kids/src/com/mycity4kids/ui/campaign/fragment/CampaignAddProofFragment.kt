@@ -375,7 +375,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
     private fun validateMediaProofs(): Boolean {
         var isAllEmpty: Boolean = true
-        if (!campaignImageProofList.get(0).url.isNullOrEmpty()) {
+        if (campaignImageProofList.size > 0 && !campaignImageProofList.get(0).url.isNullOrEmpty()) {
             isAllEmpty = false
         }
         return isAllEmpty

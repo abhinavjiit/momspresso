@@ -89,7 +89,7 @@ class CampaignCongratulationFragment : BaseFragment() {
             startActivity(shareIntent)
         }
 
-        spannable = SpannableStringBuilder()
+        /*spannable = SpannableStringBuilder()
         var newColorString = " 7 working days "
         var str = pendingTextView.text.toString()
         var iStart = str.indexOf(" 7 working days ")
@@ -110,7 +110,7 @@ class CampaignCongratulationFragment : BaseFragment() {
         spannable.append(ssText2)
 
 
-        pendingTextView.setText(spannable, TextView.BufferType.SPANNABLE)
+        pendingTextView.setText(spannable, TextView.BufferType.SPANNABLE)*/
         return view
     }
 
