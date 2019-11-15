@@ -10,15 +10,9 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.models.response.CommentListData;
-import com.mycity4kids.models.response.CommentListResponse;
 import com.mycity4kids.models.response.FeaturedOnListResponse;
-import com.mycity4kids.models.response.NotificationSettingsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.FeatureListAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
-import com.mycity4kids.ui.adapter.ArticleCommentsRecyclerAdapter;
-import com.mycity4kids.ui.adapter.EmailSubscriptionAdapter;
 import com.mycity4kids.ui.adapter.FeatureOnRecyclerAdapter;
 
 import java.util.ArrayList;
@@ -54,9 +48,9 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
 
     private void fetchFeatureList() {
         showProgressDialog("Please wait ...");
-        Retrofit retrofit = BaseApplication.getInstance().getArticleRetrofit();
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofitTest();
         FeatureListAPI featureListAPI = retrofit.create(FeatureListAPI.class);
-        Call<FeaturedOnListResponse> call = featureListAPI.getFeatureList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),0,10);
+        Call<FeaturedOnListResponse> call = featureListAPI.getFeatureList("d7d981e2978b49b7b1748306967fc8da",0,10);
         call.enqueue(featuredList);
     }
 
