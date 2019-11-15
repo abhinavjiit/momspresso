@@ -30,16 +30,16 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResult>, val context: Activity?, var forYouStatus: Int) : RecyclerView.Adapter<RewardCampaignAdapter.RewardHolder>() {
+class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResult>, val context: Activity?) : RecyclerView.Adapter<RewardCampaignAdapter.RewardHolder>() {
 
-    private var campaignNewList: List<CampaignDataListResult>? = null
+    private var forYouStatus: Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RewardHolder {
         return RewardHolder(LayoutInflater.from(context).inflate(R.layout.campaign_list_recycler_adapter, parent, false))
     }
 
-    fun updateList(campaignList: List<CampaignDataListResult>) {
-        campaignNewList = campaignList
+    fun updateForYouStatus(forYouStatus: Int) {
+        this.forYouStatus = forYouStatus
     }
 
     override fun getItemCount(): Int = campaignList.size

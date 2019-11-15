@@ -16,6 +16,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
@@ -56,9 +60,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -298,10 +299,8 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
             Call<ArticleListingResponse> filterCall = topicsAPI.getTodaysBestArticles(DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + System.currentTimeMillis()), from, from + LIMIT - 1,
                     SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
-
             Call<AllCampaignDataResponse> campaignListCall = campaignAPI.getCampaignList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), 0, 5, 3.0);
             campaignListCall.enqueue(getCampaignList);
-//            k
         } else if (Constants.KEY_TRENDING.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
@@ -426,8 +425,6 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 AllCampaignDataResponse allCampaignDataResponse = response.body();
                 if (allCampaignDataResponse.getCode() == 200 && Constants.SUCCESS.equals(allCampaignDataResponse.getStatus())) {
                     processCampaignListingResponse(allCampaignDataResponse);
-//                    ashimmerFrameLayout.stopShimmerAnimation();
-//                    ashimmerFrameLayout.setVisibility(View.GONE);
                 } else {
                 }
             } catch (Exception e) {
@@ -515,34 +512,6 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         campaignListDataModels.addAll(dataList);
         recyclerAdapter.setCampaignList(campaignListDataModels);
         recyclerAdapter.notifyDataSetChanged();
-/*
-        if (dataList.size() == 0) {
-            isLastPageReached = false;
-            if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
-                //No more next results for search from pagination
-                isLastPageReached = true;
-            } else {
-                // No results for search
-                noBlogsTextView.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.GONE);
-                noBlogsTextView.setText(getString(R.string.no_articles_found));
-                articleDataModelsNew = dataList;
-                recyclerAdapter.setNewListData(articleDataModelsNew);
-                recyclerAdapter.notifyDataSetChanged();
-            }
-        } else {
-            noBlogsTextView.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-            if (nextPageNumber == 1) {
-                articleDataModelsNew = dataList;
-            } else {
-                articleDataModelsNew.addAll(dataList);
-            }
-            recyclerAdapter.setNewListData(articleDataModelsNew);
-            nextPageNumber = nextPageNumber + 1;
-            recyclerAdapter.notifyDataSetChanged();
-        }*/
-
     }
 
     @Override
@@ -578,126 +547,161 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
 
     @Override
     public void onRecyclerItemClick(View view, int position) {
-        switch (view.getId()) {
-            case R.id.videoContainerFL1:
-                launchVideoDetailsActivity(position, 0);
-                break;
-            case R.id.closeImageView:
-                mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    mixpanel.track("FollowTopicCardClose", jsonObject);
-                    Log.d("FollowUnfollowTopics", jsonObject.toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                SharedPrefUtils.setUserSkippedFollowTopicFlag(BaseApplication.getAppContext(), true);
-                hideFollowTopicHeader();
-                break;
-            case R.id.headerView:
-                Intent intent1 = new Intent(getActivity(), ExploreArticleListingTypeActivity.class);
-                intent1.putExtra("fragType", "search");
-                startActivity(intent1);
-                break;
-            case R.id.headerArticleView:
-            case R.id.fbAdArticleView:
-            case R.id.storyHeaderView:
-            case R.id.cardView1:
-                int campaignID = campaignListDataModels.get(0).getId();
-                Intent campaignIntent = new Intent(getActivity(), CampaignContainerActivity.class);
-                campaignIntent.putExtra("campaign_id", campaignListDataModels.get(0).getId() + "");
-                campaignIntent.putExtra("campaign_detail", "campaign_detail");
-                startActivity(campaignIntent);
-                break;
-            case R.id.cardView2:
-                int campaignID2 = campaignListDataModels.get(1).getId();
-                Intent campaignIntent2 = new Intent(getActivity(), CampaignContainerActivity.class);
-                campaignIntent2.putExtra("campaign_id", campaignListDataModels.get(1).getId() + "");
-                campaignIntent2.putExtra("campaign_detail", "campaign_detail");
-                startActivity(campaignIntent2);
-                break;
-            case R.id.cardView3:
-                int campaignID3 = campaignListDataModels.get(2).getId();
-                Intent campaignIntent3 = new Intent(getActivity(), CampaignContainerActivity.class);
-                campaignIntent3.putExtra("campaign_id", campaignListDataModels.get(2).getId() + "");
-                campaignIntent3.putExtra("campaign_detail", "campaign_detail");
-                startActivity(campaignIntent3);
-                break;
-            case R.id.cardView4:
-                int campaignID4 = campaignListDataModels.get(3).getId();
-                Intent campaignIntent4 = new Intent(getActivity(), CampaignContainerActivity.class);
-                campaignIntent4.putExtra("campaign_id", campaignListDataModels.get(3).getId() + "");
-                campaignIntent4.putExtra("campaign_detail", "campaign_detail");
-                startActivity(campaignIntent4);
-                break;
-            case R.id.cardView5:
-                int campaignID5 = campaignListDataModels.get(4).getId();
-                Intent campaignIntent5 = new Intent(getActivity(), CampaignContainerActivity.class);
-                campaignIntent5.putExtra("campaign_id", campaignListDataModels.get(4).getId() + "");
-                campaignIntent5.putExtra("campaign_detail", "campaign_detail");
-                startActivity(campaignIntent5);
-                break;
-            default:
-                int limit;
-                if (Constants.KEY_FOR_YOU.equals(sortType)) {
-                    limit = FORYOU_LIMIT;
-                } else {
-                    limit = LIMIT;
-                }
-                int page = (position / limit);
-                int posSubList = position % limit;
-                int startIndex = page * limit;
-                int endIndex = startIndex + limit;
-                ArrayList<ArticleListingResult> articleDataModelsSubList = new ArrayList<>(articleDataModelsNew.subList(startIndex, endIndex));
-                if ("1".equals(articleDataModelsNew.get(position).getContentType())) {
-                    Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
-                    if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {
-                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "ForYouScreen");
-                    } else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
-                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "EditorsPickScreen");
-                    } else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
-                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "RecentScreen");
-                    } else if (Constants.KEY_TODAYS_BEST.equalsIgnoreCase(sortType)) {
-                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "TodaysBestScreen");
-                    } else if (Constants.KEY_TRENDING.equalsIgnoreCase(sortType)) {
-                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
+        try {
+            switch (view.getId()) {
+                case R.id.videoContainerFL1:
+                    launchVideoDetailsActivity(position, 0);
+                    break;
+                case R.id.closeImageView:
+                    mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        mixpanel.track("FollowTopicCardClose", jsonObject);
+                        Log.d("FollowUnfollowTopics", jsonObject.toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    intent.putExtra(Constants.ARTICLE_ID, articleDataModelsSubList.get(posSubList).getId());
-                    intent.putExtra(Constants.AUTHOR_ID, articleDataModelsSubList.get(posSubList).getUserId());
-                    intent.putExtra(Constants.BLOG_SLUG, articleDataModelsSubList.get(posSubList).getBlogPageSlug());
-                    intent.putExtra(Constants.TITLE_SLUG, articleDataModelsSubList.get(posSubList).getTitleSlug());
-                    intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
-                    intent.putExtra(Constants.AUTHOR, articleDataModelsSubList.get(posSubList).getUserId() + "~" + articleDataModelsSubList.get(posSubList).getUserName());
-                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(articleDataModelsSubList, AppConstants.CONTENT_TYPE_SHORT_STORY);
-                    intent.putParcelableArrayListExtra("pagerListData", filteredResult);
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(posSubList, articleDataModelsSubList, AppConstants.CONTENT_TYPE_SHORT_STORY));
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(mContext, ArticleDetailsContainerActivity.class);
-                    if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {
-                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "ForYouScreen");
-                    } else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
-                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "EditorsPickScreen");
-                    } else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
-                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "RecentScreen");
-                    } else if (Constants.KEY_TODAYS_BEST.equalsIgnoreCase(sortType)) {
-                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "TodaysBestScreen");
-                    } else if (Constants.KEY_TRENDING.equalsIgnoreCase(sortType)) {
-                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
+                    SharedPrefUtils.setUserSkippedFollowTopicFlag(BaseApplication.getAppContext(), true);
+                    hideFollowTopicHeader();
+                    break;
+                case R.id.headerView:
+                    Intent intent1 = new Intent(getActivity(), ExploreArticleListingTypeActivity.class);
+                    intent1.putExtra("fragType", "search");
+                    startActivity(intent1);
+                    break;
+                case R.id.cardView1:
+                    try {
+                        Utils.campaignEvent(getActivity(), "HomeScreen", "HomeScreenCarousel", "CTA_Campaign_Carousel",
+                                "" + campaignListDataModels.get(0).getName(), "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "CTA_Campaign_Carousel");
+                    } catch (Exception e) {
+
                     }
-                    intent.putExtra(Constants.ARTICLE_ID, articleDataModelsSubList.get(posSubList).getId());
-                    intent.putExtra(Constants.AUTHOR_ID, articleDataModelsSubList.get(posSubList).getUserId());
-                    intent.putExtra(Constants.BLOG_SLUG, articleDataModelsSubList.get(posSubList).getBlogPageSlug());
-                    intent.putExtra(Constants.TITLE_SLUG, articleDataModelsSubList.get(posSubList).getTitleSlug());
-                    intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
-                    intent.putExtra(Constants.AUTHOR, articleDataModelsSubList.get(posSubList).getUserId() + "~" + articleDataModelsSubList.get(posSubList).getUserName());
-                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(articleDataModelsSubList, AppConstants.CONTENT_TYPE_ARTICLE);
-                    intent.putParcelableArrayListExtra("pagerListData", filteredResult);
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(posSubList, articleDataModelsSubList, AppConstants.CONTENT_TYPE_ARTICLE));
-                    startActivity(intent);
-                }
-                break;
+                    Intent campaignIntent = new Intent(getActivity(), CampaignContainerActivity.class);
+                    campaignIntent.putExtra("campaign_id", campaignListDataModels.get(0).getId() + "");
+                    campaignIntent.putExtra("campaign_detail", "campaign_detail");
+                    startActivity(campaignIntent);
+                    break;
+                case R.id.cardView2:
+                    try {
+                        Utils.campaignEvent(getActivity(), "HomeScreen", "HomeScreenCarousel", "CTA_Campaign_Carousel",
+                                "" + campaignListDataModels.get(1).getName(), "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "CTA_Campaign_Carousel");
+                    } catch (Exception e) {
+
+                    }
+                    Intent campaignIntent2 = new Intent(getActivity(), CampaignContainerActivity.class);
+                    campaignIntent2.putExtra("campaign_id", campaignListDataModels.get(1).getId() + "");
+                    campaignIntent2.putExtra("campaign_detail", "campaign_detail");
+                    startActivity(campaignIntent2);
+                    break;
+                case R.id.cardView3:
+                    try {
+                        Utils.campaignEvent(getActivity(), "HomeScreen", "HomeScreenCarousel", "CTA_Campaign_Carousel",
+                                "" + campaignListDataModels.get(2).getName(), "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "CTA_Campaign_Carousel");
+                    } catch (Exception e) {
+
+                    }
+                    Intent campaignIntent3 = new Intent(getActivity(), CampaignContainerActivity.class);
+                    campaignIntent3.putExtra("campaign_id", campaignListDataModels.get(2).getId() + "");
+                    campaignIntent3.putExtra("campaign_detail", "campaign_detail");
+                    startActivity(campaignIntent3);
+                    break;
+                case R.id.cardView4:
+                    try {
+                        Utils.campaignEvent(getActivity(), "HomeScreen", "HomeScreenCarousel", "CTA_Campaign_Carousel",
+                                "" + campaignListDataModels.get(3).getName(), "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "CTA_Campaign_Carousel");
+                    } catch (Exception e) {
+
+                    }
+                    Intent campaignIntent4 = new Intent(getActivity(), CampaignContainerActivity.class);
+                    campaignIntent4.putExtra("campaign_id", campaignListDataModels.get(3).getId() + "");
+                    campaignIntent4.putExtra("campaign_detail", "campaign_detail");
+                    startActivity(campaignIntent4);
+                    break;
+                case R.id.cardView5:
+                    try {
+                        Utils.campaignEvent(getActivity(), "HomeScreen", "HomeScreenCarousel", "CTA_Campaign_Carousel",
+                                "" + campaignListDataModels.get(4).getName(), "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "CTA_Campaign_Carousel");
+                    } catch (Exception e) {
+
+                    }
+                    Intent campaignIntent5 = new Intent(getActivity(), CampaignContainerActivity.class);
+                    campaignIntent5.putExtra("campaign_id", campaignListDataModels.get(4).getId() + "");
+                    campaignIntent5.putExtra("campaign_detail", "campaign_detail");
+                    startActivity(campaignIntent5);
+                    break;
+                case R.id.headerArticleView:
+                case R.id.fbAdArticleView:
+                case R.id.storyHeaderView:
+                default:
+                    int limit;
+                    if (Constants.KEY_FOR_YOU.equals(sortType)) {
+                        limit = FORYOU_LIMIT;
+                    } else {
+                        limit = LIMIT;
+                    }
+                    int page = (position / limit);
+                    int posSubList = position % limit;
+                    int startIndex = page * limit;
+                    int endIndex = startIndex + limit;
+                    ArrayList<ArticleListingResult> articleDataModelsSubList = new ArrayList<>(articleDataModelsNew.subList(startIndex, endIndex));
+                    if ("1".equals(articleDataModelsNew.get(position).getContentType())) {
+                        Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
+                        if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {
+                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "ForYouScreen");
+                        } else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
+                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "EditorsPickScreen");
+                        } else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
+                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "RecentScreen");
+                        } else if (Constants.KEY_TODAYS_BEST.equalsIgnoreCase(sortType)) {
+                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "TodaysBestScreen");
+                        } else if (Constants.KEY_TRENDING.equalsIgnoreCase(sortType)) {
+                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
+                        }
+                        intent.putExtra(Constants.ARTICLE_ID, articleDataModelsSubList.get(posSubList).getId());
+                        intent.putExtra(Constants.AUTHOR_ID, articleDataModelsSubList.get(posSubList).getUserId());
+                        intent.putExtra(Constants.BLOG_SLUG, articleDataModelsSubList.get(posSubList).getBlogPageSlug());
+                        intent.putExtra(Constants.TITLE_SLUG, articleDataModelsSubList.get(posSubList).getTitleSlug());
+                        intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
+                        intent.putExtra(Constants.AUTHOR, articleDataModelsSubList.get(posSubList).getUserId() + "~" + articleDataModelsSubList.get(posSubList).getUserName());
+                        ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(articleDataModelsSubList, AppConstants.CONTENT_TYPE_SHORT_STORY);
+                        intent.putParcelableArrayListExtra("pagerListData", filteredResult);
+                        intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(posSubList, articleDataModelsSubList, AppConstants.CONTENT_TYPE_SHORT_STORY));
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(mContext, ArticleDetailsContainerActivity.class);
+                        if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {
+                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "ForYouScreen");
+                        } else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
+                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "EditorsPickScreen");
+                        } else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
+                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "RecentScreen");
+                        } else if (Constants.KEY_TODAYS_BEST.equalsIgnoreCase(sortType)) {
+                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "TodaysBestScreen");
+                        } else if (Constants.KEY_TRENDING.equalsIgnoreCase(sortType)) {
+                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
+                        }
+                        intent.putExtra(Constants.ARTICLE_ID, articleDataModelsSubList.get(posSubList).getId());
+                        intent.putExtra(Constants.AUTHOR_ID, articleDataModelsSubList.get(posSubList).getUserId());
+                        intent.putExtra(Constants.BLOG_SLUG, articleDataModelsSubList.get(posSubList).getBlogPageSlug());
+                        intent.putExtra(Constants.TITLE_SLUG, articleDataModelsSubList.get(posSubList).getTitleSlug());
+                        intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
+                        intent.putExtra(Constants.AUTHOR, articleDataModelsSubList.get(posSubList).getUserId() + "~" + articleDataModelsSubList.get(posSubList).getUserName());
+                        ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(articleDataModelsSubList, AppConstants.CONTENT_TYPE_ARTICLE);
+                        intent.putParcelableArrayListExtra("pagerListData", filteredResult);
+                        intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(posSubList, articleDataModelsSubList, AppConstants.CONTENT_TYPE_ARTICLE));
+                        startActivity(intent);
+                    }
+                    break;
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
 
