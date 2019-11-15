@@ -2103,7 +2103,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.settingTextView: {
                 mDrawerLayout.closeDrawers();
-                Intent cityIntent = new Intent(this, AppSettingsActivity.class);
+                Intent cityIntent = new Intent(this, ProfileSetting.class);
                 startActivity(cityIntent);
             }
             break;

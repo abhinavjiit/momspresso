@@ -251,12 +251,12 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                 }
 
                 override fun onNext(t: BaseResponseGeneric<DefaultData>) {
-                    if (comingFrom.equals("firstTime") && !isComingFromRewards) {
+                    /*if (comingFrom.equals("firstTime") && !isComingFromRewards) {
                         var panCardDetailsSubmissionFragment = PanCardDetailsSubmissionFragment.newInstance(isComingFromRewards = false)
                         (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, panCardDetailsSubmissionFragment,
                                 CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PanCardDetailsSubmissionFragment")
                                 .commit()
-                    } else {
+                    } else {*/
                         when (paymantModeId) {
                             1 -> {
                                 ToastUtils.showToast(context, "PaytmNumber is Updated Successfully")
@@ -271,7 +271,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                             fragment.onActivityResult(2019, Activity.RESULT_OK, null)
                         }
 
-                    }
+//                    }
 
                 }
 

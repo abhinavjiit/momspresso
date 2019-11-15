@@ -987,7 +987,7 @@
     <string name="moderation_message">100WordStory under moderation.\n
 Thank you! We will be reviewing your story. You can expect to hear from us within the next 48 working hours. Meanwhile, you can still share your story with your friends!</string>
 
-
+    <string name="rewards_pancard_details">Pan details</string>
     <string name="drawer_referra_mymoney">MyMoney को रेफ़र करें</string>
     <string name="referral_screen_text">अपने दोस्त को अपने रेफ़रल कोड द्वारा MyMoney में हिस्सा लेने के लिए आमंत्रित करें . उसके MyMoney कैम्पेन को सफलतापूर्वक पूरा करने पर आप दोनों को 25 रुपये के हक़दार होंगे.</string>
     <string name="share_referral_screen">अपना रेफरल कोड शेयर करें और कमाना शुरू करें</string>
@@ -1143,7 +1143,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
     //rewardsCampaignString
     <string name="reward_campaign_add_proof">प्रूफ़ सबमिट करें</string>
-    <string name="select_payment_method">SELECT YOUR \n PREFERRED METHOD OF PAYMENT</string>
+    <string name="select_payment_method">PREFERRED METHOD OF PAYMENT</string>
 
 
     <string name="rewards_link_social">अकाउंट लिंक करें</string>
@@ -1220,4 +1220,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="campaign_list_sorry_not_eligible">Give MyMoney a try!</string>
     <string name="try_following_campaign">Try the following campaign instead!</string>
     <string name="campaign_list_try_following_campaign">Participate in your first campaign now!</string>
+    <string name="badges">Badges</string>
+    <string name="profile_setting">Profile settings</string>
+    <string name="accounts">Accounts</string>
 </resources>

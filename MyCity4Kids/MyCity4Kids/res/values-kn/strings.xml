@@ -971,7 +971,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
     <string name="rewards_tab_fragment_panCard">PAN CARD DETAILS</string>
 
-
+    <string name="rewards_pancard_details">Pan details</string>
     <string name="rewards_tab_fragment_myEarning">MY EARNING</string>
     <string name="rewards_tab_fragment_referrer_myMoney">refer mymoney</string>
     <string name="rewards_pancard_toolbar_text">PAN CARD DETAIL</string>
@@ -1112,7 +1112,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
     //addProof
     <string name="reward_campaign_add_proof">ADD PROOF</string>
-    <string name="select_payment_method">SELECT YOUR \n PREFERRED METHOD OF PAYMENT</string>
+    <string name="select_payment_method">PREFERRED METHOD OF PAYMENT</string>
     <string name="rewards_link_social">Link Account</string>
     <string name="submit_video_text">SUBMIT YOUR VIDEO </string>
     <string name="no_video.be_first">Be the first one to upload videos in this category!</string>
@@ -1239,4 +1239,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="campaign_list_sorry_not_eligible">Give MyMoney a try!</string>
     <string name="try_following_campaign">Try the following campaign instead!</string>
     <string name="campaign_list_try_following_campaign">Participate in your first campaign now!</string>
+    <string name="badges">Badges</string>
+    <string name="profile_setting">Profile settings</string>
+    <string name="accounts">Accounts</string>
 </resources>

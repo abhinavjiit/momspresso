@@ -288,7 +288,7 @@ public class BaseApplication extends Application {
 
     public Retrofit getCampaignRetrofit() {
         if (null == campaignRewards) {
-            createRetrofitInstanceForCampaign("https://devapi.momspresso.com");
+            createRetrofitInstanceForCampaign("http://34.93.77.28:5000/");
         }
         return campaignRewards;
     }
@@ -684,7 +684,7 @@ public class BaseApplication extends Application {
 
     public Retrofit getArticleRetrofit() {
         if (null == retrofit) {
-            createRetrofitInstance("http://35.200.142.199/");
+            createRetrofitInstance(SharedPrefUtils.getRewardsBaseURL(this));
         }
         return retrofit;
     }

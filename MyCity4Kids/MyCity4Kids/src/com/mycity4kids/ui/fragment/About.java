@@ -111,7 +111,7 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
         genderList.add("Male");
         genderList.add("Female");
 
-        CustomSpinnerAdapter spinAdapter = new CustomSpinnerAdapter(getActivity(), genderList);
+        CustomSpinnerAdapter spinAdapter = new CustomSpinnerAdapter(getActivity(), genderList,"");
         genderSpinner.setAdapter(spinAdapter);
         genderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

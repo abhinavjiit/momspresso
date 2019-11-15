@@ -221,7 +221,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
         }
 
         CustomSpinnerAdapter spinAdapter = new CustomSpinnerAdapter(
-                getApplicationContext(), list);
+                getApplicationContext(), list,"");
         spinner_nav.setAdapter(spinAdapter);
         spinner_nav.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

@@ -1012,7 +1012,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="story_text_description_hindi">यहाँ आप सुविचार (कोट्स) लिख सकते हैं.</string>
     <string name="campaign_name">Campaign Name \n Facebook Campaign</string>
     <string name="reward_campaign_add_proof">ADD PROOF</string>
-    <string name="select_payment_method">SELECT YOUR \n PREFERRED METHOD OF PAYMENT</string>
+    <string name="select_payment_method">PREFERRED METHOD OF PAYMENT</string>
     <string name="campaign_proofs_approved">PROOFS APPROVED</string>
 
     //unsupported image
@@ -1135,6 +1135,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="rewards_pancard_note_detail">In case of Invalid/No Pan card attached, 20% tax will be deducted from the payment.</string>
 
 
+    <string name="rewards_pancard_details">Pan details</string>
     <string name="rewards_pancard_Note_textview">NOTE :</string>
     <string name="rewards_payment_submission_enter_bank_detail_text">PLEASE ENTER YOUR BANK DETAILS</string>
     <string name="rewards_bank_detail_holder_nmae_text">Account Holder’s Name</string>
@@ -1352,6 +1353,24 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="campaign_list_sorry_not_eligible">Give MyMoney a try!</string>
     <string name="try_following_campaign">Try the following campaign instead!</string>
     <string name="campaign_list_try_following_campaign">Participate in your first campaign now!</string>
+    <string name="badges">Badges</string>
+    <string name="profile_setting">Profile settings</string>
+    <string name="accounts">Account</string>
+    <string name="personal_info">Personal info</string>
+    <string name="mymoney_info">MyMoney info</string>
+    <string name="payment_details">Payment details</string>
+    <string name="social_accounts">Social accounts</string>
+    <string name="general">General</string>
+    <string name="notification_settings">Notification settings</string>
+    <string name="topic_of_interest">Topic of interest</string>
+    <string name="help">Help</string>
+    <string name="report_spams">Report spam</string>
+    <string name="app_version">App Version</string>
+    <string name="logout">Logout</string>
+    <string name="spam_header_text">Write to us for any help and assistance</string>
+    <string name="spam_send">Send</string>
+    <string name="featured_on">Featured on</string>
+
 
 </resources>
 

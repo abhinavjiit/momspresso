@@ -1000,7 +1000,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="story_text_description_hindi">यहाँ आप सुविचार (कोट्स) लिख सकते हैं.</string>
     <string name="campaign_name">Campaign Name \n Facebook Campaign</string>
     <string name="reward_campaign_add_proof">ADD PROOF</string>
-    <string name="select_payment_method">SELECT YOUR \n PREFERRED METHOD OF PAYMENT</string>
+    <string name="select_payment_method">PREFERRED METHOD OF PAYMENT</string>
     <string name="campaign_proofs_approved">PROOFS APPROVED</string>
     <string name="campaign_detail_toolbar_text">CAMPAIGN DETAILS</string>
 
@@ -1112,7 +1112,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="rewards_tab_fragment_myEarning">મારી કમાણી</string>
     <string name="rewards_tab_fragment_referrer_myMoney">refer mymoney</string>
 
-
+    <string name="rewards_pancard_details">Pan details</string>
     <string name="rewards_pancard_toolbar_text">PAN CARD DETAIL</string>
     <string name="reawrds_pancard_detail_text">Please enter your PAN card details</string>
     <string name="rewards_pancard_note_detail">In case of Invalid/No Pan card attached, 20% tax will be deducted from the payment.</string>
@@ -1311,4 +1311,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="campaign_list_sorry_not_eligible">Give MyMoney a try!</string>
     <string name="try_following_campaign">Try the following campaign instead!</string>
     <string name="campaign_list_try_following_campaign">Participate in your first campaign now!</string>
+    <string name="badges">Badges</string>
+    <string name="profile_setting">Profile settings</string>
+    <string name="accounts">Accounts</string>
 </resources>

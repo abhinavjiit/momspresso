@@ -3,10 +3,7 @@ package com.mycity4kids.ui.campaign.fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.RadioButton
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
@@ -45,18 +42,22 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
             holder.nonDefaultRadioButton.isChecked = item.isDefault
 
             if (!item.accountNumber.isNullOrBlank()) {
+                holder.nonDefaultRadioButton.visibility = View.VISIBLE
+                holder.accountNumberTextView.visibility = View.VISIBLE
                 holder.accountNumberTextView.text = item.accountNumber
-                holder.nonDefaultEditTextView.visibility = View.VISIBLE
+                holder.nonDefaultEditTextView.visibility = View.GONE
                 holder.viewBaseLine.visibility = View.VISIBLE
             } else {
 
+//                holder.nonDefaultRadioButton.visibility = View.GONE
                 holder.accountNumberTextView.visibility = View.GONE
-                holder.nonDefaultEditTextView.visibility = View.INVISIBLE
+                holder.nonDefaultEditTextView.visibility = View.GONE
                 holder.viewBaseLine.visibility = View.INVISIBLE
 
             }
+
             holder.nonDefaultModeImageView.setOnClickListener {
-                clickListener.onRadioButton(position)
+                clickListener.onCellClick(paymentMode[position].type_id, position, paymentMode[position].id)
 
             }
             holder.nonDefaultRadioButton.setOnClickListener {
@@ -80,6 +81,7 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
             mView.setOnClickListener(this)
         }
 
+        val imageRadioButtonContainerNonDefault: LinearLayout = mView.imageRadioButtonContainerNonDefault
         val nonDefaultModeImageView: ImageView = mView.nonDefaultModeImageView
         val defaultdataRelativeLayout: RelativeLayout = mView.defaultdataRelativeLayout
         val paymentDefaultModeImageView: ImageView = mView.paymentDefaultModeImageView
