@@ -5,13 +5,13 @@
         android:color="#80e68c9b"
         />
 
-    <solid android:color="#fef9fa" />
+    <solid android:color="#FFF3F3" />
 
     <padding
         android:left="1dp"
         android:right="1dp"
         android:top="1dp" />
 
-    <corners android:radius="2dp" />
+    <corners android:radius="60dp" />
 
 </shape>

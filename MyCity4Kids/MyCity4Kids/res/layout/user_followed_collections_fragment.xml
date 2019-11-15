@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+     <com.mycity4kids.ui.videochallengenewui.ExpandableHeightGridView
+      android:id="@+id/collectionGridView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginLeft="16dp"
+      android:layout_marginTop="16dp"
+      android:layout_marginRight="16dp"
+      android:horizontalSpacing="16dp"
+      android:nestedScrollingEnabled="true"
+      android:numColumns="2"
+      android:scrollbars="none"
+      android:stretchMode="columnWidth"
+      android:verticalSpacing="16dp"
+      android:visibility="visible" />
+
+</LinearLayout>

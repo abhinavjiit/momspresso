@@ -1244,5 +1244,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="campaign_list_sorry_not_eligible">Give MyMoney a try!</string>
     <string name="try_following_campaign">Try the following campaign instead!</string>
     <string name="campaign_list_try_following_campaign">Participate in your first campaign now!</string>
+    <string name="topics">TOPICS</string>
 
 </resources>

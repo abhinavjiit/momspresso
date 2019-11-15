@@ -3,6 +3,7 @@ package com.mycity4kids.ui.activity;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -100,6 +101,7 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
             ChangePasswordResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 Toast.makeText(ChangePasswordActivity.this, getString(R.string.app_settings_change_pass_pass_update_success), Toast.LENGTH_SHORT).show();
+                onBackPressed();
             } else {
                 Toast.makeText(ChangePasswordActivity.this, getString(R.string.app_settings_change_pass_pass_update_fail), Toast.LENGTH_SHORT).show();
             }
