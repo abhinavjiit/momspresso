@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:clipToPadding="false"
-    android:padding="5dp">
+    android:background="@color/white">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -15,16 +13,15 @@
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="6dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="4dp"
-        android:layout_marginRight="6dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@color/white"
         android:outlineProvider="bounds"
         android:paddingBottom="10dp"
         app:cardCornerRadius="5dp"
-        app:cardElevation="5dp"
-        app:cardUseCompatPadding="true">
+        app:cardElevation="5dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -37,15 +34,15 @@
                 android:layout_height="80dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:src="@drawable/mymoney_logo"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:src="@drawable/momspresso_logo"
                 app:civ_border="true"
                 app:civ_border_color="@color/white"
-                app:civ_border_width="2dp"
-                app:civ_shadow="true"
-                app:civ_shadow_radius="4" />
+                app:civ_border_width="1dp"
+                app:civ_shadow="false"
+                app:civ_shadow_radius="1" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/usernameTextView"
@@ -54,8 +51,13 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="24dp"
+                android:layout_marginEnd="10dp"
                 android:layout_toEndOf="@+id/profileImageView"
-                android:text="dhwauidhiauw dh iwjadhwao dhawio hdioawh d" />
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="dhwauidhiauw dh iwjadhwao dhawio hdioawh d"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/cityTextView"
@@ -63,8 +65,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/usernameTextView"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
                 android:layout_toEndOf="@+id/profileImageView"
-                android:text="dhwiwd " />
+                android:drawableLeft="@drawable/tab1"
+                android:text="@string/city_picker.toolbar.title" />
 
             <LinearLayout
                 android:id="@+id/badgesContainer"
@@ -89,7 +93,7 @@
                 android:gravity="center"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:text="DIW JHIDWD IW JDIW JDi jwdijw idjw idj widjwijdwi jdiwj dwi jdiw jdiw djw idawoipjd aw wiaod owa djawoijdoiwada oidwadoiawdioawdioa w awou doiaw daw aow udoiaw diowa d" />
+                android:text="@string/random_text" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/contentLangTextView"
@@ -282,4 +286,4 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
-</RelativeLayout>
+</FrameLayout>

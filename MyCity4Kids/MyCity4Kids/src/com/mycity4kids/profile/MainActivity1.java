@@ -35,7 +35,7 @@ public class MainActivity1 extends AppCompatActivity {
     }
 
     private void setData(RecyclerAdapter adapter) {
-        HeaderDataImpl headerData1 = new HeaderDataImpl(HeaderDataImpl.HEADER_TYPE_1, R.layout.header1_item_recycler);
+        HeaderDataImpl headerData1 = new HeaderDataImpl(HeaderDataImpl.HEADER_TYPE_1, R.layout.empty_view);
         HeaderDataImpl headerData2 = new HeaderDataImpl(HeaderDataImpl.HEADER_TYPE_2, R.layout.header2_item_recycler);
 
         List<CustomerData> items = new ArrayList<>();

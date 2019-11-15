@@ -8,8 +8,10 @@ import com.mycity4kids.models.response.UserTypeResponse;
 import com.mycity4kids.models.rewardsmodels.CityConfigResultResponse;
 
 import io.reactivex.Observable;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 import retrofit2.http.Url;
 
 /**
@@ -24,6 +26,9 @@ public interface ConfigAPIs {
 
     @GET("v1/utilities/config/cityType/")
     Call<CityConfigResponse> getCityConfig();
+
+    @GET("badges/")
+    Call<ResponseBody> getBadges(@Query("user_id") String userId);
 
     @GET("v1/utilities/config/cityType/")
     Observable<BaseResponseGeneric<CityConfigResultResponse>> getCityConfigRx();

@@ -30,6 +30,7 @@ import com.mycity4kids.models.response.UserDetailResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs
+import com.mycity4kids.ui.adapter.UsersRecommendationsRecycleAdapter
 import com.mycity4kids.ui.fragment.UserBioDialogFragment
 import kotlinx.android.synthetic.main.r_private_profile_activity.*
 import okhttp3.ResponseBody
@@ -38,37 +39,31 @@ import retrofit2.Call
 import retrofit2.Callback
 
 
-class R_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.RecyclerViewClickListener {
+class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.RecyclerViewClickListener, UsersRecommendationsRecycleAdapter.RecyclerViewClickListener {
     override fun onClick(view: View, position: Int) {
 
     }
 
     private var isRewardsAdded: String? = null
-    private var recommendationsList: ArrayList<StickyMainData>? = null
-    lateinit var adapter: StickyRecyclerViewAdapter
+    private var recommendationsList: ArrayList<ArticleListingResult>? = null
+    lateinit var adapter: UsersRecommendationsRecycleAdapter
     private lateinit var authorId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.r_private_profile_activity)
+        setContentView(R.layout.m_private_profile_activity)
 
-        recommendationsList = ArrayList()
-        recommendationsList?.toMutableList()
-        adapter = StickyRecyclerViewAdapter(this)
-        val linearLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        setData(adapter)
 
-//        recyclerView.addItemDecoration(object : MyItemDecoration(this) {})
+        adapter = UsersRecommendationsRecycleAdapter(this, this)
+        val llm = LinearLayoutManager(this)
+        llm.orientation = LinearLayoutManager.VERTICAL
+        recyclerView.layoutManager = llm
         recyclerView.adapter = adapter
-
-        recyclerView.layoutManager = linearLayoutManager
+        recommendationsList = ArrayList()
         authorId = SharedPrefUtils.getUserDetailModel(this).dynamoId
-        isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
-
         getUserDetail(authorId)
         getUsersRecommendations()
-        getBadges(authorId)
-        getUserPosts(authorId)
+
     }
 
     private fun getUserDetail(authorId: String) {
@@ -87,8 +82,8 @@ class R_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
                             isRewardsAdded = responseData.data[0].result.rewardsAdded
                         }
                     }
-                    recommendationsList?.add(0, responseData)
-                    adapter.notifyDataSetChanged()
+//                    recommendationsList?.add(0, responseData)
+//                    adapter.notifyDataSetChanged()
                 } catch (e: Exception) {
 
                 }
@@ -100,37 +95,6 @@ class R_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
         })
     }
 
-    private fun getUserPosts(authorId: String?) {
-
-    }
-
-    private fun getFeaturedPost() {
-
-    }
-
-    open class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
-        private var offset: Int
-
-        init {
-            this.offset = 10
-        }
-
-        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-            outRect.set(offset, offset, offset, offset)
-        }
-    }
-
-
-    private fun setData(adapter: StickyRecyclerViewAdapter) {
-        val headerData1 = HeaderDataImpl(HeaderDataImpl.HEADER_TYPE_1, R.layout.empty_view)
-        val headerData2 = HeaderDataImpl(HeaderDataImpl.HEADER_TYPE_2, R.layout.header2_item_recycler)
-
-        recommendationsList?.add(UserDetailResponse())
-        recommendationsList?.let { adapter.setHeaderAndData(it, headerData1) }
-        recommendationsList = ArrayList()
-        recommendationsList?.let { adapter.setHeaderAndData(it, headerData2) }
-
-    }
 
     private fun getUsersRecommendations() {
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
@@ -144,29 +108,6 @@ class R_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
         call.enqueue(usersRecommendationsResponseListener)
     }
 
-    private fun getBadges(authorId: String) {
-        val retrofit = BaseApplication.getInstance().retrofit
-        val configAPIs = retrofit.create(ConfigAPIs::class.java)
-        val cityCall = configAPIs.getBadges(authorId)
-        cityCall.enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {
-                try {
-                    val resData = String(response.body()!!.bytes())
-//                val gson = GsonBuilder().registerTypeAdapterFactory(ArrayAdapterFactory()).create()
-//                val res = gson.fromJson<TopicsResponse>(resData, TopicsResponse::class.java)
-                    val jObject = JSONObject(resData)
-                    val jArr = jObject.getJSONObject("data").getJSONArray("result")
-
-                } catch (e: Exception) {
-//                    this@BadgesProfileWidget.visibility = View.GONE
-                }
-            }
-
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-//                this@BadgesProfileWidget.visibility = View.GONE
-            }
-        })
-    }
 
     private val usersRecommendationsResponseListener = object : Callback<ArticleListingResponse> {
         override fun onResponse(call: Call<ArticleListingResponse>, response: retrofit2.Response<ArticleListingResponse>) {
@@ -203,10 +144,9 @@ class R_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
         val dataList = responseData.data[0].result
 
         if (dataList.size == 0) {
-//            noBlogsTextView.setVisibility(View.VISIBLE)
         } else {
             recommendationsList?.addAll(dataList)
-            recommendationsList?.toMutableList()?.let { adapter.setHeaderAndData(it, null) }
+            adapter.setListData(recommendationsList)
             adapter.notifyDataSetChanged()
         }
     }
