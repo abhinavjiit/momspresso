@@ -1370,7 +1370,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="spam_header_text">Write to us for any help and assistance</string>
     <string name="spam_send">Send</string>
     <string name="featured_on">Featured on</string>
-
-
+    <string name="topics">TOPICS</string>
 </resources>
 

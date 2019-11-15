@@ -25,9 +25,9 @@
                 android:id="@+id/closeImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="20dp"
-                android:paddingRight="20dp"
                 android:paddingTop="20dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="20dp"
                 android:src="@drawable/cross_icon_back" />
 
             <com.mycity4kids.widget.CustomFontTextView

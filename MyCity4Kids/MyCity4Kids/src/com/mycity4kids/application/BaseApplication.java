@@ -288,7 +288,7 @@ public class BaseApplication extends Application {
 
     public Retrofit getCampaignRetrofit() {
         if (null == campaignRewards) {
-            createRetrofitInstanceForCampaign("http://34.93.77.28:5000/");
+            createRetrofitInstanceForCampaign("https://testingapi.momspresso.com/");
         }
         return campaignRewards;
     }

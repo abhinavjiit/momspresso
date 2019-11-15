@@ -42,6 +42,7 @@
         tools:replace="android:allowBackup">
         <activity
             android:name=".ui.rewards.activity.RewardsShareReferralCodeActivity"
+
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mymoneytracker.activity.TrackerActivity"
@@ -586,6 +587,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".ui.videochallengenewui.activity.ExoplayerVideoChallengePlayViewActivity" />
+        <activity android:name=".ui.activity.collection.CollectionsActivity" />
+        <activity android:name=".ui.activity.UserCollectionItemListActivity" />
+        <activity android:name=".ui.activity.collection.UserCollectionItemListActivity" />
+        <activity android:name=".ui.activity.collection.AddCollectionActivity" />
 
         <receiver android:name=".reminders.CancelNotificationReceiver" />
 

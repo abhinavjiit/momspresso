@@ -107,6 +107,7 @@ import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.PublicProfileActivity;
+import com.mycity4kids.ui.activity.collection.AddCollectionActivity;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
@@ -134,6 +135,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.ResponseBody;
@@ -1270,6 +1272,28 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
                     break;
                 case R.id.likeTextView: {
+                    try {
+                        AddCollectionAndCollectionitemDialogFragment addCollectionAndCollectionitemDialogFragment = new AddCollectionAndCollectionitemDialogFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("articleId", articleId);
+                        addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
+                        FragmentManager fm = getFragmentManager();
+                        addCollectionAndCollectionitemDialogFragment.setTargetFragment(this, 0);
+                        addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                    }
+
+                   /* Intent intent = new Intent(getActivity(), AddCollectionActivity.class);}
+                   catch(
+                    intent.putExtra("articleId", articleId);
+                    startActivity(intent);*/
+                    //   getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.stay);
+
+
+
+                  /*
                     if (recommendStatus == 0) {
                         recommendStatus = 1;
                         tooltipForShare();
@@ -1283,7 +1307,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
                         recommendUnrecommentArticleAPI("0");
                         Utils.pushUnlikeArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author);
-                    }
+                    }*/
                     break;
                 }
                 case R.id.facebookShareTextView:
