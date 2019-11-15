@@ -91,6 +91,7 @@ import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.version.RateVersion;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.profile.M_PrivateProfileActivity;
 import com.mycity4kids.profile.R_PrivateProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
@@ -2023,7 +2024,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.toolbarTitle:
                 break;
             case R.id.searchAllImageView:
-                Intent inte = new Intent(this, R_PrivateProfileActivity.class);
+                Intent inte = new Intent(this, M_PrivateProfileActivity.class);
                 startActivity(inte);
 //                if (topFragment instanceof GroupsViewFragment) {
 //                    Intent searchIntent = new Intent(this, GroupsSearchActivity.class);
