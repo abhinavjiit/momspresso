@@ -1247,12 +1247,17 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                             editReferralCode.isEnabled = true
                             textApplyReferral.isEnabled = false
                             validReferralCode = "valid"
-
+                            if (isAdded) {
+                                Toast.makeText(activity, "Successfully Applied", Toast.LENGTH_SHORT).show()
+                            }
                         } else {
                             textReferCodeError.visibility = View.VISIBLE
                             textReferCodeError.setText("Code is not valid")
                             validReferralCode = "notValid"
                             textReferCodeError.setTextColor(activity!!.resources.getColor(R.color.campaign_refer_code_error))
+                            if (isAdded) {
+                                Toast.makeText(activity, "Code is not valid", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }
