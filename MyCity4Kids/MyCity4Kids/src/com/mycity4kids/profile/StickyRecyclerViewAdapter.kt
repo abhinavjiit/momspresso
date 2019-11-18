@@ -36,7 +36,6 @@ class StickyRecyclerViewAdapter(private var mListener: RecyclerViewClickListener
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
             HeaderDataImpl.HEADER_TYPE_1 -> return HeaderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.empty_view, parent, false))
-            HeaderDataImpl.HEADER_TYPE_2 -> return HeaderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.header2_item_recycler, parent, false))
             else ->
                 return when (viewType) {
                     CONTENT_TYPE_HEADER -> {

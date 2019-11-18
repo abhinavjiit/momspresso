@@ -122,12 +122,10 @@ class R_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
 
     private fun setData(adapter: StickyRecyclerViewAdapter) {
         val headerData1 = HeaderDataImpl(HeaderDataImpl.HEADER_TYPE_1, R.layout.empty_view)
-        val headerData2 = HeaderDataImpl(HeaderDataImpl.HEADER_TYPE_2, R.layout.header2_item_recycler)
 
         recommendationsList?.add(UserDetailResponse())
         recommendationsList?.let { adapter.setHeaderAndData(it, headerData1) }
         recommendationsList = ArrayList()
-        recommendationsList?.let { adapter.setHeaderAndData(it, headerData2) }
 
     }
 

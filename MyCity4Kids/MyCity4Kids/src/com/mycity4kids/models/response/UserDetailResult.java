@@ -40,6 +40,7 @@ public class UserDetailResult implements Parcelable {
     private String totalArticles;
     private String totalArticlesViews;
     private ArrayList<String> userTag;
+    private ArrayList<String> createrLangs = new ArrayList<>();
 
     public String getRewardsAdded() {
         return rewardsAdded;
@@ -339,6 +340,14 @@ public class UserDetailResult implements Parcelable {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public ArrayList<String> getCreaterLangs() {
+        return createrLangs;
+    }
+
+    public void setCreaterLangs(ArrayList<String> createrLangs) {
+        this.createrLangs = createrLangs;
     }
 
     @Override

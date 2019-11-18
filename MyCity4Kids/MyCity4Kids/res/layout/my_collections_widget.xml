@@ -44,7 +44,8 @@
         android:id="@+id/collectionsContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center">
+        android:gravity="center"
+        android:paddingBottom="4dp">
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/myCollectionsLabel"
@@ -68,12 +69,14 @@
             android:id="@+id/collectionsHSV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/myCollectionsLabel">
+            android:layout_below="@+id/myCollectionsLabel"
+            android:background="@color/app_light_grey">
 
             <LinearLayout
                 android:id="@+id/collectionsHSVContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -85,8 +88,9 @@
                     <ImageView
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/circular_textview"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/profile_add_collection_circular_bg"
                         android:padding="20dp"
                         android:src="@drawable/ic_plus"
                         android:tint="@color/app_grey" />
@@ -97,6 +101,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:gravity="center"
+                        android:layout_marginBottom="8dp"
                         android:text="@string/profile_add_new" />
                 </RelativeLayout>
             </LinearLayout>

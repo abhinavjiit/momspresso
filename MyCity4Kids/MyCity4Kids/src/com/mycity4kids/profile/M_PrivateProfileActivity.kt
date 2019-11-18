@@ -44,11 +44,8 @@ import com.mycity4kids.widget.BadgesProfileWidget
 import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
-import java.util.*
-import kotlin.collections.ArrayList
 
-
-class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.RecyclerViewClickListener,
+class M_PrivateProfileActivity : BaseActivity(),
         UserContentAdapter.RecyclerViewClickListener, View.OnClickListener, UsersFeaturedContentAdapter.RecyclerViewClickListener {
     private lateinit var profileShimmerLayout: ShimmerFrameLayout
     private lateinit var headerContainer: RelativeLayout
@@ -66,6 +63,7 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
     private lateinit var authorNameTextView: TextView
     private lateinit var authorBioTextView: TextView
     private lateinit var cityTextView: TextView
+    private lateinit var contentLangTextView: TextView
     private lateinit var creatorTab: ImageView
     private lateinit var featuredTab: ImageView
     private lateinit var bookmarksTab: ImageView
@@ -102,12 +100,13 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
         cityTextView = findViewById(R.id.cityTextView)
         authorBioTextView = findViewById(R.id.authorBioTextView)
         badgesContainer = findViewById(R.id.badgeContainer)
+        contentLangTextView = findViewById(R.id.contentLangTextView)
         creatorTab = findViewById(R.id.creatorTab)
         featuredTab = findViewById(R.id.featuredTab)
         bookmarksTab = findViewById(R.id.bookmarksTab)
 
         val llm = LinearLayoutManager(this)
-        llm.orientation = LinearLayoutManager.VERTICAL
+        llm.orientation = RecyclerView.VERTICAL
 
         recyclerView.layoutManager = llm
         recyclerView.adapter = userContentAdapter
@@ -150,12 +149,8 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
                         }
                     }
 
-                    if (StringUtils.isNullOrEmpty(responseData.data[0].result.cityName)) {
-                        cityTextView.visibility = View.GONE
-                    } else {
-                        cityTextView.visibility = View.VISIBLE
-                        cityTextView.text = responseData.data[0].result.cityName
-                    }
+                    processCityInfo(responseData)
+                    processContentLanguages(responseData)
                     processAuthorRank(responseData)
                     processAuthorsFollowingAndFollowership(responseData)
 
@@ -185,6 +180,28 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         })
+    }
+
+    private fun processContentLanguages(responseData: UserDetailResponse) {
+        if (responseData.data[0].result.createrLangs.isEmpty()) {
+            contentLangTextView.visibility = View.GONE
+        } else {
+            contentLangTextView.visibility = View.VISIBLE
+            var contentLang: String = responseData.data[0].result.createrLangs[0]
+            for (i in 1 until responseData.data[0].result.createrLangs.size) {
+                contentLang = contentLang + " \u2022 " + responseData.data[0].result.createrLangs[i]
+            }
+            contentLangTextView.text = contentLang
+        }
+    }
+
+    private fun processCityInfo(responseData: UserDetailResponse) {
+        if (StringUtils.isNullOrEmpty(responseData.data[0].result.cityName)) {
+            cityTextView.visibility = View.GONE
+        } else {
+            cityTextView.visibility = View.VISIBLE
+            cityTextView.text = responseData.data[0].result.cityName
+        }
     }
 
     private fun processAuthorsFollowingAndFollowership(responseData: UserDetailResponse) {
