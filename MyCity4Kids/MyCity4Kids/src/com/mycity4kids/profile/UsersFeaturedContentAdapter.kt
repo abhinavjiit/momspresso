@@ -11,25 +11,26 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.kelltontech.utils.StringUtils
 import com.mycity4kids.R
+import com.mycity4kids.models.CollectionsModels.CollectionFeaturedListModel
 import org.apmem.tools.layouts.FlowLayout
-import java.util.*
+import kotlin.collections.ArrayList
 
 class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val CONTENT_TYPE_SHORT_STORY = 0
     private val CONTENT_TYPE_ARTICLE = 1
     private val mContext: Context? = null
     private val mInflator: LayoutInflater? = null
-    internal var featuredItemsList: ArrayList<FeaturedItem>? = null
+    internal var featuredItemsList: ArrayList<CollectionFeaturedListModel.FeaturedListResult>? = null
 
     override fun getItemViewType(position: Int): Int {
-        return if ("1" == featuredItemsList?.get(position)?.itemType) {
+        return if ("1" == featuredItemsList?.get(position)?.collections_list?.get(0)?.itemType) {
             CONTENT_TYPE_SHORT_STORY
         } else {
             CONTENT_TYPE_ARTICLE
         }
     }
 
-    fun setListData(featuredItemsList: ArrayList<FeaturedItem>) {
+    fun setListData(featuredItemsList: ArrayList<CollectionFeaturedListModel.FeaturedListResult>?) {
         this.featuredItemsList = featuredItemsList
     }
 
@@ -53,9 +54,9 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is UserFeaturedContentViewHolder) {
-            holder.titleTextView.text = featuredItemsList?.get(position)?.title
+            holder.titleTextView.text = featuredItemsList?.get(position)?.collections_list?.get(0)?.title
             try {
-                if (!StringUtils.isNullOrEmpty(featuredItemsList?.get(position)?.thumbnail)) {
+                if (!StringUtils.isNullOrEmpty(featuredItemsList?.get(position)?.collections_list?.get(0)?.thumbnail)) {
 //                    Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURLMomspresso(featuredItemsList?.get(position).getVideoUrl())).placeholder(R.drawable.default_article).into(holder.contentImageView)
                 } else {
 //                    if (!StringUtils.isNullOrEmpty(featuredItemsList?.get(position).getImageUrl().getThumbMax())) {
@@ -69,49 +70,55 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
                 holder.contentImageView.setBackgroundResource(R.drawable.default_article)
             }
             when {
-                (featuredItemsList?.get(position)?.collectionList == null) || (featuredItemsList?.get(position)?.collectionList?.size == 0) -> {
+                (featuredItemsList?.get(position)?.collections_list?.get(0)?.collectionList == null)
+                        || (featuredItemsList?.get(position)?.collections_list?.get(0)?.collectionList?.size == 0) -> {
                     holder.collectionsFLContainer.visibility = GONE
                 }
-                (featuredItemsList?.get(position)?.collectionList?.size ?: 0) == 1 -> {
+                (featuredItemsList?.get(position)?.collections_list?.get(0)?.collectionList?.size
+                        ?: 0) == 1 -> {
                     holder.collectionItem2TextView.visibility = GONE
                     holder.collectionItem3TextView.visibility = GONE
                     holder.collectionItem4TextView.visibility = GONE
                     holder.collectionItem1TextView.visibility = VISIBLE
-                    holder.collectionItem1TextView.text = featuredItemsList?.get(position)?.collectionList?.get(0)?.name
+                    holder.collectionItem1TextView.text = featuredItemsList?.get(position)?.collections_list?.get(0)?.collectionList?.get(0)?.name
                     holder.moreItemsTextView.visibility = GONE
                 }
-                (featuredItemsList?.get(position)?.collectionList?.size ?: 0) == 2 -> {
+                (featuredItemsList?.get(position)?.collections_list?.get(0)?.collectionList?.size
+                        ?: 0) == 2 -> {
                     holder.collectionItem3TextView.visibility = GONE
                     holder.collectionItem4TextView.visibility = GONE
                     holder.collectionItem1TextView.visibility = VISIBLE
-                    holder.collectionItem1TextView.text = featuredItemsList?.get(position)?.collectionList?.get(0)?.name
+                    holder.collectionItem1TextView.text = featuredItemsList?.get(position)?.collections_list?.get(0)?.collectionList?.get(0)?.name
                     holder.collectionItem2TextView.visibility = VISIBLE
-                    holder.collectionItem2TextView.text = featuredItemsList?.get(position)?.collectionList?.get(1)?.name
+                    holder.collectionItem2TextView.text = featuredItemsList?.get(position)?.collections_list?.get(0)?.collectionList?.get(1)?.name
                     holder.moreItemsTextView.visibility = GONE
                 }
-                (featuredItemsList?.get(position)?.collectionList?.size ?: 0) == 3 -> {
+                (featuredItemsList?.get(position)?.collections_list?.get(0)?.collectionList?.size
+                        ?: 0) == 3 -> {
                     holder.collectionItem4TextView.visibility = GONE
                     holder.collectionItem1TextView.visibility = VISIBLE
-                    holder.collectionItem1TextView.text = featuredItemsList?.get(position)?.collectionList?.get(0)?.name
+                    holder.collectionItem1TextView.text = featuredItemsList?.get(position)?.collections_list?.get(0)?.collectionList?.get(0)?.name
                     holder.collectionItem2TextView.visibility = VISIBLE
-                    holder.collectionItem2TextView.text = featuredItemsList?.get(position)?.collectionList?.get(1)?.name
+                    holder.collectionItem2TextView.text = featuredItemsList?.get(position)?.collections_list?.get(0)?.collectionList?.get(1)?.name
                     holder.collectionItem3TextView.visibility = VISIBLE
-                    holder.collectionItem3TextView.text = featuredItemsList?.get(position)?.collectionList?.get(2)?.name
+                    holder.collectionItem3TextView.text = featuredItemsList?.get(position)?.collections_list?.get(0)?.collectionList?.get(2)?.name
                     holder.moreItemsTextView.visibility = GONE
                 }
-                (featuredItemsList?.get(position)?.collectionList?.size ?: 0) == 4 -> {
+                (featuredItemsList?.get(position)?.collections_list?.get(0)?.collectionList?.size
+                        ?: 0) == 4 -> {
                     holder.collectionItem1TextView.visibility = VISIBLE
-                    holder.collectionItem1TextView.text = featuredItemsList?.get(position)?.collectionList?.get(0)?.name
+                    holder.collectionItem1TextView.text = featuredItemsList?.get(position)?.collections_list?.get(0)?.collectionList?.get(0)?.name
                     holder.collectionItem2TextView.visibility = VISIBLE
-                    holder.collectionItem2TextView.text = featuredItemsList?.get(position)?.collectionList?.get(1)?.name
+                    holder.collectionItem2TextView.text = featuredItemsList?.get(position)?.collections_list?.get(0)?.collectionList?.get(1)?.name
                     holder.collectionItem3TextView.visibility = VISIBLE
-                    holder.collectionItem3TextView.text = featuredItemsList?.get(position)?.collectionList?.get(2)?.name
+                    holder.collectionItem3TextView.text = featuredItemsList?.get(position)?.collections_list?.get(0)?.collectionList?.get(2)?.name
                     holder.collectionItem4TextView.visibility = VISIBLE
-                    holder.collectionItem4TextView.text = featuredItemsList?.get(position)?.collectionList?.get(3)?.name
+                    holder.collectionItem4TextView.text = featuredItemsList?.get(position)?.collections_list?.get(0)?.collectionList?.get(3)?.name
                     holder.moreItemsTextView.visibility = GONE
                 }
-                (featuredItemsList?.get(position)?.collectionList?.size ?: 0) >= 5 -> {
-                    val moreItemCount = featuredItemsList?.get(position)?.collectionList?.size!! - 5
+                (featuredItemsList?.get(position)?.collections_list?.get(0)?.collectionList?.size
+                        ?: 0) >= 5 -> {
+                    val moreItemCount = featuredItemsList?.get(position)?.collections_list?.get(0)?.collectionList?.size!! - 5
                     holder.collectionItem1TextView.visibility = VISIBLE
                     holder.collectionItem2TextView.visibility = VISIBLE
                     holder.collectionItem3TextView.visibility = VISIBLE
@@ -149,7 +156,7 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
         internal var collectionItem2TextView: TextView
         internal var collectionItem3TextView: TextView
         internal var collectionItem4TextView: TextView
-        internal var collectionItem5TextView: TextView
+        //        internal var collectionItem5TextView: TextView
         internal var moreItemsTextView: TextView
         internal var collectionsFLContainer: FlowLayout
 
@@ -162,7 +169,7 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
             collectionItem2TextView = itemView.findViewById<View>(R.id.collectionItem2TextView) as TextView
             collectionItem3TextView = itemView.findViewById<View>(R.id.collectionItem3TextView) as TextView
             collectionItem4TextView = itemView.findViewById<View>(R.id.collectionItem4TextView) as TextView
-            collectionItem5TextView = itemView.findViewById<View>(R.id.collectionItem5TextView) as TextView
+//            collectionItem5TextView = itemView.findViewById<View>(R.id.collectionItem5TextView) as TextView
             moreItemsTextView = itemView.findViewById<View>(R.id.moreItemsTextView) as TextView
             collectionsFLContainer = itemView.findViewById<View>(R.id.collectionsFLContainer) as FlowLayout
             itemView.setOnClickListener(this)

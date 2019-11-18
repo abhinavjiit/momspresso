@@ -7,6 +7,7 @@
     <color name="app_blue">#507cbe</color>
     <color name="app_pink">#FF4081</color>
     <color name="app_red">#D54058</color>
+    <color name="app_light_pink">#E997A8</color>
 
     <color name="app_red_50_opacity">#80D54058</color>
     <color name="fab_button_bottom_sheet">#FAF6F7</color>

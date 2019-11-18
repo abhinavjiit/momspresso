@@ -13,7 +13,10 @@ import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
-import android.widget.*
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
@@ -27,12 +30,14 @@ import com.mycity4kids.animation.MyCityAnimationsUtil
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.models.CollectionsModels.CollectionFeaturedListModel
 import com.mycity4kids.models.response.ArticleListingResponse
 import com.mycity4kids.models.response.ArticleListingResult
 import com.mycity4kids.models.response.LanguageRanksModel
 import com.mycity4kids.models.response.UserDetailResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI
+import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
 import com.mycity4kids.ui.fragment.UserBioDialogFragment
 import com.mycity4kids.utils.RoundedTransformation
 import com.mycity4kids.widget.BadgesProfileWidget
@@ -61,16 +66,16 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
     private lateinit var authorNameTextView: TextView
     private lateinit var authorBioTextView: TextView
 
-    private lateinit var creatorTab: RadioButton
-    private lateinit var featuredTab: RadioButton
-    private lateinit var bookmarksTab: RadioButton
+    private lateinit var creatorTab: ImageView
+    private lateinit var featuredTab: ImageView
+    private lateinit var bookmarksTab: ImageView
 
     private lateinit var badgesContainer: BadgesProfileWidget
 
     private val multipleRankList = java.util.ArrayList<LanguageRanksModel>()
     private var isRewardsAdded: String? = null
     private var userContentList: ArrayList<ArticleListingResult>? = null
-    private var userFeaturedList: ArrayList<FeaturedItem>? = null
+    private var userFeaturedList: ArrayList<CollectionFeaturedListModel.FeaturedListResult>? = null
 
     private val userContentAdapter: UserContentAdapter by lazy { UserContentAdapter(this) }
     private val usersFeaturedContentAdapter: UsersFeaturedContentAdapter by lazy { UsersFeaturedContentAdapter(this) }
@@ -96,11 +101,12 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
         authorNameTextView = findViewById(R.id.authorNameTextView)
         authorBioTextView = findViewById(R.id.authorBioTextView)
         badgesContainer = findViewById(R.id.badgeContainer)
+        creatorTab = findViewById(R.id.creatorTab)
+        featuredTab = findViewById(R.id.featuredTab)
+        bookmarksTab = findViewById(R.id.bookmarksTab)
 
         val llm = LinearLayoutManager(this)
         llm.orientation = LinearLayoutManager.VERTICAL
-
-//        userContentAdapter = UserContentAdapter(this, this)
 
         recyclerView.layoutManager = llm
         recyclerView.adapter = userContentAdapter
@@ -202,12 +208,14 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
                     }
 
                 } catch (e: Exception) {
-
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
 
-            override fun onFailure(call: Call<UserDetailResponse>, t: Throwable) {
-
+            override fun onFailure(call: Call<UserDetailResponse>, e: Throwable) {
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
             }
         })
     }
@@ -228,11 +236,9 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
 
     private val usersRecommendationsResponseListener = object : Callback<ArticleListingResponse> {
         override fun onResponse(call: Call<ArticleListingResponse>, response: retrofit2.Response<ArticleListingResponse>) {
-//            progressBar.setVisibility(View.GONE)
             if (null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
                 Crashlytics.logException(nee)
-                //                showToast("Something went wrong from server");
                 return
             }
             try {
@@ -240,18 +246,15 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
                 if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
                     processRecommendationsResponse(responseData)
                 } else {
-                    //                    showToast(responseData.getReason());
                 }
             } catch (e: Exception) {
                 Crashlytics.logException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
-                //                showToast(getString(R.string.went_wrong));
             }
 
         }
 
         override fun onFailure(call: Call<ArticleListingResponse>, t: Throwable) {
-//            progressBar.setVisibility(View.GONE)
             Crashlytics.logException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
         }
@@ -373,8 +376,38 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
     }
 
     private fun getFeaturedContent() {
+        val retrofit = BaseApplication.getInstance().retrofitTest
+        val featureListAPI = retrofit.create(CollectionsAPI::class.java)
+        val call = featureListAPI.getFeaturedOnCollections("d7d981e2978b49b7b1748306967fc8da", 0, 10)
+        call.enqueue(object : Callback<CollectionFeaturedListModel> {
+            override fun onResponse(call: Call<CollectionFeaturedListModel>, response: retrofit2.Response<CollectionFeaturedListModel>) {
+                if (null == response.body()) {
+                    val nee = NetworkErrorException(response.raw().toString())
+                    Crashlytics.logException(nee)
+                    return
+                }
+                try {
+                    val responseData = response.body() as CollectionFeaturedListModel
+                    if (responseData.code == 200 && Constants.SUCCESS == responseData.status) {
+                        userFeaturedList?.addAll(responseData.data[0].result)
+                        usersFeaturedContentAdapter.setListData(userFeaturedList)
+                        usersFeaturedContentAdapter.notifyDataSetChanged()
+                    } else {
+                    }
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
 
+            }
+
+            override fun onFailure(call: Call<CollectionFeaturedListModel>, t: Throwable) {
+                Crashlytics.logException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
+        })
     }
+
 
     override fun onClick(view: View, position: Int) {
 
@@ -384,3 +417,5 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
 
     }
 }
+
+

@@ -49,15 +49,11 @@ public class UserContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == CONTENT_TYPE_ARTICLE) {
-            UserRecommendationsViewHolder viewHolder = null;
-            View v0 = mInflator.inflate(R.layout.users_recommendation_recycle_item, parent, false);
-            viewHolder = new UserRecommendationsViewHolder(v0, mListener);
-            return viewHolder;
+            View v0 = LayoutInflater.from(parent.getContext()).inflate(R.layout.users_recommendation_recycle_item, parent, false);
+            return new UserRecommendationsViewHolder(v0, mListener);
         } else {
-            UserRecommendedSSViewHolder viewHolder = null;
-            View v0 = mInflator.inflate(R.layout.users_activity_short_stories_item, parent, false);
-            viewHolder = new UserRecommendedSSViewHolder(v0, mListener);
-            return viewHolder;
+            View v0 = LayoutInflater.from(parent.getContext()).inflate(R.layout.users_activity_short_stories_item, parent, false);
+            return new UserRecommendedSSViewHolder(v0, mListener);
         }
     }
 
