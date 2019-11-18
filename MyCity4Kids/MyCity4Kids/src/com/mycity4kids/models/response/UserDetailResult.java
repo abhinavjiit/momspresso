@@ -18,6 +18,7 @@ public class UserDetailResult implements Parcelable {
     private String lastName;
     private String email = "";
     private String cityId;
+    private String cityName;
     private String userType;
     private String isValidated;
     private ProfilePic profilePicUrl;
@@ -77,6 +78,7 @@ public class UserDetailResult implements Parcelable {
         blogTitleSlug = in.readString();
         rewardsAdded = in.readString();
         userTag = in.createStringArrayList();
+        cityName = in.readString();
     }
 
     public static final Creator<UserDetailResult> CREATOR = new Creator<UserDetailResult>() {
@@ -168,6 +170,14 @@ public class UserDetailResult implements Parcelable {
 
     public void setCityId(String cityId) {
         this.cityId = cityId;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 
     public String getUserType() {
@@ -363,6 +373,7 @@ public class UserDetailResult implements Parcelable {
         parcel.writeString(blogTitleSlug);
         parcel.writeString(rewardsAdded);
         parcel.writeStringList(userTag);
+        parcel.writeString(cityName);
     }
 
     public class SocialTokens {

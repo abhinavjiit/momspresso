@@ -99,8 +99,8 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
             mLodingView.setVisibility(View.GONE);
             removeProgressDialog();
             isReuqestRunning = false;
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
