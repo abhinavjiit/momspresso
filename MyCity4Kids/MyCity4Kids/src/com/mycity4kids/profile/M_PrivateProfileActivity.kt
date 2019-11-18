@@ -33,7 +33,6 @@ import com.mycity4kids.models.response.LanguageRanksModel
 import com.mycity4kids.models.response.UserDetailResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI
-import com.mycity4kids.ui.adapter.UsersRecommendationsRecycleAdapter
 import com.mycity4kids.ui.fragment.UserBioDialogFragment
 import com.mycity4kids.utils.RoundedTransformation
 import com.mycity4kids.widget.BadgesProfileWidget
@@ -44,7 +43,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.RecyclerViewClickListener, UsersRecommendationsRecycleAdapter.RecyclerViewClickListener, View.OnClickListener {
+class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.RecyclerViewClickListener,
+        UserContentAdapter.RecyclerViewClickListener, View.OnClickListener, UsersFeaturedContentAdapter.RecyclerViewClickListener {
     private lateinit var profileShimmerLayout: ShimmerFrameLayout
     private lateinit var headerContainer: RelativeLayout
     private lateinit var profileImageView: ImageView
@@ -69,8 +69,11 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
 
     private val multipleRankList = java.util.ArrayList<LanguageRanksModel>()
     private var isRewardsAdded: String? = null
-    private var recommendationsList: ArrayList<ArticleListingResult>? = null
-    lateinit var adapter: UsersRecommendationsRecycleAdapter
+    private var userContentList: ArrayList<ArticleListingResult>? = null
+    private var userFeaturedList: ArrayList<FeaturedItem>? = null
+
+    private val userContentAdapter: UserContentAdapter by lazy { UserContentAdapter(this) }
+    private val usersFeaturedContentAdapter: UsersFeaturedContentAdapter by lazy { UsersFeaturedContentAdapter(this) }
     private lateinit var authorId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,12 +97,17 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
         authorBioTextView = findViewById(R.id.authorBioTextView)
         badgesContainer = findViewById(R.id.badgeContainer)
 
-        adapter = UsersRecommendationsRecycleAdapter(this, this)
         val llm = LinearLayoutManager(this)
         llm.orientation = LinearLayoutManager.VERTICAL
+
+//        userContentAdapter = UserContentAdapter(this, this)
+
         recyclerView.layoutManager = llm
-        recyclerView.adapter = adapter
-        recommendationsList = ArrayList()
+        recyclerView.adapter = userContentAdapter
+
+        userContentList = ArrayList()
+        userFeaturedList = ArrayList()
+
         authorId = SharedPrefUtils.getUserDetailModel(this).dynamoId
         profileShimmerLayout.startShimmerAnimation()
         val handler = Handler()
@@ -254,9 +262,9 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
 
         if (dataList.size == 0) {
         } else {
-            recommendationsList?.addAll(dataList)
-            adapter.setListData(recommendationsList)
-            adapter.notifyDataSetChanged()
+            userContentList?.addAll(dataList)
+            userContentAdapter.setListData(userContentList)
+            userContentAdapter.notifyDataSetChanged()
         }
     }
 
@@ -347,11 +355,14 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
                 creatorTab.isSelected = true
                 featuredTab.isSelected = false
                 bookmarksTab.isSelected = false
+                recyclerView.adapter = userContentAdapter
             }
             view?.id == R.id.featuredTab -> {
                 creatorTab.isSelected = false
                 featuredTab.isSelected = true
                 bookmarksTab.isSelected = false
+                recyclerView.adapter = usersFeaturedContentAdapter
+                getFeaturedContent()
             }
             view?.id == R.id.bookmarksTab -> {
                 creatorTab.isSelected = false
@@ -361,8 +372,15 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
         }
     }
 
+    private fun getFeaturedContent() {
+
+    }
+
     override fun onClick(view: View, position: Int) {
 
     }
 
+    override fun onFeaturedItemClick(view: View, position: Int) {
+
+    }
 }
