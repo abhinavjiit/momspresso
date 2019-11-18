@@ -65,7 +65,7 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
     private lateinit var rankLanguageTextView: TextView
     private lateinit var authorNameTextView: TextView
     private lateinit var authorBioTextView: TextView
-
+    private lateinit var cityTextView: TextView
     private lateinit var creatorTab: ImageView
     private lateinit var featuredTab: ImageView
     private lateinit var bookmarksTab: ImageView
@@ -99,6 +99,7 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
         postsCountTextView = findViewById(R.id.postsCountTextView)
         rankLanguageTextView = findViewById(R.id.rankLanguageTextView)
         authorNameTextView = findViewById(R.id.authorNameTextView)
+        cityTextView = findViewById(R.id.cityTextView)
         authorBioTextView = findViewById(R.id.authorBioTextView)
         badgesContainer = findViewById(R.id.badgeContainer)
         creatorTab = findViewById(R.id.creatorTab)
@@ -143,55 +144,21 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
                     profileShimmerLayout.visibility = View.GONE
                     headerContainer.visibility = View.VISIBLE
                     val responseData = response.body() as UserDetailResponse
-                    if (responseData.code == 200 && Constants.SUCCESS == responseData.getStatus()) {
-
+                    if (responseData.code == 200 && Constants.SUCCESS == responseData.status) {
                         if (responseData.data != null && responseData.data[0] != null && responseData.data[0].result != null) {
                             isRewardsAdded = responseData.data[0].result.rewardsAdded
                         }
                     }
 
-                    if (responseData.data[0].result.ranks == null || responseData.data[0].result.ranks.size == 0) {
-                        rankCountTextView.text = "--"
-                        rankLanguageTextView.text = getString(R.string.myprofile_rank_label)
-                    } else if (responseData.data[0].result.ranks.size < 2) {
-                        rankCountTextView.text = "" + responseData.data[0].result.ranks[0].rank
-                        if (AppConstants.LANG_KEY_ENGLISH == responseData.data[0].result.ranks[0].langKey) {
-                            rankLanguageTextView.text = getString(R.string.blogger_profile_rank_in) + " ENGLISH"
-                        } else {
-                            rankLanguageTextView.text = (getString(R.string.blogger_profile_rank_in)
-                                    + " " + responseData.data[0].result.ranks[0].langValue.toUpperCase())
-                        }
+                    if (StringUtils.isNullOrEmpty(responseData.data[0].result.cityName)) {
+                        cityTextView.visibility = View.GONE
                     } else {
-                        for (i in 0 until responseData.data[0].result.ranks.size) {
-                            if (AppConstants.LANG_KEY_ENGLISH == responseData.data[0].result.ranks[i].langKey) {
-                                multipleRankList.add(responseData.data[0].result.ranks[i])
-                                break
-                            }
-                        }
-                        Collections.sort(responseData.data[0].result.ranks)
-                        for (i in 0 until responseData.data[0].result.ranks.size) {
-                            if (AppConstants.LANG_KEY_ENGLISH != responseData.data[0].result.ranks[i].langKey) {
-                                multipleRankList.add(responseData.data[0].result.ranks[i])
-                            }
-                        }
-                        MyCityAnimationsUtil.animate(this@M_PrivateProfileActivity, rankContainer, multipleRankList, 0, true)
+                        cityTextView.visibility = View.VISIBLE
+                        cityTextView.text = responseData.data[0].result.cityName
                     }
+                    processAuthorRank(responseData)
+                    processAuthorsFollowingAndFollowership(responseData)
 
-                    val followerCount = Integer.parseInt(responseData.data[0].result.followersCount)
-                    if (followerCount > 999) {
-                        val singleFollowerCount = followerCount.toFloat() / 1000
-                        followerCountTextView.text = "" + singleFollowerCount + "k"
-                    } else {
-                        followerCountTextView.text = "" + followerCount
-                    }
-
-                    val followingCount = Integer.parseInt(responseData.data[0].result.followingCount)
-                    if (followingCount > 999) {
-                        val singleFollowingCount = followingCount.toFloat() / 1000
-                        followingCountTextView.text = "" + singleFollowingCount + "k"
-                    } else {
-                        followingCountTextView.text = "" + followingCount
-                    }
                     authorNameTextView.text = responseData.data[0].result.firstName + " " + responseData.data[0].result.lastName
 
                     if (!StringUtils.isNullOrEmpty(responseData.data[0].result.profilePicUrl.clientApp)) {
@@ -218,6 +185,53 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         })
+    }
+
+    private fun processAuthorsFollowingAndFollowership(responseData: UserDetailResponse) {
+        val followerCount = Integer.parseInt(responseData.data[0].result.followersCount)
+        if (followerCount > 999) {
+            val singleFollowerCount = followerCount.toFloat() / 1000
+            followerCountTextView.text = "" + singleFollowerCount + "k"
+        } else {
+            followerCountTextView.text = "" + followerCount
+        }
+
+        val followingCount = Integer.parseInt(responseData.data[0].result.followingCount)
+        if (followingCount > 999) {
+            val singleFollowingCount = followingCount.toFloat() / 1000
+            followingCountTextView.text = "" + singleFollowingCount + "k"
+        } else {
+            followingCountTextView.text = "" + followingCount
+        }
+    }
+
+    private fun processAuthorRank(responseData: UserDetailResponse) {
+        if (responseData.data[0].result.ranks == null || responseData.data[0].result.ranks.size == 0) {
+            rankCountTextView.text = "--"
+            rankLanguageTextView.text = getString(R.string.myprofile_rank_label)
+        } else if (responseData.data[0].result.ranks.size < 2) {
+            rankCountTextView.text = "" + responseData.data[0].result.ranks[0].rank
+            if (AppConstants.LANG_KEY_ENGLISH == responseData.data[0].result.ranks[0].langKey) {
+                rankLanguageTextView.text = getString(R.string.blogger_profile_rank_in) + " ENGLISH"
+            } else {
+                rankLanguageTextView.text = (getString(R.string.blogger_profile_rank_in)
+                        + " " + responseData.data[0].result.ranks[0].langValue.toUpperCase())
+            }
+        } else {
+            for (i in 0 until responseData.data[0].result.ranks.size) {
+                if (AppConstants.LANG_KEY_ENGLISH == responseData.data[0].result.ranks[i].langKey) {
+                    multipleRankList.add(responseData.data[0].result.ranks[i])
+                    break
+                }
+            }
+            responseData.data[0].result.ranks.sort()
+            for (i in 0 until responseData.data[0].result.ranks.size) {
+                if (AppConstants.LANG_KEY_ENGLISH != responseData.data[0].result.ranks[i].langKey) {
+                    multipleRankList.add(responseData.data[0].result.ranks[i])
+                }
+            }
+            MyCityAnimationsUtil.animate(this@M_PrivateProfileActivity, rankContainer, multipleRankList, 0, true)
+        }
     }
 
 

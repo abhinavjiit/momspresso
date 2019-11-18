@@ -12,5 +12,7 @@
         android:right="1dp"
         android:top="1dp" />
 
-    <corners android:radius="30dp" />
+    <size
+        android:width="14dp"
+        android:height="14dp" />
 </shape>
