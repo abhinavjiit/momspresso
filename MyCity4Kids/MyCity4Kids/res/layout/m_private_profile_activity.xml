@@ -363,14 +363,14 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#5e6d9e"
+            android:background="@color/white"
             android:padding="5dp">
 
             <ImageView
-                android:id="@+id/tab1"
+                android:id="@+id/creatorTab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/tab1"
+                android:src="@drawable/profile_creator_tab_selector"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/divider1"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -381,18 +381,18 @@
                 android:id="@+id/divider1"
                 android:layout_width="1dp"
                 android:layout_height="10dp"
-                android:background="@color/white"
+                android:background="@color/grey_faded"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/tab2"
+                app:layout_constraintEnd_toStartOf="@+id/featuredTab"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/tab1"
+                app:layout_constraintStart_toEndOf="@+id/creatorTab"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/tab2"
+                android:id="@+id/featuredTab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/tab1"
+                android:src="@drawable/profile_featured_tab_selector"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/divider2"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -404,18 +404,18 @@
                 android:id="@+id/divider2"
                 android:layout_width="1dp"
                 android:layout_height="10dp"
-                android:background="@color/white"
+                android:background="@color/grey_faded"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/tab3"
+                app:layout_constraintEnd_toStartOf="@+id/bookmarksTab"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/tab2"
+                app:layout_constraintStart_toEndOf="@+id/featuredTab"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/tab3"
+                android:id="@+id/bookmarksTab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/tab1"
+                android:src="@drawable/profile_bookmarks_tab_selector"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
