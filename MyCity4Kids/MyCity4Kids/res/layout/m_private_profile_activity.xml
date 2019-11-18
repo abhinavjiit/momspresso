@@ -54,7 +54,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/article_listing_item_border_bg"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <com.mikhaellopez.circularimageview.CircularImageView
                             android:id="@+id/profileImageView"
@@ -95,7 +95,8 @@
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="10dp"
                             android:layout_toEndOf="@+id/profileImageView"
-                            android:drawableStart="@drawable/tab1"
+                            android:drawableStart="@drawable/ic_profile_location"
+                            android:gravity="center"
                             android:text="@string/city_picker.toolbar.title" />
 
                         <com.mycity4kids.widget.BadgesProfileWidget
@@ -111,6 +112,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/profileImageView"
                             android:gravity="center"
+                            android:lines="2"
                             android:paddingStart="16dp"
                             android:paddingEnd="16dp"
                             android:text="@string/random_text" />
@@ -121,8 +123,9 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/authorBioTextView"
                             android:layout_marginTop="10dp"
+                            android:drawableStart="@drawable/profile_solid_square"
                             android:gravity="center"
-                            android:text="English Hindi Bangla" />
+                            android:text="dwadad" />
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"

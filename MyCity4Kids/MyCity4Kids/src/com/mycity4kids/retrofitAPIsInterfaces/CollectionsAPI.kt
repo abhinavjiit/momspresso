@@ -49,6 +49,11 @@ interface CollectionsAPI {
     @POST("/v1/collectionItem/")
     fun editCollectionItem(@Body updateCollection: AddCollectionRequestModel): Observable<BaseResponseGeneric<AddCollectionRequestModel>>
 
+    @GET("/v1/collections/featured/{userId}")
+    fun getFeaturedOnCollections(@Path("userId") userId: String,
+                                 @Query("start") start: Int,
+                                 @Query("offset") end: Int): Call<CollectionFeaturedListModel>
+
     @GET("/v1/collections/featuredItem/{userId}")
     fun getFeatureList(@Path("userId") articleId: String,
                        @Query("start") start: Int,
