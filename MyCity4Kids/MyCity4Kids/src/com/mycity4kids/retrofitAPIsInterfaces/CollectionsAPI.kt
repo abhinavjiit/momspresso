@@ -4,6 +4,7 @@ import com.mycity4kids.models.CollectionsModels.*
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.FollowUnfollowUserResponse
 import io.reactivex.Observable
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -13,6 +14,15 @@ interface CollectionsAPI {
     fun getUserCollectionList(@Path("userId") userId: String,
                               @Query("start") start: Int,
                               @Query("offset") offset: Int): Observable<BaseResponseGeneric<UserCollectionsListModel>>
+
+    @GET("badges/")
+    fun getBadges(@Query("user_id") userId: String): Call<ResponseBody>
+
+
+    @GET("/v1/collections/user/{userId}")
+    fun getUsersCollections(@Path("userId") userId: String,
+                            @Query("start") start: Int,
+                            @Query("offset") offset: Int): Call<BaseResponseGeneric<UserCollectionsListModel>>
 
     //http://testingapi.momspresso.com/v1/collections/
     @POST("v1/collections/")

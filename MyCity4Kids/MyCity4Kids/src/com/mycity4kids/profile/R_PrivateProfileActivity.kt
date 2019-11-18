@@ -67,7 +67,6 @@ class R_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
 
         getUserDetail(authorId)
         getUsersRecommendations()
-        getBadges(authorId)
         getUserPosts(authorId)
     }
 
@@ -144,29 +143,6 @@ class R_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
         call.enqueue(usersRecommendationsResponseListener)
     }
 
-    private fun getBadges(authorId: String) {
-        val retrofit = BaseApplication.getInstance().retrofit
-        val configAPIs = retrofit.create(ConfigAPIs::class.java)
-        val cityCall = configAPIs.getBadges(authorId)
-        cityCall.enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {
-                try {
-                    val resData = String(response.body()!!.bytes())
-//                val gson = GsonBuilder().registerTypeAdapterFactory(ArrayAdapterFactory()).create()
-//                val res = gson.fromJson<TopicsResponse>(resData, TopicsResponse::class.java)
-                    val jObject = JSONObject(resData)
-                    val jArr = jObject.getJSONObject("data").getJSONArray("result")
-
-                } catch (e: Exception) {
-//                    this@BadgesProfileWidget.visibility = View.GONE
-                }
-            }
-
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-//                this@BadgesProfileWidget.visibility = View.GONE
-            }
-        })
-    }
 
     private val usersRecommendationsResponseListener = object : Callback<ArticleListingResponse> {
         override fun onResponse(call: Call<ArticleListingResponse>, response: retrofit2.Response<ArticleListingResponse>) {

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/headerCardView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="10dp"
+    android:background="@color/white"
+    android:outlineProvider="bounds"
+    android:paddingBottom="10dp"
+    app:cardCornerRadius="5dp"
+    app:cardElevation="5dp">
+
+    <RelativeLayout
+        android:id="@+id/headerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/itemImageView"
+            android:layout_width="130dp"
+            android:layout_height="100dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_article" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/itemImageView"
+            android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@+id/itemImageView"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="dhwauidhiauw dh iwjadhwao dhawio hdioawh d"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/cityTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/titleTextView"
+            android:layout_marginTop="4dp"
+            android:layout_toEndOf="@+id/itemImageView"
+            android:text="@string/city_picker.toolbar.title" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/dateTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/itemImageView"
+            android:layout_toEndOf="@+id/itemImageView"
+            android:gravity="start|center_vertical"
+            android:text="12-11-2019"
+            android:textColor="@color/color_CB9797" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/collectionsLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/itemImageView"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="4dp"
+            android:gravity="start|center_vertical"
+            android:text="English Hindi Bangla"
+            android:textColor="@color/grey_faded" />
+
+        <org.apmem.tools.layouts.FlowLayout
+            android:id="@+id/collectionsFLContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/collectionsLabel">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/profile_featured_collection_bg"
+                android:text="dwadwa" />
+        </org.apmem.tools.layouts.FlowLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

@@ -13,11 +13,9 @@ import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.kelltontech.network.Response
@@ -35,23 +33,18 @@ import com.mycity4kids.models.response.LanguageRanksModel
 import com.mycity4kids.models.response.UserDetailResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI
-import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs
 import com.mycity4kids.ui.adapter.UsersRecommendationsRecycleAdapter
 import com.mycity4kids.ui.fragment.UserBioDialogFragment
 import com.mycity4kids.utils.RoundedTransformation
 import com.mycity4kids.widget.BadgesProfileWidget
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.r_private_profile_activity.*
-import okhttp3.ResponseBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.RecyclerViewClickListener, UsersRecommendationsRecycleAdapter.RecyclerViewClickListener {
-
+class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.RecyclerViewClickListener, UsersRecommendationsRecycleAdapter.RecyclerViewClickListener, View.OnClickListener {
     private lateinit var profileShimmerLayout: ShimmerFrameLayout
     private lateinit var headerContainer: RelativeLayout
     private lateinit var profileImageView: ImageView
@@ -59,6 +52,7 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
     private lateinit var followingContainer: LinearLayout
     private lateinit var rankContainer: LinearLayout
     private lateinit var postsCountContainer: LinearLayout
+    private lateinit var recyclerView: RecyclerView
     private lateinit var followingCountTextView: TextView
     private lateinit var followerCountTextView: TextView
     private lateinit var rankCountTextView: TextView
@@ -66,6 +60,11 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
     private lateinit var rankLanguageTextView: TextView
     private lateinit var authorNameTextView: TextView
     private lateinit var authorBioTextView: TextView
+
+    private lateinit var creatorTab: RadioButton
+    private lateinit var featuredTab: RadioButton
+    private lateinit var bookmarksTab: RadioButton
+
     private lateinit var badgesContainer: BadgesProfileWidget
 
     private val multipleRankList = java.util.ArrayList<LanguageRanksModel>()
@@ -77,6 +76,8 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.m_private_profile_activity)
+
+        recyclerView = findViewById(R.id.recyclerView)
         profileShimmerLayout = findViewById(R.id.profileShimmerLayout)
         profileImageView = findViewById(R.id.profileImageView)
         followerContainer = findViewById(R.id.followerContainer)
@@ -106,39 +107,13 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
             getUserDetail(authorId)
         }, 2000)
         badgesContainer.getBadges(authorId)
+
+        creatorTab.setOnClickListener(this)
+        featuredTab.setOnClickListener(this)
+        bookmarksTab.setOnClickListener(this)
+
         getUsersRecommendations(authorId)
 
-//        getUserBadges(authorId)
-//        var badgesContainer = BadgesProfileWidget(this)
-//        val params = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
-//        params.addRule(RelativeLayout.ALIGN_PARENT_END)
-//        params.addRule(RelativeLayout.BELOW, authorNameTextView.id)
-//        headerContainer.addView(badgesContainer, params)
-
-    }
-
-    private fun getUserBadges(authorId: String) {
-        val retrofit = BaseApplication.getInstance().retrofit
-        val configAPIs = retrofit.create(ConfigAPIs::class.java)
-        val cityCall = configAPIs.getBadges(authorId)
-        cityCall.enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {
-                try {
-                    val resData = String(response.body()!!.bytes())
-//                val gson = GsonBuilder().registerTypeAdapterFactory(ArrayAdapterFactory()).create()
-//                val res = gson.fromJson<TopicsResponse>(resData, TopicsResponse::class.java)
-                    val jObject = JSONObject(resData)
-                    val jArr = jObject.getJSONObject("data").getJSONArray("result")
-
-                } catch (e: Exception) {
-//                    this@BadgesProfileWidget.visibility = View.GONE
-                }
-            }
-
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-//                this@BadgesProfileWidget.visibility = View.GONE
-            }
-        })
     }
 
     private fun getUserDetail(authorId: String) {
@@ -246,7 +221,7 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
     private val usersRecommendationsResponseListener = object : Callback<ArticleListingResponse> {
         override fun onResponse(call: Call<ArticleListingResponse>, response: retrofit2.Response<ArticleListingResponse>) {
 //            progressBar.setVisibility(View.GONE)
-            if (response == null || null == response.body()) {
+            if (null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
                 Crashlytics.logException(nee)
                 //                showToast("Something went wrong from server");
@@ -363,6 +338,26 @@ class M_PrivateProfileActivity : BaseActivity(), StickyRecyclerViewAdapter.Recyc
         }
 
         override fun onClick(widget: View) {
+        }
+    }
+
+    override fun onClick(view: View?) {
+        when {
+            view?.id == R.id.creatorTab -> {
+                creatorTab.isSelected = true
+                featuredTab.isSelected = false
+                bookmarksTab.isSelected = false
+            }
+            view?.id == R.id.featuredTab -> {
+                creatorTab.isSelected = false
+                featuredTab.isSelected = true
+                bookmarksTab.isSelected = false
+            }
+            view?.id == R.id.bookmarksTab -> {
+                creatorTab.isSelected = false
+                featuredTab.isSelected = false
+                bookmarksTab.isSelected = true
+            }
         }
     }
 
