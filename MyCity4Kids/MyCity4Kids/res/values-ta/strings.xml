@@ -1200,4 +1200,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="badges">Badges</string>
     <string name="profile_setting">Profile settings</string>
     <string name="accounts">Accounts</string>
+    <string name="profile_my_collections">My Collections</string>
+    <string name="profile_view_all_collections">View All</string>
+    <string name="profile_add_new">Add New</string>
 </resources>
