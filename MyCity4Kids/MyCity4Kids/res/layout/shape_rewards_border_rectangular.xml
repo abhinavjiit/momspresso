@@ -14,5 +14,5 @@
         android:padding="10dp"
         android:text="One"
         android:textColor="@color/app_red"
-        app:fontName="oswald_regular.ttf" />
+        app:fontName="OpenSans-Regular.ttf" />
 </LinearLayout>

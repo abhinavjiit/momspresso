@@ -508,7 +508,14 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical" />
+                        android:orientation="vertical" >
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/navigation_create_button"
+                            android:visibility="visible" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -756,12 +763,6 @@
                         android:gravity="center"
                         android:orientation="vertical"
                         android:visibility="visible">
-
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:src="@drawable/navigation_create_button"
-                            android:visibility="visible" />
 
                         <TextView
                             android:layout_width="match_parent"

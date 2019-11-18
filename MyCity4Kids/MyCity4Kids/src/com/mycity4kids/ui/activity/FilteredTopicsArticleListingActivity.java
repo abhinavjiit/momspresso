@@ -296,7 +296,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         swipeRefreshLayout.setOnRefreshListener(FilteredTopicsArticleListingActivity.this);
         progressBar.setVisibility(View.VISIBLE);
 
-        articleDataModelsNew = new ArrayList<ArticleListingResult>();
+        articleDataModelsNew = new ArrayList<>();
         nextPageNumber = 1;
         hitFilteredTopicsArticleListingApi(sortType);
 

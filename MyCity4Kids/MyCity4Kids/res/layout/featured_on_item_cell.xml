@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="@dimen/space_66"
+        android:layout_height="@dimen/space_55"
+        android:layout_margin="@dimen/space_10"
+        android:background="@drawable/featured_on_img_bg"/>
+
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/featured_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_18"
+        android:layout_toRightOf="@id/img"
+        android:text="@string/featured_on"
+        android:textColor="@color/campaign_515151"
+        android:textSize="16sp"
+        app:fontName="Roboto-Bold.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/author_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/featured_name"
+        android:layout_marginTop="@dimen/space_5"
+        android:layout_toRightOf="@id/img"
+        android:text="@string/featured_on"
+        android:textColor="@color/grey_faded"
+        android:textSize="12sp"
+        app:fontName="Roboto-Regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/follow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/space_10"
+        android:background="@drawable/featured_on_follow_bg"
+        android:paddingTop="@dimen/space_10"
+        android:paddingBottom="@dimen/space_10"
+        android:paddingLeft="@dimen/space_16"
+        android:paddingRight="@dimen/space_16"
+        android:text="@string/ad.follow_author"
+        android:textColor="#E12049"
+        android:textSize="12sp"
+        app:fontName="Roboto-Regular.ttf" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_E8E6E6"
+        android:layout_below="@id/img"/>
+
+</RelativeLayout>

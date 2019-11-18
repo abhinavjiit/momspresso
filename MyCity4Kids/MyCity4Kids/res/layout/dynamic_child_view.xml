@@ -44,7 +44,7 @@
                 android:textColor="@color/app_red"
                 android:textSize="14sp"
                 android:visibility="visible"
-                app:fontName="oswald_regular.ttf" />
+                app:fontName="OpenSans-Regular.ttf" />
 
         </LinearLayout>
 

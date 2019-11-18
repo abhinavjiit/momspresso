@@ -510,6 +510,10 @@
     <color name="campaign_proof_approval">#D3425A</color>
     <color name="campaign_payment_in_process">#F5B346</color>
     <color name="campaign_payment_done">#7566E5</color>
+    <color name="my_money_earning_toolbar_bg">#43B6A1</color>
+    <color name="my_money_earning_refer_earn_text">#4BD1B9</color>
+    <color name="my_money_earning_rupee_symbol_bg">#F8BD16</color>
+
     <color name="color_979797">#979797</color>
     <color name="color_23CAAD">#23CAAD</color>
     <color name="color_F8FAFB">#F8FAFB</color>

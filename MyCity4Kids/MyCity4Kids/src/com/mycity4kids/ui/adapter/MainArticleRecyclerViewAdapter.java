@@ -15,19 +15,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.kelltontech.utils.StringUtils;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.campaignmodels.CampaignDataListResult;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.DeleteBookmarkRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
@@ -60,6 +59,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
  * Created by hemant on 4/12/17.
  */
@@ -73,9 +76,11 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     private static int STORY = 3;
     private static int GROUPS = 4;
     private static int VIDEOS = 5;
+    private static int CAROUSEL = 6;
     private final Context mContext;
     private final LayoutInflater mInflator;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
+    private ArrayList<CampaignDataListResult> campaignListDataModels;
     private RecyclerViewClickListener mListener;
     private boolean topicHeaderVisibilityFlag;
     private boolean isRequestRunning;
@@ -105,6 +110,10 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         articleDataModelsNew = mParentingLists_new;
     }
 
+    public void setCampaignList(ArrayList<CampaignDataListResult> mCampaignList) {
+        campaignListDataModels = mCampaignList;
+    }
+
     public void setGroupInfo(int groupId, String heading, String subHeading, String gpImageUrl) {
         if (StringUtils.isNullOrEmpty(heading)) {
             this.heading = BaseApplication.getAppContext().getString(R.string.groups_join_support_gp);
@@ -131,7 +140,11 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             return HEADER;
         } else if (position != 0 && position % 3 == 0) {
             if (showVideoFlag) {
-                return VIDEOS;
+                if (position == 3) {
+                    return CAROUSEL;
+                } else {
+                    return VIDEOS;
+                }
             } else {
                 if (AppConstants.CONTENT_TYPE_ARTICLE.equals(articleDataModelsNew.get(position).getContentType())) {
                     return ARTICLE;
@@ -159,6 +172,9 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         } else if (viewType == GROUPS) {
             View v0 = mInflator.inflate(R.layout.join_group_article_item, parent, false);
             return new JoinGroupViewHolder(v0);
+        } else if (viewType == CAROUSEL) {
+            View v0 = mInflator.inflate(R.layout.campaign_carousel_container, parent, false);
+            return new CampaignCarouselViewHolder(v0);
         } else if (viewType == VIDEOS) {
             View v0 = mInflator.inflate(R.layout.video_carousel_container, parent, false);
             return new VideoCarouselViewHolder(v0);
@@ -241,11 +257,83 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                         viewHolder.storyCommentCountTextView, viewHolder.storyRecommendationCountTextView, viewHolder.likeImageView,
                         articleDataModelsNew.get(position));
             }
+        } else if (holder instanceof CampaignCarouselViewHolder) {
+            CampaignCarouselViewHolder campaignCarouselViewHolder = (CampaignCarouselViewHolder) holder;
+
+            addCampaignCard(campaignCarouselViewHolder.campaignHeader, campaignCarouselViewHolder.brandImg, campaignCarouselViewHolder.brandName, campaignCarouselViewHolder.campaignName, campaignCarouselViewHolder.campaignStatus, campaignListDataModels.get(0), position, campaignCarouselViewHolder);
+            addCampaignCard(campaignCarouselViewHolder.campaignHeader2, campaignCarouselViewHolder.brandImg2, campaignCarouselViewHolder.brandName2, campaignCarouselViewHolder.campaignName2, campaignCarouselViewHolder.campaignStatus2, campaignListDataModels.get(1), position, campaignCarouselViewHolder);
+            addCampaignCard(campaignCarouselViewHolder.campaignHeader3, campaignCarouselViewHolder.brandImg3, campaignCarouselViewHolder.brandName3, campaignCarouselViewHolder.campaignName3, campaignCarouselViewHolder.campaignStatus3, campaignListDataModels.get(2), position, campaignCarouselViewHolder);
+            addCampaignCard(campaignCarouselViewHolder.campaignHeader4, campaignCarouselViewHolder.brandImg4, campaignCarouselViewHolder.brandName4, campaignCarouselViewHolder.campaignName4, campaignCarouselViewHolder.campaignStatus4, campaignListDataModels.get(3), position, campaignCarouselViewHolder);
+            addCampaignCard(campaignCarouselViewHolder.campaignHeader5, campaignCarouselViewHolder.brandImg5, campaignCarouselViewHolder.brandName5, campaignCarouselViewHolder.campaignName5, campaignCarouselViewHolder.campaignStatus5, campaignListDataModels.get(4), position, campaignCarouselViewHolder);
         } else {
             ShortStoriesViewHolder viewHolder = (ShortStoriesViewHolder) holder;
             addShortStoryItem(viewHolder.mainView, viewHolder.storyTitleTextView, viewHolder.storyBodyTextView, viewHolder.authorNameTextView,
                     viewHolder.storyCommentCountTextView, viewHolder.storyRecommendationCountTextView, viewHolder.likeImageView,
                     articleDataModelsNew.get(position));
+        }
+    }
+
+    private void addCampaignCard(ImageView campaignHeader, CircularImageView brandImg, TextView brandName, TextView campaignName, TextView campaignStatus, final CampaignDataListResult data, final int position, final RecyclerView.ViewHolder holder) {
+        Picasso.with(mContext).load(data.getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(campaignHeader);
+        Picasso.with(mContext).load(data.getBrandDetails().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(brandImg);
+        brandName.setText(data.getBrandDetails().getName());
+        campaignName.setText(data.getName());
+        setTextAndColor(data.getCampaignStatus(), campaignStatus);
+    }
+
+    private void setTextAndColor(int status, TextView campaignStatus) {
+        if (status == 0) {
+            campaignStatus.setText(mContext.getResources().getString(R.string.campaign_details_expired));
+            campaignStatus.setBackgroundResource(R.drawable.campaign_expired);
+        } else if (status == 1 || status == 18) {
+            campaignStatus.setText(mContext.getResources().getString(R.string.campaign_details_apply_now));
+            campaignStatus.setBackgroundResource(R.drawable.subscribe_now);
+        } else if (status == 2) {
+            campaignStatus.setText(mContext.getResources().getString(R.string.campaign_details_submission_open));
+            campaignStatus.setBackgroundResource(R.drawable.campaign_subscription_open);
+        } else if (status == 22) {
+            campaignStatus.setText(mContext.getResources().getString(R.string.campaign_details_submission_open));
+            campaignStatus.setBackgroundResource(R.drawable.campaign_subscription_open);
+        } else if (status == 3) {
+            campaignStatus.setText(mContext.getResources().getString(R.string.campaign_details_applied));
+            campaignStatus.setBackgroundResource(R.drawable.campaign_applied);
+        } else if (status == 21) {
+            campaignStatus.setText(mContext.getResources().getString(R.string.campaign_details_approved));
+            campaignStatus.setBackgroundResource(R.drawable.campaign_subscribed);
+        } else if (status == 4) {
+            campaignStatus.setText(mContext.getResources().getString(R.string.campaign_details_application_full));
+            campaignStatus.setBackgroundResource(R.drawable.campaign_submission_full);
+        } else if (status == 5) {
+            campaignStatus.setText(mContext.getResources().getString(R.string.campaign_details_apply_now));
+            campaignStatus.setBackgroundResource(R.drawable.subscribe_now);
+           /* if (forYouStatus == 0) {
+                campaignStatus.setText(mContext.getResources().getString(R.string.campaign_details_apply_now));
+                campaignStatus.setBackgroundResource(R.drawable.subscribe_now);
+            } else {
+                campaignStatus.setText(mContext.getResources().getString(R.string.campaign_details_ineligible));
+                campaignStatus.setBackgroundResource(R.drawable.campaign_expired);
+            }*/
+        } else if (status == 6) {
+            campaignStatus.setText(mContext.getResources().getString(R.string.campaign_list_proof_reject));
+            campaignStatus.setBackgroundResource(R.drawable.campaign_rejected);
+        } else if (status == 17) {
+            campaignStatus.setText(mContext.getResources().getString(R.string.campaign_list_proof_reject));
+            campaignStatus.setBackgroundResource(R.drawable.campaign_rejected);
+        } else if (status == 7) {
+            campaignStatus.setText(mContext.getResources().getString(R.string.campaign_details_completed));
+            campaignStatus.setBackgroundResource(R.drawable.campaign_completed);
+        } else if (status == 8) {
+            campaignStatus.setText(mContext.getResources().getString(R.string.campaign_details_invite_only));
+            campaignStatus.setBackgroundResource(R.drawable.campaign_invite_only);
+        } else if (status == 9) {
+            campaignStatus.setText(mContext.getResources().getString(R.string.campaign_list_proof_moderation));
+            campaignStatus.setBackgroundResource(R.drawable.campaign_subscription_open);
+        } else if (status == 16) {
+            campaignStatus.setText(mContext.getResources().getString(R.string.campaign_list_proof_moderation));
+            campaignStatus.setBackgroundResource(R.drawable.campaign_subscription_open);
+        } else if (status == 10) {
+            campaignStatus.setText(mContext.getResources().getString(R.string.campaign_list_proof_reject));
+            campaignStatus.setBackgroundResource(R.drawable.campaign_proof_rejected_bg);
         }
     }
 
@@ -556,6 +644,62 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             closeImageView.setOnClickListener(this);
             headerView.setOnClickListener(this);
             headerArticleView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                mListener.onRecyclerItemClick(v, getAdapterPosition());
+            }
+        }
+    }
+
+
+    public class CampaignCarouselViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        ImageView campaignHeader, campaignHeader2, campaignHeader3, campaignHeader4, campaignHeader5;
+        CircularImageView brandImg, brandImg2, brandImg3, brandImg4, brandImg5;
+        TextView brandName, campaignName, campaignStatus, brandName2, campaignName2, campaignStatus2, brandName3, campaignName3, campaignStatus3, brandName4, campaignName4, campaignStatus4, brandName5, campaignName5, campaignStatus5;
+        CardView cardView1, cardView2, cardView3, cardView4, cardView5;
+
+        CampaignCarouselViewHolder(View view) {
+            super(view);
+            campaignHeader = view.findViewById(R.id.campaign_header);
+            campaignHeader2 = view.findViewById(R.id.campaign_header2);
+            campaignHeader3 = view.findViewById(R.id.campaign_header3);
+            campaignHeader4 = view.findViewById(R.id.campaign_header4);
+            campaignHeader5 = view.findViewById(R.id.campaign_header5);
+            brandImg = view.findViewById(R.id.brand_img);
+            brandImg2 = view.findViewById(R.id.brand_img2);
+            brandImg3 = view.findViewById(R.id.brand_img3);
+            brandImg4 = view.findViewById(R.id.brand_img4);
+            brandImg5 = view.findViewById(R.id.brand_img5);
+            brandName = view.findViewById(R.id.brand_name);
+            brandName2 = view.findViewById(R.id.brand_name2);
+            brandName3 = view.findViewById(R.id.brand_name3);
+            brandName4 = view.findViewById(R.id.brand_name4);
+            brandName5 = view.findViewById(R.id.brand_name5);
+            campaignName = view.findViewById(R.id.campaign_name);
+            campaignName2 = view.findViewById(R.id.campaign_name2);
+            campaignName3 = view.findViewById(R.id.campaign_name3);
+            campaignName4 = view.findViewById(R.id.campaign_name4);
+            campaignName5 = view.findViewById(R.id.campaign_name5);
+            campaignStatus = view.findViewById(R.id.submission_status);
+            campaignStatus2 = view.findViewById(R.id.submission_status2);
+            campaignStatus3 = view.findViewById(R.id.submission_status3);
+            campaignStatus4 = view.findViewById(R.id.submission_status4);
+            campaignStatus5 = view.findViewById(R.id.submission_status5);
+            cardView1 = view.findViewById(R.id.cardView1);
+            cardView2 = view.findViewById(R.id.cardView2);
+            cardView3 = view.findViewById(R.id.cardView3);
+            cardView4 = view.findViewById(R.id.cardView4);
+            cardView5 = view.findViewById(R.id.cardView5);
+            cardView1.setOnClickListener(this);
+            cardView2.setOnClickListener(this);
+            cardView3.setOnClickListener(this);
+            cardView4.setOnClickListener(this);
+            cardView5.setOnClickListener(this);
+            view.setOnClickListener(this);
         }
 
         @Override

@@ -111,6 +111,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         viewPager = (ViewPager) findViewById(R.id.pager);
         toolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitleTextView);
         imageSortBy = (ImageView) findViewById(R.id.imageSortBy);
+        imageSortBy.setVisibility(View.GONE);
 
         imageSortBy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,7 +220,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         Topics mainTopic = new Topics();
         mainTopic.setId(null);
         String allCategoryLabel = "";
-        allCategoryLabel = getString(R.string.all_categories_label);
+        allCategoryLabel = getString(R.string.article_listing_type_trending_label);
         mainTopic.setDisplay_name(allCategoryLabel);
         mainTopic.setTitle(allCategoryLabel);
 
@@ -249,7 +250,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                         imageSortBy.setVisibility(View.GONE);
                     } else {
                         fabAdd.setVisibility(View.VISIBLE);
-                        imageSortBy.setVisibility(View.VISIBLE);
+                        imageSortBy.setVisibility(View.GONE);
                     }
                 }
             }

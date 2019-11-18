@@ -32,6 +32,7 @@ public class PushNotificationModel implements Parcelable {
     private String sound;
     private String challengeId;
     private String comingFrom;
+    private String categoryId;
 
     public String getSound() {
         return sound;
@@ -225,6 +226,14 @@ public class PushNotificationModel implements Parcelable {
         this.comingFrom = comingFrom;
     }
 
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -255,6 +264,7 @@ public class PushNotificationModel implements Parcelable {
         mapped_category = in.readString();
         body = in.readString();
         comingFrom = in.readString();
+        categoryId = in.readString();
     }
 
     @Override
@@ -281,6 +291,7 @@ public class PushNotificationModel implements Parcelable {
         dest.writeString(mapped_category);
         dest.writeString(body);
         dest.writeString(comingFrom);
+        dest.writeString(categoryId);
     }
 
     public static Parcelable.Creator<PushNotificationModel> CREATOR = new Parcelable.Creator<PushNotificationModel>() {

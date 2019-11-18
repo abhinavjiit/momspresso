@@ -86,7 +86,7 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void getBadgeList() {
-        Retrofit retrofit = BaseApplication.getInstance().getCampaignRetrofit();
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         BadgeAPI badgeAPI = retrofit.create(BadgeAPI.class);
         Call<BadgeListResponse> badgeListResponseCall = badgeAPI.getBadgeList("1c94cc0e9a7f4238a03d7a398502db7d");
         badgeListResponseCall.enqueue(badgeListCall);

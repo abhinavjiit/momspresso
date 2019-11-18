@@ -56,6 +56,7 @@ import com.mycity4kids.models.rewardsmodels.RewardsPersonalResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
+import com.mycity4kids.ui.activity.ChangePasswordActivity
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter
 import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment
 import com.mycity4kids.ui.fragment.CityListingDialogFragment
@@ -122,7 +123,11 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     }
 
     private lateinit var containerView: View
-    private lateinit var textSaveAndContinue: TextView
+    private lateinit var profileImageView: ImageView
+    private lateinit var aboutEditText: EditText
+    private lateinit var handleNameTextView: TextView
+    private lateinit var changePasswordTextView: TextView
+    private lateinit var passwordTextView: TextView
     private lateinit var saveAndContinueListener: SaveAndContinueListener
     private lateinit var editFirstName: EditText
     private lateinit var editLastName: EditText
@@ -205,7 +210,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                               savedInstanceState: Bundle?): View? {
 
         // Inflate the layout for this fragment
-        containerView = inflater.inflate(R.layout.fragment_rewards_personal_info, container, false)
+        containerView = inflater.inflate(R.layout.user_personal_info_fragment, container, false)
 
         textReferCodeError = containerView.findViewById(R.id.textReferCodeError)
         editReferralCode = containerView.findViewById(R.id.editReferralCode)
@@ -277,7 +282,13 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             textVerify.visibility = View.GONE
             editAddNumber.visibility = View.VISIBLE
         }
-        if (!apiGetResponse.email.isNullOrBlank()) editEmail.setText(apiGetResponse.email)
+        if (!apiGetResponse.email.isNullOrBlank()) {
+            editEmail.setText(apiGetResponse.email)
+            editEmail.isEnabled = false
+            changePasswordTextView.visibility = View.VISIBLE
+            passwordTextView.visibility = View.VISIBLE
+        }
+
         if (!apiGetResponse.location.isNullOrBlank()) editLocation.setText(apiGetResponse.location)
         if (apiGetResponse.latitude != null) lat = apiGetResponse.latitude!!
 
@@ -391,10 +402,18 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         editPhone = containerView.findViewById(R.id.editPhone)
         editAddNumber = containerView.findViewById(R.id.editAddNumber)
         editFirstName = containerView.findViewById(R.id.editFirstName)
-        editEmail = containerView.findViewById(R.id.editEmail)
+        editEmail = containerView.findViewById(R.id.emailTextView)
         editLocation = containerView.findViewById(R.id.editLocation)
         textApplyReferral = containerView.findViewById(R.id.textApplyReferral)
+        passwordTextView = containerView.findViewById(R.id.passwordTextView)
+        changePasswordTextView = containerView.findViewById(R.id.changePasswordTextView)
+        handleNameTextView = containerView.findViewById(R.id.handleNameTextView)
+        aboutEditText = containerView.findViewById(R.id.aboutEditText)
 
+        changePasswordTextView.setOnClickListener {
+            val intent = Intent(activity, ChangePasswordActivity::class.java)
+            startActivity(intent)
+        }
 
         editAddNumber.setOnClickListener {
             varifyNumberWithFacebookAccountKit()

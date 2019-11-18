@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#4A4A4A" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rootlayout_with_rounded_corner"
+        android:padding="@dimen/space_15">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cancle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/space_10"
+            android:src="@drawable/back_arroow"
+            android:tint="@color/black" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/space_15"
+            android:layout_toLeftOf="@id/addNewTextView"
+            android:text="Select Collection"
+            android:textColor="@color/campaign_515151"
+            android:textSize="18sp"
+            app:fontName="Helvetica Bold.ttf"
+
+
+            />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/addNewTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/space_15"
+            android:background="@drawable/shape_red_border"
+            android:padding="@dimen/space_10"
+            android:text="add new"
+            android:textAllCaps="true"
+            android:textColor="@color/app_red"
+            android:textSize="14sp" />
+
+
+    </RelativeLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+
+        android:background="#97979733" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/addCollectionRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white" />
+
+</LinearLayout>

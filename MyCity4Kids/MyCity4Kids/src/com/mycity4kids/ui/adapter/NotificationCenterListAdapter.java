@@ -44,6 +44,7 @@ import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.PrivateProfileActivity;
 import com.mycity4kids.ui.activity.PublicProfileActivity;
+import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.SuggestedTopicsActivity;
 import com.mycity4kids.ui.activity.TopicsListingActivity;
@@ -364,16 +365,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
             holder.rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "shortStoryListing");
-                    TopicsShortStoriesContainerFragment fragment1 = new TopicsShortStoriesContainerFragment();
-                    Bundle mBundle1 = new Bundle();
-                    mBundle1.putString("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
-                    fragment1.setArguments(mBundle1);
-                    ((DashboardActivity) mContext).addFragment(fragment1, mBundle1, true);
+                    Intent resultIntent = new Intent(mContext, ShortStoriesListingContainerActivity.class);
+                    resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    resultIntent.putExtra("fromNotification", true);
+                    resultIntent.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
+                    resultIntent.putExtra("selectedTabCategoryId", "" + notificationList.get(position).getCategoryId());
                     try {
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
@@ -641,7 +641,6 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
             holder.rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
@@ -741,7 +740,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", AppConstants.NOTIFICATION_TYPE_CAMPAIGN_CATEGORY_LISTING);
                     Intent intent = new Intent(mContext, TopicsListingActivity.class);
-                    intent.putExtra("parentTopicId", notificationList.get(position).getCategoryId());
+                    intent.putExtra("parentTopicId", "" + notificationList.get(position).getCategoryId());
                     mContext.startActivity(intent);
                     try {
                         JSONObject jsonObject = new JSONObject();

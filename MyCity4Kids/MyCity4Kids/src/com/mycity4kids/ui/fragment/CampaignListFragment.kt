@@ -105,13 +105,11 @@ class CampaignListFragment : BaseFragment() {
         lowerTextHeader = containerView.findViewById(R.id.lowerTextHeader)
         linearLayoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         recyclerView.layoutManager = linearLayoutManager
-        adapter = RewardCampaignAdapter(campaignList, activity, forYouStatus)
+        adapter = RewardCampaignAdapter(campaignList, activity)
         registerRewards = containerView.findViewById(R.id.bottomText)
         isRewardAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
         recyclerView.adapter = adapter
         campaignList.clear()
-//        if (campaignList.size == 0)
-        fetchCampaignList(0)
         fetchForYou()
         profileIcon.setOnClickListener {
             val intent = Intent(context, EditProfileNewActivity::class.java)
@@ -238,6 +236,7 @@ class CampaignListFragment : BaseFragment() {
                     ashimmerFrameLayout.visibility = View.GONE
                     if (responseData.data!!.result!!.size > 0) {
                         campaignList.addAll(responseData.data!!.result as ArrayList<CampaignDataListResult>)
+                        adapter.updateList(forYouStatus)
                         adapter.notifyDataSetChanged()
                     }
                 } else {
@@ -284,7 +283,8 @@ class CampaignListFragment : BaseFragment() {
                 if (response.code == 200 && response.data != null && response.status == "success") {
                     if (response.data.result != null && response.data.result.recm_status != null) {
                         forYouStatus = response.data.result.recm_status
-                        adapter.notifyDataSetChanged()
+                        fetchCampaignList(0)
+
                     }
                 }
             }

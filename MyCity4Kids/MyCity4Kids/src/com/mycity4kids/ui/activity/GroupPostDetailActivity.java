@@ -114,7 +114,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private UserPostSettingResult currentPostPrefsForUser;
     private boolean commentDisableFlag;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
-    private boolean isReuqestRunning = false;
+    private boolean isRequestRunning = true;
     private boolean isLastPageReached = false;
 
     private Animation slideAnim, fadeAnim;
@@ -220,9 +220,9 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     totalItemCount = llm.getItemCount();
                     pastVisiblesItems = llm.findFirstVisibleItemPosition();
 
-                    if (!isReuqestRunning && !isLastPageReached) {
+                    if (!isRequestRunning && !isLastPageReached) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                            isReuqestRunning = true;
+                            isRequestRunning = true;
                             mLodingView.setVisibility(View.VISIBLE);
                             getPostComments();
                         }
@@ -377,7 +377,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         @Override
         public void onResponse(Call<GroupPostCommentResponse> call, retrofit2.Response<GroupPostCommentResponse> response) {
             mLodingView.setVisibility(View.GONE);
-            isReuqestRunning = false;
+            isRequestRunning = false;
             if (response.body() == null) {
                 if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
@@ -400,7 +400,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
         @Override
         public void onFailure(Call<GroupPostCommentResponse> call, Throwable t) {
-            isReuqestRunning = false;
+            isRequestRunning = false;
             mLodingView.setVisibility(View.GONE);
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
