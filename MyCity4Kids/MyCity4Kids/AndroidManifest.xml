@@ -546,9 +546,6 @@
         <activity
             android:name=".profile.M_PrivateProfileActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".profile.MainActivity1"
-            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="io.branch.sdk.BranchKey"

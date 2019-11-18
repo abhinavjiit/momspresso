@@ -76,14 +76,19 @@ class MyCollectionsWidget : RelativeLayout {
                                 } else {
                                     collectionsContainer.visibility = View.GONE
                                     collectionsShimmerContainer.visibility = View.GONE
+                                    return
                                 }
                                 val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
                                 for (i in 0 until userCollectionsListModel.collections_list.size) {
-                                    val itemView = inflater.inflate(R.layout.explore_topics_grid_item, null)
-                                    Picasso.with(context).load(userCollectionsListModel.collections_list[i].imageUrl)
-                                            .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(RoundedTransformation())
-                                            .into(itemView.findViewById<ImageView>(R.id.tagImageView))
-                                    itemView.findViewById<TextView>(R.id.topicsNameTextView).text = userCollectionsListModel.collections_list[i].name
+                                    val itemView = inflater.inflate(R.layout.profile_collections_item, null)
+//                                    Picasso.with(context).load(userCollectionsListModel.collections_list[i].imageUrl)
+//                                            .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(RoundedTransformation())
+//                                            .into(itemView.findViewById<ImageView>(R.id.collectionImageView))
+                                    Picasso.with(BaseApplication.getAppContext()).load(userCollectionsListModel.collections_list[i].imageUrl)
+                                            .placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                                            .fit().into(itemView.findViewById<ImageView>(R.id.collectionImageView))
+                                    itemView.findViewById<TextView>(R.id.collectionTitleTextView).text = userCollectionsListModel.collections_list[i].name
+                                    itemView.findViewById<ImageView>(R.id.collectionImageView).clipToOutline = true
                                     collectionsHSVContainer.addView(itemView)
                                 }
                             } else {
