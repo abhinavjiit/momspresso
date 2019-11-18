@@ -23,8 +23,8 @@
                 android:layout_width="120dp"
                 android:layout_height="2dp"
                 android:layout_below="@+id/toolbarMenu"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="16dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
                 android:background="@color/white" />
 
             <View
@@ -32,8 +32,8 @@
                 android:layout_width="2dp"
                 android:layout_height="30dp"
                 android:layout_below="@id/menuHorizontalLine"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="70dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="70dp"
                 android:background="@color/white" />
 
             <androidx.appcompat.widget.Toolbar
@@ -54,7 +54,7 @@
                         android:id="@+id/editProfileImageView1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:paddingLeft="10dp"
                         android:paddingTop="15dp"
@@ -69,7 +69,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/editProfileImageView1"
+                        android:layout_toStartOf="@+id/editProfileImageView1"
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:text="@string/app_settings.tabbar.edit_profile"
@@ -87,8 +87,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/menuVerticalLine"
                 android:layout_centerHorizontal="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:background="@color/white"
                 android:paddingLeft="9dp"
                 android:paddingTop="7dp"
@@ -124,9 +124,9 @@
                     android:id="@+id/header"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_marginBottom="10dp"
                     android:layout_weight=".7"
                     android:orientation="vertical">
@@ -190,16 +190,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-
                     android:layout_weight=".3">
 
                     <com.mycity4kids.widget.CustomFontTextView
                         android:id="@+id/textHeaderUpdate"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginEnd="10dp"
                         android:layout_marginBottom="10dp"
                         android:layout_weight="2"
                         android:background="@drawable/update_profile_bg"
@@ -346,25 +345,22 @@
                     android:id="@+id/menuHorizontalLine1"
                     android:layout_width="80dp"
                     android:layout_height="2dp"
-                    android:layout_below="@+id/toolbarMenu"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="40dp"
+                    android:layout_marginStart="40dp"
                     android:background="@color/white" />
 
                 <View
                     android:id="@+id/menuVerticalLine1"
                     android:layout_width="2dp"
                     android:layout_height="30dp"
-                    android:layout_below="@id/menuHorizontalLine1"
-                    android:layout_marginLeft="70dp"
+                    android:layout_marginStart="70dp"
                     android:background="@color/white" />
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/menuGuideTextView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
                     android:background="@color/white"
                     android:paddingLeft="9dp"
                     android:paddingTop="7dp"
@@ -388,7 +384,7 @@
                     android:id="@+id/profileCompletionLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="10dp"
                     android:text="@string/mymoney_profile"
                     android:textColor="@color/app_red"
@@ -399,9 +395,9 @@
                     android:id="@+id/updateProfileTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="12dp"
+                    android:layout_marginEnd="12dp"
                     android:background="@drawable/update_profile_bg"
                     android:paddingLeft="20dp"
                     android:paddingTop="6dp"
@@ -416,9 +412,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/profileCompletionLabel"
-                    android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@+id/updateProfileTextView"
-                    android:layout_toRightOf="@id/progress_bar_1"
+                    android:layout_marginEnd="10dp"
+                    android:layout_toStartOf="@+id/updateProfileTextView"
+                    android:layout_toEndOf="@id/progress_bar_1"
                     android:text=""
                     android:textColor="@color/app_light_black"
                     app:fontName="oswald_regular.ttf" />
@@ -428,10 +424,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/profilePercentageTextView"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@+id/updateProfileTextView"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_toStartOf="@+id/updateProfileTextView"
                     android:text="@string/rewards_participate"
                     app:fontName="oswald.ttf" />
 
@@ -441,10 +437,10 @@
                     android:layout_width="200dp"
                     android:layout_height="6dp"
                     android:layout_below="@+id/profileCompletionLabel"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="16dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="5dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:indeterminate="false"
                     android:maxHeight="6dp"
                     android:minHeight="6dp"
@@ -459,9 +455,7 @@
                 android:layout_height="1dp"
                 android:layout_below="@+id/publishedSectionTextView"
                 android:layout_marginStart="40dp"
-                android:layout_marginLeft="40dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
                 android:background="@color/light_grey1" />
 
             <View
@@ -470,9 +464,7 @@
                 android:layout_height="1dp"
                 android:layout_below="@+id/draftSectionTextView"
                 android:layout_marginStart="40dp"
-                android:layout_marginLeft="40dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
                 android:background="@color/light_grey1" />
 
 
@@ -482,9 +474,7 @@
                 android:layout_height="1dp"
                 android:layout_below="@+id/readArticles"
                 android:layout_marginStart="40dp"
-                android:layout_marginLeft="40dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
                 android:background="@color/light_grey1" />
 
             <View
@@ -493,9 +483,7 @@
                 android:layout_height="1dp"
                 android:layout_below="@+id/activitySectionTextView"
                 android:layout_marginStart="40dp"
-                android:layout_marginLeft="40dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
                 android:background="@color/light_grey1" />
             <View
                 android:id="@+id/underline_5"
@@ -539,7 +527,7 @@
                         android:id="@+id/editProfileImageView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:paddingLeft="10dp"
                         android:paddingTop="15dp"
@@ -554,7 +542,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/editProfileImageView"
+                        android:layout_toStartOf="@+id/editProfileImageView"
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:text="@string/app_settings.tabbar.edit_profile"
@@ -598,7 +586,7 @@
                 android:layout_alignLeft="@+id/topContainer"
                 android:layout_alignBottom="@+id/topContainer"
                 android:layout_centerHorizontal="true"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginBottom="16dp"
                 android:elevation="10dp"
                 android:src="@drawable/momspresso_logo"
@@ -613,9 +601,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/profileImageView"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:layout_toRightOf="@+id/profileImageView"
+                android:layout_toEndOf="@+id/profileImageView"
                 android:gravity="left"
                 android:onClick="onClick"
                 android:text=""
@@ -629,8 +617,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/nameTextView"
-                android:layout_marginLeft="16dp"
-                android:layout_toRightOf="@+id/profileImageView"
+                android:layout_marginStart="16dp"
+                android:layout_toEndOf="@+id/profileImageView"
                 android:drawablePadding="10dp"
                 android:gravity="left"
                 android:onClick="onClick"

@@ -11,6 +11,7 @@ import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.Url;
 
@@ -29,6 +30,12 @@ public interface ConfigAPIs {
 
     @GET("badges/")
     Call<ResponseBody> getBadges(@Query("user_id") String userId);
+
+
+    @GET("http://testingapi.momspresso.com/v1/collections/user/{userId}?start=0&offset=20")
+    Call<ResponseBody> getCollections(@Path("userId") String userId,
+                                      @Query("start") int start,
+                                      @Query("offset") int offset);
 
     @GET("v1/utilities/config/cityType/")
     Observable<BaseResponseGeneric<CityConfigResultResponse>> getCityConfigRx();
