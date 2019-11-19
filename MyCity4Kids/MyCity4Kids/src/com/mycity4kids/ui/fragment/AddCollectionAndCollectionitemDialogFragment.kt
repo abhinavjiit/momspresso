@@ -1,6 +1,8 @@
 package com.mycity4kids.ui.fragment
 
 import android.app.Dialog
+import android.app.ProgressDialog
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +15,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -39,6 +42,8 @@ class AddCollectionAndCollectionitemDialogFragment : DialogFragment(), AddCollec
     lateinit var addCollectionRecyclerView: RecyclerView
     var articleId: String? = null
     lateinit var addNewTextView: TextView
+    lateinit var shimmer1: ShimmerFrameLayout
+    var type: String? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -46,13 +51,15 @@ class AddCollectionAndCollectionitemDialogFragment : DialogFragment(), AddCollec
                 false)
         addCollectionRecyclerView = rootView.findViewById(R.id.addCollectionRecyclerView)
         addNewTextView = rootView.findViewById(R.id.addNewTextView)
+        shimmer1 = rootView.findViewById(R.id.shimmer1)
         val linearLayoutManager = LinearLayoutManager(context)
-        addCollectionAdapter = AddCollectionAdapter(context!!, this)
+        addCollectionAdapter = AddCollectionAdapter(context!!, this, adapterViewType = false)
         addCollectionRecyclerView.layoutManager = linearLayoutManager
         addCollectionRecyclerView.adapter = addCollectionAdapter
         val bundle = arguments
 
         articleId = bundle?.getString("articleId")
+        type = bundle?.getString("type")
         getUserCreatedCollections()
         addNewTextView.setOnClickListener {
 
@@ -60,7 +67,7 @@ class AddCollectionAndCollectionitemDialogFragment : DialogFragment(), AddCollec
                 val addCollectionPopUpDialogFragment = AddCollectionPopUpDialogFragment()
                 addCollectionPopUpDialogFragment.arguments = bundle
                 val fm = fragmentManager
-                addCollectionPopUpDialogFragment.setTargetFragment(this, 0)
+                addCollectionPopUpDialogFragment.setTargetFragment(this, 100)
                 addCollectionPopUpDialogFragment.show(fm!!, "collectionAddPopUp")
             } catch (e: Exception) {
                 Crashlytics.logException(e)
@@ -87,9 +94,12 @@ class AddCollectionAndCollectionitemDialogFragment : DialogFragment(), AddCollec
             dialog.window!!.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.campaign_4A4A4A)))
 
         }
+
+        shimmer1.startShimmerAnimation()
     }
 
     fun getUserCreatedCollections() {
+
         BaseApplication.getInstance().campaignRetrofit.create(CollectionsAPI::class.java).getUserCollectionList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), 0, 20).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
             override fun onComplete() {
             }
@@ -99,6 +109,8 @@ class AddCollectionAndCollectionitemDialogFragment : DialogFragment(), AddCollec
 
             override fun onNext(response: BaseResponseGeneric<UserCollectionsListModel>) {
                 if (response.code == 200 && response.status == "success" && response.data?.result != null) {
+                    shimmer1.stopShimmerAnimation()
+                    shimmer1.visibility = View.GONE
                     userCollectionsListModel = response.data!!.result
                     addCollectionAdapter.setListData(userCollectionsListModel)
                     addCollectionAdapter.notifyDataSetChanged()
@@ -117,7 +129,7 @@ class AddCollectionAndCollectionitemDialogFragment : DialogFragment(), AddCollec
     fun addCollectionItem(position: Int) {
         val addCollectionRequestModel1 = UpdateCollectionRequestModel()
         addCollectionRequestModel1.userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
-        addCollectionRequestModel1.itemType = "0"
+        addCollectionRequestModel1.itemType = type
         val List = ArrayList<String>()
         List.add(userCollectionsListModel.collections_list[position].userCollectionId)
         addCollectionRequestModel1.userCollectionId = List
@@ -133,7 +145,7 @@ class AddCollectionAndCollectionitemDialogFragment : DialogFragment(), AddCollec
             override fun onNext(t: BaseResponseGeneric<AddCollectionRequestModel>) {
                 if (t != null && t.code == 200 && t.status == "success" && t.data?.result != null) {
 
-
+                    dismiss()
                     ToastUtils.showToast(activity, "item added in collection successfully")
 
 
@@ -146,7 +158,8 @@ class AddCollectionAndCollectionitemDialogFragment : DialogFragment(), AddCollec
             }
 
             override fun onError(e: Throwable) {
-                ToastUtils.showToast(activity, "item  haven't added in collection successfully , some error at the server ")
+
+                ToastUtils.showToast(activity, e.message.toString())
 
             }
 
@@ -154,4 +167,21 @@ class AddCollectionAndCollectionitemDialogFragment : DialogFragment(), AddCollec
 
 
     }
+
+    override fun onStop() {
+        super.onStop()
+        shimmer1.stopShimmerAnimation()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == 1) {
+            if (requestCode == 100) {
+                dismiss()
+            }
+        }
+
+
+    }
+
 }

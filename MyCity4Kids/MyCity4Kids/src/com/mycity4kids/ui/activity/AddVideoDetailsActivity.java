@@ -120,9 +120,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 
         muteSwitch.setOnClickListener(this);
 
-        if (Build.VERSION.SDK_INT < 18) {
-            muteSwitch.setVisibility(View.GONE);
-        }
+
 
         originalPath = getIntent().getStringExtra("uriPath");
 

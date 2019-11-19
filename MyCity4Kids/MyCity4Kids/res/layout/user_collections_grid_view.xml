@@ -1,38 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:layout_margin="@dimen/space_10"
+    android:elevation="@dimen/space_10">
 
-    <RelativeLayout
-        android:id="@+id/imvAuthorThumbContainer"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_16"
         android:background="@color/white"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/tagImageView"
-            android:layout_width="match_parent"
-            android:layout_height="110dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/shape_collection_grid_view_rounded"
-            android:scaleType="fitXY"
-            android:src="@drawable/default_article" />
-    </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/imvAuthorThumbContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@color/white"
+            android:orientation="vertical">
 
-    <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/topicsNameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:text="@string/topics"
-        android:textColor="@color/campaign_4A4A4A"
-        android:textSize="18sp"
-        app:fontName="OpenSans-Regular.ttf" />
-</LinearLayout>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/tagImageView"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:background="@drawable/shape_collection_grid_view_rounded"
+                android:scaleType="fitXY"
+                android:src="@drawable/default_article" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/topicsNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tagImageView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/topics"
+                android:textColor="@color/campaign_4A4A4A"
+                android:textSize="13sp"
+                app:fontName="OpenSans-Regular.ttf" />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

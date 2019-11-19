@@ -10,6 +10,15 @@ public class UpdateCollectionRequestModel {
     private String imageUrl;
     private String itemType;
     private Boolean deleted = false;
+    private Boolean isPublic = false;
+
+    public Boolean getPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(Boolean aPublic) {
+        isPublic = aPublic;
+    }
 
     public Boolean getDeleted() {
         return deleted;

@@ -4,15 +4,14 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.mikhaellopez.circularimageview.CircularImageView
-        android:id="@+id/collectionImageVIEW"
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/collectionItemImageVIEW"
         android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:layout_height="@dimen/space_50"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/space_10"
         android:src="@drawable/default_article" />
-
-
 
 
     <RelativeLayout
@@ -20,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/close"
-        android:layout_toRightOf="@id/collectionImageVIEW">
+        android:layout_toRightOf="@id/collectionItemImageVIEW">
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/collectionTitle"
@@ -55,13 +54,12 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/space_5"
-        android:src="@drawable/ic_close_pop_up"
-        android:visibility="gone" />
+        android:src="@drawable/ic_close_pop_up" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/collectionImageVIEW"
+        android:layout_below="@id/collectionItemImageVIEW"
         android:layout_marginTop="@dimen/space_10"
         android:background="#97979733" />
 

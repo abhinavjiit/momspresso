@@ -581,9 +581,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".ui.videochallengenewui.activity.ExoplayerVideoChallengePlayViewActivity" />
-        <activity android:name=".ui.activity.collection.CollectionsActivity" />
-        <activity android:name=".ui.activity.collection.UserCollectionItemListActivity" />
+        <activity android:name=".ui.activity.collection.CollectionsActivity"/>
+        <activity
+            android:name=".ui.activity.collection.UserCollectionItemListActivity"
+            android:theme="@style/EditorTheme" />
         <activity android:name=".ui.activity.collection.AddCollectionActivity" />
+        <activity android:name=".ui.activity.collection.EditCollectionActivity" />
 
         <receiver android:name=".reminders.CancelNotificationReceiver" />
 

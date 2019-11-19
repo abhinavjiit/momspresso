@@ -158,6 +158,7 @@ public class AddEditCommentReplyDialogFragment extends DialogFragment implements
                         Call<AddCommentResponse> callBookmark = articleDetailsAPI.editComment(commentsData.getId(), addCommentRequest);
                         callBookmark.enqueue(editCommentsResponseCallback);
                         showProgressDialog("Please wait ...");
+
                     }
                 }
                 break;

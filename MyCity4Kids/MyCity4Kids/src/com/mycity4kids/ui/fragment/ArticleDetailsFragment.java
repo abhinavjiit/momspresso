@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -45,8 +44,6 @@ import com.facebook.ads.NativeAd;
 import com.facebook.ads.NativeAdLayout;
 import com.facebook.ads.NativeAdListener;
 import com.facebook.ads.NativeBannerAd;
-import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.widget.ShareDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -108,7 +105,7 @@ import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.PublicProfileActivity;
-import com.mycity4kids.ui.activity.collection.AddCollectionActivity;
+import com.mycity4kids.ui.activity.collection.CollectionsActivity;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
@@ -1271,28 +1268,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
                     break;
                 case R.id.likeTextView: {
-                    try {
-                        AddCollectionAndCollectionitemDialogFragment addCollectionAndCollectionitemDialogFragment = new AddCollectionAndCollectionitemDialogFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("articleId", articleId);
-                        addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
-                        FragmentManager fm = getFragmentManager();
-                        addCollectionAndCollectionitemDialogFragment.setTargetFragment(this, 0);
-                        addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
-                    } catch (Exception e) {
-                        Crashlytics.logException(e);
-                        Log.d("MC4kException", Log.getStackTraceString(e));
-                    }
-
-                   /* Intent intent = new Intent(getActivity(), AddCollectionActivity.class);}
-                   catch(
-                    intent.putExtra("articleId", articleId);
-                    startActivity(intent);*/
-                    //   getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.stay);
-
-
-
-                  /*
                     if (recommendStatus == 0) {
                         recommendStatus = 1;
                         tooltipForShare();
@@ -1306,17 +1281,20 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
                         recommendUnrecommentArticleAPI("0");
                         Utils.pushUnlikeArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author);
-                    }*/
+                    }
                     break;
                 }
                 case R.id.facebookShareTextView:
-                    if (ShareDialog.canShow(ShareLinkContent.class)) {
+                    Intent intent = new Intent(getActivity(), CollectionsActivity.class);
+                    startActivity(intent);
+
+                   /* if (ShareDialog.canShow(ShareLinkContent.class)) {
                         ShareLinkContent content = new ShareLinkContent.Builder()
                                 .setContentUrl(Uri.parse(shareUrl))
                                 .build();
                         new ShareDialog(this).show(content);
                     }
-                    Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author, "Facebook");
+                    Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author, "Facebook");*/
                     break;
                 case R.id.whatsappShareTextView:
                     if (StringUtils.isNullOrEmpty(shareUrl)) {
@@ -1335,13 +1313,21 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                     break;
                 case R.id.emailShareTextView:
-                    if (!StringUtils.isNullOrEmpty(shareUrl)) {
-                        String shareMessage = detailData.getExcerpt() + "\n\n" + BaseApplication.getAppContext().getString(R.string.ad_share_follow_author, author) + "\n" + shareUrl;
-                        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-                        shareIntent.setType("text/plain");
-                        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
-                        startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
+
+                    try {
+                        AddCollectionAndCollectionitemDialogFragment addCollectionAndCollectionitemDialogFragment = new AddCollectionAndCollectionitemDialogFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("articleId", articleId);
+                        bundle.putString("type",AppConstants.ARTICLE_COLLECTION_TYPE);
+                        addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
+                        FragmentManager fm = getFragmentManager();
+                        addCollectionAndCollectionitemDialogFragment.setTargetFragment(this, 0);
+                        addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
                     }
+
                     break;
             }
         } catch (Exception e) {

@@ -224,7 +224,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             vlogsListingAndDetailsAPI = retro.create(VlogsListingAndDetailsAPI.class);
             hitArticleDetailsS3API();
         }
-        mAdapter = new VideoRecyclerViewAdapter(ParallelFeedActivity.this);
+        mAdapter = new VideoRecyclerViewAdapter(ParallelFeedActivity.this,getSupportFragmentManager());
         mixpanel.timeEvent("Player_Start");
         recyclerViewFeed.scrollToPosition(0);
     }

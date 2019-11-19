@@ -41,7 +41,7 @@ interface CollectionsAPI {
 
     //http://testingapi.momspresso.com/v1/collections/
     @POST("/v1/collections/")
-    fun editCollection(@Body updateCollection: UpdateCollectionRequestModel): Observable<BaseResponseGeneric<UpdateCollectionRequestModel>>
+    fun editCollection(@Body updateCollection: UpdateCollectionRequestModel): Observable<BaseResponseGeneric<AddCollectionRequestModel>>
 
 //testingapi.momspresso.com/v1/collections/
     //http://testingapi.momspresso.com/v1/collectionItem/
@@ -61,4 +61,9 @@ interface CollectionsAPI {
 
     @POST("/v1/followedCollections/")
     fun followCollection(@Body followCollectionRequest: FollowCollectionRequestModel): Call<FollowUnfollowUserResponse>
+
+    //http://testingapi.momspresso.com/v1/collections/images/
+    @GET("/v1/collections/images/")
+    fun getCollectionImages(): Observable<ResponseBody>
+
 }

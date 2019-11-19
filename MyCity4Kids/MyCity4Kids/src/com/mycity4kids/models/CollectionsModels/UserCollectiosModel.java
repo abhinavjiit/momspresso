@@ -15,9 +15,18 @@ public class UserCollectiosModel {
     private String isPublic;
     private String slugUrl;
     private String itemId;
-    private String item;
+    private String item; //articleId
     private String itemType;
     private boolean isFollowing;
+    private ItemInfoModel item_info;
+
+    public ItemInfoModel getItem_info() {
+        return item_info;
+    }
+
+    public void setItem_info(ItemInfoModel item_info) {
+        this.item_info = item_info;
+    }
 
     public String getItem() {
         return item;

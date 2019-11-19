@@ -24,7 +24,10 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/rootlayout_with_rounded_corner"
             app:layout_constraintEnd_toStartOf="@id/space"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="@dimen/space_16"
             app:layout_constraintTop_toBottomOf="@id/space">
 
 
@@ -39,25 +42,24 @@
                 android:textSize="20sp"
                 app:fontName="Helvetica Bold.ttf" />
 
+
             <com.mycity4kids.widget.CustomFontEditText
                 android:id="@+id/collectionNameEditTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/addCollectionNameTextView"
                 android:layout_marginLeft="@dimen/space_30"
-                android:layout_marginTop="@dimen/space_16"
+                android:layout_marginTop="15dp"
                 android:layout_marginRight="@dimen/space_15"
-
-                android:background="@drawable/mainprofile_thin_border"
-                android:backgroundTint="#F1F1F1"
+                android:background="@drawable/dark_border_rounded_corner"
                 android:gravity="center_vertical"
                 android:padding="@dimen/space_10"
-                android:text="hcshjcbshjdchjsdcjhsbd"
+                android:hint="eg: My top 10 blogs"
                 android:textColor="@color/campaign_4A4A4A"
                 android:textSize="@dimen/space_16" />
 
-
             <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/confirmTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/collectionNameEditTextView"

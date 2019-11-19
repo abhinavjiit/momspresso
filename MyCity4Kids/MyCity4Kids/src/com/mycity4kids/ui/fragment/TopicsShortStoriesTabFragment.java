@@ -20,6 +20,7 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -54,12 +55,14 @@ import com.mycity4kids.ui.adapter.ShortStoriesRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.widget.TrackingData;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -450,9 +453,18 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             break;
             case R.id.genericShareImageView: {
 
-                if (isAdded()) {
-                    AppUtils.shareStoryGeneric(getActivity(), mDatalist.get(position).getUserType(), mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug(),
-                            "ShortStoryListingScreen", userDynamoId, mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
+                try {
+                    AddCollectionAndCollectionitemDialogFragment addCollectionAndCollectionitemDialogFragment = new AddCollectionAndCollectionitemDialogFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("articleId", mDatalist.get(position).getId());
+                    bundle.putString("type", AppConstants.SHORT_STORY_COLLECTION_TYPE);
+                    addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
+                    FragmentManager fm = getFragmentManager();
+                    addCollectionAndCollectionitemDialogFragment.setTargetFragment(this, 0);
+                    addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
                 }
             }
             break;
@@ -580,7 +592,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                     }
                     recyclerAdapter.notifyDataSetChanged();
                     if (isAdded()) {
-                      //  ((ShortStoriesListingContainerActivity) getActivity()).showToast("" + responseData.getReason());
+                        //  ((ShortStoriesListingContainerActivity) getActivity()).showToast("" + responseData.getReason());
                     }
 
                 } else {

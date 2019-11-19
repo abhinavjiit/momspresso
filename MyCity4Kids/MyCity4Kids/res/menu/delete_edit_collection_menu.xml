@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/edit_collection"
+        android:actionMenuTextColor="@color/app_red"
+        android:icon="@drawable/ic_edit_title"
+        android:title="Edit Collection"
+
+        />
+    <item
+        android:id="@+id/delete_collection"
+        android:actionMenuTextColor="@color/app_red"
+        android:icon="@drawable/ic_disable_comments_icon"
+        android:title="Delete Collection" />
+
+</menu>

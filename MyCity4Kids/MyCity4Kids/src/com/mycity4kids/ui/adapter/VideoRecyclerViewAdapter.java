@@ -4,10 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -41,10 +38,15 @@ import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.BaseViewHolder;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
+import com.mycity4kids.ui.fragment.AddCollectionAndCollectionitemDialogFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
@@ -58,11 +60,13 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     private boolean isRecommendRequestRunning;
     private String userDynamoId;
     private String bookmarkStatus;
+    FragmentManager fm;
 
     //    private List<VideoInfo> mInfoList;
     private ArrayList<VlogsListingAndDetailResult> mInfoList;
 
-    public VideoRecyclerViewAdapter(Context mContext) {
+    public VideoRecyclerViewAdapter(Context mContext, FragmentManager fm) {
+        this.fm = fm;
         this.mContext = mContext;
         userDynamoId = SharedPrefUtils.getUserDetailModel(mContext).getDynamoId();
     }
@@ -163,7 +167,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         public ImageView mCover, heart, share, whatsapp, three_dot, comment, mImgBookmark;
         public ProgressBar mProgressBar;
         public final View parent;
-        ImageView userImage;
+        ImageView userImage, collectionAdd;
 
 
         public ViewHolder(View itemView) {
@@ -183,6 +187,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             heart = itemView.findViewById(R.id.heart);
             share = itemView.findViewById(R.id.share);
             whatsapp = itemView.findViewById(R.id.whatsapp);
+            collectionAdd = itemView.findViewById(R.id.collectionAdd);
             three_dot = itemView.findViewById(R.id.three_dot);
             mImgBookmark = itemView.findViewById(R.id.bookmark);
             parent = itemView;
@@ -303,9 +308,27 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 }
             });
 
-            whatsapp.setOnClickListener(new View.OnClickListener() {
+            collectionAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    try {
+                        AddCollectionAndCollectionitemDialogFragment addCollectionAndCollectionitemDialogFragment = new AddCollectionAndCollectionitemDialogFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("articleId", mInfoList.get(getAdapterPosition()).getId());
+                        bundle.putString("type", AppConstants.VIDEO_COLLECTION_TYPE);
+                        addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
+                        //   addCollectionAndCollectionitemDialogFragment.setTargetFragment(F, 0);
+                        addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                    }
+                }
+            });
+
+            whatsapp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     if (StringUtils.isNullOrEmpty(getShareUrl(responseData))) {
                         Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
                     } else {

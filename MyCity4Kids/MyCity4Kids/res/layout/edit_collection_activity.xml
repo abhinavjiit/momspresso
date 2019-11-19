@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/back_arroow"
+            android:drawablePadding="@dimen/space_16"
+            android:drawableTint="@color/black"
+            android:gravity="center_vertical"
+            android:text="Edit Collection"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:fontName="Helvetica Bold.ttf" />
+
+
+    </androidx.appcompat.widget.Toolbar>
+
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/addCollectionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginLeft="@dimen/space_16"
+        android:layout_marginTop="@dimen/space_16"
+        android:text="Please add collection Name"
+        android:textColor="#515151"
+        android:textSize="16sp"
+        app:fontName="Helvetica Bold.ttf" />
+
+    <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/collectionNameChangeEditTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/addCollectionTextView"
+        android:layout_marginLeft="@dimen/space_16"
+        android:layout_marginTop="@dimen/space_16"
+        android:layout_marginRight="@dimen/space_16"
+        android:background="@drawable/dark_border_rounded_corner"
+        android:padding="15dp"
+        android:textColor="@color/campaign_4A4A4A"
+        android:textSize="@dimen/space_16" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/thumbnailTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/collectionNameChangeEditTextView"
+        android:layout_marginLeft="@dimen/space_16"
+        android:layout_marginTop="@dimen/space_16"
+        android:text="Thumbnail"
+        android:textColor="@color/campaign_515151"
+        android:textSize="@dimen/space_16"
+        app:fontName="Helvetica Bold.ttf" />
+
+    <LinearLayout
+        android:id="@+id/imageChangeHeaderLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/thumbnailTextView"
+        android:layout_marginLeft="@dimen/space_16"
+        android:layout_marginTop="@dimen/space_16"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/collectionImageVIEW"
+            android:layout_width="160dp"
+            android:layout_height="@dimen/space_100"
+            android:scaleType="centerCrop" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/collectionImageChangeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/space_50"
+            android:layout_toRightOf="@id/collectionImageVIEW"
+            android:background="@drawable/shape_red_border"
+            android:padding="@dimen/space_10"
+            android:text="change"
+            android:textColor="@color/app_red"
+            android:textSize="14sp"
+            app:textAllCaps="true" />
+
+    </LinearLayout>
+
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageChangeHeaderLayout"
+        android:layout_marginLeft="@dimen/space_16"
+        android:layout_marginTop="@dimen/space_30"
+        android:text="List of Content"
+        android:textColor="@color/campaign_515151"
+        android:textSize="16sp"
+        app:fontName="Helvetica Bold.ttf" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/list"
+        android:layout_marginLeft="@dimen/space_16"
+        android:layout_marginTop="@dimen/space_10"
+        android:background="#97979733" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/collectionItemRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/submit"
+        android:layout_below="@id/list"
+        android:layout_marginLeft="@dimen/space_16"
+        android:layout_marginTop="@dimen/space_16" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/app_red"
+        android:gravity="center"
+        android:padding="@dimen/space_10"
+        android:text="SUBMIT"
+        android:textColor="@color/white"
+        android:textSize="@dimen/space_18"
+        app:fontName="oswald_regular.ttf" />
+
+
+</RelativeLayout>

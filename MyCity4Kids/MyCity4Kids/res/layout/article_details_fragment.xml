@@ -776,11 +776,11 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_share_white"
+                    android:drawableTop="@drawable/collectionadd"
                     android:drawablePadding="2dp"
                     android:drawableTint="@color/app_red"
                     android:gravity="center"
-                    android:text="@string/ad.bottom_bar.generic_share"
+                    android:text="Collection"
                     android:textColor="@color/app_grey"
                     android:textSize="11sp"
                     app:fontName="oswald.ttf" />

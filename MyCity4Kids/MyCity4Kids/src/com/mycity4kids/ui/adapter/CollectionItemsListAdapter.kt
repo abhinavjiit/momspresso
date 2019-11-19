@@ -10,6 +10,7 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.models.CollectionsModels.UserCollectionsListModel
 import com.mycity4kids.models.CollectionsModels.UserCollectiosModel
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.user_collection_items_list_adapter.view.*
 
 
@@ -30,8 +31,52 @@ class CollectionItemsListAdapter(var activity: Context) : RecyclerView.Adapter<C
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        try {
 
-        holder.text.text = userCollectionsTopicList[position].itemId
+            holder.articleTitleTextView.text = userCollectionsTopicList[position].item_info.title
+          //  holder.viewCountTextView.text=userCollectionsTopicList
+            if (userCollectionsTopicList[position].itemType.equals("2")) {
+                try {
+                    Picasso.with(activity).load(userCollectionsTopicList[position].item_info.thumbnail)
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView)
+                } catch (e: Exception) {
+                    holder.articleImageView.setImageResource(R.drawable.default_article)
+                }
+
+
+                if (userCollectionsTopicList[position].item_info.author != null)
+                    holder.articleAuthorName.text = userCollectionsTopicList[position].item_info.author.firstName + userCollectionsTopicList[position].item_info.author.lastName
+
+            } else if (userCollectionsTopicList[position].itemType.equals("0")) {
+                try {
+                    Picasso.with(activity).load(userCollectionsTopicList[position].item_info.imageUrl.thumbMax)
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView)
+                } catch (e: Exception) {
+                    holder.articleImageView.setImageResource(R.drawable.default_article)
+                }
+
+                holder.articleAuthorName.text = userCollectionsTopicList[position].item_info.userName
+
+
+            } else {
+
+                try {
+                    Picasso.with(activity).load(userCollectionsTopicList[position].item_info.storyImage)
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView)
+                } catch (e: Exception) {
+                    holder.articleImageView.setImageResource(R.drawable.default_article)
+                }
+
+
+                holder.articleAuthorName.text = userCollectionsTopicList[position].item_info.userName
+
+
+            }
+        } catch (e: Exception) {
+
+
+        }
+
 
     }
 
@@ -40,7 +85,10 @@ class CollectionItemsListAdapter(var activity: Context) : RecyclerView.Adapter<C
     }
 
     class ViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
-        var text: TextView = mView.text
+        var articleTitleTextView: TextView = mView.articleTitleTextView
+        var articleImageView = mView.articleImageView
+        var articleAuthorName = mView.articleAuthorName
+        var viewCountTextView = mView.viewCountTextView
 
     }
 

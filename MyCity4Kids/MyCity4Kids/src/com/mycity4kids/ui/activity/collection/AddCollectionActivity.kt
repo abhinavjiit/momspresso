@@ -1,9 +1,11 @@
 package com.mycity4kids.ui.activity.collection
 
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.ToastUtils
@@ -31,6 +33,7 @@ class AddCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerViewC
     lateinit var addCollectionAdapter: AddCollectionAdapter
     lateinit var userCollectionsListModel: UserCollectionsListModel
     lateinit var articleId: String
+    lateinit var shimmer1: ShimmerFrameLayout
     lateinit var addNewTextView: TextView
 
 
@@ -43,8 +46,9 @@ class AddCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerViewC
         setContentView(R.layout.add_collection_activity)
         addCollectionRecyclerView = findViewById(R.id.addCollectionRecyclerView)
         addNewTextView = findViewById(R.id.addNewTextView)
+        shimmer1 = findViewById(R.id.shimmer1)
         val linearLayoutManager = LinearLayoutManager(this)
-        addCollectionAdapter = AddCollectionAdapter(this@AddCollectionActivity, this)
+        addCollectionAdapter = AddCollectionAdapter(this@AddCollectionActivity, this, adapterViewType = false)
         addCollectionRecyclerView.layoutManager = linearLayoutManager
         addCollectionRecyclerView.adapter = addCollectionAdapter
         val intent = intent
@@ -68,6 +72,8 @@ class AddCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerViewC
 
             override fun onNext(response: BaseResponseGeneric<UserCollectionsListModel>) {
                 if (response.code == 200 && response.status == "success" && response.data?.result != null) {
+                    shimmer1.stopShimmerAnimation()
+                    shimmer1.visibility = View.GONE
                     userCollectionsListModel = response.data!!.result
                     addCollectionAdapter.setListData(userCollectionsListModel)
                     addCollectionAdapter.notifyDataSetChanged()
@@ -80,16 +86,13 @@ class AddCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerViewC
             }
 
         })
-
-
     }
-
 
     fun addCollectionItem(position: Int) {
         showProgressDialog("please wait")
         val addCollectionRequestModel1 = UpdateCollectionRequestModel()
         addCollectionRequestModel1.userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
-        addCollectionRequestModel1.itemType = "0"
+        addCollectionRequestModel1.itemType = "2"
         val List = ArrayList<String>()
         List.add(userCollectionsListModel.collections_list[position].userCollectionId)
         addCollectionRequestModel1.userCollectionId = List
@@ -104,7 +107,7 @@ class AddCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerViewC
             }
 
             override fun onNext(t: BaseResponseGeneric<AddCollectionRequestModel>) {
-                if (t != null && t.code == 200 && t.status == "success" && t.data?.result != null) {
+                if (t.code == 200 && t.status == "success" && t.data?.result != null) {
 
 
                     ToastUtils.showToast(this@AddCollectionActivity, "item added in collection successfully")
@@ -127,5 +130,15 @@ class AddCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerViewC
         })
 
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        shimmer1.startShimmerAnimation()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        shimmer1.stopShimmerAnimation()
     }
 }
