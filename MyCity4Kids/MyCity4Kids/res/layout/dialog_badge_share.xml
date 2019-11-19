@@ -74,7 +74,7 @@
             android:text="@string/detail_bottom_share"
             android:textColor="@color/white"
             android:textSize="16sp"
-            app:fontName="Roboto-Bold.ttf" />
+            android:textStyle="bold" />
 
     </RelativeLayout>
 </LinearLayout>

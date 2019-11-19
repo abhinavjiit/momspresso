@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
@@ -34,12 +35,16 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
     private ImageView backImageView;
     private RecyclerView featuredonRecyclerview;
     private FeatureOnRecyclerAdapter featureOnRecyclerAdapter;
+    private int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private int nextPageNumber = 0;
     private boolean isReuqestRunning = true;
-    private ArrayList<UserCollectiosModel> featuredDataList;
+    private boolean isLastPageReached = false;
+    private ArrayList<UserCollectiosModel> finalFeaturedDataList;
     private String authorId;
     private int updateFollowPos, changeFollowUnfollowTextPos;
     private Boolean isFollowing = false;
     private String userId;
+    private RelativeLayout mLodingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +52,8 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
         setContentView(R.layout.activity_featured_on);
         backImageView = findViewById(R.id.backImageView);
         featuredonRecyclerview = findViewById(R.id.featuredon_recyclerview);
-        featuredDataList = new ArrayList<>();
+        mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
+        finalFeaturedDataList = new ArrayList<>();
         userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -56,14 +62,36 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
         featuredonRecyclerview.setLayoutManager(linearLayoutManager);
         featuredonRecyclerview.setAdapter(featureOnRecyclerAdapter);
         fetchFeatureList();
+
+        featuredonRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) //check for scroll down
+                {
+                    visibleItemCount = linearLayoutManager.getChildCount();
+                    totalItemCount = linearLayoutManager.getItemCount();
+                    pastVisiblesItems = linearLayoutManager.findFirstVisibleItemPosition();
+
+                    if (!isReuqestRunning && !isLastPageReached) {
+                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                            isReuqestRunning = true;
+                            mLodingView.setVisibility(View.VISIBLE);
+                            fetchFeatureList();
+                        }
+                    }
+                }
+            }
+        });
+
         backImageView.setOnClickListener(this);
     }
 
     private void fetchFeatureList() {
-        showProgressDialog("Please wait ...");
+        showProgressDialog(getResources().getString(R.string.please_wait));
+        int from =  10 * nextPageNumber;
         Retrofit retrofit = BaseApplication.getInstance().getRetrofitTest();
         CollectionsAPI featureListAPI = retrofit.create(CollectionsAPI.class);
-        Call<CollectionFeaturedListModel> call = featureListAPI.getFeatureList("5dc0809611cb4607d6b24667/2", 0, 10);
+        Call<CollectionFeaturedListModel> call = featureListAPI.getFeatureList("5dc0809611cb4607d6b24667/2", from, from + 9);
         call.enqueue(featuredList);
     }
 
@@ -71,6 +99,9 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
         @Override
         public void onResponse(Call<CollectionFeaturedListModel> call, retrofit2.Response<CollectionFeaturedListModel> response) {
             isReuqestRunning = false;
+            if (mLodingView.getVisibility() == View.VISIBLE) {
+                mLodingView.setVisibility(View.GONE);
+            }
             removeProgressDialog();
             if (response == null || response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException("New comments API failure");
@@ -80,7 +111,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
 
             try {
                 CollectionFeaturedListModel userCollectionsListModel = response.body();
-                showFeatureList(userCollectionsListModel);
+                showFeatureList(userCollectionsListModel.getData().get(0).getResult().get(0).getCollections_list().get(0).getCollectionList());
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
@@ -91,15 +122,34 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
         public void onFailure(Call<CollectionFeaturedListModel> call, Throwable t) {
             isReuqestRunning = false;
             removeProgressDialog();
+            if (mLodingView.getVisibility() == View.VISIBLE) {
+                mLodingView.setVisibility(View.GONE);
+            }
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
-    private void showFeatureList(CollectionFeaturedListModel userCollectionsListModel) {
-        featuredDataList = userCollectionsListModel.getData().get(0).getResult().get(0).getCollections_list().get(0).getCollectionList();
-        featureOnRecyclerAdapter.setData(featuredDataList);
-        featureOnRecyclerAdapter.notifyDataSetChanged();
+    private void showFeatureList(ArrayList<UserCollectiosModel> userCollectionsListModel) {
+        if (userCollectionsListModel.size() == 0) {
+            isLastPageReached = false;
+            if (null != finalFeaturedDataList && !finalFeaturedDataList.isEmpty()) {
+                isLastPageReached = true;
+            } else {
+                finalFeaturedDataList = userCollectionsListModel;
+                featureOnRecyclerAdapter.setData(finalFeaturedDataList);
+                featureOnRecyclerAdapter.notifyDataSetChanged();
+            }
+        } else {
+            if (nextPageNumber == 1) {
+                finalFeaturedDataList = userCollectionsListModel;
+            } else {
+                finalFeaturedDataList.addAll(userCollectionsListModel);
+            }
+            featureOnRecyclerAdapter.setData(finalFeaturedDataList);
+            nextPageNumber = nextPageNumber + 1;
+            featureOnRecyclerAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -125,7 +175,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
         authorId = id;
         updateFollowPos = pos;
         changeFollowUnfollowTextPos = pos;
-        isFollowing = featuredDataList.get(pos).isFollowing();
+        isFollowing = finalFeaturedDataList.get(pos).isFollowing();
         Retrofit retrofit = BaseApplication.getInstance().getRetrofitTest();
         CollectionsAPI collectionsAPI = retrofit.create(CollectionsAPI.class);
         FollowCollectionRequestModel request = new FollowCollectionRequestModel();
@@ -136,12 +186,12 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
         if (isFollowing) {
             isFollowing = false;
             request.setDeleted(true);
-            featuredDataList.get(updateFollowPos).setFollowing(false);
+            finalFeaturedDataList.get(updateFollowPos).setFollowing(false);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = collectionsAPI.followCollection(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
             isFollowing = true;
-            featuredDataList.get(updateFollowPos).setFollowing(true);
+            finalFeaturedDataList.get(updateFollowPos).setFollowing(true);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = collectionsAPI.followCollection(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }
@@ -167,11 +217,11 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
                         ToastUtils.showToast(FeaturedOnActivity.this, responseData.getData().getMsg());
                         return;
                     } else {
-                        featuredDataList.get(updateFollowPos).setFollowing(false);
+                        finalFeaturedDataList.get(updateFollowPos).setFollowing(false);
                         isFollowing = false;
                     }
                 }
-                featureOnRecyclerAdapter.setListUpdate(updateFollowPos, featuredDataList);
+                featureOnRecyclerAdapter.setListUpdate(updateFollowPos, finalFeaturedDataList);
             } catch (Exception e) {
                 showToast(getString(R.string.server_went_wrong));
                 Crashlytics.logException(e);
@@ -206,11 +256,11 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
                         ToastUtils.showToast(FeaturedOnActivity.this, responseData.getData().getMsg());
                         return;
                     } else {
-                        featuredDataList.get(updateFollowPos).setFollowing(true);
+                        finalFeaturedDataList.get(updateFollowPos).setFollowing(true);
                         isFollowing = true;
                     }
                 }
-                featureOnRecyclerAdapter.setListUpdate(updateFollowPos, featuredDataList);
+                featureOnRecyclerAdapter.setListUpdate(updateFollowPos, finalFeaturedDataList);
             } catch (Exception e) {
                 showToast(getString(R.string.server_went_wrong));
                 Crashlytics.logException(e);

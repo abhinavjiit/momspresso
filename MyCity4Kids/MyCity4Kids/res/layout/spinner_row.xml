@@ -24,7 +24,6 @@
         android:layout_margin="@dimen/space_10"
         android:textColor="@color/grey_faded"
         android:textSize="14sp"
-        android:visibility="gone"
-        app:fontName="Roboto-Regular.ttf" />
+        android:visibility="gone" />
 
 </RelativeLayout>

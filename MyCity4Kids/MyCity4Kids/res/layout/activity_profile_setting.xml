@@ -75,7 +75,7 @@
                 android:textAllCaps="true"
                 android:textColor="@color/color_85848A"
                 android:textSize="16sp"
-                app:fontName="Roboto-Bold.ttf" />
+                android:textStyle="bold" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/personal_info"
@@ -88,8 +88,7 @@
                 android:drawablePadding="@dimen/space_20"
                 android:text="@string/personal_info"
                 android:textColor="@color/campaign_4A4A4A"
-                android:textSize="16sp"
-                app:fontName="Roboto-Regular.ttf" />
+                android:textSize="16sp" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/mymoney_info"
@@ -97,14 +96,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_20"
                 android:layout_marginRight="@dimen/space_8"
-                android:drawableLeft="@drawable/ic_rupee"
+                android:drawableLeft="@drawable/ic_my_money"
                 android:drawableRight="@drawable/arrow_right"
                 android:drawablePadding="@dimen/space_20"
                 android:drawableTint="@color/shadow_color"
                 android:text="@string/mymoney_info"
                 android:textColor="@color/campaign_4A4A4A"
-                android:textSize="16sp"
-                app:fontName="Roboto-Regular.ttf" />
+                android:textSize="16sp" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/payment_details"
@@ -117,8 +115,7 @@
                 android:drawablePadding="@dimen/space_20"
                 android:text="@string/payment_details"
                 android:textColor="@color/campaign_4A4A4A"
-                android:textSize="16sp"
-                app:fontName="Roboto-Regular.ttf" />
+                android:textSize="16sp" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/social_accounts"
@@ -131,8 +128,7 @@
                 android:drawablePadding="@dimen/space_20"
                 android:text="@string/social_accounts"
                 android:textColor="@color/campaign_4A4A4A"
-                android:textSize="16sp"
-                app:fontName="Roboto-Regular.ttf" />
+                android:textSize="16sp" />
 
             <View
                 android:layout_width="match_parent"
@@ -150,7 +146,7 @@
                 android:textAllCaps="true"
                 android:textColor="@color/color_85848A"
                 android:textSize="16sp"
-                app:fontName="Roboto-Bold.ttf" />
+                android:textStyle="bold" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/notification_settings"
@@ -163,8 +159,7 @@
                 android:drawablePadding="@dimen/space_20"
                 android:text="@string/notification_settings"
                 android:textColor="@color/campaign_4A4A4A"
-                android:textSize="16sp"
-                app:fontName="Roboto-Regular.ttf" />
+                android:textSize="16sp" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/topic_of_interest"
@@ -177,8 +172,7 @@
                 android:drawablePadding="@dimen/space_20"
                 android:text="@string/topic_of_interest"
                 android:textColor="@color/campaign_4A4A4A"
-                android:textSize="16sp"
-                app:fontName="Roboto-Regular.ttf" />
+                android:textSize="16sp" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/help"
@@ -191,8 +185,7 @@
                 android:drawablePadding="@dimen/space_20"
                 android:text="@string/help"
                 android:textColor="@color/campaign_4A4A4A"
-                android:textSize="16sp"
-                app:fontName="Roboto-Regular.ttf" />
+                android:textSize="16sp" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/report_spam"
@@ -205,8 +198,7 @@
                 android:drawablePadding="@dimen/space_20"
                 android:text="@string/report_spams"
                 android:textColor="@color/campaign_4A4A4A"
-                android:textSize="16sp"
-                app:fontName="Roboto-Regular.ttf" />
+                android:textSize="16sp" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/about"
@@ -219,8 +211,7 @@
                 android:drawablePadding="@dimen/space_20"
                 android:text="@string/about_txt"
                 android:textColor="@color/campaign_4A4A4A"
-                android:textSize="16sp"
-                app:fontName="Roboto-Regular.ttf" />
+                android:textSize="16sp" />
 
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -233,8 +224,7 @@
                 android:gravity="center"
                 android:text="@string/app_version"
                 android:textColor="@color/grey_faded"
-                android:textSize="14sp"
-                app:fontName="Roboto-Regular.ttf" />
+                android:textSize="14sp" />
 
             <View
                 android:layout_width="match_parent"
@@ -267,7 +257,7 @@
                     android:text="@string/logout"
                     android:textColor="@color/color_B4536A"
                     android:textSize="16sp"
-                    app:fontName="Roboto-Bold.ttf" />
+                    android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

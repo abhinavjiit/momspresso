@@ -59,7 +59,7 @@
                 android:text="@string/rewards_pancard_details"
                 android:textColor="#4A4A4A"
                 android:textSize="16sp"
-                app:fontName="Roboto-Bold.ttf" />
+                android:textStyle="bold" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/enterPanCardDetailsTextView"
