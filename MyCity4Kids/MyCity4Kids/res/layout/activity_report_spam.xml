@@ -43,7 +43,7 @@
                 android:text="@string/report_spams"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                app:fontName="Roboto-Bold.ttf" />
+                android:textStyle="bold" />
 
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
@@ -64,8 +64,7 @@
         android:layout_marginTop="@dimen/space_20"
         android:text="@string/spam_header_text"
         android:textColor="@color/grey_faded"
-        android:textSize="16sp"
-        app:fontName="Roboto-Regular.ttf" />
+        android:textSize="16sp" />
 
 
     <androidx.appcompat.widget.AppCompatSpinner
@@ -92,7 +91,9 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_below="@id/spamSpinner"
-        android:layout_margin="@dimen/space_16"
+        android:textColor="@color/campaign_4A4A4A"
+        android:layout_margin="14sp"
+        android:gravity="top|left"
         android:background="@drawable/spam_edttxt_bg" />
 
     <com.mycity4kids.widget.CustomFontTextView
@@ -107,6 +108,6 @@
         android:text="@string/spam_send"
         android:textColor="@color/white"
         android:textSize="22sp"
-        app:fontName="Roboto-Bold.ttf" />
+        android:textStyle="bold" />
 
 </RelativeLayout>

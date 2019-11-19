@@ -545,6 +545,9 @@
         <activity
             android:name=".profile.M_PrivateProfileActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.FeaturedOnActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="io.branch.sdk.BranchKey"
@@ -579,7 +582,6 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".ui.videochallengenewui.activity.ExoplayerVideoChallengePlayViewActivity" />
         <activity android:name=".ui.activity.collection.CollectionsActivity" />
-        <activity android:name=".ui.activity.UserCollectionItemListActivity" />
         <activity android:name=".ui.activity.collection.UserCollectionItemListActivity" />
         <activity android:name=".ui.activity.collection.AddCollectionActivity" />
 

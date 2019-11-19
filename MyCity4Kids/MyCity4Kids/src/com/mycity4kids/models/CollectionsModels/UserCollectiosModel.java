@@ -9,7 +9,7 @@ public class UserCollectiosModel {
     private String deleted;
     private String updated_at;
     private String imageUrl;
-    private String sortOrder;
+    private int sortOrder;
     private String totalCollectionItems;
     private String name;
     private String isPublic;
@@ -17,6 +17,7 @@ public class UserCollectiosModel {
     private String itemId;
     private String item;
     private String itemType;
+    private boolean isFollowing;
 
     public String getItem() {
         return item;
@@ -98,11 +99,11 @@ public class UserCollectiosModel {
         this.imageUrl = imageUrl;
     }
 
-    public String getSortOrder() {
+    public int getSortOrder() {
         return sortOrder;
     }
 
-    public void setSortOrder(String sortOrder) {
+    public void setSortOrder(int sortOrder) {
         this.sortOrder = sortOrder;
     }
 
@@ -138,5 +139,12 @@ public class UserCollectiosModel {
         this.slugUrl = slugUrl;
     }
 
+    public boolean isFollowing() {
+        return isFollowing;
+    }
+
+    public void setFollowing(boolean following) {
+        isFollowing = following;
+    }
 
 }

@@ -92,7 +92,6 @@ import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.version.RateVersion;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.M_PrivateProfileActivity;
-import com.mycity4kids.profile.R_PrivateProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
@@ -862,7 +861,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
 
         @Override

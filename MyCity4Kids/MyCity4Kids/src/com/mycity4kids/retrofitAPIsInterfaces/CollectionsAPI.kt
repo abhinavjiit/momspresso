@@ -1,11 +1,9 @@
 package com.mycity4kids.retrofitAPIsInterfaces
 
-import com.mycity4kids.models.CollectionsModels.AddCollectionRequestModel
-import com.mycity4kids.models.CollectionsModels.UpdateCollectionRequestModel
-import com.mycity4kids.models.CollectionsModels.UserCollectionsListModel
+import com.mycity4kids.models.CollectionsModels.*
 import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.models.response.FollowUnfollowUserResponse
 import io.reactivex.Observable
-
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
