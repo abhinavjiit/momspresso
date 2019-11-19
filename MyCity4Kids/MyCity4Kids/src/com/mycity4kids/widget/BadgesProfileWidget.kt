@@ -56,7 +56,7 @@ class BadgesProfileWidget : LinearLayout {
 
     }
 
-    fun getBadges(authorId: String) {
+    fun getBadges(authorId: String?) {
         val retrofit = BaseApplication.getInstance().retrofit
         val badgeAPI = retrofit.create(BadgeAPI::class.java)
         val badgeListResponseCall = badgeAPI.getBadgeList("1c94cc0e9a7f4238a03d7a398502db7d")

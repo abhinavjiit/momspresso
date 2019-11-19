@@ -165,7 +165,7 @@ public class Constants {
     public static boolean IS_GOOGLE_ANALYTICS_ENABLED = true;
 
     public static final String USER_NAME = "username";
-    public static final String USER_ID = "userid";
+    public static final String USER_ID = "userId";
     public static final String USER_EMAIL = "useremail";
     public static final String ACCESS_TOKEN = "accesstoken";
     public static final String MODE = "mode";

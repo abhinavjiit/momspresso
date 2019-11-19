@@ -57,6 +57,7 @@ import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.LanguageConfigModel;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.widget.Hashids;
 
 import org.json.JSONArray;
@@ -1228,5 +1229,13 @@ public class AppUtils {
             str = sb.toString();
         }
         return str;
+    }
+
+    public static boolean isPrivateProfile(String authorId) {
+        if (StringUtils.isNullOrEmpty(authorId) || SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(authorId)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

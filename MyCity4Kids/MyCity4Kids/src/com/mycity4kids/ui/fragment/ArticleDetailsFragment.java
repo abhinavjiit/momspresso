@@ -97,6 +97,7 @@ import com.mycity4kids.observablescrollview.ObservableScrollView;
 import com.mycity4kids.observablescrollview.ObservableScrollViewCallbacks;
 import com.mycity4kids.observablescrollview.ScrollState;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.profile.M_PrivateProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
@@ -1215,11 +1216,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         profileIntent.putExtra("TabType", "profile");
                         startActivity(profileIntent);
                     } else {
-                        Intent intentnn = new Intent(getActivity(), PublicProfileActivity.class);
-                        intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, detailData.getUserId());
-                        intentnn.putExtra(AppConstants.AUTHOR_NAME, detailData.getUserName());
-                        intentnn.putExtra(Constants.FROM_SCREEN, "Article Details");
-                        startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                        Intent profileIntent = new Intent(getActivity(), M_PrivateProfileActivity.class);
+                        profileIntent.putExtra(Constants.USER_ID, detailData.getUserId());
+                        startActivity(profileIntent);
                     }
                     break;
                 case R.id.relatedArticles1: {

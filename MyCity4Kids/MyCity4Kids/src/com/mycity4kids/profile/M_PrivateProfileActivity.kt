@@ -1,6 +1,7 @@
 package com.mycity4kids.profile
 
 import android.accounts.NetworkErrorException
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -31,19 +32,24 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.CollectionsModels.CollectionFeaturedListModel
-import com.mycity4kids.models.response.ArticleListingResponse
-import com.mycity4kids.models.response.ArticleListingResult
-import com.mycity4kids.models.response.LanguageRanksModel
-import com.mycity4kids.models.response.UserDetailResponse
+import com.mycity4kids.models.request.ArticleDetailRequest
+import com.mycity4kids.models.request.FollowUnfollowUserRequest
+import com.mycity4kids.models.response.*
 import com.mycity4kids.preference.SharedPrefUtils
+import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
+import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
+import com.mycity4kids.ui.activity.BadgeActivity
 import com.mycity4kids.ui.fragment.UserBioDialogFragment
+import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.RoundedTransformation
 import com.mycity4kids.widget.BadgesProfileWidget
 import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 class M_PrivateProfileActivity : BaseActivity(),
         UserContentAdapter.RecyclerViewClickListener, View.OnClickListener, UsersFeaturedContentAdapter.RecyclerViewClickListener {
@@ -67,21 +73,30 @@ class M_PrivateProfileActivity : BaseActivity(),
     private lateinit var creatorTab: ImageView
     private lateinit var featuredTab: ImageView
     private lateinit var bookmarksTab: ImageView
+    private lateinit var divider2: View
+    private lateinit var sharePrivateTextView: TextView
+    private lateinit var sharePublicTextView: TextView
+    private lateinit var analyticsTextView: TextView
+    private lateinit var followAuthorTextView: TextView
 
     private lateinit var badgesContainer: BadgesProfileWidget
+    private lateinit var myCollectionsWidget: MyCollectionsWidget
 
+    private var authorId: String? = null
+    private var isFollowing: Boolean = false
+    private var isRequestRunning: Boolean = false
     private val multipleRankList = java.util.ArrayList<LanguageRanksModel>()
-    private var isRewardsAdded: String? = null
     private var userContentList: ArrayList<ArticleListingResult>? = null
     private var userFeaturedList: ArrayList<CollectionFeaturedListModel.FeaturedListResult>? = null
 
     private val userContentAdapter: UserContentAdapter by lazy { UserContentAdapter(this) }
     private val usersFeaturedContentAdapter: UsersFeaturedContentAdapter by lazy { UsersFeaturedContentAdapter(this) }
-    private lateinit var authorId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.m_private_profile_activity)
+
+        authorId = intent.getStringExtra(Constants.USER_ID)
 
         recyclerView = findViewById(R.id.recyclerView)
         profileShimmerLayout = findViewById(R.id.profileShimmerLayout)
@@ -100,10 +115,40 @@ class M_PrivateProfileActivity : BaseActivity(),
         cityTextView = findViewById(R.id.cityTextView)
         authorBioTextView = findViewById(R.id.authorBioTextView)
         badgesContainer = findViewById(R.id.badgeContainer)
+        myCollectionsWidget = findViewById(R.id.myCollectionsWidget)
         contentLangTextView = findViewById(R.id.contentLangTextView)
         creatorTab = findViewById(R.id.creatorTab)
         featuredTab = findViewById(R.id.featuredTab)
         bookmarksTab = findViewById(R.id.bookmarksTab)
+        divider2 = findViewById(R.id.divider2)
+        sharePrivateTextView = findViewById(R.id.sharePrivateTextView)
+        analyticsTextView = findViewById(R.id.analyticsTextView)
+        followAuthorTextView = findViewById(R.id.followAuthorTextView)
+        sharePublicTextView = findViewById(R.id.sharePublicTextView)
+
+        if (AppUtils.isPrivateProfile(authorId)) {
+            authorId = SharedPrefUtils.getUserDetailModel(this).dynamoId
+            followerContainer.setOnClickListener(this)
+            followingContainer.setOnClickListener(this)
+            rankContainer.setOnClickListener(this)
+            sharePrivateTextView.setOnClickListener(this)
+            analyticsTextView.setOnClickListener(this)
+            followAuthorTextView.visibility = View.GONE
+            sharePublicTextView.visibility = View.GONE
+            sharePrivateTextView.visibility = View.VISIBLE
+            analyticsTextView.visibility = View.VISIBLE
+        } else {
+            bookmarksTab.visibility = View.GONE
+            divider2.visibility = View.GONE
+            myCollectionsWidget.visibility = View.GONE
+            followAuthorTextView.visibility = View.VISIBLE
+            sharePublicTextView.visibility = View.VISIBLE
+            sharePrivateTextView.visibility = View.GONE
+            analyticsTextView.visibility = View.GONE
+            followAuthorTextView.setOnClickListener(this)
+            sharePublicTextView.setOnClickListener(this)
+            checkFollowingStatusAPI()
+        }
 
         val llm = LinearLayoutManager(this)
         llm.orientation = RecyclerView.VERTICAL
@@ -114,7 +159,6 @@ class M_PrivateProfileActivity : BaseActivity(),
         userContentList = ArrayList()
         userFeaturedList = ArrayList()
 
-        authorId = SharedPrefUtils.getUserDetailModel(this).dynamoId
         profileShimmerLayout.startShimmerAnimation()
         val handler = Handler()
         handler.postDelayed(Runnable {
@@ -125,12 +169,12 @@ class M_PrivateProfileActivity : BaseActivity(),
         creatorTab.setOnClickListener(this)
         featuredTab.setOnClickListener(this)
         bookmarksTab.setOnClickListener(this)
+        badgesContainer.setOnClickListener(this)
 
         getUsersRecommendations(authorId)
-
     }
 
-    private fun getUserDetail(authorId: String) {
+    private fun getUserDetail(authorId: String?) {
         val retrofit = BaseApplication.getInstance().retrofit
         val bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI::class.java)
         val call = bloggerDashboardAPI.getBloggerData(authorId)
@@ -144,31 +188,12 @@ class M_PrivateProfileActivity : BaseActivity(),
                     headerContainer.visibility = View.VISIBLE
                     val responseData = response.body() as UserDetailResponse
                     if (responseData.code == 200 && Constants.SUCCESS == responseData.status) {
-                        if (responseData.data != null && responseData.data[0] != null && responseData.data[0].result != null) {
-                            isRewardsAdded = responseData.data[0].result.rewardsAdded
-                        }
+                        processCityInfo(responseData)
+                        processContentLanguages(responseData)
+                        processAuthorRank(responseData)
+                        processAuthorsFollowingAndFollowership(responseData)
+                        processAuthorPersonalDetails(responseData)
                     }
-
-                    processCityInfo(responseData)
-                    processContentLanguages(responseData)
-                    processAuthorRank(responseData)
-                    processAuthorsFollowingAndFollowership(responseData)
-
-                    authorNameTextView.text = responseData.data[0].result.firstName + " " + responseData.data[0].result.lastName
-
-                    if (!StringUtils.isNullOrEmpty(responseData.data[0].result.profilePicUrl.clientApp)) {
-                        Picasso.with(this@M_PrivateProfileActivity).load(responseData.data[0].result.profilePicUrl.clientApp)
-                                .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(RoundedTransformation()).into(profileImageView)
-                    }
-
-                    if (responseData.data[0].result.userBio == null || responseData.data[0].result.userBio.isEmpty()) {
-                        authorBioTextView.visibility = View.GONE
-                    } else {
-                        authorBioTextView.text = responseData.data[0].result.userBio
-                        authorBioTextView.visibility = View.VISIBLE
-                        makeTextViewResizable(authorBioTextView, 2, "See More", true, responseData.data[0].result.userBio)
-                    }
-
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
@@ -180,6 +205,146 @@ class M_PrivateProfileActivity : BaseActivity(),
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         })
+    }
+
+    private fun checkFollowingStatusAPI() {
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            removeProgressDialog()
+            showToast(getString(R.string.error_network))
+            return
+        }
+        val retro = BaseApplication.getInstance().retrofit
+        val articleDetailsAPI = retro.create(ArticleDetailsAPI::class.java)
+        val articleDetailRequest = ArticleDetailRequest()
+        articleDetailRequest.articleId = ""
+        val callBookmark = articleDetailsAPI.checkFollowingBookmarkStatus("0", authorId)
+        callBookmark.enqueue(object : Callback<ArticleDetailResponse> {
+            override fun onResponse(call: Call<ArticleDetailResponse>, response: retrofit2.Response<ArticleDetailResponse>) {
+                if (null == response.body()) {
+                    showToast(getString(R.string.server_went_wrong))
+                    return
+                }
+
+                val responseData = response.body()
+                if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                    if ("0" == responseData.data.result.isFollowed) {
+                        followAuthorTextView.setText(R.string.ad_follow_author)
+                        isFollowing = false
+                    } else {
+                        followAuthorTextView.setText(R.string.ad_following_author)
+                        isFollowing = true
+                    }
+                } else {
+                    showToast(getString(R.string.server_went_wrong))
+                }
+            }
+
+            override fun onFailure(call: Call<ArticleDetailResponse>, t: Throwable) {
+                if (t is UnknownHostException) {
+                    showToast(getString(R.string.error_network))
+                } else if (t is SocketTimeoutException) {
+                    showToast(getString(R.string.connection_timeout))
+                } else {
+                    showToast(getString(R.string.server_went_wrong))
+                }
+                Crashlytics.logException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
+        })
+    }
+
+    private fun hitFollowUnfollowAPI() {
+        val retrofit = BaseApplication.getInstance().retrofit
+        val followAPI = retrofit.create(FollowAPI::class.java)
+        val request = FollowUnfollowUserRequest()
+        request.followerId = authorId
+        if (isFollowing) {
+            isFollowing = false
+            followAuthorTextView.setText(R.string.ad_follow_author)
+            val followUnfollowUserResponseCall = followAPI.unfollowUser(request)
+            followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback)
+        } else {
+            isFollowing = true
+            followAuthorTextView.setText(R.string.ad_following_author)
+            val followUnfollowUserResponseCall = followAPI.followUser(request)
+            followUnfollowUserResponseCall.enqueue(followUserResponseCallback)
+        }
+    }
+
+    internal var followUserResponseCallback: Callback<FollowUnfollowUserResponse> = object : Callback<FollowUnfollowUserResponse> {
+        override fun onResponse(call: Call<FollowUnfollowUserResponse>, response: retrofit2.Response<FollowUnfollowUserResponse>) {
+            isRequestRunning = false
+            if (response.body() == null) {
+                showToast(getString(R.string.went_wrong))
+                return
+            }
+            try {
+                val responseData = response.body()
+                if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+
+                } else {
+                    followAuthorTextView.setText(R.string.ad_follow_author)
+                    isFollowing = false
+                }
+            } catch (e: Exception) {
+                showToast(getString(R.string.server_went_wrong))
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+            }
+        }
+
+        override fun onFailure(call: Call<FollowUnfollowUserResponse>, t: Throwable) {
+            isRequestRunning = false
+            showToast(getString(R.string.server_went_wrong))
+            Crashlytics.logException(t)
+            Log.d("MC4kException", Log.getStackTraceString(t))
+        }
+    }
+
+    internal var unfollowUserResponseCallback: Callback<FollowUnfollowUserResponse> = object : Callback<FollowUnfollowUserResponse> {
+        override fun onResponse(call: Call<FollowUnfollowUserResponse>, response: retrofit2.Response<FollowUnfollowUserResponse>) {
+            isRequestRunning = false
+            if (response.body() == null) {
+                showToast(getString(R.string.went_wrong))
+                return
+            }
+            try {
+                val responseData = response.body()
+                if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+
+                } else {
+                    followAuthorTextView.setText(R.string.ad_following_author)
+                    isFollowing = true
+                }
+            } catch (e: Exception) {
+                showToast(getString(R.string.server_went_wrong))
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+            }
+
+        }
+
+        override fun onFailure(call: Call<FollowUnfollowUserResponse>, t: Throwable) {
+            isRequestRunning = false
+            showToast(getString(R.string.server_went_wrong))
+            Crashlytics.logException(t)
+            Log.d("MC4kException", Log.getStackTraceString(t))
+        }
+    }
+
+    private fun processAuthorPersonalDetails(responseData: UserDetailResponse) {
+        authorNameTextView.text = responseData.data[0].result.firstName + " " + responseData.data[0].result.lastName
+        if (!StringUtils.isNullOrEmpty(responseData.data[0].result.profilePicUrl.clientApp)) {
+            Picasso.with(this@M_PrivateProfileActivity).load(responseData.data[0].result.profilePicUrl.clientApp)
+                    .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(RoundedTransformation()).into(profileImageView)
+        }
+        if (responseData.data[0].result.userBio == null || responseData.data[0].result.userBio.isEmpty()) {
+            authorBioTextView.visibility = View.GONE
+        } else {
+            authorBioTextView.text = responseData.data[0].result.userBio
+            authorBioTextView.visibility = View.VISIBLE
+            makeTextViewResizable(authorBioTextView, 2, "See More", true, responseData.data[0].result.userBio)
+        }
     }
 
     private fun processContentLanguages(responseData: UserDetailResponse) {
@@ -251,19 +416,16 @@ class M_PrivateProfileActivity : BaseActivity(),
         }
     }
 
-
-    private fun getUsersRecommendations(authorId: String) {
+    private fun getUsersRecommendations(authorId: String?) {
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
             showToast(getString(R.string.connectivity_unavailable))
             return
         }
-
         val retro = BaseApplication.getInstance().retrofit
         val bloggerDashboardAPI = retro.create(BloggerDashboardAPI::class.java)
         val call = bloggerDashboardAPI.getUsersRecommendation(this.authorId)
         call.enqueue(usersRecommendationsResponseListener)
     }
-
 
     private val usersRecommendationsResponseListener = object : Callback<ArticleListingResponse> {
         override fun onResponse(call: Call<ArticleListingResponse>, response: retrofit2.Response<ArticleListingResponse>) {
@@ -282,7 +444,6 @@ class M_PrivateProfileActivity : BaseActivity(),
                 Crashlytics.logException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
-
         }
 
         override fun onFailure(call: Call<ArticleListingResponse>, t: Throwable) {
@@ -403,6 +564,19 @@ class M_PrivateProfileActivity : BaseActivity(),
                 featuredTab.isSelected = false
                 bookmarksTab.isSelected = true
             }
+            view?.id == R.id.badgeContainer -> {
+                val intent = Intent(this, BadgeActivity::class.java)
+                startActivity(intent)
+            }
+            view?.id == R.id.followAuthorTextView -> {
+                if (!isRequestRunning) {
+                    isRequestRunning = true
+                    hitFollowUnfollowAPI()
+                }
+            }
+            view?.id == R.id.bookmarksTab -> {
+
+            }
         }
     }
 
@@ -448,5 +622,3 @@ class M_PrivateProfileActivity : BaseActivity(),
 
     }
 }
-
-

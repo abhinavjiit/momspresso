@@ -1,12 +1,16 @@
 package com.mycity4kids.profile
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import android.os.Handler
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
+import androidx.core.app.ActivityCompat
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.mycity4kids.R
@@ -15,20 +19,22 @@ import com.mycity4kids.models.CollectionsModels.UserCollectionsListModel
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
-import com.mycity4kids.utils.RoundedTransformation
+import com.mycity4kids.ui.activity.PrivateProfileActivity
+import com.mycity4kids.ui.activity.collection.CollectionsActivity
+import com.mycity4kids.ui.fragment.AddCollectionPopUpDialogFragment
 import com.squareup.picasso.Picasso
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-class MyCollectionsWidget : RelativeLayout {
-
+class MyCollectionsWidget : RelativeLayout, View.OnClickListener {
     private lateinit var collectionsShimmerContainer: ShimmerFrameLayout
     private lateinit var addCollectionContainer: RelativeLayout
     private lateinit var collectionsContainer: RelativeLayout
     private lateinit var collectionsHSV: HorizontalScrollView
     private lateinit var collectionsHSVContainer: LinearLayout
+    private lateinit var viewAllTextView: TextView
 
     private lateinit var userCollectionsListModel: UserCollectionsListModel
 
@@ -46,7 +52,11 @@ class MyCollectionsWidget : RelativeLayout {
         collectionsContainer = findViewById(R.id.collectionsContainer)
         collectionsHSV = findViewById(R.id.collectionsHSV)
         collectionsHSVContainer = findViewById(R.id.collectionsHSVContainer)
+        viewAllTextView = findViewById(R.id.viewAllTextView)
         collectionsShimmerContainer.startShimmerAnimation()
+
+        viewAllTextView.setOnClickListener(this)
+        addCollectionContainer.setOnClickListener(this)
 
         val handler = Handler()
         handler.postDelayed(Runnable { getCollections(SharedPrefUtils.getUserDetailModel(context).dynamoId) }, 4000)
@@ -81,9 +91,6 @@ class MyCollectionsWidget : RelativeLayout {
                                 val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
                                 for (i in 0 until userCollectionsListModel.collections_list.size) {
                                     val itemView = inflater.inflate(R.layout.profile_collections_item, null)
-//                                    Picasso.with(context).load(userCollectionsListModel.collections_list[i].imageUrl)
-//                                            .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(RoundedTransformation())
-//                                            .into(itemView.findViewById<ImageView>(R.id.collectionImageView))
                                     Picasso.with(BaseApplication.getAppContext()).load(userCollectionsListModel.collections_list[i].imageUrl)
                                             .placeholder(R.drawable.default_article).error(R.drawable.default_article)
                                             .fit().into(itemView.findViewById<ImageView>(R.id.collectionImageView))
@@ -110,9 +117,24 @@ class MyCollectionsWidget : RelativeLayout {
                 })
     }
 
+    override fun onClick(v: View?) {
+        try {
+            when {
+                v?.id == R.id.addCollectionContainer -> {
+                    if (context is PrivateProfileActivity) {
+                        val addCollectionPopUpDialogFragment = AddCollectionPopUpDialogFragment()
+                        val fm = (context as PrivateProfileActivity).supportFragmentManager
+                        addCollectionPopUpDialogFragment.show(fm, "collectionAddPopUp")
+                    }
+                }
+                v?.id == R.id.viewAllTextView -> {
+                    val intent = Intent(context, CollectionsActivity::class.java)
+                    context.startActivity(intent)
+                }
+            }
+        } catch (e: Exception) {
 
-    fun setBadges() {
-
+        }
     }
 
 }

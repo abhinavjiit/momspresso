@@ -58,8 +58,6 @@ class AddCollectionAndCollectionitemDialogFragment : DialogFragment(), AddCollec
 
             try {
                 val addCollectionPopUpDialogFragment = AddCollectionPopUpDialogFragment()
-                val bundle1 = Bundle()
-                bundle1.putString("articleId", articleId)
                 addCollectionPopUpDialogFragment.arguments = bundle
                 val fm = fragmentManager
                 addCollectionPopUpDialogFragment.setTargetFragment(this, 0)
