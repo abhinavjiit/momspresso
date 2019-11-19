@@ -175,7 +175,7 @@ class CampaignListFragment : BaseFragment() {
     }
 
     private fun fetchCampaignList(startIndex: Int, shouldShowProgressbar: Boolean = false) {
-        var userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+        var userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())?.dynamoId
 
         val retro = BaseApplication.getInstance().retrofit
         val campaignAPI = retro.create(CampaignAPI::class.java)
