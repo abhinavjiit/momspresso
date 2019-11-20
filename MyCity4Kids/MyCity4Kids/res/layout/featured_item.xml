@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/headerCardView"
+    android:id="@+id/featuredItemRootView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="10dp"
@@ -11,7 +11,6 @@
     android:background="@color/white"
     android:outlineProvider="bounds"
     android:paddingBottom="10dp"
-    app:cardCornerRadius="5dp"
     app:cardElevation="5dp">
 
     <RelativeLayout
@@ -42,7 +41,7 @@
             android:layout_toEndOf="@+id/itemImageView"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="dhwauidhiauw dh iwjadhwao dhawio hdioawh d"
+            android:text=""
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -53,7 +52,7 @@
             android:layout_below="@+id/titleTextView"
             android:layout_marginTop="4dp"
             android:layout_toEndOf="@+id/itemImageView"
-            android:text="@string/city_picker.toolbar.title" />
+            android:text="" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/dateTextView"
@@ -97,7 +96,7 @@
                 android:lines="1"
                 android:maxWidth="160dp"
                 android:padding="10dp"
-                android:text="dwadwa" />
+                android:text="User Follow Collection 1" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/collectionItem2TextView"
@@ -110,7 +109,7 @@
                 android:lines="1"
                 android:maxWidth="160dp"
                 android:padding="10dp"
-                android:text="dwadwa" />
+                android:text="User Follow Collection 1" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/collectionItem3TextView"
@@ -123,7 +122,7 @@
                 android:lines="1"
                 android:maxWidth="160dp"
                 android:padding="10dp"
-                android:text="dwadwa" />
+                android:text="User Follow Collection 1" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/collectionItem4TextView"
@@ -136,18 +135,7 @@
                 android:lines="1"
                 android:maxWidth="160dp"
                 android:padding="10dp"
-                android:text="dwadwa" />
-
-            <!--            <com.mycity4kids.widget.CustomFontTextView-->
-            <!--                android:id="@+id/collectionItem5TextView"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_margin="5dp"-->
-            <!--                android:background="@drawable/profile_featured_collection_bg"-->
-            <!--                android:gravity="center"-->
-            <!--                android:maxWidth="160dp"-->
-            <!--                android:padding="10dp"-->
-            <!--                android:text="dwadwa" />-->
+                android:text="User Follow Collection 1" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/moreItemsTextView"
@@ -155,6 +143,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:padding="10dp"
+                android:textStyle="bold"
+                android:textColor="@color/app_red"
                 android:text="+25 More" />
         </org.apmem.tools.layouts.FlowLayout>
     </RelativeLayout>

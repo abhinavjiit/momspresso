@@ -3,6 +3,7 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 import com.mycity4kids.models.SuggestBlogTitle;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.BloggerAnalyticsResponse;
+import com.mycity4kids.models.response.MixFeedResponse;
 import com.mycity4kids.models.response.ReviewResponse;
 import com.mycity4kids.models.response.UserCommentsResponse;
 import com.mycity4kids.models.response.UserDetailResponse;
@@ -66,9 +67,12 @@ public interface BloggerDashboardAPI {
                                                           @Query("pagination") String pagination);
 
     @GET("v3/comments/{userId}")
-    Call<UserCommentsResponse> getUsersComments(@Path("userId") String userId
-    );
+    Call<UserCommentsResponse> getUsersComments(@Path("userId") String userId);
 
+    @GET("author/feed")
+    Call<MixFeedResponse> getUsersAllContent(@Query("start") int start,
+                                             @Query("size") int size,
+                                             @Query("contentType") String contentType);
 
     @GET("v1/users/suggestBlogTitle/")
     Call<SuggestBlogTitle> getUserhandle();

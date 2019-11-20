@@ -194,7 +194,7 @@ public class SaveTableDataUtils {
 	}
 
 	/**
-	 * Save City  Data in CityTable
+	 * Save City  MixFeedData in CityTable
 	 * @param cityModel
 	 */
 	public void saveCityTableData(MetroCity cityModel){

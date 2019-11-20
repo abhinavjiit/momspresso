@@ -137,7 +137,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                             prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                         }
                     } else {
-                        Log.e("NOTIFICATION_TYPE", "upcoming_event_list ----- Notification Data");
+                        Log.e("NOTIFICATION_TYPE", "upcoming_event_list ----- Notification MixFeedData");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
@@ -169,7 +169,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                             prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                         }
                     } else {
-                        Log.e("NOTIFICATION_TYPE", "momvlog_challenge_details ----- Notification Data");
+                        Log.e("NOTIFICATION_TYPE", "momvlog_challenge_details ----- Notification MixFeedData");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
@@ -199,7 +199,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                             prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                         }
                     } else {
-                        Log.e("NOTIFICATION_TYPE", "momvlog_challenge_details ----- Notification Data");
+                        Log.e("NOTIFICATION_TYPE", "momvlog_challenge_details ----- Notification MixFeedData");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
@@ -237,7 +237,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                             prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                         }
                     } else {
-                        Log.e("NOTIFICATION_TYPE", "article_details ----- Notification Data");
+                        Log.e("NOTIFICATION_TYPE", "article_details ----- Notification MixFeedData");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
@@ -274,7 +274,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                             prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                         }
                     } else {
-                        Log.e("NOTIFICATION_TYPE", "video_details ----- Notification Data");
+                        Log.e("NOTIFICATION_TYPE", "video_details ----- Notification MixFeedData");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
@@ -305,7 +305,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                             prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                         }
                     } else {
-                        Log.e("NOTIFICATION_TYPE", "webView ----- Notification Data");
+                        Log.e("NOTIFICATION_TYPE", "webView ----- Notification MixFeedData");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
@@ -338,7 +338,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                             prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                         }
                     } else {
-                        Log.e("NOTIFICATION_TYPE", "profile ----- Notification Data");
+                        Log.e("NOTIFICATION_TYPE", "profile ----- Notification MixFeedData");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
@@ -369,7 +369,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                             prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                         }
                     } else {
-                        Log.e("NOTIFICATION_TYPE", "app_settings ----- Notification Data");
+                        Log.e("NOTIFICATION_TYPE", "app_settings ----- Notification MixFeedData");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
@@ -398,7 +398,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                             prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                         }
                     } else {
-                        Log.e("NOTIFICATION_TYPE", "momsights_screen ----- Notification Data");
+                        Log.e("NOTIFICATION_TYPE", "momsights_screen ----- Notification MixFeedData");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
@@ -428,7 +428,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                             prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                         }
                     } else {
-                        Log.e("NOTIFICATION_TYPE", "campaign_listing ----- Notification Data");
+                        Log.e("NOTIFICATION_TYPE", "campaign_listing ----- Notification MixFeedData");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
@@ -461,7 +461,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                             prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                         }
                     } else {
-                        Log.e("NOTIFICATION_TYPE", "mymoney_pancard ----- Notification Data");
+                        Log.e("NOTIFICATION_TYPE", "mymoney_pancard ----- Notification MixFeedData");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
@@ -491,7 +491,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                             prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                         }
                     } else {
-                        Log.e("NOTIFICATION_TYPE", "category_listing ----- Notification Data");
+                        Log.e("NOTIFICATION_TYPE", "category_listing ----- Notification MixFeedData");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
@@ -522,7 +522,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                             prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                         }
                     } else {
-                        Log.e("NOTIFICATION_TYPE", "campaign_submit_proof ----- Notification Data");
+                        Log.e("NOTIFICATION_TYPE", "campaign_submit_proof ----- Notification MixFeedData");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
@@ -555,7 +555,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                             prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                         }
                     } else {
-                        Log.e("NOTIFICATION_TYPE", "mymoney_bankdetails ----- Notification Data");
+                        Log.e("NOTIFICATION_TYPE", "mymoney_bankdetails ----- Notification MixFeedData");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
@@ -585,7 +585,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                             prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                         }
                     } else {
-                        Log.e("NOTIFICATION_TYPE", "campaign_detail ----- Notification Data");
+                        Log.e("NOTIFICATION_TYPE", "campaign_detail ----- Notification MixFeedData");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
@@ -613,7 +613,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                             prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                         }
                     } else {
-                        Log.e("NOTIFICATION_TYPE", "my_money_earnings ----- Notification Data");
+                        Log.e("NOTIFICATION_TYPE", "my_money_earnings ----- Notification MixFeedData");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
@@ -642,7 +642,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                             prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                         }
                     } else {
-                        Log.e("NOTIFICATION_TYPE", "my_money_profile ----- Notification Data");
+                        Log.e("NOTIFICATION_TYPE", "my_money_profile ----- Notification MixFeedData");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
@@ -672,7 +672,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                             prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                         }
                     } else {
-                        Log.e("NOTIFICATION_TYPE", "shortStoryListing ----- Notification Data");
+                        Log.e("NOTIFICATION_TYPE", "shortStoryListing ----- Notification MixFeedData");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }
@@ -702,7 +702,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                             prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                         }
                     } else {
-                        Log.e("NOTIFICATION_TYPE", "shortStoryListingInChallengeListing ----- Notification Data");
+                        Log.e("NOTIFICATION_TYPE", "shortStoryListingInChallengeListing ----- Notification MixFeedData");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }

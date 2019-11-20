@@ -143,7 +143,7 @@ public class LoadingActivity extends BaseActivity {
                         @Override
                         public void comeBackOnUI() {
                             navigateToDashboard();
-                            Log.i("Dashboard", "Configuration Data Updated");
+                            Log.i("Dashboard", "Configuration MixFeedData Updated");
                         }
                     });
                     _heavyDbTask.execute();

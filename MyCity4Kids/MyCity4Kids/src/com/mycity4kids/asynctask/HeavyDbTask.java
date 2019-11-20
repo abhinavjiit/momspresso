@@ -125,7 +125,7 @@ public class HeavyDbTask extends AsyncTask<Void, Void, String>{
 					}
 				}
 				/**
-				 * Save Locality Data into table:- (LocalityTable)
+				 * Save Locality MixFeedData into table:- (LocalityTable)
 				 */
 
 				if(localityData.size()>0 && localityData!=null)
@@ -140,7 +140,7 @@ public class HeavyDbTask extends AsyncTask<Void, Void, String>{
 					}
 				}
 				/**
-				 * Save City Data into table:- (LocalityTable)
+				 * Save City MixFeedData into table:- (LocalityTable)
 				 */
 				if(cityData.size()>0 && cityData!=null)
 				{

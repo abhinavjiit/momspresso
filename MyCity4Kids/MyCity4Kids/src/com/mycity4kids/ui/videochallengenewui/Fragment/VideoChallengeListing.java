@@ -157,7 +157,7 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
 
 
         articleDataModelsNew = new ArrayList<VlogsListingAndDetailResult>();
-        showProgressDialog("Fetching Data");
+        showProgressDialog("Fetching MixFeedData");
         nextPageNumber = 1;
         hitArticleListingApi();
 

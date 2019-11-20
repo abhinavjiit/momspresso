@@ -122,7 +122,7 @@ class CampaignListFragment : BaseFragment() {
             activity!!.onBackPressed()
         }
 
-        recyclerView.setOnScrollListener(object : EndlessScrollListener(linearLayoutManager) {
+        recyclerView.addOnScrollListener(object : EndlessScrollListener(linearLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
                 fetchCampaignList(totalItemsCount, true)
             }

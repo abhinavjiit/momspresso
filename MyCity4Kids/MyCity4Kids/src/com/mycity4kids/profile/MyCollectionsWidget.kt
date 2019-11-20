@@ -84,9 +84,10 @@ class MyCollectionsWidget : RelativeLayout, View.OnClickListener {
                                     collectionsContainer.visibility = View.VISIBLE
                                     collectionsShimmerContainer.visibility = View.GONE
                                 } else {
-                                    collectionsContainer.visibility = View.GONE
+//                                    collectionsContainer.visibility = View.GONE
                                     collectionsShimmerContainer.visibility = View.GONE
-                                    return
+                                    collectionsContainer.visibility = View.VISIBLE
+//                                    return
                                 }
                                 val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
                                 for (i in 0 until userCollectionsListModel.collections_list.size) {

@@ -88,7 +88,7 @@ public class HeaderGridView extends GridView {
      * the supplied cursor with one that will also account for header views.
      *
      * @param v            The view to add.
-     * @param data         Data to associate with this view
+     * @param data         MixFeedData to associate with this view
      * @param isSelectable whether the item is selectable
      */
     public void addHeaderView(View v, Object data, boolean isSelectable) {

@@ -1,6 +1,5 @@
 package com.mycity4kids.profile
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -16,8 +15,6 @@ import org.apmem.tools.layouts.FlowLayout
 class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val CONTENT_TYPE_SHORT_STORY = 0
     private val CONTENT_TYPE_ARTICLE = 1
-    private val mContext: Context? = null
-    private val mInflator: LayoutInflater? = null
     private var userFeaturedOnList: ArrayList<FeaturedItem>? = null
 
     override fun getItemViewType(position: Int): Int {
@@ -34,10 +31,8 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == CONTENT_TYPE_ARTICLE) {
-            var viewHolder: UserFeaturedContentViewHolder? = null
             val v0 = LayoutInflater.from(parent.context).inflate(R.layout.featured_item, parent, false)
-            viewHolder = UserFeaturedContentViewHolder(v0, mListener)
-            return viewHolder
+            return UserFeaturedContentViewHolder(v0, mListener)
         } else {
             var viewHolder: UserRecommendedSSViewHolder? = null
             val v0 = LayoutInflater.from(parent.context).inflate(R.layout.users_activity_short_stories_item, parent, false)
@@ -122,7 +117,7 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
                     holder.collectionItem3TextView.visibility = VISIBLE
                     holder.collectionItem4TextView.visibility = VISIBLE
                     holder.moreItemsTextView.visibility = VISIBLE
-                    holder.moreItemsTextView.text = "" + moreItemCount + " More Items"
+                    holder.moreItemsTextView.text =holder.itemView.context.getString(R.string.profile_featured_more, moreItemCount)
                 }
             }
         } else {
@@ -171,6 +166,7 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
             moreItemsTextView = itemView.findViewById<View>(R.id.moreItemsTextView) as TextView
             collectionsFLContainer = itemView.findViewById<View>(R.id.collectionsFLContainer) as FlowLayout
             itemView.setOnClickListener(this)
+            moreItemsTextView.setOnClickListener(this)
         }
 
         override fun onClick(v: View) {
@@ -178,7 +174,7 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
         }
     }
 
-    inner class UserRecommendedSSViewHolder internal constructor(itemView: View, listener: RecyclerViewClickListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class UserRecommendedSSViewHolder internal constructor(itemView: View, var listener: RecyclerViewClickListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         internal var txvArticleTitle: TextView
         internal var txvPublishDate: TextView
         internal var commentCountTextView: TextView
@@ -198,7 +194,7 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
         }
 
         override fun onClick(v: View) {
-            mListener.onFeaturedItemClick(v, adapterPosition)
+            listener.onFeaturedItemClick(v, adapterPosition)
         }
     }
 

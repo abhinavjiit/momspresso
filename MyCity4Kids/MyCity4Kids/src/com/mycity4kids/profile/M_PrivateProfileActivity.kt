@@ -82,15 +82,23 @@ class M_PrivateProfileActivity : BaseActivity(),
     private lateinit var sharePublicTextView: TextView
     private lateinit var analyticsTextView: TextView
     private lateinit var followAuthorTextView: TextView
+    private lateinit var bottomLoadingView: RelativeLayout
 
     private lateinit var badgesContainer: BadgesProfileWidget
     private lateinit var myCollectionsWidget: MyCollectionsWidget
 
+    private var pastVisiblesItems: Int = 0
+    private var visibleItemCount: Int = 0
+    private var totalItemCount: Int = 0
+    private var start = 0
+    private var size = 10
+    private var isReuqestRunning = true
+    private var isLastPageReached = true
     private var authorId: String? = null
     private var isFollowing: Boolean = false
     private var isRequestRunning: Boolean = false
     private val multipleRankList = java.util.ArrayList<LanguageRanksModel>()
-    private var userContentList: ArrayList<ArticleListingResult>? = null
+    private var userContentList: ArrayList<MixFeedResult>? = null
     private var userFeaturedOnList: ArrayList<FeaturedItem>? = null
 
     private val userContentAdapter: UserContentAdapter by lazy { UserContentAdapter(this) }
@@ -129,6 +137,7 @@ class M_PrivateProfileActivity : BaseActivity(),
         analyticsTextView = findViewById(R.id.analyticsTextView)
         followAuthorTextView = findViewById(R.id.followAuthorTextView)
         sharePublicTextView = findViewById(R.id.sharePublicTextView)
+        bottomLoadingView = findViewById(R.id.bottomLoadingView)
 
         if (AppUtils.isPrivateProfile(authorId)) {
             authorId = SharedPrefUtils.getUserDetailModel(this).dynamoId
@@ -175,7 +184,24 @@ class M_PrivateProfileActivity : BaseActivity(),
         bookmarksTab.setOnClickListener(this)
         badgesContainer.setOnClickListener(this)
 
-        getUsersRecommendations(authorId)
+        getUsersCreatedContent(authorId)
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0) {
+                    visibleItemCount = llm.childCount
+                    totalItemCount = llm.itemCount
+                    pastVisiblesItems = llm.findFirstVisibleItemPosition()
+                    if (!isReuqestRunning) {
+                        if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
+                            isReuqestRunning = true
+                            bottomLoadingView.visibility = View.VISIBLE
+                            getUsersCreatedContent(authorId)
+                        }
+                    }
+                }
+            }
+        })
     }
 
     private fun getUserDetail(authorId: String?) {
@@ -312,7 +338,6 @@ class M_PrivateProfileActivity : BaseActivity(),
             try {
                 val responseData = response.body()
                 if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-
                 } else {
                     followAuthorTextView.setText(R.string.ad_following_author)
                     isFollowing = true
@@ -322,7 +347,6 @@ class M_PrivateProfileActivity : BaseActivity(),
                 Crashlytics.logException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
-
         }
 
         override fun onFailure(call: Call<FollowUnfollowUserResponse>, t: Throwable) {
@@ -417,48 +441,54 @@ class M_PrivateProfileActivity : BaseActivity(),
         }
     }
 
-    private fun getUsersRecommendations(authorId: String?) {
-        if (!ConnectivityUtils.isNetworkEnabled(this)) {
-            showToast(getString(R.string.connectivity_unavailable))
-            return
-        }
+    private fun getUsersCreatedContent(authorId: String?) {
         val retro = BaseApplication.getInstance().retrofit
         val bloggerDashboardAPI = retro.create(BloggerDashboardAPI::class.java)
-        val call = bloggerDashboardAPI.getUsersRecommendation(this.authorId)
-        call.enqueue(usersRecommendationsResponseListener)
-    }
-
-    private val usersRecommendationsResponseListener = object : Callback<ArticleListingResponse> {
-        override fun onResponse(call: Call<ArticleListingResponse>, response: retrofit2.Response<ArticleListingResponse>) {
-            if (null == response.body()) {
-                val nee = NetworkErrorException(response.raw().toString())
-                Crashlytics.logException(nee)
-                return
-            }
-            try {
-                val responseData = response.body()
-                if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-                    processRecommendationsResponse(responseData)
-                } else {
+        val call = bloggerDashboardAPI.getUsersAllContent(start, size, null)
+        call.enqueue(object : Callback<MixFeedResponse> {
+            override fun onResponse(call: Call<MixFeedResponse>, response: retrofit2.Response<MixFeedResponse>) {
+                try {
+                    isReuqestRunning = false
+                    bottomLoadingView.visibility = View.GONE
+                    if (null == response.body()) {
+                        val nee = NetworkErrorException(response.raw().toString())
+                        Crashlytics.logException(nee)
+                        return
+                    }
+                    val responseData = response.body()
+                    if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                        processUserContentResponse(responseData.data.result)
+                    } else {
+                    }
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
                 }
-            } catch (e: Exception) {
+            }
+
+            override fun onFailure(call: Call<MixFeedResponse>, e: Throwable) {
+                bottomLoadingView.visibility = View.GONE
                 Crashlytics.logException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
-        }
-
-        override fun onFailure(call: Call<ArticleListingResponse>, t: Throwable) {
-            Crashlytics.logException(t)
-            Log.d("MC4kException", Log.getStackTraceString(t))
-        }
+        })
     }
 
-    private fun processRecommendationsResponse(responseData: ArticleListingResponse) {
-        val dataList = responseData.data[0].result
-
-        if (dataList.size == 0) {
+    private fun processUserContentResponse(responseData: List<MixFeedResult>?) {
+        if (responseData.isNullOrEmpty()) {
+            isLastPageReached = false
+            if (!userContentList.isNullOrEmpty()) {
+                //No more next results for search from pagination
+            } else {
+                // No results
+                userContentAdapter.setListData(userContentList)
+                userContentAdapter.notifyDataSetChanged()
+//                noBlogsTextView.setText(getString(R.string.short_s_no_published))
+//                noBlogsTextView.setVisibility(View.VISIBLE)
+            }
         } else {
-            userContentList?.addAll(dataList)
+            start += size
+            userContentList?.addAll(responseData)
             userContentAdapter.setListData(userContentList)
             userContentAdapter.notifyDataSetChanged()
         }
@@ -511,7 +541,6 @@ class M_PrivateProfileActivity : BaseActivity(),
                                                   maxLine: Int, spanableText: String, viewMore: Boolean, userBio: String): SpannableStringBuilder {
         val str = strSpanned.toString()
         val ssb = SpannableStringBuilder(strSpanned)
-
         if (str.contains(spanableText)) {
             ssb.setSpan(object : MySpannable(false) {
                 override fun onClick(widget: View) {
@@ -524,14 +553,12 @@ class M_PrivateProfileActivity : BaseActivity(),
                     userBioDialogFragment.show(fm, "Choose video option")
                 }
             }, str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length, 0)
-
         }
         return ssb
     }
 
     open inner class MySpannable(isUnderline: Boolean) : ClickableSpan() {
         private var isUnderline = true
-
         init {
             this.isUnderline = isUnderline
         }
@@ -551,6 +578,8 @@ class M_PrivateProfileActivity : BaseActivity(),
                 creatorTab.isSelected = true
                 featuredTab.isSelected = false
                 bookmarksTab.isSelected = false
+                userContentList?.clear()
+                start = 0
                 recyclerView.adapter = userContentAdapter
             }
             view?.id == R.id.featuredTab -> {
@@ -558,6 +587,8 @@ class M_PrivateProfileActivity : BaseActivity(),
                 featuredTab.isSelected = true
                 bookmarksTab.isSelected = false
                 recyclerView.adapter = usersFeaturedContentAdapter
+                userFeaturedOnList?.clear()
+                start = 0
                 getFeaturedContent()
             }
             view?.id == R.id.bookmarksTab -> {
@@ -638,48 +669,13 @@ class M_PrivateProfileActivity : BaseActivity(),
                             item.collectionList.add(coll)
                             userFeaturedOnList?.add(item)
                         }
-
-//                        userFeaturedOnList?.addAll(responseData.data.result.item_list.toMutableList()[0].title)
-//                        userFeaturedOnList?.addAll(responseData.data.result.item_list.toMutableList())
-//                        userFeaturedOnList?.addAll(responseData.data.result.item_list.toMutableList())
-//                        userFeaturedOnList?.addAll(responseData.data.result.item_list.toMutableList())
-//                        userFeaturedOnList?.addAll(responseData.data.result.item_list.toMutableList())
-//                        userFeaturedOnList?.addAll(responseData.data.result.item_list.toMutableList())
-//                        userFeaturedOnList?.addAll(responseData.data.result.item_list.toMutableList())
-//                        userFeaturedOnList?.addAll(responseData.data.result.item_list.toMutableList())
-//                        userFeaturedOnList?.addAll(responseData.data.result.item_list.toMutableList())
-//                        userFeaturedOnList?.addAll(responseData.data.result.item_list.toMutableList())
                         for (i in 0 until userFeaturedOnList!!.size) {
-                            for (j in 0 until (0..10).random()) {
+                            for (j in 0 until (5..10).random()) {
                                 userFeaturedOnList!![i].collectionList.add(userFeaturedOnList!![i].collectionList[0])
                             }
                         }
                         usersFeaturedContentAdapter.setListData(userFeaturedOnList)
                         usersFeaturedContentAdapter.notifyDataSetChanged()
-//                        userFeaturedOn?.add(responseData.data[0].result[0])
-//                        userFeaturedOn?.get(0)?.collections_list?.apply {
-//                            addAll(responseData.data[0].result[0]?.collections_list!!)
-//                            addAll(responseData.data[0].result[0]?.collections_list!!)
-//                            addAll(responseData.data[0].result[0]?.collections_list!!)
-//                            addAll(responseData.data[0].result[0]?.collections_list!!)
-//                            addAll(responseData.data[0].result[0]?.collections_list!!)
-//                            addAll(responseData.data[0].result[0]?.collections_list!!)
-//                            addAll(responseData.data[0].result[0]?.collections_list!!)
-//                            addAll(responseData.data[0].result[0]?.collections_list!!)
-//                            addAll(responseData.data[0].result[0]?.collections_list!!)
-//                            addAll(responseData.data[0].result[0]?.collections_list!!)
-//                        }
-//                        for (i in 0 until userFeaturedOn?.get(0)?.collections_list!!.size) {
-//
-//                        }
-//
-//                        for (i in 0 until (0..10).random()) {
-//                            userFeaturedOn?.get(0)?.collections_list?.get(i)?.collectionList?.addAll(
-//                                    userFeaturedOn?.get(0)?.collections_list?.get(i)?.collectionList!!)
-//                        }
-//
-//                        usersFeaturedContentAdapter.setListData(userFeaturedOn)
-//                        usersFeaturedContentAdapter.notifyDataSetChanged()
                     } else {
                     }
                 } catch (e: Exception) {
@@ -701,6 +697,14 @@ class M_PrivateProfileActivity : BaseActivity(),
     }
 
     override fun onFeaturedItemClick(view: View, position: Int) {
+        when {
+            view.id == R.id.featuredItemRootView -> {
+
+            }
+            view.id == R.id.moreItemsTextView -> {
+
+            }
+        }
 
     }
 }

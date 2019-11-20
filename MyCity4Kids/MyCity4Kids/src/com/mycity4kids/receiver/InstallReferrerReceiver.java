@@ -17,7 +17,7 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         Uri data = intent.getData();
-        Log.d("INSTALL_REFERRER", "Received Data : "+data+"");
+        Log.d("INSTALL_REFERRER", "Received MixFeedData : "+data+"");
 //        if (Intent.ACTION_VIEW.equals(action) && data != null) {
             Intent _splashIntent = new Intent(context, SplashActivity.class);
                   _splashIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -1320,7 +1320,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Gson gson = new Gson();
             BranchModel branchModel = gson.fromJson(mJson, BranchModel.class);
 
-            Log.i("Data", branchdata + ":");
+            Log.i("MixFeedData", branchdata + ":");
             if (!StringUtils.isNullOrEmpty(branchdata)) {
                 if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH__CAMPAIGN_LISTING)) {
                     Intent intent1 = new Intent(DashboardActivity.this, CampaignContainerActivity.class);

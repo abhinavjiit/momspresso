@@ -77,7 +77,7 @@ public abstract class BaseController implements IController {
 		Response response = new Response();
 		response.setDataType(requestType);
 		response.setRequestData(requestData);
-		response.setResponseObject("Some error in Request Data.");
+		response.setResponseObject("Some error in Request MixFeedData.");
 		response.setSuccess(false);
 		sendResponseToScreen(response);
 	}

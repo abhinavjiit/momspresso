@@ -46,7 +46,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 /*
  * This class demonstrates how to get a valid O-auth accessToken from
- * Azure Data Market.
+ * Azure MixFeedData Market.
  */
 class Authentication {
     private static final String LOG_TAG = "Authentication";

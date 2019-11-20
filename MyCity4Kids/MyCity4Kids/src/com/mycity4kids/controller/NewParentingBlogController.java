@@ -186,7 +186,7 @@ public class NewParentingBlogController extends BaseController {
                 try {
                     String responseData = new String(response.getResponseData());
                     String removeHtmlData = StringEscapeUtils.unescapeHtml4(responseData);
-                    Log.i("Blogger Search Result ", removeHtmlData);
+                    Log.i("Blogger Search MixFeedResult ", removeHtmlData);
                     ParentingBlogResponse blogResponse = new Gson().fromJson(removeHtmlData, ParentingBlogResponse.class);
                     response.setResponseObject(blogResponse);
 

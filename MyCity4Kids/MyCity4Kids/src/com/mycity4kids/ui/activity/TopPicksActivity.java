@@ -154,9 +154,9 @@ public class TopPicksActivity extends BaseActivity implements OnClickListener {
 
 				updateResponseOnUI(responseData);
 				/*mTopPicksListCount = responseData.getResult().getData().getTotal_articles();
-				ArrayList<Data> dataList = responseData.getResult().getData().getData();
+				ArrayList<MixFeedData> dataList = responseData.getResult().getData().getData();
 
-				for (Data dataModel : dataList) {
+				for (MixFeedData dataModel : dataList) {
 					ParentingArticleListModel _mainModel = new ParentingArticleListModel();
 					_mainModel.setArticleId(dataModel.getArticle().getId());
 					_mainModel.setArticleCreatedDate(dataModel.getArticle().getCreated());
