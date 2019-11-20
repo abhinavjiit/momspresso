@@ -14,7 +14,7 @@ import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.models.CollectionsModels.CollectionFeaturedListModel;
+import com.mycity4kids.models.CollectionsModels.FeaturedOnModel;
 import com.mycity4kids.models.CollectionsModels.FollowCollectionRequestModel;
 import com.mycity4kids.models.CollectionsModels.UserCollectiosModel;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
@@ -26,6 +26,7 @@ import java.util.ArrayList;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -88,16 +89,16 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
 
     private void fetchFeatureList() {
         showProgressDialog(getResources().getString(R.string.please_wait));
-        int from =  10 * nextPageNumber;
+        int from = 10 * nextPageNumber;
         Retrofit retrofit = BaseApplication.getInstance().getRetrofitTest();
         CollectionsAPI featureListAPI = retrofit.create(CollectionsAPI.class);
-        Call<CollectionFeaturedListModel> call = featureListAPI.getFeatureList("5dc0809611cb4607d6b24667/2", from, from + 9);
+        Call<FeaturedOnModel> call = featureListAPI.getFeatureList("5dc0809611cb4607d6b24667/2", from, from + 9);
         call.enqueue(featuredList);
     }
 
-    private Callback<CollectionFeaturedListModel> featuredList = new Callback<CollectionFeaturedListModel>() {
+    private Callback<FeaturedOnModel> featuredList = new Callback<FeaturedOnModel>() {
         @Override
-        public void onResponse(Call<CollectionFeaturedListModel> call, retrofit2.Response<CollectionFeaturedListModel> response) {
+        public void onResponse(Call<FeaturedOnModel> call, retrofit2.Response<FeaturedOnModel> response) {
             isReuqestRunning = false;
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
@@ -110,8 +111,8 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
             }
 
             try {
-                CollectionFeaturedListModel userCollectionsListModel = response.body();
-                showFeatureList(userCollectionsListModel.getData().get(0).getResult().get(0).getCollections_list().get(0).getCollectionList());
+                FeaturedOnModel userCollectionsListModel = response.body();
+                showFeatureList(userCollectionsListModel.getData().getResult().getItem_list().get(0).getCollectionList());
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
@@ -119,7 +120,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
         }
 
         @Override
-        public void onFailure(Call<CollectionFeaturedListModel> call, Throwable t) {
+        public void onFailure(Call<FeaturedOnModel> call, Throwable t) {
             isReuqestRunning = false;
             removeProgressDialog();
             if (mLodingView.getVisibility() == View.VISIBLE) {

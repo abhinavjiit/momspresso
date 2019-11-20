@@ -79,11 +79,11 @@
                             android:id="@+id/crownImageView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="4dp"
-                            android:background="@drawable/profile_crown_bg"
                             android:layout_alignTop="@+id/profileImageView"
-                            android:layout_marginTop="60dp"
                             android:layout_marginStart="32dp"
+                            android:layout_marginTop="60dp"
+                            android:background="@drawable/profile_crown_bg"
+                            android:padding="4dp"
                             android:src="@drawable/add_photo" />
 
                         <com.mycity4kids.widget.CustomFontTextView
@@ -284,8 +284,9 @@
 
                             <com.mycity4kids.widget.CustomFontTextView
                                 android:id="@+id/sharePrivateTextView"
-                                android:layout_width="160dp"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_marginStart="20dp"
                                 android:layout_marginTop="4dp"
                                 android:layout_marginEnd="10dp"
                                 android:background="@drawable/update_profile_bg"
@@ -299,14 +300,16 @@
                                 android:textColor="@color/white"
                                 app:fontName="oswald_regular.ttf"
                                 app:layout_constraintEnd_toStartOf="@+id/followerContainer"
+                                app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/rankContainer" />
 
                             <com.mycity4kids.widget.CustomFontTextView
                                 android:id="@+id/analyticsTextView"
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
                                 android:layout_marginStart="10dp"
+                                android:layout_marginTop="4dp"
+                                android:layout_marginEnd="20dp"
                                 android:background="@drawable/profile_analytics_btn_bg"
                                 android:drawableStart="@drawable/tab1"
                                 android:drawablePadding="-30dp"
@@ -319,13 +322,15 @@
                                 android:text="Analytics"
                                 android:textColor="@color/app_red"
                                 app:fontName="oswald_regular.ttf"
+                                app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="@+id/followerContainer"
                                 app:layout_constraintTop_toBottomOf="@+id/rankContainer" />
 
                             <com.mycity4kids.widget.CustomFontTextView
                                 android:id="@+id/followAuthorTextView"
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_marginStart="20dp"
                                 android:layout_marginTop="4dp"
                                 android:layout_marginEnd="10dp"
                                 android:background="@drawable/update_profile_bg"
@@ -337,17 +342,18 @@
                                 android:paddingBottom="10dp"
                                 android:text="FOLLOW"
                                 android:textColor="@color/white"
-                                android:visibility="gone"
                                 app:fontName="oswald_regular.ttf"
                                 app:layout_constraintEnd_toStartOf="@+id/followerContainer"
+                                app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/rankContainer" />
 
                             <com.mycity4kids.widget.CustomFontTextView
                                 android:id="@+id/sharePublicTextView"
-                                android:layout_width="160dp"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
                                 android:layout_marginStart="10dp"
+                                android:layout_marginTop="4dp"
+                                android:layout_marginEnd="20dp"
                                 android:background="@drawable/profile_analytics_btn_bg"
                                 android:elevation="6dp"
                                 android:gravity="center"
@@ -357,8 +363,8 @@
                                 android:paddingBottom="10dp"
                                 android:text="SHARE"
                                 android:textColor="@color/app_red"
-                                android:visibility="gone"
                                 app:fontName="oswald_regular.ttf"
+                                app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="@+id/followerContainer"
                                 app:layout_constraintTop_toBottomOf="@+id/rankContainer" />
                         </androidx.constraintlayout.widget.ConstraintLayout>

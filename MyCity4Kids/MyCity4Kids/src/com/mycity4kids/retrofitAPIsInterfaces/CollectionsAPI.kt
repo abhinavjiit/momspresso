@@ -52,12 +52,12 @@ interface CollectionsAPI {
     @GET("/v1/collections/featured/{userId}")
     fun getFeaturedOnCollections(@Path("userId") userId: String,
                                  @Query("start") start: Int,
-                                 @Query("offset") end: Int): Call<CollectionFeaturedListModel>
+                                 @Query("offset") end: Int): Call<FeaturedOnModel>
 
     @GET("/v1/collections/featuredItem/{userId}")
     fun getFeatureList(@Path("userId") articleId: String,
                        @Query("start") start: Int,
-                       @Query("offset") end: Int): Call<CollectionFeaturedListModel>
+                       @Query("offset") end: Int): Call<FeaturedOnModel>
 
     @POST("/v1/followedCollections/")
     fun followCollection(@Body followCollectionRequest: FollowCollectionRequestModel): Call<FollowUnfollowUserResponse>

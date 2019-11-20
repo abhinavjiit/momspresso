@@ -31,7 +31,8 @@ import com.mycity4kids.animation.MyCityAnimationsUtil
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
-import com.mycity4kids.models.CollectionsModels.CollectionFeaturedListModel
+import com.mycity4kids.models.CollectionsModels.FeaturedOnModel
+import com.mycity4kids.models.CollectionsModels.UserCollectiosModel
 import com.mycity4kids.models.request.ArticleDetailRequest
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
 import com.mycity4kids.models.response.*
@@ -41,6 +42,9 @@ import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
 import com.mycity4kids.ui.activity.BadgeActivity
+import com.mycity4kids.ui.activity.FollowersAndFollowingListActivity
+import com.mycity4kids.ui.activity.IdTokenLoginActivity
+import com.mycity4kids.ui.activity.RankingActivity
 import com.mycity4kids.ui.fragment.UserBioDialogFragment
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.RoundedTransformation
@@ -87,7 +91,7 @@ class M_PrivateProfileActivity : BaseActivity(),
     private var isRequestRunning: Boolean = false
     private val multipleRankList = java.util.ArrayList<LanguageRanksModel>()
     private var userContentList: ArrayList<ArticleListingResult>? = null
-    private var userFeaturedList: ArrayList<CollectionFeaturedListModel.FeaturedListResult>? = null
+    private var userFeaturedOnList: ArrayList<FeaturedItem>? = null
 
     private val userContentAdapter: UserContentAdapter by lazy { UserContentAdapter(this) }
     private val usersFeaturedContentAdapter: UsersFeaturedContentAdapter by lazy { UsersFeaturedContentAdapter(this) }
@@ -157,7 +161,7 @@ class M_PrivateProfileActivity : BaseActivity(),
         recyclerView.adapter = userContentAdapter
 
         userContentList = ArrayList()
-        userFeaturedList = ArrayList()
+        userFeaturedOnList = ArrayList()
 
         profileShimmerLayout.startShimmerAnimation()
         val handler = Handler()
@@ -224,15 +228,14 @@ class M_PrivateProfileActivity : BaseActivity(),
                     showToast(getString(R.string.server_went_wrong))
                     return
                 }
-
                 val responseData = response.body()
                 if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-                    if ("0" == responseData.data.result.isFollowed) {
+                    isFollowing = if ("0" == responseData.data.result.isFollowed) {
                         followAuthorTextView.setText(R.string.ad_follow_author)
-                        isFollowing = false
+                        false
                     } else {
                         followAuthorTextView.setText(R.string.ad_following_author)
-                        isFollowing = true
+                        true
                     }
                 } else {
                     showToast(getString(R.string.server_went_wrong))
@@ -240,12 +243,10 @@ class M_PrivateProfileActivity : BaseActivity(),
             }
 
             override fun onFailure(call: Call<ArticleDetailResponse>, t: Throwable) {
-                if (t is UnknownHostException) {
-                    showToast(getString(R.string.error_network))
-                } else if (t is SocketTimeoutException) {
-                    showToast(getString(R.string.connection_timeout))
-                } else {
-                    showToast(getString(R.string.server_went_wrong))
+                when (t) {
+                    is UnknownHostException -> showToast(getString(R.string.error_network))
+                    is SocketTimeoutException -> showToast(getString(R.string.connection_timeout))
+                    else -> showToast(getString(R.string.server_went_wrong))
                 }
                 Crashlytics.logException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
@@ -271,7 +272,7 @@ class M_PrivateProfileActivity : BaseActivity(),
         }
     }
 
-    internal var followUserResponseCallback: Callback<FollowUnfollowUserResponse> = object : Callback<FollowUnfollowUserResponse> {
+    private var followUserResponseCallback: Callback<FollowUnfollowUserResponse> = object : Callback<FollowUnfollowUserResponse> {
         override fun onResponse(call: Call<FollowUnfollowUserResponse>, response: retrofit2.Response<FollowUnfollowUserResponse>) {
             isRequestRunning = false
             if (response.body() == null) {
@@ -301,7 +302,7 @@ class M_PrivateProfileActivity : BaseActivity(),
         }
     }
 
-    internal var unfollowUserResponseCallback: Callback<FollowUnfollowUserResponse> = object : Callback<FollowUnfollowUserResponse> {
+    private var unfollowUserResponseCallback: Callback<FollowUnfollowUserResponse> = object : Callback<FollowUnfollowUserResponse> {
         override fun onResponse(call: Call<FollowUnfollowUserResponse>, response: retrofit2.Response<FollowUnfollowUserResponse>) {
             isRequestRunning = false
             if (response.body() == null) {
@@ -574,7 +575,39 @@ class M_PrivateProfileActivity : BaseActivity(),
                     hitFollowUnfollowAPI()
                 }
             }
-            view?.id == R.id.bookmarksTab -> {
+            view?.id == R.id.sharePrivateTextView -> {
+
+            }
+            view?.id == R.id.sharePublicTextView -> {
+
+            }
+            view?.id == R.id.analyticsTextView -> {
+                if (AppConstants.DEBUGGING_USER_ID.contains("" + authorId)) {
+                    rankContainer.setOnLongClickListener {
+                        BaseApplication.getInstance().toggleGroupBaseURL()
+                        false
+                    }
+                    val intent = Intent(this, IdTokenLoginActivity::class.java)
+                    startActivity(intent)
+                    return
+                } else {
+                    val intent = Intent(this, RankingActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+            view?.id == R.id.followerContainer -> {
+                val intent = Intent(this, FollowersAndFollowingListActivity::class.java)
+                intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWER_LIST)
+                intent.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, authorId)
+                startActivity(intent)
+            }
+            view?.id == R.id.followingContainer -> {
+                val intent = Intent(this, FollowersAndFollowingListActivity::class.java)
+                intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWING_LIST)
+                intent.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, authorId)
+                startActivity(intent)
+            }
+            view?.id == R.id.rankContainer -> {
 
             }
         }
@@ -584,29 +617,78 @@ class M_PrivateProfileActivity : BaseActivity(),
         val retrofit = BaseApplication.getInstance().retrofitTest
         val featureListAPI = retrofit.create(CollectionsAPI::class.java)
         val call = featureListAPI.getFeaturedOnCollections("d7d981e2978b49b7b1748306967fc8da", 0, 10)
-        call.enqueue(object : Callback<CollectionFeaturedListModel> {
-            override fun onResponse(call: Call<CollectionFeaturedListModel>, response: retrofit2.Response<CollectionFeaturedListModel>) {
+        call.enqueue(object : Callback<FeaturedOnModel> {
+            override fun onResponse(call: Call<FeaturedOnModel>, response: retrofit2.Response<FeaturedOnModel>) {
                 if (null == response.body()) {
                     val nee = NetworkErrorException(response.raw().toString())
                     Crashlytics.logException(nee)
                     return
                 }
                 try {
-                    val responseData = response.body() as CollectionFeaturedListModel
+                    val responseData = response.body() as FeaturedOnModel
                     if (responseData.code == 200 && Constants.SUCCESS == responseData.status) {
-                        userFeaturedList?.addAll(responseData.data[0].result)
-                        usersFeaturedContentAdapter.setListData(userFeaturedList)
+
+                        for (i in 0 until 10) {
+                            var item = FeaturedItem()
+                            item.title = "item" + i
+                            item.thumbnail = responseData.data.result.item_list[0].thumbnail
+                            var coll = UserCollectiosModel()
+                            coll.name = responseData.data.result.item_list[0].collectionList[0].name
+                            item.collectionList = ArrayList()
+                            item.collectionList.add(coll)
+                            userFeaturedOnList?.add(item)
+                        }
+
+//                        userFeaturedOnList?.addAll(responseData.data.result.item_list.toMutableList()[0].title)
+//                        userFeaturedOnList?.addAll(responseData.data.result.item_list.toMutableList())
+//                        userFeaturedOnList?.addAll(responseData.data.result.item_list.toMutableList())
+//                        userFeaturedOnList?.addAll(responseData.data.result.item_list.toMutableList())
+//                        userFeaturedOnList?.addAll(responseData.data.result.item_list.toMutableList())
+//                        userFeaturedOnList?.addAll(responseData.data.result.item_list.toMutableList())
+//                        userFeaturedOnList?.addAll(responseData.data.result.item_list.toMutableList())
+//                        userFeaturedOnList?.addAll(responseData.data.result.item_list.toMutableList())
+//                        userFeaturedOnList?.addAll(responseData.data.result.item_list.toMutableList())
+//                        userFeaturedOnList?.addAll(responseData.data.result.item_list.toMutableList())
+                        for (i in 0 until userFeaturedOnList!!.size) {
+                            for (j in 0 until (0..10).random()) {
+                                userFeaturedOnList!![i].collectionList.add(userFeaturedOnList!![i].collectionList[0])
+                            }
+                        }
+                        usersFeaturedContentAdapter.setListData(userFeaturedOnList)
                         usersFeaturedContentAdapter.notifyDataSetChanged()
+//                        userFeaturedOn?.add(responseData.data[0].result[0])
+//                        userFeaturedOn?.get(0)?.collections_list?.apply {
+//                            addAll(responseData.data[0].result[0]?.collections_list!!)
+//                            addAll(responseData.data[0].result[0]?.collections_list!!)
+//                            addAll(responseData.data[0].result[0]?.collections_list!!)
+//                            addAll(responseData.data[0].result[0]?.collections_list!!)
+//                            addAll(responseData.data[0].result[0]?.collections_list!!)
+//                            addAll(responseData.data[0].result[0]?.collections_list!!)
+//                            addAll(responseData.data[0].result[0]?.collections_list!!)
+//                            addAll(responseData.data[0].result[0]?.collections_list!!)
+//                            addAll(responseData.data[0].result[0]?.collections_list!!)
+//                            addAll(responseData.data[0].result[0]?.collections_list!!)
+//                        }
+//                        for (i in 0 until userFeaturedOn?.get(0)?.collections_list!!.size) {
+//
+//                        }
+//
+//                        for (i in 0 until (0..10).random()) {
+//                            userFeaturedOn?.get(0)?.collections_list?.get(i)?.collectionList?.addAll(
+//                                    userFeaturedOn?.get(0)?.collections_list?.get(i)?.collectionList!!)
+//                        }
+//
+//                        usersFeaturedContentAdapter.setListData(userFeaturedOn)
+//                        usersFeaturedContentAdapter.notifyDataSetChanged()
                     } else {
                     }
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
-
             }
 
-            override fun onFailure(call: Call<CollectionFeaturedListModel>, t: Throwable) {
+            override fun onFailure(call: Call<FeaturedOnModel>, t: Throwable) {
                 Crashlytics.logException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }

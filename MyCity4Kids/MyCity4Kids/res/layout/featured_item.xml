@@ -92,7 +92,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/profile_featured_collection_bg"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:lines="1"
                 android:maxWidth="160dp"
                 android:padding="10dp"
                 android:text="dwadwa" />
@@ -103,7 +105,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/profile_featured_collection_bg"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:lines="1"
                 android:maxWidth="160dp"
                 android:padding="10dp"
                 android:text="dwadwa" />
@@ -114,7 +118,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/profile_featured_collection_bg"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:lines="1"
                 android:maxWidth="160dp"
                 android:padding="10dp"
                 android:text="dwadwa" />
@@ -125,21 +131,23 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/profile_featured_collection_bg"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:lines="1"
                 android:maxWidth="160dp"
                 android:padding="10dp"
                 android:text="dwadwa" />
 
-<!--            <com.mycity4kids.widget.CustomFontTextView-->
-<!--                android:id="@+id/collectionItem5TextView"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_margin="5dp"-->
-<!--                android:background="@drawable/profile_featured_collection_bg"-->
-<!--                android:gravity="center"-->
-<!--                android:maxWidth="160dp"-->
-<!--                android:padding="10dp"-->
-<!--                android:text="dwadwa" />-->
+            <!--            <com.mycity4kids.widget.CustomFontTextView-->
+            <!--                android:id="@+id/collectionItem5TextView"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_margin="5dp"-->
+            <!--                android:background="@drawable/profile_featured_collection_bg"-->
+            <!--                android:gravity="center"-->
+            <!--                android:maxWidth="160dp"-->
+            <!--                android:padding="10dp"-->
+            <!--                android:text="dwadwa" />-->
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/moreItemsTextView"
