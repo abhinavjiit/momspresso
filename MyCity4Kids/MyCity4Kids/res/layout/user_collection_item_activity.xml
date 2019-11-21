@@ -12,9 +12,7 @@
         android:layout_margin="0dp"
         android:padding="0dp"
         app:contentInsetLeft="0dp"
-        app:contentInsetStart="0dp"
-        app:theme="@style/ToolbarTheme"
-        app:titleTextAppearance="@style/ToolbarTheme.Title">
+        app:contentInsetStart="0dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -71,10 +69,10 @@
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/share"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:padding="@dimen/space_16"
                         android:src="@drawable/sharee"
-
                         android:tint="@color/white" />
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -135,6 +133,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
                     android:text="121"
                     android:textColor="@color/white"
                     android:textSize="16dp"
@@ -147,7 +146,10 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/space_10"
                     android:layout_toEndOf="@id/followersCount"
+                    android:drawableRight="@drawable/arrow_right"
+                    android:gravity="center_vertical"
                     android:text="Follower"
+                    android:drawableTint="@color/white"
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     app:fontName="open_sans.ttf" />
@@ -159,7 +161,8 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/followersTextView"
                     android:src="@drawable/arrow_right"
-                    android:tint="@color/white" />
+                    android:tint="@color/white"
+                    android:visibility="gone" />
 
 
                 <androidx.appcompat.widget.SwitchCompat
@@ -171,8 +174,6 @@
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     app:switchPadding="@dimen/space_10" />
-
-
             </RelativeLayout>
         </RelativeLayout>
 
@@ -183,15 +184,25 @@
         android:id="@+id/collectionItemRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar" />
+        android:layout_below="@id/toolbar"
+        android:layout_margin="@dimen/space_5" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/itemNotAddedTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="you haven't added any item yet"
+        android:textColor="@color/black"
+        android:visibility="gone" />
 
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:background="@color/white"
+        android:visibility="visible"
         app:duration="1000">
 
         <LinearLayout

@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
+import com.crashlytics.android.Crashlytics
 import com.kelltontech.utils.StringUtils
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
@@ -77,7 +79,7 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
         return true
     }
 
-    fun addCollection() {
+    private fun addCollection() {
         var addCollectionRequestModel = AddCollectionRequestModel()
         addCollectionRequestModel.name = collectionNameEditTextView.text.toString().trim()
         addCollectionRequestModel.userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
@@ -91,23 +93,27 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
             }
 
             override fun onNext(t: BaseResponseGeneric<AddCollectionRequestModel>) {
-                if (t.code == 200 && t.status == "success" && t.data?.result != null) {
+                try {
+                    if (t.code == 200 && t.status == "success" && t.data?.result != null) {
 
-                    var addCollectionRequestModell: AddCollectionRequestModel = t.data!!.result
-                    collectionId = addCollectionRequestModell.userCollectionId
+                        var addCollectionRequestModell: AddCollectionRequestModel = t.data!!.result
+                        collectionId = addCollectionRequestModell.userCollectionId
 
-                    if (!StringUtils.isNullOrEmpty(collectionId) && !StringUtils.isNullOrEmpty(articleId)) {
-                        addCollectionItem()
+                        if (!StringUtils.isNullOrEmpty(collectionId) && !StringUtils.isNullOrEmpty(articleId)) {
+                            addCollectionItem()
+                        } else {
+                            targetFragment?.onActivityResult(100, 1, activity?.intent)
+                            dismiss()
+                        }
+
                     } else {
-                        targetFragment?.onActivityResult(100, 1, activity?.intent)
-                        dismiss()
+                        ToastUtils.showToast(activity, "nhi hua  add ")
+
                     }
-
-                } else {
-                    ToastUtils.showToast(activity, "nhi hua  add ")
-
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4KException", Log.getStackTraceString(e))
                 }
-
             }
 
             override fun onError(e: Throwable) {
@@ -136,27 +142,25 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
             }
 
             override fun onNext(t: BaseResponseGeneric<AddCollectionRequestModel>) {
-                if (t != null && t.code == 200 && t.status == "success" && t.data?.result != null) {
-                    targetFragment?.onActivityResult(100, 1, activity?.intent)
-                    dismiss()
-                    ToastUtils.showToast(activity, "item added in collection successfully")
-
-
-                } else {
-                    ToastUtils.showToast(activity, "item  haven't added in collection successfully")
-
+                try {
+                    if (t.code == 200 && t.status == "success" && t.data?.result != null) {
+                        targetFragment?.onActivityResult(100, 1, activity?.intent)
+                        dismiss()
+                        ToastUtils.showToast(activity, t.data?.msg)
+                    } else {
+                        ToastUtils.showToast(activity, t.data?.msg)
+                    }
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4KException", Log.getStackTraceString(e))
                 }
-
-
             }
 
             override fun onError(e: Throwable) {
-                ToastUtils.showToast(activity, "item  haven't added in collection successfully , some error at the server ")
-
+                Crashlytics.logException(e)
+                Log.d("MC4KException", Log.getStackTraceString(e))
             }
 
         })
-
-
     }
 }

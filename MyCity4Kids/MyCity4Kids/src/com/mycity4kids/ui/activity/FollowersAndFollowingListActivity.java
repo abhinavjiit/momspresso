@@ -2,7 +2,6 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +26,7 @@ import com.mycity4kids.ui.adapter.FollowerFollowingListAdapter;
 
 import java.util.ArrayList;
 
+import androidx.appcompat.widget.Toolbar;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -48,6 +48,8 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
     private String userId;
     private String followListType;
     private TextView toolbarTitle;
+    private String collectionId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +64,9 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
         if (null == userId) {
             userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         }
-
+        if (getIntent().hasExtra("collectionId")) {
+            collectionId = getIntent().getStringExtra("collectionId");
+        }
         followerFollowingListView = (ListView) findViewById(R.id.followerFollowingListView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         noResultTextView = (TextView) findViewById(R.id.emptyList);
@@ -73,6 +77,7 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mDatalist = new ArrayList<>();
+
 
         followerFollowingListAdapter = new FollowerFollowingListAdapter(this, followListType);
         followerFollowingListAdapter.setData(mDatalist);
@@ -102,6 +107,12 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
             callFollowerList.enqueue(getFollowersListResponseCallback);
             progressBar.setVisibility(View.VISIBLE);
             toolbarTitle.setText(getString(R.string.myprofile_followers_label));
+        } else if (AppConstants.COLLECTION_FOLLOWING_LIST.equals(followListType)) {
+            Retrofit retrofit1 = BaseApplication.getInstance().getCampaignRetrofit();
+            FollowAPI followListAPIi = retrofit1.create(FollowAPI.class);
+            Call<FollowersFollowingResponse> callCollectionFollowersList = followListAPIi.getCollectionFollowingList(collectionId, 0, 10);
+            callCollectionFollowersList.enqueue(getCollectionFollowersList);
+            progressBar.setVisibility(View.VISIBLE);
         } else {
             Call<FollowersFollowingResponse> callFollowingList = followListAPI.getFollowingList(userId);
             callFollowingList.enqueue(getFollowersListResponseCallback);
@@ -109,6 +120,35 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
             toolbarTitle.setText(getString(R.string.myprofile_following_label));
         }
     }
+
+    private Callback<FollowersFollowingResponse> getCollectionFollowersList = new Callback<FollowersFollowingResponse>() {
+        @Override
+        public void onResponse(Call<FollowersFollowingResponse> call, retrofit2.Response<FollowersFollowingResponse> response) {
+            progressBar.setVisibility(View.INVISIBLE);
+            if (response == null || response.body() == null) {
+                showToast(getString(R.string.went_wrong));
+                return;
+            }
+            try {
+                FollowersFollowingResponse responseData = response.body();
+                processFollowersListResponse(responseData);
+            } catch (Exception e) {
+                showToast(getString(R.string.server_went_wrong));
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+
+        }
+
+        @Override
+        public void onFailure(Call<FollowersFollowingResponse> call, Throwable t) {
+            progressBar.setVisibility(View.INVISIBLE);
+            noResultTextView.setVisibility(View.VISIBLE);
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
 
     private Callback<FollowersFollowingResponse> getFollowersListResponseCallback = new Callback<FollowersFollowingResponse>() {
         @Override

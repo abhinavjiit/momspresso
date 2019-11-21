@@ -4,26 +4,28 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.models.CollectionsModels.UserCollectionsListModel
-import com.mycity4kids.models.CollectionsModels.UserCollectiosModel
+import com.mycity4kids.models.CollectionsModels.UserCollectionsModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.user_collection_items_list_adapter.view.*
 
 
-class CollectionItemsListAdapter(var activity: Context) : RecyclerView.Adapter<CollectionItemsListAdapter.ViewHolder>() {
+class CollectionItemsListAdapter(var activity: Context, var recyclerViewClick: RecyclerViewClick) : RecyclerView.Adapter<CollectionItemsListAdapter.ViewHolder>() {
 
 
     private var mInflater: LayoutInflater = BaseApplication.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     var context: Context = activity
-    private var userCollectionsTopicList = ArrayList<UserCollectiosModel>()
+    private var userCollectionsTopicList = ArrayList<UserCollectionsModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = mInflater.inflate(R.layout.user_collection_items_list_adapter, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(view, recyclerViewClick)
     }
 
     override fun getItemCount(): Int {
@@ -32,9 +34,10 @@ class CollectionItemsListAdapter(var activity: Context) : RecyclerView.Adapter<C
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         try {
-
             holder.articleTitleTextView.text = userCollectionsTopicList[position].item_info.title
-          //  holder.viewCountTextView.text=userCollectionsTopicList
+            if (userCollectionsTopicList[position].item_info.viewCount > 0)
+                holder.viewCountTextView.text = userCollectionsTopicList[position].item_info.viewCount.toString()
+            else holder.viewCountTextView.visibility = View.GONE
             if (userCollectionsTopicList[position].itemType.equals("2")) {
                 try {
                     Picasso.with(activity).load(userCollectionsTopicList[position].item_info.thumbnail)
@@ -43,7 +46,7 @@ class CollectionItemsListAdapter(var activity: Context) : RecyclerView.Adapter<C
                     holder.articleImageView.setImageResource(R.drawable.default_article)
                 }
 
-
+                holder.articleVideoShortStoryIcon.setImageResource(R.drawable.ic_video)
                 if (userCollectionsTopicList[position].item_info.author != null)
                     holder.articleAuthorName.text = userCollectionsTopicList[position].item_info.author.firstName + userCollectionsTopicList[position].item_info.author.lastName
 
@@ -54,23 +57,24 @@ class CollectionItemsListAdapter(var activity: Context) : RecyclerView.Adapter<C
                 } catch (e: Exception) {
                     holder.articleImageView.setImageResource(R.drawable.default_article)
                 }
+                holder.articleVideoShortStoryIcon.setImageResource(R.drawable.draft_red)
 
                 holder.articleAuthorName.text = userCollectionsTopicList[position].item_info.userName
-
-
             } else {
-
                 try {
                     Picasso.with(activity).load(userCollectionsTopicList[position].item_info.storyImage)
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView)
                 } catch (e: Exception) {
                     holder.articleImageView.setImageResource(R.drawable.default_article)
                 }
-
+                holder.articleVideoShortStoryIcon.setImageResource(R.drawable.shortstory_red)
 
                 holder.articleAuthorName.text = userCollectionsTopicList[position].item_info.userName
 
 
+            }
+            holder.root.setOnClickListener {
+                recyclerViewClick.onRecyclerViewclick(position)
             }
         } catch (e: Exception) {
 
@@ -80,16 +84,22 @@ class CollectionItemsListAdapter(var activity: Context) : RecyclerView.Adapter<C
 
     }
 
-    fun setListData(topicsData: UserCollectionsListModel) {
-        userCollectionsTopicList = topicsData.collectionItems
+    fun setListData(topicsData: ArrayList<UserCollectionsModel>) {
+        userCollectionsTopicList = topicsData
     }
 
-    class ViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
+    class ViewHolder(mView: View, recyclerViewClick: RecyclerViewClick) : RecyclerView.ViewHolder(mView) {
         var articleTitleTextView: TextView = mView.articleTitleTextView
-        var articleImageView = mView.articleImageView
-        var articleAuthorName = mView.articleAuthorName
-        var viewCountTextView = mView.viewCountTextView
+        var articleImageView: ImageView = mView.articleImageView
+        var articleAuthorName: TextView = mView.articleAuthorName
+        var viewCountTextView: TextView = mView.viewCountTextView
+        var articleVideoShortStoryIcon: ImageView = mView.articleVideoShortStoryIcon
+        var root: RelativeLayout = mView.root
 
+    }
+
+    interface RecyclerViewClick {
+        fun onRecyclerViewclick(position: Int)
     }
 
 

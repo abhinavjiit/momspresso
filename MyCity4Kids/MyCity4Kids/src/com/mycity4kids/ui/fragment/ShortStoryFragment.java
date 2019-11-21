@@ -695,10 +695,10 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             }
             break;
             case R.id.genericShareImageView: {
-                if (isAdded()) {
+              /*  if (isAdded()) {
                     AppUtils.shareStoryGeneric(getActivity(), headerModel.getSsResult().getUserType(), headerModel.getSsResult().getBlogTitleSlug(), headerModel.getSsResult().getTitleSlug(),
                             "ShortStoryListingScreen", userDynamoId, articleId, authorId, author);
-                }
+                }*/
             }
             break;
             case R.id.authorNameTextView: {

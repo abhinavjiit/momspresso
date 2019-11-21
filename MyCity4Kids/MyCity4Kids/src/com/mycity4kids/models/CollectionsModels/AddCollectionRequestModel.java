@@ -1,5 +1,7 @@
 package com.mycity4kids.models.CollectionsModels;
 
+import java.util.ArrayList;
+
 public class AddCollectionRequestModel {
 
     private String name;
@@ -9,6 +11,15 @@ public class AddCollectionRequestModel {
     private String itemType;
     private String itemId;
     private Boolean deleted;
+    private ArrayList<String> listItemId;
+
+    public ArrayList<String> getListItemId() {
+        return listItemId;
+    }
+
+    public void setListItemId(ArrayList<String> listItemId) {
+        this.listItemId = listItemId;
+    }
 
     public Boolean getDeleted() {
         return deleted;

@@ -1,7 +1,7 @@
 package com.mycity4kids.models.CollectionsModels;
 
 
-public class UserCollectiosModel {
+public class UserCollectionsModel {
     private String userCollectionId;
     private String created_at;
     private String userId;
@@ -17,8 +17,13 @@ public class UserCollectiosModel {
     private String itemId;
     private String item; //articleId
     private String itemType;
+<<<<<<< HEAD:MyCity4Kids/MyCity4Kids/src/com/mycity4kids/models/CollectionsModels/UserCollectiosModel.java
     private boolean isFollowing;
     private ItemInfoModel item_info;
+=======
+    private ItemInfoModel item_info;
+
+>>>>>>> discription need to added:MyCity4Kids/MyCity4Kids/src/com/mycity4kids/models/CollectionsModels/UserCollectionsModel.java
 
     public ItemInfoModel getItem_info() {
         return item_info;

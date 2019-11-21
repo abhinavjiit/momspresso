@@ -783,7 +783,8 @@
                     android:text="Collection"
                     android:textColor="@color/app_grey"
                     android:textSize="11sp"
-                    app:fontName="oswald.ttf" />
+                    app:fontName="oswald.ttf"
+                    app:textAllCaps="true" />
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/bookmarkTextView"

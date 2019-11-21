@@ -66,4 +66,17 @@ interface CollectionsAPI {
     @GET("/v1/collections/images/")
     fun getCollectionImages(): Observable<ResponseBody>
 
+    //http://testingapi.momspresso.com/v1/followedCollections/
+
+    @POST("/v1/followedCollections/")
+    fun followUnfollowCollection(@Body addCollectionRequestModel: AddCollectionRequestModel): Observable<ResponseBody>
+
+    //http://testingapi.momspresso.com/v1/followedCollections/d97a8ea81b294b62b74e8fa656c0ae4b?start=0&offset=10
+
+    @GET("/v1/followedCollections/{userId}")
+    fun getFollowedCollection(@Path("userId") userId: String,
+                              @Query("start") start: Int,
+                              @Query("offset") offset: Int): Observable<BaseResponseGeneric<UserCollectionsListModel>>
+
+
 }

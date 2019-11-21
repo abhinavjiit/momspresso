@@ -454,7 +454,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             case R.id.genericShareImageView: {
 
                 try {
-                    AddCollectionAndCollectionitemDialogFragment addCollectionAndCollectionitemDialogFragment = new AddCollectionAndCollectionitemDialogFragment();
+                    AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment = new AddCollectionAndCollectionItemDialogFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("articleId", mDatalist.get(position).getId());
                     bundle.putString("type", AppConstants.SHORT_STORY_COLLECTION_TYPE);

@@ -10,15 +10,14 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
-import com.mycity4kids.models.CollectionsModels.UserCollectionsListModel
-import com.mycity4kids.models.CollectionsModels.UserCollectiosModel
+import com.mycity4kids.models.CollectionsModels.UserCollectionsModel
 import com.squareup.picasso.Picasso
 
 class CollectionsAdapter(activity: Context) : BaseAdapter() {
 
     private var mInflater: LayoutInflater = BaseApplication.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     var context: Context = activity
-    private var userCollectionsTopicList = ArrayList<UserCollectiosModel>()
+    private var userCollectionsTopicList = ArrayList<UserCollectionsModel>()
 
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -45,8 +44,8 @@ class CollectionsAdapter(activity: Context) : BaseAdapter() {
         return view!!
     }
 
-    fun getUserColletions(collectionsTopics: UserCollectionsListModel) {
-        userCollectionsTopicList = collectionsTopics.collections_list
+    fun getUserColletions(collectionsTopics: ArrayList<UserCollectionsModel>) {
+        userCollectionsTopicList = collectionsTopics
     }
 
     override fun getItem(position: Int): Any {

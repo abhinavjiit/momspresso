@@ -3,18 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/space_16"
-    android:elevation="@dimen/space_10">
+    android:layout_margin="@dimen/space_10"
+    android:elevation="@dimen/space_10"
+   >
 
 
     <RelativeLayout
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/space_16"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_margin="@dimen/space_16">
 
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -40,13 +38,14 @@
             android:id="@+id/articleTitleTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/space_16"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="14dp"
             android:layout_marginRight="@dimen/space_10"
-            android:layout_toRightOf="@id/articleImageView"
+            android:layout_toEndOf="@id/articleImageView"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="3"
-            android:text="dfsfdgsdfgfdhfghdgfhgjydjgy"
+            android:text="dfsfdgsd "
             android:textColor="#515151"
             android:textSize="@dimen/space_15"
             app:fontName="Helvetica Bold.ttf" />
@@ -70,7 +69,10 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/articleImageView"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginBottom="@dimen/space_10"
+            android:drawableLeft="@drawable/ic_views"
+            android:drawablePadding="@dimen/space_5"
             android:paddingLeft="@dimen/space_10"
             android:text="122"
             android:textColor="#979797" />

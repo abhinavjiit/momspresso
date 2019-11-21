@@ -67,6 +67,7 @@ import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.response.UserDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
+import com.mycity4kids.ui.activity.collection.CollectionsActivity;
 import com.mycity4kids.ui.fragment.UserBioDialogFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.RoundedTransformation;
@@ -177,6 +178,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Utils.campaignEvent(PrivateProfileActivity.this, "Rewards 1st screen", "Profile", "Update", "", "android", SharedPrefUtils.getAppLocale(PrivateProfileActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
                 startActivity(new Intent(PrivateProfileActivity.this, RewardsContainerActivity.class));
             }
@@ -525,9 +527,12 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                 startActivity(intent4);
             }
             case R.id.activitySectionTextView: {
-                Intent intent5 = new Intent(this, UserActivitiesActivity.class);
+                Intent intent1 = new Intent(PrivateProfileActivity.this, CollectionsActivity.class);
+                intent1.putExtra("userId", userId);
+                startActivity(intent1);
+               /* Intent intent5 = new Intent(this, UserActivitiesActivity.class);
                 intent5.putExtra(Constants.AUTHOR_ID, userId);
-                startActivity(intent5);
+                startActivity(intent5);*/
             }
             break;
             case R.id.badgeSectionTextView:

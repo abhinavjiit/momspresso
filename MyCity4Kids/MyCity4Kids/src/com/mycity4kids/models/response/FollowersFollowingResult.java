@@ -1,9 +1,12 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 1/8/16.
  */
 public class FollowersFollowingResult {
+    @SerializedName(value = "userId", alternate = {"id"})
     private String userId;
     private String followerId;
     private String followingId;
@@ -11,6 +14,7 @@ public class FollowersFollowingResult {
     private String lastName;
     private ProfilePic profilePicUrl;
     private int isFollowed;
+
 
     public String getUserId() {
         return userId;

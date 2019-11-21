@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -44,6 +45,8 @@ import com.facebook.ads.NativeAd;
 import com.facebook.ads.NativeAdLayout;
 import com.facebook.ads.NativeAdListener;
 import com.facebook.ads.NativeBannerAd;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -105,7 +108,6 @@ import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.PublicProfileActivity;
-import com.mycity4kids.ui.activity.collection.CollectionsActivity;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
@@ -1285,16 +1287,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     break;
                 }
                 case R.id.facebookShareTextView:
-                    Intent intent = new Intent(getActivity(), CollectionsActivity.class);
-                    startActivity(intent);
-
-                   /* if (ShareDialog.canShow(ShareLinkContent.class)) {
+                    if (ShareDialog.canShow(ShareLinkContent.class)) {
                         ShareLinkContent content = new ShareLinkContent.Builder()
                                 .setContentUrl(Uri.parse(shareUrl))
                                 .build();
                         new ShareDialog(this).show(content);
                     }
-                    Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author, "Facebook");*/
+                    Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author, "Facebook");
                     break;
                 case R.id.whatsappShareTextView:
                     if (StringUtils.isNullOrEmpty(shareUrl)) {
@@ -1315,10 +1314,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 case R.id.emailShareTextView:
 
                     try {
-                        AddCollectionAndCollectionitemDialogFragment addCollectionAndCollectionitemDialogFragment = new AddCollectionAndCollectionitemDialogFragment();
+                        AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment = new AddCollectionAndCollectionItemDialogFragment();
                         Bundle bundle = new Bundle();
                         bundle.putString("articleId", articleId);
-                        bundle.putString("type",AppConstants.ARTICLE_COLLECTION_TYPE);
+                        bundle.putString("type", AppConstants.ARTICLE_COLLECTION_TYPE);
                         addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
                         FragmentManager fm = getFragmentManager();
                         addCollectionAndCollectionitemDialogFragment.setTargetFragment(this, 0);

@@ -69,7 +69,6 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
 
     private final static int LIMIT = 15;
     private final static int FORYOU_LIMIT = 10;
-
     private MainArticleRecyclerViewAdapter recyclerAdapter;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
     private ArrayList<CampaignDataListResult> campaignListDataModels;
@@ -82,7 +81,6 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private boolean isHeaderVisible = false;
     private boolean mIsVisibleToUser;
-
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
     private RecyclerView recyclerView;

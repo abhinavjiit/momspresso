@@ -11,8 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
-import com.mycity4kids.models.CollectionsModels.UserCollectionsListModel
-import com.mycity4kids.models.CollectionsModels.UserCollectiosModel
+import com.mycity4kids.models.CollectionsModels.UserCollectionsModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.add_collection_adapter.view.*
 import kotlinx.android.synthetic.main.add_collection_adapter.view.close
@@ -24,7 +23,7 @@ import kotlinx.android.synthetic.main.edit_collection_item_adapter.view.*
 class AddCollectionAdapter(val activity: Context, var recyclerViewClickListner: RecyclerViewClickListener, var adapterViewType: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var mInflater: LayoutInflater = BaseApplication.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    var collectionList = ArrayList<UserCollectiosModel>()
+    var collectionList = ArrayList<UserCollectionsModel>()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -99,13 +98,13 @@ class AddCollectionAdapter(val activity: Context, var recyclerViewClickListner: 
     }
 
 
-    fun setListData(listData: UserCollectionsListModel) {
-        collectionList = listData.collections_list
+    fun setListData(listData: ArrayList<UserCollectionsModel>) {
+        collectionList = listData
 
     }
 
-    fun setItemListData(listData: UserCollectionsListModel) {
-        collectionList = listData.collectionItems
+    fun setItemListData(listData: ArrayList<UserCollectionsModel>) {
+        collectionList = listData
 
     }
 

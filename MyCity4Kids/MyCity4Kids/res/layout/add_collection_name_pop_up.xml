@@ -8,7 +8,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
         <Space
             android:id="@+id/space"
             android:layout_width="wrap_content"
@@ -27,7 +26,6 @@
             android:background="@drawable/rootlayout_with_rounded_corner"
             app:layout_constraintEnd_toStartOf="@id/space"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginLeft="@dimen/space_16"
             app:layout_constraintTop_toBottomOf="@id/space">
 
 
@@ -35,7 +33,7 @@
                 android:id="@+id/addCollectionNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/space_30"
+                android:layout_marginStart="@dimen/space_30"
                 android:layout_marginTop="@dimen/space_50"
                 android:text="Add collection name"
                 android:textColor="@color/campaign_515151"
@@ -53,8 +51,9 @@
                 android:layout_marginRight="@dimen/space_15"
                 android:background="@drawable/dark_border_rounded_corner"
                 android:gravity="center_vertical"
-                android:padding="@dimen/space_10"
                 android:hint="eg: My top 10 blogs"
+                android:maxLength="100"
+                android:padding="@dimen/space_10"
                 android:textColor="@color/campaign_4A4A4A"
                 android:textSize="@dimen/space_16" />
 

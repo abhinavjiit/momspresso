@@ -3,9 +3,6 @@ package com.mycity4kids.ui.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.fragment.app.FragmentManager;
-
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -41,6 +38,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
+import com.mycity4kids.ui.activity.collection.CollectionsActivity;
 import com.mycity4kids.ui.fragment.UserBioDialogFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
@@ -50,6 +48,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import androidx.fragment.app.FragmentManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -328,9 +327,13 @@ public class PublicProfileActivity extends BaseActivity implements View.OnClickL
                 startActivity(intent);
             }
             case R.id.activitySectionTextView: {
-                Intent intent = new Intent(this, UserActivitiesActivity.class);
+
+                Intent intent1 = new Intent(this, CollectionsActivity.class);
+                intent1.putExtra("userId", authorId);
+                startActivity(intent1);
+             /*   Intent intent = new Intent(this, UserActivitiesActivity.class);
                 intent.putExtra(Constants.AUTHOR_ID, authorId);
-                startActivity(intent);
+                startActivity(intent);*/
             }
             break;
             case R.id.rankContainer:

@@ -38,7 +38,7 @@ import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.BaseViewHolder;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
-import com.mycity4kids.ui.fragment.AddCollectionAndCollectionitemDialogFragment;
+import com.mycity4kids.ui.fragment.AddCollectionAndCollectionItemDialogFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -312,7 +312,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 @Override
                 public void onClick(View view) {
                     try {
-                        AddCollectionAndCollectionitemDialogFragment addCollectionAndCollectionitemDialogFragment = new AddCollectionAndCollectionitemDialogFragment();
+                        AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment = new AddCollectionAndCollectionItemDialogFragment();
                         Bundle bundle = new Bundle();
                         bundle.putString("articleId", mInfoList.get(getAdapterPosition()).getId());
                         bundle.putString("type", AppConstants.VIDEO_COLLECTION_TYPE);

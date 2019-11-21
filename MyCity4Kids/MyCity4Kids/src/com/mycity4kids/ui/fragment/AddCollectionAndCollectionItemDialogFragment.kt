@@ -1,7 +1,6 @@
 package com.mycity4kids.ui.fragment
 
 import android.app.Dialog
-import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -22,16 +21,18 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.models.CollectionsModels.AddCollectionRequestModel
 import com.mycity4kids.models.CollectionsModels.UpdateCollectionRequestModel
 import com.mycity4kids.models.CollectionsModels.UserCollectionsListModel
+import com.mycity4kids.models.CollectionsModels.UserCollectionsModel
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
 import com.mycity4kids.ui.adapter.AddCollectionAdapter
+import com.mycity4kids.utils.EndlessScrollListener
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-class AddCollectionAndCollectionitemDialogFragment : DialogFragment(), AddCollectionAdapter.RecyclerViewClickListener {
+class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollectionAdapter.RecyclerViewClickListener {
     override fun onClick(position: Int) {
         addCollectionItem(position)
 
@@ -43,6 +44,7 @@ class AddCollectionAndCollectionitemDialogFragment : DialogFragment(), AddCollec
     var articleId: String? = null
     lateinit var addNewTextView: TextView
     lateinit var shimmer1: ShimmerFrameLayout
+    private var dataList = ArrayList<UserCollectionsModel>()
     var type: String? = null
 
 
@@ -60,9 +62,8 @@ class AddCollectionAndCollectionitemDialogFragment : DialogFragment(), AddCollec
 
         articleId = bundle?.getString("articleId")
         type = bundle?.getString("type")
-        getUserCreatedCollections()
+        getUserCreatedCollections(0)
         addNewTextView.setOnClickListener {
-
             try {
                 val addCollectionPopUpDialogFragment = AddCollectionPopUpDialogFragment()
                 addCollectionPopUpDialogFragment.arguments = bundle
@@ -75,6 +76,13 @@ class AddCollectionAndCollectionitemDialogFragment : DialogFragment(), AddCollec
             }
 
         }
+        addCollectionRecyclerView.addOnScrollListener(object : EndlessScrollListener(linearLayoutManager) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
+                getUserCreatedCollections(totalItemsCount)
+            }
+        })
+
+
         return rootView
     }
 
@@ -90,17 +98,14 @@ class AddCollectionAndCollectionitemDialogFragment : DialogFragment(), AddCollec
         if (dialog != null) {
             dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             dialog.window!!.setWindowAnimations(R.style.CollectionDialogAnimation)
-            //            dialog.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.blue_bg_rounded_corners));
             dialog.window!!.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.campaign_4A4A4A)))
-
         }
-
         shimmer1.startShimmerAnimation()
     }
 
-    fun getUserCreatedCollections() {
+    private fun getUserCreatedCollections(start: Int) {
 
-        BaseApplication.getInstance().campaignRetrofit.create(CollectionsAPI::class.java).getUserCollectionList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), 0, 20).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
+        BaseApplication.getInstance().campaignRetrofit.create(CollectionsAPI::class.java).getUserCollectionList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, start, 20).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
             override fun onComplete() {
             }
 
@@ -108,17 +113,26 @@ class AddCollectionAndCollectionitemDialogFragment : DialogFragment(), AddCollec
             }
 
             override fun onNext(response: BaseResponseGeneric<UserCollectionsListModel>) {
-                if (response.code == 200 && response.status == "success" && response.data?.result != null) {
-                    shimmer1.stopShimmerAnimation()
-                    shimmer1.visibility = View.GONE
-                    userCollectionsListModel = response.data!!.result
-                    addCollectionAdapter.setListData(userCollectionsListModel)
-                    addCollectionAdapter.notifyDataSetChanged()
-                } else {
+                try {
+                    if (response.code == 200 && response.status == "success" && response.data?.result != null) {
+                        shimmer1.stopShimmerAnimation()
+                        shimmer1.visibility = View.GONE
+                        userCollectionsListModel = response.data!!.result
+                        dataList.addAll(userCollectionsListModel.collectionsList)
+                        addCollectionAdapter.setListData(dataList)
+                        addCollectionAdapter.notifyDataSetChanged()
+                    } else {
+                        Log.d("Error", response.toString())
+                    }
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4KException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onError(e: Throwable) {
+                Crashlytics.logException(e)
+                Log.d("MC4KException", Log.getStackTraceString(e))
             }
 
         })
@@ -126,13 +140,13 @@ class AddCollectionAndCollectionitemDialogFragment : DialogFragment(), AddCollec
 
     }
 
-    fun addCollectionItem(position: Int) {
+    private fun addCollectionItem(position: Int) {
         val addCollectionRequestModel1 = UpdateCollectionRequestModel()
         addCollectionRequestModel1.userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
         addCollectionRequestModel1.itemType = type
-        val List = ArrayList<String>()
-        List.add(userCollectionsListModel.collections_list[position].userCollectionId)
-        addCollectionRequestModel1.userCollectionId = List
+        val list = ArrayList<String>()
+        list.add(dataList[position].userCollectionId)
+        addCollectionRequestModel1.userCollectionId = list
         addCollectionRequestModel1.item = articleId
         BaseApplication.getInstance().campaignRetrofit.create(CollectionsAPI::class.java).addCollectionItem(addCollectionRequestModel1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
             override fun onComplete() {
@@ -143,24 +157,24 @@ class AddCollectionAndCollectionitemDialogFragment : DialogFragment(), AddCollec
             }
 
             override fun onNext(t: BaseResponseGeneric<AddCollectionRequestModel>) {
-                if (t != null && t.code == 200 && t.status == "success" && t.data?.result != null) {
-
-                    dismiss()
-                    ToastUtils.showToast(activity, "item added in collection successfully")
-
-
-                } else {
-                    ToastUtils.showToast(activity, "item  haven't added in collection successfully")
-
+                try {
+                    if (t.code == 200 && t.status == "success" && t.data?.result != null && t.data?.result?.listItemId != null) {
+                        ToastUtils.showToast(activity, t.data?.msg)
+                        dismiss()
+                    } else {
+                        ToastUtils.showToast(activity, t.data?.msg)
+                    }
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4KException", Log.getStackTraceString(e))
                 }
-
-
             }
 
+
             override fun onError(e: Throwable) {
-
+                Crashlytics.logException(e)
+                Log.d("MC4KException", Log.getStackTraceString(e))
                 ToastUtils.showToast(activity, e.message.toString())
-
             }
 
         })

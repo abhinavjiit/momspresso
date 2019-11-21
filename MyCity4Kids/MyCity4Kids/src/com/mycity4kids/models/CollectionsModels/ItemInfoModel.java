@@ -10,7 +10,24 @@ public class ItemInfoModel {
     private String userName;
     private ImageURL imageUrl;
     private String storyImage;
+    private int viewCount;
+    private String id;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public int getViewCount() {
+        return viewCount;
+    }
+
+    public void setViewCount(int viewCount) {
+        this.viewCount = viewCount;
+    }
 
     public String getStoryImage() {
         return storyImage;
