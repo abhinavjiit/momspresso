@@ -2,16 +2,17 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="oval">
-            <solid android:color="@color/black" />
+            <solid android:color="#DADADA" />
         </shape>
     </item>
     <item
         android:bottom="10dp"
         android:left="10dp"
         android:right="10dp"
-        android:top="10dp" >
+        android:top="10dp">
 
-        <bitmap android:src="@drawable/cross_icon_back"
-            android:tint="@color/white"/>
+        <bitmap
+            android:src="@drawable/cross_icon_back"
+            android:tint="@color/white" />
     </item>
 </layer-list>

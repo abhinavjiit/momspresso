@@ -18,6 +18,7 @@ import com.kelltontech.utils.StringUtils
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.CollectionsModels.AddCollectionRequestModel
 import com.mycity4kids.models.CollectionsModels.UpdateCollectionRequestModel
 import com.mycity4kids.models.response.BaseResponseGeneric
@@ -29,9 +30,9 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 class AddCollectionPopUpDialogFragment : DialogFragment() {
-    lateinit var confirmTextView: TextView
-    lateinit var collectionNameEditTextView: EditText
-    lateinit var cancle: ImageView
+    private lateinit var confirmTextView: TextView
+    private lateinit var collectionNameEditTextView: EditText
+    lateinit var cancel: ImageView
     lateinit var collectionId: String
     var articleId: String? = null
 
@@ -42,11 +43,11 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
 
         confirmTextView = rootView.findViewById(R.id.confirmTextView)
         collectionNameEditTextView = rootView.findViewById(R.id.collectionNameEditTextView)
-        cancle = rootView.findViewById(R.id.cancle)
+        cancel = rootView.findViewById(R.id.cancel)
         confirmTextView.setOnClickListener {
             if (isValid()) addCollection()
         }
-        cancle.setOnClickListener {
+        cancel.setOnClickListener {
             dismiss()
         }
 
@@ -94,7 +95,8 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
 
             override fun onNext(t: BaseResponseGeneric<AddCollectionRequestModel>) {
                 try {
-                    if (t.code == 200 && t.status == "success" && t.data?.result != null) {
+                    if (t.code == 200 && t.status == Constants.SUCCESS && t.data?.result != null) {
+
 
                         var addCollectionRequestModell: AddCollectionRequestModel = t.data!!.result
                         collectionId = addCollectionRequestModell.userCollectionId
@@ -143,7 +145,7 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
 
             override fun onNext(t: BaseResponseGeneric<AddCollectionRequestModel>) {
                 try {
-                    if (t.code == 200 && t.status == "success" && t.data?.result != null) {
+                    if (t.code == 200 && t.status == Constants.SUCCESS && t.data?.result != null) {
                         targetFragment?.onActivityResult(100, 1, activity?.intent)
                         dismiss()
                         ToastUtils.showToast(activity, t.data?.msg)

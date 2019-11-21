@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:fab="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:id="@+id/rootLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -70,11 +69,10 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/toolbar"
             android:layout_marginTop="2dp"
-            android:nestedScrollingEnabled="true"
             android:background="@color/grey_light"
             android:divider="@color/transparent"
             android:drawSelectorOnTop="true"
-             />
+            android:nestedScrollingEnabled="true" />
 
         <TextView
             android:id="@+id/noBlogsTextView"
@@ -202,13 +200,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="right|bottom"
+                android:visibility="gone"
                 fab:fab_addButtonColorNormal="@color/transparent"
                 fab:fab_addButtonColorPressed="@color/transparent"
                 fab:fab_addButtonPlusIconColor="@color/transparent"
                 fab:fab_addButtonStrokeVisible="false"
                 fab:fab_labelStyle="@style/menu_labels_style"
-                fab:fab_labelsPosition="left"
-                android:visibility="gone">
+                fab:fab_labelsPosition="left">
 
                 <com.getbase.floatingactionbutton.FloatingActionButton
                     android:id="@+id/recentSortFAB"
@@ -242,10 +240,10 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:layout_gravity="right|bottom"
+            android:visibility="gone"
             fab:fab_colorNormal="@color/fab.white"
             fab:fab_colorPressed="@color/fab.white"
-            fab:fab_icon="@drawable/ic_flip"
-            android:visibility="gone"/>
+            fab:fab_icon="@drawable/ic_flip" />
 
 
         <!--    <ImageView

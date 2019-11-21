@@ -694,6 +694,9 @@ public class AppConstants {
     public static final String SHORT_STORY_COLLECTION_TYPE = "1";
     public static final String ARTICLE_COLLECTION_TYPE = "0";
 
+    public static final String FOLLOWING = "1";
+    public static final String FOLLOW = "0";
+
     enum SocialPlatformName {
 
     }

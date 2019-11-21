@@ -8,7 +8,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#4A4A4A" />
+        android:background="@color/transparent"
+        android:clickable="false" />
 
 
     <RelativeLayout
@@ -24,8 +25,8 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/space_10"
-            android:src="@drawable/back_arroow"
-            android:tint="@color/black" />
+            android:src="@drawable/cross_icon_circle_background_black"
+            />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:layout_width="wrap_content"

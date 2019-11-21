@@ -63,7 +63,7 @@
         android:layout_height="1dp"
         android:layout_below="@id/collectionImageVIEW"
         android:layout_marginTop="@dimen/space_10"
-        android:background="#97979733" />
+        android:background="#DADADA" />
 
 
 </RelativeLayout>

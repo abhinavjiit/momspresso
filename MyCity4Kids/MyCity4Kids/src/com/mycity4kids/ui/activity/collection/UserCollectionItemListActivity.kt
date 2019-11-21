@@ -94,7 +94,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
 
                         resources.getColor(R.color.white), resources.getColor(R.color.add_video_details_mute_label))
         )
-        muteSwitch?.setThumbTintList(thumbStates)
+        muteSwitch?.thumbTintList = thumbStates
         if (Build.VERSION.SDK_INT >= 24) {
             val trackStates = ColorStateList(
                     arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
@@ -102,7 +102,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
 
                             getColor(R.color.switch_button_green_collection), getColor(R.color.add_video_details_mute_label_50_percent_opacity))
             )
-            muteSwitch?.setTrackTintList(trackStates)
+            muteSwitch?.trackTintList = trackStates
 
         }
         muteSwitch?.setOnClickListener {
@@ -137,12 +137,8 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         collectionItemRecyclerView.addOnScrollListener(object : EndlessScrollListener(linearLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
                 getUserCollectionItems(totalItemsCount)
-
             }
-
         })
-
-
     }
 
 
@@ -169,7 +165,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         val menuHelper = MenuPopupHelper(this@UserCollectionItemListActivity, popup.menu as MenuBuilder, view)
         menuHelper.setForceShowIcon(true)
         menuHelper.show()
-
     }
 
 
@@ -184,7 +179,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
 
             override fun onNext(response: BaseResponseGeneric<UserCollectionsListModel>) {
                 try {
-                    if (response.code == 200 && response.status == "success" && response.data?.result != null) {
+                    if (response.code == 200 && response.status == Constants.SUCCESS && response.data?.result != null) {
                         userCollectionsListModel = response.data!!.result
                         if (start == 0) {
                             if (userCollectionsListModel.collectionItems.isEmpty()) {
@@ -215,10 +210,10 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                                 followersTextView.isClickable = false
                                 rightArrow.visibility = View.GONE
                                 followFollowingTextView.visibility = View.VISIBLE
-                                if ("1" == userCollectionsListModel.isFollowed) {
-                                    followFollowingTextView.text = "Following"
+                                if (AppConstants.FOLLOWING == userCollectionsListModel.isFollowed) {
+                                    followFollowingTextView.text = resources.getString(R.string.ad_following_author)
                                 } else {
-                                    followFollowingTextView.text = "Follow"
+                                    followFollowingTextView.text = resources.getString(R.string.ad_follow_author)
                                 }
                                 muteSwitch?.visibility = View.GONE
                                 setting.visibility = View.GONE
@@ -276,7 +271,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
             }
 
             override fun onNext(t: BaseResponseGeneric<AddCollectionRequestModel>) {
-                if (t.code == 200 && t.status == "success") {
+                if (t.code == 200 && t.status == Constants.SUCCESS) {
                     ToastUtils.showToast(this@UserCollectionItemListActivity, t.data?.msg)
                     if (delete)
                         finish()
@@ -288,23 +283,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                 ToastUtils.showToast(this@UserCollectionItemListActivity, e.message)
             }
         })
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == 1000 && data != null) {
-                val collectionName = data.getStringExtra("collectionName")
-                collectionNameTextView = findViewById(R.id.collectionNameTextView)
-                collectionNameTextView?.text = collectionName
-                try {
-                    Picasso.with(this@UserCollectionItemListActivity).load(data.getStringExtra("collectionImage"))
-                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageVIEW)
-                } catch (e: Exception) {
-                    collectionImageVIEW?.setImageResource(R.drawable.default_article)
-                }
-            }
-        }
     }
 
 
@@ -322,7 +300,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
 
     private fun followUnfollow() {
         val addCollectionRequestModel = AddCollectionRequestModel()
-        if ("1" == userCollectionsListModel.isFollowed) {
+        if (AppConstants.FOLLOWING == userCollectionsListModel.isFollowed) {
             addCollectionRequestModel.deleted = true
             addCollectionRequestModel.userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
             addCollectionRequestModel.userCollectionId = collectionId
@@ -347,12 +325,12 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
 
                     val arr = jsonObject.getJSONObject("data").getString("msg")
                     ToastUtils.showToast(this@UserCollectionItemListActivity, arr)
-                    if ("1" == userCollectionsListModel.isFollowed) {
-                        userCollectionsListModel.isFollowed = "0"
-                        followFollowingTextView.text = "Follow"
+                    if (AppConstants.FOLLOWING == userCollectionsListModel.isFollowed) {
+                        userCollectionsListModel.isFollowed = AppConstants.FOLLOW
+                        followFollowingTextView.text = resources.getString(R.string.ad_follow_author)
                     } else {
-                        userCollectionsListModel.isFollowed = "1"
-                        followFollowingTextView.text = "Following"
+                        userCollectionsListModel.isFollowed = AppConstants.FOLLOWING
+                        followFollowingTextView.text = resources.getString(R.string.ad_following_author)
                     }
                 } catch (e: Exception) {
                 }
@@ -397,5 +375,22 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         startActivity(intent)
     }
 
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == 1000 && data != null) {
+                val collectionName = data.getStringExtra("collectionName")
+                collectionNameTextView = findViewById(R.id.collectionNameTextView)
+                collectionNameTextView?.text = collectionName
+                try {
+                    Picasso.with(this@UserCollectionItemListActivity).load(data.getStringExtra("collectionImage"))
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageVIEW)
+                } catch (e: Exception) {
+                    collectionImageVIEW?.setImageResource(R.drawable.default_article)
+                }
+            }
+        }
+    }
 
 }

@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
-import android.widget.AdapterView
+import android.widget.AdapterView.OnItemClickListener
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.crashlytics.android.Crashlytics
@@ -17,6 +17,7 @@ import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.CollectionsModels.UserCollectionsListModel
 import com.mycity4kids.models.CollectionsModels.UserCollectionsModel
 import com.mycity4kids.models.response.BaseResponseGeneric
@@ -30,15 +31,10 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 class UserCreatedCollectionsFragment : BaseFragment() {
-    var userCollectionsListModel = UserCollectionsListModel()
     private lateinit var userCreatedFollowedCollectionAdapter: CollectionsAdapter
     private lateinit var collectionGridView: ExpandableHeightGridView
-    private var list = ArrayList<String>()
-    private lateinit var collectionId: String
     var userId: String? = null
     var start: Int = 0
-    var isLoading: Boolean = false
-    var hasMoreItems: Boolean = false
     private var mLodingView: RelativeLayout? = null
     private lateinit var shimmer1: ShimmerFrameLayout
     private lateinit var notCreatedTextView: TextView
@@ -66,14 +62,11 @@ class UserCreatedCollectionsFragment : BaseFragment() {
             userCreatedFollowedCollectionAdapter = CollectionsAdapter(context!!)
             collectionGridView.adapter = userCreatedFollowedCollectionAdapter
         }
-        collectionGridView.setOnItemClickListener(object : AdapterView.OnItemClickListener {
-            override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-
-                val intent = Intent(activity, UserCollectionItemListActivity::class.java)
-                intent.putExtra("id", dataList[position].userCollectionId)
-                startActivity(intent)
-            }
-        })
+        collectionGridView.onItemClickListener = OnItemClickListener { _, _, position, _ ->
+            val intent = Intent(activity, UserCollectionItemListActivity::class.java)
+            intent.putExtra("id", dataList[position].userCollectionId)
+            startActivity(intent)
+        }
 
         collectionGridView.setOnScrollListener(object : AbsListView.OnScrollListener {
             override fun onScrollStateChanged(absListView: AbsListView, i: Int) {}
@@ -105,7 +98,7 @@ class UserCreatedCollectionsFragment : BaseFragment() {
                 override fun onNext(response: BaseResponseGeneric<UserCollectionsListModel>) {
                     isReuqestRunning = false
                     try {
-                        if (response.code == 200 && response.status == "success" && response.data?.result != null) {
+                        if (response.code == 200 && response.status == Constants.SUCCESS && response.data?.result != null) {
                             shimmer1.stopShimmerAnimation()
                             shimmer1.visibility = View.GONE
                             processResponse(response.data?.result!!)

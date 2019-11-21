@@ -18,6 +18,7 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.CollectionsModels.AddCollectionRequestModel
 import com.mycity4kids.models.CollectionsModels.UpdateCollectionRequestModel
 import com.mycity4kids.models.CollectionsModels.UserCollectionsListModel
@@ -40,9 +41,9 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
 
     lateinit var addCollectionAdapter: AddCollectionAdapter
     lateinit var userCollectionsListModel: UserCollectionsListModel
-    lateinit var addCollectionRecyclerView: RecyclerView
+    private lateinit var addCollectionRecyclerView: RecyclerView
     var articleId: String? = null
-    lateinit var addNewTextView: TextView
+    private lateinit var addNewTextView: TextView
     lateinit var shimmer1: ShimmerFrameLayout
     private var dataList = ArrayList<UserCollectionsModel>()
     var type: String? = null
@@ -98,7 +99,7 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
         if (dialog != null) {
             dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             dialog.window!!.setWindowAnimations(R.style.CollectionDialogAnimation)
-            dialog.window!!.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.campaign_4A4A4A)))
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.transparent)))
         }
         shimmer1.startShimmerAnimation()
     }
@@ -114,7 +115,7 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
 
             override fun onNext(response: BaseResponseGeneric<UserCollectionsListModel>) {
                 try {
-                    if (response.code == 200 && response.status == "success" && response.data?.result != null) {
+                    if (response.code == 200 && response.status == Constants.SUCCESS && response.data?.result != null) {
                         shimmer1.stopShimmerAnimation()
                         shimmer1.visibility = View.GONE
                         userCollectionsListModel = response.data!!.result
@@ -158,7 +159,7 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
 
             override fun onNext(t: BaseResponseGeneric<AddCollectionRequestModel>) {
                 try {
-                    if (t.code == 200 && t.status == "success" && t.data?.result != null && t.data?.result?.listItemId != null) {
+                    if (t.code == 200 && t.status == Constants.SUCCESS && t.data?.result != null && t.data?.result?.listItemId != null) {
                         ToastUtils.showToast(activity, t.data?.msg)
                         dismiss()
                     } else {
