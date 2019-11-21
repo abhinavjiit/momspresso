@@ -92,16 +92,16 @@ class M_PrivateProfileActivity : BaseActivity(),
     private var totalItemCount: Int = 0
     private var start = 0
     private var size = 10
-    private var isReuqestRunning = true
+    private var isRequestRunning = true
     private var isLastPageReached = true
     private var authorId: String? = null
     private var isFollowing: Boolean = false
-    private var isRequestRunning: Boolean = false
+    private var isFollowUnFollowRequestRunning: Boolean = false
     private val multipleRankList = java.util.ArrayList<LanguageRanksModel>()
     private var userContentList: ArrayList<MixFeedResult>? = null
     private var userFeaturedOnList: ArrayList<FeaturedItem>? = null
 
-    private val userContentAdapter: UserContentAdapter by lazy { UserContentAdapter(this) }
+    private val userContentAdapter: UserContentAdapter by lazy { UserContentAdapter(this, AppUtils.isPrivateProfile(authorId)) }
     private val usersFeaturedContentAdapter: UsersFeaturedContentAdapter by lazy { UsersFeaturedContentAdapter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -192,9 +192,9 @@ class M_PrivateProfileActivity : BaseActivity(),
                     visibleItemCount = llm.childCount
                     totalItemCount = llm.itemCount
                     pastVisiblesItems = llm.findFirstVisibleItemPosition()
-                    if (!isReuqestRunning) {
+                    if (!isRequestRunning) {
                         if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
-                            isReuqestRunning = true
+                            isRequestRunning = true
                             bottomLoadingView.visibility = View.VISIBLE
                             getUsersCreatedContent(authorId)
                         }
@@ -300,7 +300,7 @@ class M_PrivateProfileActivity : BaseActivity(),
 
     private var followUserResponseCallback: Callback<FollowUnfollowUserResponse> = object : Callback<FollowUnfollowUserResponse> {
         override fun onResponse(call: Call<FollowUnfollowUserResponse>, response: retrofit2.Response<FollowUnfollowUserResponse>) {
-            isRequestRunning = false
+            isFollowUnFollowRequestRunning = false
             if (response.body() == null) {
                 showToast(getString(R.string.went_wrong))
                 return
@@ -321,7 +321,7 @@ class M_PrivateProfileActivity : BaseActivity(),
         }
 
         override fun onFailure(call: Call<FollowUnfollowUserResponse>, t: Throwable) {
-            isRequestRunning = false
+            isFollowUnFollowRequestRunning = false
             showToast(getString(R.string.server_went_wrong))
             Crashlytics.logException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
@@ -330,7 +330,7 @@ class M_PrivateProfileActivity : BaseActivity(),
 
     private var unfollowUserResponseCallback: Callback<FollowUnfollowUserResponse> = object : Callback<FollowUnfollowUserResponse> {
         override fun onResponse(call: Call<FollowUnfollowUserResponse>, response: retrofit2.Response<FollowUnfollowUserResponse>) {
-            isRequestRunning = false
+            isFollowUnFollowRequestRunning = false
             if (response.body() == null) {
                 showToast(getString(R.string.went_wrong))
                 return
@@ -350,7 +350,7 @@ class M_PrivateProfileActivity : BaseActivity(),
         }
 
         override fun onFailure(call: Call<FollowUnfollowUserResponse>, t: Throwable) {
-            isRequestRunning = false
+            isFollowUnFollowRequestRunning = false
             showToast(getString(R.string.server_went_wrong))
             Crashlytics.logException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
@@ -448,7 +448,7 @@ class M_PrivateProfileActivity : BaseActivity(),
         call.enqueue(object : Callback<MixFeedResponse> {
             override fun onResponse(call: Call<MixFeedResponse>, response: retrofit2.Response<MixFeedResponse>) {
                 try {
-                    isReuqestRunning = false
+                    isRequestRunning = false
                     bottomLoadingView.visibility = View.GONE
                     if (null == response.body()) {
                         val nee = NetworkErrorException(response.raw().toString())
@@ -559,6 +559,7 @@ class M_PrivateProfileActivity : BaseActivity(),
 
     open inner class MySpannable(isUnderline: Boolean) : ClickableSpan() {
         private var isUnderline = true
+
         init {
             this.isUnderline = isUnderline
         }
@@ -601,8 +602,8 @@ class M_PrivateProfileActivity : BaseActivity(),
                 startActivity(intent)
             }
             view?.id == R.id.followAuthorTextView -> {
-                if (!isRequestRunning) {
-                    isRequestRunning = true
+                if (!isFollowUnFollowRequestRunning) {
+                    isFollowUnFollowRequestRunning = true
                     hitFollowUnfollowAPI()
                 }
             }
@@ -693,7 +694,14 @@ class M_PrivateProfileActivity : BaseActivity(),
 
 
     override fun onClick(view: View, position: Int) {
+        when {
+            view.id == R.id.featuredItemRootView -> {
 
+            }
+            view.id == R.id.moreItemsTextView -> {
+
+            }
+        }
     }
 
     override fun onFeaturedItemClick(view: View, position: Int) {
