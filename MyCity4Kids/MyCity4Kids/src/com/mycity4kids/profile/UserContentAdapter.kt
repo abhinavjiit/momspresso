@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kelltontech.utils.StringUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.models.response.MixFeedResult
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.utils.AppUtils
@@ -32,14 +33,11 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == 0 && isPrivate) {
-            CONTENT_TYPE_CREATE
-        } else if ("1" == mixFeedList!![position].contentType) {
-            CONTENT_TYPE_SHORT_STORY
-        } else if ("2" == mixFeedList!![position].contentType) {
-            CONTENT_TYPE_VIDEO
-        } else {
-            CONTENT_TYPE_ARTICLE
+        return when {
+            AppConstants.CONTENT_TYPE_CREATE_SECTION == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_CREATE
+            AppConstants.CONTENT_TYPE_SHORT_STORY == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_SHORT_STORY
+            AppConstants.CONTENT_TYPE_VIDEO == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_VIDEO
+            else -> CONTENT_TYPE_ARTICLE
         }
     }
 

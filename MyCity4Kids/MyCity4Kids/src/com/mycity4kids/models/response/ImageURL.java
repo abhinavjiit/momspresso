@@ -14,6 +14,9 @@ public class ImageURL implements Parcelable {
     private String thumbMin;
     private String thumbMax;
 
+    public ImageURL() {
+    }
+
     protected ImageURL(Parcel in) {
         mobileWebThumbnail = in.readString();
         clientAppThumbnail = in.readString();

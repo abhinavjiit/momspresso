@@ -12,12 +12,14 @@ import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
@@ -41,10 +43,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
-import com.mycity4kids.ui.activity.BadgeActivity
-import com.mycity4kids.ui.activity.FollowersAndFollowingListActivity
-import com.mycity4kids.ui.activity.IdTokenLoginActivity
-import com.mycity4kids.ui.activity.RankingActivity
+import com.mycity4kids.ui.activity.*
 import com.mycity4kids.ui.fragment.UserBioDialogFragment
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.RoundedTransformation
@@ -57,6 +56,8 @@ import java.net.UnknownHostException
 
 class M_PrivateProfileActivity : BaseActivity(),
         UserContentAdapter.RecyclerViewClickListener, View.OnClickListener, UsersFeaturedContentAdapter.RecyclerViewClickListener {
+
+    private lateinit var toolbar: Toolbar
     private lateinit var profileShimmerLayout: ShimmerFrameLayout
     private lateinit var headerContainer: RelativeLayout
     private lateinit var profileImageView: ImageView
@@ -99,6 +100,7 @@ class M_PrivateProfileActivity : BaseActivity(),
     private var isFollowUnFollowRequestRunning: Boolean = false
     private val multipleRankList = java.util.ArrayList<LanguageRanksModel>()
     private var userContentList: ArrayList<MixFeedResult>? = null
+    private var userBookmarkList: ArrayList<MixFeedResult>? = null
     private var userFeaturedOnList: ArrayList<FeaturedItem>? = null
 
     private val userContentAdapter: UserContentAdapter by lazy { UserContentAdapter(this, AppUtils.isPrivateProfile(authorId)) }
@@ -110,6 +112,7 @@ class M_PrivateProfileActivity : BaseActivity(),
 
         authorId = intent.getStringExtra(Constants.USER_ID)
 
+        toolbar = findViewById(R.id.toolbar)
         recyclerView = findViewById(R.id.recyclerView)
         profileShimmerLayout = findViewById(R.id.profileShimmerLayout)
         profileImageView = findViewById(R.id.profileImageView)
@@ -138,6 +141,10 @@ class M_PrivateProfileActivity : BaseActivity(),
         followAuthorTextView = findViewById(R.id.followAuthorTextView)
         sharePublicTextView = findViewById(R.id.sharePublicTextView)
         bottomLoadingView = findViewById(R.id.bottomLoadingView)
+
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         if (AppUtils.isPrivateProfile(authorId)) {
             authorId = SharedPrefUtils.getUserDetailModel(this).dynamoId
@@ -170,6 +177,7 @@ class M_PrivateProfileActivity : BaseActivity(),
         recyclerView.adapter = userContentAdapter
 
         userContentList = ArrayList()
+        userBookmarkList = ArrayList()
         userFeaturedOnList = ArrayList()
 
         profileShimmerLayout.startShimmerAnimation()
@@ -184,6 +192,12 @@ class M_PrivateProfileActivity : BaseActivity(),
         bookmarksTab.setOnClickListener(this)
         badgesContainer.setOnClickListener(this)
 
+        creatorTab.isSelected = true
+        featuredTab.isSelected = false
+        bookmarksTab.isSelected = false
+        if (AppUtils.isPrivateProfile(authorId)) {
+            userContentList?.add(MixFeedResult(contentType = AppConstants.CONTENT_TYPE_CREATE_SECTION))
+        }
         getUsersCreatedContent(authorId)
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -444,7 +458,13 @@ class M_PrivateProfileActivity : BaseActivity(),
     private fun getUsersCreatedContent(authorId: String?) {
         val retro = BaseApplication.getInstance().retrofit
         val bloggerDashboardAPI = retro.create(BloggerDashboardAPI::class.java)
-        val call = bloggerDashboardAPI.getUsersAllContent(start, size, null)
+
+        val call = if (creatorTab.isSelected) {
+            bloggerDashboardAPI.getUsersAllContent(start, size, null)
+        } else {
+            bloggerDashboardAPI.getUsersAllBookmark(start, size, 1)
+        }
+
         call.enqueue(object : Callback<MixFeedResponse> {
             override fun onResponse(call: Call<MixFeedResponse>, response: retrofit2.Response<MixFeedResponse>) {
                 try {
@@ -494,82 +514,56 @@ class M_PrivateProfileActivity : BaseActivity(),
         }
     }
 
-    override fun updateUi(response: Response?) {
-    }
-
-    fun makeTextViewResizable(tv: TextView, maxLine: Int, expandText: String, viewMore: Boolean, userBio: String) {
-        if (tv.tag == null) {
-            tv.tag = tv.text
-        }
-        val vto = tv.viewTreeObserver
-        vto.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                val obs = tv.viewTreeObserver
-                obs.removeOnGlobalLayoutListener(this)
-                if (maxLine == 0) {
-                    val lineEndIndex = tv.layout.getLineEnd(0)
-                    val text = tv.text.subSequence(0, lineEndIndex - expandText.length + 1).toString() + " " + expandText
-                    tv.text = text
-                    tv.movementMethod = LinkMovementMethod.getInstance()
-                    tv.setText(
-                            addClickablePartTextViewResizable(Html.fromHtml(tv.text.toString()), tv, maxLine, expandText,
-                                    viewMore, userBio), TextView.BufferType.SPANNABLE)
-                } else if (maxLine > 0 && tv.lineCount > maxLine) {
-                    val lineEndIndex = tv.layout.getLineEnd(maxLine - 1)
-                    if (lineEndIndex - expandText.length + 1 > 10) {
-                        val text = tv.text.subSequence(0, lineEndIndex - expandText.length + 1).toString() + " " + expandText
-                        tv.text = text
-                        tv.movementMethod = LinkMovementMethod.getInstance()
-                        tv.setText(
-                                addClickablePartTextViewResizable(Html.fromHtml(tv.text.toString()), tv, maxLine, expandText,
-                                        viewMore, userBio), TextView.BufferType.SPANNABLE)
-                    } else {
-                        val text = tv.text.subSequence(0, lineEndIndex).toString() + " " + expandText
-                        tv.text = text
-                        tv.movementMethod = LinkMovementMethod.getInstance()
-                        tv.setText(
-                                addClickablePartTextViewResizable(Html.fromHtml(tv.text.toString()), tv, maxLine, expandText,
-                                        viewMore, userBio), TextView.BufferType.SPANNABLE)
+    private fun getUsersBookmark() {
+        val retro = BaseApplication.getInstance().retrofit
+        val bloggerDashboardAPI = retro.create(BloggerDashboardAPI::class.java)
+        val call = bloggerDashboardAPI.getUsersAllBookmark(start, size, 1)
+        call.enqueue(object : Callback<MixFeedResponse> {
+            override fun onResponse(call: Call<MixFeedResponse>, response: retrofit2.Response<MixFeedResponse>) {
+                try {
+                    isRequestRunning = false
+                    bottomLoadingView.visibility = View.GONE
+                    if (null == response.body()) {
+                        val nee = NetworkErrorException(response.raw().toString())
+                        Crashlytics.logException(nee)
+                        return
                     }
-                } else {
+                    val responseData = response.body()
+                    if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                        processUserBookmarks(responseData.data.result)
+                    } else {
+                    }
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
                 }
+            }
+
+            override fun onFailure(call: Call<MixFeedResponse>, e: Throwable) {
+                bottomLoadingView.visibility = View.GONE
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
             }
         })
     }
 
-    private fun addClickablePartTextViewResizable(strSpanned: Spanned, tv: TextView,
-                                                  maxLine: Int, spanableText: String, viewMore: Boolean, userBio: String): SpannableStringBuilder {
-        val str = strSpanned.toString()
-        val ssb = SpannableStringBuilder(strSpanned)
-        if (str.contains(spanableText)) {
-            ssb.setSpan(object : MySpannable(false) {
-                override fun onClick(widget: View) {
-                    val userBioDialogFragment = UserBioDialogFragment()
-                    val fm = supportFragmentManager
-                    val _args = Bundle()
-                    _args.putString("userBio", userBio)
-                    userBioDialogFragment.arguments = _args
-                    userBioDialogFragment.isCancelable = true
-                    userBioDialogFragment.show(fm, "Choose video option")
-                }
-            }, str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length, 0)
-        }
-        return ssb
-    }
-
-    open inner class MySpannable(isUnderline: Boolean) : ClickableSpan() {
-        private var isUnderline = true
-
-        init {
-            this.isUnderline = isUnderline
-        }
-
-        override fun updateDrawState(ds: TextPaint) {
-            ds.isUnderlineText = isUnderline
-            ds.color = Color.parseColor("#1b76d3")
-        }
-
-        override fun onClick(widget: View) {
+    private fun processUserBookmarks(result: List<MixFeedResult>?) {
+        if (result.isNullOrEmpty()) {
+            isLastPageReached = false
+            if (!userContentList.isNullOrEmpty()) {
+                //No more next results for search from pagination
+            } else {
+                // No results
+                userContentAdapter.setListData(userContentList)
+                userContentAdapter.notifyDataSetChanged()
+//                noBlogsTextView.setText(getString(R.string.short_s_no_published))
+//                noBlogsTextView.setVisibility(View.VISIBLE)
+            }
+        } else {
+            start += size
+            userContentList?.addAll(result)
+            userContentAdapter.setListData(userContentList)
+            userContentAdapter.notifyDataSetChanged()
         }
     }
 
@@ -582,6 +576,10 @@ class M_PrivateProfileActivity : BaseActivity(),
                 userContentList?.clear()
                 start = 0
                 recyclerView.adapter = userContentAdapter
+                if (AppUtils.isPrivateProfile(authorId)) {
+                    userContentList?.add(MixFeedResult(contentType = AppConstants.CONTENT_TYPE_CREATE_SECTION))
+                }
+                getUsersCreatedContent(authorId)
             }
             view?.id == R.id.featuredTab -> {
                 creatorTab.isSelected = false
@@ -596,6 +594,10 @@ class M_PrivateProfileActivity : BaseActivity(),
                 creatorTab.isSelected = false
                 featuredTab.isSelected = false
                 bookmarksTab.isSelected = true
+                userContentList?.clear()
+                start = 0
+                recyclerView.adapter = userContentAdapter
+                getUsersCreatedContent(authorId)
             }
             view?.id == R.id.badgeContainer -> {
                 val intent = Intent(this, BadgeActivity::class.java)
@@ -695,11 +697,39 @@ class M_PrivateProfileActivity : BaseActivity(),
 
     override fun onClick(view: View, position: Int) {
         when {
-            view.id == R.id.featuredItemRootView -> {
-
+            view.id == R.id.articleItemView -> {
+                val intent = Intent(this, ArticleDetailsContainerActivity::class.java)
+                intent.putExtra(Constants.ARTICLE_ID, userContentList?.get(position)?.id)
+                intent.putExtra(Constants.AUTHOR_ID, userContentList?.get(position)?.userId)
+                intent.putExtra(Constants.BLOG_SLUG, userContentList?.get(position)?.blogTitleSlug)
+                intent.putExtra(Constants.TITLE_SLUG, userContentList?.get(position)?.titleSlug)
+                intent.putExtra(Constants.FROM_SCREEN, "Profile")
+                intent.putExtra(Constants.AUTHOR, userContentList?.get(position)?.userId + "~" + userContentList?.get(position)?.userName)
+//                userContentList?.let {
+//                    val filteredResult = AppUtils.getFilteredContentList(it., AppConstants.CONTENT_TYPE_ARTICLE)
+//                    intent.putParcelableArrayListExtra("pagerListData", filteredResult)
+//                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(posSubList, articleDataModelsSubList, AppConstants.CONTENT_TYPE_ARTICLE))
+//                }
+                startActivity(intent)
             }
-            view.id == R.id.moreItemsTextView -> {
-
+            view.id == R.id.rootView -> {
+                val intent = Intent(this, ShortStoryContainerActivity::class.java)
+                intent.putExtra(Constants.ARTICLE_ID, userContentList?.get(position)?.id)
+                intent.putExtra(Constants.AUTHOR_ID, userContentList?.get(position)?.userId)
+                intent.putExtra(Constants.BLOG_SLUG, userContentList?.get(position)?.blogTitleSlug)
+                intent.putExtra(Constants.TITLE_SLUG, userContentList?.get(position)?.titleSlug)
+                intent.putExtra(Constants.FROM_SCREEN, "HomeScreen")
+                intent.putExtra(Constants.AUTHOR, userContentList?.get(position)?.userId + "~" + userContentList?.get(position)?.userName)
+//                val filteredResult = AppUtils.getFilteredContentList(articleDataModelsSubList, AppConstants.CONTENT_TYPE_SHORT_STORY)
+//                intent.putParcelableArrayListExtra("pagerListData", filteredResult)
+//                intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(posSubList, articleDataModelsSubList, AppConstants.CONTENT_TYPE_SHORT_STORY))
+                startActivity(intent)
+            }
+            view.id == R.id.videoItemView -> {
+                val intent = Intent(this, ParallelFeedActivity::class.java)
+                intent.putExtra(Constants.VIDEO_ID, userContentList?.get(position)?.id)
+                intent.putExtra(Constants.FROM_SCREEN, "Search Screen")
+                startActivity(intent)
             }
         }
     }
@@ -713,6 +743,93 @@ class M_PrivateProfileActivity : BaseActivity(),
 
             }
         }
+    }
+
+    fun makeTextViewResizable(tv: TextView, maxLine: Int, expandText: String, viewMore: Boolean, userBio: String) {
+        if (tv.tag == null) {
+            tv.tag = tv.text
+        }
+        val vto = tv.viewTreeObserver
+        vto.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                val obs = tv.viewTreeObserver
+                obs.removeOnGlobalLayoutListener(this)
+                if (maxLine == 0) {
+                    val lineEndIndex = tv.layout.getLineEnd(0)
+                    val text = tv.text.subSequence(0, lineEndIndex - expandText.length + 1).toString() + " " + expandText
+                    tv.text = text
+                    tv.movementMethod = LinkMovementMethod.getInstance()
+                    tv.setText(
+                            addClickablePartTextViewResizable(Html.fromHtml(tv.text.toString()), tv, maxLine, expandText,
+                                    viewMore, userBio), TextView.BufferType.SPANNABLE)
+                } else if (maxLine > 0 && tv.lineCount > maxLine) {
+                    val lineEndIndex = tv.layout.getLineEnd(maxLine - 1)
+                    if (lineEndIndex - expandText.length + 1 > 10) {
+                        val text = tv.text.subSequence(0, lineEndIndex - expandText.length + 1).toString() + " " + expandText
+                        tv.text = text
+                        tv.movementMethod = LinkMovementMethod.getInstance()
+                        tv.setText(
+                                addClickablePartTextViewResizable(Html.fromHtml(tv.text.toString()), tv, maxLine, expandText,
+                                        viewMore, userBio), TextView.BufferType.SPANNABLE)
+                    } else {
+                        val text = tv.text.subSequence(0, lineEndIndex).toString() + " " + expandText
+                        tv.text = text
+                        tv.movementMethod = LinkMovementMethod.getInstance()
+                        tv.setText(
+                                addClickablePartTextViewResizable(Html.fromHtml(tv.text.toString()), tv, maxLine, expandText,
+                                        viewMore, userBio), TextView.BufferType.SPANNABLE)
+                    }
+                } else {
+                }
+            }
+        })
+    }
+
+    private fun addClickablePartTextViewResizable(strSpanned: Spanned, tv: TextView,
+                                                  maxLine: Int, spanableText: String, viewMore: Boolean, userBio: String): SpannableStringBuilder {
+        val str = strSpanned.toString()
+        val ssb = SpannableStringBuilder(strSpanned)
+        if (str.contains(spanableText)) {
+            ssb.setSpan(object : MySpannable(false) {
+                override fun onClick(widget: View) {
+                    val userBioDialogFragment = UserBioDialogFragment()
+                    val fm = supportFragmentManager
+                    val _args = Bundle()
+                    _args.putString("userBio", userBio)
+                    userBioDialogFragment.arguments = _args
+                    userBioDialogFragment.isCancelable = true
+                    userBioDialogFragment.show(fm, "Choose video option")
+                }
+            }, str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length, 0)
+        }
+        return ssb
+    }
+
+    open inner class MySpannable(isUnderline: Boolean) : ClickableSpan() {
+        private var isUnderline = true
+
+        init {
+            this.isUnderline = isUnderline
+        }
+
+        override fun updateDrawState(ds: TextPaint) {
+            ds.isUnderlineText = isUnderline
+            ds.color = Color.parseColor("#1b76d3")
+        }
+
+        override fun onClick(widget: View) {
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> {
+            }
+        }
+        return true
+    }
+
+    override fun updateUi(response: Response?) {
 
     }
 }

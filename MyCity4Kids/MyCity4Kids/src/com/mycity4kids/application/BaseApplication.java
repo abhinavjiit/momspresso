@@ -496,10 +496,10 @@ public class BaseApplication extends Application {
                 HttpUrl originalHttpUrl = original.url();
                 Request.Builder requestBuilder = original.newBuilder();
                 requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
-//                requestBuilder.addHeader("id", "7ac80d82d5be49cd83be1fa52e8366dc");
-//                requestBuilder.addHeader("mc4kToken", "EAAC7f1na98IBAL809orQTbhdi69hXFHNsJQcRKZB1OGJCdhkD9e5lTpKWBNmCPzZBeW3hejKwiVAV2TfSI1YjEr8AprKKQnJy8d6PNKbR4eQMCrQWyQT04xTkOeeAHkVy0ujWbuQ7wQJ2x6HDCYaQsHQzYCoorPVvR65UNyIz3pnrco6Tz");
-                requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
-                requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
+                requestBuilder.addHeader("id", "be13a0f26bbf41f0833906ec374f07db");
+                requestBuilder.addHeader("mc4kToken", "ya29.GltVBy0pjSImNx6PgYPeTg9DlTGaR12FlHJYEXi9YN3h39ZHZekRio46xKXB1uHfV_mkDH3V05DRKkFKi2ZzYICMJ5fsxn05eJ_ub7GgCtYAeRdAhgHGZ5Y07AN2");
+//                requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+//                requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
                 requestBuilder.addHeader("agent", "android");
                 requestBuilder.addHeader("manufacturer", Build.MANUFACTURER);
                 requestBuilder.addHeader("model", Build.MODEL);

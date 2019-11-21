@@ -542,9 +542,6 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         mViewPager.setOnPageChangeListener(new CustomViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if (position < articleList.size() - 1 || position > 0) {
-                    showProgressDialog("wait");
-                }
                 Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this, ReadArticleService.class);
                 stopService(readArticleIntent);
                 Log.d("-----AZURE----", "STOPPING");

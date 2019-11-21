@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/tools"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/videoItemView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
@@ -55,7 +54,6 @@
                     android:id="@+id/winnerLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignRight="@id/thumbNail"
                     android:layout_alignBottom="@id/articleImageView"
                     android:layout_margin="@dimen/space_10"
                     android:background="@drawable/update_profile_bg">
@@ -81,9 +79,8 @@
                         android:text="WINNER"
                         android:textColor="#fff"
                         android:textSize="14sp"
-                        app:fontName="oswald.ttf" />
+                        card_view:fontName="oswald.ttf" />
                 </RelativeLayout>
-
 
                 <View
                     android:layout_width="match_parent"

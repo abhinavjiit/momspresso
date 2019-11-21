@@ -72,7 +72,12 @@ public interface BloggerDashboardAPI {
     @GET("author/feed")
     Call<MixFeedResponse> getUsersAllContent(@Query("start") int start,
                                              @Query("size") int size,
-                                             @Query("contentType") String contentType);
+                                             @Query("content_type") String contentType);
+
+    @GET("bookmark/feed/")
+    Call<MixFeedResponse> getUsersAllBookmark(@Query("start") int start,
+                                              @Query("size") int size,
+                                              @Query("collection_type") int collectionType);
 
     @GET("v1/users/suggestBlogTitle/")
     Call<SuggestBlogTitle> getUserhandle();

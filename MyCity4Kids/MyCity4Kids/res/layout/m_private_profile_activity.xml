@@ -13,6 +13,7 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/profile_header_bg"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <!-- HEADER -->
@@ -26,7 +27,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
-                    android:background="@drawable/btn_crop_pressed" />
+                    android:background="@drawable/profile_header_bg" />
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/headerCardView"
@@ -383,11 +384,14 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@drawable/btn_crop_pressed"
+                android:background="@drawable/profile_header_bg"
                 android:minHeight="?attr/actionBarSize"
+                app:contentInsetEnd="0dp"
+                app:contentInsetLeft="0dp"
+                app:contentInsetRight="0dp"
+                app:contentInsetStart="0dp"
                 app:layout_collapseMode="pin"
-                app:theme="@style/ToolbarTheme"
-                app:titleTextAppearance="@style/ToolbarTheme.Title">
+                app:popupTheme="@style/AppTheme.PopupOverlay">
 
                 <RelativeLayout
                     android:id="@+id/toolbarRelativeLayout"
@@ -395,15 +399,15 @@
                     android:layout_height="wrap_content"
                     android:visibility="visible">
 
-                    <com.mycity4kids.widget.CustomFontTextView
-                        android:id="@+id/toolbarTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="@string/user_article.tabbar.published_label"
-                        android:textColor="@color/user_articles.toolbar.title"
-                        android:textSize="20sp"
-                        app:fontName="oswald_regular.ttf" />
+                    <!--<com.mycity4kids.widget.CustomFontTextView-->
+                        <!--android:id="@+id/toolbarTitle"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:text="@string/user_article.tabbar.published_label"-->
+                        <!--android:textColor="@color/user_articles.toolbar.title"-->
+                        <!--android:textSize="20sp"-->
+                        <!--app:fontName="oswald_regular.ttf" />-->
 
                     <ImageView
                         android:id="@+id/searchAllImageView"
@@ -411,9 +415,9 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:paddingTop="5dp"
-                        android:paddingRight="10dp"
+                        android:paddingEnd="10dp"
                         android:paddingBottom="5dp"
                         android:src="@drawable/ic_search" />
 
