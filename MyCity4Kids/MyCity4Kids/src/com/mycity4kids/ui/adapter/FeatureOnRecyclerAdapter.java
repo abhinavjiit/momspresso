@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
-import com.mycity4kids.models.CollectionsModels.UserCollectiosModel;
+import com.mycity4kids.models.CollectionsModels.UserCollectionsModel;
 import com.mycity4kids.ui.activity.FeaturedOnActivity;
 import com.squareup.picasso.Picasso;
 
@@ -22,7 +22,7 @@ public class FeatureOnRecyclerAdapter extends RecyclerView.Adapter<FeatureOnRecy
 
     private Context mContext;
     private LayoutInflater mInflator;
-    private ArrayList<UserCollectiosModel> featuredList;
+    private ArrayList<UserCollectionsModel> featuredList;
     private RecyclerViewClickListener mListener;
     private String userId;
     RecyclerView recyclerView;
@@ -34,11 +34,11 @@ public class FeatureOnRecyclerAdapter extends RecyclerView.Adapter<FeatureOnRecy
         this.mListener = listener;
     }
 
-    public void setData(ArrayList<UserCollectiosModel> featuredList) {
+    public void setData(ArrayList<UserCollectionsModel> featuredList) {
         this.featuredList = featuredList;
     }
 
-    public void setListUpdate(int updatePos, ArrayList<UserCollectiosModel> featuredList) {
+    public void setListUpdate(int updatePos, ArrayList<UserCollectionsModel> featuredList) {
         this.featuredList = featuredList;
         notifyItemChanged(updatePos, mHolder.follow_text);
     }

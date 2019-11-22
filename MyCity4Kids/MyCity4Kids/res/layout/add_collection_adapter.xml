@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.mikhaellopez.circularimageview.CircularImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/collectionImageVIEW"
         android:layout_width="75dp"
         android:layout_height="75dp"
@@ -52,9 +52,9 @@
         android:id="@+id/close"
         android:layout_width="@dimen/space_20"
         android:layout_height="20dp"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/space_5"
+        android:layout_marginEnd="@dimen/space_5"
         android:src="@drawable/ic_close_pop_up"
         android:visibility="gone" />
 
@@ -63,6 +63,8 @@
         android:layout_height="1dp"
         android:layout_below="@id/collectionImageVIEW"
         android:layout_marginTop="@dimen/space_10"
+        android:layout_marginEnd="@dimen/space_10"
+        android:layout_marginStart="@dimen/space_10"
         android:background="#DADADA" />
 
 

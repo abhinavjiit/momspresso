@@ -7,10 +7,10 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/collectionItemImageVIEW"
-        android:layout_width="75dp"
-        android:layout_height="@dimen/space_50"
+        android:layout_width="100dp"
+        android:layout_height="75dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/space_10"
+        android:layout_marginStart="@dimen/space_10"
         android:src="@drawable/default_article" />
 
 
@@ -49,19 +49,22 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/close"
-        android:layout_width="@dimen/space_20"
-        android:layout_height="20dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/space_5"
+        android:padding="@dimen/space_10"
         android:src="@drawable/ic_close_pop_up" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/collectionItemImageVIEW"
+        android:layout_marginStart="@dimen/space_10"
         android:layout_marginTop="@dimen/space_10"
-        android:background="#97979733" />
+        android:layout_marginEnd="@dimen/space_10"
+        android:background="#9B9B9B" />
 
 
 </RelativeLayout>

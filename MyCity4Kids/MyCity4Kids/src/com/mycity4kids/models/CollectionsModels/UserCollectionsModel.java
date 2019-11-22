@@ -17,13 +17,9 @@ public class UserCollectionsModel {
     private String itemId;
     private String item; //articleId
     private String itemType;
-<<<<<<< HEAD:MyCity4Kids/MyCity4Kids/src/com/mycity4kids/models/CollectionsModels/UserCollectiosModel.java
     private boolean isFollowing;
     private ItemInfoModel item_info;
-=======
-    private ItemInfoModel item_info;
 
->>>>>>> discription need to added:MyCity4Kids/MyCity4Kids/src/com/mycity4kids/models/CollectionsModels/UserCollectionsModel.java
 
     public ItemInfoModel getItem_info() {
         return item_info;

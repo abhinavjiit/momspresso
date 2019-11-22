@@ -1,16 +1,13 @@
 package com.mycity4kids.profile
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.os.Handler
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
-import androidx.core.app.ActivityCompat
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.mycity4kids.R
@@ -80,7 +77,7 @@ class MyCollectionsWidget : RelativeLayout, View.OnClickListener {
                         try {
                             if (response.code == 200 && response.status == "success" && response.data?.result != null) {
                                 userCollectionsListModel = response.data!!.result
-                                if (userCollectionsListModel.collections_list.size > 0) {
+                                if (userCollectionsListModel.collectionsList.size > 0) {
                                     collectionsContainer.visibility = View.VISIBLE
                                     collectionsShimmerContainer.visibility = View.GONE
                                 } else {
@@ -90,12 +87,12 @@ class MyCollectionsWidget : RelativeLayout, View.OnClickListener {
 //                                    return
                                 }
                                 val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-                                for (i in 0 until userCollectionsListModel.collections_list.size) {
+                                for (i in 0 until userCollectionsListModel.collectionsList.size) {
                                     val itemView = inflater.inflate(R.layout.profile_collections_item, null)
-                                    Picasso.with(BaseApplication.getAppContext()).load(userCollectionsListModel.collections_list[i].imageUrl)
+                                    Picasso.with(BaseApplication.getAppContext()).load(userCollectionsListModel.collectionsList[i].imageUrl)
                                             .placeholder(R.drawable.default_article).error(R.drawable.default_article)
                                             .fit().into(itemView.findViewById<ImageView>(R.id.collectionImageView))
-                                    itemView.findViewById<TextView>(R.id.collectionTitleTextView).text = userCollectionsListModel.collections_list[i].name
+                                    itemView.findViewById<TextView>(R.id.collectionTitleTextView).text = userCollectionsListModel.collectionsList[i].name
                                     itemView.findViewById<ImageView>(R.id.collectionImageView).clipToOutline = true
                                     collectionsHSVContainer.addView(itemView)
                                 }

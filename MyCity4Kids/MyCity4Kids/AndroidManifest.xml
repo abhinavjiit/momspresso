@@ -585,7 +585,6 @@
         <activity
             android:name=".ui.activity.collection.UserCollectionItemListActivity"
             android:theme="@style/EditorTheme" />
-        <activity android:name=".ui.activity.collection.AddCollectionActivity" />
         <activity android:name=".ui.activity.collection.EditCollectionActivity" />
 
         <receiver android:name=".reminders.CancelNotificationReceiver" />

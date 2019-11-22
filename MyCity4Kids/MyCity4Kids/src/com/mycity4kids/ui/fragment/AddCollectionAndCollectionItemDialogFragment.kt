@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -46,6 +47,7 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
     private lateinit var addNewTextView: TextView
     lateinit var shimmer1: ShimmerFrameLayout
     private var dataList = ArrayList<UserCollectionsModel>()
+    private lateinit var cancel: ImageView
     var type: String? = null
 
 
@@ -55,6 +57,7 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
         addCollectionRecyclerView = rootView.findViewById(R.id.addCollectionRecyclerView)
         addNewTextView = rootView.findViewById(R.id.addNewTextView)
         shimmer1 = rootView.findViewById(R.id.shimmer1)
+        cancel = rootView.findViewById(R.id.cancel)
         val linearLayoutManager = LinearLayoutManager(context)
         addCollectionAdapter = AddCollectionAdapter(context!!, this, adapterViewType = false)
         addCollectionRecyclerView.layoutManager = linearLayoutManager
@@ -83,7 +86,9 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
             }
         })
 
-
+        cancel.setOnClickListener {
+            dismiss()
+        }
         return rootView
     }
 

@@ -34,7 +34,7 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.CollectionsModels.FeaturedOnModel
-import com.mycity4kids.models.CollectionsModels.UserCollectiosModel
+import com.mycity4kids.models.CollectionsModels.UserCollectionsModel
 import com.mycity4kids.models.request.ArticleDetailRequest
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
 import com.mycity4kids.models.response.*
@@ -666,7 +666,7 @@ class M_PrivateProfileActivity : BaseActivity(),
                             var item = FeaturedItem()
                             item.title = "item" + i
                             item.thumbnail = responseData.data.result.item_list[0].thumbnail
-                            var coll = UserCollectiosModel()
+                            var coll = UserCollectionsModel()
                             coll.name = responseData.data.result.item_list[0].collectionList[0].name
                             item.collectionList = ArrayList()
                             item.collectionList.add(coll)

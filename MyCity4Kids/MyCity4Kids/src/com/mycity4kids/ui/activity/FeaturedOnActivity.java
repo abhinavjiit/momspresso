@@ -16,7 +16,7 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.CollectionsModels.FeaturedOnModel;
 import com.mycity4kids.models.CollectionsModels.FollowCollectionRequestModel;
-import com.mycity4kids.models.CollectionsModels.UserCollectiosModel;
+import com.mycity4kids.models.CollectionsModels.UserCollectionsModel;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI;
@@ -40,7 +40,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
     private int nextPageNumber = 0;
     private boolean isReuqestRunning = true;
     private boolean isLastPageReached = false;
-    private ArrayList<UserCollectiosModel> finalFeaturedDataList;
+    private ArrayList<UserCollectionsModel> finalFeaturedDataList;
     private String authorId;
     private int updateFollowPos, changeFollowUnfollowTextPos;
     private Boolean isFollowing = false;
@@ -131,7 +131,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
         }
     };
 
-    private void showFeatureList(ArrayList<UserCollectiosModel> userCollectionsListModel) {
+    private void showFeatureList(ArrayList<UserCollectionsModel> userCollectionsListModel) {
         if (userCollectionsListModel.size() == 0) {
             isLastPageReached = false;
             if (null != finalFeaturedDataList && !finalFeaturedDataList.isEmpty()) {

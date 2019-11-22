@@ -19,12 +19,12 @@
         android:padding="@dimen/space_15">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/cancle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/cancel"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/space_10"
+            android:layout_marginStart="@dimen/space_10"
             android:src="@drawable/cross_icon_circle_background_black"
             />
 
@@ -63,7 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
 
-        android:background="#97979733" />
+        android:background="#9B9B9B" />
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer1"

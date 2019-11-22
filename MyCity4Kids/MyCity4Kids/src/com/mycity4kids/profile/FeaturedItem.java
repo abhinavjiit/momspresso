@@ -1,9 +1,10 @@
 package com.mycity4kids.profile;
 
-import com.mycity4kids.models.CollectionsModels.UserCollectiosModel;
+import com.mycity4kids.models.CollectionsModels.UserCollectionsModel;
 import com.mycity4kids.models.response.ProfilePic;
 
 import java.util.ArrayList;
+
 
 public class FeaturedItem {
     private String reason;
@@ -17,7 +18,7 @@ public class FeaturedItem {
     private String[] category_id;
     private String updated_at;
     private String approval_time;
-    private ArrayList<UserCollectiosModel> collectionList;
+    private ArrayList<UserCollectionsModel> collectionList;
     private String thumbnail_milliseconds;
     private String id;
     private String[] lang;
@@ -131,11 +132,11 @@ public class FeaturedItem {
         this.approval_time = approval_time;
     }
 
-    public ArrayList<UserCollectiosModel> getCollectionList() {
+    public ArrayList<UserCollectionsModel> getCollectionList() {
         return collectionList;
     }
 
-    public void setCollectionList(ArrayList<UserCollectiosModel> collectionList) {
+    public void setCollectionList(ArrayList<UserCollectionsModel> collectionList) {
         this.collectionList = collectionList;
     }
 
