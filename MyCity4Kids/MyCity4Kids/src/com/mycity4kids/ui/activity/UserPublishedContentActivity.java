@@ -8,17 +8,18 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.material.tabs.TabLayout;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.ui.adapter.UserPublishedContentPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
-
-import androidx.appcompat.widget.Toolbar;
-import androidx.viewpager.widget.ViewPager;
 
 /**
  * Created by hemant on 19/7/17.
@@ -84,7 +85,13 @@ public class UserPublishedContentActivity extends BaseActivity implements View.O
 
             }
         });
-
+        if (AppConstants.CONTENT_TYPE_ARTICLE.equals(contentType)) {
+            viewPager.setCurrentItem(0);
+        } else if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(contentType)) {
+            viewPager.setCurrentItem(1);
+        } else {
+            viewPager.setCurrentItem(2);
+        }
 
 //        viewPager.setCurrentItem(0);
     }

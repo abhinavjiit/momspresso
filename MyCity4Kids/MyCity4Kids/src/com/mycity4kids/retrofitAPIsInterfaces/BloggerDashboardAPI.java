@@ -69,8 +69,9 @@ public interface BloggerDashboardAPI {
     @GET("v3/comments/{userId}")
     Call<UserCommentsResponse> getUsersComments(@Path("userId") String userId);
 
-    @GET("author/feed")
-    Call<MixFeedResponse> getUsersAllContent(@Query("start") int start,
+    @GET("author/feed/{userId}")
+    Call<MixFeedResponse> getUsersAllContent(@Path("userId") String userId,
+                                             @Query("start") int start,
                                              @Query("size") int size,
                                              @Query("content_type") String contentType);
 

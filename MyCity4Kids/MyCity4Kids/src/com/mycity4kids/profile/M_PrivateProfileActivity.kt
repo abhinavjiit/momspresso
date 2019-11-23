@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.material.appbar.AppBarLayout
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.ConnectivityUtils
@@ -34,7 +35,6 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.CollectionsModels.FeaturedOnModel
-import com.mycity4kids.models.CollectionsModels.UserCollectionsModel
 import com.mycity4kids.models.request.ArticleDetailRequest
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
 import com.mycity4kids.models.response.*
@@ -44,6 +44,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
 import com.mycity4kids.ui.activity.*
+import com.mycity4kids.ui.fragment.AddCollectionPopUpDialogFragment
 import com.mycity4kids.ui.fragment.UserBioDialogFragment
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.RoundedTransformation
@@ -55,9 +56,11 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
 class M_PrivateProfileActivity : BaseActivity(),
-        UserContentAdapter.RecyclerViewClickListener, View.OnClickListener, UsersFeaturedContentAdapter.RecyclerViewClickListener {
+        UserContentAdapter.RecyclerViewClickListener, View.OnClickListener, UsersFeaturedContentAdapter.RecyclerViewClickListener,
+        AddCollectionPopUpDialogFragment.AddCollectionInterface, UsersBookmarksAdapter.RecyclerViewClickListener {
 
     private lateinit var toolbar: Toolbar
+    private lateinit var appBarLayout: AppBarLayout
     private lateinit var profileShimmerLayout: ShimmerFrameLayout
     private lateinit var headerContainer: RelativeLayout
     private lateinit var profileImageView: ImageView
@@ -105,6 +108,7 @@ class M_PrivateProfileActivity : BaseActivity(),
 
     private val userContentAdapter: UserContentAdapter by lazy { UserContentAdapter(this, AppUtils.isPrivateProfile(authorId)) }
     private val usersFeaturedContentAdapter: UsersFeaturedContentAdapter by lazy { UsersFeaturedContentAdapter(this) }
+    private val usersBookmarksAdapter: UsersBookmarksAdapter by lazy { UsersBookmarksAdapter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,6 +117,7 @@ class M_PrivateProfileActivity : BaseActivity(),
         authorId = intent.getStringExtra(Constants.USER_ID)
 
         toolbar = findViewById(R.id.toolbar)
+        appBarLayout = findViewById(R.id.appBarLayout);
         recyclerView = findViewById(R.id.recyclerView)
         profileShimmerLayout = findViewById(R.id.profileShimmerLayout)
         profileImageView = findViewById(R.id.profileImageView)
@@ -146,6 +151,12 @@ class M_PrivateProfileActivity : BaseActivity(),
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+//        appBarLayout.addOnOffsetChangedListener(object:AppBarLayout.OnOffsetChangedListener{
+//            override fun onOffsetChanged(p0: AppBarLayout?, verticalOffset: Int) {
+//                headerContainer.alpha = 1.0f - Math.abs(verticalOffset / appBarLayout.totalScrollRange)
+//            }
+//        })
+
         if (AppUtils.isPrivateProfile(authorId)) {
             authorId = SharedPrefUtils.getUserDetailModel(this).dynamoId
             followerContainer.setOnClickListener(this)
@@ -157,6 +168,7 @@ class M_PrivateProfileActivity : BaseActivity(),
             sharePublicTextView.visibility = View.GONE
             sharePrivateTextView.visibility = View.VISIBLE
             analyticsTextView.visibility = View.VISIBLE
+            myCollectionsWidget.getCollections(authorId, true)
         } else {
             bookmarksTab.visibility = View.GONE
             divider2.visibility = View.GONE
@@ -168,6 +180,7 @@ class M_PrivateProfileActivity : BaseActivity(),
             followAuthorTextView.setOnClickListener(this)
             sharePublicTextView.setOnClickListener(this)
             checkFollowingStatusAPI()
+            myCollectionsWidget.getCollections(authorId, false)
         }
 
         val llm = LinearLayoutManager(this)
@@ -181,16 +194,12 @@ class M_PrivateProfileActivity : BaseActivity(),
         userFeaturedOnList = ArrayList()
 
         profileShimmerLayout.startShimmerAnimation()
-        val handler = Handler()
-        handler.postDelayed(Runnable {
-            getUserDetail(authorId)
-        }, 2000)
-        badgesContainer.getBadges(authorId)
 
         creatorTab.setOnClickListener(this)
         featuredTab.setOnClickListener(this)
         bookmarksTab.setOnClickListener(this)
         badgesContainer.setOnClickListener(this)
+        postsCountContainer.setOnClickListener(this)
 
         creatorTab.isSelected = true
         featuredTab.isSelected = false
@@ -198,6 +207,9 @@ class M_PrivateProfileActivity : BaseActivity(),
         if (AppUtils.isPrivateProfile(authorId)) {
             userContentList?.add(MixFeedResult(contentType = AppConstants.CONTENT_TYPE_CREATE_SECTION))
         }
+
+        getUserDetail(authorId)
+        badgesContainer.getBadges(authorId)
         getUsersCreatedContent(authorId)
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -206,11 +218,17 @@ class M_PrivateProfileActivity : BaseActivity(),
                     visibleItemCount = llm.childCount
                     totalItemCount = llm.itemCount
                     pastVisiblesItems = llm.findFirstVisibleItemPosition()
-                    if (!isRequestRunning) {
+                    if (!isRequestRunning && !isLastPageReached) {
                         if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
                             isRequestRunning = true
                             bottomLoadingView.visibility = View.VISIBLE
-                            getUsersCreatedContent(authorId)
+                            if (creatorTab.isSelected) {
+                                getUsersCreatedContent(authorId)
+                            } else if (bookmarksTab.isSelected) {
+                                getUsersBookmark()
+                            } else {
+                                getFeaturedContent()
+                            }
                         }
                     }
                 }
@@ -459,11 +477,11 @@ class M_PrivateProfileActivity : BaseActivity(),
         val retro = BaseApplication.getInstance().retrofit
         val bloggerDashboardAPI = retro.create(BloggerDashboardAPI::class.java)
 
-        val call = if (creatorTab.isSelected) {
-            bloggerDashboardAPI.getUsersAllContent(start, size, null)
-        } else {
-            bloggerDashboardAPI.getUsersAllBookmark(start, size, 1)
-        }
+//        val call = if (creatorTab.isSelected) {
+        val call = bloggerDashboardAPI.getUsersAllContent(authorId, start, size, null)
+//        } else {
+//            bloggerDashboardAPI.getUsersAllBookmark(start, size, 1)
+//        }
 
         call.enqueue(object : Callback<MixFeedResponse> {
             override fun onResponse(call: Call<MixFeedResponse>, response: retrofit2.Response<MixFeedResponse>) {
@@ -496,7 +514,7 @@ class M_PrivateProfileActivity : BaseActivity(),
 
     private fun processUserContentResponse(responseData: List<MixFeedResult>?) {
         if (responseData.isNullOrEmpty()) {
-            isLastPageReached = false
+            isLastPageReached = true
             if (!userContentList.isNullOrEmpty()) {
                 //No more next results for search from pagination
             } else {
@@ -549,21 +567,76 @@ class M_PrivateProfileActivity : BaseActivity(),
 
     private fun processUserBookmarks(result: List<MixFeedResult>?) {
         if (result.isNullOrEmpty()) {
-            isLastPageReached = false
+            isLastPageReached = true
             if (!userContentList.isNullOrEmpty()) {
                 //No more next results for search from pagination
             } else {
                 // No results
-                userContentAdapter.setListData(userContentList)
-                userContentAdapter.notifyDataSetChanged()
+                usersBookmarksAdapter.setListData(userBookmarkList)
+                usersBookmarksAdapter.notifyDataSetChanged()
 //                noBlogsTextView.setText(getString(R.string.short_s_no_published))
 //                noBlogsTextView.setVisibility(View.VISIBLE)
             }
         } else {
             start += size
-            userContentList?.addAll(result)
-            userContentAdapter.setListData(userContentList)
-            userContentAdapter.notifyDataSetChanged()
+            userBookmarkList?.addAll(result)
+            usersBookmarksAdapter.setListData(userBookmarkList)
+            usersBookmarksAdapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun getFeaturedContent() {
+        val retrofit = BaseApplication.getInstance().retrofit
+        val featureListAPI = retrofit.create(CollectionsAPI::class.java)
+        authorId?.let {
+            val call = featureListAPI.getFeaturedOnCollections(it, start, size)
+            call.enqueue(object : Callback<FeaturedOnModel> {
+                override fun onResponse(call: Call<FeaturedOnModel>, response: retrofit2.Response<FeaturedOnModel>) {
+                    if (null == response.body()) {
+                        val nee = NetworkErrorException(response.raw().toString())
+                        Crashlytics.logException(nee)
+                        return
+                    }
+                    try {
+                        val responseData = response.body() as FeaturedOnModel
+                        if (responseData.code == 200 && Constants.SUCCESS == responseData.status) {
+                            processFeaturedContentResponse(responseData.data.result.item_list)
+                            usersFeaturedContentAdapter.setListData(userFeaturedOnList)
+                            usersFeaturedContentAdapter.notifyDataSetChanged()
+                        } else {
+                        }
+                    } catch (e: Exception) {
+                        Crashlytics.logException(e)
+                        Log.d("MC4kException", Log.getStackTraceString(e))
+                    }
+                }
+
+                override fun onFailure(call: Call<FeaturedOnModel>, t: Throwable) {
+                    Crashlytics.logException(t)
+                    Log.d("MC4kException", Log.getStackTraceString(t))
+                }
+            })
+        }
+
+    }
+
+    private fun processFeaturedContentResponse(featuredItemList: List<FeaturedItem>) {
+        if (featuredItemList.isNullOrEmpty()) {
+            isLastPageReached = true
+            if (!userFeaturedOnList.isNullOrEmpty()) {
+                //No more next results for search from pagination
+            } else {
+                // No results
+                usersFeaturedContentAdapter.setListData(userFeaturedOnList)
+                usersFeaturedContentAdapter.notifyDataSetChanged()
+//                noBlogsTextView.setText(getString(R.string.short_s_no_published))
+//                noBlogsTextView.setVisibility(View.VISIBLE)
+            }
+        } else {
+            start += size
+            userFeaturedOnList?.addAll(featuredItemList)
+            usersFeaturedContentAdapter.setListData(userFeaturedOnList)
+            usersFeaturedContentAdapter.notifyDataSetChanged()
         }
     }
 
@@ -594,10 +667,10 @@ class M_PrivateProfileActivity : BaseActivity(),
                 creatorTab.isSelected = false
                 featuredTab.isSelected = false
                 bookmarksTab.isSelected = true
-                userContentList?.clear()
+                userBookmarkList?.clear()
                 start = 0
-                recyclerView.adapter = userContentAdapter
-                getUsersCreatedContent(authorId)
+                recyclerView.adapter = usersBookmarksAdapter
+                getUsersBookmark()
             }
             view?.id == R.id.badgeContainer -> {
                 val intent = Intent(this, BadgeActivity::class.java)
@@ -644,56 +717,11 @@ class M_PrivateProfileActivity : BaseActivity(),
             view?.id == R.id.rankContainer -> {
 
             }
+            view?.id == R.id.postsCountContainer -> {
+                appBarLayout.setExpanded(false)
+            }
         }
     }
-
-    private fun getFeaturedContent() {
-        val retrofit = BaseApplication.getInstance().retrofitTest
-        val featureListAPI = retrofit.create(CollectionsAPI::class.java)
-        val call = featureListAPI.getFeaturedOnCollections("d7d981e2978b49b7b1748306967fc8da", 0, 10)
-        call.enqueue(object : Callback<FeaturedOnModel> {
-            override fun onResponse(call: Call<FeaturedOnModel>, response: retrofit2.Response<FeaturedOnModel>) {
-                if (null == response.body()) {
-                    val nee = NetworkErrorException(response.raw().toString())
-                    Crashlytics.logException(nee)
-                    return
-                }
-                try {
-                    val responseData = response.body() as FeaturedOnModel
-                    if (responseData.code == 200 && Constants.SUCCESS == responseData.status) {
-
-                        for (i in 0 until 10) {
-                            var item = FeaturedItem()
-                            item.title = "item" + i
-                            item.thumbnail = responseData.data.result.item_list[0].thumbnail
-                            var coll = UserCollectionsModel()
-                            coll.name = responseData.data.result.item_list[0].collectionList[0].name
-                            item.collectionList = ArrayList()
-                            item.collectionList.add(coll)
-                            userFeaturedOnList?.add(item)
-                        }
-                        for (i in 0 until userFeaturedOnList!!.size) {
-                            for (j in 0 until (5..10).random()) {
-                                userFeaturedOnList!![i].collectionList.add(userFeaturedOnList!![i].collectionList[0])
-                            }
-                        }
-                        usersFeaturedContentAdapter.setListData(userFeaturedOnList)
-                        usersFeaturedContentAdapter.notifyDataSetChanged()
-                    } else {
-                    }
-                } catch (e: Exception) {
-                    Crashlytics.logException(e)
-                    Log.d("MC4kException", Log.getStackTraceString(e))
-                }
-            }
-
-            override fun onFailure(call: Call<FeaturedOnModel>, t: Throwable) {
-                Crashlytics.logException(t)
-                Log.d("MC4kException", Log.getStackTraceString(t))
-            }
-        })
-    }
-
 
     override fun onClick(view: View, position: Int) {
         when {
@@ -731,6 +759,28 @@ class M_PrivateProfileActivity : BaseActivity(),
                 intent.putExtra(Constants.FROM_SCREEN, "Search Screen")
                 startActivity(intent)
             }
+            view.id == R.id.draftContainer -> {
+                val intent = Intent(this, UserDraftsContentActivity::class.java)
+                startActivity(intent)
+            }
+            view.id == R.id.articleContainer -> {
+                val articleIntent = Intent(this, UserPublishedContentActivity::class.java)
+                articleIntent.putExtra("isPrivateProfile", true)
+                articleIntent.putExtra("contentType", AppConstants.CONTENT_TYPE_ARTICLE)
+                startActivity(articleIntent)
+            }
+            view.id == R.id.storyContainer -> {
+                val articleIntent = Intent(this, UserPublishedContentActivity::class.java)
+                articleIntent.putExtra("isPrivateProfile", true)
+                articleIntent.putExtra("contentType", AppConstants.CONTENT_TYPE_SHORT_STORY)
+                startActivity(articleIntent)
+            }
+            view.id == R.id.vlogContainer -> {
+                val articleIntent = Intent(this, UserPublishedContentActivity::class.java)
+                articleIntent.putExtra("isPrivateProfile", true)
+                articleIntent.putExtra("contentType", AppConstants.CONTENT_TYPE_VIDEO)
+                startActivity(articleIntent)
+            }
         }
     }
 
@@ -744,6 +794,27 @@ class M_PrivateProfileActivity : BaseActivity(),
             }
         }
     }
+
+    override fun onBookmarkItemInteraction(view: View, position: Int) {
+
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+            }
+        }
+        return true
+    }
+
+    override fun onCollectionAddSuccess() {
+        Handler().postDelayed(Runnable {
+            myCollectionsWidget.refresh(AppUtils.isPrivateProfile(authorId))
+        }, 1000)
+    }
+
 
     fun makeTextViewResizable(tv: TextView, maxLine: Int, expandText: String, viewMore: Boolean, userBio: String) {
         if (tv.tag == null) {
@@ -819,14 +890,6 @@ class M_PrivateProfileActivity : BaseActivity(),
 
         override fun onClick(widget: View) {
         }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            android.R.id.home -> {
-            }
-        }
-        return true
     }
 
     override fun updateUi(response: Response?) {

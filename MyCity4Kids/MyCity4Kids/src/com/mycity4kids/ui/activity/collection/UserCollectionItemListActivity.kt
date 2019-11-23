@@ -169,7 +169,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
 
 
     fun getUserCollectionItems(start: Int) {
-        BaseApplication.getInstance().campaignRetrofit.create(CollectionsAPI::class.java).getUserCollectionItems(collectionId, start, 10).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getUserCollectionItems(collectionId, start, 10).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
             override fun onComplete() {
 
             }
@@ -262,7 +262,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         val list = ArrayList<String>()
         list.add(collectionId)
         updateCollectionRequestModel.userCollectionId = list
-        BaseApplication.getInstance().campaignRetrofit.create(CollectionsAPI::class.java).editCollection(updateCollectionRequestModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).editCollection(updateCollectionRequestModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
             override fun onComplete() {
                 removeProgressDialog()
             }
@@ -310,7 +310,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
             addCollectionRequestModel.userCollectionId = collectionId
         }
 
-        BaseApplication.getInstance().campaignRetrofit.create(CollectionsAPI::class.java).followUnfollowCollection(addCollectionRequestModel = addCollectionRequestModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<ResponseBody> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).followUnfollowCollection(addCollectionRequestModel = addCollectionRequestModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<ResponseBody> {
             override fun onComplete() {
             }
 

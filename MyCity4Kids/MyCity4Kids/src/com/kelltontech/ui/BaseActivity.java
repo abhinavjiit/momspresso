@@ -23,6 +23,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.comscore.analytics.comScore;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.Tracker;
@@ -36,9 +42,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.ArticleBlogFollowController;
 import com.mycity4kids.listener.OnButtonClicked;
-import com.mycity4kids.models.parentingstop.ArticleBlogFollowRequest;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.sync.SyncUserInfoService;
@@ -60,17 +64,16 @@ import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.LocaleManager;
 import com.squareup.picasso.Picasso;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.Timer;
 import java.util.TimerTask;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+
 import io.socket.client.Socket;
 
 /*import com.mycity4kids.utils.AnalyticsHelper;*/
@@ -1045,17 +1048,4 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
 //                .setAction(R.string.snackbar_action, myOnClickListener)
                 .show(); // Don’t forget to show!
     }
-
-    public void followAPICall(String id) {
-
-        ArticleBlogFollowRequest _followRequest = new ArticleBlogFollowRequest();
-        _followRequest.setSessionId("" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getSessionId());
-        _followRequest.setUserId("" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getId());
-        _followRequest.setAuthorId("" + id);
-        ArticleBlogFollowController _followController = new ArticleBlogFollowController(this, this);
-        showProgressDialog(getString(R.string.please_wait));
-        _followController.getData(AppConstants.ARTICLE_BLOG_FOLLOW_REQUEST, _followRequest);
-
-    }
-
 }

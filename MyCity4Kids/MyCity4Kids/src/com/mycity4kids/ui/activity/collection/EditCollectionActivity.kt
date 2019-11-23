@@ -118,7 +118,7 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
     }
 
     private fun getUserCollectionItems(start: Int) {
-        BaseApplication.getInstance().campaignRetrofit.create(CollectionsAPI::class.java).getUserCollectionItems(collectionId, start, 10).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getUserCollectionItems(collectionId, start, 10).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
             override fun onComplete() {
             }
 
@@ -173,7 +173,7 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
         addCollectionRequestModel.userId = dataList[position].userId
 
 
-        BaseApplication.getInstance().campaignRetrofit.create(CollectionsAPI::class.java).editCollectionItem(addCollectionRequestModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).editCollectionItem(addCollectionRequestModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
             override fun onComplete() {
 
             }
@@ -219,7 +219,7 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
         updateCollectionRequestModel.name = collectionNameChangeEditTextView.text.toString()
         updateCollectionRequestModel.imageUrl = userCollectionsListModel.imageUrl
 
-        BaseApplication.getInstance().campaignRetrofit.create(CollectionsAPI::class.java).editCollection(updateCollectionRequestModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).editCollection(updateCollectionRequestModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
             override fun onComplete() {
             }
 

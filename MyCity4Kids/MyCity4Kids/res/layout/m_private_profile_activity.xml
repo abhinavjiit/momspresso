@@ -6,6 +6,7 @@
     android:background="@color/app_light_grey">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/app_light_grey">
@@ -58,7 +59,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/article_listing_item_border_bg"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <com.mikhaellopez.circularimageview.CircularImageView
                             android:id="@+id/profileImageView"
@@ -400,14 +401,14 @@
                     android:visibility="visible">
 
                     <!--<com.mycity4kids.widget.CustomFontTextView-->
-                        <!--android:id="@+id/toolbarTitle"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_centerVertical="true"-->
-                        <!--android:text="@string/user_article.tabbar.published_label"-->
-                        <!--android:textColor="@color/user_articles.toolbar.title"-->
-                        <!--android:textSize="20sp"-->
-                        <!--app:fontName="oswald_regular.ttf" />-->
+                    <!--android:id="@+id/toolbarTitle"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:text="@string/user_article.tabbar.published_label"-->
+                    <!--android:textColor="@color/user_articles.toolbar.title"-->
+                    <!--android:textSize="20sp"-->
+                    <!--app:fontName="oswald_regular.ttf" />-->
 
                     <ImageView
                         android:id="@+id/searchAllImageView"

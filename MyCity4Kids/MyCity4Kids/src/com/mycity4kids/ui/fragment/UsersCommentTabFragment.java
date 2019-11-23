@@ -3,18 +3,17 @@ package com.mycity4kids.ui.fragment;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
@@ -30,7 +29,6 @@ import com.mycity4kids.models.response.UserCommentsResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
-import com.mycity4kids.ui.activity.VlogsDetailActivity;
 import com.mycity4kids.ui.adapter.UsersCommentsRecycleAdapter;
 
 import java.util.ArrayList;
@@ -198,14 +196,7 @@ public class UsersCommentTabFragment extends BaseFragment implements UsersCommen
                 break;
             case R.id.rootView:
                 if (commentsList.get(position).getArticleId().contains("video")) {
-                    Intent intent = new Intent(getActivity(), VlogsDetailActivity.class);
-                    intent.putExtra(Constants.VIDEO_ID, commentsList.get(position).getArticleId());
-                    intent.putExtra(Constants.AUTHOR_ID, commentsList.get(position).getUserId());
-                    intent.putExtra(Constants.FROM_SCREEN, "Funny Videos Listing");
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                    intent.putExtra(Constants.AUTHOR, commentsList.get(position).getUserId() + "~" + commentsList.get(position).getAuthorName());
-                    startActivity(intent);
+
                 } else {
                     Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
                     intent.putExtra(Constants.ARTICLE_ID, commentsList.get(position).getArticleId());

@@ -94,7 +94,7 @@ class CollectionThumbnailImageChangeDialogFragmnet : DialogFragment() {
     }
 
     private fun getImagesForCollection() {
-        BaseApplication.getInstance().campaignRetrofit.create(CollectionsAPI::class.java).getCollectionImages().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<ResponseBody> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getCollectionImages().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<ResponseBody> {
             override fun onComplete() {
             }
 

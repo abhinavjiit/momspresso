@@ -108,7 +108,7 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
             progressBar.setVisibility(View.VISIBLE);
             toolbarTitle.setText(getString(R.string.myprofile_followers_label));
         } else if (AppConstants.COLLECTION_FOLLOWING_LIST.equals(followListType)) {
-            Retrofit retrofit1 = BaseApplication.getInstance().getCampaignRetrofit();
+            Retrofit retrofit1 = BaseApplication.getInstance().getRetrofit();
             FollowAPI followListAPIi = retrofit1.create(FollowAPI.class);
             Call<FollowersFollowingResponse> callCollectionFollowersList = followListAPIi.getCollectionFollowingList(collectionId, 0, 10);
             callCollectionFollowersList.enqueue(getCollectionFollowersList);

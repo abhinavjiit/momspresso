@@ -28,7 +28,6 @@ public interface FollowAPI {
     @POST("/v1/users/unfollow/")
     Call<FollowUnfollowUserResponse> unfollowUser(@Body FollowUnfollowUserRequest body);
 
-    //https://testingapi.momspresso.com/v1/collections/followers/5dc9a51388e803158ce7577e?start=0&offset=1
     @GET("/v1/collections/followers/{collectionId}")
     Call<FollowersFollowingResponse> getCollectionFollowingList(@Path("collectionId") String collectionId,
                                                                 @Query("start") int start,

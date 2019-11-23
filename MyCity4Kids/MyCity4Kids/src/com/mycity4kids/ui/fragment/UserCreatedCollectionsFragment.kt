@@ -88,7 +88,7 @@ class UserCreatedCollectionsFragment : BaseFragment() {
 
     private fun getUserCreatedCollections() {
         userId?.let {
-            BaseApplication.getInstance().campaignRetrofit.create(CollectionsAPI::class.java).getUserCollectionList(it, pageNumber, 10).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
+            BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getUserCollectionList(it, pageNumber, 10).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
                 override fun onComplete() {
                 }
 

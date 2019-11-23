@@ -326,10 +326,6 @@
             android:name=".ui.activity.FollowersAndFollowingListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.VlogsDetailActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
             android:name=".ui.activity.VideoTrimmerActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -478,7 +474,6 @@
         <activity
             android:name=".ui.activity.SuggestedTopicsActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.activity.MomsVlogDetailActivity" />
         <activity
             android:name=".ui.activity.EditProfileNewActivity"
             android:parentActivityName=".ui.activity.PrivateProfileActivity"
@@ -498,9 +493,6 @@
         <activity
             android:name=".ui.activity.ChooseVideoCategoryActivity"
             android:parentActivityName=".ui.activity.DashboardActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.VideoChallengeDetailListingActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.HeaderChallengeVideoPlayActivity"
@@ -586,6 +578,7 @@
             android:name=".ui.activity.collection.UserCollectionItemListActivity"
             android:theme="@style/EditorTheme" />
         <activity android:name=".ui.activity.collection.EditCollectionActivity" />
+        <activity android:name=".ui.activity.BadgeActivity" />
 
         <receiver android:name=".reminders.CancelNotificationReceiver" />
 

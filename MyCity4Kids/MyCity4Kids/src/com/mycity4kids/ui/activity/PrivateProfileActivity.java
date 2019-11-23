@@ -24,6 +24,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentManager;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -78,10 +82,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.FragmentManager;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -544,21 +544,21 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                 startActivity(featureIntent);
                 break;
             case R.id.rankContainer:
-                if (AppConstants.DEBUGGING_USER_ID.contains(userId)) {
-                    rankContainer.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View v) {
-                            BaseApplication.getInstance().toggleGroupBaseURL();
-                            return false;
-                        }
-                    });
+//                if (AppConstants.DEBUGGING_USER_ID.contains(userId)) {
+//                    rankContainer.setOnLongClickListener(new View.OnLongClickListener() {
+//                        @Override
+//                        public boolean onLongClick(View v) {
+//                            BaseApplication.getInstance().toggleGroupBaseURL();
+//                            return false;
+//                        }
+//                    });
                     Intent _intent = new Intent(this, IdTokenLoginActivity.class);
                     startActivity(_intent);
-                    return;
-                } else {
-                    Intent intent6 = new Intent(this, RankingActivity.class);
-                    startActivity(intent6);
-                }
+//                    return;
+//                } else {
+//                Intent intent6 = new Intent(this, RankingActivity.class);
+//                startActivity(intent6);
+//                }
                 break;
             case R.id.rankingSectionTextView: {
                 Intent intent7 = new Intent(this, RankingActivity.class);

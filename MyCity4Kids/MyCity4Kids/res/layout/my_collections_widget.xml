@@ -83,7 +83,8 @@
                     android:id="@+id/addCollectionContainer"
                     android:layout_width="110dp"
                     android:layout_height="110dp"
-                    android:orientation="vertical">
+                    android:clickable="true"
+                    android:focusable="true">
 
                     <ImageView
                         android:layout_width="60dp"
@@ -100,8 +101,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:gravity="center"
                         android:layout_marginBottom="8dp"
+                        android:gravity="center"
                         android:text="@string/profile_add_new" />
                 </RelativeLayout>
             </LinearLayout>

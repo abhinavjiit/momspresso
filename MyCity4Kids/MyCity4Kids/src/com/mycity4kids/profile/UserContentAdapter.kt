@@ -71,7 +71,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
                     holder.recommendCountTextView, holder.txvAuthorName, holder.articleImageView, holder.videoIndicatorImageView,
                     holder.bookmarkArticleImageView, holder.watchLaterImageView, mixFeedList?.get(position), position, holder, isPrivate)
             is VideosViewHolder -> addVideoItem(holder.winnerLayout, holder.txvArticleTitle, holder.txvAuthorName, holder.articleImageView,
-                    holder.authorImageView, holder.viewCountTextView, holder.commentCountTextView, holder.recommendCountTextView,
+                    holder.viewCountTextView, holder.commentCountTextView, holder.recommendCountTextView,
                     holder.goldLogo, mixFeedList?.get(position), holder, isPrivate)
             is ShortStoriesViewHolder -> addShortStoryItem(holder.mainView, holder.storyTitleTextView, holder.storyBodyTextView, holder.authorNameTextView,
                     holder.storyCommentCountTextView, holder.storyRecommendationCountTextView, holder.likeImageView,
@@ -199,7 +199,6 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         internal var txvArticleTitle: TextView
         internal var txvAuthorName: TextView
         internal var articleImageView: ImageView
-        internal var authorImageView: ImageView
         internal var viewCountTextView: TextView
         internal var commentCountTextView: TextView
         internal var recommendCountTextView: TextView
@@ -211,7 +210,6 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
             txvArticleTitle = itemView.findViewById<View>(R.id.txvArticleTitle) as TextView
             txvAuthorName = itemView.findViewById<View>(R.id.txvAuthorName) as TextView
             articleImageView = itemView.findViewById<View>(R.id.articleImageView) as ImageView
-            authorImageView = itemView.findViewById<View>(R.id.authorImageView) as ImageView
             viewCountTextView = itemView.findViewById<View>(R.id.viewCountTextView) as TextView
             commentCountTextView = itemView.findViewById<View>(R.id.commentCountTextView) as TextView
             recommendCountTextView = itemView.findViewById<View>(R.id.recommendCountTextView) as TextView
@@ -344,7 +342,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
     }
 
     private fun addVideoItem(winnerLayout: RelativeLayout, txvArticleTitle: TextView, txvAuthorName: TextView, articleImageView: ImageView,
-                             authorImageView: ImageView, viewCountTextView: TextView, commentCountTextView: TextView,
+                             viewCountTextView: TextView, commentCountTextView: TextView,
                              recommendCountTextView: TextView, goldLogo: TextView, data: MixFeedResult?, holder: RecyclerView.ViewHolder, private: Boolean) {
         txvArticleTitle.text = data?.title
         viewCountTextView.text = "" + data?.view_count

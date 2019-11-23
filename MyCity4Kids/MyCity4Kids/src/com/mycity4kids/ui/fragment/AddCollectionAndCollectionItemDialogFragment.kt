@@ -111,7 +111,7 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
 
     private fun getUserCreatedCollections(start: Int) {
 
-        BaseApplication.getInstance().campaignRetrofit.create(CollectionsAPI::class.java).getUserCollectionList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, start, 20).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getUserCollectionList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, start, 20).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
             override fun onComplete() {
             }
 
@@ -154,7 +154,7 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
         list.add(dataList[position].userCollectionId)
         addCollectionRequestModel1.userCollectionId = list
         addCollectionRequestModel1.item = articleId
-        BaseApplication.getInstance().campaignRetrofit.create(CollectionsAPI::class.java).addCollectionItem(addCollectionRequestModel1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).addCollectionItem(addCollectionRequestModel1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
             override fun onComplete() {
 
             }

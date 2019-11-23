@@ -88,7 +88,7 @@ class UserFollowedCollectionsFragment : BaseFragment() {
     }
 
     private fun getFollowedCollections() {
-        BaseApplication.getInstance().campaignRetrofit.create(CollectionsAPI::class.java).getFollowedCollection(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, pageNumber, 10).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getFollowedCollection(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, pageNumber, 10).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
             override fun onComplete() {
             }
 

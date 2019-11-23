@@ -534,12 +534,13 @@ public class AppConstants {
     public static final String NOTIFICATION_TYPE_CAMPAIGN_CATEGORY_LISTING = "category_listing";
     public static final String NOTIFICATION_TYPE_CAMPAIGN_BANKDETAILS = "mymoney_bankdetails";
     public static final String NOTIFICATION_NOTIFY_TYPE_MOMSIGHT_REWARDS = "20";
+    public static final String NOTIFICATION_NOTIFY_TYPE_TOPIC = "21";
     public static final String NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_LISTING = "22";
     public static final String NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_DETAIL = "23";
     public static final String NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_SUBMIT_PROOF = "24";
     public static final String NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_PANCARD = "25";
     public static final String NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_BANKDETAIL = "26";
-    public static final String NOTIFICATION_NOTIFY_TYPE_TOPIC = "21";
+
 
 
     public static final String FOLLOWING_STATUS_ACTIVITY_RESULT = "followingStatusActivityResult";

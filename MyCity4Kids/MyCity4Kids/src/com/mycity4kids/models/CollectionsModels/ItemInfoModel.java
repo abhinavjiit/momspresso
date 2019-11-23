@@ -1,6 +1,7 @@
 package com.mycity4kids.models.CollectionsModels;
 
 import com.mycity4kids.models.response.ImageURL;
+import com.mycity4kids.profile.Author;
 
 public class ItemInfoModel {
 
@@ -76,47 +77,4 @@ public class ItemInfoModel {
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
     }
-
-    public class Author {
-
-        String blogTitleSlug;
-        ProfilePic profilePicUrl;
-        String firstName;
-
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
-
-        String lastName;
-
-
-        public class ProfilePic {
-
-            String clientApp;
-
-            public String getClientApp() {
-                return clientApp;
-            }
-
-            public void setClientApp(String clientApp) {
-                this.clientApp = clientApp;
-            }
-        }
-
-
-    }
-
-
 }

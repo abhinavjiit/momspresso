@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.fragment
 
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -35,12 +36,11 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
     lateinit var cancel: ImageView
     lateinit var collectionId: String
     var articleId: String? = null
-
+    lateinit var addCollectionInterface: AddCollectionInterface
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.add_collection_name_pop_up, container,
                 false)
-
         confirmTextView = rootView.findViewById(R.id.confirmTextView)
         collectionNameEditTextView = rootView.findViewById(R.id.collectionNameEditTextView)
         cancel = rootView.findViewById(R.id.cancel)
@@ -50,7 +50,6 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
         cancel.setOnClickListener {
             dismiss()
         }
-
         val bundle = arguments
         articleId = bundle?.getString("articleId")
         return rootView
@@ -67,9 +66,17 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
         val dialog = dialog
         if (dialog != null) {
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
         }
+    }
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        try {
+            addCollectionInterface = context as AddCollectionInterface
+        } catch (e: ClassCastException) {
+            Crashlytics.logException(e)
+            Log.d("MC4KException", Log.getStackTraceString(e))
+        }
     }
 
     fun isValid(): Boolean {
@@ -85,7 +92,7 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
         addCollectionRequestModel.name = collectionNameEditTextView.text.toString().trim()
         addCollectionRequestModel.userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
 
-        BaseApplication.getInstance().campaignRetrofit.create(CollectionsAPI::class.java).addCollection(addCollectionRequestModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).addCollection(addCollectionRequestModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
             override fun onComplete() {
 
             }
@@ -96,21 +103,19 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
             override fun onNext(t: BaseResponseGeneric<AddCollectionRequestModel>) {
                 try {
                     if (t.code == 200 && t.status == Constants.SUCCESS && t.data?.result != null) {
-
-
                         var addCollectionRequestModell: AddCollectionRequestModel = t.data!!.result
                         collectionId = addCollectionRequestModell.userCollectionId
-
                         if (!StringUtils.isNullOrEmpty(collectionId) && !StringUtils.isNullOrEmpty(articleId)) {
                             addCollectionItem()
                         } else {
                             targetFragment?.onActivityResult(100, 1, activity?.intent)
+                            addCollectionInterface?.let {
+                                it.onCollectionAddSuccess()
+                            }
                             dismiss()
                         }
-
                     } else {
                         ToastUtils.showToast(activity, "nhi hua  add ")
-
                     }
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
@@ -120,12 +125,8 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
 
             override fun onError(e: Throwable) {
             }
-
         })
-
-
     }
-
 
     fun addCollectionItem() {
         val addCollectionRequestModel1 = UpdateCollectionRequestModel()
@@ -135,9 +136,8 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
         List.add(collectionId)
         addCollectionRequestModel1.userCollectionId = List
         addCollectionRequestModel1.item = articleId
-        BaseApplication.getInstance().campaignRetrofit.create(CollectionsAPI::class.java).addCollectionItem(addCollectionRequestModel1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).addCollectionItem(addCollectionRequestModel1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
             override fun onComplete() {
-
             }
 
             override fun onSubscribe(d: Disposable) {
@@ -162,7 +162,10 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
                 Crashlytics.logException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
             }
-
         })
+    }
+
+    interface AddCollectionInterface {
+        fun onCollectionAddSuccess()
     }
 }
