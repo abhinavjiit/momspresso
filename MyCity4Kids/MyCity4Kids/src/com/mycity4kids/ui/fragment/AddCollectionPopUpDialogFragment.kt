@@ -20,8 +20,8 @@ import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
-import com.mycity4kids.models.CollectionsModels.AddCollectionRequestModel
-import com.mycity4kids.models.CollectionsModels.UpdateCollectionRequestModel
+import com.mycity4kids.models.collectionsModels.AddCollectionRequestModel
+import com.mycity4kids.models.collectionsModels.UpdateCollectionRequestModel
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI

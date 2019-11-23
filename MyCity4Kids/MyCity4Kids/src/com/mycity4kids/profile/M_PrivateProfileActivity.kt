@@ -34,7 +34,8 @@ import com.mycity4kids.animation.MyCityAnimationsUtil
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
-import com.mycity4kids.models.CollectionsModels.FeaturedOnModel
+import com.mycity4kids.models.collectionsModels.FeaturedOnModel
+import com.mycity4kids.models.collectionsModels.UserCollectionsModel
 import com.mycity4kids.models.request.ArticleDetailRequest
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
 import com.mycity4kids.models.response.*

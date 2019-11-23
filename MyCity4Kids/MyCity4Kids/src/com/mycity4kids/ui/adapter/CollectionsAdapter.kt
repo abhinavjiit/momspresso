@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
-import com.mycity4kids.models.CollectionsModels.UserCollectionsModel
+import com.mycity4kids.models.collectionsModels.UserCollectionsModel
 import com.squareup.picasso.Picasso
 
 class CollectionsAdapter(activity: Context) : BaseAdapter() {

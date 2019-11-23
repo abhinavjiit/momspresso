@@ -15,7 +15,7 @@ import androidx.fragment.app.DialogFragment
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
-import com.mycity4kids.models.CollectionsModels.UserCollectionsListModel
+import com.mycity4kids.models.collectionsModels.UserCollectionsListModel
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
 import com.mycity4kids.ui.adapter.CollectionImageThumbnailAdapter
 import com.mycity4kids.ui.videochallengenewui.ExpandableHeightGridView

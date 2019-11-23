@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
-import com.mycity4kids.models.CollectionsModels.UserCollectionsModel;
+import com.mycity4kids.models.collectionsModels.UserCollectionsModel;
 import com.mycity4kids.ui.activity.FeaturedOnActivity;
 import com.squareup.picasso.Picasso;
 

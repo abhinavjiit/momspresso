@@ -1,9 +1,8 @@
 package com.mycity4kids.profile
 
-import com.mycity4kids.models.CollectionsModels.UserCollectionsModel
-import com.mycity4kids.models.response.ProfilePic
-import com.mycity4kids.models.response.VlogsListingAndDetailResult
 
+
+import com.mycity4kids.models.collectionsModels.UserCollectionsModel
 import java.util.ArrayList
 
 

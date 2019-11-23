@@ -10,8 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
-import com.mycity4kids.models.CollectionsModels.UserCollectionsListModel
-import com.mycity4kids.models.CollectionsModels.UserCollectionsModel
+import com.mycity4kids.models.collectionsModels.UserCollectionsModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.user_collection_items_list_adapter.view.*
 
