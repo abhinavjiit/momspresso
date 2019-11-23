@@ -69,7 +69,7 @@
                     android:layout_marginTop="@dimen/space_16"
                     android:layout_marginRight="@dimen/space_16"
                     android:background="@drawable/dark_border_rounded_corner"
-                    android:maxLength="100"
+                    android:maxLength="60"
                     android:padding="15dp"
                     android:textColor="@color/campaign_4A4A4A"
                     android:textSize="@dimen/space_16" />
@@ -116,6 +116,23 @@
                         app:textAllCaps="true" />
 
                 </LinearLayout>
+
+                <com.mycity4kids.widget.CustomFontEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/imageChangeHeaderLayout"
+                    android:layout_marginLeft="@dimen/space_16"
+                    android:layout_marginTop="@dimen/space_16"
+                    android:layout_marginRight="@dimen/space_16"
+                    android:background="@drawable/dark_border_rounded_corner"
+                    android:hint="Discription:"
+                    android:maxLength="150"
+                    android:overScrollMode="always"
+                    android:padding="15dp"
+                    android:scrollbarStyle="insideInset"
+                    android:scrollbars="vertical"
+                    android:textColor="#515151"
+                    android:textColorHint="@color/gray2" />
             </RelativeLayout>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 

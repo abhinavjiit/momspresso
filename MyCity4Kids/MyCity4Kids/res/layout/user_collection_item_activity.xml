@@ -11,6 +11,7 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -20,102 +21,105 @@
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
 
-            <RelativeLayout
+            <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <androidx.appcompat.widget.Toolbar
+                android:layout_height="?attr/actionBarSize"
+                android:elevation="5dp"
+                app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:theme="@style/ToolbarTheme"
+                app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+                <RelativeLayout
+                    android:id="@+id/upperToolbarHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:elevation="5dp"
-                    app:layout_collapseMode="pin"
-                    app:theme="@style/ToolbarTheme"
-                    app:titleTextAppearance="@style/ToolbarTheme.Title">
+                    android:layout_marginStart="@dimen/space_10"
+                    android:visibility="visible">
 
-                    <RelativeLayout
-                        android:id="@+id/upperToolbarHeader"
-                        android:layout_width="match_parent"
+
+                    <LinearLayout
+                        android:id="@+id/linearLayoutForFollowingShare"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/space_10"
-                        android:visibility="visible">
-
-
-                        <LinearLayout
-                            android:id="@+id/linearLayoutForFollowingShare"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_marginEnd="@dimen/space_10"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <com.mycity4kids.widget.CustomFontTextView
-                                android:id="@+id/followFollowingTextView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginRight="@dimen/space_10"
-                                android:background="@drawable/rootlayout_rounded_corner_with_transparent_background"
-                                android:paddingLeft="@dimen/space_10"
-                                android:paddingTop="@dimen/space_5"
-                                android:paddingRight="@dimen/space_10"
-                                android:paddingBottom="@dimen/space_5"
-                                android:text="Following"
-                                android:textColor="@color/white"
-                                android:textSize="12sp"
-                                android:visibility="gone"
-                                app:fontName="Helvetica Bold.ttf" />
-
-                            <androidx.appcompat.widget.AppCompatImageView
-                                android:id="@+id/share"
-                                android:layout_width="60dp"
-                                android:layout_height="60dp"
-                                android:padding="@dimen/space_16"
-                                android:src="@drawable/sharee"
-                                android:tint="@color/white" />
-
-                            <androidx.appcompat.widget.AppCompatImageView
-                                android:id="@+id/setting"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:padding="@dimen/space_15"
-                                android:src="@drawable/ic_more"
-                                android:tint="@color/white" />
-
-
-                        </LinearLayout>
-
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="@dimen/space_10"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
                         <com.mycity4kids.widget.CustomFontTextView
-                            android:id="@+id/collectionNameTextView"
+                            android:id="@+id/followFollowingTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="@dimen/space_5"
-                            android:layout_toStartOf="@+id/linearLayoutForFollowingShare"
-                            android:layout_toEndOf="@id/back"
-                            android:ellipsize="marquee"
-                            android:focusable="true"
-                            android:focusableInTouchMode="true"
-                            android:marqueeRepeatLimit="marquee_forever"
-                            android:scrollHorizontally="true"
-                            android:singleLine="true"
-                            android:text="My top blogs"
-                            android:textAllCaps="true"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="@dimen/space_10"
+                            android:background="@drawable/rootlayout_rounded_corner_with_transparent_background"
+                            android:paddingLeft="@dimen/space_10"
+                            android:paddingTop="@dimen/space_5"
+                            android:paddingRight="@dimen/space_10"
+                            android:paddingBottom="@dimen/space_5"
+                            android:text="Following"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/space_18"
+                            android:textSize="12sp"
+                            android:visibility="gone"
                             app:fontName="Helvetica Bold.ttf" />
 
                         <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/back"
+                            android:id="@+id/share"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:padding="@dimen/space_16"
+                            android:src="@drawable/sharee"
+                            android:tint="@color/white" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/setting"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/back_arroow" />
+                            android:padding="@dimen/space_15"
+                            android:src="@drawable/ic_more"
+                            android:tint="@color/white" />
 
 
-                    </RelativeLayout>
-                </androidx.appcompat.widget.Toolbar>
+                    </LinearLayout>
+
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/collectionNameTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/space_5"
+                        android:layout_toStartOf="@+id/linearLayoutForFollowingShare"
+                        android:layout_toEndOf="@id/back"
+                        android:ellipsize="marquee"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:text="My top blogs"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/space_18"
+                        app:fontName="Helvetica Bold.ttf" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/back"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/back_arroow" />
+
+
+                </RelativeLayout>
+            </androidx.appcompat.widget.Toolbar>
+
+            <RelativeLayout
+                android:id="@+id/titleHeaderRelativeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -124,6 +128,7 @@
                     android:layout_height="150dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/desert" />
+
 
                 <View
                     android:layout_width="match_parent"
@@ -187,11 +192,22 @@
                         android:textSize="14sp"
                         app:switchPadding="@dimen/space_10" />
                 </RelativeLayout>
+
+
             </RelativeLayout>
+
+
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-
-
+        <com.mycity4kids.widget.CustomFontTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/collectionImageVIEW"
+            android:layout_margin="@dimen/space_5"
+            android:maxLength="150"
+            android:padding="@dimen/space_10"
+            android:text="vcvdscvdscbds bcsdbc bdb bacb ibasiu bauisb uahsudiqw ihiduq iahiduqh bdiub kfbhjbrfhbfhcbfjwhbefjcbhjbchjwbbcwjbjwbwjbrcjwbjjwbejcwbjjwcbrjwbjrbbwjbecjwbjerbwjerbjbcjerbwjrbbwjebrjbwerbjrbjewbrwbrwjhebrjwberjbrcjw"
+            android:textColor="@color/black" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

@@ -145,7 +145,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
     private fun chooseImageOptionPopUp(view: View) {
         val popup = PopupMenu(this@UserCollectionItemListActivity, view)
         popup.menuInflater.inflate(R.menu.delete_edit_collection_menu, popup.menu)
-        if (userCollectionsListModel.collectionType == 0)
+        if (userCollectionsListModel.collectionType != 0)
             popup.menu.findItem(R.id.edit_collection).isVisible = true
         popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
             override fun onMenuItemClick(item: MenuItem?): Boolean {
