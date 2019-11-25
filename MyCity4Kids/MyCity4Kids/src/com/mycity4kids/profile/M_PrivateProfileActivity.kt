@@ -1,8 +1,10 @@
 package com.mycity4kids.profile
 
 import android.accounts.NetworkErrorException
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.text.Html
@@ -15,6 +17,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewTreeObserver
+import android.view.Window
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -35,15 +38,11 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.collectionsModels.FeaturedOnModel
-import com.mycity4kids.models.collectionsModels.UserCollectionsModel
 import com.mycity4kids.models.request.ArticleDetailRequest
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
 import com.mycity4kids.models.response.*
 import com.mycity4kids.preference.SharedPrefUtils
-import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
-import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI
-import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
-import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
+import com.mycity4kids.retrofitAPIsInterfaces.*
 import com.mycity4kids.ui.activity.*
 import com.mycity4kids.ui.fragment.AddCollectionPopUpDialogFragment
 import com.mycity4kids.ui.fragment.UserBioDialogFragment
@@ -106,6 +105,9 @@ class M_PrivateProfileActivity : BaseActivity(),
     private var userContentList: ArrayList<MixFeedResult>? = null
     private var userBookmarkList: ArrayList<MixFeedResult>? = null
     private var userFeaturedOnList: ArrayList<FeaturedItem>? = null
+    private var deeplinkUserId: String? = null
+    private var deeplinkBadgeId: String? = null
+    private var badgeDetail: ArrayList<BadgeListResponse.BadgeListData.BadgeListResult>? = null
 
     private val userContentAdapter: UserContentAdapter by lazy { UserContentAdapter(this, AppUtils.isPrivateProfile(authorId)) }
     private val usersFeaturedContentAdapter: UsersFeaturedContentAdapter by lazy { UsersFeaturedContentAdapter(this) }
@@ -114,8 +116,14 @@ class M_PrivateProfileActivity : BaseActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.m_private_profile_activity)
+        deeplinkUserId = intent.getStringExtra("userId")
+        deeplinkBadgeId = intent.getStringExtra("badgeId")
 
         authorId = intent.getStringExtra(Constants.USER_ID)
+        if (deeplinkUserId != null) {
+            authorId = deeplinkUserId
+            fetchBadgeDialog()
+        }
 
         toolbar = findViewById(R.id.toolbar)
         appBarLayout = findViewById(R.id.appBarLayout);
@@ -639,6 +647,66 @@ class M_PrivateProfileActivity : BaseActivity(),
             usersFeaturedContentAdapter.setListData(userFeaturedOnList)
             usersFeaturedContentAdapter.notifyDataSetChanged()
         }
+    }
+
+    private fun fetchBadgeDialog() {
+        fetchBadgeDetail()
+    }
+
+    private fun fetchBadgeDetail() {
+        val retrofit = BaseApplication.getInstance().retrofit
+        val badgeAPI = retrofit.create(BadgeAPI::class.java)
+        val badgeListResponseCall = badgeAPI.getBadgeDetail(deeplinkUserId, deeplinkBadgeId)
+        badgeListResponseCall.enqueue(object : Callback<BadgeListResponse> {
+            override fun onFailure(call: Call<BadgeListResponse>, t: Throwable) {
+                Crashlytics.logException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
+
+            override fun onResponse(call: Call<BadgeListResponse>, response: retrofit2.Response<BadgeListResponse>) {
+                try {
+                    if (response.body() == null) {
+                        if (response.raw() != null) {
+                            val nee = NetworkErrorException(response.raw().toString())
+                            Crashlytics.logException(nee)
+                        }
+                        return
+                    }
+                    val responseModel = response.body() as BadgeListResponse
+                    if (responseModel.code == 200 && Constants.SUCCESS == responseModel.status) {
+                        if (responseModel.data != null && !responseModel.data.isEmpty() && responseModel.data[0] != null) {
+                            badgeDetail = responseModel.data[0].result
+                            showBadgeDialog()
+                        } else {
+                        }
+                    }
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            }
+        })
+    }
+
+    private fun showBadgeDialog() {
+        val dialog = Dialog(this)
+        dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.dialog_badge_share)
+        dialog.setCancelable(true)
+        val badgeImg = dialog.findViewById<ImageView>(R.id.badgeImageView)
+        val badgeName = dialog.findViewById<TextView>(R.id.badgeName)
+        val badgeDesc = dialog.findViewById<TextView>(R.id.badgeDesc)
+        val shareBtn = dialog.findViewById<TextView>(R.id.shareBtn)
+        shareBtn.visibility = View.GONE
+
+        Picasso.with(this).load(badgeDetail!!.get(0).getBadge_image_url()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                .fit().into(badgeImg)
+
+        badgeName.setText(badgeDetail!!.get(0).getBadge_title())
+        badgeDesc.setText(badgeDetail!!.get(0).getBadge_desc())
+
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
     }
 
     override fun onClick(view: View?) {

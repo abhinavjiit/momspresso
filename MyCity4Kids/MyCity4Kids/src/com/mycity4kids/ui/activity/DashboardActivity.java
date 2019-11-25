@@ -1486,6 +1486,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             startActivity(campaignIntent);
                         }
                     }
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_USER_BADGE)) {
+                    String[] separated = tempDeepLinkURL.split("/");
+                    String userId = separated[4];
+                    String badgeId = separated[6];
+                    Intent profileIntent = new Intent(this, M_PrivateProfileActivity.class);
+                    profileIntent.putExtra("userId", userId);
+                    profileIntent.putExtra("badgeId", badgeId);
+                    startActivity(profileIntent);
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_GROUPS)) {
                     String[] separated = tempDeepLinkURL.split("/");
                     if (separated[separated.length - 1].startsWith("comment-")) {
