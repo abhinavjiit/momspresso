@@ -16,6 +16,7 @@ import com.mycity4kids.models.collectionsModels.UserCollectionsListModel
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
 import com.mycity4kids.ui.activity.collection.CollectionsActivity
+import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity
 import com.mycity4kids.ui.fragment.AddCollectionPopUpDialogFragment
 import com.squareup.picasso.Picasso
 import io.reactivex.Observer
@@ -100,6 +101,11 @@ class MyCollectionsWidget : RelativeLayout, View.OnClickListener {
 
                                         itemView.findViewById<TextView>(R.id.collectionTitleTextView).text = userCollectionsListModel.collectionsList[i].name
                                         itemView.findViewById<ImageView>(R.id.collectionImageView).clipToOutline = true
+                                        itemView.setOnClickListener(OnClickListener {
+                                            val intent = Intent(it.context, UserCollectionItemListActivity::class.java)
+                                            intent.putExtra("id", userCollectionsListModel.collectionsList[i].userCollectionId)
+                                            it.context.startActivity(intent)
+                                        })
                                         collectionsHSVContainer.addView(itemView)
                                     }
                                 } else {

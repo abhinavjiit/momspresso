@@ -20,7 +20,7 @@ import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.ArrayList
+import java.util.*
 
 class BadgesProfileWidget : LinearLayout {
 
@@ -51,21 +51,17 @@ class BadgesProfileWidget : LinearLayout {
         badgesShimmerContainer.startShimmerAnimation()
 
         badgeList = ArrayList()
-//        val handler = Handler()
-//        handler.postDelayed(Runnable { getBadges(SharedPrefUtils.getUserDetailModel(context).dynamoId) }, 4000)
-
     }
 
     fun getBadges(authorId: String?) {
+        if (authorId.isNullOrBlank()) {
+            visibility = View.GONE
+            return
+        }
         val retrofit = BaseApplication.getInstance().retrofit
         val badgeAPI = retrofit.create(BadgeAPI::class.java)
-        val badgeListResponseCall = badgeAPI.getBadgeList("1c94cc0e9a7f4238a03d7a398502db7d")
+        val badgeListResponseCall = badgeAPI.getBadgeList(authorId)
         badgeListResponseCall.enqueue(object : Callback<BadgeListResponse> {
-            override fun onFailure(call: Call<BadgeListResponse>, t: Throwable) {
-                Crashlytics.logException(t)
-                Log.d("MC4kException", Log.getStackTraceString(t))
-            }
-
             override fun onResponse(call: Call<BadgeListResponse>, response: Response<BadgeListResponse>) {
                 try {
                     if (response.body() == null) {
@@ -85,9 +81,16 @@ class BadgesProfileWidget : LinearLayout {
                         }
                     }
                 } catch (e: Exception) {
+                    visibility = View.GONE
                     Crashlytics.logException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
+            }
+
+            override fun onFailure(call: Call<BadgeListResponse>, t: Throwable) {
+                visibility = View.GONE
+                Crashlytics.logException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
             }
         })
 
@@ -121,6 +124,9 @@ class BadgesProfileWidget : LinearLayout {
                 badgeImageView3.visibility = View.GONE
                 Picasso.with(context).load(data[0].badge_image_url)
                         .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(RoundedTransformation()).into(badgeImageView1)
+            }
+            else -> {
+                visibility = View.GONE
             }
         }
     }

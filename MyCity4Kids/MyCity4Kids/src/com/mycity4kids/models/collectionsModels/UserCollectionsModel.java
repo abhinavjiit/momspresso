@@ -1,8 +1,6 @@
 package com.mycity4kids.models.collectionsModels;
 
 
-import com.mycity4kids.models.user.UserInfo;
-
 public class UserCollectionsModel {
     private String userCollectionId;
     private String created_at;

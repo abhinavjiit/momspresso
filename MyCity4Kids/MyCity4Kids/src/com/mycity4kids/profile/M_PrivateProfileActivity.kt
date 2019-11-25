@@ -7,15 +7,9 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.TextPaint
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewTreeObserver
 import android.view.Window
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -49,6 +43,7 @@ import com.mycity4kids.ui.fragment.UserBioDialogFragment
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.RoundedTransformation
 import com.mycity4kids.widget.BadgesProfileWidget
+import com.mycity4kids.widget.ResizableTextView
 import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
@@ -57,7 +52,8 @@ import java.net.UnknownHostException
 
 class M_PrivateProfileActivity : BaseActivity(),
         UserContentAdapter.RecyclerViewClickListener, View.OnClickListener, UsersFeaturedContentAdapter.RecyclerViewClickListener,
-        AddCollectionPopUpDialogFragment.AddCollectionInterface, UsersBookmarksAdapter.RecyclerViewClickListener {
+        AddCollectionPopUpDialogFragment.AddCollectionInterface, UsersBookmarksAdapter.RecyclerViewClickListener,
+        ResizableTextView.SeeMore {
 
     private lateinit var toolbar: Toolbar
     private lateinit var appBarLayout: AppBarLayout
@@ -75,7 +71,7 @@ class M_PrivateProfileActivity : BaseActivity(),
     private lateinit var postsCountTextView: TextView
     private lateinit var rankLanguageTextView: TextView
     private lateinit var authorNameTextView: TextView
-    private lateinit var authorBioTextView: TextView
+    private lateinit var authorBioTextView: ResizableTextView
     private lateinit var cityTextView: TextView
     private lateinit var contentLangTextView: TextView
     private lateinit var creatorTab: ImageView
@@ -408,7 +404,9 @@ class M_PrivateProfileActivity : BaseActivity(),
         } else {
             authorBioTextView.text = responseData.data[0].result.userBio
             authorBioTextView.visibility = View.VISIBLE
-            makeTextViewResizable(authorBioTextView, 2, "See More", true, responseData.data[0].result.userBio)
+//            authorBioTextView.text = responseData.data[0].result.userBio
+            authorBioTextView.setUserBio(responseData.data[0].result.userBio, this)
+//            makeTextViewResizable(authorBioTextView, 2, "See More", true, responseData.data[0].result.userBio)
         }
     }
 
@@ -909,81 +907,14 @@ class M_PrivateProfileActivity : BaseActivity(),
         }, 1000)
     }
 
-
-    fun makeTextViewResizable(tv: TextView, maxLine: Int, expandText: String, viewMore: Boolean, userBio: String) {
-        if (tv.tag == null) {
-            tv.tag = tv.text
-        }
-        val vto = tv.viewTreeObserver
-        vto.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                val obs = tv.viewTreeObserver
-                obs.removeOnGlobalLayoutListener(this)
-                if (maxLine == 0) {
-                    val lineEndIndex = tv.layout.getLineEnd(0)
-                    val text = tv.text.subSequence(0, lineEndIndex - expandText.length + 1).toString() + " " + expandText
-                    tv.text = text
-                    tv.movementMethod = LinkMovementMethod.getInstance()
-                    tv.setText(
-                            addClickablePartTextViewResizable(AppUtils.fromHtml(tv.text.toString()), expandText,
-                                    userBio), TextView.BufferType.SPANNABLE)
-                } else if (maxLine > 0 && tv.lineCount > maxLine) {
-                    val lineEndIndex = tv.layout.getLineEnd(maxLine - 1)
-                    if (lineEndIndex - expandText.length + 1 > 10) {
-                        val text = tv.text.subSequence(0, lineEndIndex - expandText.length + 1).toString() + " " + expandText
-                        tv.text = text
-                        tv.movementMethod = LinkMovementMethod.getInstance()
-                        tv.setText(
-                                addClickablePartTextViewResizable(AppUtils.fromHtml(tv.text.toString()), expandText,
-                                        userBio), TextView.BufferType.SPANNABLE)
-                    } else {
-                        val text = tv.text.subSequence(0, lineEndIndex).toString() + " " + expandText
-                        tv.text = text
-                        tv.movementMethod = LinkMovementMethod.getInstance()
-                        tv.setText(
-                                addClickablePartTextViewResizable(AppUtils.fromHtml(tv.text.toString()), expandText,
-                                        userBio), TextView.BufferType.SPANNABLE)
-                    }
-                } else {
-                }
-            }
-        })
-    }
-
-    private fun addClickablePartTextViewResizable(
-            strSpanned: Spanned, spanableText: String, userBio: String): SpannableStringBuilder {
-        val str = strSpanned.toString()
-        val ssb = SpannableStringBuilder(strSpanned)
-        if (str.contains(spanableText)) {
-            ssb.setSpan(object : MySpannable(false) {
-                override fun onClick(widget: View) {
-                    val userBioDialogFragment = UserBioDialogFragment()
-                    val fm = supportFragmentManager
-                    val _args = Bundle()
-                    _args.putString("userBio", userBio)
-                    userBioDialogFragment.arguments = _args
-                    userBioDialogFragment.isCancelable = true
-                    userBioDialogFragment.show(fm, "Choose video option")
-                }
-            }, str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length, 0)
-        }
-        return ssb
-    }
-
-    open inner class MySpannable(isUnderline: Boolean) : ClickableSpan() {
-        private var isUnderline = true
-
-        init {
-            this.isUnderline = isUnderline
-        }
-
-        override fun updateDrawState(ds: TextPaint) {
-            ds.isUnderlineText = isUnderline
-            ds.color = Color.parseColor("#1b76d3")
-        }
-
-        override fun onClick(widget: View) {
-        }
+    override fun onSeeMoreClick(userBio: String) {
+        val userBioDialogFragment = UserBioDialogFragment()
+        val fm = supportFragmentManager
+        val _args = Bundle()
+        _args.putString("userBio", userBio)
+        userBioDialogFragment.arguments = _args
+        userBioDialogFragment.isCancelable = true
+        userBioDialogFragment.show(fm, "Choose video option")
     }
 
     override fun updateUi(response: Response?) {
