@@ -1251,4 +1251,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="all_story">100 Word Story</string>
     <string name="all_blogs">Blogs</string>
     <string name="all_videos">Videos</string>
+    <string name="profile_post_featured">Post featured on the following collections</string>
 </resources>

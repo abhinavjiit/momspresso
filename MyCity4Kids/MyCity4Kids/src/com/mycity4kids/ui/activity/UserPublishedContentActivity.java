@@ -18,6 +18,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.UserPublishedContentPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
 
@@ -52,8 +53,8 @@ public class UserPublishedContentActivity extends BaseActivity implements View.O
         contentType = getIntent().getStringExtra("contentType");
         searchAllImageView.setOnClickListener(this);
 
-        String authorId = getIntent().getStringExtra(Constants.AUTHOR_ID);
-        boolean isPrivateProfile = getIntent().getBooleanExtra("isPrivateProfile", false);
+        String authorId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
+//        boolean isPrivateProfile = getIntent().getBooleanExtra("isPrivateProfile", false);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -64,8 +65,8 @@ public class UserPublishedContentActivity extends BaseActivity implements View.O
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.lang_setting_stories_label)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.myprofile_section_videos_label)));
         AppUtils.changeTabsFont(tabLayout);
-//        toolbarTitleTextView.setText(getString(R.string.myprofile_section_short_story_label));
-        UserPublishedContentPagerAdapter adapter = new UserPublishedContentPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, isPrivateProfile);
+
+        UserPublishedContentPagerAdapter adapter = new UserPublishedContentPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, true);
         viewPager.setAdapter(adapter);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));

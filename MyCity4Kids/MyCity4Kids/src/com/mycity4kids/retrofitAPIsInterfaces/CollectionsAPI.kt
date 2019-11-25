@@ -3,6 +3,7 @@ package com.mycity4kids.retrofitAPIsInterfaces
 import com.mycity4kids.models.collectionsModels.*
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.FollowUnfollowUserResponse
+import com.mycity4kids.models.response.MixFeedResponse
 import io.reactivex.Observable
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -39,10 +40,11 @@ interface CollectionsAPI {
                                  @Query("start") start: Int,
                                  @Query("offset") end: Int): Call<FeaturedOnModel>
 
-    @GET("/v1/collections/featuredItem/{userId}")
-    fun getFeatureList(@Path("userId") articleId: String,
+    @GET("/v1/collections/featuredItem/{contentId}/{contentType}")
+    fun getFeatureList(@Path("contentId") contentId: String,
+                       @Path("contentType") contentType: String,
                        @Query("start") start: Int,
-                       @Query("offset") end: Int): Call<FeaturedOnModel>
+                       @Query("offset") end: Int): Call<MixFeedResponse>
 
     @POST("/v1/followedCollections/")
     fun followCollection(@Body followCollectionRequest: FollowCollectionRequestModel): Call<FollowUnfollowUserResponse>

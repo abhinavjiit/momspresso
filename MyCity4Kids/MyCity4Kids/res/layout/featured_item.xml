@@ -32,6 +32,17 @@
             android:scaleType="centerCrop"
             android:src="@drawable/default_article" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/itemTypeImageView"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignRight="@id/itemImageView"
+            android:layout_alignBottom="@id/itemImageView"
+            android:background="#000000"
+            android:padding="@dimen/space_5"
+            android:src="@drawable/ic_video"
+            android:tint="@color/white" />
+
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
@@ -61,7 +72,7 @@
             android:layout_alignBottom="@+id/itemImageView"
             android:layout_toEndOf="@+id/itemImageView"
             android:gravity="start|center_vertical"
-            android:text="12-11-2019"
+            android:text=""
             android:textColor="@color/color_CB9797" />
 
         <com.mycity4kids.widget.CustomFontTextView
@@ -74,7 +85,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginBottom="10dp"
             android:gravity="start|center_vertical"
-            android:text="English Hindi Bangla"
+            android:text="@string/profile_post_featured"
             android:textColor="@color/grey_faded" />
 
         <org.apmem.tools.layouts.FlowLayout
@@ -143,9 +154,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:padding="10dp"
-                android:textStyle="bold"
+                android:text="+25 More"
                 android:textColor="@color/app_red"
-                android:text="+25 More" />
+                android:textStyle="bold" />
         </org.apmem.tools.layouts.FlowLayout>
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

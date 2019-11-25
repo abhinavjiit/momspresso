@@ -697,6 +697,7 @@ public class AppConstants {
 
     public static final String FOLLOWING = "1";
     public static final String FOLLOW = "0";
+    public static final String CONTENT_ID = "contentId";
 
     enum SocialPlatformName {
 
