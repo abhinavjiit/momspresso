@@ -2,7 +2,6 @@ package com.mycity4kids.models.collectionsModels;
 
 import com.mycity4kids.models.response.BaseResponse;
 import com.mycity4kids.models.response.MixFeedResult;
-import com.mycity4kids.profile.FeaturedItem;
 
 import java.util.List;
 
