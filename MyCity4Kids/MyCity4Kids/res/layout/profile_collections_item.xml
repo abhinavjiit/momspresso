@@ -25,7 +25,7 @@
         android:ellipsize="marquee"
         android:gravity="center"
         android:singleLine="true"
-        android:text="d wad wd a daw d ad wa"
+        android:text=""
         android:textColor="@color/campaign_4A4A4A"
         android:textSize="14sp"
         app:fontName="OpenSans-Regular.ttf" />

@@ -373,7 +373,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         } else {
             goldLogo.visibility = View.GONE
         }
-        if (data?.winner != null && data.winner) {
+        if (data?.winner != null && data.winner as Boolean) {
             winnerLayout.visibility = View.VISIBLE
         } else {
             winnerLayout.visibility = View.GONE

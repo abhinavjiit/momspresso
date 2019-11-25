@@ -1,5 +1,6 @@
 package com.mycity4kids.models.response
 
+import com.mycity4kids.models.collectionsModels.UserCollectionsModel
 import com.mycity4kids.models.parentingdetails.DetailsBody
 import java.util.*
 
@@ -77,5 +78,7 @@ data class MixFeedResult(
         val user_id: String = "",
         val videoUrl: String = "",
         val view_count: Int = -1,
-        val winner: Boolean = false
+        val winner: Any? = -1,
+        val itemType: String = "",
+        val collectionList: ArrayList<UserCollectionsModel>? = null
 )
