@@ -160,8 +160,8 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         phoneLoginRequest.setCode(authCode);
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
-//        Call<FBPhoneLoginResponse> call = loginRegistrationAPI.loginWithPhone(phoneLoginRequest);
-//        call.enqueue(fbPhoneLoginResponseCallback);
+        Call<FBPhoneLoginResponse> call = loginRegistrationAPI.loginWithPhone(phoneLoginRequest);
+        call.enqueue(fbPhoneLoginResponseCallback);
     }
 
     private Callback<FBPhoneLoginResponse> fbPhoneLoginResponseCallback = new Callback<FBPhoneLoginResponse>() {

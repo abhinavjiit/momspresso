@@ -570,13 +570,9 @@ class M_PrivateProfileActivity : BaseActivity(),
         if (result.isNullOrEmpty()) {
             isLastPageReached = true
             if (!userContentList.isNullOrEmpty()) {
-                //No more next results for search from pagination
             } else {
-                // No results
                 usersBookmarksAdapter.setListData(userBookmarkList)
                 usersBookmarksAdapter.notifyDataSetChanged()
-//                noBlogsTextView.setText(getString(R.string.short_s_no_published))
-//                noBlogsTextView.setVisibility(View.VISIBLE)
             }
         } else {
             start += size
@@ -740,6 +736,7 @@ class M_PrivateProfileActivity : BaseActivity(),
             }
             view?.id == R.id.badgeContainer -> {
                 val intent = Intent(this, BadgeActivity::class.java)
+                intent.putExtra(Constants.USER_ID, authorId)
                 startActivity(intent)
             }
             view?.id == R.id.followAuthorTextView -> {

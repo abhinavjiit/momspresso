@@ -2,12 +2,6 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +10,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
+
 import com.crashlytics.android.Crashlytics;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
@@ -181,7 +179,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                     showToast(getString(R.string.add_article_topics_max_topics));
                     return;
                 }
-                Intent _intent = new Intent(AddArticleTopicsActivityNew.this, BadgeActivity.class);
+                Intent _intent = new Intent(AddArticleTopicsActivityNew.this, ArticleImageTagUploadActivity.class);
                 _intent.putExtra("draftItem", draftObject);
                 _intent.putExtra("imageUrl", imageURL);
                 _intent.putExtra("from", userNavigatingFrom);

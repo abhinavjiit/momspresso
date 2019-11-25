@@ -42,9 +42,10 @@ public class BadgeListResponse extends BaseResponse {
             private boolean enabled;
             private BadgeUpdated updated_at;
             private String user_id;
-            private String badge_image_url = "https://cdn3.mycity4kids.com/images/reward-images/original/img-20190927-5d8de6f9e72e8.jpg";
-            private String badge_sharing_url = "https://cdn3.mycity4kids.com/images/reward-images/original/img-20190927-5d8de6f9e72e8.jpg";
-
+            private String badge_image_url = "";
+            private String badge_sharing_url = "";
+            private String item_type = "";
+            private String content_id = "";
 
             public BadgeId get_id() {
                 return _id;
@@ -150,6 +151,21 @@ public class BadgeListResponse extends BaseResponse {
                 this.badge_sharing_url = badge_sharing_url;
             }
 
+            public String getItem_type() {
+                return item_type;
+            }
+
+            public void setItem_type(String item_type) {
+                this.item_type = item_type;
+            }
+
+            public String getContent_id() {
+                return content_id;
+            }
+
+            public void setContent_id(String content_id) {
+                this.content_id = content_id;
+            }
         }
     }
 
