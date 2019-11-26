@@ -101,7 +101,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
         }
 
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
 
@@ -519,11 +519,10 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
 
         for (int i = 0; i < popup.getMenu().size(); i++) {
             MenuItem menuItem = popup.getMenu().getItem(i);
-            SpannableString spannableString = new SpannableString(menuItem.getTitle());
+            SpannableString spannableString = new SpannableString(view.getContext().getString(R.string.user_article_published_edit));
             spannableString.setSpan(new CustomTypeFace("", myTypeface), 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
             menuItem.setTitle(spannableString);
         }
-
 
         popup.getMenu().findItem(R.id.disable_comment).setVisible(false);
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {

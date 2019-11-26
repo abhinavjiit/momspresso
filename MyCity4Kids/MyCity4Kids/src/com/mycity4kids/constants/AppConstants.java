@@ -490,6 +490,7 @@ public class AppConstants {
     public static final String DEEPLINK_GROUPS = "momspresso.com/groups/";
     public static final String BRANCH_DEEPLINK = "https://mycity4kids.app.link";//https://www.momspresso.com://
     public static final String BRANCH_DEEPLINK_URL = "https://www.momspresso.com://open?link_click_id=";
+    public static final String DEEPLINK_USER_BADGE = "https://www.momspresso.com/user/";
 
 
     public static final String IGNORE_TAG = "ignore";
@@ -697,6 +698,7 @@ public class AppConstants {
 
     public static final String FOLLOWING = "1";
     public static final String FOLLOW = "0";
+    public static final String CONTENT_ID = "contentId";
 
     enum SocialPlatformName {
 

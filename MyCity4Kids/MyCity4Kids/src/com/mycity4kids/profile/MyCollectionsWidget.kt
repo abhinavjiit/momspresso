@@ -14,9 +14,9 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.models.collectionsModels.UserCollectionsListModel
 import com.mycity4kids.models.response.BaseResponseGeneric
-import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
 import com.mycity4kids.ui.activity.collection.CollectionsActivity
+import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity
 import com.mycity4kids.ui.fragment.AddCollectionPopUpDialogFragment
 import com.squareup.picasso.Picasso
 import io.reactivex.Observer
@@ -57,6 +57,8 @@ class MyCollectionsWidget : RelativeLayout, View.OnClickListener {
 
     fun getCollections(authorId: String?, isPrivateProfile: Boolean) {
         if (isPrivateProfile) {
+            addCollectionContainer.visibility = View.VISIBLE
+        } else {
             addCollectionContainer.visibility = View.GONE
         }
         authorId?.let {
@@ -78,10 +80,12 @@ class MyCollectionsWidget : RelativeLayout, View.OnClickListener {
                                         collectionsContainer.visibility = View.VISIBLE
                                         collectionsShimmerContainer.visibility = View.GONE
                                     } else {
-//                                    collectionsContainer.visibility = View.GONE
                                         collectionsShimmerContainer.visibility = View.GONE
-                                        collectionsContainer.visibility = View.VISIBLE
-//                                    return
+                                        if (isPrivateProfile) {
+                                            collectionsContainer.visibility = View.VISIBLE
+                                        } else {
+                                            collectionsContainer.visibility = View.GONE
+                                        }
                                     }
                                     val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
                                     for (i in 0 until userCollectionsListModel.collectionsList.size) {
@@ -97,6 +101,11 @@ class MyCollectionsWidget : RelativeLayout, View.OnClickListener {
 
                                         itemView.findViewById<TextView>(R.id.collectionTitleTextView).text = userCollectionsListModel.collectionsList[i].name
                                         itemView.findViewById<ImageView>(R.id.collectionImageView).clipToOutline = true
+                                        itemView.setOnClickListener(OnClickListener {
+                                            val intent = Intent(it.context, UserCollectionItemListActivity::class.java)
+                                            intent.putExtra("id", userCollectionsListModel.collectionsList[i].userCollectionId)
+                                            it.context.startActivity(intent)
+                                        })
                                         collectionsHSVContainer.addView(itemView)
                                     }
                                 } else {
@@ -139,11 +148,11 @@ class MyCollectionsWidget : RelativeLayout, View.OnClickListener {
         }
     }
 
-    fun refresh(privateProfile: Boolean) {
+    fun refresh(authorId: String?, privateProfile: Boolean) {
         for (i in 1 until collectionsHSVContainer.childCount) {
             collectionsHSVContainer.removeViewAt(1)
         }
-        getCollections(SharedPrefUtils.getUserDetailModel(context).dynamoId, privateProfile)
+        getCollections(authorId, privateProfile)
     }
 
 }

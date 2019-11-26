@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
@@ -45,6 +46,7 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
     private RelativeLayout mLodingView;
     private ProgressBar progressBar;
     private ImageView backImageView;
+    private String userId;
 
     @Override
     protected void updateUi(Response response) {
@@ -59,6 +61,13 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         backImageView = findViewById(R.id.backImageView);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
+
+        userId = getIntent().getStringExtra(Constants.USER_ID);
+        if (StringUtils.isNullOrEmpty(userId)) {
+            showToast(getString(R.string.empty_screen));
+            return;
+        }
+
         adapter = new BadgeListGridAdapter(this);
         adapter.setDatalist(badgeList);
         gridview.setAdapter(adapter);
@@ -88,7 +97,7 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
     private void getBadgeList() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         BadgeAPI badgeAPI = retrofit.create(BadgeAPI.class);
-        Call<BadgeListResponse> badgeListResponseCall = badgeAPI.getBadgeList("1c94cc0e9a7f4238a03d7a398502db7d");
+        Call<BadgeListResponse> badgeListResponseCall = badgeAPI.getBadgeList(userId);
         badgeListResponseCall.enqueue(badgeListCall);
     }
 
@@ -111,7 +120,7 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
                 if (responseModel.getData() != null && !responseModel.getData().isEmpty() && responseModel.getData().get(0) != null) {
                     processResponse(responseModel.getData());
                 } else {
-                    showToast(responseModel.getReason().toString());
+                    showToast(responseModel.getReason());
                 }
             }
         }
@@ -133,15 +142,11 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
             if (null != badgeList && !badgeList.isEmpty()) {
                 // empty arraylist in subsequent api calls while pagination
             } else {
-                //Empty arraylist result for first api call
                 badgeList = datalist;
                 adapter.setDatalist(datalist);
                 adapter.notifyDataSetChanged();
-//                noBlogsTextView.setVisibility(View.VISIBLE);
-//                noBlogsTextView.setText("No articles found");
             }
         } else {
-//            noBlogsTextView.setVisibility(View.GONE);
             if (pageNumber == 1) {
                 badgeList = datalist;
             } else {

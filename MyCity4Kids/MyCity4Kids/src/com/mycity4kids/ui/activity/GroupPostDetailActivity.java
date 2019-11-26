@@ -589,7 +589,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     mMediaplayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                         @Override
                         public void onPrepared(MediaPlayer mediaPlayer) {
-                            mMediaplayer.start();
+                            mediaPlayer.start();
                         }
                     });
                     mMediaplayer.prepareAsync();

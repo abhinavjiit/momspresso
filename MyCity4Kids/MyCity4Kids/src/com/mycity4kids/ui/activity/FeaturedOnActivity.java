@@ -7,25 +7,29 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.collectionsModels.FeaturedOnModel;
 import com.mycity4kids.models.collectionsModels.FollowCollectionRequestModel;
 import com.mycity4kids.models.collectionsModels.UserCollectionsModel;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
+import com.mycity4kids.models.response.MixFeedResponse;
+import com.mycity4kids.models.response.MixFeedResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI;
 import com.mycity4kids.ui.adapter.FeatureOnRecyclerAdapter;
 
 import java.util.ArrayList;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,6 +50,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
     private Boolean isFollowing = false;
     private String userId;
     private RelativeLayout mLodingView;
+    private String contentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +61,17 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         finalFeaturedDataList = new ArrayList<>();
         userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
+        contentId = getIntent().getStringExtra(AppConstants.CONTENT_ID);
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
-        featureOnRecyclerAdapter = new FeatureOnRecyclerAdapter(this, this);
+        featureOnRecyclerAdapter = new FeatureOnRecyclerAdapter(this);
         featuredonRecyclerview.setLayoutManager(linearLayoutManager);
         featuredonRecyclerview.setAdapter(featureOnRecyclerAdapter);
-        fetchFeatureList();
+
+        if (!StringUtils.isNullOrEmpty(contentId)) {
+            fetchFeatureList();
+        }
 
         featuredonRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -83,36 +92,35 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
                 }
             }
         });
-
         backImageView.setOnClickListener(this);
     }
 
     private void fetchFeatureList() {
         showProgressDialog(getResources().getString(R.string.please_wait));
         int from = 10 * nextPageNumber;
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofitTest();
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         CollectionsAPI featureListAPI = retrofit.create(CollectionsAPI.class);
-        Call<FeaturedOnModel> call = featureListAPI.getFeatureList("5dc0809611cb4607d6b24667/2", from, from + 9);
+        Call<MixFeedResponse> call = featureListAPI.getFeatureList(contentId, "0", from, from + 10);
         call.enqueue(featuredList);
     }
 
-    private Callback<FeaturedOnModel> featuredList = new Callback<FeaturedOnModel>() {
+    private Callback<MixFeedResponse> featuredList = new Callback<MixFeedResponse>() {
         @Override
-        public void onResponse(Call<FeaturedOnModel> call, retrofit2.Response<FeaturedOnModel> response) {
+        public void onResponse(Call<MixFeedResponse> call, retrofit2.Response<MixFeedResponse> response) {
             isReuqestRunning = false;
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
             removeProgressDialog();
-            if (response == null || response.body() == null) {
-                NetworkErrorException nee = new NetworkErrorException("New comments API failure");
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
                 return;
             }
 
             try {
-                FeaturedOnModel userCollectionsListModel = response.body();
-                showFeatureList(userCollectionsListModel.getData().getResult().getItem_list().get(0).getCollectionList());
+                MixFeedResponse userCollectionsListModel = response.body();
+                showFeatureList(userCollectionsListModel.getData().getResult().get(0).getCollectionList());
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
@@ -120,7 +128,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
         }
 
         @Override
-        public void onFailure(Call<FeaturedOnModel> call, Throwable t) {
+        public void onFailure(Call<MixFeedResponse> call, Throwable t) {
             isReuqestRunning = false;
             removeProgressDialog();
             if (mLodingView.getVisibility() == View.VISIBLE) {

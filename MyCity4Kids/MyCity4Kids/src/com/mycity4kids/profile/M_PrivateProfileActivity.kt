@@ -1,20 +1,16 @@
 package com.mycity4kids.profile
 
 import android.accounts.NetworkErrorException
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
-import android.text.Html
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.TextPaint
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewTreeObserver
+import android.view.Window
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -35,21 +31,19 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.collectionsModels.FeaturedOnModel
-import com.mycity4kids.models.collectionsModels.UserCollectionsModel
 import com.mycity4kids.models.request.ArticleDetailRequest
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
 import com.mycity4kids.models.response.*
 import com.mycity4kids.preference.SharedPrefUtils
-import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
-import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI
-import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
-import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
+import com.mycity4kids.retrofitAPIsInterfaces.*
 import com.mycity4kids.ui.activity.*
+import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity
 import com.mycity4kids.ui.fragment.AddCollectionPopUpDialogFragment
 import com.mycity4kids.ui.fragment.UserBioDialogFragment
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.RoundedTransformation
 import com.mycity4kids.widget.BadgesProfileWidget
+import com.mycity4kids.widget.ResizableTextView
 import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
@@ -58,7 +52,8 @@ import java.net.UnknownHostException
 
 class M_PrivateProfileActivity : BaseActivity(),
         UserContentAdapter.RecyclerViewClickListener, View.OnClickListener, UsersFeaturedContentAdapter.RecyclerViewClickListener,
-        AddCollectionPopUpDialogFragment.AddCollectionInterface, UsersBookmarksAdapter.RecyclerViewClickListener {
+        AddCollectionPopUpDialogFragment.AddCollectionInterface, UsersBookmarksAdapter.RecyclerViewClickListener,
+        ResizableTextView.SeeMore {
 
     private lateinit var toolbar: Toolbar
     private lateinit var appBarLayout: AppBarLayout
@@ -76,7 +71,7 @@ class M_PrivateProfileActivity : BaseActivity(),
     private lateinit var postsCountTextView: TextView
     private lateinit var rankLanguageTextView: TextView
     private lateinit var authorNameTextView: TextView
-    private lateinit var authorBioTextView: TextView
+    private lateinit var authorBioTextView: ResizableTextView
     private lateinit var cityTextView: TextView
     private lateinit var contentLangTextView: TextView
     private lateinit var creatorTab: ImageView
@@ -105,7 +100,10 @@ class M_PrivateProfileActivity : BaseActivity(),
     private val multipleRankList = java.util.ArrayList<LanguageRanksModel>()
     private var userContentList: ArrayList<MixFeedResult>? = null
     private var userBookmarkList: ArrayList<MixFeedResult>? = null
-    private var userFeaturedOnList: ArrayList<FeaturedItem>? = null
+    private var userFeaturedOnList: ArrayList<MixFeedResult>? = null
+    private var deeplinkUserId: String? = null
+    private var deeplinkBadgeId: String? = null
+    private var badgeDetail: ArrayList<BadgeListResponse.BadgeListData.BadgeListResult>? = null
 
     private val userContentAdapter: UserContentAdapter by lazy { UserContentAdapter(this, AppUtils.isPrivateProfile(authorId)) }
     private val usersFeaturedContentAdapter: UsersFeaturedContentAdapter by lazy { UsersFeaturedContentAdapter(this) }
@@ -114,8 +112,14 @@ class M_PrivateProfileActivity : BaseActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.m_private_profile_activity)
+        deeplinkUserId = intent.getStringExtra("userId")
+        deeplinkBadgeId = intent.getStringExtra("badgeId")
 
         authorId = intent.getStringExtra(Constants.USER_ID)
+        if (deeplinkUserId != null) {
+            authorId = deeplinkUserId
+            fetchBadgeDialog()
+        }
 
         toolbar = findViewById(R.id.toolbar)
         appBarLayout = findViewById(R.id.appBarLayout);
@@ -173,7 +177,6 @@ class M_PrivateProfileActivity : BaseActivity(),
         } else {
             bookmarksTab.visibility = View.GONE
             divider2.visibility = View.GONE
-            myCollectionsWidget.visibility = View.GONE
             followAuthorTextView.visibility = View.VISIBLE
             sharePublicTextView.visibility = View.VISIBLE
             sharePrivateTextView.visibility = View.GONE
@@ -211,7 +214,7 @@ class M_PrivateProfileActivity : BaseActivity(),
 
         getUserDetail(authorId)
         badgesContainer.getBadges(authorId)
-        getUsersCreatedContent(authorId)
+        getUsersCreatedContent()
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -224,7 +227,7 @@ class M_PrivateProfileActivity : BaseActivity(),
                             isRequestRunning = true
                             bottomLoadingView.visibility = View.VISIBLE
                             if (creatorTab.isSelected) {
-                                getUsersCreatedContent(authorId)
+                                getUsersCreatedContent()
                             } else if (bookmarksTab.isSelected) {
                                 getUsersBookmark()
                             } else {
@@ -401,7 +404,9 @@ class M_PrivateProfileActivity : BaseActivity(),
         } else {
             authorBioTextView.text = responseData.data[0].result.userBio
             authorBioTextView.visibility = View.VISIBLE
-            makeTextViewResizable(authorBioTextView, 2, "See More", true, responseData.data[0].result.userBio)
+//            authorBioTextView.text = responseData.data[0].result.userBio
+            authorBioTextView.setUserBio(responseData.data[0].result.userBio, this)
+//            makeTextViewResizable(authorBioTextView, 2, "See More", true, responseData.data[0].result.userBio)
         }
     }
 
@@ -474,16 +479,10 @@ class M_PrivateProfileActivity : BaseActivity(),
         }
     }
 
-    private fun getUsersCreatedContent(authorId: String?) {
+    private fun getUsersCreatedContent() {
         val retro = BaseApplication.getInstance().retrofit
         val bloggerDashboardAPI = retro.create(BloggerDashboardAPI::class.java)
-
-//        val call = if (creatorTab.isSelected) {
         val call = bloggerDashboardAPI.getUsersAllContent(authorId, start, size, null)
-//        } else {
-//            bloggerDashboardAPI.getUsersAllBookmark(start, size, 1)
-//        }
-
         call.enqueue(object : Callback<MixFeedResponse> {
             override fun onResponse(call: Call<MixFeedResponse>, response: retrofit2.Response<MixFeedResponse>) {
                 try {
@@ -547,6 +546,7 @@ class M_PrivateProfileActivity : BaseActivity(),
                         Crashlytics.logException(nee)
                         return
                     }
+
                     val responseData = response.body()
                     if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
                         processUserBookmarks(responseData.data.result)
@@ -570,13 +570,9 @@ class M_PrivateProfileActivity : BaseActivity(),
         if (result.isNullOrEmpty()) {
             isLastPageReached = true
             if (!userContentList.isNullOrEmpty()) {
-                //No more next results for search from pagination
             } else {
-                // No results
                 usersBookmarksAdapter.setListData(userBookmarkList)
                 usersBookmarksAdapter.notifyDataSetChanged()
-//                noBlogsTextView.setText(getString(R.string.short_s_no_published))
-//                noBlogsTextView.setVisibility(View.VISIBLE)
             }
         } else {
             start += size
@@ -593,17 +589,18 @@ class M_PrivateProfileActivity : BaseActivity(),
             val call = featureListAPI.getFeaturedOnCollections(it, start, size)
             call.enqueue(object : Callback<FeaturedOnModel> {
                 override fun onResponse(call: Call<FeaturedOnModel>, response: retrofit2.Response<FeaturedOnModel>) {
-                    if (null == response.body()) {
-                        val nee = NetworkErrorException(response.raw().toString())
-                        Crashlytics.logException(nee)
-                        return
-                    }
                     try {
+                        if (null == response.body()) {
+                            val nee = NetworkErrorException(response.raw().toString())
+                            Crashlytics.logException(nee)
+                            return
+                        }
+
+                        isRequestRunning = false
+                        bottomLoadingView.visibility = View.GONE
                         val responseData = response.body() as FeaturedOnModel
                         if (responseData.code == 200 && Constants.SUCCESS == responseData.status) {
                             processFeaturedContentResponse(responseData.data.result.item_list)
-                            usersFeaturedContentAdapter.setListData(userFeaturedOnList)
-                            usersFeaturedContentAdapter.notifyDataSetChanged()
                         } else {
                         }
                     } catch (e: Exception) {
@@ -613,6 +610,7 @@ class M_PrivateProfileActivity : BaseActivity(),
                 }
 
                 override fun onFailure(call: Call<FeaturedOnModel>, t: Throwable) {
+                    bottomLoadingView.visibility = View.GONE
                     Crashlytics.logException(t)
                     Log.d("MC4kException", Log.getStackTraceString(t))
                 }
@@ -621,7 +619,7 @@ class M_PrivateProfileActivity : BaseActivity(),
 
     }
 
-    private fun processFeaturedContentResponse(featuredItemList: List<FeaturedItem>) {
+    private fun processFeaturedContentResponse(featuredItemList: List<MixFeedResult>) {
         if (featuredItemList.isNullOrEmpty()) {
             isLastPageReached = true
             if (!userFeaturedOnList.isNullOrEmpty()) {
@@ -641,6 +639,66 @@ class M_PrivateProfileActivity : BaseActivity(),
         }
     }
 
+    private fun fetchBadgeDialog() {
+        fetchBadgeDetail()
+    }
+
+    private fun fetchBadgeDetail() {
+        val retrofit = BaseApplication.getInstance().retrofit
+        val badgeAPI = retrofit.create(BadgeAPI::class.java)
+        val badgeListResponseCall = badgeAPI.getBadgeDetail(deeplinkUserId, deeplinkBadgeId)
+        badgeListResponseCall.enqueue(object : Callback<BadgeListResponse> {
+            override fun onFailure(call: Call<BadgeListResponse>, t: Throwable) {
+                Crashlytics.logException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
+
+            override fun onResponse(call: Call<BadgeListResponse>, response: retrofit2.Response<BadgeListResponse>) {
+                try {
+                    if (response.body() == null) {
+                        if (response.raw() != null) {
+                            val nee = NetworkErrorException(response.raw().toString())
+                            Crashlytics.logException(nee)
+                        }
+                        return
+                    }
+                    val responseModel = response.body() as BadgeListResponse
+                    if (responseModel.code == 200 && Constants.SUCCESS == responseModel.status) {
+                        if (responseModel.data != null && !responseModel.data.isEmpty() && responseModel.data[0] != null) {
+                            badgeDetail = responseModel.data[0].result
+                            showBadgeDialog()
+                        } else {
+                        }
+                    }
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            }
+        })
+    }
+
+    private fun showBadgeDialog() {
+        val dialog = Dialog(this)
+        dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.dialog_badge_share)
+        dialog.setCancelable(true)
+        val badgeImg = dialog.findViewById<ImageView>(R.id.badgeImageView)
+        val badgeName = dialog.findViewById<TextView>(R.id.badgeName)
+        val badgeDesc = dialog.findViewById<TextView>(R.id.badgeDesc)
+        val shareBtn = dialog.findViewById<TextView>(R.id.shareBtn)
+        shareBtn.visibility = View.GONE
+
+        Picasso.with(this).load(badgeDetail!!.get(0).getBadge_image_url()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                .fit().into(badgeImg)
+
+        badgeName.setText(badgeDetail!!.get(0).getBadge_title())
+        badgeDesc.setText(badgeDetail!!.get(0).getBadge_desc())
+
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+    }
+
     override fun onClick(view: View?) {
         when {
             view?.id == R.id.creatorTab -> {
@@ -649,11 +707,12 @@ class M_PrivateProfileActivity : BaseActivity(),
                 bookmarksTab.isSelected = false
                 userContentList?.clear()
                 start = 0
+                isLastPageReached = false
                 recyclerView.adapter = userContentAdapter
                 if (AppUtils.isPrivateProfile(authorId)) {
                     userContentList?.add(MixFeedResult(contentType = AppConstants.CONTENT_TYPE_CREATE_SECTION))
                 }
-                getUsersCreatedContent(authorId)
+                getUsersCreatedContent()
             }
             view?.id == R.id.featuredTab -> {
                 creatorTab.isSelected = false
@@ -662,6 +721,7 @@ class M_PrivateProfileActivity : BaseActivity(),
                 recyclerView.adapter = usersFeaturedContentAdapter
                 userFeaturedOnList?.clear()
                 start = 0
+                isLastPageReached = false
                 getFeaturedContent()
             }
             view?.id == R.id.bookmarksTab -> {
@@ -670,11 +730,13 @@ class M_PrivateProfileActivity : BaseActivity(),
                 bookmarksTab.isSelected = true
                 userBookmarkList?.clear()
                 start = 0
+                isLastPageReached = false
                 recyclerView.adapter = usersBookmarksAdapter
                 getUsersBookmark()
             }
             view?.id == R.id.badgeContainer -> {
                 val intent = Intent(this, BadgeActivity::class.java)
+                intent.putExtra(Constants.USER_ID, authorId)
                 startActivity(intent)
             }
             view?.id == R.id.followAuthorTextView -> {
@@ -726,39 +788,8 @@ class M_PrivateProfileActivity : BaseActivity(),
 
     override fun onClick(view: View, position: Int) {
         when {
-            view.id == R.id.articleItemView -> {
-                val intent = Intent(this, ArticleDetailsContainerActivity::class.java)
-                intent.putExtra(Constants.ARTICLE_ID, userContentList?.get(position)?.id)
-                intent.putExtra(Constants.AUTHOR_ID, userContentList?.get(position)?.userId)
-                intent.putExtra(Constants.BLOG_SLUG, userContentList?.get(position)?.blogTitleSlug)
-                intent.putExtra(Constants.TITLE_SLUG, userContentList?.get(position)?.titleSlug)
-                intent.putExtra(Constants.FROM_SCREEN, "Profile")
-                intent.putExtra(Constants.AUTHOR, userContentList?.get(position)?.userId + "~" + userContentList?.get(position)?.userName)
-//                userContentList?.let {
-//                    val filteredResult = AppUtils.getFilteredContentList(it., AppConstants.CONTENT_TYPE_ARTICLE)
-//                    intent.putParcelableArrayListExtra("pagerListData", filteredResult)
-//                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(posSubList, articleDataModelsSubList, AppConstants.CONTENT_TYPE_ARTICLE))
-//                }
-                startActivity(intent)
-            }
-            view.id == R.id.rootView -> {
-                val intent = Intent(this, ShortStoryContainerActivity::class.java)
-                intent.putExtra(Constants.ARTICLE_ID, userContentList?.get(position)?.id)
-                intent.putExtra(Constants.AUTHOR_ID, userContentList?.get(position)?.userId)
-                intent.putExtra(Constants.BLOG_SLUG, userContentList?.get(position)?.blogTitleSlug)
-                intent.putExtra(Constants.TITLE_SLUG, userContentList?.get(position)?.titleSlug)
-                intent.putExtra(Constants.FROM_SCREEN, "HomeScreen")
-                intent.putExtra(Constants.AUTHOR, userContentList?.get(position)?.userId + "~" + userContentList?.get(position)?.userName)
-//                val filteredResult = AppUtils.getFilteredContentList(articleDataModelsSubList, AppConstants.CONTENT_TYPE_SHORT_STORY)
-//                intent.putParcelableArrayListExtra("pagerListData", filteredResult)
-//                intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(posSubList, articleDataModelsSubList, AppConstants.CONTENT_TYPE_SHORT_STORY))
-                startActivity(intent)
-            }
-            view.id == R.id.videoItemView -> {
-                val intent = Intent(this, ParallelFeedActivity::class.java)
-                intent.putExtra(Constants.VIDEO_ID, userContentList?.get(position)?.id)
-                intent.putExtra(Constants.FROM_SCREEN, "Search Screen")
-                startActivity(intent)
+            view.id == R.id.articleItemView || view.id == R.id.videoItemView || view.id == R.id.rootView -> {
+                launchContentDetail(userContentList?.get(position))
             }
             view.id == R.id.draftContainer -> {
                 val intent = Intent(this, UserDraftsContentActivity::class.java)
@@ -788,10 +819,67 @@ class M_PrivateProfileActivity : BaseActivity(),
     override fun onFeaturedItemClick(view: View, position: Int) {
         when {
             view.id == R.id.featuredItemRootView -> {
-
+                launchContentDetail(userFeaturedOnList?.get(position))
+            }
+            view.id == R.id.collectionItem1TextView -> {
+                Log.d("COLLECTION_CLICK", "collectionItem1TextView--" + userFeaturedOnList?.get(position)?.title)
+                val intent = Intent(this, UserCollectionItemListActivity::class.java)
+                intent.putExtra("id", userFeaturedOnList?.get(position)?.collectionList?.get(0)?.userCollectionId)
+                startActivity(intent)
+            }
+            view.id == R.id.collectionItem2TextView -> {
+                Log.d("COLLECTION_CLICK", "collectionItem2TextView--" + userFeaturedOnList?.get(position)?.title)
+                val intent = Intent(this, UserCollectionItemListActivity::class.java)
+                intent.putExtra("id", userFeaturedOnList?.get(position)?.collectionList?.get(0)?.userCollectionId)
+                startActivity(intent)
+            }
+            view.id == R.id.collectionItem3TextView -> {
+                Log.d("COLLECTION_CLICK", "collectionItem3TextView--" + userFeaturedOnList?.get(position)?.title)
+                val intent = Intent(this, UserCollectionItemListActivity::class.java)
+                intent.putExtra("id", userFeaturedOnList?.get(position)?.collectionList?.get(0)?.userCollectionId)
+                startActivity(intent)
+            }
+            view.id == R.id.collectionItem4TextView -> {
+                Log.d("COLLECTION_CLICK", "collectionItem4TextView--" + userFeaturedOnList?.get(position)?.title)
+                val intent = Intent(this, UserCollectionItemListActivity::class.java)
+                intent.putExtra("id", userFeaturedOnList?.get(position)?.collectionList?.get(0)?.userCollectionId)
+                startActivity(intent)
             }
             view.id == R.id.moreItemsTextView -> {
+                val featureIntent = Intent(this, FeaturedOnActivity::class.java)
+                featureIntent.putExtra(AppConstants.CONTENT_ID, userFeaturedOnList?.get(position)?.id)
+                startActivity(featureIntent)
+            }
+        }
+    }
 
+    private fun launchContentDetail(item: MixFeedResult?) {
+        when {
+            item?.itemType == AppConstants.CONTENT_TYPE_ARTICLE -> {
+                val intent = Intent(this, ArticleDetailsContainerActivity::class.java)
+                intent.putExtra(Constants.ARTICLE_ID, item.id)
+                intent.putExtra(Constants.AUTHOR_ID, item.userId)
+                intent.putExtra(Constants.BLOG_SLUG, item.blogTitleSlug)
+                intent.putExtra(Constants.TITLE_SLUG, item.titleSlug)
+                intent.putExtra(Constants.FROM_SCREEN, "Profile")
+                intent.putExtra(Constants.AUTHOR, item.userId + "~" + item.userName)
+                startActivity(intent)
+            }
+            item?.itemType == AppConstants.CONTENT_TYPE_SHORT_STORY -> {
+                val intent = Intent(this, ShortStoryContainerActivity::class.java)
+                intent.putExtra(Constants.ARTICLE_ID, item.id)
+                intent.putExtra(Constants.AUTHOR_ID, item.userId)
+                intent.putExtra(Constants.BLOG_SLUG, item.blogTitleSlug)
+                intent.putExtra(Constants.TITLE_SLUG, item.titleSlug)
+                intent.putExtra(Constants.FROM_SCREEN, "Profile")
+                intent.putExtra(Constants.AUTHOR, item.userId + "~" + item.userName)
+                startActivity(intent)
+            }
+            item?.itemType == AppConstants.CONTENT_TYPE_VIDEO -> {
+                val intent = Intent(this, ParallelFeedActivity::class.java)
+                intent.putExtra(Constants.VIDEO_ID, item.id)
+                intent.putExtra(Constants.FROM_SCREEN, "Profile")
+                startActivity(intent)
             }
         }
     }
@@ -812,85 +900,18 @@ class M_PrivateProfileActivity : BaseActivity(),
 
     override fun onCollectionAddSuccess() {
         Handler().postDelayed(Runnable {
-            myCollectionsWidget.refresh(AppUtils.isPrivateProfile(authorId))
+            myCollectionsWidget.refresh(authorId, AppUtils.isPrivateProfile(authorId))
         }, 1000)
     }
 
-
-    fun makeTextViewResizable(tv: TextView, maxLine: Int, expandText: String, viewMore: Boolean, userBio: String) {
-        if (tv.tag == null) {
-            tv.tag = tv.text
-        }
-        val vto = tv.viewTreeObserver
-        vto.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                val obs = tv.viewTreeObserver
-                obs.removeOnGlobalLayoutListener(this)
-                if (maxLine == 0) {
-                    val lineEndIndex = tv.layout.getLineEnd(0)
-                    val text = tv.text.subSequence(0, lineEndIndex - expandText.length + 1).toString() + " " + expandText
-                    tv.text = text
-                    tv.movementMethod = LinkMovementMethod.getInstance()
-                    tv.setText(
-                            addClickablePartTextViewResizable(Html.fromHtml(tv.text.toString()), tv, maxLine, expandText,
-                                    viewMore, userBio), TextView.BufferType.SPANNABLE)
-                } else if (maxLine > 0 && tv.lineCount > maxLine) {
-                    val lineEndIndex = tv.layout.getLineEnd(maxLine - 1)
-                    if (lineEndIndex - expandText.length + 1 > 10) {
-                        val text = tv.text.subSequence(0, lineEndIndex - expandText.length + 1).toString() + " " + expandText
-                        tv.text = text
-                        tv.movementMethod = LinkMovementMethod.getInstance()
-                        tv.setText(
-                                addClickablePartTextViewResizable(Html.fromHtml(tv.text.toString()), tv, maxLine, expandText,
-                                        viewMore, userBio), TextView.BufferType.SPANNABLE)
-                    } else {
-                        val text = tv.text.subSequence(0, lineEndIndex).toString() + " " + expandText
-                        tv.text = text
-                        tv.movementMethod = LinkMovementMethod.getInstance()
-                        tv.setText(
-                                addClickablePartTextViewResizable(Html.fromHtml(tv.text.toString()), tv, maxLine, expandText,
-                                        viewMore, userBio), TextView.BufferType.SPANNABLE)
-                    }
-                } else {
-                }
-            }
-        })
-    }
-
-    private fun addClickablePartTextViewResizable(strSpanned: Spanned, tv: TextView,
-                                                  maxLine: Int, spanableText: String, viewMore: Boolean, userBio: String): SpannableStringBuilder {
-        val str = strSpanned.toString()
-        val ssb = SpannableStringBuilder(strSpanned)
-        if (str.contains(spanableText)) {
-            ssb.setSpan(object : MySpannable(false) {
-                override fun onClick(widget: View) {
-                    val userBioDialogFragment = UserBioDialogFragment()
-                    val fm = supportFragmentManager
-                    val _args = Bundle()
-                    _args.putString("userBio", userBio)
-                    userBioDialogFragment.arguments = _args
-                    userBioDialogFragment.isCancelable = true
-                    userBioDialogFragment.show(fm, "Choose video option")
-                }
-            }, str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length, 0)
-        }
-        return ssb
-    }
-
-    open inner class MySpannable(isUnderline: Boolean) : ClickableSpan() {
-        private var isUnderline = true
-
-        init {
-            this.isUnderline = isUnderline
-        }
-
-        override fun updateDrawState(ds: TextPaint) {
-            ds.isUnderlineText = isUnderline
-            ds.color = Color.parseColor("#1b76d3")
-        }
-
-        override fun onClick(widget: View) {
-        }
+    override fun onSeeMoreClick(userBio: String) {
+        val userBioDialogFragment = UserBioDialogFragment()
+        val fm = supportFragmentManager
+        val _args = Bundle()
+        _args.putString("userBio", userBio)
+        userBioDialogFragment.arguments = _args
+        userBioDialogFragment.isCancelable = true
+        userBioDialogFragment.show(fm, "Choose video option")
     }
 
     override fun updateUi(response: Response?) {

@@ -19,7 +19,7 @@ public class UserCollectionsModel {
     private String itemType;
     private boolean isFollowing;
     private ItemInfoModel item_info;
-
+    private CollectionUserInfo user_info;
 
     public ItemInfoModel getItem_info() {
         return item_info;
@@ -157,4 +157,42 @@ public class UserCollectionsModel {
         isFollowing = following;
     }
 
+    public CollectionUserInfo getUser_info() {
+        return user_info;
+    }
+
+    public void setUser_info(CollectionUserInfo user_info) {
+        this.user_info = user_info;
+    }
+
+    public class CollectionUserInfo {
+        private String id;
+        private String firstName;
+        private String lastName;
+
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+    }
 }

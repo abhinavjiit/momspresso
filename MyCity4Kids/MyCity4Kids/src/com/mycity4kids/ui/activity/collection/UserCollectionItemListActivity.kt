@@ -14,6 +14,7 @@ import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.app.ShareCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -91,8 +92,8 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         val thumbStates = ColorStateList(
                 arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
                 intArrayOf(
-
-                        resources.getColor(R.color.white), resources.getColor(R.color.add_video_details_mute_label))
+                        ContextCompat.getColor(this, R.color.white),
+                        ContextCompat.getColor(this, R.color.add_video_details_mute_label))
         )
         muteSwitch?.thumbTintList = thumbStates
         if (Build.VERSION.SDK_INT >= 24) {

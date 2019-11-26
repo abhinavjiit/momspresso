@@ -1,7 +1,7 @@
 package com.mycity4kids.models.collectionsModels;
 
 import com.mycity4kids.models.response.BaseResponse;
-import com.mycity4kids.profile.FeaturedItem;
+import com.mycity4kids.models.response.MixFeedResult;
 
 import java.util.List;
 
@@ -39,14 +39,14 @@ public class FeaturedOnModel extends BaseResponse {
     }
 
     public class FeaturedResult {
-        private List<FeaturedItem> item_list;
+        private List<MixFeedResult> item_list;
         private int total_items;
 
-        public List<FeaturedItem> getItem_list() {
+        public List<MixFeedResult> getItem_list() {
             return item_list;
         }
 
-        public void setItem_list(List<FeaturedItem> item_list) {
+        public void setItem_list(List<MixFeedResult> item_list) {
             this.item_list = item_list;
         }
 

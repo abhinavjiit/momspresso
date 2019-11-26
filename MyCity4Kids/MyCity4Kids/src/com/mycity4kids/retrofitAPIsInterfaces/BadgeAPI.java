@@ -7,6 +7,10 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface BadgeAPI {
-    @GET("badges/")
+    @GET("badges/all")
     Call<BadgeListResponse> getBadgeList(@Query("user_id") String user_id);
+
+    @GET("badges/detail")
+    Call<BadgeListResponse> getBadgeDetail(@Query("user_id") String user_id,
+                                           @Query("id") String id);
 }
