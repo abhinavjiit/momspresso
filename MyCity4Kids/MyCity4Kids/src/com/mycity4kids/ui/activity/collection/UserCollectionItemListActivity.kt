@@ -259,7 +259,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         showProgressDialog(resources.getString(R.string.please_wait))
         val updateCollectionRequestModel = UpdateCollectionRequestModel()
         updateCollectionRequestModel.deleted = delete
-        updateCollectionRequestModel.public = isPublic
+        updateCollectionRequestModel.isPublic = isPublic
         val list = ArrayList<String>()
         list.add(collectionId)
         updateCollectionRequestModel.userCollectionId = list

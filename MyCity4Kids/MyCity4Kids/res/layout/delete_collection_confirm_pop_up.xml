@@ -20,7 +20,7 @@
             android:layout_marginStart="@dimen/space_16"
             android:layout_marginTop="@dimen/space_20"
             android:gravity="center"
-            android:text="@string/are_you_sure_you_want_to_delete_the_collection"
+            android:text="@string/dialog_confirm_delete"
             android:textColor="@color/campaign_515151"
             android:textSize="20sp"
             app:fontName="Helvetica Bold.ttf" />

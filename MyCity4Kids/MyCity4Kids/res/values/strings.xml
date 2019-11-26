@@ -1381,5 +1381,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="all_videos">Videos</string>
     <string name="profile_post_featured">Post featured on the following collections</string>
     <string name="profile_share_the_joy">Share the Joy</string>
+    <string name="dialog_confirm_delete">Are you sure you want to delete this collection</string>
 </resources>
 
