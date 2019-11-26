@@ -1,74 +1,281 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/bottom_sheet"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/shape_shadow_rectangle"
-    android:orientation="vertical"
-    android:paddingBottom="10dp">
+    android:layout_width="320dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_dialog_bg"
+    android:orientation="vertical">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:paddingBottom="20dp">
+        android:id="@+id/imagesContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true">
 
-        <com.mikhaellopez.circularimageview.CircularImageView
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/badgeBgImageView"
+            android:layout_width="250dp"
+            android:layout_height="200dp"
+            android:layout_centerHorizontal="true"
+            android:scaleType="fitXY" />
+
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/badgeImageView"
-            android:layout_width="@dimen/space_155"
-            android:layout_height="@dimen/space_155"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/space_20"
-            android:src="@drawable/default_commentor_img"
-            app:civ_border="true"
-            app:civ_border_color="@color/red_drawer_selected"
-            app:civ_border_width="0dp"
-            app:civ_shadow="true"
-            app:civ_shadow_color="@color/grey"
-            app:civ_shadow_radius="4" />
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerInParent="true"
+            android:scaleType="fitXY" />
+    </RelativeLayout>
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/badgeTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imagesContainer"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="center"
+        android:text="Congratulations"
+        android:textColor="@color/color_465391"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/badgeDescTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/badgeTitleTextView"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="center"
+        android:text=""
+        android:textColor="@color/color_787E85"
+        android:textSize="14sp" />
+
+    <RelativeLayout
+        android:id="@+id/shareJoyContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/badgeDescTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp">
 
         <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/badgeName"
+            android:id="@+id/shareJoyLabelTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/badgeImageView"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/space_20"
-            android:textColor="@color/campaign_515151"
-            android:textSize="20sp"
-            app:fontName="oswald_regular.ttf" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/badgeDesc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/badgeName"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="@dimen/space_15"
-            android:layout_marginTop="@dimen/space_10"
-            android:layout_marginRight="@dimen/space_15"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="6dp"
             android:gravity="center"
-            android:textColor="@color/campaign_list_buttons"
-            android:textSize="14sp"
+            android:text="@string/profile_share_the_joy"
+            android:textColor="@color/color_666666"
+            android:textSize="18sp"
             app:fontName="oswald.ttf" />
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/shareBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/badgeDesc"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/space_25"
-            android:background="@drawable/badge_share_bg"
-            android:paddingLeft="40dp"
-            android:paddingTop="@dimen/space_15"
-            android:paddingRight="40dp"
-            android:paddingBottom="@dimen/space_15"
-            android:text="@string/detail_bottom_share"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+        <View
+            android:layout_width="100dp"
+            android:layout_height="1dp"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="10dp"
+            android:layout_toStartOf="@+id/shareJoyLabelTextView"
+            android:background="@color/light_underline" />
 
+        <View
+            android:layout_width="100dp"
+            android:layout_height="1dp"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/shareJoyLabelTextView"
+            android:background="@color/light_underline" />
     </RelativeLayout>
-</LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/shareJoyContainer"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/whatsappShareImageView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_badge_whatsapp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/facebookShareImageView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/facebookShareImageView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_badge_facebook"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/instagramShareImageView"
+            app:layout_constraintStart_toEndOf="@+id/whatsappShareImageView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/instagramShareImageView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/ic_badge_instagram"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/genericShareImageView"
+            app:layout_constraintStart_toEndOf="@+id/facebookShareImageView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/genericShareImageView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_badge_generic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/instagramShareImageView"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/badgesShimmerContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:background="@color/white"
+        android:visibility="visible">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/imagesContainer1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/badgeBgImageView1"
+                    android:layout_width="250dp"
+                    android:layout_height="200dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/background"
+                    android:scaleType="fitXY" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/badgeImageView1"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_centerInParent="true"
+                    android:background="@color/background"
+                    android:scaleType="fitXY" />
+            </RelativeLayout>
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/badgeTitleTextView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imagesContainer1"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="10dp"
+                android:background="@color/background"
+                android:gravity="center"
+                android:textColor="@color/color_465391"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/badgeDescTextView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/badgeTitleTextView1"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@color/background"
+                android:gravity="center"
+                android:textColor="@color/color_787E85"
+                android:textSize="14sp" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/shareJoyLabelTextView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/badgeDescTextView1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="6dp"
+                android:background="@color/background"
+                android:gravity="center"
+                android:text="@string/profile_share_the_joy"
+                android:textColor="@color/transparent"
+                android:textSize="18sp"
+                app:fontName="oswald.ttf" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/shareJoyLabelTextView1"
+                android:layout_centerHorizontal="true"
+                android:paddingTop="8dp"
+                android:paddingBottom="16dp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/whatsappShareImageView1"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@color/background"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/facebookShareImageView1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/facebookShareImageView1"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@color/background"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/instagramShareImageView1"
+                    app:layout_constraintStart_toEndOf="@+id/whatsappShareImageView1"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/instagramShareImageView1"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@color/background"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/genericShareImageView1"
+                    app:layout_constraintStart_toEndOf="@+id/facebookShareImageView1"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/genericShareImageView1"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@color/background"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/instagramShareImageView1"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </RelativeLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+</RelativeLayout>

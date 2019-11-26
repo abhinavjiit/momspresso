@@ -543,6 +543,7 @@ public class AppConstants {
     public static final String NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_BANKDETAIL = "26";
 
 
+
     public static final String FOLLOWING_STATUS_ACTIVITY_RESULT = "followingStatusActivityResult";
     public static final String VIDEO_STATUS_DRAFT = "0";
     public static final String VIDEO_STATUS_APPROVAL_PENDING = "1";
@@ -694,7 +695,6 @@ public class AppConstants {
     public static final String VIDEO_COLLECTION_TYPE = "2";
     public static final String SHORT_STORY_COLLECTION_TYPE = "1";
     public static final String ARTICLE_COLLECTION_TYPE = "0";
-    public static final String COLLECTION_EDIT_TYPE = "updateCollection";
 
     public static final String FOLLOWING = "1";
     public static final String FOLLOW = "0";

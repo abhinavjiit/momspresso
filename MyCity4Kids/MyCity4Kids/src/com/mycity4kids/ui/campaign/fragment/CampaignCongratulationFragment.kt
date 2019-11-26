@@ -1,25 +1,20 @@
 package com.mycity4kids.ui.campaign.fragment
 
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
-import androidx.core.app.ShareCompat
-import android.text.Spannable
-import android.text.SpannableString
 import android.text.SpannableStringBuilder
-import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.app.ShareCompat
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.preference.SharedPrefUtils
-import com.mycity4kids.ui.activity.PrivateProfileActivity
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.mycity4kids.utils.AppUtils
 

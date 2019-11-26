@@ -1209,17 +1209,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="all_blogs">Blogs</string>
     <string name="all_videos">Videos</string>
     <string name="profile_post_featured">Post featured on the following collections</string>
-    <string name="dialog_fragment_add_collection_select_collection">Select Collection</string>
-    <string name="no_collections_yet">no collections yet</string>
-    <string name="collection_created_tab">CREATED</string>
-    <string name="collection_followed_tab">FOLLOWED</string>
-    <string name="visible_to_all">visible to all</string>
-    <string name="please_add_collection_name">Please add collection Name</string>
-    <string name="thumbnail">Thumbnail</string>
-    <string name="no_collection_items">no items</string>
-    <string name="list_of_content">List of Content</string>
-    <string name="edit_collection">Edit Collection</string>
-    <string name="delete_collection">Delete Collection</string>
-    <string name="are_you_sure_you_want_to_delete_the_collection">Are you sure you want to delete the collection</string>
-    <string name="add_collection_name">Add collection name</string>
+    <string name="profile_share_the_joy">Share the Joy</string>
 </resources>

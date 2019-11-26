@@ -8,7 +8,7 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/collectionItemImageVIEW"
         android:layout_width="100dp"
-        android:layout_height="85dp"
+        android:layout_height="75dp"
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/space_10"
         android:src="@drawable/default_article" />
@@ -28,6 +28,7 @@
             android:layout_marginLeft="@dimen/space_10"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="Weddine Makeup Tips"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
@@ -38,8 +39,10 @@
             android:layout_below="@id/collectionTitle"
             android:layout_marginLeft="@dimen/space_10"
             android:layout_marginTop="@dimen/space_5"
+
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="Lorem Ipsum is simply"
             android:textColor="@color/black"
             android:textSize="12sp" />
     </RelativeLayout>

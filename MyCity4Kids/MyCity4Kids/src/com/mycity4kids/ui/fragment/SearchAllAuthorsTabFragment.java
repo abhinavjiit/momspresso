@@ -3,7 +3,6 @@ package com.mycity4kids.ui.fragment;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
@@ -23,14 +24,12 @@ import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.SearchAuthorResult;
 import com.mycity4kids.models.response.SearchResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.profile.M_PrivateProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
-import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.activity.SearchAllActivity;
 import com.mycity4kids.ui.adapter.SearchAuthorsListingAdapter;
 
@@ -112,26 +111,10 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
-
                 SearchAuthorResult itemSelected = (SearchAuthorResult) adapterView.getItemAtPosition(position);
-
-                if (dynamoUserId.equals(itemSelected.getUserId())) {
-                    Intent profileIntent = new Intent(getActivity(), DashboardActivity.class);
-                    profileIntent.putExtra("TabType", "profile");
-                    startActivity(profileIntent);
-                } else {
-                    Intent intentnn = new Intent(getActivity(), PublicProfileActivity.class);
-                    intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, itemSelected.getUserId());
-                    intentnn.putExtra(AppConstants.AUTHOR_NAME, "" + itemSelected.getFirst_name().replace("<b>", "").replace("</b>", "") + " " + itemSelected.getLast_name().replace("<b>", "").replace("</b>", ""));
-                    intentnn.putExtra(Constants.FROM_SCREEN, "Search Authors List");
-                    startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
-                }
-
-
-//                Intent intent = new Intent(getActivity(), BloggerDashboardActivity.class);
-//                intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, "" + itemSelected.getId());
-//                getActivity().startActivityForResult(intent, Constants.BLOG_FOLLOW_STATUS);
+                Intent profileIntent = new Intent(getActivity(), M_PrivateProfileActivity.class);
+                profileIntent.putExtra(Constants.USER_ID, itemSelected.getUserId());
+                startActivity(profileIntent);
             }
         });
 

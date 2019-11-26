@@ -1215,8 +1215,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         profileIntent.putExtra("TabType", "profile");
                         startActivity(profileIntent);
                     } else {
-                        Intent profileIntent = new Intent(getActivity(), M_PrivateProfileActivity.class);
-                        profileIntent.putExtra(Constants.USER_ID, detailData.getUserId());
+                        Intent profileIntent = new Intent(getActivity(), PublicProfileActivity.class);
+                        profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, detailData.getUserId());
+                        profileIntent.putExtra(AppConstants.AUTHOR_NAME, detailData.getUserName());
+                        profileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
                         startActivity(profileIntent);
                     }
                     break;

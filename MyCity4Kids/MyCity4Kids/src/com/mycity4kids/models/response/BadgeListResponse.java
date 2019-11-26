@@ -1,5 +1,8 @@
 package com.mycity4kids.models.response;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +21,7 @@ public class BadgeListResponse extends BaseResponse {
         this.data = data;
     }
 
-    public class BadgeListData {
+    public static class BadgeListData {
 
         private ArrayList<BadgeListResult> result;
 
@@ -30,37 +33,73 @@ public class BadgeListResponse extends BaseResponse {
             this.result = result;
         }
 
-        public class BadgeListResult {
-            private BadgeId _id;
-            private String badge_desc;
+        public static class BadgeListResult implements Parcelable {
+            private String id;
+            private BadgeDesc badge_desc;
             private String badge_id;
             private String badge_metaclass;
-            private String badge_title;
+            private BadgeTitle badge_title;
             private int count;
-            private BadgeCreated created_at;
             private boolean deleted;
             private boolean enabled;
-            private BadgeUpdated updated_at;
             private String user_id;
+            private String badge_bg_url = "";
             private String badge_image_url = "";
             private String badge_sharing_url = "";
             private String item_type = "";
             private String content_id = "";
 
-            public BadgeId get_id() {
-                return _id;
+            protected BadgeListResult(Parcel in) {
+                id = in.readString();
+                badge_desc = in.readParcelable(BadgeDesc.class.getClassLoader());
+                badge_id = in.readString();
+                badge_metaclass = in.readString();
+                badge_title = in.readParcelable(BadgeTitle.class.getClassLoader());
+                count = in.readInt();
+                deleted = in.readByte() != 0;
+                enabled = in.readByte() != 0;
+                user_id = in.readString();
+                badge_bg_url = in.readString();
+                badge_image_url = in.readString();
+                badge_sharing_url = in.readString();
+                item_type = in.readString();
+                content_id = in.readString();
             }
 
-            public void set_id(BadgeId _id) {
-                this._id = _id;
+            public static final Creator<BadgeListResult> CREATOR = new Creator<BadgeListResult>() {
+                @Override
+                public BadgeListResult createFromParcel(Parcel in) {
+                    return new BadgeListResult(in);
+                }
+
+                @Override
+                public BadgeListResult[] newArray(int size) {
+                    return new BadgeListResult[size];
+                }
+            };
+
+            public String getId() {
+                return id;
             }
 
-            public String getBadge_desc() {
+            public void setId(String id) {
+                this.id = id;
+            }
+
+            public BadgeDesc getBadge_desc() {
                 return badge_desc;
             }
 
-            public void setBadge_desc(String badge_desc) {
+            public void setBadge_desc(BadgeDesc badge_desc) {
                 this.badge_desc = badge_desc;
+            }
+
+            public BadgeTitle getBadge_title() {
+                return badge_title;
+            }
+
+            public void setBadge_title(BadgeTitle badge_title) {
+                this.badge_title = badge_title;
             }
 
             public String getBadge_id() {
@@ -79,28 +118,12 @@ public class BadgeListResponse extends BaseResponse {
                 this.badge_metaclass = badge_metaclass;
             }
 
-            public String getBadge_title() {
-                return badge_title;
-            }
-
-            public void setBadge_title(String badge_title) {
-                this.badge_title = badge_title;
-            }
-
             public int getCount() {
                 return count;
             }
 
             public void setCount(int count) {
                 this.count = count;
-            }
-
-            public BadgeCreated getCreated_at() {
-                return created_at;
-            }
-
-            public void setCreated_at(BadgeCreated created_at) {
-                this.created_at = created_at;
             }
 
             public boolean isDeleted() {
@@ -119,14 +142,6 @@ public class BadgeListResponse extends BaseResponse {
                 this.enabled = enabled;
             }
 
-            public BadgeUpdated getUpdated_at() {
-                return updated_at;
-            }
-
-            public void setUpdated_at(BadgeUpdated updated_at) {
-                this.updated_at = updated_at;
-            }
-
             public String getUser_id() {
                 return user_id;
             }
@@ -137,6 +152,14 @@ public class BadgeListResponse extends BaseResponse {
 
             public String getBadge_image_url() {
                 return badge_image_url;
+            }
+
+            public String getBadge_bg_url() {
+                return badge_bg_url;
+            }
+
+            public void setBadge_bg_url(String badge_bg_url) {
+                this.badge_bg_url = badge_bg_url;
             }
 
             public void setBadge_image_url(String badge_image_url) {
@@ -166,45 +189,127 @@ public class BadgeListResponse extends BaseResponse {
             public void setContent_id(String content_id) {
                 this.content_id = content_id;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel parcel, int i) {
+                parcel.writeString(id);
+                parcel.writeParcelable(badge_desc, i);
+                parcel.writeString(badge_id);
+                parcel.writeString(badge_metaclass);
+                parcel.writeParcelable(badge_title, i);
+                parcel.writeInt(count);
+                parcel.writeByte((byte) (deleted ? 1 : 0));
+                parcel.writeByte((byte) (enabled ? 1 : 0));
+                parcel.writeString(user_id);
+                parcel.writeString(badge_bg_url);
+                parcel.writeString(badge_image_url);
+                parcel.writeString(badge_sharing_url);
+                parcel.writeString(item_type);
+                parcel.writeString(content_id);
+            }
         }
     }
 
-    public class BadgeId {
-        private String $oid;
+    public static class BadgeDesc implements Parcelable {
+        private String other;
+        private String user;
 
-        public String get$oid() {
-            return $oid;
+        protected BadgeDesc(Parcel in) {
+            other = in.readString();
+            user = in.readString();
         }
 
-        public void set$oid(String $oid) {
-            this.$oid = $oid;
+        public static final Creator<BadgeDesc> CREATOR = new Creator<BadgeDesc>() {
+            @Override
+            public BadgeDesc createFromParcel(Parcel in) {
+                return new BadgeDesc(in);
+            }
+
+            @Override
+            public BadgeDesc[] newArray(int size) {
+                return new BadgeDesc[size];
+            }
+        };
+
+        public String getOther() {
+            return other;
         }
 
+        public void setOther(String other) {
+            this.other = other;
+        }
+
+        public String getUser() {
+            return user;
+        }
+
+        public void setUser(String user) {
+            this.user = user;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(other);
+            parcel.writeString(user);
+        }
     }
 
-    public class BadgeCreated {
-        private long $date;
+    public static class BadgeTitle implements Parcelable {
+        private String other;
+        private String user;
 
-        public long get$date() {
-            return $date;
+        protected BadgeTitle(Parcel in) {
+            other = in.readString();
+            user = in.readString();
         }
 
-        public void set$date(long $date) {
-            this.$date = $date;
+        public static final Creator<BadgeTitle> CREATOR = new Creator<BadgeTitle>() {
+            @Override
+            public BadgeTitle createFromParcel(Parcel in) {
+                return new BadgeTitle(in);
+            }
+
+            @Override
+            public BadgeTitle[] newArray(int size) {
+                return new BadgeTitle[size];
+            }
+        };
+
+        public String getOther() {
+            return other;
         }
 
-    }
-
-    public class BadgeUpdated {
-        private long $date;
-
-        public long get$date() {
-            return $date;
+        public void setOther(String other) {
+            this.other = other;
         }
 
-        public void set$date(long $date) {
-            this.$date = $date;
+        public String getUser() {
+            return user;
         }
 
+        public void setUser(String user) {
+            this.user = user;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(other);
+            parcel.writeString(user);
+        }
     }
 }

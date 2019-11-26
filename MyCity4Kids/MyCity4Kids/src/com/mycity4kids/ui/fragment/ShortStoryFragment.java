@@ -695,20 +695,10 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             }
             break;
             case R.id.genericShareImageView: {
-                try {
-                    AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment = new AddCollectionAndCollectionItemDialogFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("articleId", articleId);
-                    bundle.putString("type", AppConstants.SHORT_STORY_COLLECTION_TYPE);
-                    addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
-                    FragmentManager fm = getFragmentManager();
-                    addCollectionAndCollectionitemDialogFragment.setTargetFragment(this, 0);
-                    addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Log.d("MC4kException", Log.getStackTraceString(e));
-                }
-
+              /*  if (isAdded()) {
+                    AppUtils.shareStoryGeneric(getActivity(), headerModel.getSsResult().getUserType(), headerModel.getSsResult().getBlogTitleSlug(), headerModel.getSsResult().getTitleSlug(),
+                            "ShortStoryListingScreen", userDynamoId, articleId, authorId, author);
+                }*/
             }
             break;
             case R.id.authorNameTextView: {

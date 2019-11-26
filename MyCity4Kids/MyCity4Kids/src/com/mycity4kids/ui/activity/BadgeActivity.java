@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AbsListView;
@@ -16,14 +17,19 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
+
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.BadgeListResponse;
+import com.mycity4kids.profile.BadgesDialogFragment;
 import com.mycity4kids.retrofitAPIsInterfaces.BadgeAPI;
 import com.mycity4kids.ui.adapter.BadgeListGridAdapter;
 import com.squareup.picasso.Picasso;
@@ -57,10 +63,16 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_badge);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         gridview = (GridView) findViewById(R.id.gridview);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         backImageView = findViewById(R.id.backImageView);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         userId = getIntent().getStringExtra(Constants.USER_ID);
         if (StringUtils.isNullOrEmpty(userId)) {
@@ -71,7 +83,6 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
         adapter = new BadgeListGridAdapter(this);
         adapter.setDatalist(badgeList);
         gridview.setAdapter(adapter);
-        backImageView.setOnClickListener(this);
         getBadgeList();
         showProgressDialog(getString(R.string.please_wait));
 
@@ -168,35 +179,52 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void onBadgeSelected(String image_url, String share_url, int position) {
-        final Dialog dialog = new Dialog(BadgeActivity.this);
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_badge_share);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
-
-        ImageView badgeImg = dialog.findViewById(R.id.badgeImageView);
-        TextView badgeName = dialog.findViewById(R.id.badgeName);
-        TextView badgeDesc = dialog.findViewById(R.id.badgeDesc);
-
-        Picasso.with(this).load(badgeList.get(position).getBadge_image_url()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                .fit().into(badgeImg);
-
-        badgeName.setText(badgeList.get(position).getBadge_title());
-        badgeDesc.setText(badgeList.get(position).getBadge_desc());
-
-
-        dialog.findViewById(R.id.shareBtn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                shareIntent.putExtra(Intent.EXTRA_TEXT, share_url);
-                startActivity(Intent.createChooser(shareIntent, "Share URL"));
-                dialog.cancel();
-            }
-        });
-
-        dialog.show();
+        BadgesDialogFragment badgesDialogFragment = new BadgesDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.USER_ID, userId);
+        bundle.putString("id", badgeList.get(position).getId());
+        badgesDialogFragment.setArguments(bundle);
+        FragmentManager fm = getSupportFragmentManager();
+        badgesDialogFragment.show(fm, "BadgeDetailDialog");
+//        final Dialog dialog = new Dialog(BadgeActivity.this);
+//        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+//        dialog.setContentView(R.layout.dialog_badge_share);
+//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        dialog.show();
+//
+//        ImageView badgeImg = dialog.findViewById(R.id.badgeImageView);
+//        TextView badgeName = dialog.findViewById(R.id.badgeName);
+//        TextView badgeDesc = dialog.findViewById(R.id.badgeDesc);
+//
+//        Picasso.with(this).load(badgeList.get(position).getBadge_image_url()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+//                .fit().into(badgeImg);
+//
+//        badgeName.setText(badgeList.get(position).getBadge_title().getOther());
+//        badgeDesc.setText(badgeList.get(position).getBadge_desc().getOther());
+//
+//
+//        dialog.findViewById(R.id.shareBtn).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+//                shareIntent.setType("text/plain");
+//                shareIntent.putExtra(Intent.EXTRA_TEXT, share_url);
+//                startActivity(Intent.createChooser(shareIntent, "Share URL"));
+//                dialog.cancel();
+//            }
+//        });
+//
+//        dialog.show();
     }
 }

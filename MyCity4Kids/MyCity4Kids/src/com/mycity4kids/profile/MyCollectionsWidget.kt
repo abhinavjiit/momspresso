@@ -63,7 +63,7 @@ class MyCollectionsWidget : RelativeLayout, View.OnClickListener {
         }
         authorId?.let {
             BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java)
-                    .getUserCollectionList(userId = authorId, start = 0, offset = 7, collectionType = null)
+                    .getUserCollectionList(authorId, 0, 7)
                     .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
                         override fun onComplete() {

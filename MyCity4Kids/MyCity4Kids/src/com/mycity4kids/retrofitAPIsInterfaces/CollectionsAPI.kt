@@ -14,8 +14,7 @@ interface CollectionsAPI {
     @GET("/v1/collections/user/{userId}")
     fun getUserCollectionList(@Path("userId") userId: String,
                               @Query("start") start: Int,
-                              @Query("offset") offset: Int,
-                              @Query("collectionType") collectionType: String? = null): Observable<BaseResponseGeneric<UserCollectionsListModel>>
+                              @Query("offset") offset: Int): Observable<BaseResponseGeneric<UserCollectionsListModel>>
 
     @POST("v1/collections/")
     fun addCollection(@Body addCollectionRequestModel: AddCollectionRequestModel): Observable<BaseResponseGeneric<AddCollectionRequestModel>>

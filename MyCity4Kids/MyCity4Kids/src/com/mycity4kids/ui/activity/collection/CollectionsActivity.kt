@@ -2,7 +2,7 @@ package com.mycity4kids.ui.activity.collection
 
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
+import android.widget.ImageView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.kelltontech.network.Response
@@ -20,8 +20,8 @@ class CollectionsActivity : BaseActivity() {
     private lateinit var tabs: TabLayout
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private var isPrivate: Boolean = true
-    private lateinit var back: TextView
-    private var userId: String? = null
+    private lateinit var back: ImageView
+    private var userId: String = "4347159ff74b46e4ae43df01a0b405c0"
 
     override fun updateUi(response: Response?) {
     }
@@ -34,6 +34,7 @@ class CollectionsActivity : BaseActivity() {
         toolbar = findViewById(R.id.toolbar)
         back = findViewById(R.id.back)
         tabs = findViewById(R.id.collectionTabLayout)
+
 
         if (AppUtils.isPrivateProfile(intent.getStringExtra("userId"))) {
             isPrivate = true
@@ -49,14 +50,14 @@ class CollectionsActivity : BaseActivity() {
         }
         if (isPrivate) {
             tabs.apply {
-                addTab(tabs.newTab().setText(resources.getString(R.string.collection_created_tab)))
-                addTab(tabs.newTab().setText(resources.getString(R.string.collection_followed_tab)))
+                addTab(tabs.newTab().setText("CREATED"))
+                addTab(tabs.newTab().setText("FOLLOWED"))
             }
         } else {
             tabs.visibility = View.GONE
         }
 
-        adapter = CollectionPagerAdapter(supportFragmentManager, isPrivate, userId!!)
+        adapter = CollectionPagerAdapter(supportFragmentManager, isPrivate, userId)
         collectionsViewPager.adapter = adapter
         collectionsViewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
         tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {

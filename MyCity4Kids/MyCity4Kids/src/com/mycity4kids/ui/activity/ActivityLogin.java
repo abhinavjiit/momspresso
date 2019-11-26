@@ -155,7 +155,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     private void phoneLogin(String authCode) {
         loginMode = "phone";
         showProgressDialog(getString(R.string.please_wait));
-        Log.d("PhoneToken", authCode);
+        Log.d("PhoneToken",authCode);
         PhoneLoginRequest phoneLoginRequest = new PhoneLoginRequest();
         phoneLoginRequest.setCode(authCode);
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();

@@ -10,8 +10,6 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:background="@color/transparent"
         android:minHeight="?attr/actionBarSize"
         app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
@@ -19,19 +17,15 @@
         app:titleTextAppearance="@style/ToolbarTheme.Title">
 
 
-        <com.mycity4kids.widget.CustomFontTextView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/back"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/back_arroow"
-            android:drawablePadding="@dimen/space_16"
-            android:drawableTint="@color/black"
-            android:text="Collections"
-            android:textColor="@color/campaign_4A4A4A"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:src="@drawable/back_arroow"
+            android:tint="@color/black" />
 
     </androidx.appcompat.widget.Toolbar>
+
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/collectionTabLayout"
@@ -40,7 +34,8 @@
         android:layout_below="@+id/toolbar"
         app:tabIndicatorColor="@color/app_red"
         app:tabSelectedTextColor="@color/all_drafts.title"
-        app:tabTextColor="@color/grey_faded" />
+        app:tabTextColor="@color/grey_faded"
+        />
 
     <!-- <com.mycity4kids.ui.videochallengenewui.ExpandableHeightGridView
          android:id="@+id/collectionGridView"

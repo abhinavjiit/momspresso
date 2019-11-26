@@ -161,6 +161,10 @@ class M_PrivateProfileActivity : BaseActivity(),
 //                headerContainer.alpha = 1.0f - Math.abs(verticalOffset / appBarLayout.totalScrollRange)
 //            }
 //        })
+        profileImageView.setOnClickListener {
+            val pIntent = Intent(this, PrivateProfileActivity::class.java)
+            startActivity(pIntent)
+        }
 
         if (AppUtils.isPrivateProfile(authorId)) {
             authorId = SharedPrefUtils.getUserDetailModel(this).dynamoId
@@ -516,13 +520,9 @@ class M_PrivateProfileActivity : BaseActivity(),
         if (responseData.isNullOrEmpty()) {
             isLastPageReached = true
             if (!userContentList.isNullOrEmpty()) {
-                //No more next results for search from pagination
             } else {
-                // No results
                 userContentAdapter.setListData(userContentList)
                 userContentAdapter.notifyDataSetChanged()
-//                noBlogsTextView.setText(getString(R.string.short_s_no_published))
-//                noBlogsTextView.setVisibility(View.VISIBLE)
             }
         } else {
             start += size
@@ -623,13 +623,9 @@ class M_PrivateProfileActivity : BaseActivity(),
         if (featuredItemList.isNullOrEmpty()) {
             isLastPageReached = true
             if (!userFeaturedOnList.isNullOrEmpty()) {
-                //No more next results for search from pagination
             } else {
-                // No results
                 usersFeaturedContentAdapter.setListData(userFeaturedOnList)
                 usersFeaturedContentAdapter.notifyDataSetChanged()
-//                noBlogsTextView.setText(getString(R.string.short_s_no_published))
-//                noBlogsTextView.setVisibility(View.VISIBLE)
             }
         } else {
             start += size
@@ -679,24 +675,34 @@ class M_PrivateProfileActivity : BaseActivity(),
     }
 
     private fun showBadgeDialog() {
-        val dialog = Dialog(this)
-        dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(R.layout.dialog_badge_share)
-        dialog.setCancelable(true)
-        val badgeImg = dialog.findViewById<ImageView>(R.id.badgeImageView)
-        val badgeName = dialog.findViewById<TextView>(R.id.badgeName)
-        val badgeDesc = dialog.findViewById<TextView>(R.id.badgeDesc)
-        val shareBtn = dialog.findViewById<TextView>(R.id.shareBtn)
-        shareBtn.visibility = View.GONE
 
-        Picasso.with(this).load(badgeDetail!!.get(0).getBadge_image_url()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                .fit().into(badgeImg)
+        val badgesDialogFragment = BadgesDialogFragment()
+        val bundle = Bundle()
+        bundle.putString(Constants.USER_ID, authorId)
+        badgesDialogFragment.arguments = bundle
+        val fm = supportFragmentManager
+        fm?.let {
+            badgesDialogFragment.show(fm!!, "BadgeDetailDialog")
+        }
 
-        badgeName.setText(badgeDetail!!.get(0).getBadge_title())
-        badgeDesc.setText(badgeDetail!!.get(0).getBadge_desc())
-
-        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.show()
+//        val dialog = Dialog(this)
+//        dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+//        dialog.setContentView(R.layout.dialog_badge_share)
+//        dialog.setCancelable(true)
+//        val badgeImg = dialog.findViewById<ImageView>(R.id.badgeImageView)
+//        val badgeName = dialog.findViewById<TextView>(R.id.badgeName)
+//        val badgeDesc = dialog.findViewById<TextView>(R.id.badgeDesc)
+//        val shareBtn = dialog.findViewById<TextView>(R.id.shareBtn)
+//        shareBtn.visibility = View.GONE
+//
+//        Picasso.with(this).load(badgeDetail!!.get(0).getBadge_image_url()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+//                .fit().into(badgeImg)
+//
+//        badgeName.setText(badgeDetail!!.get(0).getBadge_title().other)
+//        badgeDesc.setText(badgeDetail!!.get(0).getBadge_desc().other)
+//
+//        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//        dialog.show()
     }
 
     override fun onClick(view: View?) {

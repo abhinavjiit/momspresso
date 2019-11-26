@@ -2007,7 +2007,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.profileImageView:
                 mDrawerLayout.closeDrawers();
                 Utils.campaignEvent(this, "profile", "sidebar", "Update", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "CTA_Update_Rewards");
-                Intent pIntent = new Intent(this, PrivateProfileActivity.class);
+                Intent pIntent = new Intent(this, M_PrivateProfileActivity.class);
                 startActivity(pIntent);
                 break;
             case R.id.langTextView:
@@ -2030,17 +2030,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.toolbarTitle:
                 break;
             case R.id.searchAllImageView:
-                Intent inte = new Intent(this, M_PrivateProfileActivity.class);
-                startActivity(inte);
-//                if (topFragment instanceof GroupsViewFragment) {
-//                    Intent searchIntent = new Intent(this, GroupsSearchActivity.class);
-//                    startActivity(searchIntent);
-//                } else {
-//                    Intent searchIntent = new Intent(this, SearchAllActivity.class);
-//                    searchIntent.putExtra(Constants.FILTER_NAME, "");
-//                    searchIntent.putExtra(Constants.TAB_POSITION, 0);
-//                    startActivity(searchIntent);
-//                }
+                if (topFragment instanceof GroupsViewFragment) {
+                    Intent searchIntent = new Intent(this, GroupsSearchActivity.class);
+                    startActivity(searchIntent);
+                } else {
+                    Intent searchIntent = new Intent(this, SearchAllActivity.class);
+                    searchIntent.putExtra(Constants.FILTER_NAME, "");
+                    searchIntent.putExtra(Constants.TAB_POSITION, 0);
+                    startActivity(searchIntent);
+                }
                 break;
             case R.id.notification:
                 hideCreateContentView();
