@@ -3,13 +3,12 @@
     <item
         android:id="@+id/edit_collection"
         android:actionMenuTextColor="@color/app_red"
-        android:title="Edit Collection"
-        android:visible="false"
+        android:title="@string/edit_collection"
 
         />
     <item
         android:id="@+id/delete_collection"
         android:actionMenuTextColor="@color/app_red"
-        android:title="Delete Collection" />
+        android:title="@string/delete_collection" />
 
 </menu>

@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_16"
             android:layout_marginTop="@dimen/space_20"
-            android:text="Add collection name"
+            android:text="@string/add_collection_name"
             android:textColor="@color/campaign_515151"
             android:textSize="20sp"
             app:fontName="Helvetica Bold.ttf" />
@@ -55,7 +55,7 @@
             android:paddingTop="@dimen/space_10"
             android:paddingRight="20dp"
             android:paddingBottom="@dimen/space_10"
-            android:text="Confirm"
+            android:text="@string/rewards_confirm"
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="14sp"

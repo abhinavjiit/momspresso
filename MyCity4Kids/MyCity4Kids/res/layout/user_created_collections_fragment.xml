@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="you haven't created any collection yet"
+        android:text="@string/no_collections_yet"
         android:textColor="@color/black"
         android:visibility="gone" />
 
@@ -66,7 +66,7 @@
             android:layout_below="@id/sepaartorView"
             android:layout_centerVertical="true"
             android:layout_marginTop="4dp"
-            android:layout_toLeftOf="@id/txvLoadMore"
+            android:layout_toStartOf="@id/txvLoadMore"
             android:src="@drawable/progress_spinner" />
     </RelativeLayout>
 
@@ -81,6 +81,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <include layout="@layout/mainshimmer_layout" />
 
             <include layout="@layout/mainshimmer_layout" />
 

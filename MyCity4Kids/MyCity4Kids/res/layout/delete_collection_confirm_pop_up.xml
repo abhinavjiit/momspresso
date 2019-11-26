@@ -20,7 +20,7 @@
             android:layout_marginStart="@dimen/space_16"
             android:layout_marginTop="@dimen/space_20"
             android:gravity="center"
-            android:text="Are you sure you want to delete the collection"
+            android:text="@string/are_you_sure_you_want_to_delete_the_collection"
             android:textColor="@color/campaign_515151"
             android:textSize="20sp"
             app:fontName="Helvetica Bold.ttf" />
@@ -57,7 +57,7 @@
             android:paddingTop="@dimen/space_15"
             android:paddingRight="20dp"
             android:paddingBottom="@dimen/space_10"
-            android:text="Confirm"
+            android:text="@string/rewards_confirm"
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="14sp"

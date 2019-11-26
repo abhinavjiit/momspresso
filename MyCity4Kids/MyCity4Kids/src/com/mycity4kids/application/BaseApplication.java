@@ -14,8 +14,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.multidex.MultiDex;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
@@ -55,6 +53,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import androidx.multidex.MultiDex;
 import io.branch.referral.Branch;
 import io.fabric.sdk.android.Fabric;
 import io.socket.client.IO;
@@ -94,6 +93,7 @@ public class BaseApplication extends Application {
     private Activity dashboardActivity;
     private FirebaseAnalytics mFirebaseAnalytics;
     private Activity activity;
+    private int position;
 
     /*
      * Google Analytics configuration values.
@@ -886,4 +886,11 @@ public class BaseApplication extends Application {
         return data;
     }
 
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public int getPosition() {
+        return position;
+    }
 }

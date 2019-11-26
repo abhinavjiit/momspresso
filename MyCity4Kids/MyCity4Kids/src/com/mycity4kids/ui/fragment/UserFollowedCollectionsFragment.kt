@@ -16,6 +16,7 @@ import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.collectionsModels.UserCollectionsListModel
 import com.mycity4kids.models.collectionsModels.UserCollectionsModel
 import com.mycity4kids.models.response.BaseResponseGeneric
@@ -97,7 +98,7 @@ class UserFollowedCollectionsFragment : BaseFragment() {
 
             override fun onNext(response: BaseResponseGeneric<UserCollectionsListModel>) {
                 try {
-                    if (response.code == 200 && response.status == "success" && response.data?.result != null) {
+                    if (response.code == 200 && response.status == Constants.SUCCESS && response.data?.result != null) {
                         shimmer1.stopShimmerAnimation()
                         shimmer1.visibility = View.GONE
                         processResponse(response.data?.result!!)
@@ -111,6 +112,8 @@ class UserFollowedCollectionsFragment : BaseFragment() {
             }
 
             override fun onError(e: Throwable) {
+                Crashlytics.logException(e)
+                Log.d("MC4KException", Log.getStackTraceString(e))
             }
 
         })

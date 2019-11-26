@@ -15,7 +15,6 @@
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
 
             <RelativeLayout
@@ -27,19 +26,21 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/transparent"
                     android:elevation="5dp"
                     app:layout_collapseMode="pin"
                     app:theme="@style/ToolbarTheme"
                     app:titleTextAppearance="@style/ToolbarTheme.Title">
 
                     <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/back"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/back_arroow"
                         android:drawablePadding="@dimen/space_16"
                         android:drawableTint="@color/black"
                         android:gravity="center_vertical"
-                        android:text="Edit Collection"
+                        android:text="@string/edit_collection"
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         app:fontName="Helvetica Bold.ttf" />
@@ -55,7 +56,7 @@
                     android:layout_below="@+id/toolbar"
                     android:layout_marginLeft="@dimen/space_16"
                     android:layout_marginTop="@dimen/space_16"
-                    android:text="Please add collection Name"
+                    android:text="@string/please_add_collection_name"
                     android:textColor="#515151"
                     android:textSize="16sp"
                     app:fontName="Helvetica Bold.ttf" />
@@ -81,7 +82,7 @@
                     android:layout_below="@id/collectionNameChangeEditTextView"
                     android:layout_marginLeft="@dimen/space_16"
                     android:layout_marginTop="@dimen/space_16"
-                    android:text="Thumbnail"
+                    android:text="@string/thumbnail"
                     android:textColor="@color/campaign_515151"
                     android:textSize="@dimen/space_16"
                     app:fontName="Helvetica Bold.ttf" />
@@ -110,7 +111,7 @@
                         android:layout_toRightOf="@id/collectionImageVIEW"
                         android:background="@drawable/shape_red_border"
                         android:padding="@dimen/space_10"
-                        android:text="change"
+                        android:text="@string/collection_change_image_in_edit_collection"
                         android:textColor="@color/app_red"
                         android:textSize="14sp"
                         app:textAllCaps="true" />
@@ -118,6 +119,7 @@
                 </LinearLayout>
 
                 <com.mycity4kids.widget.CustomFontEditText
+                    android:id="@+id/descriptionEditTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/imageChangeHeaderLayout"
@@ -125,7 +127,7 @@
                     android:layout_marginTop="@dimen/space_16"
                     android:layout_marginRight="@dimen/space_16"
                     android:background="@drawable/dark_border_rounded_corner"
-                    android:hint="Discription:"
+                    android:hint="@string/description_txt"
                     android:maxLength="150"
                     android:overScrollMode="always"
                     android:padding="15dp"
@@ -133,38 +135,41 @@
                     android:scrollbars="vertical"
                     android:textColor="#515151"
                     android:textColorHint="@color/gray2" />
+
+
             </RelativeLayout>
+
+
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/list"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/space_16"
             android:layout_marginTop="@dimen/space_30"
-            android:text="List of Content"
+            android:background="@color/transparent"
+            android:text="@string/list_of_content"
             android:textColor="@color/campaign_515151"
             android:textSize="16sp"
             app:fontName="Helvetica Bold.ttf" />
 
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginLeft="@dimen/space_16"
             android:layout_marginTop="@dimen/space_10"
-            android:background="#97979733" />
+            android:background="#9B9B9B" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/collectionItemRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginStart="@dimen/space_16"
         android:layout_marginTop="@dimen/space_16"
         android:clipToPadding="false"
-        android:paddingBottom="@dimen/space_50"
+        android:paddingBottom="@dimen/space_100"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.mycity4kids.widget.CustomFontTextView
@@ -175,17 +180,29 @@
         android:background="@color/app_red"
         android:gravity="center"
         android:padding="@dimen/space_10"
-        android:text="SUBMIT"
+        android:text="@string/submit"
         android:textColor="@color/white"
         android:textSize="@dimen/space_18"
-        app:fontName="oswald_regular.ttf" />
+        app:fontName="oswald_regular.ttf"
+        app:textAllCaps="true" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/itemNotAddedTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="150dp"
+        android:gravity="center"
+        android:text="@string/no_collection_items"
+        android:textSize="16sp"
+        android:visibility="gone" />
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:visibility="gone"
+        android:visibility="visible"
         app:duration="1000">
 
         <LinearLayout

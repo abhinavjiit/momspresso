@@ -12,17 +12,17 @@
         android:id="@+id/relativeMainContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="4dp"
         android:paddingLeft="10dp"
+        android:paddingTop="8dp"
         android:paddingRight="10dp"
-        android:paddingTop="8dp">
+        android:paddingBottom="4dp">
 
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/commentorImageView"
             android:layout_width="@dimen/ad_comments_profile_pic_width"
             android:layout_height="@dimen/ad_comments_profile_pic_width"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:contentDescription="@string/author_img"
             android:src="@drawable/default_commentor_img"
@@ -38,8 +38,8 @@
             android:id="@+id/commentorUsernameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
             android:layout_marginStart="3dp"
+            android:layout_marginLeft="3dp"
             android:layout_toEndOf="@+id/commentorImageView"
             android:layout_toRightOf="@+id/commentorImageView"
             android:ellipsize="end"
@@ -56,9 +56,9 @@
             android:id="@+id/commentDataTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/commentorUsernameTextView"
-            android:layout_alignStart="@+id/commentorUsernameTextView"
             android:layout_below="@id/commentorUsernameTextView"
+            android:layout_alignStart="@+id/commentorUsernameTextView"
+            android:layout_alignLeft="@+id/commentorUsernameTextView"
             android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:paddingLeft="5dp"
@@ -73,9 +73,9 @@
             android:id="@+id/dateContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/commentorUsernameTextView"
-            android:layout_alignStart="@+id/commentorUsernameTextView"
             android:layout_below="@+id/commentDataTextView"
+            android:layout_alignStart="@+id/commentorUsernameTextView"
+            android:layout_alignLeft="@+id/commentorUsernameTextView"
             android:orientation="horizontal">
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -105,11 +105,11 @@
             android:id="@+id/replyCountTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/dateContainer"
             android:layout_below="@id/dateContainer"
-            android:paddingBottom="10dp"
+            android:layout_alignLeft="@+id/dateContainer"
             android:paddingLeft="5dp"
             android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:text=""
             android:visibility="gone" />
     </RelativeLayout>

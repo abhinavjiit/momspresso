@@ -18,6 +18,7 @@ import com.kelltontech.utils.StringUtils
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.collectionsModels.AddCollectionRequestModel
 import com.mycity4kids.models.collectionsModels.UpdateCollectionRequestModel
 import com.mycity4kids.models.collectionsModels.UserCollectionsListModel
@@ -60,6 +61,11 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
     private lateinit var collectionImageChangeTextView: TextView
     private var dataList = ArrayList<UserCollectionsModel>()
     private lateinit var shimmer1: ShimmerFrameLayout
+    private var descriptionEditTextView: EditText? = null
+    private lateinit var itemNotAddedTextView: TextView
+    private var deletedItemPosition: Int = -1
+    private lateinit var back: TextView
+
 
     override fun updateUi(response: Response?) {
 
@@ -73,9 +79,11 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
         collectionImageVIEW = findViewById(R.id.collectionImageVIEW)
         collectionNameChangeEditTextView = findViewById(R.id.collectionNameChangeEditTextView)
         collectionImageChangeTextView = findViewById(R.id.collectionImageChangeTextView)
+        descriptionEditTextView = findViewById(R.id.descriptionEditTextView)
         submit = findViewById(R.id.submit)
         shimmer1 = findViewById(R.id.shimmer1)
-
+        itemNotAddedTextView = findViewById(R.id.itemNotAddedTextView)
+        back = findViewById(R.id.back)
         val bundle = intent
         collectionId = bundle.getStringExtra("collectionId")
         val linearLayoutManager = LinearLayoutManager(this)
@@ -86,8 +94,13 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
         submit.setOnClickListener {
             if (isValid())
                 editCollection()
+        }
+        back.setOnClickListener {
 
-
+            val intent = Intent()
+            intent.putExtra("deletedItemPosition", deletedItemPosition)
+            setResult(Activity.RESULT_OK, intent)
+            finish()
         }
         collectionImageChangeTextView.setOnClickListener {
             try {
@@ -130,7 +143,14 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                     if (response.code == 200 && response.status == "success" && response.data?.result != null) {
                         userCollectionsListModel = response.data!!.result
                         if (start == 0) {
+                            if (userCollectionsListModel.collectionItems.isEmpty()) {
+                                itemNotAddedTextView.visibility = View.VISIBLE
+                            } else {
+                                itemNotAddedTextView.visibility = View.GONE
+
+                            }
                             collectionNameChangeEditTextView.setText(userCollectionsListModel.name)
+                            userCollectionsListModel.summary?.let { descriptionEditTextView?.setText(userCollectionsListModel.summary) }
                             try {
 
                                 Picasso.with(this@EditCollectionActivity).load(userCollectionsListModel.imageUrl)
@@ -146,14 +166,17 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                         collectionItemsListAdapter.notifyDataSetChanged()
 
                     } else {
-                        ToastUtils.showToast(this@EditCollectionActivity, "nhi hua ")
+                        ToastUtils.showToast(this@EditCollectionActivity, response.data?.msg)
                     }
                 } catch (e: Exception) {
-
+                    Crashlytics.logException(e)
+                    Log.d("MC4KException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onError(e: Throwable) {
+                Crashlytics.logException(e)
+                Log.d("MC4KException", Log.getStackTraceString(e))
             }
 
         })
@@ -184,8 +207,13 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
             override fun onNext(t: BaseResponseGeneric<AddCollectionRequestModel>) {
                 try {
                     removeProgressDialog()
-                    if (t.code == 200 && t.status == "success") {
+                    if (t.code == 200 && t.status == Constants.SUCCESS) {
                         dataList.removeAt(position)
+                        deletedItemPosition = position
+                        if (dataList.isEmpty()) {
+                            itemNotAddedTextView.visibility = View.VISIBLE
+
+                        }
                         collectionItemsListAdapter.setItemListData(dataList)
                         collectionItemsListAdapter.notifyDataSetChanged()
                         ToastUtils.showToast(this@EditCollectionActivity, t.data?.msg)
@@ -194,15 +222,17 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
 
                     }
                 } catch (e: Exception) {
-
+                    Crashlytics.logException(e)
+                    Log.d("MC4KException", Log.getStackTraceString(e))
 
                 }
 
             }
 
             override fun onError(e: Throwable) {
-
-                ToastUtils.showToast(this@EditCollectionActivity, e.message)
+                Crashlytics.logException(e)
+                Log.d("MC4KException", Log.getStackTraceString(e))
+                //   ToastUtils.showToast(this@EditCollectionActivity, e.message)
 
             }
 
@@ -218,6 +248,8 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
         updateCollectionRequestModel.userCollectionId = list
         updateCollectionRequestModel.name = collectionNameChangeEditTextView.text.toString()
         updateCollectionRequestModel.imageUrl = userCollectionsListModel.imageUrl
+        updateCollectionRequestModel.summary = descriptionEditTextView?.text.toString()
+
 
         BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).editCollection(updateCollectionRequestModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
             override fun onComplete() {
@@ -227,18 +259,29 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
             }
 
             override fun onNext(t: BaseResponseGeneric<AddCollectionRequestModel>) {
-                if (t.status == "success" && t.code == 200 && t.data?.result != null) {
-                    ToastUtils.showToast(this@EditCollectionActivity, t.data?.msg)
-                    val bundle = Intent()
-                    bundle.putExtra("collectionName", collectionNameChangeEditTextView.text.toString())
-                    bundle.putExtra("collectionImage", userCollectionsListModel.imageUrl)
-                    setResult(Activity.RESULT_OK, bundle)
-                    finish()
+                try {
+                    if (t.status == Constants.SUCCESS && t.code == 200 && t.data?.result != null) {
+                        ToastUtils.showToast(this@EditCollectionActivity, t.data?.msg)
+                        val bundle = Intent()
+                        bundle.putExtra("deletedItemPosition", deletedItemPosition)
+                        bundle.putExtra("collectionName", collectionNameChangeEditTextView.text.toString())
+                        bundle.putExtra("collectionImage", userCollectionsListModel.imageUrl)
+                        bundle.putExtra("collectionDescription", descriptionEditTextView?.text.toString())
+                        setResult(Activity.RESULT_OK, bundle)
+                        finish()
+                    } else {
+                        ToastUtils.showToast(this@EditCollectionActivity, t.data?.msg)
+                    }
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4KException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onError(e: Throwable) {
-                ToastUtils.showToast(this@EditCollectionActivity, e.message)
+                Crashlytics.logException(e)
+                Log.d("MC4KException", Log.getStackTraceString(e))
+                //   ToastUtils.showToast(this@EditCollectionActivity, e.message)
             }
         })
 
@@ -253,5 +296,12 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
     override fun onStop() {
         super.onStop()
         shimmer1.stopShimmerAnimation()
+    }
+
+    override fun onBackPressed() {
+        val intent = Intent()
+        intent.putExtra("deletedItemPosition", deletedItemPosition)
+        setResult(Activity.RESULT_OK, intent)
+        super.onBackPressed()
     }
 }

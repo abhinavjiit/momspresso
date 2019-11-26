@@ -1,7 +1,7 @@
 package com.mycity4kids.models.collectionsModels;
 
 
-public class UserCollectionsModel {
+public class UserCollectionsModel  {
     private String userCollectionId;
     private String created_at;
     private String userId;
@@ -20,6 +20,18 @@ public class UserCollectionsModel {
     private boolean isFollowing;
     private ItemInfoModel item_info;
     private CollectionUserInfo user_info;
+    private String summary;
+
+    public UserCollectionsModel() {
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
 
     public ItemInfoModel getItem_info() {
         return item_info;

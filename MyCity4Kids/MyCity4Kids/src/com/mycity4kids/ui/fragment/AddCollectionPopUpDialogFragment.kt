@@ -19,6 +19,7 @@ import com.kelltontech.utils.StringUtils
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.collectionsModels.AddCollectionRequestModel
 import com.mycity4kids.models.collectionsModels.UpdateCollectionRequestModel
@@ -36,6 +37,7 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
     lateinit var cancel: ImageView
     lateinit var collectionId: String
     var articleId: String? = null
+    var type: String? = null
     lateinit var addCollectionInterface: AddCollectionInterface
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -52,6 +54,8 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
         }
         val bundle = arguments
         articleId = bundle?.getString("articleId")
+        type = bundle?.getString("type")
+
         return rootView
     }
 
@@ -115,7 +119,7 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
                             dismiss()
                         }
                     } else {
-                        ToastUtils.showToast(activity, "nhi hua  add ")
+                        ToastUtils.showToast(activity, t.data?.msg)
                     }
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
@@ -124,6 +128,8 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
             }
 
             override fun onError(e: Throwable) {
+                Crashlytics.logException(e)
+                Log.d("MC4KException", Log.getStackTraceString(e))
             }
         })
     }
@@ -131,7 +137,7 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
     fun addCollectionItem() {
         val addCollectionRequestModel1 = UpdateCollectionRequestModel()
         addCollectionRequestModel1.userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
-        addCollectionRequestModel1.itemType = "0"
+        addCollectionRequestModel1.itemType = type
         val List = ArrayList<String>()
         List.add(collectionId)
         addCollectionRequestModel1.userCollectionId = List
