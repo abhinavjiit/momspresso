@@ -5,8 +5,10 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.view.menu.MenuBuilder
@@ -14,10 +16,11 @@ import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.app.ShareCompat
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.material.appbar.AppBarLayout
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.ToastUtils
@@ -65,6 +68,12 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
     private var share: ImageView? = null
     private var dataList = ArrayList<UserCollectionsModel>()
     private lateinit var itemNotAddedTextView: TextView
+    private lateinit var deleteCollectionMainLayout: FrameLayout
+    private lateinit var confirmTextView: TextView
+    private lateinit var cancel: ImageView
+    private lateinit var appBar: AppBarLayout
+    private lateinit var descriptionTextView: TextView
+    private lateinit var collectionDescription: TextView
 
 
     override fun updateUi(response: Response?) {
@@ -84,9 +93,15 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         share = findViewById(R.id.share)
         back = findViewById(R.id.back)
         itemNotAddedTextView = findViewById(R.id.itemNotAddedTextView)
+        confirmTextView = findViewById(R.id.confirmTextView)
+        deleteCollectionMainLayout = findViewById(R.id.deleteCollectionMainLayout)
         collectionNameTextView?.isSelected = true
         setting = findViewById(R.id.setting)
+        cancel = findViewById(R.id.cancel)
+        collectionDescription = findViewById(R.id.collectionDescription)
+        descriptionTextView = findViewById(R.id.descriptionTextView)
         collectionItemRecyclerView = findViewById(R.id.collectionItemRecyclerView)
+        appBar = findViewById(R.id.appBar1)
         val intent = intent
         collectionId = intent.getStringExtra("id")
         val thumbStates = ColorStateList(
@@ -101,7 +116,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                     arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
                     intArrayOf(
 
-                            getColor(R.color.switch_button_green_collection), getColor(R.color.add_video_details_mute_label_50_percent_opacity))
+                            getColor(R.color.switch_button_green_collection), getColor(R.color.white))
             )
             muteSwitch?.trackTintList = trackStates
 
@@ -115,6 +130,8 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                 updateCollection(delete = false, isPublic = false)
             }
         }
+
+
         val linearLayoutManager = LinearLayoutManager(this)
         collectionItemsListAdapter = CollectionItemsListAdapter(this@UserCollectionItemListActivity, this)
         collectionItemRecyclerView.layoutManager = linearLayoutManager
@@ -134,6 +151,8 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         followersTextView.setOnClickListener(this)
         rightArrow.setOnClickListener(this)
         share?.setOnClickListener(this)
+        confirmTextView.setOnClickListener(this)
+        cancel.setOnClickListener(this)
 
         collectionItemRecyclerView.addOnScrollListener(object : EndlessScrollListener(linearLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
@@ -146,13 +165,11 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
     private fun chooseImageOptionPopUp(view: View) {
         val popup = PopupMenu(this@UserCollectionItemListActivity, view)
         popup.menuInflater.inflate(R.menu.delete_edit_collection_menu, popup.menu)
-        if (userCollectionsListModel.collectionType == 0)
-            popup.menu.findItem(R.id.edit_collection).isVisible = true
         popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
             override fun onMenuItemClick(item: MenuItem?): Boolean {
                 var id = item?.itemId
                 if (id == R.id.delete_collection) {
-                    updateCollection(delete = true, isPublic = true)
+                    deleteCollectionMainLayout.visibility = View.VISIBLE
                     return true
                 } else if (id == R.id.edit_collection) {
                     val intent = Intent(this@UserCollectionItemListActivity, EditCollectionActivity::class.java)
@@ -185,6 +202,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                         if (start == 0) {
                             if (userCollectionsListModel.collectionItems.isEmpty()) {
                                 itemNotAddedTextView.visibility = View.VISIBLE
+
                             } else {
                                 itemNotAddedTextView.visibility = View.GONE
 
@@ -200,10 +218,23 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                                 followersTextView.isClickable = true
                                 rightArrow.visibility = View.GONE
                                 followFollowingTextView.visibility = View.GONE
-                                muteSwitch?.visibility = View.VISIBLE
-                                setting.visibility = View.VISIBLE
-                                share?.visibility = View.VISIBLE
+                                if (userCollectionsListModel.collectionType != 0) {
 
+                                    setting.visibility = View.GONE
+                                    muteSwitch?.visibility = View.GONE
+
+                                } else {
+                                    followersTextView.visibility = View.VISIBLE
+                                    followersCount.visibility = View.VISIBLE
+                                    muteSwitch?.visibility = View.VISIBLE
+                                    setting.visibility = View.VISIBLE
+                                }
+                                share?.visibility = View.VISIBLE
+                                if (!userCollectionsListModel.summary.isNullOrBlank()) {
+                                    descriptionTextView.visibility = View.VISIBLE
+                                    collectionDescription.visibility = View.VISIBLE
+                                    collectionDescription.text = userCollectionsListModel.summary
+                                }
 
                             } else {
                                 share?.visibility = View.GONE
@@ -219,7 +250,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                                 muteSwitch?.visibility = View.GONE
                                 setting.visibility = View.GONE
                             }
-
                             followersCount.text = userCollectionsListModel.totalCollectionFollowers.toString()
                             try {
                                 Picasso.with(this@UserCollectionItemListActivity).load(userCollectionsListModel.imageUrl)
@@ -230,24 +260,25 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                         }
                         shimmer1.visibility = View.GONE
                         shimmer1.stopShimmerAnimation()
-
-
                         dataList.addAll(0, userCollectionsListModel.collectionItems)
                         collectionItemsListAdapter.setListData(dataList)
                         collectionItemsListAdapter.notifyDataSetChanged()
 
+
                     } else {
-                        ToastUtils.showToast(this@UserCollectionItemListActivity, "nhi hua ")
+                        ToastUtils.showToast(this@UserCollectionItemListActivity, response.data?.msg)
 
                     }
 
                 } catch (e: Exception) {
-
+                    Crashlytics.logException(e)
+                    Log.d("MC4KException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onError(e: Throwable) {
-
+                Crashlytics.logException(e)
+                Log.d("MC4KException", Log.getStackTraceString(e))
             }
 
         })
@@ -255,7 +286,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
 
     }
 
-    fun updateCollection(delete: Boolean, isPublic: Boolean) {
+    private fun updateCollection(delete: Boolean, isPublic: Boolean) {
         showProgressDialog(resources.getString(R.string.please_wait))
         val updateCollectionRequestModel = UpdateCollectionRequestModel()
         updateCollectionRequestModel.deleted = delete
@@ -274,14 +305,19 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
             override fun onNext(t: BaseResponseGeneric<AddCollectionRequestModel>) {
                 if (t.code == 200 && t.status == Constants.SUCCESS) {
                     ToastUtils.showToast(this@UserCollectionItemListActivity, t.data?.msg)
-                    if (delete)
+                    if (delete) {
+                        val intent = Intent()
+                        intent.putExtra(AppConstants.COLLECTION_EDIT_TYPE, "deleteCollection")
+                        setResult(Activity.RESULT_OK, intent)
                         finish()
+                    }
                 }
             }
 
             override fun onError(e: Throwable) {
                 removeProgressDialog()
-                ToastUtils.showToast(this@UserCollectionItemListActivity, e.message)
+                Crashlytics.logException(e)
+                Log.d("MC4KException", Log.getStackTraceString(e))
             }
         })
     }
@@ -319,7 +355,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
             }
 
             override fun onNext(t: ResponseBody) {
-
                 try {
                     val strResponse = String(t.bytes())
                     val jsonObject = JSONObject(strResponse)
@@ -329,16 +364,25 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                     if (AppConstants.FOLLOWING == userCollectionsListModel.isFollowed) {
                         userCollectionsListModel.isFollowed = AppConstants.FOLLOW
                         followFollowingTextView.text = resources.getString(R.string.ad_follow_author)
+                        followersCount.text = ((userCollectionsListModel.totalCollectionFollowers)?.minus(1)).toString()
+                        userCollectionsListModel.totalCollectionFollowers = (userCollectionsListModel.totalCollectionFollowers)?.minus(1)
+
                     } else {
+                        followersCount.text = ((userCollectionsListModel.totalCollectionFollowers)?.plus(1)).toString()
+                        userCollectionsListModel.totalCollectionFollowers = (userCollectionsListModel.totalCollectionFollowers)?.plus(1)
                         userCollectionsListModel.isFollowed = AppConstants.FOLLOWING
                         followFollowingTextView.text = resources.getString(R.string.ad_following_author)
                     }
                 } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4KException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onError(e: Throwable) {
-                ToastUtils.showToast(this@UserCollectionItemListActivity, "unsuccessful")
+                Crashlytics.logException(e)
+                Log.d("MC4KException", Log.getStackTraceString(e))
+                //  ToastUtils.showToast(this@UserCollectionItemListActivity, "unsuccessful")
             }
         })
 
@@ -354,6 +398,11 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                 startActivity(intentt)
             }
             R.id.back -> {
+                val intent = Intent()
+                intent.putExtra(AppConstants.COLLECTION_EDIT_TYPE, "editCollection")
+                intent.putExtra("collectionName", collectionNameTextView?.text.toString())
+                intent.putExtra("collectionImage", userCollectionsListModel.imageUrl)
+                setResult(Activity.RESULT_OK, intent)
                 finish()
             }
             R.id.share -> {
@@ -365,6 +414,12 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                             .intent
                     startActivity(shareIntent)
                 }
+            }
+            R.id.confirmTextView -> {
+                updateCollection(delete = true, isPublic = true)
+            }
+            R.id.cancel -> {
+                deleteCollectionMainLayout.visibility = View.GONE
             }
         }
     }
@@ -379,19 +434,53 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == 1000 && data != null) {
-                val collectionName = data.getStringExtra("collectionName")
-                collectionNameTextView = findViewById(R.id.collectionNameTextView)
-                collectionNameTextView?.text = collectionName
-                try {
-                    Picasso.with(this@UserCollectionItemListActivity).load(data.getStringExtra("collectionImage"))
-                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageVIEW)
-                } catch (e: Exception) {
-                    collectionImageVIEW?.setImageResource(R.drawable.default_article)
+        try {
+            if (resultCode == Activity.RESULT_OK) {
+                if (requestCode == 1000 && data != null) {
+                    val position = data.getIntExtra("deletedItemPosition", -1)
+                    if (position != -1) {
+                        dataList.removeAt(position)
+                        if (dataList.isEmpty()) {
+                            itemNotAddedTextView.visibility = View.VISIBLE
+                        }
+                        collectionItemsListAdapter.notifyDataSetChanged()
+                    }
+                    if (data.hasExtra("collectionName")) {
+                        val collectionName = data.getStringExtra("collectionName")
+                        collectionNameTextView?.text = collectionName
+                        userCollectionsListModel.summary = data.getStringExtra("collectionDescription")
+                        if (!userCollectionsListModel.summary.isNullOrBlank()) {
+                            collectionDescription.visibility = View.VISIBLE
+                            descriptionTextView.visibility = View.VISIBLE
+                            collectionDescription.text = userCollectionsListModel.summary
+                        } else {
+                            collectionDescription.visibility = View.GONE
+                            descriptionTextView.visibility = View.GONE
+                        }
+                        try {
+                            userCollectionsListModel.imageUrl = data.getStringExtra("collectionImage")
+                            Picasso.with(this@UserCollectionItemListActivity).load(data.getStringExtra("collectionImage"))
+                                    .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageVIEW)
+                        } catch (e: Exception) {
+                            collectionImageVIEW?.setImageResource(R.drawable.default_article)
+                        }
+                    }
                 }
             }
+        } catch (e: Exception) {
+            Crashlytics.logException(e)
+            Log.d("MC4KException", Log.getStackTraceString(e))
         }
+    }
+
+
+    override fun onBackPressed() {
+        val intent = Intent()
+        intent.putExtra(AppConstants.COLLECTION_EDIT_TYPE, "editCollection")
+        intent.putExtra("collectionName", collectionNameTextView?.text.toString())
+        intent.putExtra("collectionImage", userCollectionsListModel.imageUrl)
+        setResult(Activity.RESULT_OK, intent)
+        super.onBackPressed()
     }
 
 }

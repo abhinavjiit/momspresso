@@ -94,6 +94,7 @@ public class BaseApplication extends Application {
     private Activity dashboardActivity;
     private FirebaseAnalytics mFirebaseAnalytics;
     private Activity activity;
+    private int position;
 
     /*
      * Google Analytics configuration values.
@@ -886,4 +887,11 @@ public class BaseApplication extends Application {
         return data;
     }
 
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public int getPosition() {
+        return position;
+    }
 }

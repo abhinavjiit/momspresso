@@ -46,6 +46,7 @@ class CollectionsAdapter(activity: Context) : BaseAdapter() {
 
     fun getUserColletions(collectionsTopics: ArrayList<UserCollectionsModel>) {
         userCollectionsTopicList = collectionsTopics
+
     }
 
     override fun getItem(position: Int): Any {

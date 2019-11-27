@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.fragment
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +18,7 @@ import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.collectionsModels.UserCollectionsListModel
 import com.mycity4kids.models.collectionsModels.UserCollectionsModel
@@ -65,7 +67,8 @@ class UserCreatedCollectionsFragment : BaseFragment() {
         collectionGridView.onItemClickListener = OnItemClickListener { _, _, position, _ ->
             val intent = Intent(activity, UserCollectionItemListActivity::class.java)
             intent.putExtra("id", dataList[position].userCollectionId)
-            startActivity(intent)
+            BaseApplication.getInstance().position = position
+            startActivityForResult(intent, 1000)
         }
 
         collectionGridView.setOnScrollListener(object : AbsListView.OnScrollListener {
@@ -88,7 +91,7 @@ class UserCreatedCollectionsFragment : BaseFragment() {
 
     private fun getUserCreatedCollections() {
         userId?.let {
-            BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getUserCollectionList(it, pageNumber, 10).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
+            BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getUserCollectionList(it, pageNumber, 10, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
                 override fun onComplete() {
                 }
 
@@ -112,6 +115,8 @@ class UserCreatedCollectionsFragment : BaseFragment() {
                 }
 
                 override fun onError(e: Throwable) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4KException", Log.getStackTraceString(e))
                 }
 
             })
@@ -151,6 +156,30 @@ class UserCreatedCollectionsFragment : BaseFragment() {
             pageNumber += 10
             userCreatedFollowedCollectionAdapter.notifyDataSetChanged()
         }
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == 1000) {
+                val position = BaseApplication.getInstance().position
+                if (dataList.isNotEmpty() && data != null) {
+                    if (data.hasExtra(AppConstants.COLLECTION_EDIT_TYPE)) {
+                        val comingFor = data.getStringExtra(AppConstants.COLLECTION_EDIT_TYPE)
+                        if ("editCollection" == comingFor) {
+                            dataList[position].imageUrl = data.getStringExtra("collectionImage")
+                            dataList[position].name = data.getStringExtra("collectionName")
+                        } else if ("deleteCollection" == comingFor) {
+                            dataList.removeAt(position)
+                        }
+                        userCreatedFollowedCollectionAdapter.notifyDataSetChanged()
+                    }
+                }
+
+            }
+        }
+
     }
 
 }

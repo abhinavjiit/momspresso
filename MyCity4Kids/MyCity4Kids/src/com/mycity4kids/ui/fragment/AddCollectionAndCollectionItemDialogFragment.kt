@@ -48,6 +48,7 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
     lateinit var shimmer1: ShimmerFrameLayout
     private var dataList = ArrayList<UserCollectionsModel>()
     private lateinit var cancel: ImageView
+    private lateinit var noItemAddedTextView: TextView
     var type: String? = null
 
 
@@ -58,6 +59,7 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
         addNewTextView = rootView.findViewById(R.id.addNewTextView)
         shimmer1 = rootView.findViewById(R.id.shimmer1)
         cancel = rootView.findViewById(R.id.cancel)
+        noItemAddedTextView = rootView.findViewById(R.id.noItemAddedTextView)
         val linearLayoutManager = LinearLayoutManager(context)
         addCollectionAdapter = AddCollectionAdapter(context!!, this, adapterViewType = false)
         addCollectionRecyclerView.layoutManager = linearLayoutManager as RecyclerView.LayoutManager?
@@ -110,8 +112,7 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
     }
 
     private fun getUserCreatedCollections(start: Int) {
-
-        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getUserCollectionList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, start, 20).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getUserCollectionList(userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, start = start, offset = 20, collectionType = "0").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
             override fun onComplete() {
             }
 
@@ -121,9 +122,16 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
             override fun onNext(response: BaseResponseGeneric<UserCollectionsListModel>) {
                 try {
                     if (response.code == 200 && response.status == Constants.SUCCESS && response.data?.result != null) {
+
                         shimmer1.stopShimmerAnimation()
                         shimmer1.visibility = View.GONE
                         userCollectionsListModel = response.data!!.result
+                        if (start == 0) {
+                            if (userCollectionsListModel.collectionsList.isEmpty())
+                                noItemAddedTextView.visibility = View.VISIBLE
+                            else
+                                noItemAddedTextView.visibility = View.GONE
+                        }
                         dataList.addAll(userCollectionsListModel.collectionsList)
                         addCollectionAdapter.setListData(dataList)
                         addCollectionAdapter.notifyDataSetChanged()
@@ -180,7 +188,7 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
             override fun onError(e: Throwable) {
                 Crashlytics.logException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
-                ToastUtils.showToast(activity, e.message.toString())
+                //  ToastUtils.showToast(activity, e.message.toString())
             }
 
         })
