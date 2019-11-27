@@ -92,8 +92,8 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         val thumbStates = ColorStateList(
                 arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
                 intArrayOf(
-                        ContextCompat.getColor(this, R.color.white),
-                        ContextCompat.getColor(this, R.color.add_video_details_mute_label))
+
+                        resources.getColor(R.color.white), resources.getColor(R.color.add_video_details_mute_label))
         )
         muteSwitch?.thumbTintList = thumbStates
         if (Build.VERSION.SDK_INT >= 24) {
@@ -395,3 +395,4 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
     }
 
 }
+
