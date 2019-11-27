@@ -695,6 +695,7 @@ public class AppConstants {
     public static final String VIDEO_COLLECTION_TYPE = "2";
     public static final String SHORT_STORY_COLLECTION_TYPE = "1";
     public static final String ARTICLE_COLLECTION_TYPE = "0";
+    public static final String COLLECTION_EDIT_TYPE = "updateCollection";
 
     public static final String FOLLOWING = "1";
     public static final String FOLLOW = "0";

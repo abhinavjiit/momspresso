@@ -20,6 +20,9 @@ import kotlinx.android.synthetic.main.add_collection_adapter.view.collectionTitl
 import kotlinx.android.synthetic.main.add_collection_adapter.view.root
 import kotlinx.android.synthetic.main.edit_collection_item_adapter.view.*
 
+const val ADD_COLLECTION_TYPE = 2
+const val EDIT_COLLECTION_ITEM_TYPE = 1
+
 class AddCollectionAdapter(val activity: Context, var recyclerViewClickListner: RecyclerViewClickListener, var adapterViewType: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var mInflater: LayoutInflater = BaseApplication.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -27,12 +30,12 @@ class AddCollectionAdapter(val activity: Context, var recyclerViewClickListner: 
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if (viewType == 2) {
+        return if (viewType == ADD_COLLECTION_TYPE) {
             val view = mInflater.inflate(R.layout.add_collection_adapter, parent, false)
-            return ViewHolderCollection(view, recyclerViewClickListner)
+            ViewHolderCollection(view, recyclerViewClickListner)
         } else {
             val view = mInflater.inflate(R.layout.edit_collection_item_adapter, parent, false)
-            return ViewHolderCollectionItem(view, recyclerViewClickListner)
+            ViewHolderCollectionItem(view, recyclerViewClickListner)
         }
     }
 
@@ -92,9 +95,9 @@ class AddCollectionAdapter(val activity: Context, var recyclerViewClickListner: 
 
     override fun getItemViewType(position: Int): Int {
         return if (adapterViewType)
-            1
+            EDIT_COLLECTION_ITEM_TYPE
         else
-            2
+            ADD_COLLECTION_TYPE
     }
 
 
