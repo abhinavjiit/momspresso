@@ -20,6 +20,7 @@ class UserCollectionsListModel {
     var isFollowed: String? = null
     var collectionType: Int = 0
     var shareUrl: String? = null
+    var summary: String? = null
 
 
 }
