@@ -1,8 +1,13 @@
 package com.mycity4kids.profile
 
+import android.Manifest
 import android.accounts.NetworkErrorException
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.util.Log
 import android.view.MenuItem
@@ -12,11 +17,14 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
@@ -41,6 +49,7 @@ import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity
 import com.mycity4kids.ui.fragment.AddCollectionPopUpDialogFragment
 import com.mycity4kids.ui.fragment.UserBioDialogFragment
 import com.mycity4kids.utils.AppUtils
+import com.mycity4kids.utils.PermissionUtil
 import com.mycity4kids.utils.RoundedTransformation
 import com.mycity4kids.widget.BadgesProfileWidget
 import com.mycity4kids.widget.ResizableTextView
@@ -55,6 +64,11 @@ class M_PrivateProfileActivity : BaseActivity(),
         AddCollectionPopUpDialogFragment.AddCollectionInterface, UsersBookmarksAdapter.RecyclerViewClickListener,
         ResizableTextView.SeeMore {
 
+    val REQUEST_GALLERY_PERMISSION = 1
+    val PERMISSIONS_INIT = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    val sharableProfileImageName = "profile"
+
+    private lateinit var rootLayout: CoordinatorLayout
     private lateinit var toolbar: Toolbar
     private lateinit var appBarLayout: AppBarLayout
     private lateinit var profileShimmerLayout: ShimmerFrameLayout
@@ -76,6 +90,7 @@ class M_PrivateProfileActivity : BaseActivity(),
     private lateinit var authorBioTextView: ResizableTextView
     private lateinit var cityTextView: TextView
     private lateinit var contentLangTextView: TextView
+    private lateinit var contentLangContainer: LinearLayout
     private lateinit var creatorTab: ImageView
     private lateinit var featuredTab: ImageView
     private lateinit var bookmarksTab: ImageView
@@ -88,6 +103,7 @@ class M_PrivateProfileActivity : BaseActivity(),
 
     private lateinit var badgesContainer: BadgesProfileWidget
     private lateinit var myCollectionsWidget: MyCollectionsWidget
+    private lateinit var profileShareCardWidget: ProfileShareCardWidget
 
     private var pastVisiblesItems: Int = 0
     private var visibleItemCount: Int = 0
@@ -105,7 +121,6 @@ class M_PrivateProfileActivity : BaseActivity(),
     private var userFeaturedOnList: ArrayList<MixFeedResult>? = null
     private var deeplinkBadgeId: String? = null
     private var profileDetail: String? = null
-    private var badgeDetail: ArrayList<BadgeListResponse.BadgeListData.BadgeListResult>? = null
 
     private val userContentAdapter: UserContentAdapter by lazy { UserContentAdapter(this, AppUtils.isPrivateProfile(authorId)) }
     private val usersFeaturedContentAdapter: UsersFeaturedContentAdapter by lazy { UsersFeaturedContentAdapter(this) }
@@ -115,6 +130,7 @@ class M_PrivateProfileActivity : BaseActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.m_private_profile_activity)
 
+        rootLayout = findViewById(R.id.rootLayout)
         toolbar = findViewById(R.id.toolbar)
         appBarLayout = findViewById(R.id.appBarLayout);
         recyclerView = findViewById(R.id.recyclerView)
@@ -138,6 +154,7 @@ class M_PrivateProfileActivity : BaseActivity(),
         badgesContainer = findViewById(R.id.badgeContainer)
         myCollectionsWidget = findViewById(R.id.myCollectionsWidget)
         contentLangTextView = findViewById(R.id.contentLangTextView)
+        contentLangContainer = findViewById(R.id.contentLangContainer)
         creatorTab = findViewById(R.id.creatorTab)
         featuredTab = findViewById(R.id.featuredTab)
         bookmarksTab = findViewById(R.id.bookmarksTab)
@@ -147,6 +164,7 @@ class M_PrivateProfileActivity : BaseActivity(),
         followAuthorTextView = findViewById(R.id.followAuthorTextView)
         sharePublicTextView = findViewById(R.id.sharePublicTextView)
         bottomLoadingView = findViewById(R.id.bottomLoadingView)
+        profileShareCardWidget = findViewById(R.id.profileShareCardWidget)
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -160,11 +178,6 @@ class M_PrivateProfileActivity : BaseActivity(),
             showBadgeDialog(deeplinkBadgeId)
         }
 
-//        appBarLayout.addOnOffsetChangedListener(object:AppBarLayout.OnOffsetChangedListener{
-//            override fun onOffsetChanged(p0: AppBarLayout?, verticalOffset: Int) {
-//                headerContainer.alpha = 1.0f - Math.abs(verticalOffset / appBarLayout.totalScrollRange)
-//            }
-//        })
         profileImageView.setOnClickListener {
             if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId == authorId) {
                 val pIntent = Intent(this, PrivateProfileActivity::class.java)
@@ -266,6 +279,7 @@ class M_PrivateProfileActivity : BaseActivity(),
                 try {
                     profileShimmerLayout.visibility = View.GONE
                     headerContainer.visibility = View.VISIBLE
+                    profileShareCardWidget.visibility = View.INVISIBLE
                     val responseData = response.body() as UserDetailResponse
                     if (responseData.code == 200 && Constants.SUCCESS == responseData.status) {
                         processCityInfo(responseData)
@@ -274,6 +288,7 @@ class M_PrivateProfileActivity : BaseActivity(),
                         processAuthorPostCount(responseData)
                         processAuthorsFollowingAndFollowership(responseData)
                         processAuthorPersonalDetails(responseData)
+                        profileShareCardWidget.populateUserDetails(authorId!!, responseData.data[0].result)
                     }
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
@@ -425,9 +440,9 @@ class M_PrivateProfileActivity : BaseActivity(),
 
     private fun processContentLanguages(responseData: UserDetailResponse) {
         if (responseData.data[0].result.createrLangs.isEmpty()) {
-            contentLangTextView.visibility = View.GONE
+            contentLangContainer.visibility = View.GONE
         } else {
-            contentLangTextView.visibility = View.VISIBLE
+            contentLangContainer.visibility = View.VISIBLE
             var contentLang: String = responseData.data[0].result.createrLangs[0]
             for (i in 1 until responseData.data[0].result.createrLangs.size) {
                 contentLang = contentLang + " \u2022 " + responseData.data[0].result.createrLangs[i]
@@ -453,7 +468,6 @@ class M_PrivateProfileActivity : BaseActivity(),
         } else {
             followerCountTextView.text = "" + followerCount
         }
-
         val followingCount = Integer.parseInt(responseData.data[0].result.followingCount)
         if (followingCount > 999) {
             val singleFollowingCount = followingCount.toFloat() / 1000
@@ -577,7 +591,6 @@ class M_PrivateProfileActivity : BaseActivity(),
                         Crashlytics.logException(nee)
                         return
                     }
-
                     val responseData = response.body()
                     if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
                         processUserBookmarks(responseData.data.result)
@@ -626,7 +639,6 @@ class M_PrivateProfileActivity : BaseActivity(),
                             Crashlytics.logException(nee)
                             return
                         }
-
                         isRequestRunning = false
                         bottomLoadingView.visibility = View.GONE
                         val responseData = response.body() as FeaturedOnModel
@@ -647,7 +659,6 @@ class M_PrivateProfileActivity : BaseActivity(),
                 }
             })
         }
-
     }
 
     private fun processFeaturedContentResponse(featuredItemList: List<MixFeedResult>) {
@@ -738,27 +749,25 @@ class M_PrivateProfileActivity : BaseActivity(),
                     hitFollowUnfollowAPI()
                 }
             }
-            view?.id == R.id.sharePrivateTextView -> {
-
-            }
-            view?.id == R.id.sharePublicTextView -> {
-
+            view?.id == R.id.sharePrivateTextView || view?.id == R.id.sharePublicTextView -> {
+                if (createSharableImageWhileCheckingPermissions()) {
+                    return
+                }
+                shareGenericImage()
             }
             view?.id == R.id.analyticsTextView -> {
-                val intent = Intent(this, RankingActivity::class.java)
-                startActivity(intent)
-//                if (AppConstants.DEBUGGING_USER_ID.contains("" + authorId)) {
-//                    rankContainer.setOnLongClickListener {
-//                        BaseApplication.getInstance().toggleGroupBaseURL()
-//                        false
-//                    }
-//                    val intent = Intent(this, IdTokenLoginActivity::class.java)
-//                    startActivity(intent)
-//                    return
-//                } else {
-//                    val intent = Intent(this, RankingActivity::class.java)
-//                    startActivity(intent)
-//                }
+                if (AppConstants.DEBUGGING_USER_ID.contains("" + authorId)) {
+                    rankContainer.setOnLongClickListener {
+                        val intent = Intent(this, IdTokenLoginActivity::class.java)
+                        startActivity(intent)
+                        false
+                    }
+                    val intent = Intent(this, RankingActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    val intent = Intent(this, RankingActivity::class.java)
+                    startActivity(intent)
+                }
             }
             view?.id == R.id.followerContainer -> {
                 val intent = Intent(this, FollowersAndFollowingListActivity::class.java)
@@ -785,6 +794,21 @@ class M_PrivateProfileActivity : BaseActivity(),
         }
     }
 
+    private fun shareGenericImage() {
+        try {
+            val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/profile.jpg")
+            val shareIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_STREAM, uri)
+                type = "image/jpeg"
+            }
+            startActivity(Intent.createChooser(shareIntent, resources.getText(R.string.ad_bottom_bar_generic_share)))
+        } catch (e: Exception) {
+            Crashlytics.logException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
+        }
+    }
+
     override fun onClick(view: View, position: Int) {
         when {
             view.id == R.id.articleItemView || view.id == R.id.videoItemView || view.id == R.id.rootView -> {
@@ -795,22 +819,25 @@ class M_PrivateProfileActivity : BaseActivity(),
                 startActivity(intent)
             }
             view.id == R.id.articleContainer -> {
-                val articleIntent = Intent(this, UserPublishedContentActivity::class.java)
-                articleIntent.putExtra("isPrivateProfile", true)
-                articleIntent.putExtra("contentType", AppConstants.CONTENT_TYPE_ARTICLE)
-                startActivity(articleIntent)
+                val intent = Intent(this, UserPublishedContentActivity::class.java)
+                intent.putExtra("isPrivateProfile", true)
+                intent.putExtra(Constants.AUTHOR_ID, authorId)
+                intent.putExtra("contentType", AppConstants.CONTENT_TYPE_ARTICLE)
+                startActivity(intent)
             }
             view.id == R.id.storyContainer -> {
-                val articleIntent = Intent(this, UserPublishedContentActivity::class.java)
-                articleIntent.putExtra("isPrivateProfile", true)
-                articleIntent.putExtra("contentType", AppConstants.CONTENT_TYPE_SHORT_STORY)
-                startActivity(articleIntent)
+                val intent = Intent(this, UserPublishedContentActivity::class.java)
+                intent.putExtra("isPrivateProfile", true)
+                intent.putExtra(Constants.AUTHOR_ID, authorId)
+                intent.putExtra("contentType", AppConstants.CONTENT_TYPE_SHORT_STORY)
+                startActivity(intent)
             }
             view.id == R.id.vlogContainer -> {
-                val articleIntent = Intent(this, UserPublishedContentActivity::class.java)
-                articleIntent.putExtra("isPrivateProfile", true)
-                articleIntent.putExtra("contentType", AppConstants.CONTENT_TYPE_VIDEO)
-                startActivity(articleIntent)
+                val intent = Intent(this, UserPublishedContentActivity::class.java)
+                intent.putExtra("isPrivateProfile", true)
+                intent.putExtra(Constants.AUTHOR_ID, authorId)
+                intent.putExtra("contentType", AppConstants.CONTENT_TYPE_VIDEO)
+                startActivity(intent)
             }
         }
     }
@@ -821,25 +848,21 @@ class M_PrivateProfileActivity : BaseActivity(),
                 launchContentDetail(userFeaturedOnList?.get(position))
             }
             view.id == R.id.collectionItem1TextView -> {
-                Log.d("COLLECTION_CLICK", "collectionItem1TextView--" + userFeaturedOnList?.get(position)?.title)
                 val intent = Intent(this, UserCollectionItemListActivity::class.java)
                 intent.putExtra("id", userFeaturedOnList?.get(position)?.collectionList?.get(0)?.userCollectionId)
                 startActivity(intent)
             }
             view.id == R.id.collectionItem2TextView -> {
-                Log.d("COLLECTION_CLICK", "collectionItem2TextView--" + userFeaturedOnList?.get(position)?.title)
                 val intent = Intent(this, UserCollectionItemListActivity::class.java)
                 intent.putExtra("id", userFeaturedOnList?.get(position)?.collectionList?.get(0)?.userCollectionId)
                 startActivity(intent)
             }
             view.id == R.id.collectionItem3TextView -> {
-                Log.d("COLLECTION_CLICK", "collectionItem3TextView--" + userFeaturedOnList?.get(position)?.title)
                 val intent = Intent(this, UserCollectionItemListActivity::class.java)
                 intent.putExtra("id", userFeaturedOnList?.get(position)?.collectionList?.get(0)?.userCollectionId)
                 startActivity(intent)
             }
             view.id == R.id.collectionItem4TextView -> {
-                Log.d("COLLECTION_CLICK", "collectionItem4TextView--" + userFeaturedOnList?.get(position)?.title)
                 val intent = Intent(this, UserCollectionItemListActivity::class.java)
                 intent.putExtra("id", userFeaturedOnList?.get(position)?.collectionList?.get(0)?.userCollectionId)
                 startActivity(intent)
@@ -885,7 +908,6 @@ class M_PrivateProfileActivity : BaseActivity(),
 
     override fun onBookmarkItemInteraction(view: View, position: Int) {
 
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -895,6 +917,82 @@ class M_PrivateProfileActivity : BaseActivity(),
             }
         }
         return true
+    }
+
+    private fun createSharableImageWhileCheckingPermissions(): Boolean {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (ActivityCompat.checkSelfPermission(this,
+                            Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                    ActivityCompat.checkSelfPermission(this,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions()
+                return true
+            } else {
+                try {
+                    AppUtils.getBitmapFromView(profileShareCardWidget, sharableProfileImageName)
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                    return true
+                }
+            }
+        } else {
+            try {
+                AppUtils.getBitmapFromView(profileShareCardWidget, sharableProfileImageName)
+            } catch (e: Exception) {
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun requestPermissions() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Snackbar.make(rootLayout, R.string.permission_storage_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok) { requestUngrantedPermissions() }.show()
+        } else {
+            requestUngrantedPermissions()
+        }
+    }
+
+    private fun requestUngrantedPermissions() {
+        val permissionList = java.util.ArrayList<String>()
+        for (s in PERMISSIONS_INIT) {
+            if (ActivityCompat.checkSelfPermission(this, s) != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(s)
+            }
+        }
+        val requiredPermission = permissionList.toTypedArray()
+        ActivityCompat.requestPermissions(this, requiredPermission, REQUEST_GALLERY_PERMISSION)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
+                                            grantResults: IntArray) {
+        if (requestCode == REQUEST_GALLERY_PERMISSION) {
+            if (PermissionUtil.verifyPermissions(grantResults)) {
+                Snackbar.make(rootLayout, R.string.permision_available_init,
+                        Snackbar.LENGTH_SHORT)
+                        .show()
+                try {
+                    AppUtils.getBitmapFromView(profileShareCardWidget, sharableProfileImageName)
+                    shareGenericImage()
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            } else {
+                Snackbar.make(rootLayout, R.string.permissions_not_granted,
+                        Snackbar.LENGTH_SHORT)
+                        .show()
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
     }
 
     override fun onCollectionAddSuccess() {

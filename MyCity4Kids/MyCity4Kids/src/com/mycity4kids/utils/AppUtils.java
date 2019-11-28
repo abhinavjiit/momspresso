@@ -35,16 +35,16 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -54,7 +54,6 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
-import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.widget.Hashids;
 
@@ -79,15 +78,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-
-import androidx.core.content.ContextCompat;
 
 import okhttp3.ResponseBody;
 
@@ -468,42 +463,6 @@ public class AppUtils {
         return false;
     }
 
-    public static LanguageConfigModel getLangModelForLanguage(Context mContext, String key) {
-        try {
-            FileInputStream fileInputStream = mContext.openFileInput(AppConstants.LANGUAGES_JSON_FILE);
-            String fileContent = AppUtils.convertStreamToString(fileInputStream);
-//            ConfigResult res = new Gson().fromJson(fileContent, ConfigResult.class);
-            LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(
-                    fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {
-                    }.getType()
-            );
-            return retMap.get(key);
-//            return (new ArrayList<LanguageConfigModel>(retMap.values())).get(0).getId();
-        } catch (FileNotFoundException ffe) {
-            Crashlytics.logException(ffe);
-            Log.d("MC4kException", Log.getStackTraceString(ffe));
-            return null;
-        }
-    }
-
-    public static LanguageConfigModel getLangModelFromLanguageKey(Context mContext, String key) {
-        try {
-            FileInputStream fileInputStream = mContext.openFileInput(AppConstants.LANGUAGES_JSON_FILE);
-            String fileContent = AppUtils.convertStreamToString(fileInputStream);
-//            ConfigResult res = new Gson().fromJson(fileContent, ConfigResult.class);
-            LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(
-                    fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {
-                    }.getType()
-            );
-            return retMap.get(key);
-//            return (new ArrayList<LanguageConfigModel>(retMap.values())).get(0).getId();
-        } catch (FileNotFoundException ffe) {
-            Crashlytics.logException(ffe);
-            Log.d("MC4kException", Log.getStackTraceString(ffe));
-            return null;
-        }
-    }
-
     public static int pxToDp(int px) {
         return (int) (px / Resources.getSystem().getDisplayMetrics().density);
     }
@@ -529,29 +488,6 @@ public class AppUtils {
         } else {
             return Html.fromHtml(html).toString();
         }
-    }
-
-
-    public static boolean testPrep() {
-        Integer[] arr = {1, 2, 3, 4, 2, 6, 7};
-        HashSet<Integer> set = new HashSet<>();
-        int k = 3;
-        for (int i = 0; i < arr.length; i++) {
-            if (i - k > 0) {
-                set.remove(arr[i - k - 1]);
-                if (!set.add(arr[i])) {
-                    System.out.println("FOund");
-                    return true;
-                }
-            } else {
-                if (!set.add(arr[i])) {
-                    System.out.println("Found early");
-                    return true;
-                }
-            }
-        }
-        System.out.println("Not Found");
-        return false;
     }
 
     public static String getShortStoryShareUrl(String userType, String blogSlug, String titleSlug) {
@@ -1020,10 +956,17 @@ public class AppUtils {
     }
 
     public static void shareStoryWithWhatsApp(Context mContext, String shareUrl, String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
+        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
+        if (shareImageWithWhatsApp(mContext, uri, shareUrl)) {
+            Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Whatsapp");
+        }
+    }
+
+    public static boolean shareImageWithWhatsApp(Context mContext, Uri uri, String shareUrl) {
         if (StringUtils.isNullOrEmpty(shareUrl)) {
             Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
+            return false;
         } else {
-            Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
             Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
             whatsappIntent.putExtra(Intent.EXTRA_STREAM, uri);
             whatsappIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
@@ -1033,32 +976,20 @@ public class AppUtils {
                 mContext.startActivity(Intent.createChooser(whatsappIntent, "Share image via:"));
             } catch (android.content.ActivityNotFoundException ex) {
                 Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show();
-                return;
+                return false;
             }
-            Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Whatsapp");
-        }
-    }
-
-    public static void shareCampaignWithWhatsApp(Context mContext, String shareUrl, String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
-        if (StringUtils.isNullOrEmpty(shareUrl)) {
-            Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
-        } else {
-            Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
-            whatsappIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
-            whatsappIntent.setPackage("com.whatsapp");
-            whatsappIntent.setType("text/plain");
-            try {
-                mContext.startActivity(Intent.createChooser(whatsappIntent, "Share Url:"));
-            } catch (android.content.ActivityNotFoundException ex) {
-                Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Whatsapp");
+            return true;
         }
     }
 
     public static void shareStoryWithInstagram(Context mContext, String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
         Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
+        if (shareImageWithInstagram(mContext, uri)) {
+            Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Instagram");
+        }
+    }
+
+    public static boolean shareImageWithInstagram(Context mContext, Uri uri) {
         Intent instaIntent = new Intent(Intent.ACTION_SEND);
         instaIntent.putExtra(Intent.EXTRA_STREAM, uri);
         instaIntent.setType("image/*");
@@ -1067,11 +998,10 @@ public class AppUtils {
             mContext.startActivity(Intent.createChooser(instaIntent, "Share image via:"));
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_insta_not_installed), Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
-        Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Instagram");
+        return true;
     }
-
 
     public static void shareStoryWithFB(BaseFragment topicsShortStoriesTabFragment, String userType, String blogSlug, String titleSlug,
                                         String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
@@ -1124,17 +1054,39 @@ public class AppUtils {
     public static void shareStoryGeneric(Context mContext, String userType, String blogSlug, String titleSlug,
                                          String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
         String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
-
-        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-        shareIntent.setType("text/plain");
-
-        if (StringUtils.isNullOrEmpty(shareUrl)) {
-
-        } else {
-            shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
-            mContext.startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+        if (shareGenericLinkWithSuccessStatus(mContext, shareUrl)) {
             Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId,
                     authorId + "~" + authorName, "Generic");
+        }
+    }
+
+    public static boolean shareGenericLinkWithSuccessStatus(Context context, String shareUrl) {
+        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        if (StringUtils.isNullOrEmpty(shareUrl)) {
+            return false;
+        } else {
+            shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
+            context.startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+            return true;
+        }
+    }
+
+    public static void shareCampaignWithWhatsApp(Context mContext, String shareUrl, String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
+        if (StringUtils.isNullOrEmpty(shareUrl)) {
+            Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
+        } else {
+            Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
+            whatsappIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
+            whatsappIntent.setPackage("com.whatsapp");
+            whatsappIntent.setType("text/plain");
+            try {
+                mContext.startActivity(Intent.createChooser(whatsappIntent, "Share Url:"));
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Whatsapp");
         }
     }
 
@@ -1179,15 +1131,6 @@ public class AppUtils {
         }
     }
 
-    public static String getMimeType(String url) {
-        String type = null;
-        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
-        if (extension != null) {
-            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-        }
-        return type;
-    }
-
     public static String convertTimestampToDate(Long timestamp) {
         if (timestamp != null) {
             return new SimpleDateFormat("dd-MM-yyyy").format(new Date(timestamp * 1000));
@@ -1195,20 +1138,6 @@ public class AppUtils {
             return "";
         }
 
-    }
-
-    public static void CopyStream(InputStream is, OutputStream os) {
-        final int buffer_size = 1024;
-        try {
-            byte[] bytes = new byte[buffer_size];
-            for (; ; ) {
-                int count = is.read(bytes, 0, buffer_size);
-                if (count == -1)
-                    break;
-                os.write(bytes, 0, count);
-            }
-        } catch (Exception ex) {
-        }
     }
 
     public static String streamToString(InputStream is) throws IOException {
@@ -1237,5 +1166,26 @@ public class AppUtils {
         } else {
             return false;
         }
+    }
+
+    public static Bitmap getBitmapFromView(View view, String filename) {
+        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(returnedBitmap);
+        Drawable bgDrawable = view.getBackground();
+        if (bgDrawable != null)
+            bgDrawable.draw(canvas);
+        else
+            canvas.drawColor(Color.WHITE);
+
+        view.draw(canvas);
+        AppUtils.createDirIfNotExists("MyCity4Kids/videos");
+        try {
+            returnedBitmap.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(
+                    Environment.getExternalStorageDirectory().toString() + "/MyCity4Kids/videos/" + filename + ".jpg"));
+        } catch (FileNotFoundException e) {
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+        return returnedBitmap;
     }
 }

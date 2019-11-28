@@ -13,6 +13,7 @@ import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.collectionsModels.UserCollectionsListModel
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
@@ -25,13 +26,15 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-class MyCollectionsWidget : RelativeLayout, View.OnClickListener {
+class MyCollectionsWidget : RelativeLayout, OnClickListener {
     private lateinit var collectionsShimmerContainer: ShimmerFrameLayout
     private lateinit var addCollectionContainer: RelativeLayout
     private lateinit var collectionsContainer: RelativeLayout
     private lateinit var collectionsHSV: HorizontalScrollView
     private lateinit var collectionsHSVContainer: LinearLayout
     private lateinit var viewAllTextView: TextView
+
+    private var authorId: String? = null
 
     private lateinit var userCollectionsListModel: UserCollectionsListModel
 
@@ -57,6 +60,7 @@ class MyCollectionsWidget : RelativeLayout, View.OnClickListener {
     }
 
     fun getCollections(authorId: String?, isPrivateProfile: Boolean) {
+        this.authorId = authorId
         if (isPrivateProfile) {
             addCollectionContainer.visibility = View.VISIBLE
         } else {
@@ -140,6 +144,7 @@ class MyCollectionsWidget : RelativeLayout, View.OnClickListener {
                 }
                 v?.id == R.id.viewAllTextView -> {
                     val intent = Intent(context, CollectionsActivity::class.java)
+                    intent.putExtra(Constants.USER_ID, "" + authorId)
                     context.startActivity(intent)
                 }
             }

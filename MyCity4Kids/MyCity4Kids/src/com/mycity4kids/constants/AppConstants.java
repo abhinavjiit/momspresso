@@ -681,6 +681,7 @@ public class AppConstants {
     public static final String MEDIUM_WHATSAPP = "whatsapp";
     public static final String MEDIUM_FACEBOOK = "facebook";
     public static final String MEDIUM_INSTAGRAM = "instagram";
+    public static final String MEDIUM_GENERIC = "generic";
     public static final String MEDIUM_TWITTER = "twitter";
     public static final String ARTICLE_CHALLENGES_ID = "category-ee7ea82543bd4bc0a8dad288561f2beb";
     public static final String ARTICLE_LIST_TYPE = "articleListType";

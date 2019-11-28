@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_light_grey">
@@ -44,6 +45,12 @@
                     app:cardCornerRadius="5dp"
                     app:cardElevation="5dp">
 
+                    <com.mycity4kids.profile.ProfileShareCardWidget
+                        android:id="@+id/profileShareCardWidget"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible" />
+
                     <com.facebook.shimmer.ShimmerFrameLayout
                         android:id="@+id/profileShimmerLayout"
                         android:layout_width="match_parent"
@@ -62,7 +69,7 @@
                         android:background="@drawable/article_listing_item_border_bg"
                         android:visibility="gone">
 
-                        <com.mikhaellopez.circularimageview.CircularImageView
+                        <ImageView
                             android:id="@+id/profileImageView"
                             android:layout_width="80dp"
                             android:layout_height="80dp"
@@ -71,12 +78,7 @@
                             android:layout_marginStart="12dp"
                             android:layout_marginTop="12dp"
                             android:layout_marginBottom="12dp"
-                            android:src="@drawable/momspresso_logo"
-                            app:civ_border="true"
-                            app:civ_border_color="@color/white"
-                            app:civ_border_width="1dp"
-                            app:civ_shadow="false"
-                            app:civ_shadow_radius="1" />
+                            android:src="@drawable/momspresso_logo" />
 
                         <ImageView
                             android:id="@+id/crownImageView"
@@ -128,30 +130,44 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/profileImageView"
-                            android:gravity="center"
+                            android:gravity="start"
                             android:paddingStart="16dp"
                             android:paddingEnd="16dp"
                             android:text=""
                             android:textColor="@color/app_light_black"
                             app:maxLines="2" />
 
-                        <com.mycity4kids.widget.CustomFontTextView
-                            android:id="@+id/contentLangTextView"
+                        <LinearLayout
+                            android:id="@+id/contentLangContainer"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/authorBioTextView"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="10dp"
-                            android:drawableStart="@drawable/profile_solid_square"
-                            android:drawablePadding="10dp"
-                            android:gravity="center"
-                            android:text=""
-                            android:textColor="@color/app_light_pink" />
+                            android:orientation="horizontal">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginEnd="8dp"
+                                android:src="@drawable/ic_profile_languages_icon"
+                                android:tint="@color/app_light_pink" />
+
+                            <com.mycity4kids.widget.CustomFontTextView
+                                android:id="@+id/contentLangTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:drawablePadding="10dp"
+                                android:gravity="center"
+                                android:text=""
+                                android:textColor="@color/app_light_pink" />
+                        </LinearLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/contentLangTextView"
+                            android:layout_below="@+id/contentLangContainer"
                             android:clipToPadding="false"
                             android:paddingBottom="10dp">
 

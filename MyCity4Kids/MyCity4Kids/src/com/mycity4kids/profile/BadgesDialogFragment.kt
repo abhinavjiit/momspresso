@@ -1,24 +1,30 @@
 package com.mycity4kids.profile
 
+import android.Manifest
 import android.accounts.NetworkErrorException
 import android.app.Dialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.DialogFragment
 import com.crashlytics.android.Crashlytics
+import com.facebook.share.model.ShareLinkContent
+import com.facebook.share.widget.ShareDialog
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.material.snackbar.Snackbar
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -30,6 +36,7 @@ import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity
 import com.mycity4kids.ui.activity.ParallelFeedActivity
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity
 import com.mycity4kids.utils.AppUtils
+import com.mycity4kids.utils.PermissionUtil
 import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
@@ -37,6 +44,13 @@ import java.util.*
 
 class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
 
+    val REQUEST_GALLERY_PERMISSION = 1
+    val PERMISSIONS_INIT = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    val sharableBadgeImageName = "badge"
+
+    private var badgeData: BadgeListResponse.BadgeListData.BadgeListResult? = null
+
+    private lateinit var rootLayout: RelativeLayout
     private lateinit var badgeImageView: ImageView
     private lateinit var badgeBgImageView: ImageView
     private lateinit var badgeTitleTextView: TextView
@@ -48,16 +62,18 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
     private lateinit var genericShareImageView: ImageView
     private lateinit var shareJoyContainer: RelativeLayout
     private lateinit var shareContainer: ConstraintLayout
+    private lateinit var sharableCardContainer: LinearLayout
     private lateinit var badgesShimmerContainer: ShimmerFrameLayout
 
     var userId: String? = null
     var badgeId: String? = null
-
+    var shareMedium: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.badge_dialog_fragment, container,
                 false)
 
+        rootLayout = rootView.findViewById(R.id.rootLayout)
         badgeImageView = rootView.findViewById(R.id.badgeImageView)
         badgeBgImageView = rootView.findViewById(R.id.badgeBgImageView)
         badgeTitleTextView = rootView.findViewById(R.id.badgeTitleTextView)
@@ -69,6 +85,7 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
         facebookShareImageView = rootView.findViewById(R.id.facebookShareImageView)
         instagramShareImageView = rootView.findViewById(R.id.instagramShareImageView)
         genericShareImageView = rootView.findViewById(R.id.genericShareImageView)
+        sharableCardContainer = rootView.findViewById(R.id.sharableCardContainer)
         badgesShimmerContainer = rootView.findViewById(R.id.badgesShimmerContainer)
 
         whatsappShareImageView.setOnClickListener(this)
@@ -87,6 +104,15 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
             }
             dismiss()
         }
+        if (AppUtils.isPrivateProfile(userId)) {
+            shareContainer.visibility = View.VISIBLE
+            shareJoyContainer.visibility = View.VISIBLE
+            viewContentTextView.visibility = View.GONE
+        } else {
+            shareContainer.visibility = View.VISIBLE
+            shareJoyContainer.visibility = View.VISIBLE
+        }
+
         badgesShimmerContainer.startShimmerAnimation()
         fetchBadgeDetail(userId!!, badgeId!!)
 
@@ -131,6 +157,7 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
 
     private fun populateBadgeDetails(userId: String, result: ArrayList<BadgeListResponse.BadgeListData.BadgeListResult>?) {
         activity?.let {
+            badgeData = result?.get(0)
             Picasso.with(it).load(result?.get(0)?.badge_image_url).error(R.drawable.default_article)
                     .fit().into(badgeImageView)
             Picasso.with(it).load(result?.get(0)?.badge_bg_url).error(R.drawable.default_article)
@@ -138,12 +165,7 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
             badgeTitleTextView.text = result?.get(0)?.badge_title
             badgeDescTextView.text = result?.get(0)?.badge_desc
             if (AppUtils.isPrivateProfile(userId)) {
-                shareContainer.visibility = View.VISIBLE
-                shareJoyContainer.visibility = View.VISIBLE
-                viewContentTextView.visibility = View.GONE
             } else {
-                shareContainer.visibility = View.GONE
-                shareJoyContainer.visibility = View.GONE
                 when {
                     result?.get(0)?.item_type == AppConstants.CONTENT_TYPE_ARTICLE -> {
                         viewContentTextView.visibility = View.VISIBLE
@@ -157,7 +179,7 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
                         startActivity(intent)
                         viewContentTextView.visibility = View.VISIBLE
                     }
-                    result?.get(0)?.item_type == AppConstants.CONTENT_TYPE_ARTICLE -> {
+                    result?.get(0)?.item_type == AppConstants.CONTENT_TYPE_VIDEO -> {
                         viewContentTextView.visibility = View.VISIBLE
                         val intent = Intent(activity, ParallelFeedActivity::class.java)
                         intent.putExtra(Constants.ARTICLE_ID, result?.get(0)?.content_id)
@@ -186,13 +208,162 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
     override fun onClick(view: View?) {
         when {
             view?.id == R.id.whatsappShareImageView -> {
+                shareMedium = AppConstants.MEDIUM_WHATSAPP
+                shareWithWhatsApp()
             }
             view?.id == R.id.facebookShareImageView -> {
+                shareMedium = AppConstants.MEDIUM_FACEBOOK
+                shareWithFB()
             }
             view?.id == R.id.instagramShareImageView -> {
+                shareMedium = AppConstants.MEDIUM_INSTAGRAM
+                shareWithInstagram()
             }
             view?.id == R.id.genericShareImageView -> {
+                shareMedium = AppConstants.MEDIUM_GENERIC
+                shareWithGeneric()
             }
+        }
+    }
+
+    private fun shareWithGeneric() {
+        activity?.let {
+            AppUtils.shareGenericLinkWithSuccessStatus(activity, badgeData?.badge_sharing_url)
+        }
+    }
+
+    private fun shareWithInstagram() {
+        if (createSharableImageWhileCheckingPermissions()) {
+            return
+        }
+        activity?.let {
+            val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/badge.jpg")
+            if (AppUtils.shareImageWithInstagram(it, uri)) {
+
+            } else {
+
+            }
+        }
+    }
+
+    private fun shareWithFB() {
+        if (ShareDialog.canShow(ShareLinkContent::class.java)) {
+            val content = ShareLinkContent.Builder()
+                    .setContentUrl(Uri.parse(badgeData?.badge_sharing_url))
+                    .build()
+            ShareDialog(this).show(content)
+        }
+    }
+
+    private fun shareWithWhatsApp() {
+        if (createSharableImageWhileCheckingPermissions()) {
+            return
+        }
+        activity?.let {
+            val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/badge.jpg")
+            if (AppUtils.shareImageWithWhatsApp(it, uri, badgeData?.badge_sharing_url)) {
+
+            } else {
+
+            }
+        }
+    }
+
+
+    private fun createSharableImageWhileCheckingPermissions(): Boolean {
+        context?.let {
+            if (Build.VERSION.SDK_INT >= 23) {
+                if (checkSelfPermission(it,
+                                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                        checkSelfPermission(it,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions()
+                    return true
+                } else {
+                    try {
+                        AppUtils.getBitmapFromView(sharableCardContainer, sharableBadgeImageName)
+                    } catch (e: Exception) {
+                        Crashlytics.logException(e)
+                        Log.d("MC4kException", Log.getStackTraceString(e))
+                        return true
+                    }
+                }
+            } else {
+                try {
+                    AppUtils.getBitmapFromView(sharableCardContainer, sharableBadgeImageName)
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    private fun requestPermissions() {
+        activity?.let {
+            if (shouldShowRequestPermissionRationale(
+                            Manifest.permission.READ_EXTERNAL_STORAGE) || shouldShowRequestPermissionRationale(
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                Snackbar.make(rootLayout, R.string.permission_storage_rationale,
+                        Snackbar.LENGTH_INDEFINITE)
+                        .setAction(R.string.ok) { requestUngrantedPermissions() }.show()
+            } else {
+                requestUngrantedPermissions()
+            }
+        }
+    }
+
+    private fun requestUngrantedPermissions() {
+        val permissionList = ArrayList<String>()
+        context?.let {
+            for (s in PERMISSIONS_INIT) {
+                if (checkSelfPermission(it, s) != PackageManager.PERMISSION_GRANTED) {
+                    permissionList.add(s)
+                }
+            }
+            val requiredPermission = permissionList.toTypedArray()
+            requestPermissions(requiredPermission, REQUEST_GALLERY_PERMISSION)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
+                                            grantResults: IntArray) {
+        if (requestCode == REQUEST_GALLERY_PERMISSION) {
+            if (PermissionUtil.verifyPermissions(grantResults)) {
+                Snackbar.make(rootLayout, R.string.permision_available_init,
+                        Snackbar.LENGTH_SHORT)
+                        .show()
+                try {
+                    when (shareMedium) {
+                        AppConstants.MEDIUM_FACEBOOK -> {
+                            shareWithFB()
+                        }
+                        AppConstants.MEDIUM_WHATSAPP -> {
+                            shareWithWhatsApp()
+                        }
+                        AppConstants.MEDIUM_INSTAGRAM -> {
+                            shareWithInstagram()
+                        }
+                        AppConstants.MEDIUM_GENERIC -> {
+                            shareWithGeneric()
+                        }
+                        else -> {
+
+                        }
+                    }
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            } else {
+                Snackbar.make(rootLayout, R.string.permissions_not_granted,
+                        Snackbar.LENGTH_SHORT)
+                        .show()
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
     }
 }

@@ -20,7 +20,7 @@ import com.mycity4kids.utils.AppUtils
 
 class ResizableTextView : CustomFontTextView {
     private var userBio: String = ""
-    lateinit var seeMore: SeeMore
+    var seeMore: SeeMore? = null
     var _maxLines = 2
 
     constructor(context: Context) : this(context, null)
@@ -29,13 +29,17 @@ class ResizableTextView : CustomFontTextView {
         init(context, attrs, defStyleAttr)
     }
 
-    fun setUserBio(userBio: String, activity: Activity) {
-        try {
-            seeMore = activity as SeeMore
-        } catch (e: ClassCastException) {
-            Crashlytics.logException(e)
-            Log.d("MC4KException", Log.getStackTraceString(e))
-            return
+    fun setUserBio(userBio: String, activity: Activity?) {
+        if (activity == null) {
+            seeMore = null
+        } else {
+            try {
+                seeMore = activity as SeeMore
+            } catch (e: ClassCastException) {
+                Crashlytics.logException(e)
+                Log.d("MC4KException", Log.getStackTraceString(e))
+                return
+            }
         }
         this.userBio = userBio
 
@@ -94,14 +98,7 @@ class ResizableTextView : CustomFontTextView {
         if (str.contains(spanableText)) {
             ssb.setSpan(object : MySpannable(false) {
                 override fun onClick(widget: View) {
-                    seeMore.onSeeMoreClick(userBio)
-//                    val userBioDialogFragment = UserBioDialogFragment()
-//                    val fm = supportFragmentManager
-//                    val _args = Bundle()
-//                    _args.putString("userBio", userBio)
-//                    userBioDialogFragment.arguments = _args
-//                    userBioDialogFragment.isCancelable = true
-//                    userBioDialogFragment.show(fm, "Choose video option")
+                    seeMore?.onSeeMoreClick(userBio)
                 }
             }, str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length, 0)
         }
