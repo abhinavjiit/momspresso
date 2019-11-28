@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_light">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <RelativeLayout
+            android:id="@+id/titleHeaderRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/collectionImageVIEW"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:scaleType="fitXY"
+                android:visibility="invisible" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:background="#00000019"
+                />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/collectionImageVIEW"
+                android:layout_marginStart="@dimen/space_40"
+                android:layout_marginBottom="@dimen/space_12"
+                android:padding="@dimen/space_10">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/followersCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:fontName="OpenSans-Bold.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/followersTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/space_10"
+                    android:layout_toEndOf="@id/followersCount"
+                    android:background="@color/background"
+                    android:drawableRight="@drawable/arrow_right"
+                    android:drawableTint="@color/background"
+                    android:gravity="center_vertical"
+                    android:text="@string/myprofile.followers_label"
+                    android:textColor="@color/background"
+                    android:textSize="12sp"
+                    app:fontName="open_sans.ttf" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/rightArrow"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/followersTextView"
+                    android:src="@drawable/arrow_right"
+                    android:tint="@color/white"
+                    android:visibility="gone" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/muteVideoSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:background="@color/background"
+                    android:text="@string/visible_to_all"
+                    android:textColor="@color/background"
+                    android:textSize="14sp"
+                    app:switchPadding="@dimen/space_10" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/upperToolbarHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_10"
+                android:layout_marginTop="@dimen/space_16"
+                android:visibility="visible"
+                app:layout_collapseMode="pin">
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutForFollowingShare"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/space_5"
+                    android:layout_marginEnd="@dimen/space_10"
+                    android:orientation="horizontal">
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/followFollowingTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="@dimen/space_10"
+                        android:background="@drawable/rootlayout_rounded_corner_with_transparent_background"
+                        android:paddingLeft="@dimen/space_10"
+                        android:paddingTop="@dimen/space_5"
+                        android:paddingRight="@dimen/space_10"
+                        android:paddingBottom="@dimen/space_5"
+                        android:text="Following"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:visibility="gone"
+                        app:fontName="Helvetica Bold.ttf" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/share"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@color/background"
+                        android:padding="@dimen/space_16"
+                        android:src="@drawable/sharee"
+                        android:tint="@color/white" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/setting"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="@dimen/space_5"
+                        android:background="@color/background"
+                        android:padding="@dimen/space_15"
+                        android:src="@drawable/ic_more"
+                        android:tint="@color/white" />
+
+                </LinearLayout>
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/collectionNameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/space_20"
+                    android:layout_toStartOf="@id/linearLayoutForFollowingShare"
+                    android:background="@color/background"
+                    android:drawablePadding="@dimen/space_10"
+                    android:drawableTint="@color/white"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="@dimen/space_10"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/space_18"
+                    app:fontName="Helvetica Bold.ttf" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/rl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/titleHeaderRelativeLayout">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/descriptionTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/space_10"
+                android:background="@color/background"
+                android:gravity="center"
+                android:padding="@dimen/space_10"
+                android:text="@string/campaign_discription"
+                android:textColor="@color/background"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/collectionDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/descriptionTextView"
+                android:layout_marginStart="@dimen/space_16"
+                android:layout_marginTop="@dimen/space_10"
+                android:layout_marginEnd="@dimen/space_16"
+                android:background="@drawable/about_user_bg"
+                android:backgroundTint="@color/background"
+                android:gravity="center_vertical"
+                android:padding="@dimen/space_16"
+                android:textColor="@color/app_light_black"
+                android:textSize="14sp"
+                android:visibility="visible" />
+
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl"
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/collection_item_type_shimmer_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <include
+                layout="@layout/collection_item_type_shimmer_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <include
+                layout="@layout/collection_item_type_shimmer_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

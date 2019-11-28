@@ -8,10 +8,13 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.StringUtils
@@ -33,16 +36,17 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.io.InputStreamReader
 
 class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerViewClickListener, CollectionThumbnailImageChangeDialogFragmnet.SendImage {
     override fun onsendData(imageUrl: String) {
         try {
             Picasso.with(this@EditCollectionActivity).load(imageUrl)
-                    .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageVIEW)
+                    .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageView)
             userCollectionsListModel.imageUrl = imageUrl
 
         } catch (e: Exception) {
-            collectionImageVIEW.setImageResource(R.drawable.default_article)
+            collectionImageView.setImageResource(R.drawable.default_article)
         }
     }
 
@@ -55,7 +59,7 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
     private lateinit var collectionItemsListAdapter: AddCollectionAdapter
     var userCollectionsListModel = UserCollectionsListModel()
     private lateinit var collectionId: String
-    private lateinit var collectionImageVIEW: ImageView
+    private lateinit var collectionImageView: ImageView
     private lateinit var submit: TextView
     private lateinit var collectionNameChangeEditTextView: EditText
     private lateinit var collectionImageChangeTextView: TextView
@@ -76,7 +80,7 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
         super.onCreate(savedInstanceState)
         setContentView(R.layout.edit_collection_activity)
         collectionItemRecyclerView = findViewById(R.id.collectionItemRecyclerView)
-        collectionImageVIEW = findViewById(R.id.collectionImageVIEW)
+        collectionImageView = findViewById(R.id.collectionImageVIEW)
         collectionNameChangeEditTextView = findViewById(R.id.collectionNameChangeEditTextView)
         collectionImageChangeTextView = findViewById(R.id.collectionImageChangeTextView)
         descriptionEditTextView = findViewById(R.id.descriptionEditTextView)
@@ -154,9 +158,9 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                             try {
 
                                 Picasso.with(this@EditCollectionActivity).load(userCollectionsListModel.imageUrl)
-                                        .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageVIEW)
+                                        .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageView)
                             } catch (e: Exception) {
-                                collectionImageVIEW.setImageResource(R.drawable.default_article)
+                                collectionImageView.setImageResource(R.drawable.default_article)
                             }
                         }
                         shimmer1.stopShimmerAnimation()
@@ -234,6 +238,19 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                 Log.d("MC4KException", Log.getStackTraceString(e))
                 //   ToastUtils.showToast(this@EditCollectionActivity, e.message)
 
+                try {
+                    //    Log.d("CODE", code.toString())
+                    var data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
+                    var jsonParser = JsonParser()
+                    var jsonObject = jsonParser.parse(
+                            InputStreamReader(data, "UTF-8")) as JsonObject
+                    var reason = jsonObject.get("reason")
+                    Toast.makeText(this@EditCollectionActivity, reason.asString, Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.e("exception in error", e.message.toString())
+                }
+
             }
 
 
@@ -282,6 +299,18 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                 Crashlytics.logException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
                 //   ToastUtils.showToast(this@EditCollectionActivity, e.message)
+                try {
+                    //       Log.d("CODE", code.toString())
+                    var data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
+                    var jsonParser = JsonParser()
+                    var jsonObject = jsonParser.parse(
+                            InputStreamReader(data, "UTF-8")) as JsonObject
+                    var reason = jsonObject.get("reason")
+                    Toast.makeText(this@EditCollectionActivity, reason.asString, Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.e("exception in error", e.message.toString())
+                }
             }
         })
 

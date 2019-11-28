@@ -11,11 +11,14 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -33,6 +36,7 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.io.InputStreamReader
 
 class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollectionAdapter.RecyclerViewClickListener {
     override fun onClick(position: Int) {
@@ -184,11 +188,20 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
                 }
             }
 
-
             override fun onError(e: Throwable) {
                 Crashlytics.logException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
-                //  ToastUtils.showToast(activity, e.message.toString())
+                try {
+                    var data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
+                    var jsonParser = JsonParser()
+                    var jsonObject = jsonParser.parse(
+                            InputStreamReader(data, "UTF-8")) as JsonObject
+                    var reason = jsonObject.get("reason")
+                    Toast.makeText(activity, reason.asString, Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.e("exception in error", e.message.toString())
+                }
             }
 
         })

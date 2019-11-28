@@ -13,13 +13,15 @@ import android.view.Window
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.crashlytics.android.Crashlytics
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.kelltontech.utils.StringUtils
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
-import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.collectionsModels.AddCollectionRequestModel
 import com.mycity4kids.models.collectionsModels.UpdateCollectionRequestModel
@@ -30,6 +32,7 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.io.InputStreamReader
 
 class AddCollectionPopUpDialogFragment : DialogFragment() {
     private lateinit var confirmTextView: TextView
@@ -130,6 +133,18 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
             override fun onError(e: Throwable) {
                 Crashlytics.logException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
+                try {
+                    //    Log.d("CODE", code.toString())
+                    var data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
+                    var jsonParser = JsonParser()
+                    var jsonObject = jsonParser.parse(
+                            InputStreamReader(data, "UTF-8")) as JsonObject
+                    var reason = jsonObject.get("reason")
+                    Toast.makeText(activity, reason.asString, Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.e("exception in error", e.message.toString())
+                }
             }
         })
     }
@@ -167,6 +182,18 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
             override fun onError(e: Throwable) {
                 Crashlytics.logException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
+                try {
+                    //    Log.d("CODE", code.toString())
+                    var data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
+                    var jsonParser = JsonParser()
+                    var jsonObject = jsonParser.parse(
+                            InputStreamReader(data, "UTF-8")) as JsonObject
+                    var reason = jsonObject.get("reason")
+                    Toast.makeText(activity, reason.asString, Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.e("exception in error", e.message.toString())
+                }
             }
         })
     }

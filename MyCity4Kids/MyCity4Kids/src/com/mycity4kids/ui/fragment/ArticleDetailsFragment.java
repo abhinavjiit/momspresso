@@ -139,6 +139,7 @@ import java.util.Map;
 
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.ResponseBody;
+import q.rorbin.badgeview.QBadgeView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -503,6 +504,16 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
+        new QBadgeView(getActivity())
+                .setBadgeText(" " + getString(R.string.new_label) + " ")
+                .setBadgeBackgroundColor(getResources().getColor(R.color.orange_new))
+                .setBadgeTextSize(7, true)
+                .setBadgePadding(3, true)
+                .setBadgeGravity(Gravity.TOP | Gravity.END)
+                .setGravityOffset(4, -2, true)
+
+                .bindTarget(emailShareTextView);
+
         return fragmentView;
     }
 

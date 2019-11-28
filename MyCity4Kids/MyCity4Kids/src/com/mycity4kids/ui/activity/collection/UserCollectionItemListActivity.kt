@@ -81,6 +81,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
     private lateinit var descriptionTextView: TextView
     private lateinit var collectionDescription: TextView
     private lateinit var toolbar: Toolbar
+    private var editType = ""
 
 
     override fun updateUi(response: Response?) {
@@ -489,6 +490,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                         collectionItemsListAdapter.notifyDataSetChanged()
                     }
                     if (data.hasExtra("collectionName")) {
+                        editType = "editCollection"
                         val collectionName = data.getStringExtra("collectionName")
                         collectionNameTextView?.text = collectionName
                         userCollectionsListModel.summary = data.getStringExtra("collectionDescription")
@@ -519,7 +521,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
 
     override fun onBackPressed() {
         val intent = Intent()
-        intent.putExtra(AppConstants.COLLECTION_EDIT_TYPE, "editCollection")
+        intent.putExtra(AppConstants.COLLECTION_EDIT_TYPE, editType)
         intent.putExtra("collectionName", collectionNameTextView?.text.toString())
         intent.putExtra("collectionImage", userCollectionsListModel.imageUrl)
         setResult(Activity.RESULT_OK, intent)

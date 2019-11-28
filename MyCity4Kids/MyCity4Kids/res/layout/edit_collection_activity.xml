@@ -76,10 +76,20 @@
                     android:textSize="@dimen/space_16" />
 
                 <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/thumbnailTextView"
+                    android:id="@+id/charLimitTextView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/collectionNameChangeEditTextView"
+                    android:layout_marginStart="@dimen/space_16"
+                    android:layout_marginTop="@dimen/space_7"
+                    android:text=" maximum supported length is 65"
+                    android:textColor="@color/gray2" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/thumbnailTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/charLimitTextView1"
                     android:layout_marginLeft="@dimen/space_16"
                     android:layout_marginTop="@dimen/space_16"
                     android:text="@string/thumbnail"
@@ -128,13 +138,23 @@
                     android:layout_marginRight="@dimen/space_16"
                     android:background="@drawable/dark_border_rounded_corner"
                     android:hint="@string/description_txt"
-                    android:maxLength="150"
+                    android:maxLength="100"
                     android:overScrollMode="always"
                     android:padding="15dp"
                     android:scrollbarStyle="insideInset"
                     android:scrollbars="vertical"
                     android:textColor="#515151"
                     android:textColorHint="@color/gray2" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/charLimitTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/descriptionEditTextView"
+                    android:layout_marginStart="@dimen/space_16"
+                    android:layout_marginTop="@dimen/space_7"
+                    android:text=" maximum supported length is 100"
+                    android:textColor="@color/gray2" />
 
 
             </RelativeLayout>

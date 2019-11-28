@@ -167,13 +167,15 @@ class UserCreatedCollectionsFragment : BaseFragment() {
                 if (dataList.isNotEmpty() && data != null) {
                     if (data.hasExtra(AppConstants.COLLECTION_EDIT_TYPE)) {
                         val comingFor = data.getStringExtra(AppConstants.COLLECTION_EDIT_TYPE)
-                        if ("editCollection" == comingFor) {
-                            dataList[position].imageUrl = data.getStringExtra("collectionImage")
-                            dataList[position].name = data.getStringExtra("collectionName")
-                        } else if ("deleteCollection" == comingFor) {
-                            dataList.removeAt(position)
+                        if (!comingFor.isNullOrBlank()) {
+                            if ("editCollection" == comingFor) {
+                                dataList[position].imageUrl = data.getStringExtra("collectionImage")
+                                dataList[position].name = data.getStringExtra("collectionName")
+                            } else if ("deleteCollection" == comingFor) {
+                                dataList.removeAt(position)
+                            }
+                            userCreatedFollowedCollectionAdapter.notifyDataSetChanged()
                         }
-                        userCreatedFollowedCollectionAdapter.notifyDataSetChanged()
                     }
                 }
 

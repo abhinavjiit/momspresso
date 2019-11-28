@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.widget.*
 import androidx.core.content.ContextCompat
 import com.crashlytics.android.Crashlytics

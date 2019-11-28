@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@android:color/background_light">
 
-
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar1"
         android:layout_width="match_parent"
@@ -33,9 +32,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/space_10"
-                    android:visibility="visible"
-                    app:layout_collapseMode="pin">
-
+                    android:visibility="visible">
 
                     <LinearLayout
                         android:id="@+id/linearLayoutForFollowingShare"
@@ -80,9 +77,7 @@
                             android:src="@drawable/ic_more"
                             android:tint="@color/white" />
 
-
                     </LinearLayout>
-
 
                     <com.mycity4kids.widget.CustomFontTextView
                         android:id="@+id/collectionNameTextView"
@@ -91,8 +86,9 @@
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
                         android:layout_toStartOf="@id/linearLayoutForFollowingShare"
-                        android:drawableLeft="@drawable/back_arroow"
+                        android:drawableLeft="@drawable/ic_back_svg"
                         android:drawablePadding="@dimen/space_10"
+                        android:drawableTint="@color/white"
                         android:ellipsize="marquee"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
@@ -104,17 +100,13 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/space_18"
                         app:fontName="Helvetica Bold.ttf" />
-
-
                 </RelativeLayout>
-
             </androidx.appcompat.widget.Toolbar>
 
             <RelativeLayout
                 android:id="@+id/titleHeaderRelativeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/collectionImageVIEW"
@@ -123,21 +115,17 @@
                     android:scaleType="fitXY"
                     android:src="@drawable/default_article" />
 
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
                     android:background="#80000000" />
-
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/space_40"
-                    android:padding="@dimen/space_10"
-
-                    >
+                    android:padding="@dimen/space_10">
 
                     <com.mycity4kids.widget.CustomFontTextView
                         android:id="@+id/followersCount"
@@ -174,7 +162,6 @@
                         android:tint="@color/white"
                         android:visibility="gone" />
 
-
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/muteVideoSwitch"
                         android:layout_width="wrap_content"
@@ -185,13 +172,8 @@
                         android:textSize="14sp"
                         app:switchPadding="@dimen/space_10" />
                 </RelativeLayout>
-
-
             </RelativeLayout>
-
         </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -252,7 +234,6 @@
         android:textColor="@color/black"
         android:visibility="gone" />
 
-
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer1"
         android:layout_width="match_parent"
@@ -261,18 +242,11 @@
         android:visibility="visible"
         app:duration="1000">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
 
-            <include layout="@layout/mainshimmer_layout" />
-
-            <include layout="@layout/mainshimmer_layout" />
-
-            <include layout="@layout/mainshimmer_layout" />
-
-        </LinearLayout>
+        <include
+            layout="@layout/collection_detail_shimmer_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </com.facebook.shimmer.ShimmerFrameLayout>
 
@@ -293,7 +267,5 @@
             android:layout_marginStart="@dimen/space_16"
             android:layout_marginEnd="@dimen/space_16" />
     </FrameLayout>
-
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
