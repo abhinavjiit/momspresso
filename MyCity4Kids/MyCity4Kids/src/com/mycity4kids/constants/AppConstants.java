@@ -491,6 +491,7 @@ public class AppConstants {
     public static final String BRANCH_DEEPLINK = "https://mycity4kids.app.link";//https://www.momspresso.com://
     public static final String BRANCH_DEEPLINK_URL = "https://www.momspresso.com://open?link_click_id=";
     public static final String DEEPLINK_USER_BADGE = "https://www.momspresso.com/user/";
+    //public static final String DEEPLINK_="https://www.momspresso.com/user"
 
 
     public static final String IGNORE_TAG = "ignore";
@@ -541,7 +542,6 @@ public class AppConstants {
     public static final String NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_SUBMIT_PROOF = "24";
     public static final String NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_PANCARD = "25";
     public static final String NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_BANKDETAIL = "26";
-
 
 
     public static final String FOLLOWING_STATUS_ACTIVITY_RESULT = "followingStatusActivityResult";
@@ -700,6 +700,15 @@ public class AppConstants {
     public static final String FOLLOWING = "1";
     public static final String FOLLOW = "0";
     public static final String CONTENT_ID = "contentId";
+
+    public static final String COLLECTION_LIST_REGEX = ".+?(user\\/)[a-zA-Z0-9]+\\/(collection)$";
+    public static final String COLLECTION_DETAIL_REGEX = ".+?(user\\/)[a-zA-Z0-9]+(\\/(collections\\/))[a-zA-Z0-9]+$";
+    public static final String BADGES_LISTING_REGEX = ".+?(user\\/)[a-zA-Z0-9]+\\/(badges)$";
+    public static final String BADGES_DETAIL_REGEX = ".+?(user\\/)[a-zA-Z0-9]+(\\/(badges\\/))[a-zA-Z0-9]+$";
+    public static final String MILESTONE_DETAIL_REGEX = ".+?(user\\/)[a-zA-Z0-9]+(\\/(milestones\\/))[a-zA-Z0-9]+$";
+    public static final String USER_PROFILE_REGEX = ".+?(user\\/)[a-zA-Z0-9]$";
+    public static final String USER_ANALYTICS_REGEX = ".+?(user\\/)[a-zA-Z0-9]+\\/(rank)$";
+
 
     enum SocialPlatformName {
 

@@ -201,6 +201,10 @@
         <!--<item name="actionMenuTextColor">@color/white_color</item>-->
     </style>
 
+    <style name="CollectionItemListingTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="actionMenuTextColor">@color/black</item>
+    </style>
+
     <style name="myCustomMenuTextApearance" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
         <item name="android:textColor">@color/colorControlNormal</item>
     </style>

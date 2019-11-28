@@ -5,6 +5,7 @@
         android:actionMenuTextColor="@color/app_red"
         android:title="@string/edit_collection"
 
+
         />
     <item
         android:id="@+id/delete_collection"

@@ -1,5 +1,6 @@
 package com.mycity4kids.models.collectionsModels;
 
+import com.google.gson.annotations.SerializedName;
 import com.mycity4kids.models.response.ImageURL;
 import com.mycity4kids.profile.Author;
 
@@ -13,6 +14,43 @@ public class ItemInfoModel {
     private String storyImage;
     private int viewCount;
     private String id;
+    @SerializedName("url")
+    private String streamUrl;
+    private String blogTitleSlug;
+    private String titleSlug;
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getBlogTitleSlug() {
+        return blogTitleSlug;
+    }
+
+    public void setBlogTitleSlug(String blogTitleSlug) {
+        this.blogTitleSlug = blogTitleSlug;
+    }
+
+    public String getTitleSlug() {
+        return titleSlug;
+    }
+
+    public void setTitleSlug(String titleSlug) {
+        this.titleSlug = titleSlug;
+    }
+
+    public String getStreamUrl() {
+        return streamUrl;
+    }
+
+    public void setStreamUrl(String streamUrl) {
+        this.streamUrl = streamUrl;
+    }
 
     public String getId() {
         return id;

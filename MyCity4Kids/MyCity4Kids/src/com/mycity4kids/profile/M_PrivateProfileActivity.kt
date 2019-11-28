@@ -1,16 +1,12 @@
 package com.mycity4kids.profile
 
 import android.accounts.NetworkErrorException
-import android.app.Dialog
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.view.Window
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -162,7 +158,8 @@ class M_PrivateProfileActivity : BaseActivity(),
 //            }
 //        })
         profileImageView.setOnClickListener {
-            val pIntent = Intent(this, PrivateProfileActivity::class.java)
+            val pIntent = Intent(this, PublicProfileActivity::class.java)
+            pIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, "4347159ff74b46e4ae43df01a0b405c0")
             startActivity(pIntent)
         }
 
