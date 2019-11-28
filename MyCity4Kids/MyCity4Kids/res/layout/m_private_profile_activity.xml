@@ -406,7 +406,7 @@
                     android:visibility="visible">
 
                     <ImageView
-                        android:id="@+id/searchAllImageView"
+                        android:id="@+id/appSettingsImageView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -415,7 +415,8 @@
                         android:paddingTop="5dp"
                         android:paddingEnd="10dp"
                         android:paddingBottom="5dp"
-                        android:src="@drawable/ic_search" />
+                        android:src="@drawable/ic_app_settings"
+                        android:tint="@color/white" />
 
                 </RelativeLayout>
             </androidx.appcompat.widget.Toolbar>

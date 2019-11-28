@@ -10,6 +10,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -54,8 +57,6 @@ import com.mycity4kids.utils.AppUtils;
 
 import org.json.JSONObject;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;

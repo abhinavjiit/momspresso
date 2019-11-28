@@ -532,7 +532,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent" />
         <activity
-            android:name=".profile.R_PrivateProfileActivity"
+            android:name=".ui.activity.ProfileSetting"
             android:screenOrientation="portrait" />
         <activity
             android:name=".profile.M_PrivateProfileActivity"

@@ -53,8 +53,8 @@ public class UserPublishedContentActivity extends BaseActivity implements View.O
         contentType = getIntent().getStringExtra("contentType");
         searchAllImageView.setOnClickListener(this);
 
-        String authorId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
-//        boolean isPrivateProfile = getIntent().getBooleanExtra("isPrivateProfile", false);
+        String authorId = getIntent().getStringExtra(Constants.AUTHOR_ID);
+        boolean isPrivateProfile = AppUtils.isPrivateProfile(authorId);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -66,7 +66,7 @@ public class UserPublishedContentActivity extends BaseActivity implements View.O
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.myprofile_section_videos_label)));
         AppUtils.changeTabsFont(tabLayout);
 
-        UserPublishedContentPagerAdapter adapter = new UserPublishedContentPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, true);
+        UserPublishedContentPagerAdapter adapter = new UserPublishedContentPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, isPrivateProfile);
         viewPager.setAdapter(adapter);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));

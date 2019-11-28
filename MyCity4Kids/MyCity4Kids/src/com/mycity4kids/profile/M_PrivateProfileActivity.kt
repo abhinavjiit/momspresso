@@ -59,6 +59,7 @@ class M_PrivateProfileActivity : BaseActivity(),
     private lateinit var appBarLayout: AppBarLayout
     private lateinit var profileShimmerLayout: ShimmerFrameLayout
     private lateinit var headerContainer: RelativeLayout
+    private lateinit var appSettingsImageView: ImageView
     private lateinit var profileImageView: ImageView
     private lateinit var crownImageView: ImageView
     private lateinit var followerContainer: LinearLayout
@@ -102,8 +103,8 @@ class M_PrivateProfileActivity : BaseActivity(),
     private var userContentList: ArrayList<MixFeedResult>? = null
     private var userBookmarkList: ArrayList<MixFeedResult>? = null
     private var userFeaturedOnList: ArrayList<MixFeedResult>? = null
-    private var deeplinkUserId: String? = null
     private var deeplinkBadgeId: String? = null
+    private var profileDetail: String? = null
     private var badgeDetail: ArrayList<BadgeListResponse.BadgeListData.BadgeListResult>? = null
 
     private val userContentAdapter: UserContentAdapter by lazy { UserContentAdapter(this, AppUtils.isPrivateProfile(authorId)) }
@@ -119,6 +120,7 @@ class M_PrivateProfileActivity : BaseActivity(),
         recyclerView = findViewById(R.id.recyclerView)
         profileShimmerLayout = findViewById(R.id.profileShimmerLayout)
         profileImageView = findViewById(R.id.profileImageView)
+        appSettingsImageView = findViewById(R.id.appSettingsImageView)
         crownImageView = findViewById(R.id.crownImageView)
         followerContainer = findViewById(R.id.followerContainer)
         followingContainer = findViewById(R.id.followingContainer)
@@ -152,15 +154,10 @@ class M_PrivateProfileActivity : BaseActivity(),
 
         authorId = intent.getStringExtra(Constants.USER_ID)
         deeplinkBadgeId = intent.getStringExtra("badgeId")
-        val profileDetail: String? = intent.getStringExtra("detail")
+        profileDetail = intent.getStringExtra("detail")
 
         if (!deeplinkBadgeId.isNullOrBlank()) {
-            authorId = deeplinkUserId
             showBadgeDialog(deeplinkBadgeId)
-        }
-
-        if(!profileDetail.isNullOrBlank()&&profileDetail == "rank"){
-            showCrownDialog()
         }
 
 //        appBarLayout.addOnOffsetChangedListener(object:AppBarLayout.OnOffsetChangedListener{
@@ -220,6 +217,7 @@ class M_PrivateProfileActivity : BaseActivity(),
         bookmarksTab.setOnClickListener(this)
         badgesContainer.setOnClickListener(this)
         postsCountContainer.setOnClickListener(this)
+        appSettingsImageView.setOnClickListener(this)
 
         creatorTab.isSelected = true
         featuredTab.isSelected = false
@@ -476,6 +474,9 @@ class M_PrivateProfileActivity : BaseActivity(),
             crown = Gson().fromJson<Crown>(jsonObject, Crown::class.java)
             Picasso.with(this@M_PrivateProfileActivity).load(crown.image_url).error(
                     R.drawable.family_xxhdpi).fit().into(crownImageView)
+            if (!profileDetail.isNullOrBlank() && profileDetail == "rank") {
+                showCrownDialog(crown)
+            }
         } catch (e: Exception) {
             crownImageView.visibility = View.GONE
         }
@@ -776,6 +777,10 @@ class M_PrivateProfileActivity : BaseActivity(),
             }
             view?.id == R.id.postsCountContainer -> {
                 appBarLayout.setExpanded(false)
+            }
+            view?.id == R.id.appSettingsImageView -> {
+                val intent = Intent(this, ProfileSetting::class.java)
+                startActivity(intent)
             }
         }
     }
