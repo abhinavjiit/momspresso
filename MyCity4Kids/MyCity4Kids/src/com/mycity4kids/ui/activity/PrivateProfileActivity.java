@@ -497,9 +497,6 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
             break;
             case R.id.authorTypeTextView:
                 break;
-//            case R.id.authorBioTextView:
-//                break;
-            case R.id.settingImageView:
             case R.id.imgProfile:
                 break;
             case R.id.publishedSectionTextView:
@@ -521,11 +518,6 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                 ssIntent.putExtra(Constants.AUTHOR_ID, userId);
                 startActivity(ssIntent);
                 break;
-            case R.id.bookmarksSectionTextView: {
-                Intent intent4 = new Intent(this, UserActivitiesActivity.class);
-                intent4.putExtra(Constants.AUTHOR_ID, userId);
-                startActivity(intent4);
-            }
             case R.id.activitySectionTextView: {
                 Intent intent1 = new Intent(PrivateProfileActivity.this, CollectionsActivity.class);
                 intent1.putExtra("userId", userId);
@@ -552,22 +544,13 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
 //                            return false;
 //                        }
 //                    });
-                    Intent _intent = new Intent(this, IdTokenLoginActivity.class);
-                    startActivity(_intent);
+                Intent _intent = new Intent(this, IdTokenLoginActivity.class);
+                startActivity(_intent);
 //                    return;
 //                } else {
 //                Intent intent6 = new Intent(this, RankingActivity.class);
 //                startActivity(intent6);
 //                }
-                break;
-            case R.id.rankingSectionTextView: {
-                Intent intent7 = new Intent(this, RankingActivity.class);
-                startActivity(intent7);
-            }
-            break;
-            case R.id.settingsSectionTextView:
-                Intent settingsIntent = new Intent(this, AppSettingsActivity.class);
-                startActivity(settingsIntent);
                 break;
             case R.id.signoutSectionTextView:
                 logoutUser();

@@ -68,6 +68,7 @@ import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.UserPostSettingResponse;
 import com.mycity4kids.models.response.UserPostSettingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.profile.M_PrivateProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.GroupAboutRecyclerAdapter;
@@ -1650,26 +1651,22 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         switch (view.getId()) {
             case R.id.userImageView:
             case R.id.usernameTextView: {
-
                 if (postList.get(position).getIsAnnon() == 0) {
-
-                    if (userDynamoId.equals(postList.get(position).getUserId())) {
-//                    MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
-//                    Bundle mBundle0 = new Bundle();
-//                    fragment0.setArguments(mBundle0);
-//                    if (isAdded())
-//                        ((ShortStoriesListingContainerActivity) getActivity()).addFragment(fragment0, mBundle0, true);
-                        Intent pIntent = new Intent(this, PrivateProfileActivity.class);
-                        startActivity(pIntent);
-                    } else {
-                        Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "profile image", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "User Profile", "", "");
-
-                        Intent intentnn = new Intent(this, PublicProfileActivity.class);
-                        intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, postList.get(position).getUserId());
-                        intentnn.putExtra(AppConstants.AUTHOR_NAME, postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo().getLastName());
-                        intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
-                        startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
-                    }
+                    Intent pIntent = new Intent(this, M_PrivateProfileActivity.class);
+                    pIntent.putExtra(Constants.USER_ID, postList.get(position).getUserId());
+                    startActivity(pIntent);
+//                    if (userDynamoId.equals(postList.get(position).getUserId())) {
+//                        Intent pIntent = new Intent(this, PrivateProfileActivity.class);
+//                        startActivity(pIntent);
+//                    } else {
+//                        Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "profile image", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "User Profile", "", "");
+//
+//                        Intent intentnn = new Intent(this, PublicProfileActivity.class);
+//                        intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, postList.get(position).getUserId());
+//                        intentnn.putExtra(AppConstants.AUTHOR_NAME, postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo().getLastName());
+//                        intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+//                        startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+//                    }
                 }
                 break;
             }

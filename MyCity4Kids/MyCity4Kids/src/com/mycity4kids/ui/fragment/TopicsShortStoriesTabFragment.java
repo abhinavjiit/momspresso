@@ -21,6 +21,14 @@ import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -42,12 +50,11 @@ import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.profile.M_PrivateProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.AddShortStoryActivity;
-import com.mycity4kids.ui.activity.PrivateProfileActivity;
-import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.TopicsListingFragment;
@@ -63,13 +70,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -469,21 +469,9 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             }
             break;
             case R.id.authorNameTextView:
-                if (userDynamoId.equals(mDatalist.get(position).getUserId())) {
-//                    MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
-//                    Bundle mBundle0 = new Bundle();
-//                    fragment0.setArguments(mBundle0);
-//                    if (isAdded())
-//                        ((ShortStoriesListingContainerActivity) getActivity()).addFragment(fragment0, mBundle0, true);
-                    Intent pIntent = new Intent(getActivity(), PrivateProfileActivity.class);
-                    startActivity(pIntent);
-                } else {
-                    Intent intentnn = new Intent(getActivity(), PublicProfileActivity.class);
-                    intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, mDatalist.get(position).getUserId());
-                    intentnn.putExtra(AppConstants.AUTHOR_NAME, mDatalist.get(position).getUserName());
-                    intentnn.putExtra(Constants.FROM_SCREEN, "ShortStoryScreen");
-                    startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
-                }
+                Intent pIntent = new Intent(getActivity(), M_PrivateProfileActivity.class);
+                pIntent.putExtra(Constants.USER_ID, mDatalist.get(position).getUserId());
+                startActivity(pIntent);
                 break;
         }
     }

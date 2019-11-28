@@ -6,7 +6,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +20,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -42,6 +43,7 @@ import com.mycity4kids.models.response.ContributorListResult;
 import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.newmodels.bloggermodel.BlogItemModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.profile.M_PrivateProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI;
 import com.mycity4kids.ui.adapter.ContributorListAdapter;
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter;
@@ -152,18 +154,9 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 ContributorListResult itemSelected = (ContributorListResult) adapterView.getItemAtPosition(position);
-                if (dynamoUserId.equals(itemSelected.getId())) {
-                    Intent profileIntent = new Intent(ContributorListActivity.this, DashboardActivity.class);
-                    profileIntent.putExtra("TabType", "profile");
-                    startActivity(profileIntent);
-                } else {
-                    Intent intent = new Intent(ContributorListActivity.this, PublicProfileActivity.class);
-                    intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, itemSelected.getId());
-                    intent.putExtra(AppConstants.AUTHOR_NAME, itemSelected.getFirstName() + " " + itemSelected.getLastName());
-                    intent.putExtra(Constants.FROM_SCREEN, "Contributor List");
-                    startActivity(intent);
-                }
-
+                Intent profileIntent = new Intent(ContributorListActivity.this, M_PrivateProfileActivity.class);
+                profileIntent.putExtra(Constants.USER_ID, itemSelected.getId());
+                startActivity(profileIntent);
             }
         });
 
@@ -221,7 +214,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
         }
 
         CustomSpinnerAdapter spinAdapter = new CustomSpinnerAdapter(
-                getApplicationContext(), list,"");
+                getApplicationContext(), list, "");
         spinner_nav.setAdapter(spinAdapter);
         spinner_nav.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

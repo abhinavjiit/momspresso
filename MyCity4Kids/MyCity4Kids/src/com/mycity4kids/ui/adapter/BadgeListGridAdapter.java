@@ -68,7 +68,7 @@ public class BadgeListGridAdapter extends BaseAdapter {
             holder.badgeImageView.setBackgroundResource(R.drawable.article_default);
         }
 
-        holder.badgeName.setText(badgeList.get(position).getBadge_title().getOther());
+        holder.badgeName.setText(badgeList.get(position).getBadge_title());
 
         holder.badgeLayout.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.appbar.AppBarLayout
+import com.google.gson.Gson
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.ConnectivityUtils
@@ -31,7 +32,10 @@ import com.mycity4kids.models.request.ArticleDetailRequest
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
 import com.mycity4kids.models.response.*
 import com.mycity4kids.preference.SharedPrefUtils
-import com.mycity4kids.retrofitAPIsInterfaces.*
+import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
+import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI
+import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
+import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
 import com.mycity4kids.ui.activity.*
 import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity
 import com.mycity4kids.ui.fragment.AddCollectionPopUpDialogFragment
@@ -56,6 +60,7 @@ class M_PrivateProfileActivity : BaseActivity(),
     private lateinit var profileShimmerLayout: ShimmerFrameLayout
     private lateinit var headerContainer: RelativeLayout
     private lateinit var profileImageView: ImageView
+    private lateinit var crownImageView: ImageView
     private lateinit var followerContainer: LinearLayout
     private lateinit var followingContainer: LinearLayout
     private lateinit var rankContainer: LinearLayout
@@ -89,7 +94,7 @@ class M_PrivateProfileActivity : BaseActivity(),
     private var start = 0
     private var size = 10
     private var isRequestRunning = true
-    private var isLastPageReached = true
+    private var isLastPageReached = false
     private var authorId: String? = null
     private var isFollowing: Boolean = false
     private var isFollowUnFollowRequestRunning: Boolean = false
@@ -108,20 +113,13 @@ class M_PrivateProfileActivity : BaseActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.m_private_profile_activity)
-        deeplinkUserId = intent.getStringExtra("userId")
-        deeplinkBadgeId = intent.getStringExtra("badgeId")
-
-        authorId = intent.getStringExtra(Constants.USER_ID)
-        if (deeplinkUserId != null) {
-            authorId = deeplinkUserId
-            fetchBadgeDialog()
-        }
 
         toolbar = findViewById(R.id.toolbar)
         appBarLayout = findViewById(R.id.appBarLayout);
         recyclerView = findViewById(R.id.recyclerView)
         profileShimmerLayout = findViewById(R.id.profileShimmerLayout)
         profileImageView = findViewById(R.id.profileImageView)
+        crownImageView = findViewById(R.id.crownImageView)
         followerContainer = findViewById(R.id.followerContainer)
         followingContainer = findViewById(R.id.followingContainer)
         rankContainer = findViewById(R.id.rankContainer)
@@ -152,22 +150,39 @@ class M_PrivateProfileActivity : BaseActivity(),
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+        authorId = intent.getStringExtra(Constants.USER_ID)
+        deeplinkBadgeId = intent.getStringExtra("badgeId")
+        val profileDetail: String? = intent.getStringExtra("detail")
+
+        if (!deeplinkBadgeId.isNullOrBlank()) {
+            authorId = deeplinkUserId
+            showBadgeDialog(deeplinkBadgeId)
+        }
+
+        if(!profileDetail.isNullOrBlank()&&profileDetail == "rank"){
+            showCrownDialog()
+        }
+
 //        appBarLayout.addOnOffsetChangedListener(object:AppBarLayout.OnOffsetChangedListener{
 //            override fun onOffsetChanged(p0: AppBarLayout?, verticalOffset: Int) {
 //                headerContainer.alpha = 1.0f - Math.abs(verticalOffset / appBarLayout.totalScrollRange)
 //            }
 //        })
         profileImageView.setOnClickListener {
-            val pIntent = Intent(this, PublicProfileActivity::class.java)
-            pIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, "4347159ff74b46e4ae43df01a0b405c0")
-            startActivity(pIntent)
+            if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId == authorId) {
+                val pIntent = Intent(this, PrivateProfileActivity::class.java)
+                startActivity(pIntent)
+            } else {
+                val intentnn = Intent(this, PublicProfileActivity::class.java)
+                intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, authorId)
+                startActivity(intentnn)
+            }
         }
 
         if (AppUtils.isPrivateProfile(authorId)) {
             authorId = SharedPrefUtils.getUserDetailModel(this).dynamoId
             followerContainer.setOnClickListener(this)
             followingContainer.setOnClickListener(this)
-            rankContainer.setOnClickListener(this)
             sharePrivateTextView.setOnClickListener(this)
             analyticsTextView.setOnClickListener(this)
             followAuthorTextView.visibility = View.GONE
@@ -257,7 +272,8 @@ class M_PrivateProfileActivity : BaseActivity(),
                     if (responseData.code == 200 && Constants.SUCCESS == responseData.status) {
                         processCityInfo(responseData)
                         processContentLanguages(responseData)
-                        processAuthorRank(responseData)
+                        processAuthorRankAndCrown(responseData)
+                        processAuthorPostCount(responseData)
                         processAuthorsFollowingAndFollowership(responseData)
                         processAuthorPersonalDetails(responseData)
                     }
@@ -405,9 +421,7 @@ class M_PrivateProfileActivity : BaseActivity(),
         } else {
             authorBioTextView.text = responseData.data[0].result.userBio
             authorBioTextView.visibility = View.VISIBLE
-//            authorBioTextView.text = responseData.data[0].result.userBio
             authorBioTextView.setUserBio(responseData.data[0].result.userBio, this)
-//            makeTextViewResizable(authorBioTextView, 2, "See More", true, responseData.data[0].result.userBio)
         }
     }
 
@@ -451,11 +465,28 @@ class M_PrivateProfileActivity : BaseActivity(),
         }
     }
 
-    private fun processAuthorRank(responseData: UserDetailResponse) {
+    private fun processAuthorPostCount(responseData: UserDetailResponse) {
+        postsCountTextView.text = responseData.data[0].result.totalArticles
+    }
+
+    private fun processAuthorRankAndCrown(responseData: UserDetailResponse) {
+        var crown: Crown? = null
+        try {
+            val jsonObject = Gson().toJsonTree(responseData.data.get(0).result.crownData).asJsonObject
+            crown = Gson().fromJson<Crown>(jsonObject, Crown::class.java)
+            Picasso.with(this@M_PrivateProfileActivity).load(crown.image_url).error(
+                    R.drawable.family_xxhdpi).fit().into(crownImageView)
+        } catch (e: Exception) {
+            crownImageView.visibility = View.GONE
+        }
+
         if (responseData.data[0].result.ranks == null || responseData.data[0].result.ranks.size == 0) {
             rankCountTextView.text = "--"
             rankLanguageTextView.text = getString(R.string.myprofile_rank_label)
+            rankContainer.setOnClickListener(null)
         } else if (responseData.data[0].result.ranks.size < 2) {
+            rankContainer.setOnClickListener(this)
+            rankContainer.tag = crown
             rankCountTextView.text = "" + responseData.data[0].result.ranks[0].rank
             if (AppConstants.LANG_KEY_ENGLISH == responseData.data[0].result.ranks[0].langKey) {
                 rankLanguageTextView.text = getString(R.string.blogger_profile_rank_in) + " ENGLISH"
@@ -464,6 +495,8 @@ class M_PrivateProfileActivity : BaseActivity(),
                         + " " + responseData.data[0].result.ranks[0].langValue.toUpperCase())
             }
         } else {
+            rankContainer.setOnClickListener(this)
+            rankContainer.tag = crown
             for (i in 0 until responseData.data[0].result.ranks.size) {
                 if (AppConstants.LANG_KEY_ENGLISH == responseData.data[0].result.ranks[i].langKey) {
                     multipleRankList.add(responseData.data[0].result.ranks[i])
@@ -566,7 +599,7 @@ class M_PrivateProfileActivity : BaseActivity(),
     private fun processUserBookmarks(result: List<MixFeedResult>?) {
         if (result.isNullOrEmpty()) {
             isLastPageReached = true
-            if (!userContentList.isNullOrEmpty()) {
+            if (!userBookmarkList.isNullOrEmpty()) {
             } else {
                 usersBookmarksAdapter.setListData(userBookmarkList)
                 usersBookmarksAdapter.notifyDataSetChanged()
@@ -632,74 +665,30 @@ class M_PrivateProfileActivity : BaseActivity(),
         }
     }
 
-    private fun fetchBadgeDialog() {
-        fetchBadgeDetail()
-    }
-
-    private fun fetchBadgeDetail() {
-        val retrofit = BaseApplication.getInstance().retrofit
-        val badgeAPI = retrofit.create(BadgeAPI::class.java)
-        val badgeListResponseCall = badgeAPI.getBadgeDetail(deeplinkUserId, deeplinkBadgeId)
-        badgeListResponseCall.enqueue(object : Callback<BadgeListResponse> {
-            override fun onFailure(call: Call<BadgeListResponse>, t: Throwable) {
-                Crashlytics.logException(t)
-                Log.d("MC4kException", Log.getStackTraceString(t))
-            }
-
-            override fun onResponse(call: Call<BadgeListResponse>, response: retrofit2.Response<BadgeListResponse>) {
-                try {
-                    if (response.body() == null) {
-                        if (response.raw() != null) {
-                            val nee = NetworkErrorException(response.raw().toString())
-                            Crashlytics.logException(nee)
-                        }
-                        return
-                    }
-                    val responseModel = response.body() as BadgeListResponse
-                    if (responseModel.code == 200 && Constants.SUCCESS == responseModel.status) {
-                        if (responseModel.data != null && !responseModel.data.isEmpty() && responseModel.data[0] != null) {
-                            badgeDetail = responseModel.data[0].result
-                            showBadgeDialog()
-                        } else {
-                        }
-                    }
-                } catch (e: Exception) {
-                    Crashlytics.logException(e)
-                    Log.d("MC4kException", Log.getStackTraceString(e))
-                }
-            }
-        })
-    }
-
-    private fun showBadgeDialog() {
-
+    private fun showBadgeDialog(badgeId: String?) {
         val badgesDialogFragment = BadgesDialogFragment()
         val bundle = Bundle()
         bundle.putString(Constants.USER_ID, authorId)
+        bundle.putString("id", badgeId)
         badgesDialogFragment.arguments = bundle
         val fm = supportFragmentManager
         fm?.let {
             badgesDialogFragment.show(fm!!, "BadgeDetailDialog")
         }
+    }
 
-//        val dialog = Dialog(this)
-//        dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
-//        dialog.setContentView(R.layout.dialog_badge_share)
-//        dialog.setCancelable(true)
-//        val badgeImg = dialog.findViewById<ImageView>(R.id.badgeImageView)
-//        val badgeName = dialog.findViewById<TextView>(R.id.badgeName)
-//        val badgeDesc = dialog.findViewById<TextView>(R.id.badgeDesc)
-//        val shareBtn = dialog.findViewById<TextView>(R.id.shareBtn)
-//        shareBtn.visibility = View.GONE
-//
-//        Picasso.with(this).load(badgeDetail!!.get(0).getBadge_image_url()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-//                .fit().into(badgeImg)
-//
-//        badgeName.setText(badgeDetail!!.get(0).getBadge_title().other)
-//        badgeDesc.setText(badgeDetail!!.get(0).getBadge_desc().other)
-//
-//        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//        dialog.show()
+    private fun showCrownDialog(crown: Any?) {
+        if (crown is Crown) {
+            val crownDialogFragment = CrownDialogFragment()
+            val bundle = Bundle()
+            bundle.putString(Constants.USER_ID, authorId)
+            bundle.putParcelable("crown", crown)
+            crownDialogFragment.arguments = bundle
+            val fm = supportFragmentManager
+            fm?.let {
+                crownDialogFragment.show(fm!!, "CrownDetailDialog")
+            }
+        }
     }
 
     override fun onClick(view: View?) {
@@ -755,18 +744,20 @@ class M_PrivateProfileActivity : BaseActivity(),
 
             }
             view?.id == R.id.analyticsTextView -> {
-                if (AppConstants.DEBUGGING_USER_ID.contains("" + authorId)) {
-                    rankContainer.setOnLongClickListener {
-                        BaseApplication.getInstance().toggleGroupBaseURL()
-                        false
-                    }
-                    val intent = Intent(this, IdTokenLoginActivity::class.java)
-                    startActivity(intent)
-                    return
-                } else {
-                    val intent = Intent(this, RankingActivity::class.java)
-                    startActivity(intent)
-                }
+                val intent = Intent(this, RankingActivity::class.java)
+                startActivity(intent)
+//                if (AppConstants.DEBUGGING_USER_ID.contains("" + authorId)) {
+//                    rankContainer.setOnLongClickListener {
+//                        BaseApplication.getInstance().toggleGroupBaseURL()
+//                        false
+//                    }
+//                    val intent = Intent(this, IdTokenLoginActivity::class.java)
+//                    startActivity(intent)
+//                    return
+//                } else {
+//                    val intent = Intent(this, RankingActivity::class.java)
+//                    startActivity(intent)
+//                }
             }
             view?.id == R.id.followerContainer -> {
                 val intent = Intent(this, FollowersAndFollowingListActivity::class.java)
@@ -781,7 +772,7 @@ class M_PrivateProfileActivity : BaseActivity(),
                 startActivity(intent)
             }
             view?.id == R.id.rankContainer -> {
-
+                showCrownDialog(view.tag)
             }
             view?.id == R.id.postsCountContainer -> {
                 appBarLayout.setExpanded(false)

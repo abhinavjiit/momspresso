@@ -13,10 +13,8 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.kelltontech.utils.StringUtils
 import com.mycity4kids.R
-import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.models.response.MixFeedResult
-import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.utils.AppUtils
 import com.squareup.picasso.Picasso
 import java.util.*
@@ -255,7 +253,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
             recommendCountTV.visibility = View.VISIBLE
             recommendCountTV.text = "" + data?.likesCount
         }
-        if (StringUtils.isNullOrEmpty(data?.userName) || data?.userName?.trim { it <= ' ' }.equals("", ignoreCase = true)) {
+        if (data?.userName.isNullOrBlank()) {
             authorNameTV.text = "NA"
         } else {
             authorNameTV.text = data?.userName
@@ -350,9 +348,8 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         recommendCountTextView.text = "" + data?.like_count
 
         try {
-            val userName = (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).first_name +
-                    " " + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).last_name)
-            if (StringUtils.isNullOrEmpty(userName) || userName.trim({ it <= ' ' }).equals("", ignoreCase = true)) {
+            val userName = data?.userName
+            if (userName.isNullOrBlank()) {
                 txvAuthorName.setText("NA")
             } else {
                 txvAuthorName.setText(userName)

@@ -2,11 +2,6 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +11,10 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
@@ -35,10 +34,9 @@ import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.response.LanguageRanksModel;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.profile.M_PrivateProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI;
-import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.activity.RankingActivity;
 import com.mycity4kids.ui.adapter.RankingTopBloggerAdapter;
 import com.mycity4kids.utils.AppUtils;
@@ -312,16 +310,10 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
     @Override
     public void onClick(View view, int position) {
         ContributorListResult itemSelected = contributorListResults.get(position);
-        if (userId.equals(itemSelected.getId())) {
-            Intent profileIntent = new Intent(getActivity(), DashboardActivity.class);
-            profileIntent.putExtra("TabType", "profile");
-            startActivity(profileIntent);
-        } else {
-            Intent intent = new Intent(getActivity(), PublicProfileActivity.class);
-            intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, itemSelected.getId());
-            intent.putExtra(AppConstants.AUTHOR_NAME, itemSelected.getFirstName() + " " + itemSelected.getLastName());
-            intent.putExtra(Constants.FROM_SCREEN, "Ranking");
-            startActivity(intent);
-        }
+        Intent intent = new Intent(getActivity(), M_PrivateProfileActivity.class);
+        intent.putExtra(Constants.USER_ID, itemSelected.getId());
+        intent.putExtra(AppConstants.AUTHOR_NAME, itemSelected.getFirstName() + " " + itemSelected.getLastName());
+        intent.putExtra(Constants.FROM_SCREEN, "Ranking");
+        startActivity(intent);
     }
 }

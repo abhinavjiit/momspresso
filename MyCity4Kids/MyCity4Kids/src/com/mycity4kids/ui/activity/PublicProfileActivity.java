@@ -17,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentManager;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.kelltontech.network.Response;
@@ -48,7 +50,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import androidx.fragment.app.FragmentManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -321,11 +322,6 @@ public class PublicProfileActivity extends BaseActivity implements View.OnClickL
                 articleIntent.putExtra(Constants.AUTHOR_ID, authorId);
                 startActivity(articleIntent);
                 break;
-            case R.id.bookmarksSectionTextView: {
-                Intent intent = new Intent(this, UserActivitiesActivity.class);
-                intent.putExtra(Constants.AUTHOR_ID, authorId);
-                startActivity(intent);
-            }
             case R.id.activitySectionTextView: {
 
                 Intent intent1 = new Intent(this, CollectionsActivity.class);
@@ -337,15 +333,6 @@ public class PublicProfileActivity extends BaseActivity implements View.OnClickL
             }
             break;
             case R.id.rankContainer:
-                break;
-            case R.id.rankingSectionTextView: {
-                Intent intent = new Intent(this, RankingActivity.class);
-                startActivity(intent);
-            }
-            break;
-            case R.id.settingsSectionTextView:
-                Intent settingsIntent = new Intent(this, AppSettingsActivity.class);
-                startActivity(settingsIntent);
                 break;
             case R.id.followingContainer: {
             }

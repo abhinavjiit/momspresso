@@ -22,6 +22,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -59,6 +67,7 @@ import com.mycity4kids.observablescrollview.ObservableScrollView;
 import com.mycity4kids.observablescrollview.ObservableScrollViewCallbacks;
 import com.mycity4kids.observablescrollview.ScrollState;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.profile.M_PrivateProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
@@ -82,13 +91,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -224,7 +226,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             vlogsListingAndDetailsAPI = retro.create(VlogsListingAndDetailsAPI.class);
             hitArticleDetailsS3API();
         }
-        mAdapter = new VideoRecyclerViewAdapter(ParallelFeedActivity.this,getSupportFragmentManager());
+        mAdapter = new VideoRecyclerViewAdapter(ParallelFeedActivity.this, getSupportFragmentManager());
         mixpanel.timeEvent("Player_Start");
         recyclerViewFeed.scrollToPosition(0);
     }
@@ -1078,20 +1080,11 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     }
 
     public void openPublicProfile(String authorType, String authorId, String author) {
-        /*if (AppConstants.USER_TYPE_USER.equals(authorType)) {
-            return;
-        }*/
-        if (userDynamoId.equals(authorId)) {
-            Intent profileIntent = new Intent(this, DashboardActivity.class);
-            profileIntent.putExtra("TabType", "profile");
-            startActivity(profileIntent);
-        } else {
-            Intent intentnn = new Intent(this, PublicProfileActivity.class);
-            intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, authorId);
-            intentnn.putExtra(AppConstants.AUTHOR_NAME, "" + author);
-            intentnn.putExtra(Constants.FROM_SCREEN, "Video Details");
-            startActivity(intentnn);
-        }
+        Intent intentnn = new Intent(this, M_PrivateProfileActivity.class);
+        intentnn.putExtra(Constants.USER_ID, authorId);
+        intentnn.putExtra(AppConstants.AUTHOR_NAME, "" + author);
+        intentnn.putExtra(Constants.FROM_SCREEN, "Video Details");
+        startActivity(intentnn);
     }
 
     private void launchRelatedTrendingArticle(View v, String listingType, int index) {

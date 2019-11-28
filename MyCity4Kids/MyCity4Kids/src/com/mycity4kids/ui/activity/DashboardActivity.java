@@ -682,7 +682,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             fragment.setArguments(mBundle);
             replaceFragment(fragment, mBundle, true);
         } else if (Constants.PROFILE_FRAGMENT.equals(fragmentToLoad)) {
-            Intent pIntent = new Intent(this, PrivateProfileActivity.class);
+            Intent pIntent = new Intent(this, M_PrivateProfileActivity.class);
             startActivity(pIntent);
         } else if (Constants.SUGGESTED_TOPICS_FRAGMENT.equals(fragmentToLoad)) {
             SuggestedTopicsFragment fragment0 = new SuggestedTopicsFragment();
@@ -1193,10 +1193,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } else if (notificationExtras.getString("type").equalsIgnoreCase("profile")) {
                 String u_id = notificationExtras.getString("userId");
                 if (!SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(u_id)) {
-                    Intent intent1 = new Intent(this, PublicProfileActivity.class);
+                    Intent intent1 = new Intent(this, M_PrivateProfileActivity.class);
                     intent1.putExtra("fromNotification", true);
-                    intent1.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, u_id);
-                    intent1.putExtra(AppConstants.AUTHOR_NAME, "");
+                    intent1.putExtra(Constants.USER_ID, u_id);
                     intent1.putExtra(Constants.FROM_SCREEN, "Notification");
                     startActivity(intent1);
                 } else {
@@ -2015,7 +2014,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.profileImageView:
                 mDrawerLayout.closeDrawers();
                 Utils.campaignEvent(this, "profile", "sidebar", "Update", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "CTA_Update_Rewards");
-                Intent pIntent = new Intent(this, PrivateProfileActivity.class);
+                Intent pIntent = new Intent(this, M_PrivateProfileActivity.class);
                 startActivity(pIntent);
                 break;
             case R.id.langTextView:
@@ -2031,7 +2030,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;
             case R.id.imgProfile:
-                Intent intent4 = new Intent(DashboardActivity.this, PublicProfileActivity.class);
+                Intent intent4 = new Intent(DashboardActivity.this, M_PrivateProfileActivity.class);
+                intent4.putExtra(Constants.USER_ID, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 startActivity(intent4);
                 break;
             case R.id.downArrowImageView:
@@ -2547,9 +2547,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderAuthorDetailScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getAuthor_id())) {
-            Intent intent = new Intent(DashboardActivity.this, PublicProfileActivity.class);
+            Intent intent = new Intent(DashboardActivity.this, M_PrivateProfileActivity.class);
             intent.putExtra(AppConstants.PUBLIC_PROFILE_FLAG, true);
-            intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, data.getAuthor_id());
+            intent.putExtra(Constants.USER_ID, data.getAuthor_id());
             intent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
             intent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
             startActivity(intent);
@@ -2607,8 +2607,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderAuthorListingScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getAuthor_name())) {
-            Intent _authorListIntent = new Intent(DashboardActivity.this, PublicProfileActivity.class);
-            _authorListIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, data.getAuthor_id());
+            Intent _authorListIntent = new Intent(DashboardActivity.this, M_PrivateProfileActivity.class);
+            _authorListIntent.putExtra(Constants.USER_ID, data.getAuthor_id());
             _authorListIntent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
             _authorListIntent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
             _authorListIntent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
@@ -2618,8 +2618,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderBloggerListingScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getBlog_title())) {
-            Intent _bloggerListIntent = new Intent(DashboardActivity.this, PublicProfileActivity.class);
-            _bloggerListIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, data.getAuthor_id());
+            Intent _bloggerListIntent = new Intent(DashboardActivity.this, M_PrivateProfileActivity.class);
+            _bloggerListIntent.putExtra(Constants.USER_ID, data.getAuthor_id());
             _bloggerListIntent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
             _bloggerListIntent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
             _bloggerListIntent.putExtra(Constants.FROM_SCREEN, "Deep Linking");

@@ -48,7 +48,8 @@
                         android:id="@+id/profileShimmerLayout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:animateLayoutChanges="true">
+                        android:animateLayoutChanges="true"
+                        android:visibility="visible">
 
                         <include layout="@layout/profile_shimmer_layout" />
 
@@ -79,14 +80,13 @@
 
                         <ImageView
                             android:id="@+id/crownImageView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="40dp"
+                            android:layout_height="30dp"
                             android:layout_alignTop="@+id/profileImageView"
                             android:layout_marginStart="32dp"
-                            android:layout_marginTop="60dp"
+                            android:layout_marginTop="58dp"
                             android:background="@drawable/profile_crown_bg"
-                            android:padding="4dp"
-                            android:src="@drawable/add_photo" />
+                            android:elevation="4dp" />
 
                         <com.mycity4kids.widget.CustomFontTextView
                             android:id="@+id/authorNameTextView"
@@ -99,7 +99,8 @@
                             android:layout_toEndOf="@+id/profileImageView"
                             android:ellipsize="end"
                             android:maxLines="1"
-                            android:text="dhwauidhiauw dh iwjadhwao dhawio hdioawh d"
+                            android:text=""
+                            android:textColor="@color/app_dark_black"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -113,7 +114,7 @@
                             android:layout_toEndOf="@+id/profileImageView"
                             android:drawableStart="@drawable/ic_profile_location"
                             android:gravity="center"
-                            android:text="@string/city_picker.toolbar.title" />
+                            android:text="" />
 
                         <com.mycity4kids.widget.BadgesProfileWidget
                             android:id="@+id/badgeContainer"
@@ -130,7 +131,7 @@
                             android:gravity="center"
                             android:paddingStart="16dp"
                             android:paddingEnd="16dp"
-                            android:text="@string/random_text"
+                            android:text=""
                             android:textColor="@color/app_light_black"
                             app:maxLines="2" />
 
@@ -173,18 +174,19 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="10dp"
                                     android:text="--"
-                                    android:textColor="@color/app_light_black"
-                                    android:textSize="14sp"
-                                    app:fontName="oswald_regular.ttf" />
+                                    android:textColor="@color/app_dark_black"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
 
                                 <com.mycity4kids.widget.CustomFontTextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="10dp"
-                                    android:text="POSTS"
+                                    android:gravity="center"
+                                    android:minLines="2"
+                                    android:text="@string/blogger_profile.article_count_label"
                                     android:textColor="@color/app_grey"
-                                    android:textSize="12sp"
-                                    app:fontName="oswald.ttf" />
+                                    android:textSize="12sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -206,18 +208,19 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="10dp"
                                     android:text="--"
-                                    android:textColor="@color/app_light_black"
-                                    android:textSize="14sp"
-                                    app:fontName="oswald_regular.ttf" />
+                                    android:textColor="@color/app_dark_black"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
 
                                 <com.mycity4kids.widget.CustomFontTextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="10dp"
+                                    android:gravity="center"
+                                    android:minLines="2"
                                     android:text="@string/myprofile.followers_label"
                                     android:textColor="@color/app_grey"
-                                    android:textSize="12sp"
-                                    app:fontName="oswald.ttf" />
+                                    android:textSize="12sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -239,18 +242,19 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="10dp"
                                     android:text="--"
-                                    android:textColor="@color/app_light_black"
-                                    android:textSize="14sp"
-                                    app:fontName="oswald_regular.ttf" />
+                                    android:textColor="@color/app_dark_black"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
 
                                 <com.mycity4kids.widget.CustomFontTextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="10dp"
+                                    android:gravity="center"
+                                    android:minLines="2"
                                     android:text="@string/myprofile.following_label"
                                     android:textColor="@color/app_grey"
-                                    android:textSize="12sp"
-                                    app:fontName="oswald.ttf" />
+                                    android:textSize="12sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -272,19 +276,20 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="10dp"
                                     android:text="--"
-                                    android:textColor="@color/app_light_black"
-                                    android:textSize="14sp"
-                                    app:fontName="oswald_regular.ttf" />
+                                    android:textColor="@color/app_dark_black"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
 
                                 <com.mycity4kids.widget.CustomFontTextView
                                     android:id="@+id/rankLanguageTextView"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="10dp"
-                                    android:text="RANK IN ENGLISH"
+                                    android:gravity="center"
+                                    android:minLines="2"
+                                    android:text=""
                                     android:textColor="@color/app_grey"
-                                    android:textSize="12sp"
-                                    app:fontName="oswald.ttf" />
+                                    android:textSize="12sp" />
                             </LinearLayout>
 
                             <com.mycity4kids.widget.CustomFontTextView
@@ -298,12 +303,11 @@
                                 android:elevation="6dp"
                                 android:gravity="center"
                                 android:paddingStart="30dp"
-                                android:paddingTop="10dp"
+                                android:paddingTop="14dp"
                                 android:paddingEnd="30dp"
-                                android:paddingBottom="10dp"
-                                android:text="SHARE"
+                                android:paddingBottom="14dp"
+                                android:text="@string/ad.bottom_bar.generic_share"
                                 android:textColor="@color/white"
-                                app:fontName="oswald_regular.ttf"
                                 app:layout_constraintEnd_toStartOf="@+id/followerContainer"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/rankContainer" />
@@ -316,17 +320,16 @@
                                 android:layout_marginTop="4dp"
                                 android:layout_marginEnd="20dp"
                                 android:background="@drawable/profile_analytics_btn_bg"
-                                android:drawableStart="@drawable/tab1"
+                                android:drawableStart="@drawable/ic_analytics"
                                 android:drawablePadding="-30dp"
                                 android:elevation="6dp"
                                 android:gravity="center"
                                 android:paddingStart="30dp"
-                                android:paddingTop="10dp"
+                                android:paddingTop="12dp"
                                 android:paddingEnd="10dp"
-                                android:paddingBottom="10dp"
-                                android:text="Analytics"
+                                android:paddingBottom="12dp"
+                                android:text="@string/all_analytics"
                                 android:textColor="@color/app_red"
-                                app:fontName="oswald_regular.ttf"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="@+id/followerContainer"
                                 app:layout_constraintTop_toBottomOf="@+id/rankContainer" />
@@ -342,12 +345,12 @@
                                 android:elevation="6dp"
                                 android:gravity="center"
                                 android:paddingStart="30dp"
-                                android:paddingTop="10dp"
+                                android:paddingTop="14dp"
                                 android:paddingEnd="30dp"
-                                android:paddingBottom="10dp"
-                                android:text="FOLLOW"
+                                android:paddingBottom="14dp"
+                                android:text="@string/ad.follow_author"
                                 android:textColor="@color/white"
-                                app:fontName="oswald_regular.ttf"
+                                android:textStyle="bold"
                                 app:layout_constraintEnd_toStartOf="@+id/followerContainer"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/rankContainer" />
@@ -363,12 +366,11 @@
                                 android:elevation="6dp"
                                 android:gravity="center"
                                 android:paddingStart="30dp"
-                                android:paddingTop="10dp"
+                                android:paddingTop="14dp"
                                 android:paddingEnd="30dp"
-                                android:paddingBottom="10dp"
-                                android:text="SHARE"
+                                android:paddingBottom="14dp"
+                                android:text="@string/ad.bottom_bar.generic_share"
                                 android:textColor="@color/app_red"
-                                app:fontName="oswald_regular.ttf"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="@+id/followerContainer"
                                 app:layout_constraintTop_toBottomOf="@+id/rankContainer" />
@@ -402,16 +404,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="visible">
-
-                    <!--<com.mycity4kids.widget.CustomFontTextView-->
-                    <!--android:id="@+id/toolbarTitle"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:text="@string/user_article.tabbar.published_label"-->
-                    <!--android:textColor="@color/user_articles.toolbar.title"-->
-                    <!--android:textSize="20sp"-->
-                    <!--app:fontName="oswald_regular.ttf" />-->
 
                     <ImageView
                         android:id="@+id/searchAllImageView"

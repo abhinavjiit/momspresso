@@ -3,11 +3,6 @@ package com.mycity4kids.ui.fragment;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +16,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.internal.LinkedTreeMap;
@@ -30,7 +31,6 @@ import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.GroupActionsPatchRequest;
 import com.mycity4kids.models.request.GroupActionsRequest;
@@ -47,14 +47,13 @@ import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.UserPostSettingResponse;
 import com.mycity4kids.models.response.UserPostSettingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.profile.M_PrivateProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.GroupsEditPostActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
-import com.mycity4kids.ui.activity.PrivateProfileActivity;
-import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.adapter.MyFeedPollGenericRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
 
@@ -414,32 +413,14 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
 //                postSettingsContainer.setVisibility(View.VISIBLE);
 //                overlayView.setVisibility(View.VISIBLE);
                 break;
-
             case R.id.userImageView:
             case R.id.usernameTextView:
-
                 if (postList.get(position).getIsAnnon() == 0) {
-
-                    if (userDynamoId.equals(postList.get(position).getUserId())) {
-//                    MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
-//                    Bundle mBundle0 = new Bundle();
-//                    fragment0.setArguments(mBundle0);
-//                    if (isAdded())
-//                        ((ShortStoriesListingContainerActivity) getActivity()).addFragment(fragment0, mBundle0, true);
-                        Intent pIntent = new Intent(getActivity(), PrivateProfileActivity.class);
-                        startActivity(pIntent);
-                    } else {
-                        Utils.groupsEvent(getActivity(), "Groups_Discussion", "profile image", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "User Profile", "", "");
-
-                        Intent intentnn = new Intent(getActivity(), PublicProfileActivity.class);
-                        intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, postList.get(position).getUserId());
-                        intentnn.putExtra(AppConstants.AUTHOR_NAME, postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo().getLastName());
-                        intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
-                        startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
-                    }
+                    Intent pIntent = new Intent(getActivity(), M_PrivateProfileActivity.class);
+                    pIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, postList.get(position).getUserId());
+                    startActivity(pIntent);
                 }
                 break;
-
             case R.id.shareTextView:
                 Utils.groupsEvent(getActivity(), "Groups_Discussion_# comment", "Share", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "sharing options", "", postList.get(position).getId() + "");
 

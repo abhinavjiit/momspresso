@@ -16,6 +16,13 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crashlytics.android.Crashlytics;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
@@ -48,12 +55,11 @@ import com.mycity4kids.models.response.ShortStoryDetailResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.models.response.ViewCountResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.profile.M_PrivateProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
-import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.ShortStoriesDetailRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
@@ -68,12 +74,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -303,6 +303,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 author = responseData.getUserName();
                 userType = responseData.getUserType();
                 authorId = responseData.getUserId();
+                blogSlug = responseData.getBlogTitleSlug();
+                titleSlug = responseData.getTitleSlug();
                 hitBookmarkFollowingStatusAPI();
                 consolidatedList.add(headerModel);
                 getStoryComments(articleId, null);
@@ -712,17 +714,11 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             }
             break;
             case R.id.authorNameTextView: {
-                if (userDynamoId.equals(headerModel.getSsResult().getUserId())) {
-                    Intent profileIntent = new Intent(getActivity(), DashboardActivity.class);
-                    profileIntent.putExtra("TabType", "profile");
-                    startActivity(profileIntent);
-                } else {
-                    Intent intentnn = new Intent(getActivity(), PublicProfileActivity.class);
-                    intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, headerModel.getSsResult().getUserId());
-                    intentnn.putExtra(AppConstants.AUTHOR_NAME, headerModel.getSsResult().getUserName());
-                    intentnn.putExtra(Constants.FROM_SCREEN, "ShortStoryDetailsScreen");
-                    startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
-                }
+                Intent intentnn = new Intent(getActivity(), M_PrivateProfileActivity.class);
+                intentnn.putExtra(Constants.USER_ID, headerModel.getSsResult().getUserId());
+                intentnn.putExtra(AppConstants.AUTHOR_NAME, headerModel.getSsResult().getUserName());
+                intentnn.putExtra(Constants.FROM_SCREEN, "ShortStoryDetailsScreen");
+                startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
                 break;
             }
             case R.id.followAuthorTextView: {

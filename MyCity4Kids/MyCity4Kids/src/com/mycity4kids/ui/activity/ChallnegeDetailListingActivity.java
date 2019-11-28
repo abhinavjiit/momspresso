@@ -51,6 +51,7 @@ import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.profile.M_PrivateProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
@@ -601,12 +602,11 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
             break;
             case R.id.authorNameTextView:
                 if (userDynamoId.equals(mDatalist.get(position).getUserId())) {
-
-                    Intent pIntent = new Intent(this, PrivateProfileActivity.class);
+                    Intent pIntent = new Intent(this, M_PrivateProfileActivity.class);
                     startActivity(pIntent);
                 } else {
-                    Intent intentnn = new Intent(this, PublicProfileActivity.class);
-                    intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, mDatalist.get(position).getUserId());
+                    Intent intentnn = new Intent(this, M_PrivateProfileActivity.class);
+                    intentnn.putExtra(Constants.USER_ID, mDatalist.get(position).getUserId());
                     intentnn.putExtra(AppConstants.AUTHOR_NAME, mDatalist.get(position).getUserName());
                     intentnn.putExtra(Constants.FROM_SCREEN, "ShortStoryScreen");
                     startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);

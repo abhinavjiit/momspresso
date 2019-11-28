@@ -2,6 +2,7 @@ package com.mycity4kids.profile
 
 import android.accounts.NetworkErrorException
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -11,17 +12,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.response.BadgeListResponse
 import com.mycity4kids.retrofitAPIsInterfaces.BadgeAPI
+import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity
+import com.mycity4kids.ui.activity.ParallelFeedActivity
+import com.mycity4kids.ui.activity.ShortStoryContainerActivity
 import com.mycity4kids.utils.AppUtils
 import com.squareup.picasso.Picasso
 import retrofit2.Call
@@ -34,10 +41,13 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
     private lateinit var badgeBgImageView: ImageView
     private lateinit var badgeTitleTextView: TextView
     private lateinit var badgeDescTextView: TextView
+    private lateinit var viewContentTextView: TextView
     private lateinit var whatsappShareImageView: ImageView
     private lateinit var facebookShareImageView: ImageView
     private lateinit var instagramShareImageView: ImageView
     private lateinit var genericShareImageView: ImageView
+    private lateinit var shareJoyContainer: RelativeLayout
+    private lateinit var shareContainer: ConstraintLayout
     private lateinit var badgesShimmerContainer: ShimmerFrameLayout
 
     var userId: String? = null
@@ -52,6 +62,9 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
         badgeBgImageView = rootView.findViewById(R.id.badgeBgImageView)
         badgeTitleTextView = rootView.findViewById(R.id.badgeTitleTextView)
         badgeDescTextView = rootView.findViewById(R.id.badgeDescTextView)
+        viewContentTextView = rootView.findViewById(R.id.viewContentTextView)
+        shareJoyContainer = rootView.findViewById(R.id.shareJoyContainer)
+        shareContainer = rootView.findViewById(R.id.shareContainer)
         whatsappShareImageView = rootView.findViewById(R.id.whatsappShareImageView)
         facebookShareImageView = rootView.findViewById(R.id.facebookShareImageView)
         instagramShareImageView = rootView.findViewById(R.id.instagramShareImageView)
@@ -62,12 +75,11 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
         facebookShareImageView.setOnClickListener(this)
         instagramShareImageView.setOnClickListener(this)
         genericShareImageView.setOnClickListener(this)
+        viewContentTextView.setOnClickListener(this)
 
         val bundle = arguments
         userId = bundle?.getString(Constants.USER_ID)
         badgeId = bundle?.getString("id")
-
-//        val badgeData = bundle?.getParcelable<BadgeListResponse.BadgeListData.BadgeListResult>("badgeData")
 
         if (userId.isNullOrBlank() || badgeId.isNullOrBlank()) {
             activity?.let {
@@ -99,7 +111,7 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
                     val responseModel = response.body() as BadgeListResponse
                     if (responseModel.code == 200 && Constants.SUCCESS == responseModel.status) {
                         if (responseModel.data != null && !responseModel.data.isEmpty() && responseModel.data[0] != null) {
-                            showBadgeDialog(responseModel.data[0].result)
+                            populateBadgeDetails(userId, responseModel.data[0].result)
                         } else {
                         }
                     }
@@ -114,22 +126,45 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
                 Crashlytics.logException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
-
         })
     }
 
-    private fun showBadgeDialog(result: ArrayList<BadgeListResponse.BadgeListData.BadgeListResult>?) {
+    private fun populateBadgeDetails(userId: String, result: ArrayList<BadgeListResponse.BadgeListData.BadgeListResult>?) {
         activity?.let {
             Picasso.with(it).load(result?.get(0)?.badge_image_url).error(R.drawable.default_article)
                     .fit().into(badgeImageView)
             Picasso.with(it).load(result?.get(0)?.badge_bg_url).error(R.drawable.default_article)
                     .fit().into(badgeBgImageView)
+            badgeTitleTextView.text = result?.get(0)?.badge_title
+            badgeDescTextView.text = result?.get(0)?.badge_desc
             if (AppUtils.isPrivateProfile(userId)) {
-                badgeTitleTextView.setText(result?.get(0)?.getBadge_title()?.user)
-                badgeDescTextView.setText(result?.get(0)?.getBadge_desc()?.user)
+                shareContainer.visibility = View.VISIBLE
+                shareJoyContainer.visibility = View.VISIBLE
+                viewContentTextView.visibility = View.GONE
             } else {
-                badgeTitleTextView.setText(result?.get(0)?.getBadge_title()?.other)
-                badgeDescTextView.setText(result?.get(0)?.getBadge_desc()?.other)
+                shareContainer.visibility = View.GONE
+                shareJoyContainer.visibility = View.GONE
+                when {
+                    result?.get(0)?.item_type == AppConstants.CONTENT_TYPE_ARTICLE -> {
+                        viewContentTextView.visibility = View.VISIBLE
+                        val intent = Intent(activity, ArticleDetailsContainerActivity::class.java)
+                        intent.putExtra(Constants.ARTICLE_ID, result?.get(0)?.content_id)
+                        startActivity(intent)
+                    }
+                    result?.get(0)?.item_type == AppConstants.CONTENT_TYPE_SHORT_STORY -> {
+                        val intent = Intent(activity, ShortStoryContainerActivity::class.java)
+                        intent.putExtra(Constants.ARTICLE_ID, result?.get(0)?.content_id)
+                        startActivity(intent)
+                        viewContentTextView.visibility = View.VISIBLE
+                    }
+                    result?.get(0)?.item_type == AppConstants.CONTENT_TYPE_ARTICLE -> {
+                        viewContentTextView.visibility = View.VISIBLE
+                        val intent = Intent(activity, ParallelFeedActivity::class.java)
+                        intent.putExtra(Constants.ARTICLE_ID, result?.get(0)?.content_id)
+                        startActivity(intent)
+                    }
+                    else -> viewContentTextView.visibility = View.GONE
+                }
             }
         }
     }

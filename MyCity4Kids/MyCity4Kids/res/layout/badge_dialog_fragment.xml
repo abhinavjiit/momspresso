@@ -49,18 +49,32 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
+        android:layout_marginBottom="20dp"
         android:gravity="center"
         android:text=""
         android:textColor="@color/color_787E85"
         android:textSize="14sp" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/viewContentTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/badgeDescTextView"
+        android:background="@color/app_red"
+        android:elevation="4dp"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="@string/all_view"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/shareJoyContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/badgeDescTextView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp">
+        android:layout_centerHorizontal="true">
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/shareJoyLabelTextView"
@@ -93,6 +107,7 @@
     </RelativeLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/shareContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/shareJoyContainer"
@@ -151,7 +166,7 @@
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
         android:background="@color/white"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="wrap_content"

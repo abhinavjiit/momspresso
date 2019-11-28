@@ -45,6 +45,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.profile.M_PrivateProfileActivity;
 import com.mycity4kids.sync.SyncUserInfoService;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
@@ -57,7 +58,6 @@ import com.mycity4kids.ui.activity.GroupsReportedContentActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
-import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
@@ -496,11 +496,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
         } else if (type.equalsIgnoreCase("profile")) {
 //            String u_id = notificationExtras.getString("userId");
             if (!SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(userId)) {
-                Intent intent1 = new Intent(this, PublicProfileActivity.class);
+                Intent intent1 = new Intent(this, M_PrivateProfileActivity.class);
                 intent1.putExtra("fromNotification", true);
-                intent1.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, userId);
-                intent1.putExtra(AppConstants.AUTHOR_NAME, "");
-                intent1.putExtra(Constants.FROM_SCREEN, "Notification");
+                intent1.putExtra(Constants.USER_ID, userId);
                 startActivity(intent1);
             } else {
 //                fragmentToLoad = Constants.PROFILE_FRAGMENT;

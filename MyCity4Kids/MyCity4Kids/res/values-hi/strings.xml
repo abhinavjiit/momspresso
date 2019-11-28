@@ -1249,4 +1249,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="add_collection_name">Add collection name</string>
     <string name="profile_share_the_joy">Share the Joy</string>
     <string name="dialog_confirm_delete">Are you sure you want to delete this collection</string>
+    <string name="all_view">View</string>
+    <string name="all_analytics">Analytics</string>
 </resources>

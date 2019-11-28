@@ -35,10 +35,10 @@ public class BadgeListResponse extends BaseResponse {
 
         public static class BadgeListResult implements Parcelable {
             private String id;
-            private BadgeDesc badge_desc;
+            private String badge_desc;
             private String badge_id;
             private String badge_metaclass;
-            private BadgeTitle badge_title;
+            private String badge_title;
             private int count;
             private boolean deleted;
             private boolean enabled;
@@ -51,10 +51,10 @@ public class BadgeListResponse extends BaseResponse {
 
             protected BadgeListResult(Parcel in) {
                 id = in.readString();
-                badge_desc = in.readParcelable(BadgeDesc.class.getClassLoader());
+                badge_desc = in.readString();
                 badge_id = in.readString();
                 badge_metaclass = in.readString();
-                badge_title = in.readParcelable(BadgeTitle.class.getClassLoader());
+                badge_title = in.readString();
                 count = in.readInt();
                 deleted = in.readByte() != 0;
                 enabled = in.readByte() != 0;
@@ -86,19 +86,19 @@ public class BadgeListResponse extends BaseResponse {
                 this.id = id;
             }
 
-            public BadgeDesc getBadge_desc() {
+            public String getBadge_desc() {
                 return badge_desc;
             }
 
-            public void setBadge_desc(BadgeDesc badge_desc) {
+            public void setBadge_desc(String badge_desc) {
                 this.badge_desc = badge_desc;
             }
 
-            public BadgeTitle getBadge_title() {
+            public String getBadge_title() {
                 return badge_title;
             }
 
-            public void setBadge_title(BadgeTitle badge_title) {
+            public void setBadge_title(String badge_title) {
                 this.badge_title = badge_title;
             }
 
@@ -198,10 +198,10 @@ public class BadgeListResponse extends BaseResponse {
             @Override
             public void writeToParcel(Parcel parcel, int i) {
                 parcel.writeString(id);
-                parcel.writeParcelable(badge_desc, i);
+                parcel.writeString(badge_desc);
                 parcel.writeString(badge_id);
                 parcel.writeString(badge_metaclass);
-                parcel.writeParcelable(badge_title, i);
+                parcel.writeString(badge_title);
                 parcel.writeInt(count);
                 parcel.writeByte((byte) (deleted ? 1 : 0));
                 parcel.writeByte((byte) (enabled ? 1 : 0));
@@ -212,104 +212,6 @@ public class BadgeListResponse extends BaseResponse {
                 parcel.writeString(item_type);
                 parcel.writeString(content_id);
             }
-        }
-    }
-
-    public static class BadgeDesc implements Parcelable {
-        private String other;
-        private String user;
-
-        protected BadgeDesc(Parcel in) {
-            other = in.readString();
-            user = in.readString();
-        }
-
-        public static final Creator<BadgeDesc> CREATOR = new Creator<BadgeDesc>() {
-            @Override
-            public BadgeDesc createFromParcel(Parcel in) {
-                return new BadgeDesc(in);
-            }
-
-            @Override
-            public BadgeDesc[] newArray(int size) {
-                return new BadgeDesc[size];
-            }
-        };
-
-        public String getOther() {
-            return other;
-        }
-
-        public void setOther(String other) {
-            this.other = other;
-        }
-
-        public String getUser() {
-            return user;
-        }
-
-        public void setUser(String user) {
-            this.user = user;
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel parcel, int i) {
-            parcel.writeString(other);
-            parcel.writeString(user);
-        }
-    }
-
-    public static class BadgeTitle implements Parcelable {
-        private String other;
-        private String user;
-
-        protected BadgeTitle(Parcel in) {
-            other = in.readString();
-            user = in.readString();
-        }
-
-        public static final Creator<BadgeTitle> CREATOR = new Creator<BadgeTitle>() {
-            @Override
-            public BadgeTitle createFromParcel(Parcel in) {
-                return new BadgeTitle(in);
-            }
-
-            @Override
-            public BadgeTitle[] newArray(int size) {
-                return new BadgeTitle[size];
-            }
-        };
-
-        public String getOther() {
-            return other;
-        }
-
-        public void setOther(String other) {
-            this.other = other;
-        }
-
-        public String getUser() {
-            return user;
-        }
-
-        public void setUser(String user) {
-            this.user = user;
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel parcel, int i) {
-            parcel.writeString(other);
-            parcel.writeString(user);
         }
     }
 }

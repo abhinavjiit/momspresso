@@ -32,6 +32,7 @@ import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.NotificationCenterListResponse;
 import com.mycity4kids.models.response.NotificationCenterResult;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.profile.M_PrivateProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
@@ -42,13 +43,10 @@ import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
-import com.mycity4kids.ui.activity.PrivateProfileActivity;
-import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.SuggestedTopicsActivity;
 import com.mycity4kids.ui.activity.TopicsListingActivity;
-import com.mycity4kids.ui.activity.TopicsShortStoriesContainerFragment;
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
@@ -260,17 +258,9 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     } else {
                         authorId = notificationList.get(position).getAuthorId();
                     }
-
-                    if (SharedPrefUtils.getUserDetailModel(mContext).getDynamoId().equals(authorId)) {
-                        Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
-                        mContext.startActivity(pIntent);
-                    } else {
-                        Intent intent1 = new Intent(mContext, PublicProfileActivity.class);
-                        intent1.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, authorId);
-                        intent1.putExtra(AppConstants.AUTHOR_NAME, "");
-                        intent1.putExtra(Constants.FROM_SCREEN, "Notification Center List");
-                        mContext.startActivity(intent1);
-                    }
+                    Intent pIntent = new Intent(mContext, M_PrivateProfileActivity.class);
+                    pIntent.putExtra(Constants.USER_ID, authorId);
+                    mContext.startActivity(pIntent);
                     try {
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());

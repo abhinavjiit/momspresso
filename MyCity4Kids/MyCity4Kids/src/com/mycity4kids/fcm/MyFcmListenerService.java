@@ -32,6 +32,7 @@ import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.newmodels.PushNotificationModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.profile.M_PrivateProfileActivity;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
@@ -42,7 +43,6 @@ import com.mycity4kids.ui.activity.EditProfileNewActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.MyTotalEarningActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
-import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity;
 import com.mycity4kids.ui.activity.SplashActivity;
 import com.mycity4kids.ui.activity.TopicsListingActivity;
@@ -317,14 +317,14 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         resultIntent.putExtra("fromNotification", true);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                     } else {
-                        resultIntent = new Intent(getApplicationContext(), PublicProfileActivity.class);
+                        resultIntent = new Intent(getApplicationContext(), M_PrivateProfileActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         resultIntent.putExtra("fromNotification", true);
-                        resultIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, pushNotificationModel.getUser_id());
+                        resultIntent.putExtra(Constants.USER_ID, pushNotificationModel.getUser_id());
                         resultIntent.putExtra(AppConstants.AUTHOR_NAME, "");
                         resultIntent.putExtra(Constants.FROM_SCREEN, "Notification");
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                        stackBuilder.addParentStack(PublicProfileActivity.class);
+                        stackBuilder.addParentStack(M_PrivateProfileActivity.class);
                         stackBuilder.addNextIntent(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                     }

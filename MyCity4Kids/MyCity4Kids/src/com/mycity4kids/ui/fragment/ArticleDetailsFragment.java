@@ -35,6 +35,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.crashlytics.android.Crashlytics;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
@@ -107,7 +114,6 @@ import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
-import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
@@ -131,12 +137,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -1171,18 +1171,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 case R.id.commentorImageView: {
                     CommentsData commentData = (CommentsData) ((View) v.getParent().getParent()).getTag();
                     if (!"fb".equals(commentData.getComment_type())) {
-                        if (userDynamoId.equals(commentData.getUserId())) {
-                            Intent profileIntent = new Intent(getActivity(), DashboardActivity.class);
-                            profileIntent.putExtra("TabType", "profile");
-                            startActivity(profileIntent);
-                        } else {
-                            Intent profileIntent = new Intent(getActivity(), PublicProfileActivity.class);
-                            profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
-                            profileIntent.putExtra(AppConstants.AUTHOR_NAME, commentData.getName());
-                            profileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
-                            startActivity(profileIntent);
-                        }
-
+                        Intent profileIntent = new Intent(getActivity(), M_PrivateProfileActivity.class);
+                        profileIntent.putExtra(Constants.USER_ID, commentData.getUserId());
+                        startActivity(profileIntent);
                     }
                 }
                 break;
@@ -1190,17 +1181,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 case R.id.replierImageView: {
                     CommentsData commentData = (CommentsData) ((View) v.getParent()).getTag();
                     if (!"fb".equals(commentData.getComment_type())) {
-                        if (userDynamoId.equals(commentData.getUserId())) {
-                            Intent profileIntent = new Intent(getActivity(), DashboardActivity.class);
-                            profileIntent.putExtra("TabType", "profile");
-                            startActivity(profileIntent);
-                        } else {
-                            Intent profileIntent = new Intent(getActivity(), PublicProfileActivity.class);
-                            profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
-                            profileIntent.putExtra(AppConstants.AUTHOR_NAME, commentData.getName());
-                            profileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
-                            startActivity(profileIntent);
-                        }
+                        Intent profileIntent = new Intent(getActivity(), M_PrivateProfileActivity.class);
+                        profileIntent.putExtra(Constants.USER_ID, commentData.getUserId());
+                        startActivity(profileIntent);
                     }
                 }
                 break;
@@ -1210,17 +1193,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
                 case R.id.user_image:
                 case R.id.user_name:
-                    if (userDynamoId.equals(detailData.getUserId())) {
-                        Intent profileIntent = new Intent(getActivity(), DashboardActivity.class);
-                        profileIntent.putExtra("TabType", "profile");
-                        startActivity(profileIntent);
-                    } else {
-                        Intent profileIntent = new Intent(getActivity(), PublicProfileActivity.class);
-                        profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, detailData.getUserId());
-                        profileIntent.putExtra(AppConstants.AUTHOR_NAME, detailData.getUserName());
-                        profileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
-                        startActivity(profileIntent);
-                    }
+                    Intent profileIntent = new Intent(getActivity(), M_PrivateProfileActivity.class);
+                    profileIntent.putExtra(Constants.USER_ID, detailData.getUserId());
+                    startActivity(profileIntent);
                     break;
                 case R.id.relatedArticles1: {
                     if (recentAuthorArticleHeading.getText() != null && recentAuthorArticleHeading.getText().toString().contains("RELATED")) {

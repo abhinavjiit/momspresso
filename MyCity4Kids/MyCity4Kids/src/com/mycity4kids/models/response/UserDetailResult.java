@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,6 +34,7 @@ public class UserDetailResult implements Parcelable {
     private SocialTokens socialTokens;
     private String isLangSelection = "0";
     private String subscriptionEmail;
+    private Object crownData;
 
     private Map<String, String> langSubscription;
     private String totalArticles;
@@ -348,6 +348,14 @@ public class UserDetailResult implements Parcelable {
 
     public void setCreaterLangs(ArrayList<String> createrLangs) {
         this.createrLangs = createrLangs;
+    }
+
+    public Object getCrownData() {
+        return crownData;
+    }
+
+    public void setCrownData(Object crownData) {
+        this.crownData = crownData;
     }
 
     @Override

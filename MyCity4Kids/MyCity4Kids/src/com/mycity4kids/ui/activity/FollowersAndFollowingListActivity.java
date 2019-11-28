@@ -11,6 +11,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.Toolbar;
+
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -21,12 +23,12 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.FollowersFollowingResponse;
 import com.mycity4kids.models.response.FollowersFollowingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.profile.M_PrivateProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.ui.adapter.FollowerFollowingListAdapter;
 
 import java.util.ArrayList;
 
-import androidx.appcompat.widget.Toolbar;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -86,9 +88,9 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
         followerFollowingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(FollowersAndFollowingListActivity.this, PublicProfileActivity.class);
+                Intent intent = new Intent(FollowersAndFollowingListActivity.this, M_PrivateProfileActivity.class);
                 intent.putExtra(AppConstants.PUBLIC_PROFILE_FLAG, true);
-                intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, mDatalist.get(position).getUserId());
+                intent.putExtra(Constants.USER_ID, mDatalist.get(position).getUserId());
                 intent.putExtra(AppConstants.AUTHOR_NAME, mDatalist.get(position).getFirstName() + " " + mDatalist.get(position).getLastName());
                 intent.putExtra(Constants.FROM_SCREEN, "Followers/Following List");
                 startActivity(intent);

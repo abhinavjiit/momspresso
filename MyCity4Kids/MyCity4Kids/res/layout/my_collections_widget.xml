@@ -70,6 +70,7 @@
             android:layout_alignParentEnd="true"
             android:padding="10dp"
             android:text="@string/profile_view_all_collections"
+            android:textSize="12sp"
             android:textColor="@color/app_light_black" />
 
         <HorizontalScrollView
