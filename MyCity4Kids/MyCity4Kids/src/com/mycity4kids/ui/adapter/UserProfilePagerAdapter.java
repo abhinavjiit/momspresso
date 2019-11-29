@@ -70,12 +70,7 @@ public class UserProfilePagerAdapter extends FragmentStatePagerAdapter {
         return about;
     }
 
-    public Contactdetails getContactdetails() {
-        return contactdetails;
-    }
 
-    public RewardsTabFragment getRewardsFragment() {
-        return rewardsFragment;
-    }
+
 
 }

@@ -519,12 +519,10 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                 startActivity(ssIntent);
                 break;
             case R.id.activitySectionTextView: {
-                Intent intent1 = new Intent(PrivateProfileActivity.this, CollectionsActivity.class);
-                intent1.putExtra("userId", userId);
-                startActivity(intent1);
-               /* Intent intent5 = new Intent(this, UserActivitiesActivity.class);
+
+                Intent intent5 = new Intent(this, UserActivitiesActivity.class);
                 intent5.putExtra(Constants.AUTHOR_ID, userId);
-                startActivity(intent5);*/
+                startActivity(intent5);
             }
             break;
             case R.id.badgeSectionTextView:

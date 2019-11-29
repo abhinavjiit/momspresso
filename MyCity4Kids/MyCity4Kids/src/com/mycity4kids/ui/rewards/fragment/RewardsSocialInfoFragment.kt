@@ -336,7 +336,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         houseHoldIncomeArray.forEach { str ->
             householdList.add(str)
         }
-        val householdAdapter = CustomSpinnerAdapter(activity, householdList,"")
+        val householdAdapter = CustomSpinnerAdapter(activity, householdList)
         spinnerHouseHold.adapter = householdAdapter
         spinnerHouseHold.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapter: AdapterView<*>, v: View,
@@ -354,7 +354,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
             professionList.add(str)
         }
 
-        val professionAdapter = CustomSpinnerAdapter(activity, professionList,"")
+        val professionAdapter = CustomSpinnerAdapter(activity, professionList)
         spinnerProfession.adapter = professionAdapter
         spinnerProfession.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapter: AdapterView<*>, v: View,

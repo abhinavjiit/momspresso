@@ -64,6 +64,7 @@ class RewardsTabFragment : BaseFragment() {
         relativeShareReferralCode = containerView.findViewById(R.id.relativeShareReferralCode)
 
         fetchTotalEarning()
+       // val isRewardAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
 
         textPersonalInfo.setOnClickListener {
             Utils.campaignEvent(activity, "personalInfo", "reward_tab", "personalInfoText", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "personal_info_detail")
@@ -116,7 +117,7 @@ class RewardsTabFragment : BaseFragment() {
 
         if (arguments != null) {
             isRewardsAdded = arguments!!.getString("isRewardsAdded", "0")
-            if (isRewardsAdded.equals("1")) {
+            if (isRewardsAdded == "1") {
                 textStartReward.setText(resources.getString(R.string.update))
                 relativeParticipate.visibility = View.GONE
                 linearConnectivity.visibility = View.VISIBLE
@@ -126,6 +127,7 @@ class RewardsTabFragment : BaseFragment() {
                 linearConnectivity.visibility = View.GONE
             }
         }
+
 
         textStartReward.setOnClickListener {
             startActivity(Intent(activity, RewardsContainerActivity::class.java))

@@ -115,7 +115,9 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                 arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
                 intArrayOf(
 
+
                         ContextCompat.getColor(this@UserCollectionItemListActivity, R.color.white), ContextCompat.getColor(this@UserCollectionItemListActivity, R.color.add_video_details_mute_label))
+
         )
         muteSwitch?.thumbTintList = thumbStates
         if (Build.VERSION.SDK_INT >= 24) {
@@ -520,6 +522,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
 
 
     override fun onBackPressed() {
+
         val intent = Intent()
         intent.putExtra(AppConstants.COLLECTION_EDIT_TYPE, editType)
         intent.putExtra("collectionName", collectionNameTextView?.text.toString())
@@ -529,4 +532,3 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
     }
 
 }
-

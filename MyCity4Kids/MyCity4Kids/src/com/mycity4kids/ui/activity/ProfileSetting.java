@@ -10,9 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -55,8 +52,11 @@ import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 
+import org.apache.commons.lang.WordUtils;
 import org.json.JSONObject;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -69,6 +69,8 @@ public class ProfileSetting extends BaseActivity implements GoogleApiClient.OnCo
     private LinearLayout logout_layout;
     private GoogleApiClient mGoogleApiClient;
     private int totalPayout = 0;
+    private TextView activityTextView, readArticlesTextView;
+    private String isRewardAdded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,12 @@ public class ProfileSetting extends BaseActivity implements GoogleApiClient.OnCo
         about = findViewById(R.id.about);
         app_version = findViewById(R.id.app_version);
         logout_layout = findViewById(R.id.logout_layout);
+        activityTextView = findViewById(R.id.activityTextView);
+        readArticlesTextView = findViewById(R.id.readArticlesTextView);
+
+        if (getIntent().getExtras().containsKey("isRewardAdded")) {
+            isRewardAdded = getIntent().getStringExtra("isRewardAdded");
+        }
         fetchTotalEarning();
         app_version.setText(getResources().getString(R.string.app_version) + " " + AppUtils.getAppVersion(BaseApplication.getAppContext()));
 
@@ -100,6 +108,9 @@ public class ProfileSetting extends BaseActivity implements GoogleApiClient.OnCo
         } catch (Exception e) {
 
         }
+
+        activityTextView.setText(WordUtils.capitalizeFully(getString(R.string.myprofile_section_activity_label)));
+        readArticlesTextView.setText(WordUtils.capitalizeFully(getString(R.string.read_articles)));
         backImageView.setOnClickListener(this);
         personal_info.setOnClickListener(this);
         mymoney_info.setOnClickListener(this);
@@ -111,6 +122,8 @@ public class ProfileSetting extends BaseActivity implements GoogleApiClient.OnCo
         report_spam.setOnClickListener(this);
         about.setOnClickListener(this);
         logout_layout.setOnClickListener(this);
+        activityTextView.setOnClickListener(this);
+        readArticlesTextView.setOnClickListener(this);
     }
 
     @Override
@@ -126,9 +139,10 @@ public class ProfileSetting extends BaseActivity implements GoogleApiClient.OnCo
                 startActivity(personalIntent);
                 break;
             case R.id.mymoney_info:
-                Intent mymoneyIntent = new Intent(this, MyTotalEarningActivity.class);
-                mymoneyIntent.putExtra("totalPayout", totalPayout);
-                startActivity(mymoneyIntent);
+                Intent intent = new Intent(this, EditProfileNewActivity.class);
+                intent.putExtra("isComingfromCampaign", true);
+                intent.putExtra("isRewardAdded", "1");
+                startActivity(intent);
                 break;
             case R.id.payment_details:
                 Intent paymentIntent = new Intent(this, RewardsContainerActivity.class);
@@ -166,6 +180,19 @@ public class ProfileSetting extends BaseActivity implements GoogleApiClient.OnCo
                 break;
             case R.id.logout_layout:
                 logoutUser();
+                break;
+
+            case R.id.readArticlesTextView:
+                Intent readArticleIntent = new Intent(this, UserReadArticlesContentActivity.class);
+                readArticleIntent.putExtra("isPrivateProfile", true);
+                readArticleIntent.putExtra(Constants.AUTHOR_ID, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                startActivity(readArticleIntent);
+                break;
+
+            case R.id.activityTextView:
+                Intent intent5 = new Intent(this, UserActivitiesActivity.class);
+                intent5.putExtra(Constants.AUTHOR_ID, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                startActivity(intent5);
                 break;
         }
     }

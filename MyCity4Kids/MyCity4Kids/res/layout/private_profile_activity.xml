@@ -684,7 +684,7 @@
                 android:drawablePadding="18dp"
                 android:gravity="center_vertical"
                 android:paddingLeft="10dp"
-                android:text="READ ARTICLES"
+                android:text="@string/read_articles"
                 app:fontName="oswald.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView

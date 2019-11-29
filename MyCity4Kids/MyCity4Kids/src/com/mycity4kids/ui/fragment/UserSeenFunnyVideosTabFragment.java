@@ -7,13 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
@@ -33,6 +30,9 @@ import com.mycity4kids.ui.adapter.SeenVideosAdapter;
 
 import java.util.ArrayList;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -50,7 +50,6 @@ public class UserSeenFunnyVideosTabFragment extends BaseFragment implements View
     private boolean isReuqestRunning = true;
     private int chunk = 0;
     private String authorId;
-
     private RecyclerView seenVideosRecyclerView;
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
@@ -67,6 +66,7 @@ public class UserSeenFunnyVideosTabFragment extends BaseFragment implements View
         seenVideosRecyclerView = (RecyclerView) view.findViewById(R.id.seenVideos);
         authorId = getArguments().getString(Constants.AUTHOR_ID);
         seenVideosRecyclerView.setVisibility(View.VISIBLE);
+        view.findViewById(R.id.relativeLoadingView).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
         if (StringUtils.isNullOrEmpty(authorId)) {
             authorId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();

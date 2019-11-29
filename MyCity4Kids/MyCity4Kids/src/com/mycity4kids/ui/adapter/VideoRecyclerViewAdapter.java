@@ -12,6 +12,7 @@ import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
+import q.rorbin.badgeview.QBadgeView;
 
 public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
@@ -124,6 +126,14 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position, List<Object> payload) {
         mHolder = (ViewHolder) holder;
+        new QBadgeView(mContext)
+                .setBadgeText(" " + mContext.getString(R.string.new_label) + " ")
+                .setBadgeBackgroundColor(mContext.getResources().getColor(R.color.orange_new))
+                .setBadgeTextSize(7, true)
+                .setBadgePadding(3, true)
+                .setBadgeGravity(Gravity.TOP | Gravity.END)
+                .setGravityOffset(4, -2, true)
+                .bindTarget(mHolder.collectionAdd);
         holder.onBind(position);
     }
 

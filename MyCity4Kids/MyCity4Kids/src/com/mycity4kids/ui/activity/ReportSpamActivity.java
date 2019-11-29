@@ -49,7 +49,7 @@ public class ReportSpamActivity extends BaseActivity implements View.OnClickList
         spamTopicList.add("Male");
         spamTopicList.add("Female");
 
-        CustomSpinnerAdapter spinAdapter = new CustomSpinnerAdapter(this, spamTopicList, "ReportSpam");
+        CustomSpinnerAdapter spinAdapter = new CustomSpinnerAdapter(this, spamTopicList);
         spamSpinner.setAdapter(spinAdapter);
         spamSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

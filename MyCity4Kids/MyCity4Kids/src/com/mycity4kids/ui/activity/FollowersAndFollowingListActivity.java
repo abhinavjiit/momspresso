@@ -11,11 +11,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.widget.Toolbar;
-
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -25,10 +24,15 @@ import com.mycity4kids.models.response.FollowersFollowingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.M_PrivateProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
+import com.mycity4kids.ui.adapter.CollectionFollowFollowersListAdapter;
 import com.mycity4kids.ui.adapter.FollowerFollowingListAdapter;
+import com.mycity4kids.utils.EndlessScrollListener;
 
 import java.util.ArrayList;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -47,10 +51,14 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
     FollowerFollowingListAdapter followerFollowingListAdapter;
 
     ArrayList<FollowersFollowingResult> mDatalist;
+    ArrayList<FollowersFollowingResult> collectionDatalist;
     private String userId;
+    RecyclerView collectionFollowFollowingListView;
+    private CollectionFollowFollowersListAdapter collectionFollowFollowersListAdapter;
     private String followListType;
     private TextView toolbarTitle;
-    private String collectionId;
+    private String collectionId = "";
+    LinearLayoutManager linearLayoutManager;
 
 
     @Override
@@ -74,16 +82,38 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
         noResultTextView = (TextView) findViewById(R.id.emptyList);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
+        collectionFollowFollowingListView = findViewById(R.id.collectionFollowFollowingListView);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mDatalist = new ArrayList<>();
+        collectionDatalist = new ArrayList<>();
+
+        if (!StringUtils.isNullOrEmpty(collectionId)) {
+            getCollectionFollowers(0);
+            linearLayoutManager = new LinearLayoutManager(this);
+            followerFollowingListView.setVisibility(View.GONE);
+            collectionFollowFollowingListView.setVisibility(View.VISIBLE);
+            collectionFollowFollowingListView.setLayoutManager(linearLayoutManager);
+            collectionFollowFollowersListAdapter = new CollectionFollowFollowersListAdapter(this, followListType);
+            collectionFollowFollowersListAdapter.setData(collectionDatalist);
+            collectionFollowFollowingListView.setAdapter(collectionFollowFollowersListAdapter);
+        } else {
+            followerFollowingListView.setVisibility(View.VISIBLE);
+            collectionFollowFollowingListView.setVisibility(View.GONE);
+            followerFollowingListAdapter = new FollowerFollowingListAdapter(this, followListType);
+            followerFollowingListAdapter.setData(mDatalist);
+            followerFollowingListView.setAdapter(followerFollowingListAdapter);
+        }
 
 
-        followerFollowingListAdapter = new FollowerFollowingListAdapter(this, followListType);
-        followerFollowingListAdapter.setData(mDatalist);
-        followerFollowingListView.setAdapter(followerFollowingListAdapter);
+        collectionFollowFollowingListView.addOnScrollListener(new EndlessScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                getCollectionFollowers(totalItemsCount);
+            }
+        });
 
         followerFollowingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -96,30 +126,28 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mDatalist.clear();
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        FollowAPI followListAPI = retrofit.create(FollowAPI.class);
-        if (AppConstants.FOLLOWER_LIST.equals(followListType)) {
-            Call<FollowersFollowingResponse> callFollowerList = followListAPI.getFollowersList(userId);
-            callFollowerList.enqueue(getFollowersListResponseCallback);
-            progressBar.setVisibility(View.VISIBLE);
-            toolbarTitle.setText(getString(R.string.myprofile_followers_label));
-        } else if (AppConstants.COLLECTION_FOLLOWING_LIST.equals(followListType)) {
-            Retrofit retrofit1 = BaseApplication.getInstance().getRetrofit();
-            FollowAPI followListAPIi = retrofit1.create(FollowAPI.class);
-            Call<FollowersFollowingResponse> callCollectionFollowersList = followListAPIi.getCollectionFollowingList(collectionId, 0, 10);
-            callCollectionFollowersList.enqueue(getCollectionFollowersList);
-            progressBar.setVisibility(View.VISIBLE);
-        } else {
-            Call<FollowersFollowingResponse> callFollowingList = followListAPI.getFollowingList(userId);
-            callFollowingList.enqueue(getFollowersListResponseCallback);
-            progressBar.setVisibility(View.VISIBLE);
-            toolbarTitle.setText(getString(R.string.myprofile_following_label));
+        if (StringUtils.isNullOrEmpty(collectionId)) {
+            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+            FollowAPI followListAPI = retrofit.create(FollowAPI.class);
+            if (AppConstants.FOLLOWER_LIST.equals(followListType)) {
+                Call<FollowersFollowingResponse> callFollowerList = followListAPI.getFollowersList(userId);
+                callFollowerList.enqueue(getFollowersListResponseCallback);
+                progressBar.setVisibility(View.VISIBLE);
+                toolbarTitle.setText(getString(R.string.myprofile_followers_label));
+            } else {
+                Call<FollowersFollowingResponse> callFollowingList = followListAPI.getFollowingList(userId);
+                callFollowingList.enqueue(getFollowersListResponseCallback);
+                progressBar.setVisibility(View.VISIBLE);
+                toolbarTitle.setText(getString(R.string.myprofile_following_label));
+            }
         }
     }
 
@@ -133,7 +161,7 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
             }
             try {
                 FollowersFollowingResponse responseData = response.body();
-                processFollowersListResponse(responseData);
+                processCollectionFollowersListResponse(responseData);
             } catch (Exception e) {
                 showToast(getString(R.string.server_went_wrong));
                 Crashlytics.logException(e);
@@ -197,6 +225,24 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
         }
     }
 
+    private void processCollectionFollowersListResponse(FollowersFollowingResponse responseData) {
+        if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+            noResultTextView.setVisibility(View.GONE);
+            mDatalist = responseData.getData().getResult();
+            collectionDatalist.addAll(mDatalist);
+            if (collectionDatalist.size() == 0) {
+                noResultTextView.setVisibility(View.VISIBLE);
+                collectionFollowFollowingListView.setVisibility(View.GONE);
+            } else {
+                collectionFollowFollowersListAdapter.setData(collectionDatalist);
+                collectionFollowFollowersListAdapter.notifyDataSetChanged();
+            }
+        } else {
+            if (null != responseData.getReason())
+                showToast(responseData.getReason());
+        }
+    }
+
     @Override
     protected void updateUi(Response response) {
 
@@ -211,6 +257,14 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void getCollectionFollowers(int start) {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        FollowAPI followListAPI = retrofit.create(FollowAPI.class);
+        Call<FollowersFollowingResponse> callCollectionFollowersList = followListAPI.getCollectionFollowingList(collectionId, start, 10);
+        callCollectionFollowersList.enqueue(getCollectionFollowersList);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
 

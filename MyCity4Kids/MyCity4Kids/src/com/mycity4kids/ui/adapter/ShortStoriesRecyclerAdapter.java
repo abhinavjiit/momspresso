@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import q.rorbin.badgeview.QBadgeView;
 
 /**
  * Created by hemant on 30/5/18.
@@ -27,12 +29,11 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
     private Context mContext;
     private LayoutInflater mInflator;
     ArrayList<ArticleListingResult> articleDataModelsNew;
-    private final float density;
     private RecyclerViewClickListener mListener;
 
     public ShortStoriesRecyclerAdapter(Context pContext, RecyclerViewClickListener listener) {
 
-        density = pContext.getResources().getDisplayMetrics().density;
+        float density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
         this.mListener = listener;
@@ -96,6 +97,15 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
         } else {
             holder.likeImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_ss_like));
         }
+
+        new QBadgeView(mContext)
+                .setBadgeText(" " + mContext.getString(R.string.new_label) + " ")
+                .setBadgeBackgroundColor(mContext.getResources().getColor(R.color.orange_new))
+                .setBadgeTextSize(7, true)
+                .setBadgePadding(3, true)
+                .setBadgeGravity(Gravity.TOP | Gravity.END)
+                .setGravityOffset(4, -2, true)
+                .bindTarget(holder.genericShareImageView);
     }
 
     @Override

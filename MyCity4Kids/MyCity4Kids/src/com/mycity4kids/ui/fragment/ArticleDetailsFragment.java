@@ -511,7 +511,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 .setBadgePadding(3, true)
                 .setBadgeGravity(Gravity.TOP | Gravity.END)
                 .setGravityOffset(4, -2, true)
-
                 .bindTarget(emailShareTextView);
 
         return fragmentView;

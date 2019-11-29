@@ -504,7 +504,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         genderList.add("Male")
         genderList.add("Female")
 
-        val spinAdapter = CustomSpinnerAdapter(activity, genderList,"")
+        val spinAdapter = CustomSpinnerAdapter(activity, genderList)
         spinnerGender.adapter = spinAdapter
         spinnerGender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapter: AdapterView<*>, v: View,

@@ -237,9 +237,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                     if (isComingFromReward) {
                         viewPager.setCurrentItem(1);
                         saveTextView.setVisibility(View.GONE);
-                    }
-
-                    if (isComingfromCampaign) {
+                    } else if (isComingfromCampaign) {
                         viewPager.setCurrentItem(1);
                         saveTextView.setVisibility(View.GONE);
                     } else {

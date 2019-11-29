@@ -130,6 +130,30 @@
                 android:textColor="@color/campaign_4A4A4A"
                 android:textSize="16sp" />
 
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/readArticlesTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_20"
+                android:layout_marginRight="@dimen/space_8"
+                android:drawableLeft="@drawable/ic_social"
+                android:drawableRight="@drawable/arrow_right"
+                android:drawablePadding="@dimen/space_20"
+                android:textColor="@color/campaign_4A4A4A"
+                android:textSize="16sp" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/activityTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_20"
+                android:layout_marginRight="@dimen/space_8"
+                android:drawableLeft="@drawable/ic_social"
+                android:drawableRight="@drawable/arrow_right"
+                android:drawablePadding="@dimen/space_20"
+                android:textColor="@color/campaign_4A4A4A"
+                android:textSize="16sp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

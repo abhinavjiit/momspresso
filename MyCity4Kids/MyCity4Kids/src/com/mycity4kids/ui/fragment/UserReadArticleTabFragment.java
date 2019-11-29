@@ -2,12 +2,16 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -83,7 +87,7 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         noBlogsTextViewshortstory = view.findViewById(R.id.noBlogsTextViewshortstory);
-
+        view.findViewById(R.id.relativeLoadingView).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
         if (getArguments() != null) {
             authorId = getArguments().getString(Constants.AUTHOR_ID);
             isPrivateProfile = getArguments().getBoolean("isPrivateProfile", false);

@@ -1275,4 +1275,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="dialog_confirm_delete">Are you sure you want to delete this collection</string>
     <string name="all_view">View</string>
     <string name="all_analytics">Analytics</string>
+    <string name="read_articles">READ ARTICLES</string>
 </resources>

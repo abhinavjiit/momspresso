@@ -323,13 +323,9 @@ public class PublicProfileActivity extends BaseActivity implements View.OnClickL
                 startActivity(articleIntent);
                 break;
             case R.id.activitySectionTextView: {
-
-                Intent intent1 = new Intent(this, CollectionsActivity.class);
-                intent1.putExtra("userId", authorId);
-                startActivity(intent1);
-             /*   Intent intent = new Intent(this, UserActivitiesActivity.class);
+                Intent intent = new Intent(this, UserActivitiesActivity.class);
                 intent.putExtra(Constants.AUTHOR_ID, authorId);
-                startActivity(intent);*/
+                startActivity(intent);
             }
             break;
             case R.id.rankContainer:
@@ -338,6 +334,7 @@ public class PublicProfileActivity extends BaseActivity implements View.OnClickL
             }
             break;
             case R.id.followerContainer: {
+                break;
             }
         }
     }
