@@ -268,7 +268,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                         }
                         shimmer1.visibility = View.GONE
                         shimmer1.stopShimmerAnimation()
-                        dataList.addAll(0, userCollectionsListModel.collectionItems)
+                        dataList.addAll( userCollectionsListModel.collectionItems)
                         collectionItemsListAdapter.setListData(dataList)
                         collectionItemsListAdapter.notifyDataSetChanged()
 

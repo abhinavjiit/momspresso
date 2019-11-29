@@ -165,7 +165,7 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                         }
                         shimmer1.stopShimmerAnimation()
                         shimmer1.visibility = View.GONE
-                        dataList.addAll(0, userCollectionsListModel.collectionItems)
+                        dataList.addAll(userCollectionsListModel.collectionItems)
                         collectionItemsListAdapter.setItemListData(dataList)
                         collectionItemsListAdapter.notifyDataSetChanged()
 
