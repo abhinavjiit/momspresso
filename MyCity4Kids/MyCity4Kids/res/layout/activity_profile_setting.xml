@@ -99,7 +99,6 @@
                 android:drawableLeft="@drawable/ic_my_money"
                 android:drawableRight="@drawable/arrow_right"
                 android:drawablePadding="@dimen/space_20"
-                android:drawableTint="@color/shadow_color"
                 android:text="@string/mymoney_info"
                 android:textColor="@color/campaign_4A4A4A"
                 android:textSize="16sp" />
@@ -136,7 +135,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_20"
                 android:layout_marginRight="@dimen/space_8"
-                android:drawableLeft="@drawable/ic_social"
+                android:drawableLeft="@drawable/ic_read_articles"
                 android:drawableRight="@drawable/arrow_right"
                 android:drawablePadding="@dimen/space_20"
                 android:textColor="@color/campaign_4A4A4A"
@@ -148,8 +147,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_20"
                 android:layout_marginRight="@dimen/space_8"
-                android:drawableLeft="@drawable/ic_social"
+                android:drawableLeft="@drawable/ic_activity"
                 android:drawableRight="@drawable/arrow_right"
+                android:drawableTint="#FF000000"
                 android:drawablePadding="@dimen/space_20"
                 android:textColor="@color/campaign_4A4A4A"
                 android:textSize="16sp" />

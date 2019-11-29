@@ -23,8 +23,6 @@ class CollectionImageThumbnailAdapter(var activity: Context) : BaseAdapter() {
             view = mInflater.inflate(R.layout.collection_thumbnail_change_adapter, parent, false)
             viewHolder = ViewHolder()
             viewHolder.tagImageView = view.findViewById<ImageView>(R.id.tagImageView)
-
-
             view.tag = viewHolder
 
         } else {
@@ -58,7 +56,6 @@ class CollectionImageThumbnailAdapter(var activity: Context) : BaseAdapter() {
     class ViewHolder {
 
         var tagImageView: ImageView? = null
-
 
 
     }
