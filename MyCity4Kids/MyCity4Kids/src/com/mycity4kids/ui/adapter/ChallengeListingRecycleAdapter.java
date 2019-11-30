@@ -1,8 +1,12 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import q.rorbin.badgeview.QBadgeView;
+
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +57,14 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
 
     @Override
     public void onBindViewHolder(ChallengeListingViewHolder holder, int position) {
+        new QBadgeView(mContext)
+                .setBadgeText(" " + mContext.getString(R.string.new_label) + " ")
+                .setBadgeBackgroundColor(mContext.getResources().getColor(R.color.orange_new))
+                .setBadgeTextSize(7, true)
+                .setBadgePadding(3, true)
+                .setBadgeGravity(Gravity.TOP | Gravity.END)
+                .setGravityOffset(4, -2, true)
+                .bindTarget(holder.genericShareImageView);
         if (position == 0) {
             holder.rootview.setVisibility(View.GONE);
             holder.challengeHeaderText.setVisibility(View.VISIBLE);

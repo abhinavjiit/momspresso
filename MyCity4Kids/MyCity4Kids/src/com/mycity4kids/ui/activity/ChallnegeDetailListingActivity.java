@@ -56,6 +56,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ChallengeListingRecycleAdapter;
+import com.mycity4kids.ui.fragment.AddCollectionAndCollectionItemDialogFragment;
 import com.mycity4kids.ui.fragment.ReportContentDialogFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
@@ -596,8 +597,27 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
             }
             break;
             case R.id.genericShareImageView: {
-                AppUtils.shareStoryGeneric(this, mDatalist.get(position).getUserType(), mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug(),
+       /*         AppUtils.shareStoryGeneric(this, mDatalist.get(position).getUserType(), mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug(),
                         "ShortStoryListingScreen", userDynamoId, mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
+      */
+
+                try {
+                    AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment = new AddCollectionAndCollectionItemDialogFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("articleId", mDatalist.get(position).getId());
+                    bundle.putString("type", AppConstants.SHORT_STORY_COLLECTION_TYPE);
+                    addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
+                    //addCollectionAndCollectionitemDialogFragment.setTargetFragment(getSupportFragmentManager(), 0);
+                    addCollectionAndCollectionitemDialogFragment.show(getSupportFragmentManager(), "collectionAdd");
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                }
+
+
+
+
+
             }
             break;
             case R.id.authorNameTextView:
