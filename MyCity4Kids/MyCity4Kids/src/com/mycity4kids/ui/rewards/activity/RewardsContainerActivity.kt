@@ -49,6 +49,8 @@ class RewardsContainerActivity : BaseActivity(),
             if (Id == -1) {
                 this@RewardsContainerActivity.finish()
             }
+        } else {
+            addPancardDetailFragment()
         }
     }
 
@@ -92,9 +94,9 @@ class RewardsContainerActivity : BaseActivity(),
 
         if (intent != null) {
             if (intent.hasExtra("pageLimit")) {
-                pageLimit = intent.getIntExtra("pageLimit", 4)
+                pageLimit = intent.getIntExtra("pageLimit", 5)
             } else {
-                pageLimit = 4
+                pageLimit = 5
             }
             if (intent.hasExtra("referral")) {
                 referralCode = intent.getStringExtra("referral")
@@ -118,6 +120,8 @@ class RewardsContainerActivity : BaseActivity(),
             addSocialFragment()
         } else if (pageNumber == 4) {
             addPaymentModesFragment()
+        } else if (pageNumber == 5) {
+            addPancardDetailFragment()
         }
 
         callbackManager = CallbackManager.Factory.create()
@@ -182,7 +186,7 @@ class RewardsContainerActivity : BaseActivity(),
         }
     }
 
-    /*private fun addPancardDetailFragment() {
+    private fun addPancardDetailFragment() {
         if (pageLimit!! >= 5) {
             panCardDetailsSubmissionFragment = PanCardDetailsSubmissionFragment.newInstance(isComingFromRewards = true)
             val pancardFrag = panCardDetailsSubmissionFragment as Fragment
@@ -192,7 +196,7 @@ class RewardsContainerActivity : BaseActivity(),
         } else {
             finish()
         }
-    }*/
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
