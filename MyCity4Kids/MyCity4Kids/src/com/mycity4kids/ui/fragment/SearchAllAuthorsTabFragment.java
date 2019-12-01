@@ -28,7 +28,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.SearchAuthorResult;
 import com.mycity4kids.models.response.SearchResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.profile.M_PrivateProfileActivity;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
 import com.mycity4kids.ui.activity.SearchAllActivity;
 import com.mycity4kids.ui.adapter.SearchAuthorsListingAdapter;
@@ -112,7 +112,7 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 SearchAuthorResult itemSelected = (SearchAuthorResult) adapterView.getItemAtPosition(position);
-                Intent profileIntent = new Intent(getActivity(), M_PrivateProfileActivity.class);
+                Intent profileIntent = new Intent(getActivity(), UserProfileActivity.class);
                 profileIntent.putExtra(Constants.USER_ID, itemSelected.getUserId());
                 startActivity(profileIntent);
             }

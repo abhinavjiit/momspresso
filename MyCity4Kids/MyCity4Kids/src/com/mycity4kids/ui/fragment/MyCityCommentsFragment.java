@@ -40,7 +40,7 @@ import com.mycity4kids.observablescrollview.ObservableScrollView;
 import com.mycity4kids.observablescrollview.ObservableScrollViewCallbacks;
 import com.mycity4kids.observablescrollview.ScrollState;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.profile.M_PrivateProfileActivity;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.utils.AppUtils;
@@ -170,7 +170,7 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
             case R.id.commentorImageView: {
                 CommentsData commentData = (CommentsData) ((View) v.getParent().getParent()).getTag();
                 if (!"fb".equals(commentData.getComment_type())) {
-                    Intent profileIntent = new Intent(getActivity(), M_PrivateProfileActivity.class);
+                    Intent profileIntent = new Intent(getActivity(), UserProfileActivity.class);
                     profileIntent.putExtra(Constants.USER_ID, commentData.getUserId());
                     profileIntent.putExtra(AppConstants.AUTHOR_NAME, commentData.getName());
                     profileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
@@ -182,7 +182,7 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
             case R.id.replierImageView: {
                 CommentsData commentData = (CommentsData) ((View) v.getParent()).getTag();
                 if (!"fb".equals(commentData.getComment_type())) {
-                    Intent profileIntent = new Intent(getActivity(), M_PrivateProfileActivity.class);
+                    Intent profileIntent = new Intent(getActivity(), UserProfileActivity.class);
                     profileIntent.putExtra(Constants.USER_ID, commentData.getUserId());
                     profileIntent.putExtra(AppConstants.AUTHOR_NAME, commentData.getName());
                     profileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");

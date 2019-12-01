@@ -43,7 +43,7 @@ import com.mycity4kids.models.response.ContributorListResult;
 import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.newmodels.bloggermodel.BlogItemModel;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.profile.M_PrivateProfileActivity;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI;
 import com.mycity4kids.ui.adapter.ContributorListAdapter;
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter;
@@ -154,7 +154,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 ContributorListResult itemSelected = (ContributorListResult) adapterView.getItemAtPosition(position);
-                Intent profileIntent = new Intent(ContributorListActivity.this, M_PrivateProfileActivity.class);
+                Intent profileIntent = new Intent(ContributorListActivity.this, UserProfileActivity.class);
                 profileIntent.putExtra(Constants.USER_ID, itemSelected.getId());
                 startActivity(profileIntent);
             }

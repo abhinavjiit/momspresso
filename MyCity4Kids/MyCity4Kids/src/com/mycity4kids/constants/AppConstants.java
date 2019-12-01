@@ -476,6 +476,7 @@ public class AppConstants {
     public static final String DEEPLINK_EDIT_SHORT_STORY_URL = "mc4k://www.momspresso.com/editashortstory/";
     public static final String DEEPLINK_MOMSPRESSO_EDITOR_URL = "mc4k://www.momspresso.com/editor/";
     public static final String DEEPLINK_PROFILE_URL = "mc4k://www.mycity4kids.com/profile";
+    public static final String DEEPLINK_SELF_PROFILE_URL = "https://www.momspresso.com/parenting/admin";
     public static final String DEEPLINK_MOMSPRESSO_PROFILE_URL = "mc4k://www.momspresso.com/profile";
     public static final String DEEPLINK_SUGGESTED_TOPIC_URL = "mc4k://www.mycity4kids.com/suggested_topics";
     public static final String DEEPLINK_MOMSPRESSO_SUGGESTED_TOPIC_URL = "mc4k://www.momspresso.com/suggested_topics";
@@ -540,6 +541,8 @@ public class AppConstants {
     public static final String NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_SUBMIT_PROOF = "24";
     public static final String NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_PANCARD = "25";
     public static final String NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_BANKDETAIL = "26";
+    public static final String NOTIFICATION_NOTIFY_TYPE_VIDEO_CHALLENGE_DETAIL = "27";
+    public static final String NOTIFICATION_NOTIFY_TYPE_COLLECTION_DETAIL = "28";
 
 
     public static final String FOLLOWING_STATUS_ACTIVITY_RESULT = "followingStatusActivityResult";
@@ -705,7 +708,7 @@ public class AppConstants {
     public static final String BADGES_LISTING_REGEX = ".+?(user\\/)[a-zA-Z0-9]+\\/(badges)$";
     public static final String BADGES_DETAIL_REGEX = ".+?(user\\/)[a-zA-Z0-9]+(\\/(badges\\/))[a-zA-Z0-9]+$";
     public static final String MILESTONE_DETAIL_REGEX = ".+?(user\\/)[a-zA-Z0-9]+(\\/(milestones\\/))[a-zA-Z0-9]+$";
-    public static final String USER_PROFILE_REGEX = ".+?(user\\/)[a-zA-Z0-9]$";
+    public static final String USER_PROFILE_REGEX = ".+?(user\\/)[a-zA-Z0-9]+$";
     public static final String USER_ANALYTICS_REGEX = ".+?(user\\/)[a-zA-Z0-9]+\\/(rank)$";
 
 

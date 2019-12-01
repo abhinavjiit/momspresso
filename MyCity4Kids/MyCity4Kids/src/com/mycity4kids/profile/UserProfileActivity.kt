@@ -61,7 +61,7 @@ import retrofit2.Callback
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
-class M_PrivateProfileActivity : BaseActivity(),
+class UserProfileActivity : BaseActivity(),
         UserContentAdapter.RecyclerViewClickListener, View.OnClickListener, UsersFeaturedContentAdapter.RecyclerViewClickListener,
         AddCollectionPopUpDialogFragment.AddCollectionInterface, UsersBookmarksAdapter.RecyclerViewClickListener,
         ResizableTextView.SeeMore {
@@ -185,16 +185,16 @@ class M_PrivateProfileActivity : BaseActivity(),
             showBadgeDialog(deeplinkBadgeId)
         }
 
-        profileImageView.setOnClickListener {
-            if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId == authorId) {
-                val pIntent = Intent(this, PrivateProfileActivity::class.java)
-                startActivity(pIntent)
-            } else {
-                val intentnn = Intent(this, PublicProfileActivity::class.java)
-                intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, authorId)
-                startActivity(intentnn)
-            }
-        }
+//        profileImageView.setOnClickListener {
+//            if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId == authorId) {
+//                val pIntent = Intent(this, PrivateProfileActivity::class.java)
+//                startActivity(pIntent)
+//            } else {
+//                val intentnn = Intent(this, PublicProfileActivity::class.java)
+//                intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, authorId)
+//                startActivity(intentnn)
+//            }
+//        }
 
         if (AppUtils.isPrivateProfile(authorId)) {
             authorId = SharedPrefUtils.getUserDetailModel(this).dynamoId
@@ -208,6 +208,7 @@ class M_PrivateProfileActivity : BaseActivity(),
             analyticsTextView.visibility = View.VISIBLE
             appSettingsImageView.visibility = View.VISIBLE
             myCollectionsWidget.getCollections(authorId, true)
+            Utils.pushGenericEvent(this, "Show_Private_Profile", authorId, "UserProfileActivity")
         } else {
             bookmarksTab.visibility = View.GONE
             divider2.visibility = View.GONE
@@ -220,11 +221,11 @@ class M_PrivateProfileActivity : BaseActivity(),
             sharePublicTextView.setOnClickListener(this)
             checkFollowingStatusAPI()
             myCollectionsWidget.getCollections(authorId, false)
+            Utils.pushGenericEvent(this, "Show_Public_Profile", authorId, "UserProfileActivity")
         }
 
         val llm = LinearLayoutManager(this)
         llm.orientation = RecyclerView.VERTICAL
-
         recyclerView.layoutManager = llm
         recyclerView.adapter = userContentAdapter
 
@@ -365,11 +366,15 @@ class M_PrivateProfileActivity : BaseActivity(),
             followAuthorTextView.setText(R.string.ad_follow_author)
             val followUnfollowUserResponseCall = followAPI.unfollowUser(request)
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback)
+            Utils.pushProfileEvents(this, "CTA_Unfollow_Profile", "UserProfileActivity",
+                    "Unfollow", "-");
         } else {
             isFollowing = true
             followAuthorTextView.setText(R.string.ad_following_author)
             val followUnfollowUserResponseCall = followAPI.followUser(request)
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback)
+            Utils.pushProfileEvents(this, "CTA_Follow_Profile", "UserProfileActivity",
+                    "Follow", "-");
         }
     }
 
@@ -435,7 +440,7 @@ class M_PrivateProfileActivity : BaseActivity(),
     private fun processAuthorPersonalDetails(responseData: UserDetailResponse) {
         authorNameTextView.text = responseData.data[0].result.firstName + " " + responseData.data[0].result.lastName
         if (!StringUtils.isNullOrEmpty(responseData.data[0].result.profilePicUrl.clientApp)) {
-            Picasso.with(this@M_PrivateProfileActivity).load(responseData.data[0].result.profilePicUrl.clientApp)
+            Picasso.with(this@UserProfileActivity).load(responseData.data[0].result.profilePicUrl.clientApp)
                     .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(RoundedTransformation()).into(profileImageView)
         }
         if (responseData.data[0].result.userBio == null || responseData.data[0].result.userBio.isEmpty()) {
@@ -495,7 +500,7 @@ class M_PrivateProfileActivity : BaseActivity(),
         try {
             val jsonObject = Gson().toJsonTree(responseData.data.get(0).result.crownData).asJsonObject
             crown = Gson().fromJson<Crown>(jsonObject, Crown::class.java)
-            Picasso.with(this@M_PrivateProfileActivity).load(crown.image_url).error(
+            Picasso.with(this@UserProfileActivity).load(crown.image_url).error(
                     R.drawable.family_xxhdpi).fit().into(crownImageView)
             if (!profileDetail.isNullOrBlank() && profileDetail == "rank") {
                 showCrownDialog(crown)
@@ -533,7 +538,7 @@ class M_PrivateProfileActivity : BaseActivity(),
                     multipleRankList.add(responseData.data[0].result.ranks[i])
                 }
             }
-            MyCityAnimationsUtil.animate(this@M_PrivateProfileActivity, rankContainer, multipleRankList, 0, true)
+            MyCityAnimationsUtil.animate(this@UserProfileActivity, rankContainer, multipleRankList, 0, true)
         }
     }
 
@@ -741,6 +746,13 @@ class M_PrivateProfileActivity : BaseActivity(),
                 start = 0
                 isLastPageReached = false
                 getFeaturedContent()
+                if (AppUtils.isPrivateProfile(authorId)) {
+                    Utils.pushProfileEvents(this, "CTA_Private_Featured_Collections", "UserProfileActivity",
+                            "Featured Collections", "-")
+                } else {
+                    Utils.pushProfileEvents(this, "CTA_Public_Featured_Collections", "UserProfileActivity",
+                            "Featured Collections", "-")
+                }
             }
             view?.id == R.id.bookmarksTab -> {
                 creatorTab.isSelected = false
@@ -751,6 +763,8 @@ class M_PrivateProfileActivity : BaseActivity(),
                 isLastPageReached = false
                 recyclerView.adapter = usersBookmarksAdapter
                 getUsersBookmark()
+                Utils.pushProfileEvents(this, "CTA_Bookmarks", "UserProfileActivity",
+                        "Bookmarks", "-")
             }
             view?.id == R.id.badgeContainer -> {
                 val intent = Intent(this, BadgeActivity::class.java)
@@ -809,6 +823,8 @@ class M_PrivateProfileActivity : BaseActivity(),
             view?.id == R.id.appSettingsImageView -> {
                 val intent = Intent(this, ProfileSetting::class.java)
                 startActivity(intent)
+                Utils.pushProfileEvents(this, "CTA_Settings", "UserProfileActivity",
+                        "Settings", "-")
             }
         }
     }
@@ -822,6 +838,13 @@ class M_PrivateProfileActivity : BaseActivity(),
                 type = "image/jpeg"
             }
             startActivity(Intent.createChooser(shareIntent, resources.getText(R.string.ad_bottom_bar_generic_share)))
+            if (AppUtils.isPrivateProfile(authorId)) {
+                Utils.pushProfileEvents(this, "CTA_Share_Private_Profile", "UserProfileActivity",
+                        "Share", "-")
+            } else {
+                Utils.pushProfileEvents(this, "CTA_Share_Public_Profile", "UserProfileActivity",
+                        "Share", "-")
+            }
         } catch (e: Exception) {
             Crashlytics.logException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
@@ -836,6 +859,8 @@ class M_PrivateProfileActivity : BaseActivity(),
             view.id == R.id.draftContainer -> {
                 val intent = Intent(this, UserDraftsContentActivity::class.java)
                 startActivity(intent)
+                Utils.pushProfileEvents(this, "CTA_Drafts_Folder", "UserProfileActivity",
+                        "Drafts folder", "-")
             }
             view.id == R.id.articleContainer -> {
                 val intent = Intent(this, UserPublishedContentActivity::class.java)
@@ -843,6 +868,8 @@ class M_PrivateProfileActivity : BaseActivity(),
                 intent.putExtra(Constants.AUTHOR_ID, authorId)
                 intent.putExtra("contentType", AppConstants.CONTENT_TYPE_ARTICLE)
                 startActivity(intent)
+                Utils.pushProfileEvents(this, "CTA_Blogs_Folder", "UserProfileActivity",
+                        "Blogs folder", "-")
             }
             view.id == R.id.storyContainer -> {
                 val intent = Intent(this, UserPublishedContentActivity::class.java)
@@ -850,6 +877,8 @@ class M_PrivateProfileActivity : BaseActivity(),
                 intent.putExtra(Constants.AUTHOR_ID, authorId)
                 intent.putExtra("contentType", AppConstants.CONTENT_TYPE_SHORT_STORY)
                 startActivity(intent)
+                Utils.pushProfileEvents(this, "CTA_100WS_Folder", "UserProfileActivity",
+                        "100WS folder", "-")
             }
             view.id == R.id.vlogContainer -> {
                 val intent = Intent(this, UserPublishedContentActivity::class.java)
@@ -857,6 +886,8 @@ class M_PrivateProfileActivity : BaseActivity(),
                 intent.putExtra(Constants.AUTHOR_ID, authorId)
                 intent.putExtra("contentType", AppConstants.CONTENT_TYPE_VIDEO)
                 startActivity(intent)
+                Utils.pushProfileEvents(this, "CTA_Vlogs_Folder", "UserProfileActivity",
+                        "Vlogs folder", "-")
             }
             view.id == R.id.shareArticleImageView -> {
                 shareContent(userContentList?.get(position))
@@ -894,6 +925,8 @@ class M_PrivateProfileActivity : BaseActivity(),
                     addCollectionAndCollectionitemDialogFragment.arguments = bundle
                     val fm = supportFragmentManager
                     addCollectionAndCollectionitemDialogFragment.show(fm!!, "collectionAdd")
+                    Utils.pushProfileEvents(this, "CTA_100WS_Add_To_Collection",
+                            "UserProfileActivity", "Add to Collection", "-")
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))

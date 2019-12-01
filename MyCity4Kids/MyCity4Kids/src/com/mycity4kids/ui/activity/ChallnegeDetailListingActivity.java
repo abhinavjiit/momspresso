@@ -51,7 +51,7 @@ import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.profile.M_PrivateProfileActivity;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
@@ -597,35 +597,27 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
             }
             break;
             case R.id.genericShareImageView: {
-       /*         AppUtils.shareStoryGeneric(this, mDatalist.get(position).getUserType(), mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug(),
-                        "ShortStoryListingScreen", userDynamoId, mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
-      */
-
                 try {
                     AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment = new AddCollectionAndCollectionItemDialogFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("articleId", mDatalist.get(position).getId());
                     bundle.putString("type", AppConstants.SHORT_STORY_COLLECTION_TYPE);
                     addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
-                    //addCollectionAndCollectionitemDialogFragment.setTargetFragment(getSupportFragmentManager(), 0);
                     addCollectionAndCollectionitemDialogFragment.show(getSupportFragmentManager(), "collectionAdd");
+                    Utils.pushProfileEvents(this, "CTA_100WS_Add_To_Collection",
+                            "ChallnegeDetailListingActivity", "Add to Collection", "-");
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
-
-
-
-
-
             }
             break;
             case R.id.authorNameTextView:
                 if (userDynamoId.equals(mDatalist.get(position).getUserId())) {
-                    Intent pIntent = new Intent(this, M_PrivateProfileActivity.class);
+                    Intent pIntent = new Intent(this, UserProfileActivity.class);
                     startActivity(pIntent);
                 } else {
-                    Intent intentnn = new Intent(this, M_PrivateProfileActivity.class);
+                    Intent intentnn = new Intent(this, UserProfileActivity.class);
                     intentnn.putExtra(Constants.USER_ID, mDatalist.get(position).getUserId());
                     intentnn.putExtra(AppConstants.AUTHOR_NAME, mDatalist.get(position).getUserName());
                     intentnn.putExtra(Constants.FROM_SCREEN, "ShortStoryScreen");

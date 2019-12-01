@@ -23,6 +23,7 @@ import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.collectionsModels.AddCollectionRequestModel
 import com.mycity4kids.models.collectionsModels.UpdateCollectionRequestModel
 import com.mycity4kids.models.response.BaseResponseGeneric
@@ -112,6 +113,8 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
                     if (t.code == 200 && t.status == Constants.SUCCESS && t.data?.result != null) {
                         var addCollectionRequestModell: AddCollectionRequestModel = t.data!!.result
                         collectionId = addCollectionRequestModell.userCollectionId
+                        Utils.pushProfileEvents(activity, "CTA_Add_Collection_From_Content",
+                                "AddCollectionPopUpDialogFragment", "New collection", "-")
                         if (!StringUtils.isNullOrEmpty(collectionId) && !StringUtils.isNullOrEmpty(articleId)) {
                             addCollectionItem()
                         } else {

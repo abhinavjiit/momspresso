@@ -47,7 +47,7 @@ import com.mycity4kids.models.response.GroupPostCommentResult;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupsActionVoteResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.profile.M_PrivateProfileActivity;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.mycity4kids.utils.AppUtils;
@@ -829,7 +829,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     }
 
     private void launchProfile(String _userId) {
-        Intent pIntent = new Intent(mContext, M_PrivateProfileActivity.class);
+        Intent pIntent = new Intent(mContext, UserProfileActivity.class);
         pIntent.putExtra(Constants.USER_ID, _userId);
         mContext.startActivity(pIntent);
 //        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(groupPostResult.getUserId())) {

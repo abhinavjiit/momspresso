@@ -49,7 +49,7 @@ import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.UserPostSettingResponse;
 import com.mycity4kids.models.response.UserPostSettingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.profile.M_PrivateProfileActivity;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
@@ -466,16 +466,16 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
             case R.id.usernameTextView:
 
                 if (postList.get(position).getIsAnnon() == 0) {
-                    Intent pIntent = new Intent(getActivity(), M_PrivateProfileActivity.class);
+                    Intent pIntent = new Intent(getActivity(), UserProfileActivity.class);
                     pIntent.putExtra(Constants.USER_ID, postList.get(position).getUserId());
                     startActivity(pIntent);
 //                    if (userDynamoId.equals(postList.get(position).getUserId())) {
-//                        Intent pIntent = new Intent(getActivity(), M_PrivateProfileActivity.class);
+//                        Intent pIntent = new Intent(getActivity(), UserProfileActivity.class);
 //                        pIntent.putExtra(Constants.USER_ID, postList.get(position).getUserId());
 //                        startActivity(pIntent);
 //                    } else {
 //                        Utils.groupsEvent(getActivity(), "Groups_Discussion", "profile image", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "User Profile", "", "");
-//                        Intent pIntent = new Intent(getActivity(), M_PrivateProfileActivity.class);
+//                        Intent pIntent = new Intent(getActivity(), UserProfileActivity.class);
 //                        pIntent.putExtra(Constants.USER_ID, postList.get(position).getUserId());
 //                        startActivity(pIntent);
 //                        Intent intentnn = new Intent(getActivity(), PublicProfileActivity.class);

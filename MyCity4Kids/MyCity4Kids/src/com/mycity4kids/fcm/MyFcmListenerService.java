@@ -32,7 +32,7 @@ import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.newmodels.PushNotificationModel;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.profile.M_PrivateProfileActivity;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
@@ -317,14 +317,14 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         resultIntent.putExtra("fromNotification", true);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                     } else {
-                        resultIntent = new Intent(getApplicationContext(), M_PrivateProfileActivity.class);
+                        resultIntent = new Intent(getApplicationContext(), UserProfileActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         resultIntent.putExtra("fromNotification", true);
                         resultIntent.putExtra(Constants.USER_ID, pushNotificationModel.getUser_id());
                         resultIntent.putExtra(AppConstants.AUTHOR_NAME, "");
                         resultIntent.putExtra(Constants.FROM_SCREEN, "Notification");
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                        stackBuilder.addParentStack(M_PrivateProfileActivity.class);
+                        stackBuilder.addParentStack(UserProfileActivity.class);
                         stackBuilder.addNextIntent(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                     }

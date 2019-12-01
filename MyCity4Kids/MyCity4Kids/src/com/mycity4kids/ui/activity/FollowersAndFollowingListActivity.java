@@ -11,6 +11,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -19,10 +23,11 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.FollowersFollowingResponse;
 import com.mycity4kids.models.response.FollowersFollowingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.profile.M_PrivateProfileActivity;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.ui.adapter.CollectionFollowFollowersListAdapter;
 import com.mycity4kids.ui.adapter.FollowerFollowingListAdapter;
@@ -30,9 +35,6 @@ import com.mycity4kids.utils.EndlessScrollListener;
 
 import java.util.ArrayList;
 
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -100,13 +102,19 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
             collectionFollowFollowersListAdapter.setData(collectionDatalist);
             collectionFollowFollowingListView.setAdapter(collectionFollowFollowersListAdapter);
         } else {
+            if (AppConstants.FOLLOWER_LIST.equals(followListType)) {
+                Utils.pushGenericEvent(this, "Show_Followers_Listing",
+                        userId, "FollowersAndFollowingListActivity");
+            } else {
+                Utils.pushGenericEvent(this, "Show_Following_Listing",
+                        userId, "FollowersAndFollowingListActivity");
+            }
             followerFollowingListView.setVisibility(View.VISIBLE);
             collectionFollowFollowingListView.setVisibility(View.GONE);
             followerFollowingListAdapter = new FollowerFollowingListAdapter(this, followListType);
             followerFollowingListAdapter.setData(mDatalist);
             followerFollowingListView.setAdapter(followerFollowingListAdapter);
         }
-
 
         collectionFollowFollowingListView.addOnScrollListener(new EndlessScrollListener(linearLayoutManager) {
             @Override
@@ -118,7 +126,7 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
         followerFollowingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(FollowersAndFollowingListActivity.this, M_PrivateProfileActivity.class);
+                Intent intent = new Intent(FollowersAndFollowingListActivity.this, UserProfileActivity.class);
                 intent.putExtra(AppConstants.PUBLIC_PROFILE_FLAG, true);
                 intent.putExtra(Constants.USER_ID, mDatalist.get(position).getUserId());
                 intent.putExtra(AppConstants.AUTHOR_NAME, mDatalist.get(position).getFirstName() + " " + mDatalist.get(position).getLastName());
@@ -126,8 +134,6 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-
-
     }
 
     @Override

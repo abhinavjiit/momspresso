@@ -47,7 +47,7 @@ import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.UserPostSettingResponse;
 import com.mycity4kids.models.response.UserPostSettingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.profile.M_PrivateProfileActivity;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
@@ -416,7 +416,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
             case R.id.userImageView:
             case R.id.usernameTextView:
                 if (postList.get(position).getIsAnnon() == 0) {
-                    Intent pIntent = new Intent(getActivity(), M_PrivateProfileActivity.class);
+                    Intent pIntent = new Intent(getActivity(), UserProfileActivity.class);
                     pIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, postList.get(position).getUserId());
                     startActivity(pIntent);
                 }

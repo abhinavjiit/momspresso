@@ -9,6 +9,7 @@ import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.ui.adapter.CollectionPagerAdapter
 import com.mycity4kids.utils.AppUtils
@@ -26,7 +27,6 @@ class CollectionsActivity : BaseActivity() {
     override fun updateUi(response: Response?) {
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_collections)
@@ -39,11 +39,12 @@ class CollectionsActivity : BaseActivity() {
         if (AppUtils.isPrivateProfile(intent.getStringExtra("userId"))) {
             isPrivate = true
             userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()
+            Utils.pushGenericEvent(this, "Show_Private_Collection_Listing", userId, "CollectionsActivity")
         } else {
             isPrivate = false
             userId = intent.getStringExtra("userId")
+            Utils.pushGenericEvent(this, "Show_Public_Collection_Listing", userId, "CollectionsActivity")
         }
-
 
         back.setOnClickListener {
             onBackPressed()

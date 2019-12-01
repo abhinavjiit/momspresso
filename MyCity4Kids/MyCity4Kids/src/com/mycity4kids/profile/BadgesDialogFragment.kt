@@ -31,6 +31,7 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.response.BadgeListResponse
 import com.mycity4kids.retrofitAPIsInterfaces.BadgeAPI
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity
@@ -171,7 +172,9 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
             badgeTitleTextView.text = result?.get(0)?.badge_title
             badgeDescTextView.text = result?.get(0)?.badge_desc
             if (AppUtils.isPrivateProfile(userId)) {
+                Utils.pushProfileEvents(it, "Show_Private_Badge_Detail", "BadgesDialogFragment", "-", badgeData?.badge_name)
             } else {
+                Utils.pushProfileEvents(it, "Show_Public_Badge_Detail", "BadgesDialogFragment", "-", badgeData?.badge_name)
                 when {
                     result?.get(0)?.item_type == AppConstants.CONTENT_TYPE_ARTICLE -> {
                         viewContentTextView.visibility = View.VISIBLE
@@ -223,19 +226,31 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
             view?.id == R.id.viewContentTextView -> {
                 when {
                     badgeData?.item_type == AppConstants.CONTENT_TYPE_ARTICLE -> {
-                        val intent = Intent(activity, ArticleDetailsContainerActivity::class.java)
-                        intent.putExtra(Constants.ARTICLE_ID, badgeData?.content_id)
-                        startActivity(intent)
+                        activity?.let {
+                            Utils.pushProfileEvents(it, "CTA_View_Article_Public_Badge_Detail",
+                                    "BadgesDialogFragment", "View article", badgeData?.badge_name)
+                            val intent = Intent(it, ArticleDetailsContainerActivity::class.java)
+                            intent.putExtra(Constants.ARTICLE_ID, badgeData?.content_id)
+                            startActivity(intent)
+                        }
                     }
                     badgeData?.item_type == AppConstants.CONTENT_TYPE_SHORT_STORY -> {
-                        val intent = Intent(activity, ShortStoryContainerActivity::class.java)
-                        intent.putExtra(Constants.ARTICLE_ID, badgeData?.content_id)
-                        startActivity(intent)
+                        activity?.let {
+                            Utils.pushProfileEvents(it, "CTA_View_Story_Public_Badge_Detail",
+                                    "BadgesDialogFragment", "View Story", badgeData?.badge_name)
+                            val intent = Intent(it, ShortStoryContainerActivity::class.java)
+                            intent.putExtra(Constants.ARTICLE_ID, badgeData?.content_id)
+                            startActivity(intent)
+                        }
                     }
                     badgeData?.item_type == AppConstants.CONTENT_TYPE_VIDEO -> {
-                        val intent = Intent(activity, ParallelFeedActivity::class.java)
-                        intent.putExtra(Constants.ARTICLE_ID, badgeData?.content_id)
-                        startActivity(intent)
+                        activity?.let {
+                            Utils.pushProfileEvents(it, "CTA_View_Video_Public_Badge_Detail",
+                                    "BadgesDialogFragment", "View Video", badgeData?.badge_name)
+                            val intent = Intent(activity, ParallelFeedActivity::class.java)
+                            intent.putExtra(Constants.ARTICLE_ID, badgeData?.content_id)
+                            startActivity(intent)
+                        }
                     }
                 }
             }
@@ -244,7 +259,10 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
 
     private fun shareWithGeneric() {
         activity?.let {
-            AppUtils.shareGenericLinkWithSuccessStatus(activity, badgeData?.badge_sharing_url)
+            if (AppUtils.shareGenericLinkWithSuccessStatus(activity, badgeData?.badge_sharing_url)) {
+                Utils.pushProfileEvents(it, "CTA_Generic_Share_Private_Badge_Detail",
+                        "BadgesDialogFragment", "Generic Share", badgeData?.badge_name)
+            }
         }
     }
 
@@ -255,9 +273,8 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
         activity?.let {
             val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/badge.jpg")
             if (AppUtils.shareImageWithInstagram(it, uri)) {
-
-            } else {
-
+                Utils.pushProfileEvents(it, "CTA_IG_Share_Private_Badge_Detail",
+                        "BadgesDialogFragment", "IG Share", badgeData?.badge_name)
             }
         }
     }
@@ -268,6 +285,10 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
                     .setContentUrl(Uri.parse(badgeData?.badge_sharing_url))
                     .build()
             ShareDialog(this).show(content)
+            activity?.let {
+                Utils.pushProfileEvents(it, "CTA_FB_Share_Private_Badge_Detail",
+                        "BadgesDialogFragment", "FB Share", badgeData?.badge_name)
+            }
         }
     }
 
@@ -278,9 +299,8 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
         activity?.let {
             val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/badge.jpg")
             if (AppUtils.shareImageWithWhatsApp(it, uri, badgeData?.badge_sharing_url)) {
-
-            } else {
-
+                Utils.pushProfileEvents(it, "CTA_Whatsapp_Share_Private_Badge_Detail",
+                        "BadgesDialogFragment", "Whatsapp Share", badgeData?.badge_name)
             }
         }
     }

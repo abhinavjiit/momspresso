@@ -303,6 +303,7 @@ public class Constants {
     public static String PROFILE_FRAGMENT = "fragment_profile";
     public static String SHORT_STOY_FRAGMENT = "fragment_story_listing";
     public static String GROUP_LISTING_FRAGMENT = "fragment_group_listing";
+    public static String CREATE_CONTENT_PROMPT = "createContentPrompt";
 
     /*Kids Birthday Constants*/
     public static String KIDS_NAME = "kids_name";

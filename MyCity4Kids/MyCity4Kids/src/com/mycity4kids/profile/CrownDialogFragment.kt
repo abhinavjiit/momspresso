@@ -27,6 +27,7 @@ import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.PermissionUtil
 import com.squareup.picasso.Picasso
@@ -91,13 +92,19 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
         if (AppUtils.isPrivateProfile(userId)) {
             shareContainer.visibility = View.VISIBLE
             shareJoyContainer.visibility = View.VISIBLE
+            activity?.let {
+                Utils.pushGenericEvent(it, "Show_Private_Rank_Detail", userId, "CrownDialogFragment")
+            }
         } else {
             if (BuildConfig.DEBUG) {
-                shareContainer.visibility = View.VISIBLE
-                shareJoyContainer.visibility = View.VISIBLE
+                shareContainer.visibility = View.GONE
+                shareJoyContainer.visibility = View.GONE
             } else {
                 shareContainer.visibility = View.GONE
                 shareJoyContainer.visibility = View.GONE
+            }
+            activity?.let {
+                Utils.pushGenericEvent(it, "Show_Public_Rank_Detail", userId, "CrownDialogFragment")
             }
         }
 
@@ -159,7 +166,10 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
 
     private fun shareWithGeneric() {
         activity?.let {
-            AppUtils.shareGenericLinkWithSuccessStatus(activity, crownData?.sharing_url)
+            if (AppUtils.shareGenericLinkWithSuccessStatus(activity, crownData?.sharing_url)) {
+                Utils.pushProfileEvents(it, "CTA_Generic_Share_Private_Rank_Detail",
+                        "CrownDialogFragment", "Generic Share", "-")
+            }
         }
     }
 
@@ -168,11 +178,11 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
             return
         }
         activity?.let {
-            val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/badge.jpg")
+            val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() +
+                    "/MyCity4Kids/videos/" + sharableCrownImageName + ".jpg")
             if (AppUtils.shareImageWithInstagram(it, uri)) {
-
-            } else {
-
+                Utils.pushProfileEvents(it, "CTA_IG_Share_Private_Rank_Detail",
+                        "CrownDialogFragment", "IG Share", "-")
             }
         }
     }
@@ -183,6 +193,10 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
                     .setContentUrl(Uri.parse(crownData?.sharing_url))
                     .build()
             ShareDialog(this).show(content)
+            activity?.let {
+                Utils.pushProfileEvents(it, "CTA_FB_Share_Private_Rank_Detail",
+                        "CrownDialogFragment", "FB Share", "-")
+            }
         }
     }
 
@@ -194,9 +208,8 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
             val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() +
                     "/MyCity4Kids/videos/" + sharableCrownImageName + ".jpg")
             if (AppUtils.shareImageWithWhatsApp(it, uri, crownData?.sharing_url)) {
-
-            } else {
-
+                Utils.pushProfileEvents(it, "CTA_Whatsapp_Share_Private_Rank_Detail",
+                        "CrownDialogFragment", "Whatsapp Share", "-")
             }
         }
     }

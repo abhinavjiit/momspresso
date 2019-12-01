@@ -1,21 +1,15 @@
 package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
-import android.app.Dialog;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
@@ -26,13 +20,14 @@ import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.BadgeListResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.BadgesDialogFragment;
 import com.mycity4kids.retrofitAPIsInterfaces.BadgeAPI;
 import com.mycity4kids.ui.adapter.BadgeListGridAdapter;
-import com.squareup.picasso.Picasso;
+import com.mycity4kids.utils.AppUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +75,12 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
             return;
         }
 
+        if (AppUtils.isPrivateProfile(userId)) {
+            Utils.pushGenericEvent(this, "Show_Private_All_Badges", userId, "BadgeActivity");
+        } else {
+            Utils.pushGenericEvent(this, "Show_Public_All_Badges", userId, "BadgeActivity");
+        }
+
         adapter = new BadgeListGridAdapter(this);
         adapter.setDatalist(badgeList);
         gridview.setAdapter(adapter);
@@ -97,8 +98,6 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
                 if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
                     mLodingView.setVisibility(View.VISIBLE);
-                    //caching enabled only for page 1. so disabling it here for all other pages by passing false.
-
                     isReuqestRunning = true;
                 }
             }

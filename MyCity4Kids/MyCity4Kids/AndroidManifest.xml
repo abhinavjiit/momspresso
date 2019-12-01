@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
     android:versionCode="176"
-    android:versionName="12.3.1.2">
+    android:versionName="12.3.0">
 
     <uses-sdk tools:overrideLibrary="io.branch.referral, com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
     <!-- So that we can get the account name -->
@@ -476,7 +476,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.EditProfileNewActivity"
-            android:parentActivityName=".ui.activity.PrivateProfileActivity"
+            android:parentActivityName=".profile.UserProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/EditorTheme" />
         <activity
@@ -535,7 +535,7 @@
             android:name=".ui.activity.ProfileSetting"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".profile.M_PrivateProfileActivity"
+            android:name=".profile.UserProfileActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.FeaturedOnActivity"

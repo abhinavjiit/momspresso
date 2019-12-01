@@ -104,7 +104,7 @@ import com.mycity4kids.observablescrollview.ObservableScrollView;
 import com.mycity4kids.observablescrollview.ObservableScrollViewCallbacks;
 import com.mycity4kids.observablescrollview.ScrollState;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.profile.M_PrivateProfileActivity;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
@@ -1181,7 +1181,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 case R.id.commentorImageView: {
                     CommentsData commentData = (CommentsData) ((View) v.getParent().getParent()).getTag();
                     if (!"fb".equals(commentData.getComment_type())) {
-                        Intent profileIntent = new Intent(getActivity(), M_PrivateProfileActivity.class);
+                        Intent profileIntent = new Intent(getActivity(), UserProfileActivity.class);
                         profileIntent.putExtra(Constants.USER_ID, commentData.getUserId());
                         startActivity(profileIntent);
                     }
@@ -1191,7 +1191,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 case R.id.replierImageView: {
                     CommentsData commentData = (CommentsData) ((View) v.getParent()).getTag();
                     if (!"fb".equals(commentData.getComment_type())) {
-                        Intent profileIntent = new Intent(getActivity(), M_PrivateProfileActivity.class);
+                        Intent profileIntent = new Intent(getActivity(), UserProfileActivity.class);
                         profileIntent.putExtra(Constants.USER_ID, commentData.getUserId());
                         startActivity(profileIntent);
                     }
@@ -1203,7 +1203,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
                 case R.id.user_image:
                 case R.id.user_name:
-                    Intent profileIntent = new Intent(getActivity(), M_PrivateProfileActivity.class);
+                    Intent profileIntent = new Intent(getActivity(), UserProfileActivity.class);
                     profileIntent.putExtra(Constants.USER_ID, detailData.getUserId());
                     startActivity(profileIntent);
                     break;
@@ -1299,7 +1299,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                     break;
                 case R.id.emailShareTextView:
-
                     try {
                         AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment = new AddCollectionAndCollectionItemDialogFragment();
                         Bundle bundle = new Bundle();
@@ -1309,6 +1308,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         FragmentManager fm = getFragmentManager();
                         addCollectionAndCollectionitemDialogFragment.setTargetFragment(this, 0);
                         addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
+                        Utils.pushProfileEvents(getActivity(), "CTA_Article_Add_To_Collection",
+                                "ArticleDetailsFragment", "Add to Collection", "-");
                     } catch (Exception e) {
                         Crashlytics.logException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));

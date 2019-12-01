@@ -39,7 +39,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.GroupPostCommentResult;
-import com.mycity4kids.profile.M_PrivateProfileActivity;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.squareup.picasso.Picasso;
 
@@ -177,7 +177,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
 
 
                     if (repliesList.get(position).getIsAnnon() == 0) {
-                        Intent pIntent = new Intent(mContext, M_PrivateProfileActivity.class);
+                        Intent pIntent = new Intent(mContext, UserProfileActivity.class);
                         pIntent.putExtra(Constants.USER_ID, repliesList.get(position).getUserId());
                         mContext.startActivity(pIntent);
 //                        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(repliesList.get(position).getUserId())) {
@@ -200,7 +200,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
 
 
                     if (repliesList.get(position).getIsAnnon() == 0) {
-                        Intent pIntent = new Intent(mContext, M_PrivateProfileActivity.class);
+                        Intent pIntent = new Intent(mContext, UserProfileActivity.class);
                         pIntent.putExtra(Constants.USER_ID, repliesList.get(position).getUserId());
                         mContext.startActivity(pIntent);
 //                        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(repliesList.get(position).getUserId())) {
@@ -305,7 +305,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
 
 
                     if (repliesList.get(position).getIsAnnon() == 0) {
-                        Intent pIntent = new Intent(mContext, M_PrivateProfileActivity.class);
+                        Intent pIntent = new Intent(mContext, UserProfileActivity.class);
                         pIntent.putExtra(Constants.USER_ID, repliesList.get(position).getUserId());
                         mContext.startActivity(pIntent);
 //                        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(repliesList.get(position).getUserId())) {
@@ -326,7 +326,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                 @Override
                 public void onClick(View view) {
                     if (repliesList.get(position).getIsAnnon() == 0) {
-                        Intent pIntent = new Intent(mContext, M_PrivateProfileActivity.class);
+                        Intent pIntent = new Intent(mContext, UserProfileActivity.class);
                         pIntent.putExtra(Constants.USER_ID, repliesList.get(position).getUserId());
                         mContext.startActivity(pIntent);
 //                        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(repliesList.get(position).getUserId())) {
@@ -405,7 +405,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
 
 
                     if (repliesList.get(position).getIsAnnon() == 0) {
-                        Intent pIntent = new Intent(mContext, M_PrivateProfileActivity.class);
+                        Intent pIntent = new Intent(mContext, UserProfileActivity.class);
                         pIntent.putExtra(Constants.USER_ID, repliesList.get(position).getUserId());
                         mContext.startActivity(pIntent);
 //                        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(repliesList.get(position).getUserId())) {
@@ -428,7 +428,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
 
 
                     if (repliesList.get(position).getIsAnnon() == 0) {
-                        Intent pIntent = new Intent(mContext, M_PrivateProfileActivity.class);
+                        Intent pIntent = new Intent(mContext, UserProfileActivity.class);
                         pIntent.putExtra(Constants.USER_ID, repliesList.get(position).getUserId());
                         mContext.startActivity(pIntent);
 //                        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(repliesList.get(position).getUserId())) {

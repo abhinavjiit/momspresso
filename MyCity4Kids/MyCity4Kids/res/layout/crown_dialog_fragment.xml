@@ -33,27 +33,26 @@
                 android:layout_centerInParent="true"
                 android:scaleType="fitXY" />
         </RelativeLayout>
-    </LinearLayout>
 
-    <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/crownTitleTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/sharableCardContainer"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="10dp"
-        android:gravity="center"
-        android:text=""
-        android:textColor="@color/color_465391"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/crownTitleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/color_465391"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/crownDescTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/crownTitleTextView"
+        android:layout_below="@+id/sharableCardContainer"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"

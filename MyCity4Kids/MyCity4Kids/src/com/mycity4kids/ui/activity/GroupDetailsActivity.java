@@ -68,7 +68,7 @@ import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.UserPostSettingResponse;
 import com.mycity4kids.models.response.UserPostSettingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.profile.M_PrivateProfileActivity;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.GroupAboutRecyclerAdapter;
@@ -1652,7 +1652,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             case R.id.userImageView:
             case R.id.usernameTextView: {
                 if (postList.get(position).getIsAnnon() == 0) {
-                    Intent pIntent = new Intent(this, M_PrivateProfileActivity.class);
+                    Intent pIntent = new Intent(this, UserProfileActivity.class);
                     pIntent.putExtra(Constants.USER_ID, postList.get(position).getUserId());
                     startActivity(pIntent);
 //                    if (userDynamoId.equals(postList.get(position).getUserId())) {

@@ -67,7 +67,7 @@ import com.mycity4kids.observablescrollview.ObservableScrollView;
 import com.mycity4kids.observablescrollview.ObservableScrollViewCallbacks;
 import com.mycity4kids.observablescrollview.ScrollState;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.profile.M_PrivateProfileActivity;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
@@ -1080,7 +1080,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     }
 
     public void openPublicProfile(String authorType, String authorId, String author) {
-        Intent intentnn = new Intent(this, M_PrivateProfileActivity.class);
+        Intent intentnn = new Intent(this, UserProfileActivity.class);
         intentnn.putExtra(Constants.USER_ID, authorId);
         intentnn.putExtra(AppConstants.AUTHOR_NAME, "" + author);
         intentnn.putExtra(Constants.FROM_SCREEN, "Video Details");

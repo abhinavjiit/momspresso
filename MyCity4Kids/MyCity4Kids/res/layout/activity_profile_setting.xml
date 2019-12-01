@@ -134,7 +134,6 @@
                 android:layout_marginRight="@dimen/space_8"
                 android:drawableLeft="@drawable/ic_activity"
                 android:drawableRight="@drawable/arrow_right"
-                android:drawableTint="#FF000000"
                 android:drawablePadding="@dimen/space_20"
                 android:inputType="textCapSentences"
                 android:textColor="@color/campaign_4A4A4A"
@@ -195,7 +194,8 @@
                 android:drawablePadding="@dimen/space_20"
                 android:text="@string/help"
                 android:textColor="@color/campaign_4A4A4A"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="gone" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/report_spam"
@@ -208,7 +208,8 @@
                 android:drawablePadding="@dimen/space_20"
                 android:text="@string/report_spams"
                 android:textColor="@color/campaign_4A4A4A"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="gone" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/about"

@@ -91,7 +91,7 @@ import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.version.RateVersion;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.profile.M_PrivateProfileActivity;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
@@ -304,7 +304,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
-        appUpdatePopUp();
+//        appUpdatePopUp();
         onNewIntent(getIntent());
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -683,7 +683,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             fragment.setArguments(mBundle);
             replaceFragment(fragment, mBundle, true);
         } else if (Constants.PROFILE_FRAGMENT.equals(fragmentToLoad)) {
-            Intent pIntent = new Intent(this, M_PrivateProfileActivity.class);
+            Intent pIntent = new Intent(this, UserProfileActivity.class);
             startActivity(pIntent);
         } else if (Constants.SUGGESTED_TOPICS_FRAGMENT.equals(fragmentToLoad)) {
             SuggestedTopicsFragment fragment0 = new SuggestedTopicsFragment();
@@ -701,6 +701,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Bundle mBundle1 = new Bundle();
             fragment1.setArguments(mBundle1);
             addFragment(fragment1, mBundle1, true);
+        } else if (Constants.CREATE_CONTENT_PROMPT.equals(fragmentToLoad)) {
+            replaceFragment(new FragmentMC4KHomeNew(), null, false);
+            bottomNavigationView.setSelectedItemId(R.id.action_write);
         } else {
             replaceFragment(new FragmentMC4KHomeNew(), null, false);
             String tabType = getIntent().getStringExtra("TabType");
@@ -937,6 +940,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("collection_detail")) {
+                Intent intent = new Intent(DashboardActivity.this, UserCollectionItemListActivity.class);
+                intent.putExtra("id", notificationExtras.getString("id"));
+                startActivity(intent);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "collection_detail");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("create_content_prompt")) {
+                fragmentToLoad = Constants.CREATE_CONTENT_PROMPT;
             } else if (notificationExtras.getString("type").equalsIgnoreCase("momsights_screen")) {
                 Intent intent1 = new Intent(DashboardActivity.this, RewardsContainerActivity.class);
                 startActivity(intent1);
@@ -1194,7 +1211,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } else if (notificationExtras.getString("type").equalsIgnoreCase("profile")) {
                 String u_id = notificationExtras.getString("userId");
                 if (!SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(u_id)) {
-                    Intent intent1 = new Intent(this, M_PrivateProfileActivity.class);
+                    Intent intent1 = new Intent(this, UserProfileActivity.class);
                     intent1.putExtra("fromNotification", true);
                     intent1.putExtra(Constants.USER_ID, u_id);
                     intent1.putExtra(Constants.FROM_SCREEN, "Notification");
@@ -1396,6 +1413,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else {
                         launchAddVideoOptions();
                     }
+                } else if (tempDeepLinkURL.equals(AppConstants.DEEPLINK_SELF_PROFILE_URL)) {
+                    fragmentToLoad = Constants.PROFILE_FRAGMENT;
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_PROFILE_URL) || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_PROFILE_URL)) {
                     final String bloggerId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
                     if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId.equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
@@ -1414,7 +1433,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     if (deepLinkChallengeId == null || deepLinkChallengeId.isEmpty()) {
                         Intent ssIntent = new Intent(this, AddShortStoryActivity.class);
                         startActivity(ssIntent);
-                    } else if (!deepLinkChallengeId.isEmpty()) {
+                    } else {
                         findValues(deepLinkChallengeId);
                         if (shortStoryChallengesList != null && deepLinkDisplayName != null && deepLinkImageUrl != null && shortStoriesTopicList != null && shortStoryChallengesList.size() != 0 && deepLinkDisplayName.size() != 0 && deepLinkImageUrl.size() != 0 && shortStoriesTopicList.size() != 0) {
                             Intent deepLinkIntent = new Intent(this, ChallnegeDetailListingActivity.class);
@@ -2004,7 +2023,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.profileImageView:
                 mDrawerLayout.closeDrawers();
                 Utils.campaignEvent(this, "profile", "sidebar", "Update", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "CTA_Update_Rewards");
-                Intent pIntent = new Intent(this, M_PrivateProfileActivity.class);
+                Intent pIntent = new Intent(this, UserProfileActivity.class);
                 startActivity(pIntent);
                 break;
             case R.id.langTextView:
@@ -2020,7 +2039,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;
             case R.id.imgProfile:
-                Intent intent4 = new Intent(DashboardActivity.this, M_PrivateProfileActivity.class);
+                Intent intent4 = new Intent(DashboardActivity.this, UserProfileActivity.class);
                 intent4.putExtra(Constants.USER_ID, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 startActivity(intent4);
                 break;
@@ -2537,7 +2556,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderAuthorDetailScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getAuthor_id())) {
-            Intent intent = new Intent(DashboardActivity.this, M_PrivateProfileActivity.class);
+            Intent intent = new Intent(DashboardActivity.this, UserProfileActivity.class);
             intent.putExtra(AppConstants.PUBLIC_PROFILE_FLAG, true);
             intent.putExtra(Constants.USER_ID, data.getAuthor_id());
             intent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
@@ -2597,7 +2616,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderAuthorListingScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getAuthor_name())) {
-            Intent _authorListIntent = new Intent(DashboardActivity.this, M_PrivateProfileActivity.class);
+            Intent _authorListIntent = new Intent(DashboardActivity.this, UserProfileActivity.class);
             _authorListIntent.putExtra(Constants.USER_ID, data.getAuthor_id());
             _authorListIntent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
             _authorListIntent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
@@ -2608,7 +2627,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderBloggerListingScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getBlog_title())) {
-            Intent _bloggerListIntent = new Intent(DashboardActivity.this, M_PrivateProfileActivity.class);
+            Intent _bloggerListIntent = new Intent(DashboardActivity.this, UserProfileActivity.class);
             _bloggerListIntent.putExtra(Constants.USER_ID, data.getAuthor_id());
             _bloggerListIntent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
             _bloggerListIntent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
@@ -3115,7 +3134,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Matcher matcher3 = pattern3.matcher(urlWithNoParams);
             if (matcher3.matches()) {
                 String[] separated = urlWithNoParams.split("/");
-                Intent intent = new Intent(this, M_PrivateProfileActivity.class);
+                Intent intent = new Intent(this, UserProfileActivity.class);
                 intent.putExtra("badgeId", separated[separated.length - 1]);
                 intent.putExtra(Constants.USER_ID, separated[separated.length - 3]);
                 startActivity(intent);
@@ -3133,7 +3152,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Matcher matcher5 = pattern5.matcher(urlWithNoParams);
             if (matcher5.matches()) {
                 String[] separated = urlWithNoParams.split("/");
-                Intent intent = new Intent(this, M_PrivateProfileActivity.class);
+                Intent intent = new Intent(this, UserProfileActivity.class);
                 intent.putExtra(Constants.USER_ID, separated[separated.length - 1]);
                 startActivity(intent);
                 return true;
@@ -3142,7 +3161,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Matcher matcher6 = pattern6.matcher(urlWithNoParams);
             if (matcher6.matches()) {
                 String[] separated = urlWithNoParams.split("/");
-                Intent intent = new Intent(this, M_PrivateProfileActivity.class);
+                Intent intent = new Intent(this, UserProfileActivity.class);
                 intent.putExtra("detail", "rank");
                 intent.putExtra(Constants.USER_ID, separated[separated.length - 2]);
                 startActivity(intent);

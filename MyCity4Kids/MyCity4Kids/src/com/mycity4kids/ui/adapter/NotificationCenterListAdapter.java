@@ -32,7 +32,7 @@ import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.NotificationCenterListResponse;
 import com.mycity4kids.models.response.NotificationCenterResult;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.profile.M_PrivateProfileActivity;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
@@ -48,10 +48,12 @@ import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.SuggestedTopicsActivity;
 import com.mycity4kids.ui.activity.TopicsListingActivity;
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
+import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.GroupsViewFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
+import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -258,7 +260,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     } else {
                         authorId = notificationList.get(position).getAuthorId();
                     }
-                    Intent pIntent = new Intent(mContext, M_PrivateProfileActivity.class);
+                    Intent pIntent = new Intent(mContext, UserProfileActivity.class);
                     pIntent.putExtra(Constants.USER_ID, authorId);
                     mContext.startActivity(pIntent);
                     try {
@@ -761,6 +763,52 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                         jsonObject.put("type", AppConstants.NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_BANKDETAIL);
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else if ((StringUtils.isNullOrEmpty(nType) && AppConstants.NOTIFICATION_NOTIFY_TYPE_VIDEO_CHALLENGE_DETAIL.equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_NOTIFY_TYPE_VIDEO_CHALLENGE_DETAIL.equals(nType)) {
+            holder.rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
+                    hitNotificationReadAPI(notificationList.get(position).getId());
+                    notifyDataSetChanged();
+                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(),
+                            "Notification Centre", AppConstants.NOTIFICATION_NOTIFY_TYPE_VIDEO_CHALLENGE_DETAIL);
+                    Intent videoChallengeIntent = new Intent(mContext, NewVideoChallengeActivity.class);
+                    videoChallengeIntent.putExtra(Constants.CHALLENGE_ID, "" + notificationList.get(position).getId());
+                    videoChallengeIntent.putExtra("comingFrom", "notification");
+                    mContext.startActivity(videoChallengeIntent);
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", AppConstants.NOTIFICATION_NOTIFY_TYPE_VIDEO_CHALLENGE_DETAIL);
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else if ((StringUtils.isNullOrEmpty(nType) && AppConstants.NOTIFICATION_NOTIFY_TYPE_COLLECTION_DETAIL.equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_NOTIFY_TYPE_COLLECTION_DETAIL.equals(nType)) {
+            holder.rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
+                    hitNotificationReadAPI(notificationList.get(position).getId());
+                    notifyDataSetChanged();
+                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(),
+                            "Notification Centre", AppConstants.NOTIFICATION_NOTIFY_TYPE_COLLECTION_DETAIL);
+                    Intent intent = new Intent(mContext, UserCollectionItemListActivity.class);
+                    intent.putExtra("id", "" + notificationList.get(position).getId());
+                    intent.putExtra("comingFrom", "notification");
+                    mContext.startActivity(intent);
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", AppConstants.NOTIFICATION_NOTIFY_TYPE_COLLECTION_DETAIL);
                         mixpanel.track("NotificationCenterClick", jsonObject);
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -14,6 +14,7 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.collectionsModels.UserCollectionsListModel
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
@@ -136,10 +137,12 @@ class MyCollectionsWidget : RelativeLayout, OnClickListener {
         try {
             when {
                 v?.id == R.id.addCollectionContainer -> {
-                    if (context is M_PrivateProfileActivity) {
+                    if (context is UserProfileActivity) {
                         val addCollectionPopUpDialogFragment = AddCollectionPopUpDialogFragment()
-                        val fm = (context as M_PrivateProfileActivity).supportFragmentManager
+                        val fm = (context as UserProfileActivity).supportFragmentManager
                         addCollectionPopUpDialogFragment.show(fm, "collectionAddPopUp")
+                        Utils.pushProfileEvents(context, "CTA_Add_Collection_From_Profile", "UserProfileActivity",
+                                "Add Collection", "-")
                     }
                 }
                 v?.id == R.id.viewAllTextView -> {

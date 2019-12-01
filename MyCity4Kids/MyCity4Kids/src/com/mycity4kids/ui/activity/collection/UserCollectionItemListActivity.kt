@@ -32,6 +32,7 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.collectionsModels.AddCollectionRequestModel
 import com.mycity4kids.models.collectionsModels.UpdateCollectionRequestModel
 import com.mycity4kids.models.collectionsModels.UserCollectionsListModel
@@ -114,32 +115,25 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         val thumbStates = ColorStateList(
                 arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
                 intArrayOf(
-
-
                         ContextCompat.getColor(this@UserCollectionItemListActivity, R.color.white), ContextCompat.getColor(this@UserCollectionItemListActivity, R.color.add_video_details_mute_label))
-
         )
         muteSwitch?.thumbTintList = thumbStates
         if (Build.VERSION.SDK_INT >= 24) {
             val trackStates = ColorStateList(
                     arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
                     intArrayOf(
-
                             ContextCompat.getColor(this@UserCollectionItemListActivity, R.color.switch_button_green_collection), ContextCompat.getColor(this@UserCollectionItemListActivity, R.color.white))
             )
             muteSwitch?.trackTintList = trackStates
 
         }
         muteSwitch?.setOnClickListener {
-
             if (muteSwitch?.isChecked == true) {
-
                 updateCollection(delete = false, isPublic = true)
             } else {
                 updateCollection(delete = false, isPublic = false)
             }
         }
-
 
         val linearLayoutManager = LinearLayoutManager(this)
         collectionItemsListAdapter = CollectionItemsListAdapter(this@UserCollectionItemListActivity, this)
@@ -169,7 +163,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         })
     }
 
-
     private fun chooseImageOptionPopUp(view: View) {
         val popup = PopupMenu(this@UserCollectionItemListActivity, view)
         popup.menuInflater.inflate(R.menu.delete_edit_collection_menu, popup.menu)
@@ -193,7 +186,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         menuHelper.show()
     }
 
-
     fun getUserCollectionItems(start: Int) {
         BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getUserCollectionItems(collectionId, start, 10).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
             override fun onComplete() {
@@ -210,10 +202,8 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                         if (start == 0) {
                             if (userCollectionsListModel.collectionItems.isEmpty()) {
                                 itemNotAddedTextView.visibility = View.VISIBLE
-
                             } else {
                                 itemNotAddedTextView.visibility = View.GONE
-
                             }
                             collectionNameTextView?.text = userCollectionsListModel.name
                             if (userCollectionsListModel.isPublic) {
@@ -227,7 +217,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                                 rightArrow.visibility = View.GONE
                                 followFollowingTextView.visibility = View.GONE
                                 if (userCollectionsListModel.collectionType != 0) {
-
                                     setting.visibility = View.GONE
                                     muteSwitch?.visibility = View.GONE
 
@@ -243,7 +232,8 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                                     collectionDescription.visibility = View.VISIBLE
                                     collectionDescription.text = userCollectionsListModel.summary
                                 }
-
+                                Utils.pushGenericEvent(this@UserCollectionItemListActivity, "Show_Private_Collection_Detail",
+                                        userCollectionsListModel.userId, "UserCollectionItemListActivity")
                             } else {
                                 share?.visibility = View.GONE
                                 followersCount.isClickable = false
@@ -257,6 +247,8 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                                 }
                                 muteSwitch?.visibility = View.GONE
                                 setting.visibility = View.GONE
+                                Utils.pushGenericEvent(this@UserCollectionItemListActivity, "Show_Public_Collection_Detail",
+                                        userCollectionsListModel.userId, "UserCollectionItemListActivity")
                             }
                             followersCount.text = userCollectionsListModel.totalCollectionFollowers.toString()
                             try {
@@ -268,7 +260,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                         }
                         shimmer1.visibility = View.GONE
                         shimmer1.stopShimmerAnimation()
-                        dataList.addAll( userCollectionsListModel.collectionItems)
+                        dataList.addAll(userCollectionsListModel.collectionItems)
                         collectionItemsListAdapter.setListData(dataList)
                         collectionItemsListAdapter.notifyDataSetChanged()
 
@@ -349,10 +341,14 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
             addCollectionRequestModel.deleted = true
             addCollectionRequestModel.userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
             addCollectionRequestModel.userCollectionId = collectionId
+            Utils.pushProfileEvents(this, "CTA_Unfollow_Collection_Detail", "UserCollectionItemListActivity",
+                    "Unfollow", "-");
         } else {
             addCollectionRequestModel.deleted = false
             addCollectionRequestModel.userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
             addCollectionRequestModel.userCollectionId = collectionId
+            Utils.pushProfileEvents(this, "CTA_Follow_Collection_Detail", "UserCollectionItemListActivity",
+                    "Follow", "-");
         }
 
         BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).followUnfollowCollection(addCollectionRequestModel = addCollectionRequestModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<ResponseBody> {
@@ -440,6 +436,8 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                             .setText(contentStr)
                             .intent
                     startActivity(shareIntent)
+                    Utils.pushProfileEvents(this@UserCollectionItemListActivity, "CTA_Share_Private_Collection_Detail",
+                            "UserCollectionItemListActivity", "Share", "-")
                 }
             }
             R.id.confirmTextView -> {

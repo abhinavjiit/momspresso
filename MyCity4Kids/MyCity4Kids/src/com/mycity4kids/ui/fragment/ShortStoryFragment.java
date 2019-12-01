@@ -55,7 +55,7 @@ import com.mycity4kids.models.response.ShortStoryDetailResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.models.response.ViewCountResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.profile.M_PrivateProfileActivity;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
@@ -706,6 +706,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     FragmentManager fm = getFragmentManager();
                     addCollectionAndCollectionitemDialogFragment.setTargetFragment(this, 0);
                     addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
+                    Utils.pushProfileEvents(getActivity(), "CTA_100WS_Add_To_Collection",
+                            "ShortStoryFragment", "Add to Collection", "-");
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
@@ -714,7 +716,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             }
             break;
             case R.id.authorNameTextView: {
-                Intent intentnn = new Intent(getActivity(), M_PrivateProfileActivity.class);
+                Intent intentnn = new Intent(getActivity(), UserProfileActivity.class);
                 intentnn.putExtra(Constants.USER_ID, headerModel.getSsResult().getUserId());
                 intentnn.putExtra(AppConstants.AUTHOR_NAME, headerModel.getSsResult().getUserName());
                 intentnn.putExtra(Constants.FROM_SCREEN, "ShortStoryDetailsScreen");

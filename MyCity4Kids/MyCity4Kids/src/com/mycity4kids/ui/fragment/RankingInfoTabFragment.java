@@ -34,7 +34,7 @@ import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.response.LanguageRanksModel;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.profile.M_PrivateProfileActivity;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI;
 import com.mycity4kids.ui.activity.RankingActivity;
@@ -310,7 +310,7 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
     @Override
     public void onClick(View view, int position) {
         ContributorListResult itemSelected = contributorListResults.get(position);
-        Intent intent = new Intent(getActivity(), M_PrivateProfileActivity.class);
+        Intent intent = new Intent(getActivity(), UserProfileActivity.class);
         intent.putExtra(Constants.USER_ID, itemSelected.getId());
         intent.putExtra(AppConstants.AUTHOR_NAME, itemSelected.getFirstName() + " " + itemSelected.getLastName());
         intent.putExtra(Constants.FROM_SCREEN, "Ranking");

@@ -146,6 +146,7 @@ class UsersBookmarksAdapter(private val mListener: RecyclerViewClickListener) : 
             recommendCountTextView = itemView.findViewById<View>(R.id.recommendCountTextView) as TextView
             removeBookmarkTextView = itemView.findViewById<View>(R.id.removeBookmarkTextView) as TextView
             shareImageView = itemView.findViewById<View>(R.id.shareImageView) as ImageView
+            removeBookmarkTextView.visibility = View.GONE
             itemTypeImageView.setImageResource(R.drawable.draft_red)
             shareImageView.setOnClickListener(this)
             removeBookmarkTextView.setOnClickListener(this)

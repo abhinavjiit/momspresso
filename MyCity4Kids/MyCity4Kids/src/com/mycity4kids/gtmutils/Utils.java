@@ -23,6 +23,8 @@ public class Utils {
         // private constructor.G
     }
 
+    private static final String BADGE_NAME = "Badge name";
+
     public static void initialLanguageSelection(Context context, String currentScreen, String source, String CTA, String platform, String lang, String userId, String timestamp, String event) {
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
         dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, event, GTMTags.Current_Screen, currentScreen, GTMTags.Source, source, GTMTags.CTA, CTA, GTMTags.Platform, platform, GTMTags.Language, lang, GTMTags.USER_ID, userId, GTMTags.Timestamp, timestamp));
@@ -114,7 +116,6 @@ public class Utils {
         bundle.putString(GTMTags.USER_ID, userId);
         bundle.putString(GTMTags.Timestamp, timestamp);
         bundle.putString(GTMTags.categoryId, categoryId);
-
         mFirebaseAnalytics.logEvent(event, bundle);
 
     }
@@ -138,7 +139,6 @@ public class Utils {
             e.printStackTrace();
         }
 
-
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         Bundle bundle = new Bundle();
         bundle.putString(GTMTags.Current_Screen, currentScreen);
@@ -149,10 +149,8 @@ public class Utils {
         bundle.putString(GTMTags.USER_ID, userId);
         bundle.putString(GTMTags.Timestamp, timestamp);
         bundle.putString(GTMTags.PostId, postId);
-
         mFirebaseAnalytics.logEvent(event, bundle);
     }
-
 
     public static void pushAppOpenEvent(Context context, String user) {
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
@@ -162,7 +160,6 @@ public class Utils {
         Bundle bundle = new Bundle();
         bundle.putString(GTMTags.USER_ID, user);
         mFirebaseAnalytics.logEvent("AppLaunch", bundle);
-
     }
 
     public static void timeSpending(Context context, String user) {
@@ -300,7 +297,6 @@ public class Utils {
             e.printStackTrace();
         }
 
-
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         Bundle bundle = new Bundle();
         bundle.putString("userId", user);
@@ -310,7 +306,6 @@ public class Utils {
         bundle.putString("reportContentType", type);
 
         mFirebaseAnalytics.logEvent("StoryCommentReplyChangeEvent", bundle);
-
     }
 
 
@@ -332,7 +327,6 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         Bundle bundle = new Bundle();
@@ -505,7 +499,6 @@ public class Utils {
         bundle.putString("articleId", articleId);
         bundle.putString("author", author);
         bundle.putString("articleLanguage", language);
-
         mFirebaseAnalytics.logEvent("PlayArticleAudio", bundle);
     }
 
@@ -527,7 +520,6 @@ public class Utils {
             e.printStackTrace();
         }
 
-
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         Bundle bundle = new Bundle();
         bundle.putString("userId", user);
@@ -535,7 +527,6 @@ public class Utils {
         bundle.putString("articleId", articleId);
         bundle.putString("author", author);
         bundle.putString("articleLanguage", language);
-
         mFirebaseAnalytics.logEvent("StopArticleAudio", bundle);
     }
 
@@ -557,7 +548,6 @@ public class Utils {
             e.printStackTrace();
         }
 
-
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         Bundle bundle = new Bundle();
         bundle.putString("userId", user);
@@ -565,7 +555,6 @@ public class Utils {
         bundle.putString("articleId", articleId);
         bundle.putString("author", author);
         bundle.putString("shareMedium", shareMedium);
-
         mFirebaseAnalytics.logEvent("ShareArticle", bundle);
     }
 
@@ -587,7 +576,6 @@ public class Utils {
             e.printStackTrace();
         }
 
-
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         Bundle bundle = new Bundle();
         bundle.putString("userId", user);
@@ -595,7 +583,6 @@ public class Utils {
         bundle.putString("articleId", articleId);
         bundle.putString("author", author);
         bundle.putString("shareMedium", shareMedium);
-
         mFirebaseAnalytics.logEvent("ShareStory", bundle);
     }
 
@@ -622,7 +609,6 @@ public class Utils {
         bundle.putString("screen", screenName);
         bundle.putString("articleId", articleId);
         bundle.putString("author", author);
-
         mFirebaseAnalytics.logEvent("BookmarkArticle", bundle);
     }
 
@@ -649,7 +635,6 @@ public class Utils {
         bundle.putString("screen", screenName);
         bundle.putString("articleId", articleId);
         bundle.putString("author", author);
-
         mFirebaseAnalytics.logEvent("UnbookmarkArticle", bundle);
     }
 
@@ -676,7 +661,6 @@ public class Utils {
         bundle.putString("screen", screenName);
         bundle.putString("articleId", articleId);
         bundle.putString("author", author);
-
         mFirebaseAnalytics.logEvent("LikeArticle", bundle);
     }
 
@@ -703,7 +687,6 @@ public class Utils {
         bundle.putString("screen", screenName);
         bundle.putString("articleId", articleId);
         bundle.putString("author", author);
-
         mFirebaseAnalytics.logEvent("LikeStory", bundle);
     }
 
@@ -730,7 +713,6 @@ public class Utils {
         bundle.putString("screen", screenName);
         bundle.putString("articleId", articleId);
         bundle.putString("author", author);
-
         mFirebaseAnalytics.logEvent("UnlikeArticle", bundle);
     }
 
@@ -751,14 +733,12 @@ public class Utils {
             e.printStackTrace();
         }
 
-
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         Bundle bundle = new Bundle();
         bundle.putString("userId", user);
         bundle.putString("screen", screenName);
         bundle.putString("articleId", articleId);
         bundle.putString("author", author);
-
         mFirebaseAnalytics.logEvent("WatchLater", bundle);
     }
 
@@ -779,14 +759,12 @@ public class Utils {
             e.printStackTrace();
         }
 
-
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         Bundle bundle = new Bundle();
         bundle.putString("userId", user);
         bundle.putString("screen", screenName);
         bundle.putString("articleId", articleId);
         bundle.putString("author", author);
-
         mFirebaseAnalytics.logEvent("RemoveWatchLater", bundle);
     }
 
@@ -807,14 +785,12 @@ public class Utils {
             e.printStackTrace();
         }
 
-
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         Bundle bundle = new Bundle();
         bundle.putString("userId", user);
         bundle.putString("screen", screenName);
         bundle.putString("articleId", articleId);
         bundle.putString("author", author);
-
         mFirebaseAnalytics.logEvent("CommentOnArticle", bundle);
     }
 
@@ -841,7 +817,6 @@ public class Utils {
         bundle.putString("screen", screenName);
         bundle.putString("articleId", articleId);
         bundle.putString("author", author);
-
         mFirebaseAnalytics.logEvent("ReplyToComment", bundle);
     }
 
@@ -866,7 +841,6 @@ public class Utils {
         bundle.putString("userId", user);
         bundle.putString("screen", screenName);
         bundle.putString("author", author);
-
         mFirebaseAnalytics.logEvent("FollowAuthor", bundle);
     }
 
@@ -891,7 +865,6 @@ public class Utils {
         bundle.putString("userId", user);
         bundle.putString("screen", screenName);
         bundle.putString("author", author);
-
         mFirebaseAnalytics.logEvent("UnfollowAuthor", bundle);
     }
 
@@ -916,7 +889,6 @@ public class Utils {
         bundle.putString("userId", user);
         bundle.putString("screen", screenName);
         bundle.putString("topic", topic);
-
         mFirebaseAnalytics.logEvent("FollowTopic", bundle);
     }
 
@@ -941,7 +913,6 @@ public class Utils {
         bundle.putString("userId", user);
         bundle.putString("screen", screenName);
         bundle.putString("topic", topic);
-
         mFirebaseAnalytics.logEvent("UnfollowTopic", bundle);
     }
 
@@ -966,7 +937,6 @@ public class Utils {
         bundle.putString("userId", user);
         bundle.putString("screen", screenName);
         bundle.putString("notificationType", notificationType);
-
         mFirebaseAnalytics.logEvent("EnableNotification", bundle);
     }
 
@@ -991,7 +961,6 @@ public class Utils {
         bundle.putString("userId", user);
         bundle.putString("screen", screenName);
         bundle.putString("notificationType", notificationType);
-
         mFirebaseAnalytics.logEvent("DisableNotification", bundle);
     }
 
@@ -1011,13 +980,11 @@ public class Utils {
             e.printStackTrace();
         }
 
-
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         Bundle bundle = new Bundle();
         bundle.putString("userId", user);
         bundle.putString("screen", screenName);
         bundle.putString("subscriptionType", subsriptionType);
-
         mFirebaseAnalytics.logEvent("EnableSubscription", bundle);
     }
 
@@ -1042,7 +1009,6 @@ public class Utils {
         bundle.putString("userId", user);
         bundle.putString("screen", screenName);
         bundle.putString("subscriptionType", subsriptionType);
-
         mFirebaseAnalytics.logEvent("DisableSubscription", bundle);
     }
 
@@ -1067,7 +1033,6 @@ public class Utils {
         bundle.putString("userId", user);
         bundle.putString("screen", screenName);
         bundle.putString("preferredLanguage", language);
-
         mFirebaseAnalytics.logEvent("EnableLanguage", bundle);
     }
 
@@ -1092,7 +1057,6 @@ public class Utils {
         bundle.putString("userId", user);
         bundle.putString("screen", screenName);
         bundle.putString("preferredLanguage", language);
-
         mFirebaseAnalytics.logEvent("DisableLanguage", bundle);
     }
 
@@ -1115,7 +1079,6 @@ public class Utils {
         Bundle bundle = new Bundle();
         bundle.putString("userId", user);
         bundle.putString("screen", screenName);
-
         mFirebaseAnalytics.logEvent("BlogSetupSubmit", bundle);
     }
 
@@ -1134,12 +1097,10 @@ public class Utils {
             e.printStackTrace();
         }
 
-
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         Bundle bundle = new Bundle();
         bundle.putString("userId", user);
         bundle.putString("screen", screenName);
-
         mFirebaseAnalytics.logEvent("BlogSetupSuccess", bundle);
     }
 
@@ -1164,7 +1125,6 @@ public class Utils {
         bundle.putString("userId", user);
         bundle.putString("screen", screenName);
         bundle.putString("articleStatus", listingType);
-
         mFirebaseAnalytics.logEvent("PublishArticle", bundle);
     }
 
@@ -1184,13 +1144,11 @@ public class Utils {
             e.printStackTrace();
         }
 
-
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         Bundle bundle = new Bundle();
         bundle.putString("userId", user);
         bundle.putString("screen", screenName);
         bundle.putString("articleStatus", listingType);
-
         mFirebaseAnalytics.logEvent("PublishStory", bundle);
     }
 
@@ -1210,13 +1168,11 @@ public class Utils {
             e.printStackTrace();
         }
 
-
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         Bundle bundle = new Bundle();
         bundle.putString("userId", user);
         bundle.putString("screen", screenName);
         bundle.putString("draftId", draftId);
-
         mFirebaseAnalytics.logEvent("RemoveDraft", bundle);
     }
 
@@ -1236,13 +1192,11 @@ public class Utils {
             e.printStackTrace();
         }
 
-
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         Bundle bundle = new Bundle();
         bundle.putString("userId", user);
         bundle.putString("screen", screenName);
         bundle.putString("draftId", draftId);
-
         mFirebaseAnalytics.logEvent("EditDraft", bundle);
     }
 
@@ -1344,7 +1298,6 @@ public class Utils {
         bundle.putString("userId", user);
         bundle.putString("screen", screenName);
         bundle.putString(GTMTags.TopicChosen, categoryNameIdCombination);
-
         mFirebaseAnalytics.logEvent(event.toString(), bundle);
     }
 
@@ -1362,26 +1315,58 @@ public class Utils {
     }
 
     public static void pushGenericEvent(Context context, String event, String user, String screenName) {
-        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
-        dataLayer.push(DataLayer.mapOf("event", event, GTMTags.USER_ID, user, GTMTags.ScreenName, screenName));
-
-        MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
         try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("userId", user);
-            jsonObject.put("screen", screenName);
-            jsonObject.put(GTMTags.Timestamp, String.valueOf(System.currentTimeMillis()));
-            mixpanel.track(event, jsonObject);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("screen", screenName);
+                jsonObject.put(GTMTags.Timestamp, String.valueOf(System.currentTimeMillis()));
+                mixpanel.track(event, jsonObject);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
-        Bundle bundle = new Bundle();
-        bundle.putString("userId", user);
-        bundle.putString("screen", screenName);
-        bundle.putString(GTMTags.Timestamp, "" + System.currentTimeMillis());
-        bundle.putString(GTMTags.Language, "" + SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()));
-        mFirebaseAnalytics.logEvent(event, bundle);
+            FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+            Bundle bundle = new Bundle();
+            bundle.putString("userId", user);
+            bundle.putString("screen", screenName);
+            bundle.putString(GTMTags.Timestamp, "" + System.currentTimeMillis());
+            bundle.putString(GTMTags.Language, "" + SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()));
+            mFirebaseAnalytics.logEvent(event, bundle);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
+
+    public static void pushProfileEvents(Context context, String event, String currentScreen, String CTA, String params) {
+        try {
+            MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put(GTMTags.Current_Screen, currentScreen);
+                jsonObject.put(GTMTags.CTA, CTA);
+                jsonObject.put(BADGE_NAME, params);
+                jsonObject.put(GTMTags.Platform, "android");
+                jsonObject.put(GTMTags.Language, SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()));
+                jsonObject.put(GTMTags.USER_ID, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                jsonObject.put(GTMTags.Timestamp, String.valueOf(System.currentTimeMillis()));
+                mixpanel.track(event, jsonObject);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+            Bundle bundle = new Bundle();
+            bundle.putString(GTMTags.Current_Screen, currentScreen);
+            bundle.putString(GTMTags.CTA, CTA);
+            bundle.putString(BADGE_NAME, params);
+            bundle.putString(GTMTags.Platform, "android");
+            bundle.putString(GTMTags.Language, SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()));
+            bundle.putString(GTMTags.Timestamp, String.valueOf(System.currentTimeMillis()));
+            mFirebaseAnalytics.logEvent(event, bundle);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }

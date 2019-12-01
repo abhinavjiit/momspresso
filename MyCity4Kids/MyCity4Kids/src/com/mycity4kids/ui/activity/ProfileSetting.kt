@@ -29,6 +29,7 @@ import com.mycity4kids.constants.Constants
 import com.mycity4kids.controller.LogoutController
 import com.mycity4kids.dbtable.*
 import com.mycity4kids.facebook.FacebookUtils
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.campaignmodels.TotalPayoutResponse
 import com.mycity4kids.models.logout.LogoutResponse
 import com.mycity4kids.preference.SharedPrefUtils
@@ -90,6 +91,9 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_setting)
+
+        Utils.pushGenericEvent(this, "Show_Settings_Detail", SharedPrefUtils.getUserDetailModel(this).dynamoId,
+                "ProfileSetting")
 
         toolbar = findViewById(R.id.toolbar)
         personal_info = findViewById(R.id.personal_info)

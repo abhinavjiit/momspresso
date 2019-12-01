@@ -50,7 +50,7 @@ import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.profile.M_PrivateProfileActivity;
+import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
@@ -462,6 +462,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                     FragmentManager fm = getFragmentManager();
                     addCollectionAndCollectionitemDialogFragment.setTargetFragment(this, 0);
                     addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
+                    Utils.pushProfileEvents(getActivity(), "CTA_100WS_Add_To_Collection",
+                            "TopicsShortStoriesTabFragment", "Add to Collection", "-");
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
@@ -469,7 +471,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             }
             break;
             case R.id.authorNameTextView:
-                Intent pIntent = new Intent(getActivity(), M_PrivateProfileActivity.class);
+                Intent pIntent = new Intent(getActivity(), UserProfileActivity.class);
                 pIntent.putExtra(Constants.USER_ID, mDatalist.get(position).getUserId());
                 startActivity(pIntent);
                 break;
