@@ -1,37 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayout"
     android:layout_width="320dp"
     android:layout_height="wrap_content"
     android:background="@drawable/custom_dialog_bg"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/imagesContainer"
+    <LinearLayout
+        android:id="@+id/sharableCardContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/crownBgImageView"
-            android:layout_width="250dp"
-            android:layout_height="200dp"
-            android:layout_centerHorizontal="true"
-            android:scaleType="fitXY" />
+        <RelativeLayout
+            android:id="@+id/imagesContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/crownImageView"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_centerInParent="true"
-            android:scaleType="fitXY" />
-    </RelativeLayout>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/crownBgImageView"
+                android:layout_width="250dp"
+                android:layout_height="200dp"
+                android:layout_centerHorizontal="true"
+                android:scaleType="fitXY" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/crownImageView"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_centerInParent="true"
+                android:scaleType="fitXY" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/crownTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imagesContainer"
+        android:layout_below="@+id/sharableCardContainer"
         android:layout_marginStart="10dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="10dp"
@@ -49,17 +57,54 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:gravity="center"
         android:layout_marginBottom="20dp"
+        android:gravity="center"
         android:text=""
         android:textColor="@color/color_787E85"
         android:textSize="14sp" />
+
+    <RelativeLayout
+        android:id="@+id/shareJoyContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/crownDescTextView"
+        android:layout_centerHorizontal="true">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/shareJoyLabelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="6dp"
+            android:gravity="center"
+            android:text="@string/profile_share_the_joy"
+            android:textColor="@color/color_666666"
+            android:textSize="18sp"
+            app:fontName="oswald.ttf" />
+
+        <View
+            android:layout_width="100dp"
+            android:layout_height="1dp"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="10dp"
+            android:layout_toStartOf="@+id/shareJoyLabelTextView"
+            android:background="@color/light_underline" />
+
+        <View
+            android:layout_width="100dp"
+            android:layout_height="1dp"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/shareJoyLabelTextView"
+            android:background="@color/light_underline" />
+    </RelativeLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/shareContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/crownDescTextView"
+        android:layout_below="@+id/shareJoyContainer"
         android:layout_centerHorizontal="true"
         android:paddingTop="8dp"
         android:paddingBottom="16dp">

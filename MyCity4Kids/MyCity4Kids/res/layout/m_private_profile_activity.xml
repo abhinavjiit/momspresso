@@ -49,7 +49,7 @@
                         android:id="@+id/profileShareCardWidget"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="invisible" />
+                        android:visibility="gone" />
 
                     <com.facebook.shimmer.ShimmerFrameLayout
                         android:id="@+id/profileShimmerLayout"
@@ -144,7 +144,9 @@
                             android:layout_below="@+id/authorBioTextView"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="10dp"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:paddingStart="20dp"
+                            android:paddingEnd="20dp">
 
                             <androidx.appcompat.widget.AppCompatImageView
                                 android:layout_width="20dp"
@@ -158,8 +160,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="center_vertical"
-                                android:drawablePadding="10dp"
-                                android:gravity="center"
+                                android:ellipsize="marquee"
+                                android:focusable="true"
+                                android:focusableInTouchMode="true"
+                                android:marqueeRepeatLimit="marquee_forever"
+                                android:scrollHorizontally="true"
+                                android:singleLine="true"
                                 android:text=""
                                 android:textColor="@color/app_light_pink" />
                         </LinearLayout>
@@ -168,6 +174,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/contentLangContainer"
+                            android:layout_marginTop="4dp"
                             android:clipToPadding="false"
                             android:paddingBottom="10dp">
 
@@ -175,14 +182,14 @@
                                 android:id="@+id/postsCountContainer"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:gravity="center"
                                 android:orientation="vertical"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toStartOf="@+id/rankContainer"
                                 app:layout_constraintHorizontal_bias="0.5"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent">
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintVertical_bias="0.1">
 
                                 <com.mycity4kids.widget.CustomFontTextView
                                     android:id="@+id/postsCountTextView"
@@ -199,7 +206,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="10dp"
                                     android:gravity="center"
-                                    android:minLines="2"
+                                    android:lines="2"
                                     android:text="@string/blogger_profile.article_count_label"
                                     android:textColor="@color/app_grey"
                                     android:textSize="12sp" />
@@ -209,14 +216,14 @@
                                 android:id="@+id/followerContainer"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:gravity="center"
                                 android:orientation="vertical"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toStartOf="@+id/followingContainer"
                                 app:layout_constraintHorizontal_bias="0.5"
                                 app:layout_constraintStart_toEndOf="@+id/rankContainer"
-                                app:layout_constraintTop_toTopOf="parent">
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintVertical_bias="0.1">
 
                                 <com.mycity4kids.widget.CustomFontTextView
                                     android:id="@+id/followerCountTextView"
@@ -233,7 +240,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="10dp"
                                     android:gravity="center"
-                                    android:minLines="2"
+                                    android:lines="2"
                                     android:text="@string/myprofile.followers_label"
                                     android:textColor="@color/app_grey"
                                     android:textSize="12sp" />
@@ -243,14 +250,14 @@
                                 android:id="@+id/followingContainer"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:gravity="center"
                                 android:orientation="vertical"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintHorizontal_bias="0.5"
                                 app:layout_constraintStart_toEndOf="@+id/followerContainer"
-                                app:layout_constraintTop_toTopOf="parent">
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintVertical_bias="0.1">
 
                                 <com.mycity4kids.widget.CustomFontTextView
                                     android:id="@+id/followingCountTextView"
@@ -267,7 +274,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="10dp"
                                     android:gravity="center"
-                                    android:minLines="2"
+                                    android:lines="2"
                                     android:text="@string/myprofile.following_label"
                                     android:textColor="@color/app_grey"
                                     android:textSize="12sp" />
@@ -277,14 +284,14 @@
                                 android:id="@+id/rankContainer"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:gravity="center"
                                 android:orientation="vertical"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toStartOf="@+id/followerContainer"
                                 app:layout_constraintHorizontal_bias="0.5"
                                 app:layout_constraintStart_toEndOf="@+id/postsCountContainer"
-                                app:layout_constraintTop_toTopOf="parent">
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintVertical_bias="0.1">
 
                                 <com.mycity4kids.widget.CustomFontTextView
                                     android:id="@+id/rankCountTextView"
@@ -302,7 +309,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="10dp"
                                     android:gravity="center"
-                                    android:minLines="2"
+                                    android:lines="2"
                                     android:text=""
                                     android:textColor="@color/app_grey"
                                     android:textSize="12sp" />
@@ -444,7 +451,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:background="@color/white"
-            android:elevation="5dp"
+            android:elevation="2dp"
             android:paddingTop="8dp"
             android:paddingBottom="8dp">
 

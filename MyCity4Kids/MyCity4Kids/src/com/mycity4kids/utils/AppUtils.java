@@ -506,6 +506,21 @@ public class AppUtils {
         return shareUrl;
     }
 
+    public static Intent getArticleShareIntent(String userType, String blogSlug, String titleSlug, String shareMsg, String title, String userName) {
+        String shareUrl = getShortStoryShareUrl(userType, blogSlug, titleSlug);
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        String shareData;
+        if (StringUtils.isNullOrEmpty(shareUrl)) {
+            shareData = shareMsg + "\"" + title + "\" by " + userName + ".";
+        } else {
+            shareData = shareMsg + "\"" +
+                    title + "\" by " + userName + ".\nRead Here: " + shareUrl;
+        }
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareData);
+        return shareIntent;
+    }
+
     public static String getShareUrl(String userType, String blogSlug, String titleSlug) {
         String shareUrl = "";
         if (AppConstants.USER_TYPE_BLOGGER.equals(userType)) {
@@ -947,6 +962,19 @@ public class AppUtils {
             comboImage.drawBitmap(c, 0f, i * c.getHeight(), null);
         }
         return cs;
+    }
+
+    public static void shareStoryWithFB(Activity context, String userType, String blogSlug, String titleSlug,
+                                        String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
+        String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
+
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
+            ShareLinkContent content = new ShareLinkContent.Builder()
+                    .setContentUrl(Uri.parse(shareUrl))
+                    .build();
+            new ShareDialog(context).show(content);
+        }
+        Utils.pushShareStoryEvent(context, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Facebook");
     }
 
     public static void shareStoryWithWhatsApp(Context mContext, String userType, String blogSlug, String titleSlug,

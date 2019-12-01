@@ -29,6 +29,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
@@ -128,18 +141,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
@@ -1357,11 +1358,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 e.printStackTrace();
             }
             if (!StringUtils.isNullOrEmpty(tempDeepLinkURL)) {
-                if (abhi(tempDeepLinkURL)) {
-
+                if (matchRegex(tempDeepLinkURL)) {
                     //////// need to optimize this code
-
-
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_EDITOR_URL) || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_EDITOR_URL)) {
                     final String bloggerId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
                     if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId.equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
@@ -1493,14 +1491,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             startActivity(campaignIntent);
                         }
                     }
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_USER_BADGE)) {
-                    String[] separated = tempDeepLinkURL.split("/");
-                    String userId = separated[4];
-                    String badgeId = separated[6];
-                    Intent profileIntent = new Intent(this, M_PrivateProfileActivity.class);
-                    profileIntent.putExtra("userId", userId);
-                    profileIntent.putExtra("badgeId", badgeId);
-                    startActivity(profileIntent);
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_GROUPS)) {
                     String[] separated = tempDeepLinkURL.split("/");
                     if (separated[separated.length - 1].startsWith("comment-")) {
@@ -3032,11 +3022,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 Uri.parse("http://www.momspresso.com/parenting/admin/setupablog"));
                 startActivity(viewIntent);
             }
-
-
         }
     }
-
 
     public void showChooseLayoutForShortStory() {
         chooseLayout.setVisibility(View.VISIBLE);
@@ -3075,13 +3062,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 dialog.dismiss();
                             }
                         });
-
                         dialog.show();
                         SharedPrefUtils.setFrequencyForShowingAppUpdate(BaseApplication.getAppContext(), frequecy);
-
                     } else {
                         rateNowDialog = true;
-
                     }
                 } else {
                     rateNowDialog = true;
@@ -3090,78 +3074,84 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    private Boolean abhi(String tempDeepLinkURL) {
-        String urlWithNoParams = tempDeepLinkURL.split("\\?")[0];
-        Pattern pattern = Pattern.compile(AppConstants.COLLECTION_LIST_REGEX);
-        Matcher matcher = pattern.matcher(tempDeepLinkURL);
-        if (matcher.matches()) {
-            String[] separated = urlWithNoParams.split("/");
-            Intent intent = new Intent(this, CollectionsActivity.class);
-            intent.putExtra("userId", separated[separated.length - 2]);
-            startActivity(intent);
-            return true;
-        }
+    private Boolean matchRegex(String tempDeepLinkURL) {
+        try {
+            String urlWithNoParams = tempDeepLinkURL.split("\\?")[0];
+            if (urlWithNoParams.endsWith("/")) {
+                urlWithNoParams = urlWithNoParams.substring(0, urlWithNoParams.length() - 1);
+            }
+            Pattern pattern = Pattern.compile(AppConstants.COLLECTION_LIST_REGEX);
+            Matcher matcher = pattern.matcher(urlWithNoParams);
+            if (matcher.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(this, CollectionsActivity.class);
+                intent.putExtra("userId", separated[separated.length - 2]);
+                startActivity(intent);
+                return true;
+            }
 
-        Pattern pattern1 = Pattern.compile(AppConstants.COLLECTION_DETAIL_REGEX);
-        Matcher matcher1 = pattern1.matcher(tempDeepLinkURL);
-        if (matcher1.matches()) {
-            String[] separated = urlWithNoParams.split("/");
-            Intent intent = new Intent(this, UserCollectionItemListActivity.class);
-            intent.putExtra("id", separated[separated.length - 1]);
-            startActivity(intent);
-            return true;
-        }
+            Pattern pattern1 = Pattern.compile(AppConstants.COLLECTION_DETAIL_REGEX);
+            Matcher matcher1 = pattern1.matcher(urlWithNoParams);
+            if (matcher1.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(this, UserCollectionItemListActivity.class);
+                intent.putExtra("id", separated[separated.length - 1]);
+                startActivity(intent);
+                return true;
+            }
 
-        Pattern pattern2 = Pattern.compile(AppConstants.BADGES_LISTING_REGEX);
-        Matcher matcher2 = pattern2.matcher(tempDeepLinkURL);
-        if (matcher2.matches()) {
-            String[] separated = urlWithNoParams.split("/");
-            Intent intent = new Intent(this, BadgeActivity.class);
-            intent.putExtra(Constants.USER_ID, separated[separated.length - 2]);
-            startActivity(intent);
+            Pattern pattern2 = Pattern.compile(AppConstants.BADGES_LISTING_REGEX);
+            Matcher matcher2 = pattern2.matcher(urlWithNoParams);
+            if (matcher2.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(this, BadgeActivity.class);
+                intent.putExtra(Constants.USER_ID, separated[separated.length - 2]);
+                startActivity(intent);
 
-            return true;
+                return true;
 
-        }
-        Pattern pattern3 = Pattern.compile(AppConstants.BADGES_DETAIL_REGEX);
-        Matcher matcher3 = pattern3.matcher(tempDeepLinkURL);
-        if (matcher3.matches()) {
-            String[] separated = urlWithNoParams.split("/");
-            Intent intent = new Intent(this, M_PrivateProfileActivity.class);
-            intent.putExtra("badgeId", separated[separated.length - 1]);
-            intent.putExtra(Constants.USER_ID, separated[separated.length - 3]);
-            startActivity(intent);
-            return true;
-        }
+            }
+            Pattern pattern3 = Pattern.compile(AppConstants.BADGES_DETAIL_REGEX);
+            Matcher matcher3 = pattern3.matcher(urlWithNoParams);
+            if (matcher3.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(this, M_PrivateProfileActivity.class);
+                intent.putExtra("badgeId", separated[separated.length - 1]);
+                intent.putExtra(Constants.USER_ID, separated[separated.length - 3]);
+                startActivity(intent);
+                return true;
+            }
 
-        Pattern pattern4 = Pattern.compile(AppConstants.MILESTONE_DETAIL_REGEX);
-        Matcher matcher4 = pattern4.matcher(tempDeepLinkURL);
-        if (matcher4.matches()) {
-            String[] separated = urlWithNoParams.split("/");
-            return true;
-        }
+            Pattern pattern4 = Pattern.compile(AppConstants.MILESTONE_DETAIL_REGEX);
+            Matcher matcher4 = pattern4.matcher(urlWithNoParams);
+            if (matcher4.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                return true;
+            }
 
-        Pattern pattern5 = Pattern.compile(AppConstants.USER_PROFILE_REGEX);
-        Matcher matcher5 = pattern5.matcher(tempDeepLinkURL);
-        if (matcher5.matches()) {
-            String[] separated = urlWithNoParams.split("/");
-            Intent intent = new Intent(this, M_PrivateProfileActivity.class);
-            intent.putExtra(Constants.USER_ID, separated[separated.length - 1]);
-            startActivity(intent);
-            return true;
+            Pattern pattern5 = Pattern.compile(AppConstants.USER_PROFILE_REGEX);
+            Matcher matcher5 = pattern5.matcher(urlWithNoParams);
+            if (matcher5.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(this, M_PrivateProfileActivity.class);
+                intent.putExtra(Constants.USER_ID, separated[separated.length - 1]);
+                startActivity(intent);
+                return true;
+            }
+            Pattern pattern6 = Pattern.compile(AppConstants.USER_ANALYTICS_REGEX);
+            Matcher matcher6 = pattern6.matcher(urlWithNoParams);
+            if (matcher6.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(this, M_PrivateProfileActivity.class);
+                intent.putExtra("detail", "rank");
+                intent.putExtra(Constants.USER_ID, separated[separated.length - 2]);
+                startActivity(intent);
+                return true;
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
         }
-        Pattern pattern6 = Pattern.compile(AppConstants.USER_ANALYTICS_REGEX);
-        Matcher matcher6 = pattern6.matcher(tempDeepLinkURL);
-        if (matcher6.matches()) {
-            String[] separated = urlWithNoParams.split("/");
-            Intent intent = new Intent(this, M_PrivateProfileActivity.class);
-            intent.putExtra("detail", "rank");
-            intent.putExtra(Constants.USER_ID, separated[separated.length - 2]);
-            startActivity(intent);
-            return true;
-        }
-
         return false;
     }
-
 }

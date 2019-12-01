@@ -20,26 +20,11 @@
             android:layout_height="wrap_content"
             android:visibility="visible">
 
-
-            <ImageView
-                android:id="@+id/backImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:paddingLeft="20dp"
-                android:paddingTop="20dp"
-                android:paddingRight="20dp"
-                android:paddingBottom="20dp"
-                android:src="@drawable/back_arroow"
-                android:tint="@color/black" />
-
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/toolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/backImageView"
                 android:text="@string/profile_setting"
                 android:textColor="@color/black"
                 android:textSize="18sp"
@@ -95,9 +80,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_20"
-                android:layout_marginRight="@dimen/space_8"
-                android:drawableLeft="@drawable/ic_my_money"
-                android:drawableRight="@drawable/arrow_right"
+                android:layout_marginEnd="@dimen/space_8"
+                android:drawableStart="@drawable/ic_my_money"
+                android:drawableEnd="@drawable/arrow_right"
                 android:drawablePadding="@dimen/space_20"
                 android:text="@string/mymoney_info"
                 android:textColor="@color/campaign_4A4A4A"
@@ -136,8 +121,8 @@
                 android:layout_marginTop="@dimen/space_20"
                 android:layout_marginRight="@dimen/space_8"
                 android:drawableLeft="@drawable/ic_read_articles"
-                android:drawableRight="@drawable/arrow_right"
                 android:drawablePadding="@dimen/space_20"
+                android:inputType="textCapSentences"
                 android:textColor="@color/campaign_4A4A4A"
                 android:textSize="16sp" />
 
@@ -151,6 +136,7 @@
                 android:drawableRight="@drawable/arrow_right"
                 android:drawableTint="#FF000000"
                 android:drawablePadding="@dimen/space_20"
+                android:inputType="textCapSentences"
                 android:textColor="@color/campaign_4A4A4A"
                 android:textSize="16sp" />
 
@@ -172,29 +158,29 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/notification_settings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_20"
-                android:layout_marginRight="@dimen/space_8"
-                android:drawableLeft="@drawable/ic_notification"
-                android:drawableRight="@drawable/arrow_right"
-                android:drawablePadding="@dimen/space_20"
-                android:text="@string/notification_settings"
-                android:textColor="@color/campaign_4A4A4A"
-                android:textSize="16sp" />
+            <!--<com.mycity4kids.widget.CustomFontTextView-->
+            <!--android:id="@+id/notification_settings"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="@dimen/space_20"-->
+            <!--android:layout_marginRight="@dimen/space_8"-->
+            <!--android:drawableLeft="@drawable/ic_notification"-->
+            <!--android:drawableRight="@drawable/arrow_right"-->
+            <!--android:drawablePadding="@dimen/space_20"-->
+            <!--android:text="@string/notification_settings"-->
+            <!--android:textColor="@color/campaign_4A4A4A"-->
+            <!--android:textSize="16sp" />-->
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/topic_of_interest"
+                android:id="@+id/appSettingsTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_20"
                 android:layout_marginRight="@dimen/space_8"
-                android:drawableLeft="@drawable/ic_topic_of_interest_icon"
+                android:drawableLeft="@drawable/ic_settings"
                 android:drawableRight="@drawable/arrow_right"
                 android:drawablePadding="@dimen/space_20"
-                android:text="@string/topic_of_interest"
+                android:text="@string/app_settings"
                 android:textColor="@color/campaign_4A4A4A"
                 android:textSize="16sp" />
 

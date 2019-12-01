@@ -179,7 +179,7 @@
                     android:paddingRight="10dp"
                     android:paddingBottom="10dp"
                     android:src="@drawable/ic_watch"
-                    android:visibility="invisible" />
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <LinearLayout

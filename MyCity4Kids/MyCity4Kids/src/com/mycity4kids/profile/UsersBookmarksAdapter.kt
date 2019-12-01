@@ -125,9 +125,10 @@ class UsersBookmarksAdapter(private val mListener: RecyclerViewClickListener) : 
         return if (mixFeedResult == null) 0 else mixFeedResult!!.size
     }
 
-    inner class UserArticleBookmarksViewHolder(itemView: View, listener: RecyclerViewClickListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class UserArticleBookmarksViewHolder(itemView: View, val listener: RecyclerViewClickListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         internal var authorTextView: TextView
         internal var contentImageView: ImageView
+        internal var itemTypeImageView: ImageView
         internal var contentTitleTextView: TextView
         internal var viewCountTextView: TextView
         internal var commentCountTextView: TextView
@@ -138,25 +139,28 @@ class UsersBookmarksAdapter(private val mListener: RecyclerViewClickListener) : 
         init {
             contentTitleTextView = itemView.findViewById<View>(R.id.contentTitleTextView) as TextView
             contentImageView = itemView.findViewById<View>(R.id.contentImageView) as ImageView
+            itemTypeImageView = itemView.findViewById<View>(R.id.itemTypeImageView) as ImageView
             authorTextView = itemView.findViewById<View>(R.id.authorTextView) as TextView
             viewCountTextView = itemView.findViewById<View>(R.id.viewCountTextView) as TextView
             commentCountTextView = itemView.findViewById<View>(R.id.commentCountTextView) as TextView
             recommendCountTextView = itemView.findViewById<View>(R.id.recommendCountTextView) as TextView
             removeBookmarkTextView = itemView.findViewById<View>(R.id.removeBookmarkTextView) as TextView
             shareImageView = itemView.findViewById<View>(R.id.shareImageView) as ImageView
+            itemTypeImageView.setImageResource(R.drawable.draft_red)
             shareImageView.setOnClickListener(this)
             removeBookmarkTextView.setOnClickListener(this)
             itemView.setOnClickListener(this)
         }
 
         override fun onClick(v: View) {
-            mListener.onBookmarkItemInteraction(v, adapterPosition)
+            listener.onBookmarkItemInteraction(v, adapterPosition)
         }
     }
 
-    inner class UserVideoBookmarksViewHolder(itemView: View, listener: RecyclerViewClickListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class UserVideoBookmarksViewHolder(itemView: View, val listener: RecyclerViewClickListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         internal var authorTextView: TextView
         internal var contentImageView: ImageView
+        internal var itemTypeImageView: ImageView
         internal var contentTitleTextView: TextView
         internal var viewCountTextView: TextView
         internal var commentCountTextView: TextView
@@ -167,19 +171,21 @@ class UsersBookmarksAdapter(private val mListener: RecyclerViewClickListener) : 
         init {
             contentTitleTextView = itemView.findViewById<View>(R.id.contentTitleTextView) as TextView
             contentImageView = itemView.findViewById<View>(R.id.contentImageView) as ImageView
+            itemTypeImageView = itemView.findViewById<View>(R.id.itemTypeImageView) as ImageView
             authorTextView = itemView.findViewById<View>(R.id.authorTextView) as TextView
             viewCountTextView = itemView.findViewById<View>(R.id.viewCountTextView) as TextView
             commentCountTextView = itemView.findViewById<View>(R.id.commentCountTextView) as TextView
             recommendCountTextView = itemView.findViewById<View>(R.id.recommendCountTextView) as TextView
             removeBookmarkTextView = itemView.findViewById<View>(R.id.removeBookmarkTextView) as TextView
             shareImageView = itemView.findViewById<View>(R.id.shareImageView) as ImageView
+            itemTypeImageView.setImageResource(R.drawable.ic_video)
             shareImageView.setOnClickListener(this)
             removeBookmarkTextView.setOnClickListener(this)
             itemView.setOnClickListener(this)
         }
 
         override fun onClick(v: View) {
-            mListener.onBookmarkItemInteraction(v, adapterPosition)
+            listener.onBookmarkItemInteraction(v, adapterPosition)
         }
     }
 
