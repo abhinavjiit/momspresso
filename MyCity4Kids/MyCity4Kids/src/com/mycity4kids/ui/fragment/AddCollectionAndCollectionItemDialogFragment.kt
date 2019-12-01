@@ -152,10 +152,7 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
                 Crashlytics.logException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
             }
-
         })
-
-
     }
 
     private fun addCollectionItem(position: Int) {
@@ -205,8 +202,6 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
             }
 
         })
-
-
     }
 
     override fun onStop() {
@@ -221,8 +216,5 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
                 dismiss()
             }
         }
-
-
     }
-
 }

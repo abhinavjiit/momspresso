@@ -26,6 +26,7 @@ import com.facebook.share.widget.ShareDialog
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.snackbar.Snackbar
 import com.kelltontech.utils.ToastUtils
+import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
@@ -109,8 +110,13 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
             shareJoyContainer.visibility = View.VISIBLE
             viewContentTextView.visibility = View.GONE
         } else {
-            shareContainer.visibility = View.VISIBLE
-            shareJoyContainer.visibility = View.VISIBLE
+            if (BuildConfig.DEBUG) {
+                shareContainer.visibility = View.GONE
+                shareJoyContainer.visibility = View.GONE
+            } else {
+                shareContainer.visibility = View.GONE
+                shareJoyContainer.visibility = View.GONE
+            }
         }
 
         badgesShimmerContainer.startShimmerAnimation()
@@ -169,21 +175,12 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
                 when {
                     result?.get(0)?.item_type == AppConstants.CONTENT_TYPE_ARTICLE -> {
                         viewContentTextView.visibility = View.VISIBLE
-                        val intent = Intent(activity, ArticleDetailsContainerActivity::class.java)
-                        intent.putExtra(Constants.ARTICLE_ID, result?.get(0)?.content_id)
-                        startActivity(intent)
                     }
                     result?.get(0)?.item_type == AppConstants.CONTENT_TYPE_SHORT_STORY -> {
-                        val intent = Intent(activity, ShortStoryContainerActivity::class.java)
-                        intent.putExtra(Constants.ARTICLE_ID, result?.get(0)?.content_id)
-                        startActivity(intent)
                         viewContentTextView.visibility = View.VISIBLE
                     }
                     result?.get(0)?.item_type == AppConstants.CONTENT_TYPE_VIDEO -> {
                         viewContentTextView.visibility = View.VISIBLE
-                        val intent = Intent(activity, ParallelFeedActivity::class.java)
-                        intent.putExtra(Constants.ARTICLE_ID, result?.get(0)?.content_id)
-                        startActivity(intent)
                     }
                     else -> viewContentTextView.visibility = View.GONE
                 }
@@ -222,6 +219,25 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
             view?.id == R.id.genericShareImageView -> {
                 shareMedium = AppConstants.MEDIUM_GENERIC
                 shareWithGeneric()
+            }
+            view?.id == R.id.viewContentTextView -> {
+                when {
+                    badgeData?.item_type == AppConstants.CONTENT_TYPE_ARTICLE -> {
+                        val intent = Intent(activity, ArticleDetailsContainerActivity::class.java)
+                        intent.putExtra(Constants.ARTICLE_ID, badgeData?.content_id)
+                        startActivity(intent)
+                    }
+                    badgeData?.item_type == AppConstants.CONTENT_TYPE_SHORT_STORY -> {
+                        val intent = Intent(activity, ShortStoryContainerActivity::class.java)
+                        intent.putExtra(Constants.ARTICLE_ID, badgeData?.content_id)
+                        startActivity(intent)
+                    }
+                    badgeData?.item_type == AppConstants.CONTENT_TYPE_VIDEO -> {
+                        val intent = Intent(activity, ParallelFeedActivity::class.java)
+                        intent.putExtra(Constants.ARTICLE_ID, badgeData?.content_id)
+                        startActivity(intent)
+                    }
+                }
             }
         }
     }
@@ -269,7 +285,6 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
         }
     }
 
-
     private fun createSharableImageWhileCheckingPermissions(): Boolean {
         context?.let {
             if (Build.VERSION.SDK_INT >= 23) {
@@ -281,7 +296,10 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
                     return true
                 } else {
                     try {
+//                        val temp = badgeTitleTextView.text
+//                        badgeTitleTextView.text = badgeData?.badge_name
                         AppUtils.getBitmapFromView(sharableCardContainer, sharableBadgeImageName)
+//                        badgeTitleTextView.text = temp
                     } catch (e: Exception) {
                         Crashlytics.logException(e)
                         Log.d("MC4kException", Log.getStackTraceString(e))

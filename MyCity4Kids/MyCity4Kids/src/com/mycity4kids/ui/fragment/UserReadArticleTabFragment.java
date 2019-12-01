@@ -2,18 +2,16 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
@@ -60,8 +58,8 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
 
     private ArrayList<ArticleListingResult> articleDataModelsNew;
     private RecyclerView recyclerView;
-    private RelativeLayout mLodingView;
     private TextView noBlogsTextView, noBlogsTextViewshortstory;
+    private RelativeLayout bottomLoadingView;
 
     private UserReadArticleAdapter adapter;
     private UserReadShortStoriesAdapter shortStoriesAdapter;
@@ -84,10 +82,12 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
         View view = inflater.inflate(R.layout.user_read_article_tab_fragment, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
+        bottomLoadingView = (RelativeLayout) view.findViewById(R.id.bottomLoadingView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         noBlogsTextViewshortstory = view.findViewById(R.id.noBlogsTextViewshortstory);
-        view.findViewById(R.id.relativeLoadingView).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
+
+        view.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
+
         if (getArguments() != null) {
             authorId = getArguments().getString(Constants.AUTHOR_ID);
             isPrivateProfile = getArguments().getBoolean("isPrivateProfile", false);
@@ -95,7 +95,7 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
         }
 
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
 
@@ -129,7 +129,7 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
                     if (!isReuqestRunning) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             isReuqestRunning = true;
-                            mLodingView.setVisibility(View.VISIBLE);
+                            bottomLoadingView.setVisibility(View.VISIBLE);
                             if ("shortStory".equals(contentType)) {
                                 getUserPublishedShortStories();
                             } else {
@@ -181,7 +181,7 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
             removeProgressDialog();
             isReuqestRunning = false;
-            mLodingView.setVisibility(View.GONE);
+            bottomLoadingView.setVisibility(View.GONE);
             if (response == null || response.body() == null) {
                 return;
             }
@@ -208,7 +208,7 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
 
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            mLodingView.setVisibility(View.GONE);
+            bottomLoadingView.setVisibility(View.GONE);
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }

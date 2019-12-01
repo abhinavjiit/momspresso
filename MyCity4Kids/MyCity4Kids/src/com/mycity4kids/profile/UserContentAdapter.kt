@@ -131,6 +131,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
             shareArticleImageView = view.findViewById<View>(R.id.shareArticleImageView) as ImageView
             watchLaterImageView = view.findViewById<View>(R.id.watchLaterImageView) as ImageView
             shareArticleImageView.setOnClickListener(this)
+            bookmarkArticleImageView.setOnClickListener(this)
             view.setOnClickListener(this)
         }
 
@@ -154,7 +155,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         internal var facebookShareImageView: ImageView
         internal var whatsappShareImageView: ImageView
         internal var instagramShareImageView: ImageView
-        internal var genericShareImageView: ImageView
+        internal var addToCollectionImageView: ImageView
         internal var mainView: RelativeLayout
 
         init {
@@ -171,7 +172,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
             facebookShareImageView = itemView.findViewById<View>(R.id.facebookShareImageView) as ImageView
             whatsappShareImageView = itemView.findViewById<View>(R.id.whatsappShareImageView) as ImageView
             instagramShareImageView = itemView.findViewById<View>(R.id.instagramShareImageView) as ImageView
-            genericShareImageView = itemView.findViewById<View>(R.id.genericShareImageView) as ImageView
+            addToCollectionImageView = itemView.findViewById<View>(R.id.genericShareImageView) as ImageView
 
             whatsappShareImageView.tag = itemView
 
@@ -179,7 +180,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
             facebookShareImageView.setOnClickListener(this)
             whatsappShareImageView.setOnClickListener(this)
             instagramShareImageView.setOnClickListener(this)
-            genericShareImageView.setOnClickListener(this)
+            addToCollectionImageView.setOnClickListener(this)
             authorNameTextView.setOnClickListener(this)
             storyOptionImageView.setOnClickListener(this)
             itemView.setOnClickListener(this)
@@ -283,8 +284,15 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
 
         if (private) {
             holder.shareArticleImageView.visibility = View.VISIBLE
+            holder.bookmarkArticleImageView.visibility = View.GONE
         } else {
             holder.shareArticleImageView.visibility = View.GONE
+            holder.bookmarkArticleImageView.visibility = View.VISIBLE
+            if (data?.isbookmark == 0) {
+                holder.bookmarkArticleImageView.setImageResource(R.drawable.ic_bookmark)
+            } else {
+                holder.bookmarkArticleImageView.setImageResource(R.drawable.ic_bookmarked)
+            }
         }
 //        if ("1" == data?.isMomspresso) {
 //            bookmarkArticleIV.visibility = View.VISIBLE
@@ -322,7 +330,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
     private fun addShortStoryItem(mainViewRL: RelativeLayout, storyTitleTV: TextView, storyBodyTV: TextView, authorNameTV: TextView,
                                   storyCommentCountTV: TextView, storyRecommendationCountTV: TextView, likeIV: ImageView,
                                   data: MixFeedResult?, holder: ShortStoriesViewHolder, private: Boolean) {
-        mainViewRL.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.short_story_card_bg_6))
+        mainViewRL.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.short_story_card_bg_1))
         storyTitleTV.text = data?.title?.trim { it <= ' ' }
         storyBodyTV.text = data?.body?.trim { it <= ' ' }
         authorNameTV.text = data?.userName
@@ -350,12 +358,12 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         try {
             val userName = data?.userName
             if (userName.isNullOrBlank()) {
-                txvAuthorName.setText("NA")
+                txvAuthorName.text = ""
             } else {
-                txvAuthorName.setText(userName)
+                txvAuthorName.text = userName
             }
         } catch (e: Exception) {
-            txvAuthorName.setText("NA")
+            txvAuthorName.text = ""
         }
 
         try {

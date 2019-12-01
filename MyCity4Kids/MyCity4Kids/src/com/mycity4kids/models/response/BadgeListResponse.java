@@ -38,6 +38,7 @@ public class BadgeListResponse extends BaseResponse {
             private String badge_desc;
             private String badge_id;
             private String badge_metaclass;
+            private String badge_name;
             private String badge_title;
             private int count;
             private boolean deleted;
@@ -55,6 +56,7 @@ public class BadgeListResponse extends BaseResponse {
                 badge_id = in.readString();
                 badge_metaclass = in.readString();
                 badge_title = in.readString();
+                badge_name = in.readString();
                 count = in.readInt();
                 deleted = in.readByte() != 0;
                 enabled = in.readByte() != 0;
@@ -100,6 +102,14 @@ public class BadgeListResponse extends BaseResponse {
 
             public void setBadge_title(String badge_title) {
                 this.badge_title = badge_title;
+            }
+
+            public String getBadge_name() {
+                return badge_name;
+            }
+
+            public void setBadge_name(String badge_name) {
+                this.badge_name = badge_name;
             }
 
             public String getBadge_id() {
@@ -202,6 +212,7 @@ public class BadgeListResponse extends BaseResponse {
                 parcel.writeString(badge_id);
                 parcel.writeString(badge_metaclass);
                 parcel.writeString(badge_title);
+                parcel.writeString(badge_name);
                 parcel.writeInt(count);
                 parcel.writeByte((byte) (deleted ? 1 : 0));
                 parcel.writeByte((byte) (enabled ? 1 : 0));

@@ -197,34 +197,5 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
         badgesDialogFragment.setArguments(bundle);
         FragmentManager fm = getSupportFragmentManager();
         badgesDialogFragment.show(fm, "BadgeDetailDialog");
-//        final Dialog dialog = new Dialog(BadgeActivity.this);
-//        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-//        dialog.setContentView(R.layout.dialog_badge_share);
-//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        dialog.show();
-//
-//        ImageView badgeImg = dialog.findViewById(R.id.badgeImageView);
-//        TextView badgeName = dialog.findViewById(R.id.badgeName);
-//        TextView badgeDesc = dialog.findViewById(R.id.badgeDesc);
-//
-//        Picasso.with(this).load(badgeList.get(position).getBadge_image_url()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-//                .fit().into(badgeImg);
-//
-//        badgeName.setText(badgeList.get(position).getBadge_title().getOther());
-//        badgeDesc.setText(badgeList.get(position).getBadge_desc().getOther());
-//
-//
-//        dialog.findViewById(R.id.shareBtn).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-//                shareIntent.setType("text/plain");
-//                shareIntent.putExtra(Intent.EXTRA_TEXT, share_url);
-//                startActivity(Intent.createChooser(shareIntent, "Share URL"));
-//                dialog.cancel();
-//            }
-//        });
-//
-//        dialog.show();
     }
 }

@@ -80,5 +80,6 @@ data class MixFeedResult(
         val view_count: Int = -1,
         val winner: Any? = -1,
         val itemType: String = "",
-        val collectionList: ArrayList<UserCollectionsModel>? = null
+        val collectionList: ArrayList<UserCollectionsModel>? = null,
+        var isbookmark: Int = 0
 )

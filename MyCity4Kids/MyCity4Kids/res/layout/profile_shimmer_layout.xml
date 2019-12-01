@@ -66,12 +66,15 @@
         android:layout_below="@+id/shimmerAuthorBioTextView"
         android:layout_marginTop="10dp"
         android:background="@color/background"
-        android:gravity="center" />
+        android:gravity="center"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/shimmerContentLangTextView"
+        android:layout_marginTop="4dp"
         android:clipToPadding="false"
         android:paddingBottom="10dp">
 
@@ -86,7 +89,8 @@
             app:layout_constraintEnd_toStartOf="@+id/shimmerRankContainer"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.1">
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/shimmerPostsCountTextView"
@@ -119,7 +123,8 @@
             app:layout_constraintEnd_toStartOf="@+id/shimmerFollowingContainer"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/shimmerRankContainer"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.1">
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/shimmerFollowerCountTextView"
@@ -152,7 +157,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/shimmerFollowerContainer"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.1">
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/shimmerFollowingCountTextView"
@@ -185,7 +191,8 @@
             app:layout_constraintEnd_toStartOf="@+id/shimmerFollowerContainer"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/shimmerPostsCountContainer"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.1">
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/shimmerRankCountTextView"

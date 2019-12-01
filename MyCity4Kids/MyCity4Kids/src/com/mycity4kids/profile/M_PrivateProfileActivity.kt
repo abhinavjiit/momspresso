@@ -35,6 +35,7 @@ import com.mycity4kids.animation.MyCityAnimationsUtil
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.collectionsModels.FeaturedOnModel
 import com.mycity4kids.models.request.ArticleDetailRequest
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
@@ -46,6 +47,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
 import com.mycity4kids.ui.activity.*
 import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity
+import com.mycity4kids.ui.fragment.AddCollectionAndCollectionItemDialogFragment
 import com.mycity4kids.ui.fragment.AddCollectionPopUpDialogFragment
 import com.mycity4kids.ui.fragment.UserBioDialogFragment
 import com.mycity4kids.utils.AppUtils
@@ -67,6 +69,10 @@ class M_PrivateProfileActivity : BaseActivity(),
     val REQUEST_GALLERY_PERMISSION = 1
     val PERMISSIONS_INIT = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
     val sharableProfileImageName = "profile"
+    var shareCardType: String? = null
+    var shareMedium: String? = null
+    var shareContentPosition: Int? = null
+
 
     private lateinit var rootLayout: CoordinatorLayout
     private lateinit var toolbar: Toolbar
@@ -169,6 +175,7 @@ class M_PrivateProfileActivity : BaseActivity(),
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+        contentLangTextView.isSelected = true
 
         authorId = intent.getStringExtra(Constants.USER_ID)
         deeplinkBadgeId = intent.getStringExtra("badgeId")
@@ -199,6 +206,7 @@ class M_PrivateProfileActivity : BaseActivity(),
             sharePublicTextView.visibility = View.GONE
             sharePrivateTextView.visibility = View.VISIBLE
             analyticsTextView.visibility = View.VISIBLE
+            appSettingsImageView.visibility = View.VISIBLE
             myCollectionsWidget.getCollections(authorId, true)
         } else {
             bookmarksTab.visibility = View.GONE
@@ -207,6 +215,7 @@ class M_PrivateProfileActivity : BaseActivity(),
             sharePublicTextView.visibility = View.VISIBLE
             sharePrivateTextView.visibility = View.GONE
             analyticsTextView.visibility = View.GONE
+            appSettingsImageView.visibility = View.GONE
             followAuthorTextView.setOnClickListener(this)
             sharePublicTextView.setOnClickListener(this)
             checkFollowingStatusAPI()
@@ -543,8 +552,13 @@ class M_PrivateProfileActivity : BaseActivity(),
                         return
                     }
                     val responseData = response.body()
-                    if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-                        processUserContentResponse(responseData.data.result)
+                    if (responseData?.code == 200 && Constants.SUCCESS == responseData.status) {
+                        if (responseData.data == null && userContentList?.size == 1) {
+                            userContentAdapter.setListData(userContentList)
+                            userContentAdapter.notifyDataSetChanged()
+                        } else {
+                            processUserContentResponse(responseData.data.result)
+                        }
                     } else {
                     }
                 } catch (e: Exception) {
@@ -750,6 +764,7 @@ class M_PrivateProfileActivity : BaseActivity(),
                 }
             }
             view?.id == R.id.sharePrivateTextView || view?.id == R.id.sharePublicTextView -> {
+                shareCardType = "profile"
                 if (createSharableImageWhileCheckingPermissions()) {
                     return
                 }
@@ -782,6 +797,10 @@ class M_PrivateProfileActivity : BaseActivity(),
                 startActivity(intent)
             }
             view?.id == R.id.rankContainer -> {
+                if (AppConstants.DEBUGGING_USER_ID.contains("" + authorId)) {
+                    val intent = Intent(this, IdTokenLoginActivity::class.java)
+                    startActivity(intent)
+                }
                 showCrownDialog(view.tag)
             }
             view?.id == R.id.postsCountContainer -> {
@@ -839,6 +858,109 @@ class M_PrivateProfileActivity : BaseActivity(),
                 intent.putExtra("contentType", AppConstants.CONTENT_TYPE_VIDEO)
                 startActivity(intent)
             }
+            view.id == R.id.shareArticleImageView -> {
+                shareContent(userContentList?.get(position))
+            }
+            view.id == R.id.facebookShareImageView -> {
+                AppUtils.shareStoryWithFB(this, userContentList?.get(position)?.userType, userContentList?.get(position)?.blogTitleSlug,
+                        userContentList?.get(position)?.titleSlug, "Profile",
+                        SharedPrefUtils.getUserDetailModel(this).dynamoId + "",
+                        userContentList?.get(position)?.id, authorId, userContentList?.get(position)?.userName)
+            }
+            view.id == R.id.whatsappShareImageView -> {
+                shareContentPosition = position
+                shareCardType = "story"
+                shareMedium = AppConstants.MEDIUM_WHATSAPP
+                if (createSharableImageWhileCheckingPermissions()) return
+                AppUtils.shareStoryWithWhatsApp(this, userContentList?.get(position)?.userType,
+                        userContentList?.get(position)?.blogTitleSlug, userContentList?.get(position)?.titleSlug,
+                        "Profile", SharedPrefUtils.getUserDetailModel(this).dynamoId,
+                        userContentList?.get(position)?.id, authorId, userContentList?.get(position)?.userName)
+            }
+            view.id == R.id.instagramShareImageView -> {
+                shareContentPosition = position
+                shareCardType = "story"
+                shareMedium = AppConstants.MEDIUM_INSTAGRAM
+                if (createSharableImageWhileCheckingPermissions()) return
+                AppUtils.shareStoryWithInstagram(this, "Profile", SharedPrefUtils.getUserDetailModel(this).dynamoId,
+                        userContentList?.get(position)?.id, authorId, userContentList?.get(position)?.userName)
+            }
+            view.id == R.id.genericShareImageView -> {
+                try {
+                    val addCollectionAndCollectionitemDialogFragment = AddCollectionAndCollectionItemDialogFragment()
+                    val bundle = Bundle()
+                    bundle.putString("articleId", userContentList?.get(position)?.id)
+                    bundle.putString("type", AppConstants.ARTICLE_COLLECTION_TYPE)
+                    addCollectionAndCollectionitemDialogFragment.arguments = bundle
+                    val fm = supportFragmentManager
+                    addCollectionAndCollectionitemDialogFragment.show(fm!!, "collectionAdd")
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            }
+            view.id == R.id.bookmarkArticleImageView -> {
+                bookmarkItem(position)
+            }
+        }
+    }
+
+    private fun bookmarkItem(position: Int) {
+        val retro = BaseApplication.getInstance().retrofit
+        val articleDetailsAPI = retro.create(ArticleDetailsAPI::class.java)
+        val articleDetailRequest = ArticleDetailRequest()
+        articleDetailRequest.articleId = userContentList?.get(position)?.id
+
+        if ("1" == userContentList?.get(position)?.isMomspresso) {
+            val call = articleDetailsAPI.addVideoWatchLater(articleDetailRequest)
+            call.enqueue(object : Callback<AddBookmarkResponse> {
+                override fun onResponse(call: Call<AddBookmarkResponse>, response: retrofit2.Response<AddBookmarkResponse>) {
+                    if (null == response.body()) {
+                        showToast(getString(R.string.server_went_wrong))
+                        return
+                    }
+                    val responseData = response.body()
+                    if (responseData?.code == 200) {
+                        userContentList?.get(position)?.isbookmark = 1
+                        userContentAdapter.notifyDataSetChanged()
+                    }
+                }
+
+                override fun onFailure(call: Call<AddBookmarkResponse>, e: Throwable) {
+                    showToast(getString(R.string.server_went_wrong))
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+
+            })
+            Utils.pushWatchLaterArticleEvent(this, "Profile",
+                    SharedPrefUtils.getUserDetailModel(this).dynamoId + "",
+                    userContentList?.get(position)?.id, authorId + "~" + userContentList?.get(position)?.userName)
+        } else {
+            val call = articleDetailsAPI.addBookmark(articleDetailRequest)
+            call.enqueue(object : Callback<AddBookmarkResponse> {
+                override fun onResponse(call: Call<AddBookmarkResponse>, response: retrofit2.Response<AddBookmarkResponse>) {
+                    if (null == response.body()) {
+                        showToast(getString(R.string.server_went_wrong))
+                        return
+                    }
+                    val responseData = response.body()
+                    if (responseData?.code == 200) {
+                        userContentList?.get(position)?.isbookmark = 1
+                        userContentAdapter.notifyDataSetChanged()
+                    }
+                }
+
+                override fun onFailure(call: Call<AddBookmarkResponse>, e: Throwable) {
+                    showToast(getString(R.string.server_went_wrong))
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+
+            })
+            Utils.pushBookmarkArticleEvent(this, "Profile",
+                    SharedPrefUtils.getUserDetailModel(this).dynamoId + "",
+                    userContentList?.get(position)?.id, authorId + "~" + userContentList?.get(position)?.userName)
         }
     }
 
@@ -907,7 +1029,35 @@ class M_PrivateProfileActivity : BaseActivity(),
     }
 
     override fun onBookmarkItemInteraction(view: View, position: Int) {
+        when {
+            view.id == R.id.rootView -> {
+                launchContentDetail(userBookmarkList?.get(position))
+            }
+            view.id == R.id.removeBookmarkTextView -> {
 
+            }
+            view.id == R.id.shareImageView -> {
+                shareContent(userBookmarkList?.get(position))
+            }
+        }
+    }
+
+    private fun shareContent(data: MixFeedResult?) {
+        when {
+            data?.itemType == AppConstants.CONTENT_TYPE_ARTICLE -> {
+                val shareIntent = AppUtils.getArticleShareIntent(data.userType, data.blogTitleSlug, data.titleSlug,
+                        getString(R.string.check_out_blog), data.title, data.userName)
+                startActivity(Intent.createChooser(shareIntent, "Momspresso"))
+                Utils.pushShareArticleEvent(this, "Profile",
+                        SharedPrefUtils.getUserDetailModel(this).dynamoId + "", data.id,
+                        data.userId + "~" + data.userName, "-")
+            }
+            data?.itemType == AppConstants.CONTENT_TYPE_SHORT_STORY -> {
+            }
+            data?.itemType == AppConstants.CONTENT_TYPE_VIDEO -> {
+
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -929,7 +1079,15 @@ class M_PrivateProfileActivity : BaseActivity(),
                 return true
             } else {
                 try {
-                    AppUtils.getBitmapFromView(profileShareCardWidget, sharableProfileImageName)
+                    if (shareCardType == "profile") {
+                        AppUtils.getBitmapFromView(profileShareCardWidget, sharableProfileImageName)
+                    } else {
+                        shareContentPosition?.let {
+                            AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_1,
+                                    userContentList?.get(it)?.title,
+                                    userContentList?.get(it)?.body, userContentList?.get(it)?.userName)
+                        }
+                    }
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
@@ -938,7 +1096,15 @@ class M_PrivateProfileActivity : BaseActivity(),
             }
         } else {
             try {
-                AppUtils.getBitmapFromView(profileShareCardWidget, sharableProfileImageName)
+                if (shareCardType == "profile") {
+                    AppUtils.getBitmapFromView(profileShareCardWidget, sharableProfileImageName)
+                } else {
+                    shareContentPosition?.let {
+                        AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_1,
+                                userContentList?.get(it)?.title,
+                                userContentList?.get(it)?.body, userContentList?.get(it)?.userName)
+                    }
+                }
             } catch (e: Exception) {
                 Crashlytics.logException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
@@ -979,8 +1145,25 @@ class M_PrivateProfileActivity : BaseActivity(),
                         Snackbar.LENGTH_SHORT)
                         .show()
                 try {
-                    AppUtils.getBitmapFromView(profileShareCardWidget, sharableProfileImageName)
-                    shareGenericImage()
+                    if (shareCardType == "profile") {
+                        AppUtils.getBitmapFromView(profileShareCardWidget, sharableProfileImageName)
+                        shareGenericImage()
+                    } else {
+                        if (AppConstants.MEDIUM_WHATSAPP == shareMedium) {
+                            shareContentPosition?.let {
+                                AppUtils.shareStoryWithWhatsApp(this, userContentList?.get(it)?.userType,
+                                        userContentList?.get(it)?.blogTitleSlug, userContentList?.get(it)?.titleSlug, "Profile",
+                                        SharedPrefUtils.getUserDetailModel(this).dynamoId, userContentList?.get(it)?.id,
+                                        authorId, userContentList?.get(it)?.userName)
+                            }
+                        } else if (AppConstants.MEDIUM_INSTAGRAM == shareMedium) {
+                            shareContentPosition?.let {
+                                AppUtils.shareStoryWithInstagram(this, "Profile",
+                                        SharedPrefUtils.getUserDetailModel(this).dynamoId, userContentList?.get(it)?.id,
+                                        authorId, userContentList?.get(it)?.userName)
+                            }
+                        }
+                    }
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))

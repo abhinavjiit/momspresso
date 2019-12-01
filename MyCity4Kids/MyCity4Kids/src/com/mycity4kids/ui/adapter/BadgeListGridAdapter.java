@@ -61,14 +61,18 @@ public class BadgeListGridAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        if (!StringUtils.isNullOrEmpty(badgeList.get(position).getBadge_image_url())) {
-            Picasso.with(mContext).load(badgeList.get(position).getBadge_image_url()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                    .fit().into(holder.badgeImageView);
-        } else {
+        try {
+            if (!StringUtils.isNullOrEmpty(badgeList.get(position).getBadge_image_url())) {
+                Picasso.with(mContext).load(badgeList.get(position).getBadge_image_url()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                        .fit().into(holder.badgeImageView);
+            } else {
+                holder.badgeImageView.setBackgroundResource(R.drawable.article_default);
+            }
+        } catch (Exception e) {
             holder.badgeImageView.setBackgroundResource(R.drawable.article_default);
         }
 
-        holder.badgeName.setText(badgeList.get(position).getBadge_title());
+        holder.badgeName.setText("" + badgeList.get(position).getBadge_name());
 
         holder.badgeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
