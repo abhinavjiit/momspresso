@@ -104,6 +104,9 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         logout_layout = findViewById(R.id.logout_layout)
         activityTextView = findViewById(R.id.activityTextView)
         readArticlesTextView = findViewById(R.id.readArticlesTextView)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         if (intent.extras!!.containsKey("isRewardAdded")) {
             isRewardAdded = intent.getStringExtra("isRewardAdded")
@@ -367,6 +370,7 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
+                onBackPressed()
             }
         }
         return true
