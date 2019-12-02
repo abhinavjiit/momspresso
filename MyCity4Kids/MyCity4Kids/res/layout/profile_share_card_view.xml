@@ -66,9 +66,13 @@
             android:layout_below="@+id/authorNameTextViewBitmap"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@+id/badgeContainerBitmap"
             android:layout_toEndOf="@+id/profileImageViewBitmap"
             android:drawableStart="@drawable/ic_profile_location"
-            android:gravity="center"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:singleLine="true"
             android:text="" />
 
         <com.mycity4kids.widget.BadgesProfileWidget

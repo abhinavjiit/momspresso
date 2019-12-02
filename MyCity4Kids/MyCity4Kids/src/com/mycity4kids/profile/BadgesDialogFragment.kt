@@ -315,26 +315,25 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
                     requestPermissions()
                     return true
                 } else {
-                    try {
-//                        val temp = badgeTitleTextView.text
-//                        badgeTitleTextView.text = badgeData?.badge_name
-                        AppUtils.getBitmapFromView(sharableCardContainer, sharableBadgeImageName)
-//                        badgeTitleTextView.text = temp
-                    } catch (e: Exception) {
-                        Crashlytics.logException(e)
-                        Log.d("MC4kException", Log.getStackTraceString(e))
-                        return true
-                    }
+                    if (createSharableCardWithBadgeName()) return true
                 }
             } else {
-                try {
-                    AppUtils.getBitmapFromView(sharableCardContainer, sharableBadgeImageName)
-                } catch (e: Exception) {
-                    Crashlytics.logException(e)
-                    Log.d("MC4kException", Log.getStackTraceString(e))
-                    return true
-                }
+                if (createSharableCardWithBadgeName()) return true
             }
+        }
+        return false
+    }
+
+    private fun createSharableCardWithBadgeName(): Boolean {
+        try {
+            val temp = badgeTitleTextView.text
+            badgeTitleTextView.text = badgeData?.badge_name
+            AppUtils.getBitmapFromView(sharableCardContainer, sharableBadgeImageName)
+            badgeTitleTextView.text = temp
+        } catch (e: Exception) {
+            Crashlytics.logException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
+            return true
         }
         return false
     }

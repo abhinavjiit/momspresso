@@ -134,7 +134,7 @@ class UserProfileActivity : BaseActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.m_private_profile_activity)
+        setContentView(R.layout.user_profile_activity)
 
         rootLayout = findViewById(R.id.rootLayout)
         toolbar = findViewById(R.id.toolbar)
@@ -176,6 +176,7 @@ class UserProfileActivity : BaseActivity(),
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         contentLangTextView.isSelected = true
+        cityTextView.isSelected = true
 
         authorId = intent.getStringExtra(Constants.USER_ID)
         deeplinkBadgeId = intent.getStringExtra("badgeId")
@@ -476,19 +477,9 @@ class UserProfileActivity : BaseActivity(),
 
     private fun processAuthorsFollowingAndFollowership(responseData: UserDetailResponse) {
         val followerCount = Integer.parseInt(responseData.data[0].result.followersCount)
-        if (followerCount > 999) {
-            val singleFollowerCount = followerCount.toFloat() / 1000
-            followerCountTextView.text = "" + singleFollowerCount + "k"
-        } else {
-            followerCountTextView.text = "" + followerCount
-        }
         val followingCount = Integer.parseInt(responseData.data[0].result.followingCount)
-        if (followingCount > 999) {
-            val singleFollowingCount = followingCount.toFloat() / 1000
-            followingCountTextView.text = "" + singleFollowingCount + "k"
-        } else {
-            followingCountTextView.text = "" + followingCount
-        }
+        followerCountTextView.text = AppUtils.withSuffix(followerCount.toLong())
+        followingCountTextView.text = AppUtils.withSuffix(followingCount.toLong())
     }
 
     private fun processAuthorPostCount(responseData: UserDetailResponse) {

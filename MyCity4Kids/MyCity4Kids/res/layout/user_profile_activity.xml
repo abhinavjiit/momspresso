@@ -113,9 +113,17 @@
                             android:layout_below="@+id/authorNameTextView"
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_toStartOf="@+id/badgeContainer"
                             android:layout_toEndOf="@+id/profileImageView"
                             android:drawableStart="@drawable/ic_profile_location"
-                            android:gravity="center"
+                            android:ellipsize="marquee"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:gravity="start"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:scrollHorizontally="true"
+                            android:singleLine="true"
                             android:text="" />
 
                         <com.mycity4kids.widget.BadgesProfileWidget

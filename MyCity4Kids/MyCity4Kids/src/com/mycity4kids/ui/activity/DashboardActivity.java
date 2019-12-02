@@ -1413,7 +1413,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else {
                         launchAddVideoOptions();
                     }
-                } else if (tempDeepLinkURL.equals(AppConstants.DEEPLINK_SELF_PROFILE_URL)) {
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_SELF_PROFILE_URL)) {
                     fragmentToLoad = Constants.PROFILE_FRAGMENT;
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_PROFILE_URL) || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_PROFILE_URL)) {
                     final String bloggerId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
