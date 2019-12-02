@@ -33,6 +33,7 @@ import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.response.BadgeListResponse
+import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.BadgeAPI
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity
 import com.mycity4kids.ui.activity.ParallelFeedActivity
@@ -64,7 +65,7 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
     private lateinit var genericShareImageView: ImageView
     private lateinit var shareJoyContainer: RelativeLayout
     private lateinit var shareContainer: ConstraintLayout
-    private lateinit var sharableCardContainer: LinearLayout
+    private lateinit var badgesSharableCard: BadgeShareCardWidget
     private lateinit var badgesShimmerContainer: ShimmerFrameLayout
 
     var userId: String? = null
@@ -77,6 +78,7 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
 
         rootLayout = rootView.findViewById(R.id.rootLayout)
         badgeImageView = rootView.findViewById(R.id.badgeImageView)
+        badgesSharableCard = rootView.findViewById(R.id.badgesSharableCard)
         badgeBgImageView = rootView.findViewById(R.id.badgeBgImageView)
         badgeTitleTextView = rootView.findViewById(R.id.badgeTitleTextView)
         badgeDescTextView = rootView.findViewById(R.id.badgeDescTextView)
@@ -87,7 +89,6 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
         facebookShareImageView = rootView.findViewById(R.id.facebookShareImageView)
         instagramShareImageView = rootView.findViewById(R.id.instagramShareImageView)
         genericShareImageView = rootView.findViewById(R.id.genericShareImageView)
-        sharableCardContainer = rootView.findViewById(R.id.sharableCardContainer)
         badgesShimmerContainer = rootView.findViewById(R.id.badgesShimmerContainer)
 
         whatsappShareImageView.setOnClickListener(this)
@@ -112,8 +113,8 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
             viewContentTextView.visibility = View.GONE
         } else {
             if (BuildConfig.DEBUG) {
-                shareContainer.visibility = View.GONE
-                shareJoyContainer.visibility = View.GONE
+                shareContainer.visibility = View.VISIBLE
+                shareJoyContainer.visibility = View.VISIBLE
             } else {
                 shareContainer.visibility = View.GONE
                 shareJoyContainer.visibility = View.GONE
@@ -188,6 +189,7 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
                     else -> viewContentTextView.visibility = View.GONE
                 }
             }
+            badgesSharableCard.populateBadgesDetails(badgeData)
         }
     }
 
@@ -298,7 +300,10 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
         }
         activity?.let {
             val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/badge.jpg")
-            if (AppUtils.shareImageWithWhatsApp(it, uri, badgeData?.badge_sharing_url)) {
+            if (AppUtils.shareImageWithWhatsApp(it, uri, getString(R.string.badges_winner_share_text,
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).first_name,
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).last_name,
+                            badgeData?.badge_name, badgeData?.badge_sharing_url))) {
                 Utils.pushProfileEvents(it, "CTA_Whatsapp_Share_Private_Badge_Detail",
                         "BadgesDialogFragment", "Whatsapp Share", badgeData?.badge_name)
             }
@@ -326,10 +331,7 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
 
     private fun createSharableCardWithBadgeName(): Boolean {
         try {
-            val temp = badgeTitleTextView.text
-            badgeTitleTextView.text = badgeData?.badge_name
-            AppUtils.getBitmapFromView(sharableCardContainer, sharableBadgeImageName)
-            badgeTitleTextView.text = temp
+            AppUtils.getBitmapFromView(badgesSharableCard, sharableBadgeImageName)
         } catch (e: Exception) {
             Crashlytics.logException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))

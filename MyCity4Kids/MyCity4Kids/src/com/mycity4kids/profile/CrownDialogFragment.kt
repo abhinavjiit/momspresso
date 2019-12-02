@@ -49,7 +49,7 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
     private lateinit var facebookShareImageView: ImageView
     private lateinit var instagramShareImageView: ImageView
     private lateinit var genericShareImageView: ImageView
-    private lateinit var sharableCardContainer: LinearLayout
+    private lateinit var crownSharableCard: CrownShareCardWidget
     private lateinit var shareContainer: ConstraintLayout
 
     var userId: String? = null
@@ -70,7 +70,7 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
         whatsappShareImageView = rootView.findViewById(R.id.whatsappShareImageView)
         facebookShareImageView = rootView.findViewById(R.id.facebookShareImageView)
         instagramShareImageView = rootView.findViewById(R.id.instagramShareImageView)
-        sharableCardContainer = rootView.findViewById(R.id.sharableCardContainer)
+        crownSharableCard = rootView.findViewById(R.id.crownSharableCard)
         genericShareImageView = rootView.findViewById(R.id.genericShareImageView)
 
         whatsappShareImageView.setOnClickListener(this)
@@ -126,6 +126,7 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
             } else {
                 shareContainer.visibility = View.GONE
             }
+            crownSharableCard.populateCrownDetails(result)
         }
     }
 
@@ -225,7 +226,7 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
                     return true
                 } else {
                     try {
-                        AppUtils.getBitmapFromView(sharableCardContainer, sharableCrownImageName)
+                        AppUtils.getBitmapFromView(crownSharableCard, sharableCrownImageName)
                     } catch (e: Exception) {
                         Crashlytics.logException(e)
                         Log.d("MC4kException", Log.getStackTraceString(e))
@@ -234,7 +235,7 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
                 }
             } else {
                 try {
-                    AppUtils.getBitmapFromView(sharableCardContainer, sharableCrownImageName)
+                    AppUtils.getBitmapFromView(crownSharableCard, sharableCrownImageName)
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))

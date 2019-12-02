@@ -476,7 +476,8 @@ public class AppConstants {
     public static final String DEEPLINK_EDIT_SHORT_STORY_URL = "mc4k://www.momspresso.com/editashortstory/";
     public static final String DEEPLINK_MOMSPRESSO_EDITOR_URL = "mc4k://www.momspresso.com/editor/";
     public static final String DEEPLINK_PROFILE_URL = "mc4k://www.mycity4kids.com/profile";
-    public static final String DEEPLINK_SELF_PROFILE_URL = "https://www.momspresso.com/parenting/admin";
+    public static final String DEEPLINK_SELF_PROFILE_URL_1 = ".momspresso.com/parenting/admin";
+    public static final String DEEPLINK_SELF_PROFILE_URL_2 = ".momspresso.com/parenting/admin/";
     public static final String DEEPLINK_MOMSPRESSO_PROFILE_URL = "mc4k://www.momspresso.com/profile";
     public static final String DEEPLINK_SUGGESTED_TOPIC_URL = "mc4k://www.mycity4kids.com/suggested_topics";
     public static final String DEEPLINK_MOMSPRESSO_SUGGESTED_TOPIC_URL = "mc4k://www.momspresso.com/suggested_topics";
