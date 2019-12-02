@@ -25,6 +25,11 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.viewpager.widget.ViewPager;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -72,10 +77,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.viewpager.widget.ViewPager;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -124,6 +125,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         Intent intent = getIntent();
 
@@ -451,9 +453,9 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
-            default:
-                return super.onOptionsItemSelected(item);
+                break;
         }
+        return true;
     }
 
     @Override

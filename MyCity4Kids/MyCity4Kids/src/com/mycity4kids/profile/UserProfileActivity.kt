@@ -178,6 +178,7 @@ class UserProfileActivity : BaseActivity(),
         supportActionBar?.setDisplayShowHomeEnabled(true)
         contentLangTextView.isSelected = true
         cityTextView.isSelected = true
+        appSettingsImageView.isEnabled = false
 
         authorId = intent.getStringExtra(Constants.USER_ID)
         deeplinkBadgeId = intent.getStringExtra("badgeId")
@@ -294,6 +295,7 @@ class UserProfileActivity : BaseActivity(),
                     profileShareCardWidget.visibility = View.INVISIBLE
                     val responseData = response.body() as UserDetailResponse
                     if (responseData.code == 200 && Constants.SUCCESS == responseData.status) {
+                        appSettingsImageView.isEnabled = true
                         isRewardAdded = responseData.data.get(0).result.rewardsAdded
                         processCityInfo(responseData)
                         processContentLanguages(responseData)
