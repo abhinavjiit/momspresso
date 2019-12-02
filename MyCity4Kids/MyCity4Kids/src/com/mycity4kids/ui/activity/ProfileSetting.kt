@@ -58,6 +58,7 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
     private var readArticlesTextView: TextView? = null
     private var isRewardAdded: String? = null
     private var toolbar: Toolbar? = null
+    private var editProfile: TextView? = null
 
     internal var getTotalPayout: Callback<TotalPayoutResponse> = object : Callback<TotalPayoutResponse> {
         override fun onResponse(call: Call<TotalPayoutResponse>, response: retrofit2.Response<TotalPayoutResponse>) {
@@ -108,6 +109,7 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         logout_layout = findViewById(R.id.logout_layout)
         activityTextView = findViewById(R.id.activityTextView)
         readArticlesTextView = findViewById(R.id.readArticlesTextView)
+        editProfile = findViewById(R.id.edit_Profile)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -148,6 +150,8 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         logout_layout!!.setOnClickListener(this)
         activityTextView!!.setOnClickListener(this)
         readArticlesTextView!!.setOnClickListener(this)
+        editProfile?.setOnClickListener(this)
+
     }
 
     override fun onClick(v: View) {
@@ -162,7 +166,7 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
             R.id.mymoney_info -> {
                 val intent = Intent(this, EditProfileNewActivity::class.java)
                 intent.putExtra("isComingfromCampaign", true)
-                intent.putExtra("isRewardAdded", "1")
+                intent.putExtra("isRewardAdded", isRewardAdded)
                 startActivity(intent)
             }
             R.id.payment_details -> {
@@ -214,6 +218,11 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
                 val intent5 = Intent(this, UserActivitiesActivity::class.java)
                 intent5.putExtra(Constants.AUTHOR_ID, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId)
                 startActivity(intent5)
+            }
+            R.id.edit_Profile -> {
+                val intent = Intent(this, EditProfileNewActivity::class.java)
+                intent.putExtra("isRewardAdded", isRewardAdded)
+                startActivity(intent)
             }
         }
     }

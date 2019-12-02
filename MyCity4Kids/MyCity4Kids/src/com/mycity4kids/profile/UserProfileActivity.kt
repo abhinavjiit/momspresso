@@ -72,6 +72,7 @@ class UserProfileActivity : BaseActivity(),
     var shareCardType: String? = null
     var shareMedium: String? = null
     var shareContentPosition: Int? = null
+    lateinit var isRewardAdded: String
 
 
     private lateinit var rootLayout: CoordinatorLayout
@@ -293,6 +294,7 @@ class UserProfileActivity : BaseActivity(),
                     profileShareCardWidget.visibility = View.INVISIBLE
                     val responseData = response.body() as UserDetailResponse
                     if (responseData.code == 200 && Constants.SUCCESS == responseData.status) {
+                        isRewardAdded = responseData.data.get(0).result.rewardsAdded
                         processCityInfo(responseData)
                         processContentLanguages(responseData)
                         processAuthorRankAndCrown(responseData)
@@ -813,6 +815,7 @@ class UserProfileActivity : BaseActivity(),
             }
             view?.id == R.id.appSettingsImageView -> {
                 val intent = Intent(this, ProfileSetting::class.java)
+                intent.putExtra("isRewardAdded", isRewardAdded)
                 startActivity(intent)
                 Utils.pushProfileEvents(this, "CTA_Settings", "UserProfileActivity",
                         "Settings", "-")

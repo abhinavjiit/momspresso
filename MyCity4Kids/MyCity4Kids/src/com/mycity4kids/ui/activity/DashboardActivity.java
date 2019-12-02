@@ -29,19 +29,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
@@ -141,6 +128,18 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
@@ -673,6 +672,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         return true;
                     }
                 });
+
         if (Constants.BUSINESS_EVENTLIST_FRAGMENT.equals(fragmentToLoad)) {
             setTitle("Upcoming Events");
             FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
@@ -1366,6 +1366,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
         } else {
             String tempDeepLinkURL = _intent.getStringExtra(AppConstants.DEEP_LINK_URL);
+
+
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
@@ -1807,6 +1809,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         } else if (topFragmentt instanceof GroupsViewFragment) {
             menu.findItem(R.id.action_location).setChecked(true);
         }
+
+
     }
 
     @Override

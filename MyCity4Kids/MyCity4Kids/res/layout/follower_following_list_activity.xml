@@ -47,8 +47,9 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
         android:gravity="center"
-        android:text="No result found"
-        android:visibility="gone" />
+        android:textColor="@color/black"
+        android:visibility="visible" />
+
 
     <ProgressBar
         android:id="@+id/progressBar"

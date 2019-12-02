@@ -1271,4 +1271,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="all_view">View</string>
     <string name="all_analytics">Analytics</string>
     <string name="read_articles">READ ARTICLES</string>
+    <string name="empty_followers_in_profile">The people who follow your profile will show here</string>
+    <string name="empty_followers_in_collection">The people who follow your collection will show here</string>
+    <string name="no_collection_item_text">The articles you add to this collection will show here</string>
 </resources>
