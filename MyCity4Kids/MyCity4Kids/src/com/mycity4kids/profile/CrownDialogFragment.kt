@@ -14,7 +14,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.*
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
@@ -25,9 +28,11 @@ import com.google.android.material.snackbar.Snackbar
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
+import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
+import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.PermissionUtil
 import com.squareup.picasso.Picasso
@@ -208,7 +213,10 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
         activity?.let {
             val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() +
                     "/MyCity4Kids/videos/" + sharableCrownImageName + ".jpg")
-            if (AppUtils.shareImageWithWhatsApp(it, uri, crownData?.sharing_url)) {
+            if (AppUtils.shareImageWithWhatsApp(it, uri, getString(R.string.badges_winner_share_text,
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).first_name,
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).last_name,
+                            crownData?.crown?.name, crownData?.sharing_url))) {
                 Utils.pushProfileEvents(it, "CTA_Whatsapp_Share_Private_Rank_Detail",
                         "CrownDialogFragment", "Whatsapp Share", "-")
             }
