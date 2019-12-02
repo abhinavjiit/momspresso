@@ -112,11 +112,11 @@
             android:id="@+id/whatsappShareImageView"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/ic_badge_whatsapp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/facebookShareImageView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:src="@drawable/ic_badge_whatsapp" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/facebookShareImageView"
@@ -124,11 +124,11 @@
             android:layout_height="40dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/ic_badge_facebook"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/instagramShareImageView"
             app:layout_constraintStart_toEndOf="@+id/whatsappShareImageView"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:src="@drawable/ic_badge_facebook" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/instagramShareImageView"
@@ -136,20 +136,20 @@
             android:layout_height="40dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_badge_instagram"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/genericShareImageView"
             app:layout_constraintStart_toEndOf="@+id/facebookShareImageView"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:src="@drawable/ic_badge_instagram" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/genericShareImageView"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/ic_badge_generic"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/instagramShareImageView"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:src="@drawable/ic_badge_generic" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </RelativeLayout>
