@@ -303,7 +303,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
-//        appUpdatePopUp();
+        appUpdatePopUp();
         onNewIntent(getIntent());
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -3060,11 +3060,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         if (!StringUtils.isNullOrEmpty(onlineVersionCode) && !StringUtils.isNullOrEmpty(currentVersion)) {
             String[] v1 = currentVersion.split("\\.");
             String[] v2 = onlineVersionCode.split("\\.");
+            Log.d("current::::", currentVersion);
+            Log.d("online", onlineVersionCode);
             if (v1.length != v2.length)
                 return;
             for (int pos = 0; pos < v1.length; pos++) {
                 if (Integer.parseInt(v1[pos]) > Integer.parseInt(v2[pos])) {
                     rateNowDialog = true;
+                    break;
                 } else if (Integer.parseInt(v1[pos]) < Integer.parseInt(v2[pos])) {
                     if (SharedPrefUtils.getFrequencyForShowingUpdateApp(BaseApplication.getAppContext()) != frequecy) {
                         Dialog dialog = new Dialog(this);
@@ -3087,6 +3090,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         });
                         dialog.show();
                         SharedPrefUtils.setFrequencyForShowingAppUpdate(BaseApplication.getAppContext(), frequecy);
+                        break;
                     } else {
                         rateNowDialog = true;
                     }

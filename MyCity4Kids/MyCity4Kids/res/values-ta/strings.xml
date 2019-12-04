@@ -1209,18 +1209,19 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="all_blogs">Blogs</string>
     <string name="all_videos">Videos</string>
     <string name="profile_post_featured">Post featured on the following collections</string>
-    <string name="dialog_fragment_add_collection_select_collection">Select Collection</string>
+    <string name="dialog_fragment_add_collection_select_collection">தொகுப்பைத் தேர்ந்தெடுக்கவும்</string>
     <string name="no_collections_yet">no collections yet</string>
-    <string name="collection_created_tab">CREATED</string>
-    <string name="collection_followed_tab">FOLLOWED</string>
+    <string name="collection_created_tab">உருவாக்கப்பட்டது</string>
+    <string name="collection_followed_tab">தொடரப்பட்டது</string>
     <string name="visible_to_all">visible to all</string>
-    <string name="please_add_collection_name">Please add collection Name</string>
-    <string name="thumbnail">Thumbnail</string>
+    <string name="please_add_collection_name">தொகுப்பின் பெயரைச் சேர்க்கவும்</string>
+    <string name="thumbnail">தம்ப்நெய்ல்</string>
+    <string name="collection_change_image_in_edit_collection">மாற்று</string>
     <string name="no_collection_items">no items</string>
-    <string name="list_of_content">List of Content</string>
-    <string name="edit_collection">Edit Collection</string>
-    <string name="delete_collection">Delete Collection</string>
-    <string name="are_you_sure_you_want_to_delete_the_collection">Are you sure you want to delete the collection</string>
+    <string name="list_of_content">பொருளடக்கம்</string>
+    <string name="edit_collection">தொகுப்பைத் திருத்து</string>
+    <string name="delete_collection">தொகுப்பை நீக்கு</string>
+    <string name="are_you_sure_you_want_to_delete_the_collection">தொகுப்பை நீக்க விரும்புகிறீர்களா?</string>
     <string name="add_collection_name">Add collection name</string>
     <string name="profile_share_the_joy">Share the Joy</string>
     <string name="dialog_confirm_delete">Are you sure you want to delete this collection</string>
@@ -1232,4 +1233,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="no_collection_item_text">The articles you add to this collection will show here</string>
     <string name="badges_winner_share_text">%1$s %2$s is a %3$s badge winner | Momspresso\n%4$s</string>
     <string name="crown_winner_share_text">%1$s %2$s is a %3$s crown winner | Momspresso\n%4$s</string>
+    <string name="add_thumbnail">தம்ப்நெய்ல் சேர்க்கவும்</string>
 </resources>

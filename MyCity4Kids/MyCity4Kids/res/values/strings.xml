@@ -1404,5 +1404,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="no_collection_item_text">The articles you add to this collection will show here</string>
     <string name="badges_winner_share_text">%1$s %2$s is a %3$s badge winner | Momspresso\n%4$s</string>
     <string name="crown_winner_share_text">%1$s %2$s is a %3$s crown winner | Momspresso\n%4$s</string>
+    <string name="add_thumbnail">Add thumbnail</string>
 </resources>
 
