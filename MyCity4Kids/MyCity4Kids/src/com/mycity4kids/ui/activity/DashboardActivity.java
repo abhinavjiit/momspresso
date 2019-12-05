@@ -194,7 +194,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private TextView selectedlangGuideTextView;
     private MixpanelAPI mMixpanel;
     private RelativeLayout bookmarkInfoView;
-    private RelativeLayout chooseStoryChallengeLayout;
     private TextView viewBookmarkedArticleTextView;
     private ImageView profileImageView;
     private Animation slideAnim, fadeAnim;
@@ -381,7 +380,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         createLabelTextView = (TextView) findViewById(R.id.createLabelTextView);
         continueWritingLabelTV = (TextView) findViewById(R.id.continueWritingLabelTV);
         createTextImageVIew = (ImageView) findViewById(R.id.createTextImageVIew);
-        chooseStoryChallengeLayout = (RelativeLayout) findViewById(R.id.choose_layout);
         writeStoryText = (TextView) findViewById(R.id.write_story);
         TakeChallengetext = (TextView) findViewById(R.id.write_challenge);
         languageLayout = (RelativeLayout) findViewById(R.id.languageLayout);
@@ -397,7 +395,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         drawerProfileCoachmark.setOnClickListener(this);
         drawerSettingsCoachmark.setOnClickListener(this);
         drawerMyMoneyCoachmark.setOnClickListener(this);
-        chooseStoryChallengeLayout.setOnClickListener(this);
+        chooseLayout.setOnClickListener(this);
         overLayViewChooseStory.setOnClickListener(this);
         writeStoryText.setOnClickListener(this);
         TakeChallengetext.setOnClickListener(this);
@@ -1306,7 +1304,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("shortStoryListingInChallengeListing")) {
                 findValues(notificationExtras.getString("categoryId"));
-                Intent intent1 = new Intent(this, ChallnegeDetailListingActivity.class);
+                Intent intent1 = new Intent(this, ChallengeDetailListingActivity.class);
                 intent1.putExtra("Display_Name", deepLinkDisplayName);
                 intent1.putExtra("challenge", shortStoryChallengesList);
                 intent1.putExtra("position", 0);
@@ -1438,7 +1436,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else {
                         findValues(deepLinkChallengeId);
                         if (shortStoryChallengesList != null && deepLinkDisplayName != null && deepLinkImageUrl != null && shortStoriesTopicList != null && shortStoryChallengesList.size() != 0 && deepLinkDisplayName.size() != 0 && deepLinkImageUrl.size() != 0 && shortStoriesTopicList.size() != 0) {
-                            Intent deepLinkIntent = new Intent(this, ChallnegeDetailListingActivity.class);
+                            Intent deepLinkIntent = new Intent(this, ChallengeDetailListingActivity.class);
                             deepLinkIntent.putExtra("selectedrequest", FromDeepLink);
                             deepLinkIntent.putExtra("Display_Name", deepLinkDisplayName);
                             deepLinkIntent.putExtra("challenge", shortStoryChallengesList);
@@ -1449,7 +1447,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             startActivity(deepLinkIntent);
                         } else {
                             findValues(deepLinkChallengeId);
-                            Intent deepLinkIntent = new Intent(this, ChallnegeDetailListingActivity.class);
+                            Intent deepLinkIntent = new Intent(this, ChallengeDetailListingActivity.class);
                             deepLinkIntent.putExtra("selectedrequest", FromDeepLink);
                             deepLinkIntent.putExtra("Display_Name", deepLinkDisplayName);
                             deepLinkIntent.putExtra("challenge", shortStoryChallengesList);
@@ -1825,7 +1823,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onStop() {
         super.onStop();
-        chooseStoryChallengeLayout.setVisibility(View.GONE);
+        chooseLayout.setVisibility(View.GONE);
         chooseOptionLayout.setVisibility(View.GONE);
         overLayViewChooseStory.setVisibility(View.GONE);
         rootChooseLayout.setVisibility(View.GONE);
@@ -2004,7 +2002,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.storyContainer:
                 hideCreateContentView();
-                chooseStoryChallengeLayout.setVisibility(View.VISIBLE);
+                chooseLayout.setVisibility(View.VISIBLE);
                 overLayViewChooseStory.setVisibility(View.VISIBLE);
                 chooseOptionLayout.setVisibility(View.VISIBLE);
                 rootChooseLayout.setVisibility(View.VISIBLE);
@@ -2134,7 +2132,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
         }
         if (v.getId() == R.id.overlayView_choose_story_challenge) {
-            chooseStoryChallengeLayout.setVisibility(View.GONE);
+            chooseLayout.setVisibility(View.GONE);
             chooseOptionLayout.setVisibility(View.GONE);
             overLayViewChooseStory.setVisibility(View.GONE);
             rootChooseLayout.setVisibility(View.GONE);
@@ -2156,7 +2154,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 findActiveChallenge();
             }
             if (challengeId != null && Display_Name != null && ImageUrl != null && shortStoriesTopicList != null && challengeId.size() != 0 && Display_Name.size() != 0 && ImageUrl.size() != 0 && shortStoriesTopicList.size() != 0) {
-                Intent intent = new Intent(this, ChallnegeDetailListingActivity.class);
+                Intent intent = new Intent(this, ChallengeDetailListingActivity.class);
                 intent.putExtra("selectedrequest", challenge);
                 intent.putExtra("Display_Name", Display_Name);
                 intent.putExtra("challenge", challengeId);
@@ -2204,7 +2202,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         });
     }
 
-
     private void findActiveChallenge() {
         try {
             if (shortStoriesTopicList != null && shortStoriesTopicList.size() != 0) {
@@ -2226,6 +2223,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                     }
                                 }
                             }
+
                         }
                     }
                 }
@@ -2269,7 +2267,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         }
 
                     }
-                } catch (IllegalStateException | JsonSyntaxException exception) {
+                } catch (IllegalStateException | JsonSyntaxException | NullPointerException exception) {
                     Crashlytics.logException(exception);
                 }
             }
@@ -2385,7 +2383,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             switch (requestCode) {
                 case 1234:
                     chooseLayout.setVisibility(View.VISIBLE);
-                    chooseStoryChallengeLayout.setVisibility(View.VISIBLE);
                     overLayViewChooseStory.setVisibility(View.VISIBLE);
                     chooseOptionLayout.setVisibility(View.VISIBLE);
                     rootChooseLayout.setVisibility(View.VISIBLE);
@@ -3050,7 +3047,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     public void showChooseLayoutForShortStory() {
         chooseLayout.setVisibility(View.VISIBLE);
-        chooseStoryChallengeLayout.setVisibility(View.VISIBLE);
         overLayViewChooseStory.setVisibility(View.VISIBLE);
         chooseOptionLayout.setVisibility(View.VISIBLE);
         rootChooseLayout.setVisibility(View.VISIBLE);

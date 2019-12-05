@@ -479,7 +479,8 @@
             android:name=".ui.activity.EditProfileNewActivity"
             android:parentActivityName=".profile.UserProfileActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/EditorTheme" />
+            android:theme="@style/EditorTheme"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activity.PhoneLoginUserDetailActivity"
             android:screenOrientation="portrait"
@@ -489,7 +490,7 @@
             android:parentActivityName=".ui.activity.DashboardActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.ChallnegeDetailListingActivity"
+            android:name=".ui.activity.ChallengeDetailListingActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.ChooseVideoCategoryActivity"

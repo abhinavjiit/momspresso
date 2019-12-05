@@ -554,7 +554,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="city_picker.toolbar.title">શહેર પસંદ કરો</string>
 
     <string name="rate_now">રેટ કરો</string>
-    <string name="rate_us.dialog.title">Rએપ ક્રમ?</string>
+    <string name="rate_us.dialog.title">એપ ને રેટ કરો</string>
 
     <string name="rate_us.dialog.not_now">હમણાં નહીં</string>
     <string name="rate_us.dialog.message1">જો તમને મોમ્સ્પ્રેસ્સો એપ પર મજા પડે છે તો એક ક્ષણ લાગશે તેને ક્રમાંકિત કરો.</string>
@@ -594,7 +594,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="choose_mp4_file">please choose a .mp4 format file</string>
     <string name="article_listing.type.trending_label">વલણ </string>
     <string name="article_listing.type.editor_label">સંપાદક ની પસંદ </string>
-    <string name="article_listing.type.todays_best_label">આજનું સર્વ શ્રેષ્ટ </string>
+    <string name="article_listing.type.todays_best_label">આજનું સર્વશ્રેષ્ઠ</string>
     <string name="article_listing.type.for_you_label">તમારા માટે </string>
     <string name="article_listing.type.short_story_label">૧૦૦ શબ્દોની વાર્તા </string>
     <string name="article_listing.type.languages_label">ભાષાઓ</string>
@@ -820,7 +820,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="coachmark.publish">તમારા પ્રકાશિત લેખ, વાર્તા, અને વીલોગ્સ એક અજ જગ્યાએ મેળવો</string>
     <string name="mobile">MOBILE NO</string>
 
-    <string name="continue_writing">લાખા રહો (ડ્રાફ્ટ)</string>
+    <string name="continue_writing">લખતા રહો (ડ્રાફ્ટ)</string>
     <string name="app_settings">એપ સેટ્ટીગ</string>
     <string name="create_new">નવું સર્જન કરો</string>
     <string name="name_optional">નામ (સ્વેચ્છિક)</string>
@@ -1342,7 +1342,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="dialog_confirm_delete">Are you sure you want to delete this collection</string>
     <string name="all_view">View</string>
     <string name="all_analytics">Analytics</string>
-    <string name="read_articles">READ ARTICLES</string>
+    <string name="read_articles">લેખ વાંચો</string>
     <string name="empty_followers_in_profile">The people who follow your profile will show here</string>
     <string name="empty_followers_in_collection">The people who follow your collection will show here</string>
     <string name="no_collection_item_text">The articles you add to this collection will show here</string>

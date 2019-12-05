@@ -350,7 +350,7 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
     public void onShortStoryClick(View view, int position) {
         switch (view.getId()) {
             case R.id.editDraftTextView:
-                if (Build.VERSION.SDK_INT > 15) {
+                if (Build.VERSION.SDK_INT >= 21) {
                     Utils.pushEditDraftEvent(getActivity(), "DraftList", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), draftList.get(position).getId());
                     Intent intent = new Intent(getActivity(), AddShortStoryActivity.class);
                     intent.putExtra("draftItem", draftList.get(position));

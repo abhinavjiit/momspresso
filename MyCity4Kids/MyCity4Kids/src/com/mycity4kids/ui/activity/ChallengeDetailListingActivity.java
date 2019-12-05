@@ -76,7 +76,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class ChallnegeDetailListingActivity extends BaseActivity implements View.OnClickListener, ChallengeListingRecycleAdapter.RecyclerViewClickListener {
+public class ChallengeDetailListingActivity extends BaseActivity implements View.OnClickListener, ChallengeListingRecycleAdapter.RecyclerViewClickListener {
 
     private static final int REQUEST_INIT_PERMISSION = 2;
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -88,39 +88,28 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
     private Toolbar mToolbar;
     private ArrayList<ExploreTopicsModel> ssTopicsList;
     private int pos;
-    private String ActiveUrl;
     private ArrayList<String> challengeId = new ArrayList<>();
     private ArrayList<String> activeUrl = new ArrayList<>();
     private ArrayList<String> Display_Name = new ArrayList<>();
     private String challenge = "challenge";
-    private Topics articledatamodal;
     private String parentName, parentId;
-    private static final long MIN_TIME_VIEW = 3;
     private int nextPageNumber = 1;
     private int limit = 15;
     private boolean isReuqestRunning = false;
     private boolean isLastPageReached = false;
     private int sortType = 0;
     private ArrayList<ArticleListingResult> mDatalist;
-    private Topics currentSubTopic;
-    private Topics selectedTopic;
-    private boolean isHeaderVisible = false;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
-    private FlowLayout flowLayout;
-    private String title = "#100WORDSTORY";
     private String selectedId;
     private String selected_Name;
     private String selectedActiveUrl;
-    private RelativeLayout headerRL;
-    private ImageView expandImageView;
     private FrameLayout frameLayout;
     private FloatingActionsMenu fabMenu;
     private FloatingActionButton popularSortFAB;
     private FloatingActionButton recentSortFAB;
     private FloatingActionButton fabSort;
-    private FeedNativeAd feedNativeAd;
     private RelativeLayout guideOverlay;
     private RelativeLayout writeArticleCell;
     private boolean showGuide = false;
@@ -128,15 +117,11 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
     private View shareSSView;
     private TextView titleTextView, bodyTextView, authorTextView;
     private ShortStoryAPI shortStoryAPI;
-    Set<Integer> viewedStoriesSet = new HashSet<>();
     private boolean isRecommendRequestRunning;
     private String likeStatus;
     private int currentShortStoryPosition;
     private RelativeLayout chooseLayout;
     int count = -1;
-    private String[] array;
-    private String[] url;
-    private String[] array_Name;
     private TextView toolbartitle;
     private RelativeLayout relative_frame;
     private FrameLayout frameLayout_report;
@@ -605,7 +590,7 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
                     addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
                     addCollectionAndCollectionitemDialogFragment.show(getSupportFragmentManager(), "collectionAdd");
                     Utils.pushProfileEvents(this, "CTA_100WS_Add_To_Collection",
-                            "ChallnegeDetailListingActivity", "Add to Collection", "-");
+                            "ChallengeDetailListingActivity", "Add to Collection", "-");
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));

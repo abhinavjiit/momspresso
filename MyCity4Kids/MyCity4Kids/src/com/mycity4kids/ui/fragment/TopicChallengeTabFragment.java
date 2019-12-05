@@ -15,7 +15,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.activity.ChallnegeDetailListingActivity;
+import com.mycity4kids.ui.activity.ChallengeDetailListingActivity;
 import com.mycity4kids.ui.adapter.ChallengeRecyclerAdapter;
 
 import java.util.ArrayList;
@@ -82,7 +82,7 @@ public class TopicChallengeTabFragment extends BaseFragment implements View.OnCl
         switch (view.getId()) {
             case R.id.mainView:
             case R.id.getStartedTextView:
-                Intent intent = new Intent(getContext(), ChallnegeDetailListingActivity.class);
+                Intent intent = new Intent(getContext(), ChallengeDetailListingActivity.class);
                 intent.putExtra("Display_Name", Display_Name);
                 intent.putExtra("challenge", challengeId);
                 intent.putExtra("position", position);

@@ -65,7 +65,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
     private lateinit var collectionItemsListAdapter: CollectionItemsListAdapter
     private lateinit var collectionItemRecyclerView: RecyclerView
     private lateinit var setting: ImageView
-    private var muteSwitch: SwitchCompat? = null
+    private var visibleToAll: SwitchCompat? = null
     private var collectionNameTextView: TextView? = null
     private var collectionImageVIEW: ImageView? = null
     private lateinit var followersCount: TextView
@@ -92,7 +92,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         super.onCreate(savedInstanceState)
         setContentView(R.layout.user_collection_item_activity)
         toolbar = findViewById(R.id.toolbar)
-        muteSwitch = findViewById<View>(R.id.muteVideoSwitch) as SwitchCompat
+        visibleToAll = findViewById<View>(R.id.muteVideoSwitch) as SwitchCompat
         collectionNameTextView = findViewById(R.id.collectionNameTextView)
         collectionImageVIEW = findViewById(R.id.collectionImageVIEW)
         shimmer1 = findViewById(R.id.shimmer1)
@@ -117,18 +117,18 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                 intArrayOf(
                         ContextCompat.getColor(this@UserCollectionItemListActivity, R.color.white), ContextCompat.getColor(this@UserCollectionItemListActivity, R.color.add_video_details_mute_label))
         )
-        muteSwitch?.thumbTintList = thumbStates
+        visibleToAll?.thumbTintList = thumbStates
         if (Build.VERSION.SDK_INT >= 24) {
             val trackStates = ColorStateList(
                     arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
                     intArrayOf(
                             ContextCompat.getColor(this@UserCollectionItemListActivity, R.color.switch_button_green_collection), ContextCompat.getColor(this@UserCollectionItemListActivity, R.color.white))
             )
-            muteSwitch?.trackTintList = trackStates
+            visibleToAll?.trackTintList = trackStates
 
         }
-        muteSwitch?.setOnClickListener {
-            if (muteSwitch?.isChecked == true) {
+        visibleToAll?.setOnClickListener {
+            if (visibleToAll?.isChecked == true) {
                 updateCollection(delete = false, isPublic = true)
             } else {
                 updateCollection(delete = false, isPublic = false)
@@ -198,72 +198,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                 try {
                     if (response.code == 200 && response.status == Constants.SUCCESS && response.data?.result != null) {
                         userCollectionsListModel = response.data!!.result
-                        if (start == 0) {
-                            collectionNameTextView?.text = userCollectionsListModel.name
-                            if (userCollectionsListModel.isPublic) {
-                                muteSwitch?.isChecked = true
-                                followFollowingTextView
-                            }
-
-                            if (AppUtils.isPrivateProfile(userCollectionsListModel.userId)) {
-                                followersCount.isClickable = true
-                                followersTextView.isClickable = true
-                                rightArrow.visibility = View.GONE
-                                followFollowingTextView.visibility = View.GONE
-                                if (userCollectionsListModel.collectionItems.isEmpty()) {
-                                    itemNotAddedTextView.visibility = View.VISIBLE
-                                    itemNotAddedTextView.text = getString(R.string.no_collection_item_text)
-                                } else {
-                                    itemNotAddedTextView.visibility = View.GONE
-                                }
-                                if (userCollectionsListModel.collectionType != 0) {
-                                    setting.visibility = View.GONE
-                                    muteSwitch?.visibility = View.GONE
-
-                                } else {
-                                    followersTextView.visibility = View.VISIBLE
-                                    followersCount.visibility = View.VISIBLE
-                                    muteSwitch?.visibility = View.VISIBLE
-                                    setting.visibility = View.VISIBLE
-                                }
-                                share?.visibility = View.VISIBLE
-                                if (!userCollectionsListModel.summary.isNullOrBlank()) {
-                                    descriptionTextView.visibility = View.VISIBLE
-                                    collectionDescription.visibility = View.VISIBLE
-                                    collectionDescription.text = userCollectionsListModel.summary
-                                }
-                                Utils.pushGenericEvent(this@UserCollectionItemListActivity, "Show_Private_Collection_Detail",
-                                        userCollectionsListModel.userId, "UserCollectionItemListActivity")
-                            } else {
-                                share?.visibility = View.GONE
-                                if (userCollectionsListModel.collectionItems.isEmpty()) {
-                                    itemNotAddedTextView.visibility = View.VISIBLE
-                                    itemNotAddedTextView.text = getString(R.string.no_collection_items)
-                                } else {
-                                    itemNotAddedTextView.visibility = View.GONE
-                                }
-                                followersCount.isClickable = false
-                                followersTextView.isClickable = false
-                                rightArrow.visibility = View.GONE
-                                followFollowingTextView.visibility = View.VISIBLE
-                                if (AppConstants.FOLLOWING == userCollectionsListModel.isFollowed) {
-                                    followFollowingTextView.text = resources.getString(R.string.ad_following_author)
-                                } else {
-                                    followFollowingTextView.text = resources.getString(R.string.ad_follow_author)
-                                }
-                                muteSwitch?.visibility = View.GONE
-                                setting.visibility = View.GONE
-                                Utils.pushGenericEvent(this@UserCollectionItemListActivity, "Show_Public_Collection_Detail",
-                                        userCollectionsListModel.userId, "UserCollectionItemListActivity")
-                            }
-                            followersCount.text = userCollectionsListModel.totalCollectionFollowers.toString()
-                            try {
-                                Picasso.with(this@UserCollectionItemListActivity).load(userCollectionsListModel.imageUrl)
-                                        .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageVIEW)
-                            } catch (e: Exception) {
-                                collectionImageVIEW?.setImageResource(R.drawable.default_article)
-                            }
-                        }
+                        setFirstCallData(start)
                         shimmer1.visibility = View.GONE
                         shimmer1.stopShimmerAnimation()
                         dataList.addAll(userCollectionsListModel.collectionItems)
@@ -528,6 +463,74 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         intent.putExtra("collectionImage", userCollectionsListModel.imageUrl)
         setResult(Activity.RESULT_OK, intent)
         super.onBackPressed()
+    }
+
+    fun setFirstCallData(start: Int) {
+        if (start == 0) {
+            collectionNameTextView?.text = userCollectionsListModel.name
+            if (userCollectionsListModel.isPublic) {
+                visibleToAll?.isChecked = true
+                followFollowingTextView
+            }
+
+            if (AppUtils.isPrivateProfile(userCollectionsListModel.userId)) {
+                followersCount.isClickable = true
+                followersTextView.isClickable = true
+                rightArrow.visibility = View.GONE
+                followFollowingTextView.visibility = View.GONE
+                if (userCollectionsListModel.collectionItems.isEmpty()) {
+                    itemNotAddedTextView.visibility = View.VISIBLE
+                    itemNotAddedTextView.text = getString(R.string.no_collection_item_text)
+                } else {
+                    itemNotAddedTextView.visibility = View.GONE
+                }
+                if (userCollectionsListModel.collectionType != 0) {
+                    setting.visibility = View.GONE
+                    visibleToAll?.visibility = View.GONE
+                } else {
+                    followersTextView.visibility = View.VISIBLE
+                    followersCount.visibility = View.VISIBLE
+                    visibleToAll?.visibility = View.VISIBLE
+                    setting.visibility = View.VISIBLE
+                }
+                share?.visibility = View.VISIBLE
+                if (!userCollectionsListModel.summary.isNullOrBlank()) {
+                    descriptionTextView.visibility = View.VISIBLE
+                    collectionDescription.visibility = View.VISIBLE
+                    collectionDescription.text = userCollectionsListModel.summary
+                }
+                Utils.pushGenericEvent(this@UserCollectionItemListActivity, "Show_Private_Collection_Detail",
+                        userCollectionsListModel.userId, "UserCollectionItemListActivity")
+            } else {
+                share?.visibility = View.GONE
+                if (userCollectionsListModel.collectionItems.isEmpty()) {
+                    itemNotAddedTextView.visibility = View.VISIBLE
+                    itemNotAddedTextView.text = getString(R.string.no_collection_items)
+                } else {
+                    itemNotAddedTextView.visibility = View.GONE
+                }
+                followersCount.isClickable = false
+                followersTextView.isClickable = false
+                rightArrow.visibility = View.GONE
+                followFollowingTextView.visibility = View.VISIBLE
+                if (AppConstants.FOLLOWING == userCollectionsListModel.isFollowed) {
+                    followFollowingTextView.text = resources.getString(R.string.ad_following_author)
+                } else {
+                    followFollowingTextView.text = resources.getString(R.string.ad_follow_author)
+                }
+                visibleToAll?.visibility = View.GONE
+                setting.visibility = View.GONE
+                Utils.pushGenericEvent(this@UserCollectionItemListActivity, "Show_Public_Collection_Detail",
+                        userCollectionsListModel.userId, "UserCollectionItemListActivity")
+            }
+            followersCount.text = userCollectionsListModel.totalCollectionFollowers.toString()
+            try {
+                Picasso.with(this@UserCollectionItemListActivity).load(userCollectionsListModel.imageUrl)
+                        .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageVIEW)
+            } catch (e: Exception) {
+                collectionImageVIEW?.setImageResource(R.drawable.default_article)
+            }
+        }
     }
 
 }
