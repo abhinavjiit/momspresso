@@ -30,7 +30,9 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.SubmitListener, CampaignCongratulationFragment.SubmitListener, CampaignPaymentModesFragment.SubmitListener {
+    override fun onPanCardDone() {
 
+    }
 
     override fun onPaymentModeDone(paymentModeId: Int) {
 

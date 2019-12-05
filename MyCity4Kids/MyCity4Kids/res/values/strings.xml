@@ -981,7 +981,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="rewards_mobile_number_verified">Mobile number is verified</string>
     <string name="rewards_have_children">Do you have children?</string>
     <string name="rewards_add_child">Add More</string>
-    <string name="rewards_kid_detail">Child detail</string>
+    <string name="rewards_kid_detail">Add Child Details</string>
     <string name="app_name">Momspresso</string>
     <string name="video_challenge_live_text">LIVE</string>
     <string name="video_challenge_text">CHALLENGES</string>
@@ -1399,5 +1399,10 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="all_view">View</string>
     <string name="all_analytics">Analytics</string>
     <string name="read_articles">READ ARTICLES</string>
+    <string name="profile_emailid">Email Id</string>
+    <string name="profile_blog_title">Blog Title</string>
+    <string name="child_delete">Delete</string>
+    <string name="profile_name_optional">Name (optional)</string>
+    <string name="profile_expected_date_delivery">Expected date of delivery</string>
 </resources>
 

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.ui.rewards.adapter.PickerDialogAdapter
+import com.mycity4kids.ui.rewards.fragment.ProfileInfoFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsPersonalInfoFragment
 
 
@@ -151,6 +152,18 @@ class PickerDialogFragment : DialogFragment(), PickerDialogAdapter.onItemClickLi
         // TODO: Customize parameter initialization
         @JvmStatic
         fun newInstance(columnCount: Int = 1, popType: String, isSingleSelection: Boolean = false, preSelectedItemIds: ArrayList<String>? = null, context: RewardsPersonalInfoFragment) =
+                PickerDialogFragment().apply {
+                    this.onClickDoneListener = context
+                    arguments = Bundle().apply {
+                        putInt(ARG_COLUMN_COUNT, columnCount)
+                        putString(ARG_POPUP_TYPE, popType)
+                        putBoolean(ARG_IS_SINGLE_SELECTION, isSingleSelection)
+                        putStringArrayList(ARG_PRE_SELECTED_ITEMS_IDS, preSelectedItemIds)
+                    }
+                }
+
+        @JvmStatic
+        fun newInstance(columnCount: Int = 1, popType: String, isSingleSelection: Boolean = false, preSelectedItemIds: ArrayList<String>? = null, context: ProfileInfoFragment) =
                 PickerDialogFragment().apply {
                     this.onClickDoneListener = context
                     arguments = Bundle().apply {

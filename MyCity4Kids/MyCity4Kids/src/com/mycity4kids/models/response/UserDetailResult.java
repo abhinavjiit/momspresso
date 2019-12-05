@@ -51,6 +51,17 @@ public class UserDetailResult implements Parcelable {
     }
 
     private String rewardsAdded;
+    private double latitude;
+    private double longitude;
+    private ArrayList<String> preferredLanguages;
+    private ArrayList<String> interests;
+    private String isMother;
+    private String workStatus;
+    private String dob;
+    private String isExpected;
+    private String expectedDate;
+    private String mobileToken;
+    private String mobile;
 
 
     protected UserDetailResult(Parcel in) {
@@ -79,7 +90,18 @@ public class UserDetailResult implements Parcelable {
         blogTitleSlug = in.readString();
         rewardsAdded = in.readString();
         userTag = in.createStringArrayList();
+        preferredLanguages = in.createStringArrayList();
+        interests = in.createStringArrayList();
         cityName = in.readString();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
+        isMother = in.readString();
+        workStatus = in.readString();
+        dob = in.readString();
+        isExpected = in.readString();
+        expectedDate = in.readString();
+        mobileToken = in.readString();
+        mobile = in.readString();
     }
 
     public static final Creator<UserDetailResult> CREATOR = new Creator<UserDetailResult>() {
@@ -108,6 +130,23 @@ public class UserDetailResult implements Parcelable {
     public UserDetailResult() {
 
     }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -181,6 +220,62 @@ public class UserDetailResult implements Parcelable {
         this.cityName = cityName;
     }
 
+    public String getIsMother() {
+        return isMother;
+    }
+
+    public void setIsMother(String isMother) {
+        this.isMother = isMother;
+    }
+
+    public String getWorkStatus() {
+        return workStatus;
+    }
+
+    public void setWorkStatus(String workStatus) {
+        this.workStatus = workStatus;
+    }
+
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
+
+    public String getExpectedDate() {
+        return expectedDate;
+    }
+
+    public void setExpectedDate(String expectedDate) {
+        this.expectedDate = expectedDate;
+    }
+
+    public String getMobileToken() {
+        return mobileToken;
+    }
+
+    public void setMobileToken(String mobileToken) {
+        this.mobileToken = mobileToken;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getIsExpected() {
+        return isExpected;
+    }
+
+    public void setIsExpected(String isExpected) {
+        this.isExpected = isExpected;
+    }
+
     public String getUserType() {
         return userType;
     }
@@ -210,7 +305,7 @@ public class UserDetailResult implements Parcelable {
     }
 
     public void setKids(ArrayList<KidsModel> kidsList) {
-        this.kids = kids;
+        this.kids = kidsList;
     }
 
     public String getBlogTitle() {
@@ -267,6 +362,24 @@ public class UserDetailResult implements Parcelable {
 
     public void setUserTag(ArrayList<String> userTag) {
         this.userTag = userTag;
+    }
+
+
+    public ArrayList<String> getPreferredLanguages() {
+        return preferredLanguages;
+    }
+
+    public void setPreferredLanguages(ArrayList<String> preferredLanguages) {
+        this.preferredLanguages = preferredLanguages;
+    }
+
+
+    public ArrayList<String> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(ArrayList<String> interests) {
+        this.interests = interests;
     }
 
 
@@ -390,7 +503,18 @@ public class UserDetailResult implements Parcelable {
         parcel.writeString(blogTitleSlug);
         parcel.writeString(rewardsAdded);
         parcel.writeStringList(userTag);
+        parcel.writeStringList(preferredLanguages);
+        parcel.writeStringList(interests);
         parcel.writeString(cityName);
+        parcel.writeDouble(latitude);
+        parcel.writeDouble(longitude);
+        parcel.writeString(isMother);
+        parcel.writeString(workStatus);
+        parcel.writeString(dob);
+        parcel.writeString(isExpected);
+        parcel.writeString(expectedDate);
+        parcel.writeString(mobileToken);
+        parcel.writeString(mobile);
     }
 
     public class SocialTokens {

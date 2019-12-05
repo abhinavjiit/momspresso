@@ -11,7 +11,7 @@ import retrofit2.http.POST;
 
 public interface ReportSpamAPI {
 
-    @POST("http://eventsapi.momspresso.com/datapipeline/")
+    @POST("message/v1/report_spam/")
     Call<ResponseBody> reportSpam(@Body ReportSpamRequest reportSpamRequest);
 
 

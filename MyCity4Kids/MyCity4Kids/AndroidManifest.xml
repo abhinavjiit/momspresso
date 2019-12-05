@@ -353,7 +353,8 @@
             android:name=".ui.rewards.activity.RewardsContainerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|layoutDirection"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/Theme.nnn" />
         <activity
             android:name=".ui.activity.RankingActivity"
             android:screenOrientation="portrait"
@@ -540,7 +541,12 @@
         <activity
             android:name=".ui.activity.FeaturedOnActivity"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".ui.activity.ReportSpamActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ProfileWebViewActivity"
+            android:screenOrientation="portrait" />
         <meta-data
             android:name="io.branch.sdk.BranchKey"
             android:value="key_live_kdGnDu8Q4xxqJJoBNp8prlpeAAndQfuJ" />

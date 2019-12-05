@@ -77,8 +77,6 @@ public class ReportSpamActivity extends BaseActivity implements View.OnClickList
             case R.id.sendTextView:
                 if (isValid()) {
                     postSpam();
-                } else {
-                    Toast.makeText(this, R.string.toast_cannot_retrieve_selected_video, Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -86,11 +84,12 @@ public class ReportSpamActivity extends BaseActivity implements View.OnClickList
 
     private boolean isValid() {
         boolean isValid = true;
-        if (StringUtils.isNullOrEmpty(spamEdtTxt.getText().toString())) {
-            isValid = false;
-        }
         if (pos == 0) {
             isValid = false;
+            Toast.makeText(this, R.string.please_select, Toast.LENGTH_SHORT).show();
+        }else if (StringUtils.isNullOrEmpty(spamEdtTxt.getText().toString())) {
+            isValid = false;
+            Toast.makeText(this, R.string.editor_body_empty, Toast.LENGTH_SHORT).show();
         }
         return isValid;
     }
@@ -107,7 +106,7 @@ public class ReportSpamActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                 removeProgressDialog();
-                Toast.makeText(ReportSpamActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                finish();
             }
 
             @Override

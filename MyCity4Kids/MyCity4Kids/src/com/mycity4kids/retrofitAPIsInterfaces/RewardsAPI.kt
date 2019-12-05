@@ -3,6 +3,8 @@ package com.mycity4kids.retrofitAPIsInterfaces
 import com.mycity4kids.models.campaignmodels.ReferralCodeResult
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.SetupBlogData
+import com.mycity4kids.models.response.UserDetailResponse
+import com.mycity4kids.models.response.UserDetailResult
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.models.rewardsmodels.RewardsPersonalResponse
 import io.reactivex.Observable
@@ -36,5 +38,14 @@ interface RewardsAPI {
     @GET("/rewards/v1/users/referrals/validations/{referralCode}")
     fun validateReferralCode(@Path("referralCode") referralCode: String)
             : Observable<BaseResponseGeneric<ReferralCodeResult>>
+
+    @GET("v1/users/{userId}")
+    fun getUserDetails(@Path("userId") userId: String, @Query("email") required: String)
+            : Observable<BaseResponseGeneric<UserDetailResult>>
+
+    @PUT("/v2/users/{userId}")
+    fun sendProfileDataForAny(@Path("userId") userId: String, @Body userDetailResult: UserDetailResult,
+                                 @Query("fn") pageValue : Int)
+            : Observable<RewardsPersonalResponse>
 
 }

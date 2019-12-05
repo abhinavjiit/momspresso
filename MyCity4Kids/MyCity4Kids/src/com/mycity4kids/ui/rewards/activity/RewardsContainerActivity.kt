@@ -22,6 +22,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.fragment.CampaignPaymentModesFragment
 import com.mycity4kids.ui.campaign.fragment.PanCardDetailsSubmissionFragment
 import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment
+import com.mycity4kids.ui.rewards.fragment.ProfileInfoFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsFamilyInfoFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsPersonalInfoFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsSocialInfoFragment
@@ -33,6 +34,7 @@ import io.reactivex.schedulers.Schedulers
 
 class RewardsContainerActivity : BaseActivity(),
         RewardsPersonalInfoFragment.SaveAndContinueListener,
+        ProfileInfoFragment.SaveAndContinueListener,
         RewardsSocialInfoFragment.SubmitListener, CampaignPaymentModesFragment.SubmitListener, PanCardDetailsSubmissionFragment.SubmitListener, IFacebookEvent {
     private var Id: Int = -1
     private var referralCode: String = " "
@@ -75,6 +77,7 @@ class RewardsContainerActivity : BaseActivity(),
 
     private var callbackManager: CallbackManager? = null
     private var rewardsPersonalInfoFragment: RewardsPersonalInfoFragment? = null
+    private var profileInfoFragment: ProfileInfoFragment? = null
     private var rewardsFamilyInfoFragment: RewardsFamilyInfoFragment? = null
     private var rewardsSocialInfoFragment: RewardsSocialInfoFragment? = null
     private var paymentModesFragment: CampaignPaymentModesFragment? = null
@@ -82,6 +85,7 @@ class RewardsContainerActivity : BaseActivity(),
     private var pageLimit: Int? = null
     private var pageNumber: Int? = null
     private var isComingfromCampaign = false
+    private var showProfileInfo = false
     private lateinit var root: RelativeLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -112,16 +116,25 @@ class RewardsContainerActivity : BaseActivity(),
             } else {
                 isComingfromCampaign = false
             }
+            if (intent.hasExtra("showProfileInfo")) {
+                showProfileInfo = intent.getBooleanExtra("showProfileInfo", false)
+            } else {
+                showProfileInfo = false
+            }
         }
 
-        if (pageNumber == 1) {
-            addProfileFragment()
-        } else if (pageNumber == 3) {
-            addSocialFragment()
-        } else if (pageNumber == 4) {
-            addPaymentModesFragment()
-        } else if (pageNumber == 5) {
-            addPancardDetailFragment()
+        if (showProfileInfo) {
+            addProfileInfoFragment()
+        } else {
+            if (pageNumber == 1) {
+                addProfileFragment()
+            } else if (pageNumber == 3) {
+                addSocialFragment()
+            } else if (pageNumber == 4) {
+                addPaymentModesFragment()
+            } else if (pageNumber == 5) {
+                addPancardDetailFragment()
+            }
         }
 
         callbackManager = CallbackManager.Factory.create()
@@ -156,6 +169,14 @@ class RewardsContainerActivity : BaseActivity(),
         } else {
             finish()
         }
+    }
+
+    private fun addProfileInfoFragment() {
+        profileInfoFragment = ProfileInfoFragment()
+        val rewardFrag = profileInfoFragment as Fragment
+        supportFragmentManager.beginTransaction().replace(R.id.container, rewardFrag,
+                ProfileInfoFragment::class.java.simpleName)
+                .commit()
     }
 
     private fun addSocialFragment() {

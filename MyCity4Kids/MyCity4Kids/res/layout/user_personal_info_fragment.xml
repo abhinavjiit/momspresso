@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false">
@@ -11,18 +12,33 @@
         android:background="@color/white"
         android:orientation="vertical">
 
-        <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/profileImageView"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="70dp"
-            android:src="@drawable/family_xxhdpi"
-            app:civ_border_color="@color/app_red"
-            app:civ_border_width="2dp" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/space_50">
 
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/profileImageView"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/family_xxhdpi"
+                app:civ_border_color="@color/app_red"
+                app:civ_border_width="2dp" />
+
+            <ImageView
+                android:id="@+id/editImageView"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignRight="@+id/profileImageView"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/profile_camera_circle"
+                android:padding="12dp"
+                android:src="@drawable/ic_camera"
+                android:tint="@color/white" />
+        </RelativeLayout>
 
         <com.mycity4kids.widget.CustomFontTextView
             android:layout_width="wrap_content"
@@ -44,10 +60,8 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="15dp"
             android:text="@string/rewards_first_name"
-            android:textAllCaps="true"
-            android:textColor="@color/app_grey"
-            android:textSize="14sp"
-            app:fontName="oswald_regular.ttf" />
+            android:textColor="@color/color_85848A"
+            android:textSize="16sp" />
 
         <com.mycity4kids.widget.CustomFontEditText
             android:id="@+id/editFirstName"
@@ -60,9 +74,8 @@
             android:hint=""
             android:inputType="textNoSuggestions"
             android:padding="@dimen/space_8"
-            android:textColor="@color/app_light_black"
-            android:textSize="16dp"
-            app:fontName="oswald_regular.ttf" />
+            android:textColor="@color/campaign_4A4A4A"
+            android:textSize="16sp" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/labelLastName"
@@ -71,10 +84,8 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="15dp"
             android:text="@string/rewards_last_name"
-            android:textAllCaps="true"
-            android:textColor="@color/app_grey"
-            android:textSize="14sp"
-            app:fontName="oswald_regular.ttf" />
+            android:textColor="@color/color_85848A"
+            android:textSize="16sp" />
 
         <com.mycity4kids.widget.CustomFontEditText
             android:id="@+id/editLastName"
@@ -87,9 +98,8 @@
             android:hint=""
             android:inputType="textNoSuggestions"
             android:padding="@dimen/space_8"
-            android:textColor="@color/app_light_black"
-            android:textSize="16dp"
-            app:fontName="oswald_regular.ttf" />
+            android:textColor="@color/campaign_4A4A4A"
+            android:textSize="16sp" />
 
 
         <com.mycity4kids.widget.CustomFontTextView
@@ -97,10 +107,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="15dp"
-            android:text="@string/rewards_email"
-            android:textAllCaps="true"
-            android:textColor="@color/app_grey"
-            app:fontName="oswald_regular.ttf" />
+            android:text="@string/profile_emailid"
+            android:textColor="@color/color_85848A"
+            android:textSize="16sp" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -110,7 +119,7 @@
             android:layout_marginRight="15dp"
             android:background="@drawable/mainprofile_thin_border">
 
-            <com.mycity4kids.widget.CustomFontEditText
+            <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/emailTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -119,9 +128,8 @@
                 android:paddingLeft="5dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:textColor="@color/app_light_black"
-                android:textSize="16dp"
-                app:fontName="oswald_regular.ttf" />
+                android:textColor="@color/campaign_4A4A4A"
+                android:textSize="16sp" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/passwordTextView"
@@ -132,9 +140,10 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="5dp"
                 android:paddingLeft="5dp"
-                android:visibility="gone"
                 android:text="*********"
-                app:fontName="oswald_regular.ttf" />
+                android:textColor="@color/campaign_4A4A4A"
+                android:textSize="16sp"
+                android:visibility="visible" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/changePasswordTextView"
@@ -144,12 +153,11 @@
                 android:layout_marginTop="22dp"
                 android:layout_marginRight="10dp"
                 android:gravity="center"
-                android:visibility="gone"
                 android:paddingLeft="@dimen/space_15"
                 android:text="Change password"
                 android:textColor="@color/app_red"
-                android:textSize="14sp"
-                app:fontName="oswald_regular.ttf" />
+                android:textSize="12sp"
+                android:visibility="visible" />
         </RelativeLayout>
 
         <com.mycity4kids.widget.CustomFontTextView
@@ -157,11 +165,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="15dp"
-            android:text="@string/rewards_phone"
-            android:textAllCaps="true"
-            android:textColor="@color/app_grey"
-            android:textSize="14sp"
-            app:fontName="oswald_regular.ttf" />
+            android:text="@string/blog_setup.hint_phone"
+            android:textColor="@color/color_85848A"
+            android:textSize="16sp" />
 
 
         <RelativeLayout
@@ -220,8 +226,8 @@
                 android:paddingLeft="15dp"
                 android:tag="+91"
                 android:text="@string/rewards_mobile_number_verified"
-                android:textColor="@color/app_light_black"
-                app:fontName="oswald.ttf" />
+                android:textColor="@color/campaign_4A4A4A"
+                android:textSize="16sp" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/textVerify"
@@ -254,9 +260,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/rewards_location"
-                android:textAllCaps="true"
-                android:textColor="@color/app_grey"
-                app:fontName="oswald_regular.ttf" />
+                android:textColor="@color/color_85848A"
+                android:textSize="16sp" />
 
             <com.mycity4kids.widget.CustomFontEditText
                 android:id="@+id/editLocation"
@@ -270,9 +275,8 @@
                 android:hint=""
                 android:inputType="textNoSuggestions"
                 android:padding="5dp"
-                android:textColor="@color/app_light_black"
-                android:textSize="16dp"
-                app:fontName="oswald_regular.ttf" />
+                android:textColor="@color/campaign_4A4A4A"
+                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="14dp"
@@ -290,9 +294,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="15dp"
-            android:text="@string/blog_setup.blog_title_label"
-            android:textColor="@color/app_grey"
-            app:fontName="oswald_regular.ttf" />
+            android:text="@string/profile_blog_title"
+            android:textColor="@color/color_85848A"
+            android:textSize="16sp" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/handleNameTextView"
@@ -306,9 +310,8 @@
             android:paddingLeft="10dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:textColor="@color/app_light_black"
-            android:textSize="14sp"
-            app:fontName="oswald_regular.ttf" />
+            android:textColor="@color/campaign_4A4A4A"
+            android:textSize="16sp" />
 
         <RelativeLayout
             android:id="@+id/interestLayout"
@@ -324,9 +327,8 @@
                 android:layout_centerVertical="true"
                 android:layout_marginTop="15dp"
                 android:text="@string/rewards_interest"
-                android:textAllCaps="true"
-                android:textColor="@color/app_grey"
-                app:fontName="oswald_regular.ttf" />
+                android:textColor="@color/color_85848A"
+                android:textSize="16sp" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/textEditInterest"
@@ -339,9 +341,9 @@
                 android:gravity="center"
                 android:text="@string/rewards_edit"
                 android:textColor="@color/app_red"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:visibility="gone"
-                app:fontName="oswald_regular.ttf" />
+                app:fontName="open_sans.ttf" />
         </RelativeLayout>
 
         <LinearLayout
@@ -380,9 +382,8 @@
             android:hint="Select"
             android:inputType="textNoSuggestions"
             android:padding="5dp"
-            android:textColor="@color/app_light_black"
-            android:textSize="16dp"
-            app:fontName="oswald_regular.ttf" />
+            android:textColor="@color/campaign_4A4A4A"
+            android:textSize="16sp" />
 
 
         <com.mycity4kids.widget.CustomFontTextView
@@ -391,10 +392,8 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:text="@string/about_txt"
-            android:textAllCaps="true"
-            android:textColor="@color/app_grey"
-
-            app:fontName="oswald_regular.ttf" />
+            android:textColor="@color/color_85848A"
+            android:textSize="16sp" />
 
         <com.mycity4kids.widget.CustomFontEditText
             android:id="@+id/aboutEditText"
@@ -412,7 +411,7 @@
             android:paddingTop="12dp"
             android:scrollbarStyle="insideInset"
             android:scrollbars="vertical"
-            android:textColor="@color/app_light_black"
+            android:textColor="@color/campaign_expired_background"
             android:textSize="16sp" />
 
         <LinearLayout
@@ -449,9 +448,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/rewards_gender"
-                    android:textAllCaps="true"
-                    android:textColor="@color/app_grey"
-                    app:fontName="oswald_regular.ttf"
+                    android:textColor="@color/color_85848A"
+                    android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -460,9 +458,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/rewards_dob"
-                    android:textAllCaps="true"
-                    android:textColor="@color/app_grey"
-                    app:fontName="oswald_regular.ttf"
+                    android:textColor="@color/color_85848A"
+                    android:textSize="16sp"
                     app:layout_constraintLeft_toLeftOf="@+id/textDOB"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -473,8 +470,6 @@
                     android:layout_height="40dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/mainprofile_thin_border"
-
-                    app:fontName="oswald_regular.ttf"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@+id/textDOB"
                     app:layout_constraintStart_toStartOf="parent"
@@ -497,11 +492,13 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="7dp"
                     android:background="@drawable/mainprofile_thin_border"
+                    android:drawableLeft="@drawable/calander_icon"
+                    android:drawablePadding="@dimen/space_4"
                     android:gravity="center_vertical"
                     android:hint="DD/MM/YYYY"
                     android:paddingLeft="10dp"
-                    android:textColor="#000"
-                    app:fontName="oswald_regular.ttf"
+                    android:textColor="@color/campaign_4A4A4A"
+                    android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/genderSpinner"
                     app:layout_constraintTop_toBottomOf="@id/dobLabelTextView" />
@@ -520,9 +517,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/rewards_working_status"
-                    android:textAllCaps="true"
-                    android:textColor="@color/app_grey"
-                    app:fontName="oswald_regular.ttf" />
+                    android:textColor="@color/color_85848A"
+                    android:textSize="16sp" />
 
                 <RadioGroup
                     android:id="@+id/radioGroupWorkingStatus"
@@ -544,8 +540,8 @@
                         android:layout_marginLeft="0dp"
                         android:buttonTint="@color/app_red"
                         android:text="@string/rewards_working"
-                        android:textAllCaps="true"
-                        android:textColor="@color/app_light_black" />
+                        android:textColor="@color/campaign_4A4A4A"
+                        android:textSize="16sp" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
                         android:id="@+id/radioNotWorking"
@@ -556,8 +552,8 @@
                         android:layout_marginRight="8dp"
                         android:buttonTint="@color/app_red"
                         android:text="@string/rewards_non_working"
-                        android:textAllCaps="true"
-                        android:textColor="@color/app_light_black" />
+                        android:textColor="@color/campaign_4A4A4A"
+                        android:textSize="16sp" />
                 </RadioGroup>
             </RelativeLayout>
 
@@ -575,10 +571,8 @@
                     android:layout_centerVertical="true"
                     android:layout_marginTop="15dp"
                     android:text="@string/rewards_language"
-                    android:textAllCaps="true"
-
-                    android:textColor="@color/app_grey"
-                    app:fontName="oswald_regular.ttf" />
+                    android:textColor="@color/color_85848A"
+                    android:textSize="16sp" />
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/textEditLanguage"
@@ -591,9 +585,9 @@
                     android:gravity="center"
                     android:text="@string/rewards_edit"
                     android:textColor="@color/app_red"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:visibility="gone"
-                    app:fontName="OpenSans-Regular.ttf" />
+                    app:fontName="open_sans.ttf" />
             </RelativeLayout>
 
             <LinearLayout
@@ -632,9 +626,8 @@
                 android:hint="Select"
                 android:inputType="textNoSuggestions"
                 android:padding="5dp"
-                android:textColor="@color/app_light_black"
-                android:textSize="16dp"
-                app:fontName="oswald_regular.ttf" />
+                android:textColor="@color/campaign_4A4A4A"
+                android:textSize="16sp" />
 
             <RelativeLayout
                 android:id="@+id/layoutFamilyType"
@@ -650,8 +643,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="FAMILY TYPE"
-                    android:textColor="@color/app_grey"
-                    app:fontName="oswald_regular.ttf" />
+                    android:textColor="@color/app_grey" />
 
                 <RadioGroup
                     android:id="@+id/radioGroupFamilyType"
@@ -704,9 +696,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/rewards_have_children"
-                    android:textAllCaps="true"
-                    android:textColor="@color/app_grey"
-                    app:fontName="oswald_regular.ttf" />
+                    android:textColor="@color/color_85848A"
+                    android:textSize="16sp"/>
 
                 <RadioGroup
                     android:id="@+id/radioGroupAreMother"
@@ -726,7 +717,8 @@
                         android:layout_alignParentLeft="true"
                         android:buttonTint="@color/app_red"
                         android:text="@string/rewards_yes"
-                        android:textColor="@color/app_light_black" />
+                        android:textColor="@color/campaign_4A4A4A"
+                        android:textSize="16sp"/>
 
                     <androidx.appcompat.widget.AppCompatRadioButton
                         android:id="@+id/radioExpecting"
@@ -749,7 +741,8 @@
                         android:layout_toRightOf="@+id/radioExpecting"
                         android:buttonTint="@color/app_red"
                         android:text="@string/rewards_no"
-                        android:textColor="@color/app_light_black" />
+                        android:textColor="@color/campaign_4A4A4A"
+                        android:textSize="16sp"/>
                 </RadioGroup>
             </RelativeLayout>
 
@@ -767,8 +760,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/rewards_number_of_kids"
                     android:textColor="@color/app_grey"
-                    android:visibility="gone"
-                    app:fontName="oswald_regular.ttf" />
+                    android:visibility="gone" />
 
                 <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/spinnernumberOfKids"
@@ -798,39 +790,53 @@
                     android:visibility="gone" />
             </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/linearKidsDetail"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="@dimen/space_16"
                 android:layout_marginTop="15dp"
-                android:layout_marginRight="16dp"
-                android:orientation="vertical" />
+                android:layout_marginRight="@dimen/space_16"
+                app:cardElevation="@dimen/space_5">
 
-            <include
-                android:id="@+id/layoutDynamicNumberOfKids"
-                layout="@layout/dynamic_child_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="visible"
-                android:layout_marginRight="16dp"
-                android:layout_marginLeft="20dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/textAddChild"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/shape_rectangle_red"
-                android:gravity="center"
-                android:text="+"
-                android:textColor="@color/app_red"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:fontName="oswald_regular.ttf" />
+                    <LinearLayout
+                        android:id="@+id/linearKidsDetail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+
+                    <include
+                        android:id="@+id/layoutDynamicNumberOfKids"
+                        layout="@layout/dynamic_child_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="visible"
+                        app:layout_constraintEnd_toEndOf="@+id/cardview"
+                        app:layout_constraintStart_toStartOf="@+id/cardview" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/textAddChild"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="@dimen/space_20"
+                        android:background="@drawable/shape_rectangle_red"
+                        android:gravity="center"
+                        android:paddingLeft="@dimen/space_20"
+                        android:paddingTop="@dimen/space_10"
+                        android:paddingRight="@dimen/space_20"
+                        android:paddingBottom="@dimen/space_10"
+                        android:text="Add+"
+                        android:textColor="@color/app_red"
+                        android:textSize="18sp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
             <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/checkAreYouExpecting"
@@ -843,9 +849,8 @@
                 android:paddingEnd="15dp"
                 android:paddingRight="15dp"
                 android:text="@string/rewards_are_expecing"
-                android:textAllCaps="true"
-                android:textColor="@color/app_grey"
-                app:fontName="open_sans.ttf"
+                android:textColor="@color/color_85848A"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/gender" />
 
@@ -862,9 +867,9 @@
                     android:id="@+id/textDateOfDelivery"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/rewards_expected_date_delivery"
-                    android:textColor="@color/app_grey"
-                    app:fontName="oswald_regular.ttf" />
+                    android:text="@string/profile_expected_date_delivery"
+                    android:textColor="@color/color_85848A"
+                    android:textSize="16sp" />
 
                 <com.mycity4kids.widget.CustomFontEditText
                     android:id="@+id/editExpectedDate"
@@ -881,9 +886,8 @@
                     android:paddingLeft="15dp"
                     android:paddingTop="15dp"
                     android:paddingBottom="15dp"
-                    android:textColor="@color/app_light_black"
-                    android:textSize="16dp"
-                    app:fontName="oswald_regular.ttf" />
+                    android:textColor="@color/campaign_4A4A4A"
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:layout_width="14dp"
@@ -905,7 +909,7 @@
                 android:background="@drawable/shape_rectangle_light_red"
                 android:paddingTop="@dimen/space_10"
                 android:paddingBottom="@dimen/space_10"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/referHeader"
@@ -988,6 +992,7 @@
                     android:text="Apply"
                     android:textColor="@color/app_red"
                     android:textSize="14sp"
+                    android:visibility="gone"
                     app:fontName="oswald_regular.ttf" />
 
                 <com.mycity4kids.widget.CustomFontTextView
@@ -1040,9 +1045,8 @@
             android:layout_marginBottom="@dimen/space_15"
             android:background="@color/app_red"
             android:gravity="center"
-            android:text="@string/save_continue"
+            android:text="@string/complete_blogger_profile.save"
             android:textColor="@color/white"
-            android:textSize="18sp"
-            app:fontName="oswald_regular.ttf" />
+            android:textSize="22sp" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

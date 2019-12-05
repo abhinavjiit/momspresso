@@ -2,14 +2,14 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="oval">
-            <solid android:color="@color/color_23CAAD" />
+            <solid android:color="@color/white" />
             <size android:height="@dimen/space_13" android:width="@dimen/space_13"/>
         </shape>
     </item>
     <item
         android:width="@dimen/space_8"
         android:height="@dimen/space_8"
-        android:drawable="@drawable/tick"
+        android:drawable="@drawable/green_tick"
         android:gravity="center">
 
     </item>

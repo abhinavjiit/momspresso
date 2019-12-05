@@ -150,7 +150,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
                 featureOnRecyclerAdapter.notifyDataSetChanged();
             }
         } else {
-            if (nextPageNumber == 1) {
+            if (nextPageNumber == 0) {
                 finalFeaturedDataList = userCollectionsListModel;
             } else {
                 finalFeaturedDataList.addAll(userCollectionsListModel);

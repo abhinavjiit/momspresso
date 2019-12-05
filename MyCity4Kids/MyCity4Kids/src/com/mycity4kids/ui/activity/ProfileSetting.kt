@@ -2,6 +2,7 @@ package com.mycity4kids.ui.activity
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -11,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.browser.customtabs.CustomTabsIntent
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -155,8 +157,7 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
             R.id.backImageView -> onBackPressed()
             R.id.personal_info -> {
                 val personalIntent = Intent(this, RewardsContainerActivity::class.java)
-                personalIntent.putExtra("pageLimit", 1)
-                personalIntent.putExtra("pageNumber", 1)
+                personalIntent.putExtra("showProfileInfo", true)
                 startActivity(personalIntent)
             }
             R.id.mymoney_info -> {
@@ -188,8 +189,9 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
             //                startActivity(subscribeTopicIntent);
             //                break;
             R.id.help -> {
-                val intent1 = Intent(this, LoadWebViewActivity::class.java)
+                val intent1 = Intent(this, ProfileWebViewActivity::class.java)
                 intent1.putExtra(Constants.WEB_VIEW_URL, "https://www.momspresso.com/home/faq")
+                intent1.putExtra("title","Help")
                 startActivity(intent1)
             }
             R.id.report_spam -> {
@@ -197,8 +199,9 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
                 startActivity(spamIntent)
             }
             R.id.about -> {
-                val intent1 = Intent(this, LoadWebViewActivity::class.java)
+                val intent1 = Intent(this, ProfileWebViewActivity::class.java)
                 intent1.putExtra(Constants.WEB_VIEW_URL, "https://www.momspresso.com/aboutus")
+                intent1.putExtra("title","About")
                 startActivity(intent1)
             }
             R.id.logout_layout -> logoutUser()
