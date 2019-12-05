@@ -74,7 +74,7 @@
                 android:text="@string/personal_info"
                 android:textColor="@color/campaign_4A4A4A"
                 android:textSize="16sp"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/edit_Profile"
@@ -87,7 +87,8 @@
                 android:drawablePadding="@dimen/space_20"
                 android:text="Edit profile"
                 android:textColor="@color/campaign_4A4A4A"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="gone"/>
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/mymoney_info"
