@@ -165,10 +165,9 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
                 startActivity(personalIntent)
             }
             R.id.mymoney_info -> {
-                val intent = Intent(this, EditProfileNewActivity::class.java)
-                intent.putExtra("isComingfromCampaign", true)
-                intent.putExtra("isRewardAdded", isRewardAdded)
-                startActivity(intent)
+                val moneyIntent = Intent(this, MyTotalEarningActivity::class.java)
+                moneyIntent.putExtra("totalPayout", totalPayout)
+                startActivity(moneyIntent)
             }
             R.id.payment_details -> {
                 val paymentIntent = Intent(this, RewardsContainerActivity::class.java)

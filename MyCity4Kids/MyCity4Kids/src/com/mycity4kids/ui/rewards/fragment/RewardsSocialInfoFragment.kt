@@ -316,7 +316,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
 
         layoutFacebook.setOnClickListener {
             if (ConnectivityUtils.isNetworkEnabled(activity)) {
-                showProgressDialog(getString(R.string.please_wait))
+                (activity as RewardsContainerActivity).showProgressDialog(getString(R.string.please_wait))
                 FacebookUtils.facebookLogin(activity, this)
             } else {
                 (activity as BaseActivity).showToast(getString(R.string.error_network))
@@ -325,7 +325,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
 
         editFacebook.setOnClickListener {
             if (ConnectivityUtils.isNetworkEnabled(activity)) {
-                showProgressDialog(getString(R.string.please_wait))
+                (activity as RewardsContainerActivity).showProgressDialog(getString(R.string.please_wait))
                 FacebookUtils.facebookLogin(activity, this)
             } else {
                 (activity as RewardsContainerActivity).showToast(getString(R.string.error_network))
