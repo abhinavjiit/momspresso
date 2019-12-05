@@ -230,11 +230,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include layout="@layout/mainshimmer_layout" />
+            <include layout="@layout/edit_collection_shimmer_layout" />
 
-            <include layout="@layout/mainshimmer_layout" />
-
-            <include layout="@layout/mainshimmer_layout" />
 
         </LinearLayout>
 

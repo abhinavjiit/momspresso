@@ -25,6 +25,11 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.viewpager.widget.ViewPager;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -72,10 +77,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.viewpager.widget.ViewPager;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -105,7 +106,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
     private String mCurrentPhotoPath, absoluteImagePath;
     private Uri imageUri;
     private String isRewardsAdded = "0";
-    private boolean isComingFromReward, isComingfromCampaign = false;
+    private boolean isComingFromReward = false, isComingfromCampaign = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +125,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         Intent intent = getIntent();
 
@@ -234,6 +236,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                     }
                     viewPagerAdapter = new UserProfilePagerAdapter(getSupportFragmentManager(), userDetails, mDatalist, isRewardsAdded, EditProfileNewActivity.this);
                     viewPager.setAdapter(viewPagerAdapter);
+
                     if (isComingFromReward) {
                         viewPager.setCurrentItem(1);
                         saveTextView.setVisibility(View.GONE);
@@ -242,18 +245,18 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                         saveTextView.setVisibility(View.GONE);
                     } else {
                         viewPager.setCurrentItem(0);
+                        saveTextView.setVisibility(View.VISIBLE);
                     }
-
                     viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
                     tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                         @Override
                         public void onTabSelected(TabLayout.Tab tab) {
-                            if (tab.getPosition() == 1) {
-                                saveTextView.setVisibility(View.GONE);
-                            } else {
-                                saveTextView.setVisibility(View.VISIBLE);
-                            }
                             viewPager.setCurrentItem(tab.getPosition());
+                            if (tab.getPosition() == 0) {
+                                saveTextView.setVisibility(View.VISIBLE);
+                            } else {
+                                saveTextView.setVisibility(View.GONE);
+                            }
                         }
 
                         @Override
@@ -264,6 +267,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                         @Override
                         public void onTabReselected(TabLayout.Tab tab) {
                             viewPager.setCurrentItem(tab.getPosition());
+
                         }
                     });
                 } else {
@@ -449,9 +453,9 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
-            default:
-                return super.onOptionsItemSelected(item);
+                break;
         }
+        return true;
     }
 
     @Override

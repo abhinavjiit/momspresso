@@ -180,6 +180,7 @@ class UsersBookmarksAdapter(private val mListener: RecyclerViewClickListener) : 
             removeBookmarkTextView = itemView.findViewById<View>(R.id.removeBookmarkTextView) as TextView
             shareImageView = itemView.findViewById<View>(R.id.shareImageView) as ImageView
             itemTypeImageView.setImageResource(R.drawable.ic_video)
+            removeBookmarkTextView.visibility = View.GONE
             shareImageView.setOnClickListener(this)
             removeBookmarkTextView.setOnClickListener(this)
             itemView.setOnClickListener(this)

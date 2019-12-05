@@ -30,7 +30,7 @@
                 android:drawableLeft="@drawable/back_arroow"
                 android:drawablePadding="@dimen/space_10"
                 android:drawableTint="@color/black"
-                android:text="Add thumbnail"
+                android:text="@string/add_thumbnail"
                 android:textColor="@color/user_activities.toolbar.title"
                 android:textSize="20sp"
                 android:textStyle="bold" />

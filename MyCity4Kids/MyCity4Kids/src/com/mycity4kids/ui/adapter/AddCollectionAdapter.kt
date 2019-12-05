@@ -26,7 +26,7 @@ const val EDIT_COLLECTION_ITEM_TYPE = 1
 class AddCollectionAdapter(val activity: Context, var recyclerViewClickListner: RecyclerViewClickListener, var adapterViewType: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var mInflater: LayoutInflater = BaseApplication.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    var collectionList = ArrayList<UserCollectionsModel>()
+    private var collectionList = ArrayList<UserCollectionsModel>()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -55,28 +55,29 @@ class AddCollectionAdapter(val activity: Context, var recyclerViewClickListner: 
             }
         } else if (holder is ViewHolderCollectionItem) {
             holder.collectionTitle.text = collectionList[position].item_info.title
-
-            if (AppConstants.ARTICLE_COLLECTION_TYPE.equals(collectionList[position].itemType)) {
-                try {
-                    Picasso.with(activity).load(collectionList[position].item_info.imageUrl.thumbMax).placeholder(R.drawable.default_article).into(holder.collectionItemImageVIEW)
-                } catch (e: Exception) {
-                    holder.collectionItemImageVIEW.setBackgroundResource(R.drawable.default_article);
+            when (collectionList[position].itemType) {
+                AppConstants.ARTICLE_COLLECTION_TYPE -> {
+                    try {
+                        Picasso.with(activity).load(collectionList[position].item_info.imageUrl.thumbMax).into(holder.collectionItemImageVIEW)
+                    } catch (e: Exception) {
+                        holder.collectionItemImageVIEW.setBackgroundResource(R.drawable.default_article);
+                    }
                 }
-
-            } else if (AppConstants.SHORT_STORY_COLLECTION_TYPE.equals(collectionList[position].itemType)) {
-                try {
-                    Picasso.with(activity).load(collectionList[position].item_info.storyImage)
-                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.collectionItemImageVIEW)
-                } catch (e: Exception) {
-                    holder.collectionItemImageVIEW.setImageResource(R.drawable.default_article)
+                AppConstants.SHORT_STORY_COLLECTION_TYPE -> {
+                    try {
+                        Picasso.with(activity).load(collectionList[position].item_info.storyImage)
+                                .into(holder.collectionItemImageVIEW)
+                    } catch (e: Exception) {
+                        holder.collectionItemImageVIEW.setImageResource(R.drawable.default_article)
+                    }
                 }
-            } else {
-
-                try {
-                    Picasso.with(activity).load(collectionList[position].item_info.thumbnail)
-                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.collectionItemImageVIEW)
-                } catch (e: Exception) {
-                    holder.collectionItemImageVIEW.setImageResource(R.drawable.default_article)
+                AppConstants.VIDEO_COLLECTION_TYPE -> {
+                    try {
+                        Picasso.with(activity).load(collectionList[position].item_info.thumbnail)
+                                .into(holder.collectionItemImageVIEW)
+                    } catch (e: Exception) {
+                        holder.collectionItemImageVIEW.setImageResource(R.drawable.default_article)
+                    }
                 }
             }
 
@@ -100,6 +101,9 @@ class AddCollectionAdapter(val activity: Context, var recyclerViewClickListner: 
             ADD_COLLECTION_TYPE
     }
 
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
 
     fun setListData(listData: ArrayList<UserCollectionsModel>) {
         collectionList = listData

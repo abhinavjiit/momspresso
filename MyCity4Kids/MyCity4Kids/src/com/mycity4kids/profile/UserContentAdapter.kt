@@ -30,6 +30,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         this.mixFeedList = mixFeedList
     }
 
+
     override fun getItemViewType(position: Int): Int {
         return when {
             AppConstants.CONTENT_TYPE_CREATE_SECTION == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_CREATE

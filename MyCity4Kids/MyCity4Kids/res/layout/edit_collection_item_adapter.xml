@@ -11,7 +11,7 @@
         android:layout_height="85dp"
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/space_10"
-        android:src="@drawable/default_article" />
+        android:scaleType="centerCrop" />
 
 
     <RelativeLayout

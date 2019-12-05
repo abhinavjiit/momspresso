@@ -219,6 +219,7 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
             mDatalist = responseData.getData().getResult();
 
             if (mDatalist.size() == 0) {
+                noResultTextView.setText(getResources().getString(R.string.empty_followers_in_profile));
                 noResultTextView.setVisibility(View.VISIBLE);
                 followerFollowingListView.setVisibility(View.GONE);
             } else {
@@ -237,6 +238,7 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
             mDatalist = responseData.getData().getResult();
             collectionDatalist.addAll(mDatalist);
             if (collectionDatalist.size() == 0) {
+                noResultTextView.setText(getResources().getString(R.string.empty_followers_in_collection));
                 noResultTextView.setVisibility(View.VISIBLE);
                 collectionFollowFollowingListView.setVisibility(View.GONE);
             } else {

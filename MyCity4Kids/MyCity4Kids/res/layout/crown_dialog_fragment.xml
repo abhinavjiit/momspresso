@@ -7,52 +7,52 @@
     android:background="@drawable/custom_dialog_bg"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/sharableCardContainer"
+    <com.mycity4kids.profile.CrownShareCardWidget
+        android:id="@+id/crownSharableCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:orientation="vertical">
+        android:visibility="invisible" />
 
-        <RelativeLayout
-            android:id="@+id/imagesContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+    <RelativeLayout
+        android:id="@+id/imagesContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/crownBgImageView"
-                android:layout_width="250dp"
-                android:layout_height="200dp"
-                android:layout_centerHorizontal="true"
-                android:scaleType="fitXY" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/crownBgImageView"
+            android:layout_width="250dp"
+            android:layout_height="200dp"
+            android:layout_centerHorizontal="true"
+            android:scaleType="fitXY" />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/crownImageView"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_centerInParent="true"
-                android:scaleType="fitXY" />
-        </RelativeLayout>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/crownImageView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerInParent="true"
+            android:scaleType="fitXY" />
+    </RelativeLayout>
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/crownTitleTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="10dp"
-            android:gravity="center"
-            android:text=""
-            android:textColor="@color/color_465391"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/crownTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imagesContainer"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="center"
+        android:text=""
+        android:textColor="@color/color_465391"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/crownDescTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/sharableCardContainer"
+        android:layout_below="@+id/crownTitleTextView"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"

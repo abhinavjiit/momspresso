@@ -189,7 +189,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
     fun getUserCollectionItems(start: Int) {
         BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getUserCollectionItems(collectionId, start, 10).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
             override fun onComplete() {
-
             }
 
             override fun onSubscribe(d: Disposable) {
@@ -200,11 +199,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                     if (response.code == 200 && response.status == Constants.SUCCESS && response.data?.result != null) {
                         userCollectionsListModel = response.data!!.result
                         if (start == 0) {
-                            if (userCollectionsListModel.collectionItems.isEmpty()) {
-                                itemNotAddedTextView.visibility = View.VISIBLE
-                            } else {
-                                itemNotAddedTextView.visibility = View.GONE
-                            }
                             collectionNameTextView?.text = userCollectionsListModel.name
                             if (userCollectionsListModel.isPublic) {
                                 muteSwitch?.isChecked = true
@@ -216,6 +210,12 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                                 followersTextView.isClickable = true
                                 rightArrow.visibility = View.GONE
                                 followFollowingTextView.visibility = View.GONE
+                                if (userCollectionsListModel.collectionItems.isEmpty()) {
+                                    itemNotAddedTextView.visibility = View.VISIBLE
+                                    itemNotAddedTextView.text = getString(R.string.no_collection_item_text)
+                                } else {
+                                    itemNotAddedTextView.visibility = View.GONE
+                                }
                                 if (userCollectionsListModel.collectionType != 0) {
                                     setting.visibility = View.GONE
                                     muteSwitch?.visibility = View.GONE
@@ -236,6 +236,12 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                                         userCollectionsListModel.userId, "UserCollectionItemListActivity")
                             } else {
                                 share?.visibility = View.GONE
+                                if (userCollectionsListModel.collectionItems.isEmpty()) {
+                                    itemNotAddedTextView.visibility = View.VISIBLE
+                                    itemNotAddedTextView.text = getString(R.string.no_collection_items)
+                                } else {
+                                    itemNotAddedTextView.visibility = View.GONE
+                                }
                                 followersCount.isClickable = false
                                 followersTextView.isClickable = false
                                 rightArrow.visibility = View.GONE
@@ -263,13 +269,9 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                         dataList.addAll(userCollectionsListModel.collectionItems)
                         collectionItemsListAdapter.setListData(dataList)
                         collectionItemsListAdapter.notifyDataSetChanged()
-
-
                     } else {
                         ToastUtils.showToast(this@UserCollectionItemListActivity, response.data?.msg)
-
                     }
-
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
                     Log.d("MC4KException", Log.getStackTraceString(e))
@@ -520,7 +522,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
 
 
     override fun onBackPressed() {
-
         val intent = Intent()
         intent.putExtra(AppConstants.COLLECTION_EDIT_TYPE, editType)
         intent.putExtra("collectionName", collectionNameTextView?.text.toString())

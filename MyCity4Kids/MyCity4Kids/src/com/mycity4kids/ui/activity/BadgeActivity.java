@@ -87,21 +87,21 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
         getBadgeList();
         showProgressDialog(getString(R.string.please_wait));
 
-        gridview.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-                boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
-                    mLodingView.setVisibility(View.VISIBLE);
-                    isReuqestRunning = true;
-                }
-            }
-        });
+//        gridview.setOnScrollListener(new AbsListView.OnScrollListener() {
+////            @Override
+////            public void onScrollStateChanged(AbsListView absListView, int i) {
+////            }
+////
+////            @Override
+////            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+////
+////                boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
+////                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
+////                    mLodingView.setVisibility(View.VISIBLE);
+////                    isReuqestRunning = true;
+////                }
+////            }
+////        });
     }
 
     private void getBadgeList() {
