@@ -119,7 +119,7 @@
             android:layout_marginRight="15dp"
             android:background="@drawable/mainprofile_thin_border">
 
-            <com.mycity4kids.widget.CustomFontTextView
+            <com.mycity4kids.widget.CustomFontEditText
                 android:id="@+id/emailTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

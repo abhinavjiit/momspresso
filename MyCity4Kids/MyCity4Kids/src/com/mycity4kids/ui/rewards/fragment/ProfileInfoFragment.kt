@@ -160,7 +160,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
     private lateinit var labelLastName: TextView
     private lateinit var editPhone: TextView
     private lateinit var editAddNumber: TextView
-    private lateinit var editEmail: TextView
+    private lateinit var editEmail: EditText
     private lateinit var referralMainLayout: RelativeLayout
     private lateinit var editReferralCode: EditText
     private lateinit var textReferCodeError: TextView
