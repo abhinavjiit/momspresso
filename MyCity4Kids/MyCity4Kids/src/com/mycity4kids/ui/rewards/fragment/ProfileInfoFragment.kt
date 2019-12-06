@@ -289,30 +289,6 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
     }
 
     private fun setValuesToComponents() {
-//        isNewRegistration = apiGetResponse.rewardsAdded == 0
-        /*if (apiGetResponse.rewardsAdded.equals("1")) {
-            referralMainLayout.visibility = View.GONE
-        } else {
-            referralMainLayout.visibility = View.VISIBLE
-        }*/
-
-        if (apiGetResponse.rewardsAdded.equals("0")) {
-            labelFirstName.visibility = View.GONE
-            labelLastName.visibility = View.GONE
-            editFirstName.visibility = View.GONE
-            editLastName.visibility = View.GONE
-            layoutWorking.visibility = View.GONE
-            editKidsName.visibility = View.GONE
-        }
-
-        /*if (!referralCode.trim().isNullOrEmpty()) {
-            editReferralCode.setText(referralCode)
-            editReferralCode.isEnabled = true
-            //  apiGetResponse.referred_by = referralCode
-        } else {
-            apiGetResponse.referred_by = null
-        }*/
-
         if (!apiGetResponse.firstName.isNullOrBlank()) editFirstName.setText(apiGetResponse.firstName)
         if (!apiGetResponse.lastName.isNullOrBlank()) editLastName.setText(apiGetResponse.lastName)
         if (!apiGetResponse.mobile.isNullOrBlank()) {
@@ -347,7 +323,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
                 checkJoint.isChecked = true
             }
         }*/
-        if (apiGetResponse.rewardsAdded.equals("1") && apiGetResponse.preferredLanguages != null && apiGetResponse.preferredLanguages!!.size > 0) {
+        if (apiGetResponse.preferredLanguages != null && apiGetResponse.preferredLanguages!!.size > 0) {
             floatingLanguage.removeAllViews()
             textEditLanguage.visibility = View.VISIBLE
             editLanguage.visibility = View.GONE
@@ -364,14 +340,14 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
                 }
             }
         } else {
-            langLayout.visibility = View.GONE
-            editLanguage.visibility = View.GONE
+//            langLayout.visibility = View.GONE
+//            editLanguage.visibility = View.GONE
             linearLanguage.visibility = View.GONE
             textEditLanguage.visibility = View.GONE
 
         }
 
-        if (apiGetResponse.rewardsAdded.equals("1") && apiGetResponse.interests != null && apiGetResponse.interests!!.isNotEmpty()) {
+        if (apiGetResponse.interests != null && apiGetResponse.interests!!.isNotEmpty()) {
             floatingInterest.removeAllViews()
             textEditInterest.visibility = View.VISIBLE
             editInterest.visibility = View.GONE
@@ -388,8 +364,8 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
                 }
             }
         } else {
-            interestLayout.visibility = View.GONE
-            editInterest.visibility = View.GONE
+//            interestLayout.visibility = View.GONE
+//            editInterest.visibility = View.GONE
             linearInterest.visibility = View.GONE
             textEditInterest.visibility = View.GONE
 
@@ -410,15 +386,15 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
         }
 
         if (apiGetResponse.gender != null) {
-            val selectionPosition = spinAdapter.getPosition(apiGetResponse.gender);
+            val selectionPosition = spinAdapter.getPosition(StringUtils.firstLetterToUpperCase(apiGetResponse.gender));
             genderSpinner.setSelection(selectionPosition)
         }
         if (apiGetResponse.dob != null) {
-            textDOB.setText(DateTimeUtils.getKidsDOBNanoMilliTimestamp(apiGetResponse.dob))
+            textDOB.setText(DateTimeUtils.getDOBMilliTimestamp(apiGetResponse.dob))
         }
 
         if (apiGetResponse.isExpected != null && apiGetResponse.isExpected.equals("1") && !apiGetResponse.expectedDate.isNullOrEmpty()) {
-            editExpectedDate.setText(DateTimeUtils.getKidsDOBNanoMilliTimestamp(apiGetResponse.expectedDate))
+            editExpectedDate.setText(DateTimeUtils.getDOBMilliTimestamp(apiGetResponse.expectedDate))
             checkAreYouExpecting.isChecked = true
             layoutMotherExptectedDate.visibility = View.VISIBLE
         } else {
@@ -428,9 +404,9 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
         if (apiGetResponse.kids != null && apiGetResponse.kids!!.isNotEmpty()) {
             for (i in 0..apiGetResponse.kids!!.size - 1) {
                 if (i == 0 && apiGetResponse.kids!!.size == 1) {
-                    createKidsDetailDynamicView(apiGetResponse.kids!!.get(i).gender!!, DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + apiGetResponse.kids!!.get(i).getBirthDay()), apiGetResponse.kids!!.get(i).name, false)
+                    createKidsDetailDynamicView(apiGetResponse.kids!!.get(i).gender!!, DateTimeUtils.getDOBMilliTimestamp(apiGetResponse.kids!!.get(i).getBirthDay()), apiGetResponse.kids!!.get(i).name, false)
                 } else {
-                    createKidsDetailDynamicView(apiGetResponse.kids!!.get(i).gender!!, DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + apiGetResponse.kids!!.get(i).getBirthDay()), apiGetResponse.kids!!.get(i).name)
+                    createKidsDetailDynamicView(apiGetResponse.kids!!.get(i).gender!!, DateTimeUtils.getDOBMilliTimestamp(apiGetResponse.kids!!.get(i).getBirthDay()), apiGetResponse.kids!!.get(i).name)
                 }
             }
             linearKidsEmptyView.visibility = View.GONE
@@ -865,14 +841,14 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
 
 
     fun prepareDataForPosting(): Boolean {
-        if (apiGetResponse.rewardsAdded.equals("1") && editFirstName.text.trim().isEmpty()) {
+        if (editFirstName.text.trim().isEmpty()) {
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_first_name)), Toast.LENGTH_SHORT).show()
             return false
         } else {
             apiGetResponse.firstName = editFirstName.text.toString()
         }
 
-        if (apiGetResponse.rewardsAdded.equals("1") && editLastName.text.trim().isEmpty()) {
+        if (editLastName.text.trim().isEmpty()) {
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_last_name)), Toast.LENGTH_SHORT).show()
             return false
         } else {
@@ -890,18 +866,17 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
 //            apiGetResponse.contact = "9999999999"
 //        }
 
-        if (accountKitAuthCode.trim().isEmpty() && apiGetResponse.mobile.trim().isEmpty()) {
+        if (accountKitAuthCode.trim().isEmpty()) {
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_phone)), Toast.LENGTH_SHORT).show()
             return false
         } else {
-            if (!apiGetResponse.mobile.trim().isEmpty()) {
-                apiGetResponse.mobile = apiGetResponse.mobile
-                apiGetResponse.mobileToken = ""
-            } else if (!accountKitAuthCode.trim().isEmpty()) {
+            if (!accountKitAuthCode.trim().isEmpty()) {
                 apiGetResponse.mobileToken = accountKitAuthCode
-                apiGetResponse.mobile = ""
+//                 apiGetResponse.mobile = edit
             }
         }
+
+
 
         if (isvalid()) {
             apiGetResponse.email = editEmail.text.toString().trim()
@@ -938,14 +913,14 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_dob)), Toast.LENGTH_SHORT).show()
             return false
         } else {
-            apiGetResponse.dob = DateTimeUtils.convertStringToTimestamp(textDOB.text.toString()).toString()
+            apiGetResponse.dob = DateTimeUtils.convertStringToMilliTimestamp(textDOB.text.toString()).toString()
         }
 
 
         preSelectedLanguage.removeAll(Collections.singleton(""))
 
 
-        if (apiGetResponse.rewardsAdded.equals("1") && preSelectedLanguage.isEmpty()) {
+        if (preSelectedLanguage.isEmpty()) {
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_language)), Toast.LENGTH_SHORT).show()
             return false
         } else {
@@ -976,7 +951,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
                 return false
             } else {
                 apiGetResponse.isExpected = "1"
-                apiGetResponse.expectedDate = DateTimeUtils.convertStringToTimestamp(editExpectedDate.text.toString()).toString()
+                apiGetResponse.expectedDate = DateTimeUtils.convertStringToMilliTimestamp(editExpectedDate.text.toString()).toString()
             }
         } else {
             apiGetResponse.isExpected = "0"
@@ -994,7 +969,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
                         } else {
                             "Female"
                         }
-                        kidsInfoResponse.birthDay = DateTimeUtils.convertStringToTimestamp(linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textKidsDOB).text.toString()).toString()
+                        kidsInfoResponse.birthDay = DateTimeUtils.convertStringToMilliTimestamp(linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textKidsDOB).text.toString()).toString()
                         kidsInfoResponse.name = linearKidsDetail.getChildAt(i).findViewById<EditText>(R.id.editKidsName).text.toString()
                         kidsList.add(kidsInfoResponse)
                     }
@@ -1005,11 +980,11 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
                     if (!textKidsDOB.text.trim().isEmpty()) {
                         var kidsInfoResponse = KidsModel()
                         kidsInfoResponse.gender = if (spinnerGender.selectedItemPosition == 0) {
-                            "0"
+                            "Male"
                         } else {
-                            "1"
+                            "Female"
                         }
-                        kidsInfoResponse.birthDay = DateTimeUtils.convertStringToTimestamp(textKidsDOB.text.toString()).toString()
+                        kidsInfoResponse.birthDay = DateTimeUtils.convertStringToMilliTimestamp(textKidsDOB.text.toString()).toString()
                         kidsInfoResponse.name = editKidsName.text.toString()
                         apiGetResponse.kids!!.add(kidsInfoResponse)
                     } else {
@@ -1022,11 +997,11 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
                     var kidsInfoLocal = ArrayList<KidsModel>()
                     var kidsInfoResponse = KidsModel()
                     kidsInfoResponse.gender = if (spinnerGender.selectedItemPosition == 0) {
-                        "0"
+                        "Male"
                     } else {
-                        "1"
+                        "Female"
                     }
-                    kidsInfoResponse.birthDay = DateTimeUtils.convertStringToTimestamp(textKidsDOB.text.toString()).toString()
+                    kidsInfoResponse.birthDay = DateTimeUtils.convertStringToMilliTimestamp(textKidsDOB.text.toString()).toString()
                     kidsInfoResponse.name = editKidsName.text.toString()
                     kidsInfoLocal.add(kidsInfoResponse)
                     apiGetResponse.kids = kidsInfoLocal

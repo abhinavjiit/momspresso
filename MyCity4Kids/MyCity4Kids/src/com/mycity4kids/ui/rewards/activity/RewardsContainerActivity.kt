@@ -87,11 +87,13 @@ class RewardsContainerActivity : BaseActivity(),
     private var isComingfromCampaign = false
     private var showProfileInfo = false
     private lateinit var root: RelativeLayout
+    private lateinit var toolbarTitle: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rewards_container)
         root = findViewById(R.id.root)
+        toolbarTitle = findViewById(R.id.toolbarTitle)
         (application as BaseApplication).view = root
 
         (application as BaseApplication).activity = this
@@ -154,7 +156,8 @@ class RewardsContainerActivity : BaseActivity(),
             changePreferredLanguageDialogFragment.isCancelable = true
             changePreferredLanguageDialogFragment.show(fm, "Choose video option")
         }
-        findViewById<TextView>(R.id.toolbarTitle).setOnClickListener {
+
+        toolbarTitle.setOnClickListener {
             onBackPressed()
         }
     }
@@ -172,6 +175,7 @@ class RewardsContainerActivity : BaseActivity(),
     }
 
     private fun addProfileInfoFragment() {
+        toolbarTitle.setText(resources.getString(R.string.personal_info))
         profileInfoFragment = ProfileInfoFragment()
         val rewardFrag = profileInfoFragment as Fragment
         supportFragmentManager.beginTransaction().replace(R.id.container, rewardFrag,
@@ -181,6 +185,7 @@ class RewardsContainerActivity : BaseActivity(),
 
     private fun addSocialFragment() {
         if (pageLimit!! >= 3) {
+            toolbarTitle.setText(resources.getString(R.string.social_accounts))
             rewardsSocialInfoFragment = RewardsSocialInfoFragment.newInstance(isComingFromRewards = true)
             val rewardFrag = rewardsSocialInfoFragment as Fragment
             supportFragmentManager.beginTransaction().replace(R.id.container, rewardFrag,
@@ -196,7 +201,7 @@ class RewardsContainerActivity : BaseActivity(),
 
     private fun addPaymentModesFragment() {
         if (pageLimit!! >= 4) {
-
+            toolbarTitle.setText(resources.getString(R.string.payment_details))
             paymentModesFragment = CampaignPaymentModesFragment.newInstance(isComingFromRewards = true)
             val paymentFrag = paymentModesFragment as Fragment
             supportFragmentManager.beginTransaction().replace(R.id.container, paymentFrag,

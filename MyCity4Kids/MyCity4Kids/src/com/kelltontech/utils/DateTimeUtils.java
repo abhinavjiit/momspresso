@@ -4,8 +4,6 @@ import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.util.Log;
 
-import com.mycity4kids.application.BaseApplication;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -109,11 +107,11 @@ public class DateTimeUtils {
         fields[2] = calendar.get(Calendar.DAY_OF_MONTH);
         /*
          * fields[3] = calendar.get(Calendar.HOUR_OF_DAY); fields[4] =
-		 * calendar.get(Calendar.MINUTE); fields[5] =
-		 * calendar.get(Calendar.SECOND); fields[6] =
-		 * calendar.get(Calendar.MILLISECOND); fields[7] =
-		 * calendar.get(Calendar.DAY_OF_WEEK);
-		 */
+         * calendar.get(Calendar.MINUTE); fields[5] =
+         * calendar.get(Calendar.SECOND); fields[6] =
+         * calendar.get(Calendar.MILLISECOND); fields[7] =
+         * calendar.get(Calendar.DAY_OF_WEEK);
+         */
         return fields;
     }
 
@@ -296,6 +294,18 @@ public class DateTimeUtils {
         }
     }
 
+    public static String getDOBMilliTimestamp(String timeStampStr) {
+
+        try {
+            Long dobTime = Long.parseLong(timeStampStr);
+            java.text.DateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            Date netDate = new Date(dobTime);
+            return sdf.format(netDate);
+        } catch (Exception ex) {
+            return "xx";
+        }
+    }
+
     public static boolean isValidDate(String str_date) {
         try {
             java.text.DateFormat formatter;
@@ -321,6 +331,20 @@ public class DateTimeUtils {
             return 0;
         }
     }
+
+    public static long convertStringToMilliTimestamp(String str_date) {
+        try {
+            java.text.DateFormat formatter;
+            formatter = new SimpleDateFormat("dd-MM-yyyy");
+            // you can change format of date
+            Date date = formatter.parse(str_date);
+            return date.getTime();
+        } catch (ParseException e) {
+            System.out.println("Exception :" + e);
+            return 0;
+        }
+    }
+
 
     public static long getTimestampFromStringDate(String date) {
         java.text.DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
