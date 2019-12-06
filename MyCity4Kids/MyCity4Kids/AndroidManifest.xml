@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="177"
-    android:versionName="12.3.1">
+    android:versionCode="178"
+    android:versionName="12.3.2">
 
     <uses-sdk tools:overrideLibrary="io.branch.referral, com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
     <!-- So that we can get the account name -->
@@ -353,8 +353,8 @@
             android:name=".ui.rewards.activity.RewardsContainerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|layoutDirection"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/Theme.nnn" />
+            android:theme="@style/Theme.nnn"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activity.RankingActivity"
             android:screenOrientation="portrait"
@@ -548,6 +548,7 @@
         <activity
             android:name=".ui.activity.ProfileWebViewActivity"
             android:screenOrientation="portrait" />
+
         <meta-data
             android:name="io.branch.sdk.BranchKey"
             android:value="key_live_kdGnDu8Q4xxqJJoBNp8prlpeAAndQfuJ" />

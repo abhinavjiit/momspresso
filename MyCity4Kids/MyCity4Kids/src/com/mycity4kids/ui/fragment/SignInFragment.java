@@ -10,12 +10,12 @@ import android.widget.RelativeLayout;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
-import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ActivityLogin;
 import com.mycity4kids.ui.activity.CustomSignUpActivity;
+import com.mycity4kids.ui.activity.phoneLogin.SendSMSFragment;
 import com.mycity4kids.widget.CustomFontTextView;
 
 /**
@@ -71,10 +71,14 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
                     count++;
                 }
                 break;
-            case R.id.connect_phone:
+            case R.id.connect_phone: {
                 Utils.pushGenericEvent(getActivity(), "SignIn_phone_click_event", "NA", "SignInFragment");
-                ((ActivityLogin) getActivity()).fbAccountKitVerification();
-                break;
+                SendSMSFragment fragment = new SendSMSFragment();
+                Bundle mBundle = new Bundle();
+                fragment.setArguments(mBundle);
+                ((ActivityLogin) getActivity()).replaceFragmentWithAnimation(fragment, mBundle, true);
+            }
+            break;
             case R.id.connect_facebook:
                 Utils.pushGenericEvent(getActivity(), "SignIn_facebook_click_event", "NA", "SignInFragment");
                 ((ActivityLogin) getActivity()).loginWithFacebook();

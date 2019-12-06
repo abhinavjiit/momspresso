@@ -29,7 +29,6 @@ import com.mycity4kids.azuretts.Synthesizer;
 import com.mycity4kids.azuretts.Voice;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
@@ -113,7 +112,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         final String author = bundle.getString(Constants.AUTHOR);
 
         if (bundle.getBoolean("fromNotification")) {
-            Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, userDynamoId, "Notification Popup", "article_details");
+            Utils.pushNotificationClickEvent(this, "article_details", userDynamoId, "ArticleDetailsContainerActivity");
             Utils.pushViewArticleEvent(this, "Notification", userDynamoId + "", articleId, "Notification Popup", "-1" + "", author);
         } else {
             String listingType = bundle.getString(Constants.ARTICLE_OPENED_FROM);

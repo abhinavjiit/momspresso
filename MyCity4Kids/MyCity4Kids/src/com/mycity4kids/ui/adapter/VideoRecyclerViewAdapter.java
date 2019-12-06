@@ -26,6 +26,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -45,9 +49,6 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.RecyclerView;
 import q.rorbin.badgeview.QBadgeView;
 
 public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
@@ -322,13 +323,15 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 @Override
                 public void onClick(View view) {
                     try {
-                        AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment = new AddCollectionAndCollectionItemDialogFragment();
+                        AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment =
+                                new AddCollectionAndCollectionItemDialogFragment();
                         Bundle bundle = new Bundle();
                         bundle.putString("articleId", mInfoList.get(getAdapterPosition()).getId());
                         bundle.putString("type", AppConstants.VIDEO_COLLECTION_TYPE);
                         addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
-                        //   addCollectionAndCollectionitemDialogFragment.setTargetFragment(F, 0);
                         addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
+                        Utils.pushProfileEvents(mContext, "CTA_Vlog_Add_To_Collection",
+                                "VideoRecyclerViewAdapter", "Add to Collection", "-");
                     } catch (Exception e) {
                         Crashlytics.logException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));

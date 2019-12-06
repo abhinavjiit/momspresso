@@ -6,7 +6,7 @@ import java.util.*
 
 data class MixFeedResponse(
         val code: Int,
-        val data: MixFeedData,
+        val data: MixFeedData?,
         val error: Boolean,
         val error_code: Any,
         val reason: String,
@@ -81,5 +81,6 @@ data class MixFeedResult(
         val winner: Any? = -1,
         val itemType: String = "",
         val collectionList: ArrayList<UserCollectionsModel>? = null,
+        val collectionListTotal: Int = 0,
         var isbookmark: Int = 0
 )

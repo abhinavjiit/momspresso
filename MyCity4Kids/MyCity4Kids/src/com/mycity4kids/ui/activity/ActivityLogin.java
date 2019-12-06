@@ -152,15 +152,15 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    private void phoneLogin(String authCode) {
+    public void phoneLogin(String authCode) {
         loginMode = "phone";
         showProgressDialog(getString(R.string.please_wait));
         Log.d("PhoneToken", authCode);
         PhoneLoginRequest phoneLoginRequest = new PhoneLoginRequest();
-        phoneLoginRequest.setCode(authCode);
+        phoneLoginRequest.setAuth_token(authCode);
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
-        Call<FBPhoneLoginResponse> call = loginRegistrationAPI.loginWithPhone(phoneLoginRequest);
+        Call<FBPhoneLoginResponse> call = loginRegistrationAPI.loginWithPhoneToken(phoneLoginRequest);
         call.enqueue(fbPhoneLoginResponseCallback);
     }
 
@@ -169,7 +169,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         public void onResponse(Call<FBPhoneLoginResponse> call, retrofit2.Response<FBPhoneLoginResponse> response) {
             Log.d("SUCCESS", "" + response);
             removeProgressDialog();
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 showToast(getString(R.string.went_wrong));
                 return;
             }
@@ -186,8 +186,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     } else {
                         loginWithAccount(responseData.getData().get(0).getResult().get(0));
                     }
-
-
                 } else {
                     showToast(responseData.getReason());
                 }
@@ -200,7 +198,8 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
         @Override
         public void onFailure(Call<FBPhoneLoginResponse> call, Throwable t) {
-
+            Log.d("MC4kException", Log.getStackTraceString(t));
+            showToast(getString(R.string.went_wrong));
         }
     };
 

@@ -535,16 +535,37 @@ public class AppConstants {
     public static final String NOTIFICATION_TYPE_CAMPAIGN_PANCARD = "mymoney_pancard";
     public static final String NOTIFICATION_TYPE_CAMPAIGN_CATEGORY_LISTING = "category_listing";
     public static final String NOTIFICATION_TYPE_CAMPAIGN_BANKDETAILS = "mymoney_bankdetails";
-    public static final String NOTIFICATION_NOTIFY_TYPE_MOMSIGHT_REWARDS = "20";
-    public static final String NOTIFICATION_NOTIFY_TYPE_TOPIC = "21";
-    public static final String NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_LISTING = "22";
-    public static final String NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_DETAIL = "23";
-    public static final String NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_SUBMIT_PROOF = "24";
-    public static final String NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_PANCARD = "25";
-    public static final String NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_BANKDETAIL = "26";
-    public static final String NOTIFICATION_NOTIFY_TYPE_VIDEO_CHALLENGE_DETAIL = "27";
-    public static final String NOTIFICATION_NOTIFY_TYPE_COLLECTION_DETAIL = "28";
 
+    public static final String NOTIFICATION_CENTER_APP_SETTINGS = "-1";
+    public static final String NOTIFICATION_CENTER_WEB_VIEW = "0";
+    public static final String NOTIFICATION_CENTER_ARTICLE_DETAIL = "1";
+    public static final String NOTIFICATION_CENTER_PROFILE = "2";
+    public static final String NOTIFICATION_CENTER_UPCOMING_EVENTS = "3"; //Deprecated
+    public static final String NOTIFICATION_CENTER_VIDEO_DETAIL = "4";
+    public static final String NOTIFICATION_CENTER_LAUNCH_EDITOR = "5";
+    public static final String NOTIFICATION_CENTER_SUGGESTED_TOPICS = "6";
+    public static final String NOTIFICATION_CENTER_TODAYS_BEST = "7";
+    public static final String NOTIFICATION_CENTER_SHORT_STORY_LIST = "8";
+    public static final String NOTIFICATION_CENTER_SHORT_STORY_DETAILS = "9";
+    public static final String NOTIFICATION_CENTER_GROUP_MEMBERSHIP = "10";
+    public static final String NOTIFICATION_CENTER_GROUP_NEW_POST = "11";
+    public static final String NOTIFICATION_CENTER_GROUP_NEW_RESPONSE = "12";
+    public static final String NOTIFICATION_CENTER_GROUP_NEW_REPLY = "13";
+    public static final String NOTIFICATION_CENTER_GROUP_ADMIN_MEMBERSHIP = "14";
+    public static final String NOTIFICATION_CENTER_GROUP_ADMIN_REPORTED = "15";
+    public static final String NOTIFICATION_CENTER_GROUP_ADMIN_EDIT_GROUP = "16";
+    public static final String NOTIFICATION_CENTER_GROUP_ADMIN = "17";
+    public static final String NOTIFICATION_CENTER_GROUP_LISTING = "18";
+    public static final String NOTIFICATION_CENTER_CREATE_SECTION = "19";
+    public static final String NOTIFICATION_CENTER_MY_MONEY_PERSONAL_INFO = "20";
+    public static final String NOTIFICATION_CENTER_TOPICS_ARTICLE_LISTING = "21";
+    public static final String NOTIFICATION_CENTER_CAMPAIGN_LISTING = "22";
+    public static final String NOTIFICATION_CENTER_CAMPAIGN_DETAIL = "23";
+    public static final String NOTIFICATION_CENTER_CAMPAIGN_SUBMIT_PROOF = "24";
+    public static final String NOTIFICATION_CENTER_CAMPAIGN_PANCARD = "25";
+    public static final String NOTIFICATION_CENTER_CAMPAIGN_BANKDETAIL = "26";
+    public static final String NOTIFICATION_CENTER_VIDEO_CHALLENGE_DETAIL = "27";
+    public static final String NOTIFICATION_CENTER_COLLECTION_DETAIL = "28";
 
     public static final String FOLLOWING_STATUS_ACTIVITY_RESULT = "followingStatusActivityResult";
     public static final String VIDEO_STATUS_DRAFT = "0";
@@ -711,6 +732,7 @@ public class AppConstants {
     public static final String MILESTONE_DETAIL_REGEX = ".+?(user\\/)[a-zA-Z0-9]+(\\/(milestones\\/))[a-zA-Z0-9]+$";
     public static final String USER_PROFILE_REGEX = ".+?(user\\/)[a-zA-Z0-9]+$";
     public static final String USER_ANALYTICS_REGEX = ".+?(user\\/)[a-zA-Z0-9]+\\/(rank)$";
+    public static final String BADGE_ID = "badgeId";
 
 
     enum SocialPlatformName {

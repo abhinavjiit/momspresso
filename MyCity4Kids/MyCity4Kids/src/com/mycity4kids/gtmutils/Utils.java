@@ -1267,9 +1267,6 @@ public class Utils {
 
     public static void pushEventNotificationClick(Context context, GTMEventType event, String user, String screenName, String notificationType) {
         Log.d("GTMNotification", "" + event + "-" + user + "-" + screenName + "-" + notificationType);
-        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
-        dataLayer.push(DataLayer.mapOf("event", event, GTMTags.USER_ID, user, GTMTags.ScreenName, screenName, GTMTags.Type, notificationType));
-
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
         try {
             JSONObject jsonObject = new JSONObject();
@@ -1369,4 +1366,55 @@ public class Utils {
         }
     }
 
+    public static void pushNotificationClickEvent(Context context, String type, String user, String screenName) {
+        try {
+            MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("screen", screenName);
+                jsonObject.put("type", type);
+                jsonObject.put(GTMTags.Timestamp, String.valueOf(System.currentTimeMillis()));
+                mixpanel.track("PushNotification", jsonObject);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+            Bundle bundle = new Bundle();
+            bundle.putString("userId", user);
+            bundle.putString("screen", screenName);
+            bundle.putString("type", type);
+            bundle.putString(GTMTags.Timestamp, "" + System.currentTimeMillis());
+            bundle.putString(GTMTags.Language, "" + SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()));
+            mFirebaseAnalytics.logEvent("PushNotification", bundle);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void pushNotificationCenterItemClickEvent(Context context, String type, String user, String screenName) {
+        try {
+            MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("screen", screenName);
+                jsonObject.put("type", type);
+                jsonObject.put(GTMTags.Timestamp, String.valueOf(System.currentTimeMillis()));
+                mixpanel.track("NotificationCenterClick", jsonObject);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+            Bundle bundle = new Bundle();
+            bundle.putString("userId", user);
+            bundle.putString("screen", screenName);
+            bundle.putString("type", type);
+            bundle.putString(GTMTags.Timestamp, "" + System.currentTimeMillis());
+            bundle.putString(GTMTags.Language, "" + SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()));
+            mFirebaseAnalytics.logEvent("NotificationCenterClick", bundle);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 }

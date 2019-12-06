@@ -370,7 +370,7 @@
     <string name="myprofile.rank_label">റാങ്ക്</string>
 
     <string name="blogger_profile.follow_button">പിന്തുടരൂ</string>
-    <string name="blogger_profile.rank_in">റാങ്ക് </string>
+    <string name="blogger_profile.rank_in">റാങ്ക് %1$s</string>
     <string name="blogger_profile.unfollow_button">നിങ്ങൾ പിന്തുടരുന്നത്</string>
     <string name="blogger_profile.view_count_label">കാഴ്ചകൾ</string>
     <string name="blogger_profile.article_count_label">പോസ്റ്റുകൾ </string>
@@ -1288,4 +1288,18 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="profile_name_optional">Name (optional)</string>
     <string name="profile_expected_date_delivery">Expected date of delivery</string>
     <string name="mymoney_info">MyMoney Dashboard</string>
+    <string name="profile_empty_created_content">The content you create will show here</string>
+    <string name="profile_empty_bookmarks">The articles you bookmark will show here</string>
+    <string name="profile_empty_featured">Your featured articles will show here</string>
+    <string name="profile_empty_read_article">The articles you have read will show here</string>
+    <string name="profile_empty_read_stories">The stories you have read will show here</string>
+    <string name="profile_empty_seen_videos">The videos you have seen will show here</string>
+    <string name="profile_empty_drafts">All your drafts will show here</string>
+    <string name="profile_empty_following">The people who you follow will show here</string>
+    <string name="login_verify_sms">Verify</string>
+    <string name="login_send_otp">Send OTP</string>
+    <string name="login_enter_mobile_number">Enter your mobile number</string>
+    <string name="login_enter_otp">Please enter OTP below</string>
+    <string name="login_resend_otp">Resend OTP</string>
+    <string name="login_remaining_time">Seconds remaining: %1$d</string>
 </resources>

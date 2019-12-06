@@ -106,6 +106,7 @@ class UserProfileActivity : BaseActivity(),
     private lateinit var sharePublicTextView: TextView
     private lateinit var analyticsTextView: TextView
     private lateinit var followAuthorTextView: TextView
+    private lateinit var emptyListTextView: TextView
     private lateinit var bottomLoadingView: RelativeLayout
 
     private lateinit var badgesContainer: BadgesProfileWidget
@@ -171,6 +172,7 @@ class UserProfileActivity : BaseActivity(),
         followAuthorTextView = findViewById(R.id.followAuthorTextView)
         sharePublicTextView = findViewById(R.id.sharePublicTextView)
         bottomLoadingView = findViewById(R.id.bottomLoadingView)
+        emptyListTextView = findViewById(R.id.emptyListTextView)
         profileShareCardWidget = findViewById(R.id.profileShareCardWidget)
 
         setSupportActionBar(toolbar)
@@ -181,7 +183,7 @@ class UserProfileActivity : BaseActivity(),
         appSettingsImageView.isEnabled = false
 
         authorId = intent.getStringExtra(Constants.USER_ID)
-        deeplinkBadgeId = intent.getStringExtra("badgeId")
+        deeplinkBadgeId = intent.getStringExtra(AppConstants.BADGE_ID)
         profileDetail = intent.getStringExtra("detail")
 
         if (!deeplinkBadgeId.isNullOrBlank()) {
@@ -513,10 +515,9 @@ class UserProfileActivity : BaseActivity(),
             rankContainer.tag = crown
             rankCountTextView.text = "" + responseData.data[0].result.ranks[0].rank
             if (AppConstants.LANG_KEY_ENGLISH == responseData.data[0].result.ranks[0].langKey) {
-                rankLanguageTextView.text = getString(R.string.blogger_profile_rank_in) + " ENGLISH"
+                rankLanguageTextView.text = getString(R.string.blogger_profile_rank_in, "ENGLISH")
             } else {
-                rankLanguageTextView.text = (getString(R.string.blogger_profile_rank_in)
-                        + " " + responseData.data[0].result.ranks[0].langValue.toUpperCase())
+                rankLanguageTextView.text = (getString(R.string.blogger_profile_rank_in, responseData.data[0].result.ranks[0].langValue.toUpperCase()))
             }
         } else {
             rankContainer.setOnClickListener(this)
@@ -556,8 +557,10 @@ class UserProfileActivity : BaseActivity(),
                         if (responseData.data == null && userContentList?.size == 1) {
                             userContentAdapter.setListData(userContentList)
                             userContentAdapter.notifyDataSetChanged()
+                            emptyListTextView.text = getString(R.string.profile_empty_created_content)
+                            emptyListTextView.visibility = View.VISIBLE
                         } else {
-                            processUserContentResponse(responseData.data.result)
+                            processUserContentResponse(responseData.data?.result)
                         }
                     } else {
                     }
@@ -582,8 +585,11 @@ class UserProfileActivity : BaseActivity(),
             } else {
                 userContentAdapter.setListData(userContentList)
                 userContentAdapter.notifyDataSetChanged()
+                emptyListTextView.text = getString(R.string.profile_empty_created_content)
+                emptyListTextView.visibility = View.VISIBLE
             }
         } else {
+            emptyListTextView.visibility = View.GONE
             start += size
             userContentList?.addAll(responseData)
             userContentAdapter.setListData(userContentList)
@@ -607,7 +613,7 @@ class UserProfileActivity : BaseActivity(),
                     }
                     val responseData = response.body()
                     if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-                        processUserBookmarks(responseData.data.result)
+                        processUserBookmarks(responseData.data?.result)
                     } else {
                     }
                 } catch (e: Exception) {
@@ -631,8 +637,11 @@ class UserProfileActivity : BaseActivity(),
             } else {
                 usersBookmarksAdapter.setListData(userBookmarkList)
                 usersBookmarksAdapter.notifyDataSetChanged()
+                emptyListTextView.text = getString(R.string.profile_empty_bookmarks)
+                emptyListTextView.visibility = View.VISIBLE
             }
         } else {
+            emptyListTextView.visibility = View.GONE
             start += size
             userBookmarkList?.addAll(result)
             usersBookmarksAdapter.setListData(userBookmarkList)
@@ -657,7 +666,7 @@ class UserProfileActivity : BaseActivity(),
                         bottomLoadingView.visibility = View.GONE
                         val responseData = response.body() as FeaturedOnModel
                         if (responseData.code == 200 && Constants.SUCCESS == responseData.status) {
-                            processFeaturedContentResponse(responseData.data.result.item_list)
+                            processFeaturedContentResponse(responseData.data?.result?.item_list)
                         } else {
                         }
                     } catch (e: Exception) {
@@ -675,15 +684,18 @@ class UserProfileActivity : BaseActivity(),
         }
     }
 
-    private fun processFeaturedContentResponse(featuredItemList: List<MixFeedResult>) {
+    private fun processFeaturedContentResponse(featuredItemList: List<MixFeedResult>?) {
         if (featuredItemList.isNullOrEmpty()) {
             isLastPageReached = true
             if (!userFeaturedOnList.isNullOrEmpty()) {
             } else {
                 usersFeaturedContentAdapter.setListData(userFeaturedOnList)
                 usersFeaturedContentAdapter.notifyDataSetChanged()
+                emptyListTextView.visibility = View.VISIBLE
+                emptyListTextView.text = getString(R.string.profile_empty_featured)
             }
         } else {
+            emptyListTextView.visibility = View.GONE
             start += size
             userFeaturedOnList?.addAll(featuredItemList)
             usersFeaturedContentAdapter.setListData(userFeaturedOnList)
@@ -730,6 +742,7 @@ class UserProfileActivity : BaseActivity(),
                 if (AppUtils.isPrivateProfile(authorId)) {
                     userContentList?.add(MixFeedResult(contentType = AppConstants.CONTENT_TYPE_CREATE_SECTION))
                 }
+                emptyListTextView.visibility = View.GONE
                 getUsersCreatedContent()
             }
             view?.id == R.id.featuredTab -> {
@@ -740,6 +753,7 @@ class UserProfileActivity : BaseActivity(),
                 userFeaturedOnList?.clear()
                 start = 0
                 isLastPageReached = false
+                emptyListTextView.visibility = View.GONE
                 getFeaturedContent()
                 if (AppUtils.isPrivateProfile(authorId)) {
                     Utils.pushProfileEvents(this, "CTA_Private_Featured_Collections", "UserProfileActivity",
@@ -757,6 +771,7 @@ class UserProfileActivity : BaseActivity(),
                 start = 0
                 isLastPageReached = false
                 recyclerView.adapter = usersBookmarksAdapter
+                emptyListTextView.visibility = View.GONE
                 getUsersBookmark()
                 Utils.pushProfileEvents(this, "CTA_Bookmarks", "UserProfileActivity",
                         "Bookmarks", "-")

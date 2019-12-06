@@ -23,6 +23,7 @@ import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.collectionsModels.AddCollectionRequestModel
 import com.mycity4kids.models.collectionsModels.UpdateCollectionRequestModel
 import com.mycity4kids.models.collectionsModels.UserCollectionsListModel
@@ -80,6 +81,8 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
                 val fm = fragmentManager
                 addCollectionPopUpDialogFragment.setTargetFragment(this, 100)
                 addCollectionPopUpDialogFragment.show(fm!!, "collectionAddPopUp")
+                Utils.pushProfileEvents(activity, "CTA_Add_Collection_From_Content",
+                        "AddCollectionAndCollectionItemDialogFragment", "New collection", "-")
             } catch (e: Exception) {
                 Crashlytics.logException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))

@@ -29,6 +29,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
@@ -128,18 +141,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
@@ -498,7 +499,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
             }
 
-
             @Override
             public void onDrawerOpened(View drawerView) {
                 if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "Drawer")) {
@@ -810,7 +810,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         processDraftsResponse();
                         return;
                     }
-//
+
                     JSONArray resultJsonObject = jObject.getJSONObject("data").optJSONArray("result");
                     ArrayList<AllDraftsResponse.AllDraftsData.AllDraftsResult> draftList = new ArrayList<>();
                     ArrayList<Map<String, String>> retMap;
@@ -818,15 +818,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         AllDraftsResponse.AllDraftsData.AllDraftsResult draftitem = new AllDraftsResponse.AllDraftsData.AllDraftsResult();
                         draftitem.setId(resultJsonObject.getJSONObject(i).getString("id"));
                         draftitem.setArticleType(resultJsonObject.getJSONObject(i).getString("articleType"));
-                        // draftitem.setContentType(resultJsonObject.getJSONObject(i).getString("contentType"));
                         draftitem.setCreatedTime(resultJsonObject.getJSONObject(i).getString("createdTime"));
                         draftitem.setUpdatedTime(resultJsonObject.getJSONObject(i).getLong("updatedTime"));
                         draftitem.setBody(resultJsonObject.getJSONObject(i).getString("body"));
                         draftitem.setTitle(resultJsonObject.getJSONObject(i).getString("title"));
-                        //if (resultJsonObject.getJSONObject(i).has("itemType")) {
-                        //  draftitem.setItemType(resultJsonObject.getJSONObject(i).getInt("itemType"));
-                        //     }
-                        //     Different formats of tags array Handling :(
                         if (resultJsonObject.getJSONObject(i).has("contentType")) {
                             draftitem.setContentType(resultJsonObject.getJSONObject(i).getString("contentType"));
 
@@ -879,8 +874,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     };
 
     private void processDraftsResponse() {
-        //  allDraftsList = responsemodal.getData().getResult();
-
         if (allDraftsList.size() == 0) {
             createLabelTextView.setVisibility(View.VISIBLE);
             createTextImageVIew.setVisibility(View.VISIBLE);
@@ -920,7 +913,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 String blogSlug = notificationExtras.getString("blogSlug");
                 String titleSlug = notificationExtras.getString("titleSlug");
                 Intent intent1 = new Intent(DashboardActivity.this, ArticleDetailsContainerActivity.class);
-                intent1.putExtra("fromNotification", true);
                 intent1.putExtra(Constants.ARTICLE_ID, articleId);
                 intent1.putExtra(Constants.AUTHOR_ID, authorId);
                 intent1.putExtra(Constants.BLOG_SLUG, blogSlug);
@@ -930,103 +922,47 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent1.putExtra(Constants.ARTICLE_INDEX, "-1");
                 intent1.putExtra(Constants.AUTHOR, authorId + "~");
                 startActivity(intent1);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "article_details");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("article_details");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("collection_detail")) {
                 Intent intent = new Intent(DashboardActivity.this, UserCollectionItemListActivity.class);
                 intent.putExtra("id", notificationExtras.getString("id"));
                 startActivity(intent);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "collection_detail");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("collection_detail");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("create_content_prompt")) {
                 fragmentToLoad = Constants.CREATE_CONTENT_PROMPT;
             } else if (notificationExtras.getString("type").equalsIgnoreCase("momsights_screen")) {
                 Intent intent1 = new Intent(DashboardActivity.this, RewardsContainerActivity.class);
                 startActivity(intent1);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "momsights_screen");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("momsights_screen");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("campaign_listing")) {
                 Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
                 campaignIntent.putExtra("campaign_listing", "campaign_listing");
                 startActivity(campaignIntent);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "campaign_listing");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("campaign_listing");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("choose_video_category")) {
                 Intent createVideoIntent = new Intent(this, ChooseVideoCategoryActivity.class);
                 createVideoIntent.putExtra("comingFrom", "notification");
                 startActivity(createVideoIntent);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "choose_video_category");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("choose_video_category");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("video_challenge_details")) {
                 Intent videoChallengeIntent = new Intent(this, NewVideoChallengeActivity.class);
                 videoChallengeIntent.putExtra(Constants.CHALLENGE_ID, "" + notificationExtras.getString("challengeId"));
                 videoChallengeIntent.putExtra("comingFrom", "notification");
                 startActivity(videoChallengeIntent);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "video_challenge_details");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("video_challenge_details");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("campaign_detail")) {
                 Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
                 campaignIntent.putExtra("campaign_id", notificationExtras.getString("campaign_id"));
                 campaignIntent.putExtra("campaign_detail", "campaign_detail");
                 campaignIntent.putExtra("fromNotification", true);
                 startActivity(campaignIntent);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "campaign_detail");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("campaign_detail");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("campaign_submit_proof")) {
                 Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
                 campaignIntent.putExtra("campaign_Id", notificationExtras.getString("campaign_id"));
                 campaignIntent.putExtra("campaign_submit_proof", "campaign_submit_proof");
                 startActivity(campaignIntent);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "campaign_submit_proof");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("campaign_submit_proof");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("mymoney_bankdetails")) {
                 Intent campaignIntent = new Intent(this, RewardsContainerActivity.class);
                 campaignIntent.putExtra("isComingfromCampaign", true);
@@ -1035,14 +971,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 campaignIntent.putExtra("campaign_Id", notificationExtras.getString("campaign_id"));
                 campaignIntent.putExtra("mymoney_bankdetails", "mymoney_bankdetails");
                 startActivity(campaignIntent);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "mymoney_bankdetails");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("mymoney_bankdetails");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("mymoney_pancard")) {
                 Intent campaignIntent = new Intent(this, RewardsContainerActivity.class);
                 campaignIntent.putExtra("isComingFromRewards", true);
@@ -1051,14 +980,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 campaignIntent.putExtra("panCardFormNotification", "mymoney_pancard");
                 campaignIntent.putExtra("mymoney_pancard", "mymoney_pancard");
                 startActivity(campaignIntent);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "mymoney_pancard");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("mymoney_pancard");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("shortStoryDetails")) {
                 Intent ssIntent = new Intent(DashboardActivity.this, ShortStoryContainerActivity.class);
                 ssIntent.putExtra(Constants.AUTHOR_ID, notificationExtras.getString("userId"));
@@ -1070,14 +992,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 ssIntent.putExtra(Constants.ARTICLE_INDEX, "-1");
                 ssIntent.putExtra(Constants.AUTHOR, notificationExtras.getString("userId") + "~");
                 startActivity(ssIntent);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "shortStoryDetails");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("shortStoryDetails");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("video_details")) {
                 String articleId = notificationExtras.getString("id");
                 String authorId = notificationExtras.getString("userId");
@@ -1090,80 +1005,38 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent1.putExtra(Constants.ARTICLE_INDEX, "-1");
                 intent1.putExtra(Constants.AUTHOR, authorId + "~");
                 startActivity(intent1);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "video_details");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("video_details");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_membership")
                     || notificationExtras.getString("type").equalsIgnoreCase("group_new_post")
                     || notificationExtras.getString("type").equalsIgnoreCase("group_admin_group_edit")
                     || notificationExtras.getString("type").equalsIgnoreCase("group_admin")) {
                 GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
                 groupMembershipStatus.checkMembershipStatus(Integer.parseInt(notificationExtras.getString("groupId")), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "" + notificationExtras.getString("type"));
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent(notificationExtras.getString("type"));
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_new_response")) {
                 Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
                 gpPostIntent.putExtra("postId", Integer.parseInt(notificationExtras.getString("postId")));
                 gpPostIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
                 gpPostIntent.putExtra("responseId", Integer.parseInt(notificationExtras.getString("responseId")));
                 startActivity(gpPostIntent);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "group_new_response");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("group_new_response");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_new_reply")) {
                 Intent gpPostIntent = new Intent(this, ViewGroupPostCommentsRepliesActivity.class);
                 gpPostIntent.putExtra("postId", Integer.parseInt(notificationExtras.getString("postId")));
                 gpPostIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
                 gpPostIntent.putExtra("responseId", Integer.parseInt(notificationExtras.getString("responseId")));
                 startActivity(gpPostIntent);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "group_new_reply");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("group_new_reply");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_admin_membership")) {
                 Intent memberIntent = new Intent(this, GroupMembershipActivity.class);
                 memberIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
                 startActivity(memberIntent);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "group_admin_membership");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("group_admin_membership");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_admin_reported")) {
                 Intent reportIntent = new Intent(this, GroupsReportedContentActivity.class);
                 reportIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
                 startActivity(reportIntent);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "group_admin_reported");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("group_admin_reported");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("event_details")) {
                 String eventId = notificationExtras.getString("id");
                 Intent resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);
@@ -1174,134 +1047,66 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 resultIntent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
                 resultIntent.putExtra(Constants.DISTANCE, "0");
                 startActivity(resultIntent);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "event_details");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("event_details");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("webView")) {
                 String url = notificationExtras.getString("url");
                 Intent intent1 = new Intent(this, LoadWebViewActivity.class);
                 intent1.putExtra("fromNotification", true);
                 intent1.putExtra(Constants.WEB_VIEW_URL, url);
                 startActivity(intent1);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "webView");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("webView");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("write_blog")) {
                 launchEditor();
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "write_blog");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("write_blog");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("profile")) {
                 String u_id = notificationExtras.getString("userId");
                 if (!SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(u_id)) {
                     Intent intent1 = new Intent(this, UserProfileActivity.class);
                     intent1.putExtra("fromNotification", true);
                     intent1.putExtra(Constants.USER_ID, u_id);
+                    intent1.putExtra(AppConstants.BADGE_ID, "" + notificationExtras.getString(AppConstants.BADGE_ID));
                     intent1.putExtra(Constants.FROM_SCREEN, "Notification");
                     startActivity(intent1);
                 } else {
                     fragmentToLoad = Constants.PROFILE_FRAGMENT;
                 }
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "profile");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("profile");
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("badge_list")) {
+                Intent badgeIntent = new Intent(this, BadgeActivity.class);
+                startActivity(badgeIntent);
+                pushEvent("badge_list");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("upcoming_event_list")) {
                 fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "upcoming_event_list");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("upcoming_event_list");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("suggested_topics")) {
                 fragmentToLoad = Constants.SUGGESTED_TOPICS_FRAGMENT;
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "suggested_topics");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("suggested_topics");
             } else if (notificationExtras.getString("type").equalsIgnoreCase(AppConstants.APP_SETTINGS_DEEPLINK)) {
                 Intent intent1 = new Intent(this, AppSettingsActivity.class);
                 intent1.putExtra("fromNotification", true);
                 intent1.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
                 startActivity(intent1);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("type", AppConstants.APP_SETTINGS_DEEPLINK);
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent(AppConstants.APP_SETTINGS_DEEPLINK);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("my_money_earnings")) {
                 Intent intent1 = new Intent(this, MyTotalEarningActivity.class);
                 startActivity(intent1);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("type", "my_money_earnings");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("my_money_earnings");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("my_money_profile")) {
                 Intent intent1 = new Intent(this, EditProfileNewActivity.class);
                 intent1.putExtra("isComingfromCampaign", true);
                 startActivity(intent1);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("type", "my_money_profile");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("my_money_profile");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("category_listing")) {
                 Intent intent1 = new Intent(this, TopicsListingActivity.class);
                 intent1.putExtra("parentTopicId", notificationExtras.getString("categoryId"));
                 startActivity(intent1);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("type", "category_listing");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("category_listing");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("shortStoryListing")) {
                 Intent intent1 = new Intent(this, ShortStoriesListingContainerActivity.class);
                 intent1.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
                 intent1.putExtra("selectedTabCategoryId", notificationExtras.getString("categoryId"));
                 startActivity(intent1);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "shortStoryListing");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("shortStoryListing");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("shortStoryListingInChallengeListing")) {
                 findValues(notificationExtras.getString("categoryId"));
                 Intent intent1 = new Intent(this, ChallengeDetailListingActivity.class);
@@ -1312,24 +1117,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent1.putExtra("parentId", shortStoriesTopicList.get(0).getId());
                 intent1.putExtra("StringUrl", deepLinkImageUrl);
                 startActivity(intent1);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "shortStoryListingInChallenge");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("shortStoryListingInChallenge");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_listing")) {
                 fragmentToLoad = Constants.GROUP_LISTING_FRAGMENT;
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "group_listing");
-                    mMixpanel.track("PushNotification", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                pushEvent("group_listing");
             }
         } else if (_intent.hasExtra("branchLink") || _intent.hasExtra(AppConstants.BRANCH_DEEPLINK_URL)) {
             String branchdata = BaseApplication.getInstance().getBranchData();
@@ -1364,8 +1155,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
         } else {
             String tempDeepLinkURL = _intent.getStringExtra(AppConstants.DEEP_LINK_URL);
-
-
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
@@ -1575,6 +1364,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             deepLinkUrl = _intent.getStringExtra(AppConstants.DEEP_LINK_URL);
         }
+    }
+
+    private void pushEvent(String type) {
+        Utils.pushNotificationClickEvent(this, type,
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), "DashboardActivity");
     }
 
     private void findValues(String deepLinkChallengeId) {
@@ -3139,7 +2933,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             if (matcher3.matches()) {
                 String[] separated = urlWithNoParams.split("/");
                 Intent intent = new Intent(this, UserProfileActivity.class);
-                intent.putExtra("badgeId", separated[separated.length - 1]);
+                intent.putExtra(AppConstants.BADGE_ID, separated[separated.length - 1]);
                 intent.putExtra(Constants.USER_ID, separated[separated.length - 3]);
                 startActivity(intent);
                 return true;

@@ -359,7 +359,7 @@
     <string name="myprofile.rank_label">র‍্যাঙ্ক</string>
 
     <string name="blogger_profile.follow_button">ফলো করুন</string>
-    <string name="blogger_profile.rank_in">র্যাঙ্ক ইন</string>
+    <string name="blogger_profile.rank_in">র‍্যাঙ্ক ইন %1$s</string>
     <string name="blogger_profile.unfollow_button">অনুসরণ</string>
     <string name="blogger_profile.view_count_label">দৃশ্য সংখ্যা</string>
     <string name="blogger_profile.article_count_label">গল্প</string>
@@ -1248,4 +1248,18 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="crown_winner_share_text">%1$s %2$s is a %3$s crown winner | Momspresso\n%4$s</string>
     <string name="add_thumbnail">থাম্বনেইল যোগ করুন</string>
     <string name="mymoney_info">MyMoney Dashboard</string>
+    <string name="profile_empty_created_content">The content you create will show here</string>
+    <string name="profile_empty_bookmarks">The articles you bookmark will show here</string>
+    <string name="profile_empty_featured">Your featured articles will show here</string>
+    <string name="profile_empty_read_article">The articles you have read will show here</string>
+    <string name="profile_empty_read_stories">The stories you have read will show here</string>
+    <string name="profile_empty_seen_videos">The videos you have seen will show here</string>
+    <string name="profile_empty_drafts">All your drafts will show here</string>
+    <string name="profile_empty_following">The people who you follow will show here</string>
+    <string name="login_verify_sms">Verify</string>
+    <string name="login_send_otp">Send OTP</string>
+    <string name="login_enter_mobile_number">Enter your mobile number</string>
+    <string name="login_enter_otp">Please enter OTP below</string>
+    <string name="login_resend_otp">Resend OTP</string>
+    <string name="login_remaining_time">Seconds remaining: %1$d</string>
 </resources>

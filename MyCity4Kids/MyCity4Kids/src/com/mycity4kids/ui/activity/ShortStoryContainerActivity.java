@@ -7,21 +7,20 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
+
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.ShortStoryPagerAdapter;
 
 import java.util.ArrayList;
-
-import androidx.appcompat.widget.Toolbar;
-import androidx.viewpager.widget.ViewPager;
 
 /**
  * Created by hemant on 6/6/17.
@@ -68,7 +67,7 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
         final String author = bundle.getString(Constants.AUTHOR);
 
         if (bundle.getBoolean("fromNotification")) {
-            Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, userDynamoId, "Notification Popup", "shortStoryDetails");
+            Utils.pushNotificationClickEvent(this, "shortStoryDetails", userDynamoId, "ShortStoryContainerActivity");
             Utils.pushViewShortStoryEvent(this, "Notification", userDynamoId + "", articleId, "Notification Popup", "-1" + "", author);
         } else {
             String listingType = bundle.getString(Constants.ARTICLE_OPENED_FROM);

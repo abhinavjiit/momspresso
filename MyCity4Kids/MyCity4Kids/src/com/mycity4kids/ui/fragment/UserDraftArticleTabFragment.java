@@ -4,14 +4,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -61,6 +64,7 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
 
     ArrayList<DraftListResult> draftList;
     RecyclerView recyclerView;
+    TextView noBlogsTextView;
     private RelativeLayout mLodingView;
     private UserDraftArticleAdapter adapter;
     private UserDraftShortStoriesAdapter shortStoriesDraftAdapter;
@@ -74,11 +78,12 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
+        noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
 
         contentType = getArguments().getString("contentType");
 
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
         if ("shortStory".equals(contentType)) {
@@ -232,7 +237,9 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
 
         if (draftList.size() == 0 && recyclerView.getVisibility() == View.VISIBLE) {
 //            noDraftTextView.setVisibility(View.VISIBLE);
+            noBlogsTextView.setVisibility(View.VISIBLE);
         } else {
+            noBlogsTextView.setVisibility(View.GONE);
             if ("shortStory".equals(contentType)) {
                 shortStoriesDraftAdapter.setListData(draftList);
                 shortStoriesDraftAdapter.notifyDataSetChanged();
@@ -366,7 +373,7 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
             case R.id.deleteDraftImageView:
                 ConfirmationDialogFragment confirmationDialogFragment = new ConfirmationDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
-             //   confirmationDialogFragment.setTargetFragment(this, 0);
+                //   confirmationDialogFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
                 confirmationDialogFragment.setArguments(_args);

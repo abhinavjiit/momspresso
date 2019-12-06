@@ -113,8 +113,9 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
                     if (t.code == 200 && t.status == Constants.SUCCESS && t.data?.result != null) {
                         var addCollectionRequestModell: AddCollectionRequestModel = t.data!!.result
                         collectionId = addCollectionRequestModell.userCollectionId
-                        Utils.pushProfileEvents(activity, "CTA_Add_Collection_From_Content",
-                                "AddCollectionPopUpDialogFragment", "New collection", "-")
+                        Utils.pushGenericEvent(activity, "CTA_Collection_Creation",
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                                "AddCollectionPopUpDialogFragment")
                         if (!StringUtils.isNullOrEmpty(collectionId) && !StringUtils.isNullOrEmpty(articleId)) {
                             addCollectionItem()
                         } else {

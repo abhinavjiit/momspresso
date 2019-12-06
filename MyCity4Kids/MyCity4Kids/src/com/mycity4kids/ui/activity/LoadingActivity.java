@@ -50,7 +50,7 @@ public class LoadingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.pushGenericEvent(this, "Post_signup_singin_loading_event", SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "PhoneLoginUserDetailActivity");
+        Utils.pushGenericEvent(this, "Post_signup_singin_loading_event", SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "LoadingActivity");
         setContentView(R.layout.fetch_pincode_config);
         root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setView(root);

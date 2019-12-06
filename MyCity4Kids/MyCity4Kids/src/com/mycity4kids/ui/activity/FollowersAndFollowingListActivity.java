@@ -219,6 +219,11 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
             mDatalist = responseData.getData().getResult();
 
             if (mDatalist.size() == 0) {
+                if (AppConstants.FOLLOWER_LIST.equals(followListType)) {
+                    noResultTextView.setText(getResources().getString(R.string.empty_followers_in_profile));
+                } else {
+                    noResultTextView.setText(getResources().getString(R.string.profile_empty_following));
+                }
                 noResultTextView.setText(getResources().getString(R.string.empty_followers_in_profile));
                 noResultTextView.setVisibility(View.VISIBLE);
                 followerFollowingListView.setVisibility(View.GONE);

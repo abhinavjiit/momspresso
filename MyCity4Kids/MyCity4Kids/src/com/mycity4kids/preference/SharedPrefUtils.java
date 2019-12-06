@@ -445,35 +445,6 @@ public class SharedPrefUtils {
         _editor.commit();
     }
 
-    public static boolean isPhoenixFirstLaunch(Context context) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return _sharedPref.getBoolean(PHOENIX_FIRST_LAUNCH_FLAG, true);
-    }
-
-    public static void setLocalizationFirstLaunch(Context context, boolean flag) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putBoolean(LOCALIZATION_FIRST_LAUNCH_FLAG, flag);
-        _editor.commit();
-    }
-
-    public static boolean isLocalizationFirstLaunch(Context context) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return _sharedPref.getBoolean(LOCALIZATION_FIRST_LAUNCH_FLAG, true);
-    }
-
-    public static void setGroupTourFirstLaunch(Context context, boolean flag) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putBoolean(GROUP_TOUR_LAUNCH_FLAG, flag);
-        _editor.commit();
-    }
-
-    public static boolean isGroupTourFirstLaunch(Context context) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return _sharedPref.getBoolean(GROUP_TOUR_LAUNCH_FLAG, true);
-    }
-
     public static void setCoachmarksShownFlag(Context context, String screenName, boolean flag) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         Editor _editor = _sharedPref.edit();

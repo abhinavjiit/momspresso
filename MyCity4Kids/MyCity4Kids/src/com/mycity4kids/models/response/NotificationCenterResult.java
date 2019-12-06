@@ -25,6 +25,7 @@ public class NotificationCenterResult {
     private int campaign_id;
     private int category_id;
     private String categoryId;
+    private String badgeId;
 
 //    public int getCategoryId() {
 //        return category_id;
@@ -193,5 +194,13 @@ public class NotificationCenterResult {
 
     public void setResponseId(int responseId) {
         this.responseId = responseId;
+    }
+
+    public String getBadgeId() {
+        return badgeId;
+    }
+
+    public void setBadgeId(String badgeId) {
+        this.badgeId = badgeId;
     }
 }

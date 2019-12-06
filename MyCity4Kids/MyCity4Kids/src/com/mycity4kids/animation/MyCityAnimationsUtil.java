@@ -39,7 +39,7 @@ public class MyCityAnimationsUtil {
             ((TextView) ((RelativeLayout) view).getChildAt(3)).setText(mContext.getString(R.string.ranking_in) + " " + arr.get(index).getLangValue().toUpperCase());
         } else {
             ((TextView) ((LinearLayout) view).getChildAt(0)).setText("" + arr.get(index).getRank());
-            ((TextView) ((LinearLayout) view).getChildAt(1)).setText(mContext.getString(R.string.blogger_profile_rank_in) + " " + arr.get(index).getLangValue().toUpperCase());
+            ((TextView) ((LinearLayout) view).getChildAt(1)).setText(mContext.getString(R.string.blogger_profile_rank_in, arr.get(index).getLangValue().toUpperCase()));
         }
 
 

@@ -67,7 +67,7 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
 
         adapter = new UsersRecommendationsRecycleAdapter(getActivity(), this);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.setAdapter(adapter);
         recommendationsList = new ArrayList<ArticleListingResult>();

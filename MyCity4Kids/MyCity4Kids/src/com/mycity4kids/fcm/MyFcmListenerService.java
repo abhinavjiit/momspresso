@@ -242,7 +242,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                                 , contentIntent, pushNotificationModel.getSound());
                     }
                 } else if (type.equalsIgnoreCase("video_details")) {
-                    Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "video_details");
+                    Utils.pushNotificationClickEvent(this, "video_details",
+                            SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "MyFcmListenerService");
                     Intent intent;
                     PendingIntent contentIntent;
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
@@ -267,7 +268,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (remoteMessage.getNotification() != null) {
                         String title = remoteMessage.getNotification().getTitle();
                         String body = remoteMessage.getNotification().getBody();
-                        Log.e("NOTIFICATION_TYPE", "video_details ----- Notification Messag --- " + remoteMessage.getNotification().getImageUrl());
+                        Log.e("NOTIFICATION_TYPE", "video_details ----- Notification Message --- " + remoteMessage.getNotification().getImageUrl());
                         if (remoteMessage.getNotification().getImageUrl() != null) {
                             prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
                         } else {

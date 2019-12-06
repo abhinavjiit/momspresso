@@ -41,7 +41,6 @@
                     android:layout_marginBottom="10dp"
                     android:background="@color/white"
                     android:outlineProvider="bounds"
-                    android:paddingBottom="10dp"
                     app:cardCornerRadius="5dp"
                     app:cardElevation="5dp">
 
@@ -525,6 +524,18 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/emptyListTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:paddingTop="160dp"
+        android:text="@string/profile_empty_created_content"
+        android:textColor="@color/empty_list_msg"
+        android:textSize="16sp"
+        android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <include

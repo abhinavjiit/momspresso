@@ -25,7 +25,6 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.EditorPostActivity;
-import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.NotificationReadRequest;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
@@ -50,13 +49,10 @@ import com.mycity4kids.ui.activity.TopicsListingActivity;
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
 import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
-import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.GroupsViewFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -129,41 +125,30 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
             holder.rootView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.notification_center_read_bg));
         }
 
-        String nType = SharedPrefUtils.getNotificationType(BaseApplication.getAppContext(), notificationList.get(position).getNotifType());
-        if ((StringUtils.isNullOrEmpty(nType) && "0".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_WEBVIEW.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        holder.rootView.setOnClickListener(v -> {
+            notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
+            hitNotificationReadAPI(notificationList.get(position).getId());
+            notifyDataSetChanged();
 
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "webView");
+            String nType = notificationList.get(position).getNotifType();
+            if (StringUtils.isNullOrEmpty(nType)) {
+                pushEvent("-");
+                return;
+            }
+
+            switch (nType) {
+                case AppConstants.NOTIFICATION_CENTER_APP_SETTINGS: {
+
+                }
+                break;
+                case AppConstants.NOTIFICATION_CENTER_WEB_VIEW: {
                     Intent intent1 = new Intent(mContext, LoadWebViewActivity.class);
                     intent1.putExtra(Constants.WEB_VIEW_URL, notificationList.get(position).getUrl());
                     mContext.startActivity(intent1);
-
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", "0");
-                        //Log.d("NotificationCenterClick", jsonObject.toString());
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_WEB_VIEW");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && "1".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_ARTICLE_DETAILS.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "article_details");
-
+                break;
+                case AppConstants.NOTIFICATION_CENTER_ARTICLE_DETAIL: {
                     String authorId;
                     if (StringUtils.isNullOrEmpty(notificationList.get(position).getAuthorId()) || "0".equals(notificationList.get(position).getAuthorId())) {
                         authorId = notificationList.get(position).getUserId();
@@ -180,80 +165,10 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
                     intent.putExtra(Constants.AUTHOR, authorId + "~");
                     mContext.startActivity(intent);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", "1");
-                        //Log.d("NotificationCenterClick", jsonObject.toString());
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_ARTICLE_DETAIL");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && "4".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_VIDEO_DETAILS.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "video_details");
-                    Intent intent = new Intent(mContext, ParallelFeedActivity.class);
-                    intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getArticleId());
-                    //intent.putExtra(Constants.STREAM_URL, notificationList.get(position).getUrl());
-                    intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
-                    intent.putExtra(Constants.FROM_SCREEN, "Home Screen");
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
-                    mContext.startActivity(intent);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", "4");
-                        //Log.d("NotificationCenterClick", jsonObject.toString());
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && "3".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_UPCOMING_EVENTS.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "upcoming_event_list");
-                    FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
-                    bundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity(BaseApplication.getAppContext()));
-                    bundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
-                    fragment.setArguments(bundle);
-                    ((DashboardActivity) mContext).addFragment(fragment, bundle, true);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", "3");
-                        //Log.d("NotificationCenterClick", jsonObject.toString());
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && "2".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_PROFILE.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "profile");
+                break;
+                case AppConstants.NOTIFICATION_CENTER_PROFILE: {
                     String authorId;
                     if (StringUtils.isNullOrEmpty(notificationList.get(position).getAuthorId()) || "0".equals(notificationList.get(position).getAuthorId())) {
                         authorId = notificationList.get(position).getUserId();
@@ -262,132 +177,52 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     }
                     Intent pIntent = new Intent(mContext, UserProfileActivity.class);
                     pIntent.putExtra(Constants.USER_ID, authorId);
+                    pIntent.putExtra(AppConstants.BADGE_ID, notificationList.get(position).getBadgeId());
                     mContext.startActivity(pIntent);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", "2");
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_PROFILE");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && "-1".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_APP_SETTINGS.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", "-1");
-                        //Log.d("NotificationCenterClick", jsonObject.toString());
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                break;
+                case AppConstants.NOTIFICATION_CENTER_VIDEO_DETAIL: {
+                    Intent intent = new Intent(mContext, ParallelFeedActivity.class);
+                    intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getArticleId());
+                    intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
+                    intent.putExtra(Constants.FROM_SCREEN, "Home Screen");
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
+                    mContext.startActivity(intent);
+                    pushEvent("NOTIFICATION_CENTER_VIDEO_DETAIL");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && "5".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_EDITOR.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "write_blog");
+                break;
+                case AppConstants.NOTIFICATION_CENTER_LAUNCH_EDITOR: {
                     launchEditor();
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", "5");
-                        //Log.d("NotificationCenterClick", jsonObject.toString());
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_LAUNCH_EDITOR");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && "6".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_SUGGESTED_TOPICS.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "suggested_topics");
+                break;
+                case AppConstants.NOTIFICATION_CENTER_SUGGESTED_TOPICS: {
                     Intent intent = new Intent(mContext, SuggestedTopicsActivity.class);
                     mContext.startActivity(intent);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", "6");
-                        //Log.d("NotificationCenterClick", jsonObject.toString());
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_SUGGESTED_TOPICS");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && "7".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_TODAYS_BEST.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "todaysBest");
-                    Intent intent1 = new Intent(mContext, ArticleListingActivity.class);
-                    intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_TODAYS_BEST);
-                    mContext.startActivity(intent1);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", "7");
-                        //Log.d("NotificationCenterClick", jsonObject.toString());
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                break;
+                case AppConstants.NOTIFICATION_CENTER_TODAYS_BEST: {
+                    Intent intent = new Intent(mContext, ArticleListingActivity.class);
+                    intent.putExtra(Constants.SORT_TYPE, Constants.KEY_TODAYS_BEST);
+                    mContext.startActivity(intent);
+                    pushEvent("NOTIFICATION_CENTER_TODAYS_BEST");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && "8".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_SHORT_STORY_LIST.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "shortStoryListing");
+                break;
+                case AppConstants.NOTIFICATION_CENTER_SHORT_STORY_LIST: {
                     Intent resultIntent = new Intent(mContext, ShortStoriesListingContainerActivity.class);
                     resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     resultIntent.putExtra("fromNotification", true);
                     resultIntent.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
                     resultIntent.putExtra("selectedTabCategoryId", "" + notificationList.get(position).getCategoryId());
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", "8");
-                        //Log.d("NotificationCenterClick", jsonObject.toString());
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_SHORT_STORY_LIST");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && "9".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_SHORT_STORY_DETAILS.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "shortStoryDetails");
+                break;
+                case AppConstants.NOTIFICATION_CENTER_SHORT_STORY_DETAILS: {
                     String authorId;
-                    if (StringUtils.isNullOrEmpty(notificationList.get(position).getAuthorId()) || "0".equals(notificationList.get(position).getAuthorId())) {
+                    if (StringUtils.isNullOrEmpty(notificationList.get(position).getAuthorId())
+                            || "0".equals(notificationList.get(position).getAuthorId())) {
                         authorId = notificationList.get(position).getUserId();
                     } else {
                         authorId = notificationList.get(position).getAuthorId();
@@ -402,310 +237,119 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
                     intent.putExtra(Constants.AUTHOR, authorId + "~");
                     mContext.startActivity(intent);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", "9");
-                        //Log.d("NotificationCenterClick", jsonObject.toString());
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_SHORT_STORY_DETAILS");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && "10".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_GROUP_DETAILS.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "groupDetails");
+                break;
+                case AppConstants.NOTIFICATION_CENTER_GROUP_MEMBERSHIP: {
                     GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(NotificationCenterListAdapter.this);
-                    groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", "10");
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(),
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    pushEvent("NOTIFICATION_CENTER_GROUP_MEMBERSHIP");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && "11".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_POST_DETAILS.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "groupDetails");
+                break;
+                case AppConstants.NOTIFICATION_CENTER_GROUP_NEW_POST: {
                     GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(NotificationCenterListAdapter.this);
-                    groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", "11");
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(),
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    pushEvent("NOTIFICATION_CENTER_GROUP_NEW_POST");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && "12".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_POST_DETAILS.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "postDetails");
+                break;
+                case AppConstants.NOTIFICATION_CENTER_GROUP_NEW_RESPONSE: {
                     Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
                     intent.putExtra("postId", notificationList.get(position).getPostId());
                     intent.putExtra("groupId", notificationList.get(position).getGroupId());
                     mContext.startActivity(intent);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", "12");
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_GROUP_NEW_RESPONSE");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && "13".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_POST_DETAILS.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "postDetails");
+                break;
+                case AppConstants.NOTIFICATION_CENTER_GROUP_NEW_REPLY: {
                     Intent intent = new Intent(mContext, ViewGroupPostCommentsRepliesActivity.class);
                     intent.putExtra("postId", notificationList.get(position).getPostId());
                     intent.putExtra("groupId", notificationList.get(position).getGroupId());
                     intent.putExtra("responseId", notificationList.get(position).getResponseId());
                     intent.putExtra("action", "commentReply");
                     mContext.startActivity(intent);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", "13");
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_GROUP_NEW_REPLY");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && "14".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_POST_DETAILS.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "groupDetails");
+                break;
+                case AppConstants.NOTIFICATION_CENTER_GROUP_ADMIN_MEMBERSHIP: {
                     GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(NotificationCenterListAdapter.this);
                     groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", "14");
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_GROUP_ADMIN_MEMBERSHIP");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && "15".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_POST_DETAILS.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "groupDetails");
+                break;
+                case AppConstants.NOTIFICATION_CENTER_GROUP_ADMIN_REPORTED: {
                     GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(NotificationCenterListAdapter.this);
                     groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", "15");
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_GROUP_ADMIN_REPORTED");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && "16".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_POST_DETAILS.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "groupDetails");
+                break;
+                case AppConstants.NOTIFICATION_CENTER_GROUP_ADMIN_EDIT_GROUP: {
                     GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(NotificationCenterListAdapter.this);
                     groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", "16");
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_GROUP_ADMIN_EDIT_GROUP");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && "17".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_POST_DETAILS.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "groupDetails");
+                break;
+                case AppConstants.NOTIFICATION_CENTER_GROUP_ADMIN: {
                     GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(NotificationCenterListAdapter.this);
                     groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", "17");
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_GROUP_ADMIN");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && "18".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_GROUP_LISTING.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "groupListing");
+                break;
+                case AppConstants.NOTIFICATION_CENTER_GROUP_LISTING: {
                     GroupsViewFragment fragment0 = new GroupsViewFragment();
                     Bundle mBundle0 = new Bundle();
                     fragment0.setArguments(mBundle0);
                     ((DashboardActivity) mContext).addFragment(fragment0, mBundle0, true);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", "18");
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_GROUP_LISTING");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && AppConstants.NOTIFICATION_NOTIFY_TYPE_MOMSIGHT_REWARDS.equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_MOMSIGHT_REWARD_LISTING.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                break;
+                case AppConstants.NOTIFICATION_CENTER_CREATE_SECTION: {
 
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", AppConstants.NOTIFICATION_TYPE_MOMSIGHT_REWARD_LISTING);
+                    pushEvent("NOTIFICATION_CENTER_CREATE_SECTION");
+                }
+                break;
+                case AppConstants.NOTIFICATION_CENTER_MY_MONEY_PERSONAL_INFO: {
                     Intent intent = new Intent(mContext, RewardsContainerActivity.class);
                     mContext.startActivity(intent);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", AppConstants.NOTIFICATION_NOTIFY_TYPE_MOMSIGHT_REWARDS);
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_MY_MONEY_PERSONAL_INFO");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && AppConstants.NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_LISTING.equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_CAMPAIGN_LISING.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", AppConstants.NOTIFICATION_TYPE_CAMPAIGN_LISING);
-                    Intent campaignIntent = new Intent(mContext, CampaignContainerActivity.class);
-                    campaignIntent.putExtra("campaign_listing", "campaign_listing");
-                    mContext.startActivity(campaignIntent);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", AppConstants.NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_LISTING);
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                break;
+                case AppConstants.NOTIFICATION_CENTER_TOPICS_ARTICLE_LISTING: {
+                    Intent intent = new Intent(mContext, TopicsListingActivity.class);
+                    intent.putExtra("parentTopicId", "" + notificationList.get(position).getCategoryId());
+                    mContext.startActivity(intent);
+                    pushEvent("NOTIFICATION_CENTER_TOPICS_ARTICLE_LISTING");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && AppConstants.NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_DETAIL.equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_CAMPAIGN_DETAIL.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", AppConstants.NOTIFICATION_TYPE_CAMPAIGN_DETAIL);
+                break;
+                case AppConstants.NOTIFICATION_CENTER_CAMPAIGN_LISTING: {
+                    Intent intent = new Intent(mContext, ParallelFeedActivity.class);
+                    intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getArticleId());
+                    intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
+                    intent.putExtra(Constants.FROM_SCREEN, "Home Screen");
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
+                    mContext.startActivity(intent);
+                    pushEvent("NOTIFICATION_CENTER_CAMPAIGN_LISTING");
+                }
+                break;
+                case AppConstants.NOTIFICATION_CENTER_CAMPAIGN_DETAIL: {
                     Intent campaignIntent = new Intent(mContext, CampaignContainerActivity.class);
                     campaignIntent.putExtra("campaign_id", notificationList.get(position).getCampaign_id() + "");
                     campaignIntent.putExtra("campaign_detail", "campaign_detail");
                     campaignIntent.putExtra("fromNotification", true);
                     mContext.startActivity(campaignIntent);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", AppConstants.NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_DETAIL);
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_CAMPAIGN_DETAIL");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && AppConstants.NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_SUBMIT_PROOF.equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_CAMPAIGN_SUBMIT_PROOF.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", AppConstants.NOTIFICATION_TYPE_CAMPAIGN_SUBMIT_PROOF);
+                break;
+                case AppConstants.NOTIFICATION_CENTER_CAMPAIGN_SUBMIT_PROOF: {
                     Intent campaignIntent = new Intent(mContext, CampaignContainerActivity.class);
                     campaignIntent.putExtra("campaign_Id", notificationList.get(position).getCampaign_id() + "");
                     campaignIntent.putExtra("campaign_submit_proof", "campaign_submit_proof");
                     mContext.startActivity(campaignIntent);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", AppConstants.NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_SUBMIT_PROOF);
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_CAMPAIGN_SUBMIT_PROOF");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && AppConstants.NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_PANCARD.equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_CAMPAIGN_PANCARD.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", AppConstants.NOTIFICATION_TYPE_CAMPAIGN_PANCARD);
+                break;
+                case AppConstants.NOTIFICATION_CENTER_CAMPAIGN_PANCARD: {
                     Intent campaignIntent = new Intent(mContext, RewardsContainerActivity.class);
                     campaignIntent.putExtra("isComingFromRewards", true);
                     campaignIntent.putExtra("pageLimit", 5);
@@ -713,45 +357,10 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     campaignIntent.putExtra("panCardFormNotification", "mymoney_pancard");
                     campaignIntent.putExtra("mymoney_pancard", "mymoney_pancard");
                     mContext.startActivity(campaignIntent);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", AppConstants.NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_PANCARD);
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_CAMPAIGN_PANCARD");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && AppConstants.NOTIFICATION_NOTIFY_TYPE_TOPIC.equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_CAMPAIGN_CATEGORY_LISTING.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", AppConstants.NOTIFICATION_TYPE_CAMPAIGN_CATEGORY_LISTING);
-                    Intent intent = new Intent(mContext, TopicsListingActivity.class);
-                    intent.putExtra("parentTopicId", "" + notificationList.get(position).getCategoryId());
-                    mContext.startActivity(intent);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", AppConstants.NOTIFICATION_NOTIFY_TYPE_TOPIC);
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && AppConstants.NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_BANKDETAIL.equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_CAMPAIGN_BANKDETAILS.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", AppConstants.NOTIFICATION_TYPE_CAMPAIGN_BANKDETAILS);
+                break;
+                case AppConstants.NOTIFICATION_CENTER_CAMPAIGN_BANKDETAIL: {
                     Intent campaignIntent = new Intent(mContext, RewardsContainerActivity.class);
                     campaignIntent.putExtra("isComingfromCampaign", true);
                     campaignIntent.putExtra("pageLimit", 4);
@@ -759,64 +368,33 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     campaignIntent.putExtra("campaign_Id", notificationList.get(position).getCampaign_id() + "");
                     campaignIntent.putExtra("mymoney_bankdetails", "mymoney_bankdetails");
                     mContext.startActivity(campaignIntent);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", AppConstants.NOTIFICATION_NOTIFY_TYPE_CAMPAIGN_BANKDETAIL);
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_CAMPAIGN_BANKDETAIL");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && AppConstants.NOTIFICATION_NOTIFY_TYPE_VIDEO_CHALLENGE_DETAIL.equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_NOTIFY_TYPE_VIDEO_CHALLENGE_DETAIL.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(),
-                            "Notification Centre", AppConstants.NOTIFICATION_NOTIFY_TYPE_VIDEO_CHALLENGE_DETAIL);
+                break;
+                case AppConstants.NOTIFICATION_CENTER_VIDEO_CHALLENGE_DETAIL: {
                     Intent videoChallengeIntent = new Intent(mContext, NewVideoChallengeActivity.class);
-                    videoChallengeIntent.putExtra(Constants.CHALLENGE_ID, "" + notificationList.get(position).getId());
+                    videoChallengeIntent.putExtra(Constants.CHALLENGE_ID, "" + notificationList.get(position).getCategoryId());
                     videoChallengeIntent.putExtra("comingFrom", "notification");
                     mContext.startActivity(videoChallengeIntent);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", AppConstants.NOTIFICATION_NOTIFY_TYPE_VIDEO_CHALLENGE_DETAIL);
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_VIDEO_CHALLENGE_DETAIL");
                 }
-            });
-        } else if ((StringUtils.isNullOrEmpty(nType) && AppConstants.NOTIFICATION_NOTIFY_TYPE_COLLECTION_DETAIL.equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_NOTIFY_TYPE_COLLECTION_DETAIL.equals(nType)) {
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-                    hitNotificationReadAPI(notificationList.get(position).getId());
-                    notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(),
-                            "Notification Centre", AppConstants.NOTIFICATION_NOTIFY_TYPE_COLLECTION_DETAIL);
+                break;
+                case AppConstants.NOTIFICATION_CENTER_COLLECTION_DETAIL: {
                     Intent intent = new Intent(mContext, UserCollectionItemListActivity.class);
                     intent.putExtra("id", "" + notificationList.get(position).getId());
                     intent.putExtra("comingFrom", "notification");
                     mContext.startActivity(intent);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("type", AppConstants.NOTIFICATION_NOTIFY_TYPE_COLLECTION_DETAIL);
-                        mixpanel.track("NotificationCenterClick", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    pushEvent("NOTIFICATION_CENTER_COLLECTION_DETAIL");
                 }
-            });
-        }
+                break;
+            }
+        });
         return view;
+    }
+
+    private void pushEvent(String type) {
+        Utils.pushNotificationCenterItemClickEvent(mContext, type,
+                SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "NotificationCenterListAdapter");
     }
 
     private void launchEditor() {

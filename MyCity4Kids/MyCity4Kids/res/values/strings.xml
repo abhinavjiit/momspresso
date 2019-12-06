@@ -348,7 +348,7 @@
     <string name="myprofile.rank_label">RANK</string>
     <string name="blogger_profile.follow_button">FOLLOW</string>
 
-    <string name="blogger_profile.rank_in">RANK IN</string>
+    <string name="blogger_profile.rank_in">RANK IN %1$s</string>
     <string name="blogger_profile.unfollow_button">FOLLOWING</string>
     <string name="blogger_profile.view_count_label">VIEWS</string>
     <string name="blogger_profile.article_count_label">POSTS</string>
@@ -534,7 +534,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="user_activities.comments.saved_on">Saved on:</string>
     <string name="user_activities.comments.edit">EDIT</string>
     <string name="user_activities.comments.no_comments">You have not commented on any article yet.</string>
-    <string name="user_activities.recommended.no_recommendations">You have not recommended any article yet.</string>
+    <string name="user_activities.recommended.no_recommendations">The articles you have liked will show here</string>
     <string name="user_activities.bookmarks.no_bookmarks">No article has been bookmarked yet.</string>
     <string name="user_activities.watch_later.no_watch_later">You have not saved any videos yet.</string>
     <string name="explore.section.events">EVENTS</string>
@@ -1410,5 +1410,19 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="profile_name_optional">Name (optional)</string>
     <string name="profile_expected_date_delivery">Expected date of delivery</string>
     <string name="mymoney_info">MyMoney Dashboard</string>
+    <string name="profile_empty_created_content">The content you create will show here</string>
+    <string name="profile_empty_bookmarks">The articles you bookmark will show here</string>
+    <string name="profile_empty_featured">Your featured articles will show here</string>
+    <string name="profile_empty_read_article">The articles you have read will show here</string>
+    <string name="profile_empty_read_stories">The stories you have read will show here</string>
+    <string name="profile_empty_seen_videos">The videos you have seen will show here</string>
+    <string name="profile_empty_drafts">All your drafts will show here</string>
+    <string name="profile_empty_following">The people who you follow will show here</string>
+    <string name="login_verify_sms">Verify</string>
+    <string name="login_send_otp">Send OTP</string>
+    <string name="login_enter_mobile_number">Enter your mobile number</string>
+    <string name="login_enter_otp">Please enter OTP below</string>
+    <string name="login_resend_otp">Resend OTP</string>
+    <string name="login_remaining_time">Seconds remaining: %1$d</string>
 </resources>
 

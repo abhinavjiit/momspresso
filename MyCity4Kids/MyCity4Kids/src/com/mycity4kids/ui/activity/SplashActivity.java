@@ -18,7 +18,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -98,7 +97,6 @@ public class SplashActivity extends BaseActivity {
     private boolean isLocationScreen = false;
     private String _deepLinkURL;
     private int isFirstLaunch = 0;
-    private String mobileNumberForVerification = "";
     private GoogleApiClient mClient;
     private Uri mUrl;
     private String mTitle;
@@ -108,7 +106,6 @@ public class SplashActivity extends BaseActivity {
     private View mLayout;
     private boolean shouldResumeSplash = false;
     MixpanelAPI mixpanel;
-    private RelativeLayout root;
     private String branchData;
 
     // The onNewIntent() is overridden to get and resolve the data for deep linking
@@ -137,22 +134,6 @@ public class SplashActivity extends BaseActivity {
             }
         }
     }
-
-    /*don't delete this function we can use this function to generate facebook hashcode*/
-//    private void generateFacebookHashcode() {
-//        try {
-//            PackageInfo info = getPackageManager().getPackageInfo(
-//                    getPackageName(),
-//                    PackageManager.GET_SIGNATURES);
-//            for (Signature signature : info.signatures) {
-//                MessageDigest md = MessageDigest.getInstance("SHA");
-//                md.update(signature.toByteArray());
-//                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-//            }
-//        } catch (Exception e) {
-//
-//        }
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,35 +165,16 @@ public class SplashActivity extends BaseActivity {
         try {
 
             setContentView(R.layout.splash_activity);
-            root = findViewById(R.id.rootLayout);
-            ((BaseApplication) getApplication()).setView(root);
+            mLayout = findViewById(R.id.rootLayout);
+            ((BaseApplication) getApplication()).setView(mLayout);
             ((BaseApplication) getApplication()).setActivity(this);
 
-            mLayout = findViewById(R.id.rootLayout);
+
             /* AnalyticsHelper.logEvent("Application Launch...");*/
 
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
             Log.e("version number ", version);
-
-            if (!"0".equals(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getId()) && version.equals(AppConstants.GROUPS_COACHMARK_VERSION) && SharedPrefUtils.isGroupTourFirstLaunch(BaseApplication.getAppContext())) {
-                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "groups", false);
-                SharedPrefUtils.setGroupTourFirstLaunch(BaseApplication.getAppContext(), false);
-            }
-
-            if (!"0".equals(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getId()) && version.equals(AppConstants.LOCALIZATION_RELEASE_VERSION) && SharedPrefUtils.isLocalizationFirstLaunch(BaseApplication.getAppContext())) {
-                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "home", false);
-                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics", false);
-                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article", false);
-                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "article_details", false);
-                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "Mom_vlog", false);
-                SharedPrefUtils.setLocalizationFirstLaunch(BaseApplication.getAppContext(), false);
-            }
-
-            if (!"0".equals(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getId()) && version.equals(AppConstants.FACEBOOK_CONNECT_RELEASE_VERSION) && SharedPrefUtils.isFBConnectFirstLaunch(BaseApplication.getAppContext())) {
-                SharedPrefUtils.clearPrefrence(BaseApplication.getAppContext());
-                SharedPrefUtils.setFBConnectFirstLaunch(BaseApplication.getAppContext(), false);
-            }
 
             ImageView _spin = (ImageView) findViewById(R.id.spin);
             _spin.startAnimation(AnimationUtils.loadAnimation(this,
@@ -235,7 +197,6 @@ public class SplashActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -503,16 +464,7 @@ public class SplashActivity extends BaseActivity {
         UserInfo userInfo = SharedPrefUtils.getUserDetailModel(this);
         TableAdult _table = new TableAdult(BaseApplication.getInstance());
         if (null != userInfo && !StringUtils.isNullOrEmpty(userInfo.getMc4kToken()) && AppConstants.VALIDATED_USER.equals(userInfo.getIsValidated())) { // if he signup
-
-         /*   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(new Intent(context, ServedService.class));
-            } else {
-                context.startService(new Intent(context, ServedService.class));
-            }*/
-
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
                 Intent intent5 = new Intent(this, PushTokenService.class);
                 startForegroundService(intent5);
             } else {
