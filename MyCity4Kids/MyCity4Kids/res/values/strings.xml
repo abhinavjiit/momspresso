@@ -1357,7 +1357,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="profile_setting">Profile settings</string>
     <string name="accounts">Account</string>
     <string name="personal_info">Personal info</string>
-    <string name="mymoney_info">MyMoney info</string>
     <string name="payment_details">Payment details</string>
     <string name="social_accounts">Social accounts</string>
     <string name="general">General</string>
@@ -1410,5 +1409,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="child_delete">Delete</string>
     <string name="profile_name_optional">Name (optional)</string>
     <string name="profile_expected_date_delivery">Expected date of delivery</string>
+    <string name="mymoney_info">MyMoney Dashboard</string>
 </resources>
 

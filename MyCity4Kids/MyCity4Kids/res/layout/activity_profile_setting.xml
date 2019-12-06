@@ -209,7 +209,8 @@
                 android:drawablePadding="@dimen/space_20"
                 android:text="@string/help"
                 android:textColor="@color/campaign_4A4A4A"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="gone"/>
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/report_spam"

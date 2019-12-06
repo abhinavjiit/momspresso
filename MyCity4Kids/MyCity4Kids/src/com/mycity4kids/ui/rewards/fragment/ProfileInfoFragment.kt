@@ -417,7 +417,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
             textDOB.setText(DateTimeUtils.getKidsDOBNanoMilliTimestamp(apiGetResponse.dob))
         }
 
-        if (apiGetResponse.isExpected != null && apiGetResponse.isExpected.equals("1") && apiGetResponse.expectedDate != null) {
+        if (apiGetResponse.isExpected != null && apiGetResponse.isExpected.equals("1") && !apiGetResponse.expectedDate.isNullOrEmpty()) {
             editExpectedDate.setText(DateTimeUtils.getKidsDOBNanoMilliTimestamp(apiGetResponse.expectedDate))
             checkAreYouExpecting.isChecked = true
             layoutMotherExptectedDate.visibility = View.VISIBLE
@@ -865,18 +865,24 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
 
 
     fun prepareDataForPosting(): Boolean {
-        if (apiGetResponse.rewardsAdded.equals("1") && editFirstName.text.isNullOrEmpty()) {
+        if (apiGetResponse.rewardsAdded.equals("1") && editFirstName.text.trim().isEmpty()) {
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_first_name)), Toast.LENGTH_SHORT).show()
             return false
         } else {
             apiGetResponse.firstName = editFirstName.text.toString()
         }
 
-        if (apiGetResponse.rewardsAdded.equals("1") && editLastName.text.isNullOrEmpty()) {
+        if (apiGetResponse.rewardsAdded.equals("1") && editLastName.text.trim().isEmpty()) {
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_last_name)), Toast.LENGTH_SHORT).show()
             return false
         } else {
             apiGetResponse.lastName = editLastName.text.toString()
+        }
+        if (aboutEditText.text.trim().isEmpty()) {
+            Toast.makeText(activity, getString(R.string.app_settings_edit_profile_toast_user_bio_empty), Toast.LENGTH_SHORT).show()
+            return false
+        } else {
+            apiGetResponse.userBio = aboutEditText.text.toString()
         }
 
 //        if (BuildConfig.DEBUG) {
@@ -884,14 +890,14 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
 //            apiGetResponse.contact = "9999999999"
 //        }
 
-        if (accountKitAuthCode.isNullOrEmpty() && apiGetResponse.mobile.isNullOrEmpty()) {
+        if (accountKitAuthCode.trim().isEmpty() && apiGetResponse.mobile.trim().isEmpty()) {
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_phone)), Toast.LENGTH_SHORT).show()
             return false
         } else {
-            if (!apiGetResponse.mobile.isNullOrEmpty()) {
+            if (!apiGetResponse.mobile.trim().isEmpty()) {
                 apiGetResponse.mobile = apiGetResponse.mobile
                 apiGetResponse.mobileToken = ""
-            } else if (!accountKitAuthCode.isNullOrEmpty()) {
+            } else if (!accountKitAuthCode.trim().isEmpty()) {
                 apiGetResponse.mobileToken = accountKitAuthCode
                 apiGetResponse.mobile = ""
             }
@@ -903,7 +909,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
             return false
         }
 
-        if (editLocation.text.isNullOrEmpty()) {
+        if (editLocation.text.trim().isEmpty()) {
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_location)), Toast.LENGTH_SHORT).show()
             return false
         } else {
@@ -928,7 +934,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
             "Female"
         }
 
-        if (textDOB.text.isNullOrEmpty()) {
+        if (textDOB.text.trim().isEmpty()) {
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_dob)), Toast.LENGTH_SHORT).show()
             return false
         } else {
@@ -965,7 +971,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
         }
 
         if (checkAreYouExpecting.isChecked) {
-            if (editExpectedDate.text.isNullOrEmpty()) {
+            if (editExpectedDate.text.trim().isEmpty()) {
                 Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_expected_date)), Toast.LENGTH_SHORT).show()
                 return false
             } else {
@@ -974,7 +980,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
             }
         } else {
             apiGetResponse.isExpected = "0"
-            apiGetResponse.expectedDate = "0"
+            apiGetResponse.expectedDate = ""
         }
 
         if (radioGroupAreMother.checkedRadioButtonId == R.id.radioYes) {
@@ -996,7 +1002,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
                 apiGetResponse.kids = kidsList
                 Log.d("dob text is ", kidsList.get(0).name)
                 if (linearKidsEmptyView.visibility == View.VISIBLE) {
-                    if (!textKidsDOB.text.isNullOrEmpty()) {
+                    if (!textKidsDOB.text.trim().isEmpty()) {
                         var kidsInfoResponse = KidsModel()
                         kidsInfoResponse.gender = if (spinnerGender.selectedItemPosition == 0) {
                             "0"
@@ -1012,7 +1018,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
                     }
                 }
             } else {
-                if (!textKidsDOB.text.isNullOrEmpty()) {
+                if (!textKidsDOB.text.trim().isEmpty()) {
                     var kidsInfoLocal = ArrayList<KidsModel>()
                     var kidsInfoResponse = KidsModel()
                     kidsInfoResponse.gender = if (spinnerGender.selectedItemPosition == 0) {

@@ -1247,4 +1247,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="badges_winner_share_text">%1$s %2$s is a %3$s badge winner | Momspresso\n%4$s</string>
     <string name="crown_winner_share_text">%1$s %2$s is a %3$s crown winner | Momspresso\n%4$s</string>
     <string name="add_thumbnail">থাম্বনেইল যোগ করুন</string>
+    <string name="mymoney_info">MyMoney Dashboard</string>
 </resources>

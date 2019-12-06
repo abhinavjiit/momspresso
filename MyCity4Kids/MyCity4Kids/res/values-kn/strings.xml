@@ -1282,4 +1282,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="child_delete">Delete</string>
     <string name="profile_name_optional">Name (optional)</string>
     <string name="profile_expected_date_delivery">Expected date of delivery</string>
+    <string name="mymoney_info">MyMoney Dashboard</string>
 </resources>
