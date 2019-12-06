@@ -991,7 +991,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
                         kidsInfoResponse.name = editKidsName.text.toString()
                         apiGetResponse.kids!!.add(kidsInfoResponse)
                     } else {
-                        Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_dob)), Toast.LENGTH_SHORT).show()
                         return false
                     }
                 }
@@ -1009,7 +1009,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
                     kidsInfoLocal.add(kidsInfoResponse)
                     apiGetResponse.kids = kidsInfoLocal
                 } else {
-                    Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_dob)), Toast.LENGTH_SHORT).show()
                     return false
                 }
             }
