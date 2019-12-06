@@ -268,7 +268,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             anonymousCheckbox.setChecked(false);
         }
 
-
         new SimpleTooltip.Builder(this)
                 .anchorView(audioRecordView)
                 .backgroundColor(getResources().getColor(R.color.app_red))
@@ -281,7 +280,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                 .transparentOverlay(true)
                 .build()
                 .show();
-
     }
 
     @Override
