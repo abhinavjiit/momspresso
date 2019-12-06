@@ -1064,7 +1064,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     Intent intent1 = new Intent(this, UserProfileActivity.class);
                     intent1.putExtra("fromNotification", true);
                     intent1.putExtra(Constants.USER_ID, u_id);
-                    intent1.putExtra(AppConstants.BADGE_ID, "" + notificationExtras.getString(AppConstants.BADGE_ID));
+                    intent1.putExtra(AppConstants.BADGE_ID, notificationExtras.getString(AppConstants.BADGE_ID));
                     intent1.putExtra(Constants.FROM_SCREEN, "Notification");
                     startActivity(intent1);
                 } else {
