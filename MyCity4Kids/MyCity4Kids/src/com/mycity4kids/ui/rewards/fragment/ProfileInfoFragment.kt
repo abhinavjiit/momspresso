@@ -866,13 +866,16 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
 //            apiGetResponse.contact = "9999999999"
 //        }
 
-        if (accountKitAuthCode.trim().isEmpty()) {
+        if (accountKitAuthCode.trim().isEmpty() && apiGetResponse.mobile != null && apiGetResponse.mobile.trim().isEmpty()) {
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_phone)), Toast.LENGTH_SHORT).show()
             return false
         } else {
-            if (!accountKitAuthCode.trim().isEmpty()) {
+            if (apiGetResponse.mobile != null && !apiGetResponse.mobile.trim().isEmpty()) {
+                apiGetResponse.mobile = apiGetResponse.mobile
+                apiGetResponse.mobileToken = ""
+            } else if (!accountKitAuthCode.trim().isEmpty()) {
                 apiGetResponse.mobileToken = accountKitAuthCode
-//                 apiGetResponse.mobile = edit
+                apiGetResponse.mobile = ""
             }
         }
 
@@ -988,7 +991,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
                         kidsInfoResponse.name = editKidsName.text.toString()
                         apiGetResponse.kids!!.add(kidsInfoResponse)
                     } else {
-                        Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_dob)), Toast.LENGTH_SHORT).show()
                         return false
                     }
                 }
@@ -1006,7 +1009,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
                     kidsInfoLocal.add(kidsInfoResponse)
                     apiGetResponse.kids = kidsInfoLocal
                 } else {
-                    Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_dob)), Toast.LENGTH_SHORT).show()
                     return false
                 }
             }
