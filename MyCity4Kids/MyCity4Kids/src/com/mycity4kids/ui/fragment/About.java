@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
@@ -27,6 +28,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -57,7 +62,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class About extends Fragment implements AdapterView.OnItemSelectedListener, View.OnClickListener, CityListingDialogFragment.IChangeCity {
+import static com.mycity4kids.ui.rewards.fragment.RewardsPersonalInfoFragmentKt.REQUEST_SELECT_PLACE;
+
+public class About extends Fragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     private boolean isEditFlag = false;
     private int kidsViewPosition;
@@ -238,14 +245,36 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
                 break;
 
             case R.id.cityTextView:
-                cityFragment = new CityListingDialogFragment();
+                if (isAdded()) {
+                    ArrayList<Place.Field> fieldsArr = new ArrayList<>();
+                    fieldsArr.add(Place.Field.ID);
+                    fieldsArr.add(Place.Field.NAME);
+                    fieldsArr.add(Place.Field.LAT_LNG);
+                    Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fieldsArr).setTypeFilter(TypeFilter.CITIES)
+                            .build(getActivity());
+
+                    startActivityForResult(intent, REQUEST_SELECT_PLACE);
+                }
+
+
+             /*   val fieldsArr = arrayOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG).asList()
+                val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fieldsArr)
+                        .setTypeFilter(TypeFilter.CITIES)
+                        .build(it.context)
+
+                startActivityForResult(intent, REQUEST_SELECT_PLACE)*/
+
+
+
+
+              /*  cityFragment = new CityListingDialogFragment();
                 // cityFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putParcelableArrayList("cityList", cityList);
                 _args.putString("fromScreen", "editProfile");
                 cityFragment.setArguments(_args);
                 FragmentManager fm = getChildFragmentManager();
-                cityFragment.show(fm, "Replies");
+                cityFragment.show(fm, "Replies");*/
                 break;
             case R.id.changePasswordTextView:
                 Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
@@ -487,22 +516,6 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
         newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }
 
-    @Override
-    public void onCitySelect(CityInfoItem cityItem) {
-        cityTextView.setText(cityItem.getCityName());
-        currentCityName = cityItem.getCityName();
-        selectedCityId = Integer.parseInt(cityItem.getId().replace("city-", ""));
-        newSelectedCityId = cityItem.getId();
-    }
-
-    @Override
-    public void onOtherCitySelect(int pos, String cityName) {
-        currentCityName = cityName;
-        selectedCityId = Integer.parseInt(cityList.get(pos).getId().replace("city-", ""));
-        newSelectedCityId = cityList.get(pos).getId();
-        cityList.get(pos).setCityName("Others(" + cityName + ")");
-        cityTextView.setText(cityList.get(pos).getCityName());
-    }
 
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
@@ -586,6 +599,40 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
     public String getNewSelectedCityId() {
         return newSelectedCityId;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            if (requestCode == REQUEST_SELECT_PLACE) {
+
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                if (!StringUtils.isNullOrEmpty(place.getName())) {
+                    cityTextView.setText(place.getName());
+                    currentCityName = place.getName();
+                    newSelectedCityId = place.getId();
+                    selectedCityId = Integer.parseInt(place.getId().replace("city-", ""));
+
+                }
+
+            /*    cityTextView.setText(cityItem.getCityName());
+                currentCityName = cityItem.getCityName();
+                selectedCityId = Integer.parseInt(cityItem.getId().replace("city-", ""));
+                newSelectedCityId = cityItem.getId();
+*/
+              /*  val place = Autocomplete.getPlaceFromIntent(data)
+                if (!place.name.toString().isNullOrEmpty()) {
+                    cityName = place.name.toString()
+                    editLocation.setText(cityName)
+                    lat = place.latLng?.latitude
+                            lng = place.latLng?.longitude
+                            address = cityName*/
+            }
+
+
+        }
+    }
+
 }
 
 
