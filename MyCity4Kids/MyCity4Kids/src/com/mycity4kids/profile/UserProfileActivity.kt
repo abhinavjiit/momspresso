@@ -1020,17 +1020,17 @@ class UserProfileActivity : BaseActivity(),
             }
             view.id == R.id.collectionItem2TextView -> {
                 val intent = Intent(this, UserCollectionItemListActivity::class.java)
-                intent.putExtra("id", userFeaturedOnList?.get(position)?.collectionList?.get(0)?.userCollectionId)
+                intent.putExtra("id", userFeaturedOnList?.get(position)?.collectionList?.get(1)?.userCollectionId)
                 startActivity(intent)
             }
             view.id == R.id.collectionItem3TextView -> {
                 val intent = Intent(this, UserCollectionItemListActivity::class.java)
-                intent.putExtra("id", userFeaturedOnList?.get(position)?.collectionList?.get(0)?.userCollectionId)
+                intent.putExtra("id", userFeaturedOnList?.get(position)?.collectionList?.get(2)?.userCollectionId)
                 startActivity(intent)
             }
             view.id == R.id.collectionItem4TextView -> {
                 val intent = Intent(this, UserCollectionItemListActivity::class.java)
-                intent.putExtra("id", userFeaturedOnList?.get(position)?.collectionList?.get(0)?.userCollectionId)
+                intent.putExtra("id", userFeaturedOnList?.get(position)?.collectionList?.get(3)?.userCollectionId)
                 startActivity(intent)
             }
             view.id == R.id.moreItemsTextView -> {

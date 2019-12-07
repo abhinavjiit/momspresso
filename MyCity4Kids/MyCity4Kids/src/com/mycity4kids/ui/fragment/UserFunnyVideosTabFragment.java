@@ -251,6 +251,10 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
+            if (nextPageNumber == 1) {
+                firstUploadLayout.setVisibility(View.GONE);
+                noBlogsTextView.setVisibility(View.VISIBLE);
+            }
             progressBar.setVisibility(View.INVISIBLE);
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
