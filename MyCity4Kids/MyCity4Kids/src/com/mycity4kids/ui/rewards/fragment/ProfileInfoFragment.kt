@@ -404,9 +404,9 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
         if (apiGetResponse.kids != null && apiGetResponse.kids!!.isNotEmpty()) {
             for (i in 0..apiGetResponse.kids!!.size - 1) {
                 if (i == 0 && apiGetResponse.kids!!.size == 1) {
-                    createKidsDetailDynamicView(apiGetResponse.kids!!.get(i).gender!!, DateTimeUtils.getDOBMilliTimestamp(apiGetResponse.kids!!.get(i).getBirthDay()), apiGetResponse.kids!!.get(i).name, false)
+                    createKidsDetailDynamicView(apiGetResponse.kids!!.get(i).gender, DateTimeUtils.getDOBMilliTimestamp(apiGetResponse.kids!!.get(i).getBirthDay()), apiGetResponse.kids!!.get(i).name, false)
                 } else {
-                    createKidsDetailDynamicView(apiGetResponse.kids!!.get(i).gender!!, DateTimeUtils.getDOBMilliTimestamp(apiGetResponse.kids!!.get(i).getBirthDay()), apiGetResponse.kids!!.get(i).name)
+                    createKidsDetailDynamicView(apiGetResponse.kids!!.get(i).gender, DateTimeUtils.getDOBMilliTimestamp(apiGetResponse.kids!!.get(i).getBirthDay()), apiGetResponse.kids!!.get(i).name)
                 }
             }
             linearKidsEmptyView.visibility = View.GONE
