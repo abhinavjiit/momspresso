@@ -100,16 +100,22 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
             holder.itemTypeImageView.setImageResource(R.drawable.ic_video)
         }
         setContentDate(userFeaturedOnList?.get(position)?.itemType, position, holder)
-        populateCollectionsForEachItem(position, holder)
+        try {
+            populateCollectionsForEachItem(position, holder)
+        } catch (e: Exception) {
+            Crashlytics.logException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
+        }
     }
 
     private fun populateCollectionsForEachItem(position: Int, holder: UserFeaturedContentViewHolder) {
         when {
             (userFeaturedOnList?.get(position)?.collectionList == null)
-                    || (userFeaturedOnList?.get(position)?.collectionListTotal == 0) -> {
+                    || (userFeaturedOnList?.get(position)?.collectionList?.size == 0) -> {
                 holder.collectionsFLContainer.visibility = GONE
             }
-            userFeaturedOnList?.get(position)?.collectionListTotal == 1 -> {
+            (userFeaturedOnList?.get(position)?.collectionList?.size
+                    ?: 0) == 1 -> {
                 holder.collectionItem2TextView.visibility = GONE
                 holder.collectionItem3TextView.visibility = GONE
                 holder.collectionItem4TextView.visibility = GONE
@@ -117,7 +123,8 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
                 holder.collectionItem1TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(0)?.name
                 holder.moreItemsTextView.visibility = GONE
             }
-            userFeaturedOnList?.get(position)?.collectionListTotal == 2 -> {
+            (userFeaturedOnList?.get(position)?.collectionList?.size
+                    ?: 0) == 2 -> {
                 holder.collectionItem3TextView.visibility = GONE
                 holder.collectionItem4TextView.visibility = GONE
                 holder.collectionItem1TextView.visibility = VISIBLE
@@ -126,7 +133,8 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
                 holder.collectionItem2TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(1)?.name
                 holder.moreItemsTextView.visibility = GONE
             }
-            userFeaturedOnList?.get(position)?.collectionListTotal == 3 -> {
+            (userFeaturedOnList?.get(position)?.collectionList?.size
+                    ?: 0) == 3 -> {
                 holder.collectionItem4TextView.visibility = GONE
                 holder.collectionItem1TextView.visibility = VISIBLE
                 holder.collectionItem1TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(0)?.name
@@ -136,7 +144,8 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
                 holder.collectionItem3TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(2)?.name
                 holder.moreItemsTextView.visibility = GONE
             }
-            userFeaturedOnList?.get(position)?.collectionListTotal == 4 -> {
+            (userFeaturedOnList?.get(position)?.collectionList?.size
+                    ?: 0) == 4 -> {
                 holder.collectionItem1TextView.visibility = VISIBLE
                 holder.collectionItem1TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(0)?.name
                 holder.collectionItem1TextView.setOnClickListener(holder)
@@ -148,7 +157,8 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
                 holder.collectionItem4TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(3)?.name
                 holder.moreItemsTextView.visibility = GONE
             }
-            userFeaturedOnList?.get(position)?.collectionListTotal!! > 4 -> {
+            (userFeaturedOnList?.get(position)?.collectionList?.size
+                    ?: 0) > 4 -> {
                 val moreItemCount = userFeaturedOnList?.get(position)?.collectionListTotal!! - 4
                 holder.collectionItem1TextView.visibility = VISIBLE
                 holder.collectionItem1TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(0)?.name
