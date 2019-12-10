@@ -29,19 +29,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
@@ -141,6 +128,18 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
@@ -1726,22 +1725,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.drawerProfileCoachmark: {
                 drawerProfileCoachmark.setVisibility(View.GONE);
-                drawerMyMoneyCoachmark.setVisibility(View.VISIBLE);
-                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "Drawer", true);
-            }
-            break;
-            case R.id.drawerMyMoneyCoachmark: {
                 drawerMyMoneyCoachmark.setVisibility(View.GONE);
                 SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "Drawer", true);
             }
             break;
             case R.id.homeCoachmark: {
                 homeCoachmark.setVisibility(View.GONE);
-                exploreCoachmark.setVisibility(View.VISIBLE);
-            }
-            break;
-            case R.id.exploreCoachmark: {
-                exploreCoachmark.setVisibility(View.GONE);
                 createCoachmark.setVisibility(View.VISIBLE);
             }
             break;
