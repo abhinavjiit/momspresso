@@ -27,6 +27,7 @@ dependencies {
     compile project(':WordPressEditor')
     compile files('libs/comscore.jar')
 
+    implementation 'pub.devrel:easypermissions:3.0.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'com.google.android.gms:play-services-plus:17.0.0'
@@ -61,7 +62,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
     implementation 'org.apmem.tools:layouts:1.10@aar'
-    implementation 'com.yalantis:ucrop:2.1.1'
+    implementation 'com.github.yalantis:ucrop:2.2.4'
     implementation 'com.getbase:floatingactionbutton:1.10.1'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.1'
     implementation 'io.tus.java.client:tus-java-client:0.3.1'
