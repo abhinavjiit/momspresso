@@ -46,6 +46,7 @@ public class ArticleListingResult implements Parcelable, StickyMainData {
     private boolean isCarouselRequestRunning = false;
     private boolean responseReceived = false;
     private String disableComment = "";
+    private boolean isChecked = false;
     private ArrayList<VlogsListingAndDetailResult> carouselVideoList;
 
     public ArticleListingResult() {
@@ -77,6 +78,7 @@ public class ArticleListingResult implements Parcelable, StickyMainData {
         url = in.readString();
         is_bookmark = in.readString();
         disableComment = in.readString();
+
     }
 
     public static final Creator<ArticleListingResult> CREATOR = new Creator<ArticleListingResult>() {
@@ -119,6 +121,13 @@ public class ArticleListingResult implements Parcelable, StickyMainData {
         return excerpt;
     }
 
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
 
     public void setExcerpt(String excerpt) {
         this.excerpt = excerpt;
@@ -148,7 +157,7 @@ public class ArticleListingResult implements Parcelable, StickyMainData {
         this.userName = userName;
     }
 
-//    public ProfilePic getProfilePic() {
+//    public ProfilePic getProfilePic()  {
 //        return profilePic;
 //    }
 //

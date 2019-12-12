@@ -4,6 +4,7 @@ import com.mycity4kids.models.collectionsModels.*
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.FollowUnfollowUserResponse
 import com.mycity4kids.models.response.MixFeedResponse
+import com.mycity4kids.ui.campaign.BasicResponse
 import io.reactivex.Observable
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -61,5 +62,10 @@ interface CollectionsAPI {
                               @Query("start") start: Int,
                               @Query("offset") offset: Int): Observable<BaseResponseGeneric<UserCollectionsListModel>>
 
+    //api.momspresso.com/v1/collectionItem/addItems/
+    @POST("/v1/collectionItem/addItems/")
+    fun addMultipleCollectionItem(@Body multipleCollectionItems: ArrayList<UpdateCollectionRequestModel>): Call<BaseResponseGeneric<AddCollectionRequestModel>>
+
 
 }
+

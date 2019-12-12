@@ -6,11 +6,6 @@ import android.content.pm.PackageInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.AlertDialog;
-
 import android.util.Log;
 import android.view.View;
 
@@ -74,6 +69,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -248,7 +246,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         try {
             if (user != null) {
                 loginMode = "fb";
-
                 LoginRegistrationRequest lr = new LoginRegistrationRequest();
                 lr.setCityId("" + SharedPrefUtils.getCurrentCityModel(this).getId());
                 lr.setRequestMedium("fb");

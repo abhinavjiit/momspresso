@@ -4,12 +4,12 @@
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/shape_shadow_rectangle"
+    android:clickable="true"
     android:orientation="vertical"
     android:paddingBottom="10dp"
-    app:behavior_hideable="false"
-    android:clickable="true"
     android:visibility="visible"
-    android:background="@drawable/shape_shadow_rectangle"
+    app:behavior_hideable="false"
     app:behavior_peekHeight="100dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
@@ -18,8 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_gravity="center_vertical"
-        android:orientation="horizontal"
         android:background="@drawable/ic_rewards_bottom_header"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -28,10 +28,10 @@
             android:id="@+id/header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
             android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight=".7"
             android:orientation="vertical">
 
@@ -117,9 +117,9 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:background="@color/white"
-        android:paddingBottom="20dp"
-        android:layout_centerHorizontal="true">
+        android:paddingBottom="20dp">
 
         <ImageView
             android:id="@+id/imageView2"
@@ -157,8 +157,8 @@
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="20dp"
-            android:paddingRight="10dp"
             android:gravity="center"
+            android:paddingRight="10dp"
             android:text="@string/rewards_description"
             android:textSize="14sp"
             app:fontName="oswald.ttf" />
@@ -202,8 +202,8 @@
             android:layout_alignEnd="@+id/imageView2"
             android:layout_alignRight="@+id/imageView2"
             android:layout_alignBottom="@+id/imageView2"
-            android:gravity="bottom|center"
             android:layout_marginBottom="10dp"
+            android:gravity="bottom|center"
             android:text="@string/reward_welcome"
             android:textColor="@color/white"
             app:fontName="oswald_regular.ttf" />

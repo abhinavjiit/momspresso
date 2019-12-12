@@ -113,8 +113,8 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
             viewContentTextView.visibility = View.GONE
         } else {
             if (BuildConfig.DEBUG) {
-                shareContainer.visibility = View.GONE
-                shareJoyContainer.visibility = View.GONE
+                shareContainer.visibility = View.VISIBLE
+                shareJoyContainer.visibility = View.VISIBLE
             } else {
                 shareContainer.visibility = View.GONE
                 shareJoyContainer.visibility = View.GONE

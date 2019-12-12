@@ -7,7 +7,8 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import com.mycity4kids.ui.fragment.UserCreatedCollectionsFragment
 import com.mycity4kids.ui.fragment.UserFollowedCollectionsFragment
 
-class CollectionPagerAdapter(val fragmentManager: FragmentManager, var isPrivate: Boolean, var userId: String) : FragmentStatePagerAdapter(fragmentManager) {
+
+class CollectionPagerAdapter(val fragmentManager: FragmentManager, var isPrivate: Boolean, var userId: String) : FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getCount(): Int {
         return if (isPrivate)
