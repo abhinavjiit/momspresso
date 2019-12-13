@@ -88,7 +88,7 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                 val text = currentEditText.text?.toString()
                 if (text.isNullOrBlank()) {
                     setFocusable()
-                    setCursurVisibility()
+                    setCursorVisibility()
                     nextEditText?.text?.clear()
                     nextEditText?.isFocusableInTouchMode = true
                     nextEditText?.requestFocus()
@@ -293,7 +293,7 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
         otpEditText6?.isFocusable = false
     }
 
-    private fun setCursurVisibility() {
+    private fun setCursorVisibility() {
         otpEditText1?.isCursorVisible = false
         otpEditText2?.isCursorVisible = false
         otpEditText3?.isCursorVisible = false

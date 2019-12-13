@@ -22,6 +22,7 @@ import com.kelltontech.utils.StringUtils
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.collectionsModels.AddCollectionRequestModel
@@ -119,6 +120,7 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
                         if (!StringUtils.isNullOrEmpty(collectionId) && !StringUtils.isNullOrEmpty(articleId)) {
                             addCollectionItem()
                         } else {
+                            addMultipleCollectionItemsInCollection(collectionId)
                             targetFragment?.onActivityResult(100, 1, activity?.intent)
                             addCollectionInterface?.let {
                                 it.onCollectionAddSuccess()
@@ -201,6 +203,25 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
             }
         })
     }
+
+    private fun addMultipleCollectionItemsInCollection(collectionId: String) {
+        try {
+            val addMultipleCollectionItemDialogFragment = AddMultipleCollectionItemDialogFragment()
+            val bundle = Bundle()
+            bundle.putString("collectionId", collectionId)
+            bundle.putString("type", AppConstants.ARTICLE_COLLECTION_TYPE)
+            addMultipleCollectionItemDialogFragment.arguments = bundle
+            val fm = fragmentManager
+            addMultipleCollectionItemDialogFragment.setTargetFragment(this, 0)
+            addMultipleCollectionItemDialogFragment.show(fm!!, "collectionAdd")
+            /*    Utils.pushProfileEvents(activity, "CTA_100WS_Add_To_Collection",
+                        "TopicsShortStoriesTabFragment", "Add to Collection", "-")*/
+        } catch (e: Exception) {
+            Crashlytics.logException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
+        }
+    }
+
 
     interface AddCollectionInterface {
         fun onCollectionAddSuccess()

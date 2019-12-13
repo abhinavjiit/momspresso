@@ -96,16 +96,17 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
-    <include layout="@layout/rewards_bottom_sheet" />
+    <include
+        layout="@layout/rewards_bottom_sheet"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_gravity="right|bottom"
-        android:layout_marginRight="@dimen/space_10"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="@dimen/space_10"
         android:layout_marginBottom="@dimen/space_20"
         android:orientation="vertical">
 
@@ -268,6 +269,7 @@
         </LinearLayout>
 
         <RelativeLayout
+            android:id="@+id/videoCoachMark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -276,19 +278,18 @@
             android:layout_gravity="right|bottom"
             android:layout_marginRight="@dimen/space_10"
             android:layout_marginBottom="@dimen/space_20"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/tapToCreateTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-
                 android:paddingLeft="@dimen/space_20"
                 android:paddingTop="@dimen/space_5"
                 android:paddingRight="@dimen/space_20"
                 android:paddingBottom="@dimen/space_5"
-
                 android:text="@string/tap_to_create"
                 android:textColor="@color/black"
                 android:textSize="16sp"
@@ -311,10 +312,8 @@
                 android:elevation="4dp"
                 android:tint="@color/white"
                 android:visibility="visible"
-
                 app:backgroundTint="@color/app_red"
                 app:srcCompat="@drawable/ic_video_new" />
-
 
         </RelativeLayout>
 

@@ -1399,6 +1399,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 .arrowWidth(60)
                 .arrowHeight(20)
                 .animated(false)
+                .focusable(true)
                 .transparentOverlay(true)
                 .build();
         simpleTooltip.show();

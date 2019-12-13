@@ -69,7 +69,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/articleImageView"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
                 android:layout_marginBottom="@dimen/space_10"
                 android:drawableLeft="@drawable/ic_views"
                 android:drawablePadding="@dimen/space_5"

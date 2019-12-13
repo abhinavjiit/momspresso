@@ -502,7 +502,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                 Utils.pushGenericEvent(this@UserCollectionItemListActivity, "Show_Private_Collection_Detail",
                         userCollectionsListModel.userId, "UserCollectionItemListActivity")
             } else {
-                share?.visibility = View.GONE
+                //  share?.visibility = View.GONE
                 if (userCollectionsListModel.collectionItems.isEmpty()) {
                     itemNotAddedTextView.visibility = View.VISIBLE
                     itemNotAddedTextView.text = getString(R.string.no_collection_items)

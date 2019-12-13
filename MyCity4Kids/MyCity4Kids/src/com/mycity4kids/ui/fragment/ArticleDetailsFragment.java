@@ -407,6 +407,41 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
 
             facebookShareTextView.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.ic_facebook_svg), null, null);
+            try {
+                Drawable myDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_whats_app);
+                myDrawable.setTint(getResources().getColor(R.color.app_red));
+                whatsappShareTextView.setCompoundDrawablesWithIntrinsicBounds(null, myDrawable, null, null);
+            } catch (NullPointerException e) {
+                Crashlytics.logException(e);
+                Log.d("NullPointerException", Log.getStackTraceString(e));
+            }
+            try {
+                Drawable myDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_collection_add);
+                myDrawable.setTint(getResources().getColor(R.color.app_red));
+                emailShareTextView.setCompoundDrawablesWithIntrinsicBounds(null, myDrawable, null, null);
+            } catch (NullPointerException e) {
+                Crashlytics.logException(e);
+                Log.d("NullPointerException", Log.getStackTraceString(e));
+            }
+
+            try {
+                Drawable myDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmark);
+                myDrawable.setTint(getResources().getColor(R.color.app_red));
+                bookmarkArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, myDrawable, null, null);
+            } catch (NullPointerException e) {
+                Crashlytics.logException(e);
+                Log.d("NullPointerException", Log.getStackTraceString(e));
+            }
+            try {
+                Drawable myDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_recommend);
+                myDrawable.setTint(getResources().getColor(R.color.app_red));
+                likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, myDrawable, null, null);
+            } catch (NullPointerException e) {
+                Crashlytics.logException(e);
+                Log.d("NullPointerException", Log.getStackTraceString(e));
+            }
+
+
             density = getResources().getDisplayMetrics().density;
             width = getResources().getDisplayMetrics().widthPixels;
             defaultBloggerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_blogger_profile_img);
@@ -2919,5 +2954,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }, 3000);
 
     }
+
 
 }

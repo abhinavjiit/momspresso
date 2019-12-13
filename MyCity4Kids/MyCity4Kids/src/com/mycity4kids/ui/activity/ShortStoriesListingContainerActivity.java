@@ -89,10 +89,12 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
         textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
         bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
         fabAddShortStory = findViewById(R.id.fabAddShortStory);
+        bottom_sheet.setVisibility(View.GONE);
+        fabAddShortStory.setVisibility(View.VISIBLE);
 
 
         String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext());
-        if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
+       /* if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
             bottom_sheet.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -131,9 +133,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
         } else {
             bottom_sheet.setVisibility(View.GONE);
             fabAddShortStory.setVisibility(View.VISIBLE);
-
-
-        }
+        }*/
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);

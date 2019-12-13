@@ -25,11 +25,6 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.viewpager.widget.ViewPager;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -65,6 +60,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
 import com.mycity4kids.ui.adapter.UserProfilePagerAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.GenericFileProvider;
+import com.mycity4kids.utils.PermissionUtil;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -77,6 +73,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.viewpager.widget.ViewPager;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -555,6 +555,50 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
         }
     }
 
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_CAMERA) {
+            // We have requested multiple permissions for contacts, so all of them need to be
+            // checked.
+            if (PermissionUtil.verifyPermissions(grantResults)) {
+                // All required permissions have been granted, display contacts fragment.
+                Snackbar.make(rootView, R.string.permision_available_init,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            } else {
+                Log.i("Permissions", "storage permissions were NOT granted.");
+                Snackbar.make(rootView, R.string.permissions_not_granted,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+
+        } else if (requestCode == REQUEST_EDIT_PICTURE) {
+            Log.i("Permissions", "Received response for storage permissions request.");
+
+            // We have requested multiple permissions for contacts, so all of them need to be
+            // checked.
+            if (PermissionUtil.verifyPermissions(grantResults)) {
+                // All required permissions have been granted, display contacts fragment.
+                Snackbar.make(rootView, R.string.permision_available_init,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+                chooseImageOptionPopUp();
+            } else {
+                Log.i("Permissions", "storage permissions were NOT granted.");
+                Snackbar.make(rootView, R.string.permissions_not_granted,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        }
+
+    }
+
     public void chooseImageOptionPopUp() {
         final PopupMenu popup = new PopupMenu(this, profileImageView);
         popup.getMenuInflater().inflate(R.menu.profile_image_upload_options, popup.getMenu());
@@ -735,6 +779,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                     final Throwable cropError = UCrop.getError(data);
                 }
             }
+
         }
     }
 

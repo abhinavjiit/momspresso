@@ -7,17 +7,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
 import com.crashlytics.android.Crashlytics;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
@@ -46,6 +39,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -77,15 +74,8 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         setContentView(R.layout.topic_listing_activity);
         root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setActivity(this);
-
-        LinearLayout layoutBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
-        BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
-        TextView textHeaderUpdate = layoutBottomSheet.findViewById(R.id.textHeaderUpdate);
-        TextView textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
-        LinearLayout bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
         fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
         momVlogCoachMark = (RelativeLayout) findViewById(R.id.momVlogCoachMark);
-        bottom_sheet.setVisibility(View.GONE);
         momVlogCoachMark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
