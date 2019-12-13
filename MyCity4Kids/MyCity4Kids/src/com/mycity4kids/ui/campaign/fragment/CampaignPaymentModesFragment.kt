@@ -444,7 +444,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         fetchPaymentModes()
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         mContext = context
         super.onAttach(context)
         if (context is RewardsContainerActivity) {

@@ -185,7 +185,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
         updateFollowPos = pos;
         changeFollowUnfollowTextPos = pos;
         isFollowing = finalFeaturedDataList.get(pos).isFollowing();
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofitTest();
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         CollectionsAPI collectionsAPI = retrofit.create(CollectionsAPI.class);
         FollowCollectionRequestModel request = new FollowCollectionRequestModel();
         request.setUserId(userId);

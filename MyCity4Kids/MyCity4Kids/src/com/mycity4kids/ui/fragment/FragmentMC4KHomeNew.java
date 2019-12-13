@@ -6,9 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.Nullable;
-import androidx.viewpager.widget.ViewPager;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -29,7 +26,11 @@ import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.GroupIdCategoryMap;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.viewpager.widget.ViewPager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -127,7 +128,8 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
     private void processTrendingResponse(TrendingListingResponse responseData) {
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-        feedOrderArray = mFirebaseRemoteConfig.getString(HOME_PAGE_FEED_ORDER).split(",");
+//        feedOrderArray = mFirebaseRemoteConfig.getString(HOME_PAGE_FEED_ORDER).split(",");
+        feedOrderArray = new String[]{"todaysBest", "trending", "following", "recent"};
         for (String s : feedOrderArray) {
             switch (s) {
                 case Constants.KEY_TRENDING:
@@ -136,8 +138,8 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
                 case Constants.KEY_TODAYS_BEST:
                     tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.article_listing_toolbar_title_todays_best)));
                     break;
-                case Constants.KEY_EDITOR_PICKS:
-                    tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.article_listing_toolbar_title_editor_picks)));
+                case Constants.KEY_FOLLOWING:
+                    tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.ad_following_author)));
                     break;
                 case Constants.KEY_FOR_YOU:
                     tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.article_listing_toolbar_title_for_you)));

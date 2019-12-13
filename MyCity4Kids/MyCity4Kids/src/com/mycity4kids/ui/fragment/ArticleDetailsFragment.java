@@ -35,13 +35,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import com.crashlytics.android.Crashlytics;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
@@ -92,6 +85,7 @@ import com.mycity4kids.models.response.ArticleDetailWebserviceResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
+import com.mycity4kids.models.response.CrownDataResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
@@ -137,6 +131,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.QBadgeView;
@@ -153,12 +153,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     private final static int ADD_BOOKMARK = 1;
     private static final int RECOVERY_REQUEST = 1;
-    private SimpleTooltip simpleTooltip;
+    private SimpleTooltip simpleTooltip, collectionTooltip;
     private int TOOLTIP_SHOW_TIMES = 0;
     private final static int REPLY_LEVEL_PARENT = 1;
     private final static int REPLY_LEVEL_CHILD = 2;
     private MixpanelAPI mixpanel;
-    private Handler handler;
+    private Handler handler, startCollectionHandler, stopCollectionHandler;
     private ISwipeRelated iSwipeRelated;
     private ArticleDetailResult detailData;
     private Bitmap defaultBloggerBitmap;
@@ -263,6 +263,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private LinearLayout progressBarContainer;
     private boolean newArticleDetailFlag;
     private String webViewURL;
+    private ImageView crownImageView;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -322,6 +323,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             groupSubHeadingTextView = (TextView) fragmentView.findViewById(R.id.groupSubHeadingTextView);
             mScrollView = (ObservableScrollView) fragmentView.findViewById(R.id.scroll_view);
             mLodingView = (RelativeLayout) fragmentView.findViewById(R.id.relativeLoadingView);
+            crownImageView = fragmentView.findViewById(R.id.crownImageView);
 
             fragmentView.findViewById(R.id.user_name).setOnClickListener(this);
             floatingActionButton.setOnClickListener(this);
@@ -343,6 +345,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             groupHeaderView.setOnClickListener(this);
             followClick.setOnClickListener(this);
             followClick.setEnabled(false);
+
+            startCollectionHandler = new Handler();
+            startCollectionHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    tooltipForCollection();
+                }
+            }, 60000);
 
             mWebChromeClient = new MyWebChromeClient();
             mWebView.setWebChromeClient(mWebChromeClient);
@@ -516,6 +526,33 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         return fragmentView;
     }
 
+    private void tooltipForCollection() {
+        collectionTooltip = new SimpleTooltip.Builder(getActivity())
+                .anchorView(emailShareTextView)
+                .backgroundColor(getResources().getColor(R.color.app_red))
+                .text(getResources().getString(R.string.add_to_collection))
+                .textColor(getResources().getColor(R.color.white))
+                .arrowColor(getResources().getColor(R.color.app_red))
+                .gravity(Gravity.TOP)
+                .arrowWidth(40)
+                .animated(true)
+                .transparentOverlay(true)
+                .dismissOnInsideTouch(false)
+                .dismissOnOutsideTouch(false)
+                .build();
+        collectionTooltip.show();
+        stopCollectionHandler = new Handler();
+        stopCollectionHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (collectionTooltip.isShowing()) {
+                    collectionTooltip.dismiss();
+                }
+            }
+        }, 5000);
+
+    }
+
     private void bindSponsored() {
         for (int i = 0; i < shortStoriesTopicList.get(0).getChild().size(); i++) {
             if (parentId.equals(shortStoriesTopicList.get(0).getChild().get(i).getId())) {
@@ -666,6 +703,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         call.enqueue(getViewCountResponseCallback);
     }
 
+    private void getCrownData() {
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
+        Call<CrownDataResponse> call = articleDetailsAPI.getCrownData(authorId);
+        call.enqueue(getCrownDataResponse);
+    }
+
     private void hitBookmarkFollowingStatusAPI() {
         ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
         articleDetailRequest.setArticleId(articleId);
@@ -808,6 +852,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         videoList = detailData.getBody().getVideo();
         author = detailData.getUserName();
         isMomspresso = detailData.getIsMomspresso();
+        getCrownData();
 
         if (!StringUtils.isNullOrEmpty(detailData.getImageUrl().getThumbMax())) {
             Picasso.with(getActivity()).load(detailData.getImageUrl().getThumbMax()).placeholder(R.drawable.default_article).resize(width, (int) (220 * density)).centerCrop().into(cover_image);
@@ -1453,6 +1498,20 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         bottomToolbarLL.setVisibility(View.GONE);
+                        if (collectionTooltip.isShowing()) {
+                            startCollectionHandler.postAtTime(new Runnable() {
+                                @Override
+                                public void run() {
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            collectionTooltip.dismiss();
+                                            stopCollectionHandler.removeMessages(0);
+                                        }
+                                    });
+                                }
+                            },100);
+                        }
                     }
                 });
     }
@@ -1737,7 +1796,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
                 responseData = response.body();
                 getResponseUpdateUi(responseData);
-
                 checkingForSponsored();
 
                 authorId = detailData.getUserId();
@@ -1806,6 +1864,40 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
+
+    private Callback<CrownDataResponse> getCrownDataResponse = new Callback<CrownDataResponse>() {
+        @Override
+        public void onResponse(Call<CrownDataResponse> call, retrofit2.Response<CrownDataResponse> response) {
+            if (response.body() == null) {
+                return;
+            }
+            try {
+                CrownDataResponse responseData = response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    setCrownData(responseData.getData().getResult().getImage_url());
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<CrownDataResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void setCrownData(String image_url) {
+        if (!StringUtils.isNullOrEmpty(image_url)) {
+            crownImageView.setVisibility(View.VISIBLE);
+            Picasso.with(getActivity()).load(image_url).
+                    placeholder(R.drawable.default_article).fit().into(crownImageView);
+        }
+    }
 
     private void getArticleDetailsWebserviceAPI() {
         Call<ArticleDetailWebserviceResponse> call = articleDetailsAPI.getArticleDetailsFromWebservice(articleId);

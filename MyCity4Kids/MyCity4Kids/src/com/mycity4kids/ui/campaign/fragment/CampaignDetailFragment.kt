@@ -378,9 +378,15 @@ class CampaignDetailFragment : BaseFragment() {
             detail_recyclerview.isNestedScrollingEnabled = false
         }
 
-        showRewardText.setOnClickListener {
-            showDialog()
+        if (apiGetResponsee?.amount != null) {
+            showRewardText.setText(resources.getString(R.string.dialog_you_can_earn) + apiGetResponsee?.amount?.toInt())
+        } else {
+            showRewardText.visibility = View.GONE
         }
+
+        /*showRewardText.setOnClickListener {
+            showDialog()
+        }*/
 
         unapplyCampaign.setOnClickListener {
             val popupwindow_obj = popupDisplay()

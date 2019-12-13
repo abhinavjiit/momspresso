@@ -133,12 +133,12 @@ class PickerDialogFragment : DialogFragment(), PickerDialogAdapter.onItemClickLi
         list.adapter = adapter
 
         (containerView.findViewById<TextView>(R.id.cancelTextView)).setOnClickListener {
-            dialog.dismiss()
+            dialog?.dismiss()
         }
 
         (containerView.findViewById<TextView>(R.id.saveTextView)).setOnClickListener {
             onClickDoneListener.onItemClick(preSelectedItemNames, popupType!!)
-            dialog.dismiss()
+            dialog?.dismiss()
         }
     }
 

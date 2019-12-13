@@ -229,10 +229,10 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {
                     tracker.setScreenName("ForYouScreen");
                     Utils.pushOpenScreenEvent(getActivity(), "ForYouScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
-                } else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
+                } /*else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
                     tracker.setScreenName("EditorsPickScreen");
                     Utils.pushOpenScreenEvent(getActivity(), "EditorsPickScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
-                } else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
+                }*/ else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
                     tracker.setScreenName("RecentScreen");
                     Utils.pushOpenScreenEvent(getActivity(), "RecentScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
                 } else if (Constants.KEY_TODAYS_BEST.equalsIgnoreCase(sortType)) {
@@ -241,6 +241,9 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 } else if (Constants.KEY_TRENDING.equalsIgnoreCase(sortType)) {
                     tracker.setScreenName("AllTrendingScreen");
                     Utils.pushOpenScreenEvent(getActivity(), "AllTrending", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
+                } else if (Constants.KEY_FOLLOWING.equalsIgnoreCase(sortType)) {
+                    tracker.setScreenName("FollowingContentScreen");
+                    Utils.pushOpenScreenEvent(getActivity(), "FollowingContentScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
                 }
                 tracker.send(new HitBuilders.ScreenViewBuilder().build());
             }
@@ -282,14 +285,24 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
             Call<ArticleListingResponse> call = recommendationAPI.getRecommendedArticlesList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), FORYOU_LIMIT, chunks, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             progressBar.setVisibility(View.VISIBLE);
             call.enqueue(recommendedArticlesResponseCallback);
-        } else if (Constants.KEY_EDITOR_PICKS.equals(sortKey)) {
+        } else if (Constants.KEY_FOLLOWING.equals(sortKey)) {
+            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+            RecommendationAPI recommendationAPI = retrofit.create(RecommendationAPI.class);
+            if (fromPullToRefresh) {
+                fromPullToRefresh = false;
+                chunks = "";
+            }
+            Call<ArticleListingResponse> call = recommendationAPI.getFollowingArticlesList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), LIMIT, chunks, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+            progressBar.setVisibility(View.VISIBLE);
+            call.enqueue(recommendedArticlesResponseCallback);
+        } /*else if (Constants.KEY_EDITOR_PICKS.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
             int from = (nextPageNumber - 1) * LIMIT + 1;
             Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(AppConstants.EDITOR_PICKS_CATEGORY_ID, 0, from, from + LIMIT - 1,
                     SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
-        } else if (Constants.KEY_TODAYS_BEST.equals(sortKey)) {
+        }*/ else if (Constants.KEY_TODAYS_BEST.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
             CampaignAPI campaignAPI = retrofit.create(CampaignAPI.class);
@@ -652,14 +665,16 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                         Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
                         if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "ForYouScreen");
-                        } else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
+                        } /*else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "EditorsPickScreen");
-                        } else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
+                        }*/ else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "RecentScreen");
                         } else if (Constants.KEY_TODAYS_BEST.equalsIgnoreCase(sortType)) {
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "TodaysBestScreen");
                         } else if (Constants.KEY_TRENDING.equalsIgnoreCase(sortType)) {
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
+                        } else if (Constants.KEY_FOLLOWING.equalsIgnoreCase(sortType)){
+                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "FollowingContentScreen");
                         }
                         intent.putExtra(Constants.ARTICLE_ID, articleDataModelsSubList.get(posSubList).getId());
                         intent.putExtra(Constants.AUTHOR_ID, articleDataModelsSubList.get(posSubList).getUserId());
@@ -675,14 +690,16 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                         Intent intent = new Intent(mContext, ArticleDetailsContainerActivity.class);
                         if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "ForYouScreen");
-                        } else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
+                        } /*else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "EditorsPickScreen");
-                        } else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
+                        }*/ else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "RecentScreen");
                         } else if (Constants.KEY_TODAYS_BEST.equalsIgnoreCase(sortType)) {
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "TodaysBestScreen");
                         } else if (Constants.KEY_TRENDING.equalsIgnoreCase(sortType)) {
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
+                        } else if (Constants.KEY_FOLLOWING.equalsIgnoreCase(sortType)){
+                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "FollowingContentScreen");
                         }
                         intent.putExtra(Constants.ARTICLE_ID, articleDataModelsSubList.get(posSubList).getId());
                         intent.putExtra(Constants.AUTHOR_ID, articleDataModelsSubList.get(posSubList).getUserId());

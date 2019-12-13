@@ -77,7 +77,7 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
         }
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
             addCollectionInterface = context as AddCollectionInterface
