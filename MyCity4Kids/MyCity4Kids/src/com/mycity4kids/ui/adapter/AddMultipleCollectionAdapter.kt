@@ -12,7 +12,7 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.models.response.ArticleListingResult
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.add_multiple_collectionitem_adapter.view.*
+import kotlinx.android.synthetic.main.add_multiple_collection_item.view.*
 import kotlinx.android.synthetic.main.user_collection_items_list_adapter.view.articleAuthorName
 import kotlinx.android.synthetic.main.user_collection_items_list_adapter.view.articleImageView
 import kotlinx.android.synthetic.main.user_collection_items_list_adapter.view.articleTitleTextView
@@ -27,7 +27,7 @@ class AddMultipleCollectionAdapter(var context: Context, var recyclerViewClickLi
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        val view = mInflater.inflate(R.layout.add_multiple_collectionitem_adapter, parent, false)
+        val view = mInflater.inflate(R.layout.add_multiple_collection_item, parent, false)
         return ViewHolderCollection(view, recyclerViewClickListner)
     }
 
@@ -46,7 +46,7 @@ class AddMultipleCollectionAdapter(var context: Context, var recyclerViewClickLi
             holder.viewCountTextView.text = dataList[position].articleCount
             holder.articleAuthorName.text = dataList[position].userName
 
-            if (dataList[position].isChecked) {
+            if (dataList[position].isCollectionItemSelected) {
                 holder.checkBoxImageView.setImageResource(R.drawable.ic_done)
             } else {
                 holder.checkBoxImageView.setImageResource(R.drawable.ic_rectangle)

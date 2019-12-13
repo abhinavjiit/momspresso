@@ -46,7 +46,7 @@ public class ArticleListingResult implements Parcelable, StickyMainData {
     private boolean isCarouselRequestRunning = false;
     private boolean responseReceived = false;
     private String disableComment = "";
-    private boolean isChecked = false;
+    private boolean isCollectionItemSelected = false;
     private ArrayList<VlogsListingAndDetailResult> carouselVideoList;
 
     public ArticleListingResult() {
@@ -121,12 +121,12 @@ public class ArticleListingResult implements Parcelable, StickyMainData {
         return excerpt;
     }
 
-    public boolean isChecked() {
-        return isChecked;
+    public boolean isCollectionItemSelected() {
+        return isCollectionItemSelected;
     }
 
-    public void setChecked(boolean checked) {
-        isChecked = checked;
+    public void setCollectionItemSelected(boolean collectionItemSelected) {
+        isCollectionItemSelected = collectionItemSelected;
     }
 
     public void setExcerpt(String excerpt) {

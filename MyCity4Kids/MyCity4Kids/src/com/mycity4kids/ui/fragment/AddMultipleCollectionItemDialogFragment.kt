@@ -47,7 +47,7 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(), AddMultipleCol
                 multipleCollectionList.clear()
                 collectionId?.let {
                     for (i in 0 until articleDataModelsNew.size) {
-                        if (articleDataModelsNew[i].isChecked) {
+                        if (articleDataModelsNew[i].isCollectionItemSelected) {
                             val updateCollectionRequestModel = UpdateCollectionRequestModel()
                             val list = ArrayList<String>()
                             list.add(it)
@@ -70,7 +70,7 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(), AddMultipleCol
     }
 
     override fun onclick(position: Int) {
-        articleDataModelsNew[position].isChecked = !articleDataModelsNew[position].isChecked
+        articleDataModelsNew[position].isCollectionItemSelected = !articleDataModelsNew[position].isCollectionItemSelected
         addMultipleCollectionAdapter.notifyDataSetChanged()
 
     }
@@ -96,7 +96,7 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(), AddMultipleCol
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.add_multiple_collectionitem_layout, container,
+        val rootView = inflater.inflate(R.layout.add_multiple_collection_item_activity, container,
                 false)
         recyclerView = rootView.findViewById(R.id.recyclerView)
         bottomLoadingView = rootView.findViewById(R.id.bottomLoadingView)
