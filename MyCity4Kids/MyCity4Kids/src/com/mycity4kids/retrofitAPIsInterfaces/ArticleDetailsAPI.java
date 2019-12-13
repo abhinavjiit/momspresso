@@ -15,6 +15,7 @@ import com.mycity4kids.models.response.ArticleDetailWebserviceResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
 import com.mycity4kids.models.response.BaseResponse;
+import com.mycity4kids.models.response.CrownDataResponse;
 import com.mycity4kids.models.response.FBCommentResponse;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.CommentListResponse;
@@ -97,6 +98,9 @@ public interface ArticleDetailsAPI {
 
     @GET("v1/articles/views/{articleId}")
     Call<ViewCountResponse> getViewCount(@Path("articleId") String articleId);
+
+    @GET("crowns/v1/user/crowns/{userId}")
+    Call<CrownDataResponse> getCrownData(@Path("userId") String userId);
 
     @GET("v1/comments/fb/{articleId}")
     Call<FBCommentResponse> getFBComments(@Path("articleId") String articleId,

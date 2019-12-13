@@ -68,7 +68,7 @@ class CollectionThumbnailImageChangeDialogFragmnet : DialogFragment() {
     }
 
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         sendImage = context as SendImage
     }

@@ -233,6 +233,7 @@ public class Constants {
     public static final String KEY_POPULAR = "popular";
     public static final String KEY_TRENDING = "trending";
     public static final String KEY_FOR_YOU = "foryou";
+    public static final String KEY_FOLLOWING = "following";
     public static final String KEY_IN_YOUR_CITY = "inYourCity";
     public static final String KEY_EDITOR_PICKS = "editorPicks";
     public static final String KEY_TODAYS_BEST = "todaysBest";

@@ -552,13 +552,13 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
         textEditInterest.setOnClickListener {
             var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.INTEREST.name,
                     isSingleSelection = true, preSelectedItemIds = preSelectedInterest, context = this@ProfileInfoFragment)
-            fragment.show(fragmentManager, RewardsSocialInfoFragment::class.java.simpleName)
+            fragmentManager?.let { it1 -> fragment.show(it1, RewardsSocialInfoFragment::class.java.simpleName) }
         }
 
         editInterest.setOnClickListener {
             var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.INTEREST.name,
                     isSingleSelection = true, preSelectedItemIds = preSelectedInterest, context = this@ProfileInfoFragment)
-            fragment.show(fragmentManager, RewardsSocialInfoFragment::class.java.simpleName)
+            fragmentManager?.let { it1 -> fragment.show(it1, RewardsSocialInfoFragment::class.java.simpleName) }
         }
 
         textDOB.setOnClickListener {
@@ -574,13 +574,13 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
         textEditLanguage.setOnClickListener {
             var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.LANGUAGE.name,
                     isSingleSelection = true, preSelectedItemIds = preSelectedLanguage, context = this@ProfileInfoFragment)
-            fragment.show(fragmentManager, RewardsSocialInfoFragment::class.java.simpleName)
+            fragmentManager?.let { it1 -> fragment.show(it1, RewardsSocialInfoFragment::class.java.simpleName) }
         }
 
         editLanguage.setOnClickListener {
             var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.LANGUAGE.name,
                     isSingleSelection = true, preSelectedItemIds = preSelectedLanguage, context = this@ProfileInfoFragment)
-            fragment.show(fragmentManager, RewardsSocialInfoFragment::class.java.simpleName)
+            fragmentManager?.let { it1 -> fragment.show(it1, RewardsSocialInfoFragment::class.java.simpleName) }
         }
 
         val genderList = ArrayList<String>()
@@ -1099,7 +1099,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
         }
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is RewardsContainerActivity) {
             saveAndContinueListener = context

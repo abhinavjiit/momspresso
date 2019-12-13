@@ -23,6 +23,12 @@ public interface RecommendationAPI {
                                                             @Query("chunks") String chunks,
                                                             @Query("lang") String lang);
 
+    @GET("v3/recommendations/v2/{userId}")
+    Call<ArticleListingResponse> getFollowingArticlesList(@Path("userId") String userId,
+                                                            @Query("size") int limit,
+                                                            @Query("chunks") String chunks,
+                                                            @Query("lang") String lang);
+
     @POST("/v1/articles/removeForYouRelation/")
     Call<ForYourArticleRemoveResponse> removeFromForYouFeed(@Body ForYouArticleRemoveRequest body);
 }
