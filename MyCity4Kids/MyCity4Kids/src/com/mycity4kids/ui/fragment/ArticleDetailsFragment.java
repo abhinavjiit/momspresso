@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -407,38 +408,40 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
 
             facebookShareTextView.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.ic_facebook_svg), null, null);
-            try {
-                Drawable myDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_whats_app);
-                myDrawable.setTint(getResources().getColor(R.color.app_red));
-                whatsappShareTextView.setCompoundDrawablesWithIntrinsicBounds(null, myDrawable, null, null);
-            } catch (NullPointerException e) {
-                Crashlytics.logException(e);
-                Log.d("NullPointerException", Log.getStackTraceString(e));
-            }
-            try {
-                Drawable myDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_collection_add);
-                myDrawable.setTint(getResources().getColor(R.color.app_red));
-                emailShareTextView.setCompoundDrawablesWithIntrinsicBounds(null, myDrawable, null, null);
-            } catch (NullPointerException e) {
-                Crashlytics.logException(e);
-                Log.d("NullPointerException", Log.getStackTraceString(e));
-            }
+            if (Build.VERSION.SDK_INT > 23) {
+                try {
+                    Drawable myDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_whats_app);
+                    myDrawable.setTint(getResources().getColor(R.color.app_red));
+                    whatsappShareTextView.setCompoundDrawablesWithIntrinsicBounds(null, myDrawable, null, null);
+                } catch (NullPointerException e) {
+                    Crashlytics.logException(e);
+                    Log.d("NullPointerException", Log.getStackTraceString(e));
+                }
+                try {
+                    Drawable myDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_collection_add);
+                    myDrawable.setTint(getResources().getColor(R.color.app_red));
+                    emailShareTextView.setCompoundDrawablesWithIntrinsicBounds(null, myDrawable, null, null);
+                } catch (NullPointerException e) {
+                    Crashlytics.logException(e);
+                    Log.d("NullPointerException", Log.getStackTraceString(e));
+                }
 
-            try {
-                Drawable myDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmark);
-                myDrawable.setTint(getResources().getColor(R.color.app_red));
-                bookmarkArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, myDrawable, null, null);
-            } catch (NullPointerException e) {
-                Crashlytics.logException(e);
-                Log.d("NullPointerException", Log.getStackTraceString(e));
-            }
-            try {
-                Drawable myDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_recommend);
-                myDrawable.setTint(getResources().getColor(R.color.app_red));
-                likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, myDrawable, null, null);
-            } catch (NullPointerException e) {
-                Crashlytics.logException(e);
-                Log.d("NullPointerException", Log.getStackTraceString(e));
+                try {
+                    Drawable myDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmark);
+                    myDrawable.setTint(getResources().getColor(R.color.app_red));
+                    bookmarkArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, myDrawable, null, null);
+                } catch (NullPointerException e) {
+                    Crashlytics.logException(e);
+                    Log.d("NullPointerException", Log.getStackTraceString(e));
+                }
+                try {
+                    Drawable myDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_recommend);
+                    myDrawable.setTint(getResources().getColor(R.color.app_red));
+                    likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, myDrawable, null, null);
+                } catch (NullPointerException e) {
+                    Crashlytics.logException(e);
+                    Log.d("NullPointerException", Log.getStackTraceString(e));
+                }
             }
 
 
