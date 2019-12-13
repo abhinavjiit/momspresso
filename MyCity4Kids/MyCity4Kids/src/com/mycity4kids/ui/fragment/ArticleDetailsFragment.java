@@ -350,7 +350,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             startCollectionHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    tooltipForCollection();
+                    if (getActivity() != null)
+                        tooltipForCollection();
                 }
             }, 60000);
 
@@ -1502,15 +1503,18 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             startCollectionHandler.postAtTime(new Runnable() {
                                 @Override
                                 public void run() {
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            collectionTooltip.dismiss();
-                                            stopCollectionHandler.removeMessages(0);
-                                        }
-                                    });
+                                    if (getActivity() != null) {
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                collectionTooltip.dismiss();
+                                                stopCollectionHandler.removeMessages(0);
+                                            }
+                                        });
+                                    }
                                 }
-                            },100);
+                            }, 100);
+
                         }
                     }
                 });
