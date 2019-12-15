@@ -60,6 +60,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -310,8 +311,13 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
             Call<ArticleListingResponse> filterCall = topicsAPI.getTodaysBestArticles(DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + System.currentTimeMillis()), from, from + LIMIT - 1,
                     SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
-            Call<AllCampaignDataResponse> campaignListCall = campaignAPI.getCampaignList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), 0, 5, 3.0);
-            campaignListCall.enqueue(getCampaignList);
+            if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getHomeAdSlotUrl(BaseApplication.getAppContext()))) {
+                Call<ResponseBody> adSlotCall = campaignAPI.getAdSlotData(SharedPrefUtils.getHomeAdSlotUrl(BaseApplication.getAppContext()));
+                adSlotCall.enqueue(adSlotResponseCallback);
+            } else {
+                Call<AllCampaignDataResponse> campaignListCall = campaignAPI.getCampaignList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), 0, 5, 3.0);
+                campaignListCall.enqueue(getCampaignList);
+            }
         } else if (Constants.KEY_TRENDING.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
@@ -446,8 +452,38 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         }
 
         @Override
-        public void onFailure(Call<AllCampaignDataResponse> call, Throwable t) {
+        public void onFailure(Call<AllCampaignDataResponse> call, Throwable e) {
+            Crashlytics.logException(e);
+            Log.d("MC4KException", Log.getStackTraceString(e));
+        }
+    };
 
+    private Callback<ResponseBody> adSlotResponseCallback = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+            try {
+                if (response.body() == null) {
+                    return;
+                }
+                String resData = new String(response.body().bytes());
+                JSONObject jObject = new JSONObject(resData);
+                String htmlContent = jObject.getJSONObject("revive-0-0").getString("html");
+                recyclerAdapter.setCampaignOrAdSlotData("adslot", null, htmlContent);
+                recyclerAdapter.notifyDataSetChanged();
+            } catch (Exception e) {
+                recyclerAdapter.setCampaignOrAdSlotData("", null, "");
+                recyclerAdapter.notifyDataSetChanged();
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable e) {
+            recyclerAdapter.setCampaignOrAdSlotData("", null, "");
+            recyclerAdapter.notifyDataSetChanged();
+            Crashlytics.logException(e);
+            Log.d("MC4KException", Log.getStackTraceString(e));
         }
     };
 
@@ -518,10 +554,9 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
     }
 
     private void processCampaignListingResponse(AllCampaignDataResponse responseData) {
-
         ArrayList<CampaignDataListResult> dataList = responseData.getData().getResult();
         campaignListDataModels.addAll(dataList);
-        recyclerAdapter.setCampaignList(campaignListDataModels);
+        recyclerAdapter.setCampaignOrAdSlotData("campaign", campaignListDataModels, "");
         recyclerAdapter.notifyDataSetChanged();
     }
 
@@ -673,7 +708,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "TodaysBestScreen");
                         } else if (Constants.KEY_TRENDING.equalsIgnoreCase(sortType)) {
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
-                        } else if (Constants.KEY_FOLLOWING.equalsIgnoreCase(sortType)){
+                        } else if (Constants.KEY_FOLLOWING.equalsIgnoreCase(sortType)) {
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "FollowingContentScreen");
                         }
                         intent.putExtra(Constants.ARTICLE_ID, articleDataModelsSubList.get(posSubList).getId());
@@ -698,7 +733,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "TodaysBestScreen");
                         } else if (Constants.KEY_TRENDING.equalsIgnoreCase(sortType)) {
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
-                        } else if (Constants.KEY_FOLLOWING.equalsIgnoreCase(sortType)){
+                        } else if (Constants.KEY_FOLLOWING.equalsIgnoreCase(sortType)) {
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "FollowingContentScreen");
                         }
                         intent.putExtra(Constants.ARTICLE_ID, articleDataModelsSubList.get(posSubList).getId());

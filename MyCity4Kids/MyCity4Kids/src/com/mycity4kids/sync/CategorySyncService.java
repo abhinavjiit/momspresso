@@ -1,6 +1,5 @@
 package com.mycity4kids.sync;
 
-import android.accounts.NetworkErrorException;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
@@ -12,27 +11,20 @@ import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.Constants;
-import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ConfigResponse;
-import com.mycity4kids.models.response.UserTypeResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.utils.AppUtils;
 
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Iterator;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
@@ -81,6 +73,8 @@ public class CategorySyncService extends IntentService {
                                      return;
                                  } else {
                                      if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
+                                         SharedPrefUtils.setHomeAdSlotUrl(BaseApplication.getAppContext(), responseModel.getData().getResult().getHomeCarouselUrl());
+
                                          for (Map.Entry<String, String> entry : responseModel.getData().getResult().getNotificationSettings().entrySet()) {
                                              SharedPrefUtils.setNotificationConfig(BaseApplication.getAppContext(), entry.getKey(), entry.getValue());
                                          }

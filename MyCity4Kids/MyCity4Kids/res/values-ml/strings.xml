@@ -1303,4 +1303,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="login_resend_otp">Resend OTP</string>
     <string name="login_remaining_time">Seconds remaining: %1$d</string>
     <string name="add_to_collection">Add to Collection</string>
+    <string name="profile_follow_author">Follow %1$s on Momspresso!</string>
+    <string name="analytics_lang_rank">നിങ്ങളുടെ റാങ്കിങ് \nIN %1$s</string>
 </resources>

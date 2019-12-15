@@ -1,9 +1,6 @@
 package com.mycity4kids.models.response;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,6 +15,7 @@ public class ConfigResult {
     private ArrayList<String> notificationType;
     private Map<String, String> language;
     private Map<String, LanguageConfigModel> languages;
+    private String homeCarouselUrl = "";
 
     public int getUserTypeVersion() {
         return userTypeVersion;
@@ -73,5 +71,13 @@ public class ConfigResult {
 
     public void setLanguages(Map<String, LanguageConfigModel> languages) {
         this.languages = languages;
+    }
+
+    public String getHomeCarouselUrl() {
+        return homeCarouselUrl;
+    }
+
+    public void setHomeCarouselUrl(String homeCarouselUrl) {
+        this.homeCarouselUrl = homeCarouselUrl;
     }
 }

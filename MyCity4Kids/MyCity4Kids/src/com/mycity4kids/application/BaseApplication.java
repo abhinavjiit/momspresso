@@ -44,6 +44,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.LocaleManager;
+import com.smartlook.sdk.smartlook.Smartlook;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -362,10 +363,12 @@ public class BaseApplication extends Application {
 
         CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build();
         Fabric.with(this, new Crashlytics.Builder().core(core).build());
-
-//        Fabric.with(this, new Crashlytics.Builder().build());
         Crashlytics.setUserIdentifier("" + SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         Crashlytics.setUserEmail("" + SharedPrefUtils.getUserDetailModel(this).getEmail());
+
+        Smartlook.setupAndStartRecording(getString(R.string.smart_look_key));
+        Smartlook.setUserIdentifier("" + SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        Smartlook.enableCrashlytics(true);
 
         setInstance(this);
         VolleyLog.setTag("VolleyLogs");
@@ -374,22 +377,12 @@ public class BaseApplication extends Application {
         createRetrofitInstance(AppConstants.LIVE_URL);
 
         mRequestQueue = Volley.newRequestQueue(getApplicationContext());
-// Initialize comScore Application Tag library
         comScore.setAppContext(this.getApplicationContext());
-        // Include any of the comScore Application Tag library initialization settings here.
         comScore.setCustomerC2("18705325");
         comScore.setPublisherSecret("6116f207ac5e9f9226f6b98e088a22ea");
-        //initializeGa();
-        // startService(new Intent(this,ReplicationService.class))
-        // For Google Analytics initialization.
-//        userAgent = Util.getUserAgent(this, "ExoPlayerDemo");
         AudienceNetworkAds.initialize(this);
-// Branch logging for debugging
         Branch.enableLogging();
-        // Branch object initialization
         Branch.getAutoInstance(this);
-        // Branch.setPlayStoreReferrerCheckTimeout(0);
-
         PackageInfo pInfo = null;
         try {
             pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -422,12 +415,9 @@ public class BaseApplication extends Application {
         return mSocket;
     }
 
-    private static Emitter.Listener onNewMessage = new Emitter.Listener() {
-        @Override
-        public void call(final Object... args) {
-            if (EventBus.getDefault() != null) {
-                EventBus.getDefault().post(new MessageEvent(args));
-            }
+    private static Emitter.Listener onNewMessage = args -> {
+        if (EventBus.getDefault() != null) {
+            EventBus.getDefault().post(new MessageEvent(args));
         }
     };
 

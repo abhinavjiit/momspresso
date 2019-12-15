@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -23,11 +24,33 @@
                 android:id="@+id/toolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/shareTextView"
                 android:text="@string/badges"
                 android:textColor="@color/user_articles.toolbar.title"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/shareTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/all_red_border_circular_bg"
+                android:drawableStart="@drawable/ic_share_icon"
+                android:drawablePadding="10dp"
+                android:drawableTint="@color/app_red"
+                android:gravity="center"
+                android:paddingStart="12dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="6dp"
+                android:text="@string/ad.bottom_bar.generic_share"
+                android:textAllCaps="true"
+                android:textColor="@color/app_red" />
 
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>

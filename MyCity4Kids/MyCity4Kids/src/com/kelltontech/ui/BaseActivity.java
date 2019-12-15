@@ -739,9 +739,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                     if (!fragmentPopped) { // fragment not in back stack, create
                         // it.
                         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        if (animationType.equals("topToBottom")) {
+                        if ("topToBottom".equals(animationType)) {
                             ft.setCustomAnimations(R.anim.transition_enter_from_bottom, R.anim.transition_exit_to_top, R.anim.transition_enter_from_top, R.anim.transition_exit_to_bottom);
-                        } else if (animationType.equals("bottomSheet")) {
+                        } else if ("bottomSheet".equals(animationType)) {
                             ft.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_down, R.anim.transition_enter_from_top, R.anim.transition_exit_to_bottom);
                         } else {
                             ft.setCustomAnimations(R.anim.transition_enter_from_right, R.anim.transition_exit_to_left, R.anim.transition_enter_from_left, R.anim.transition_exit_to_right);

@@ -83,7 +83,7 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.ranking_info_tab_fragment, container, false);
 
-        userId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
+        userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
 
         authorId = getArguments().getString("authorId");
         if (StringUtils.isNullOrEmpty(authorId)) {
@@ -206,14 +206,15 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 if (responseData.getData().get(0).getResult().getRanks() == null || responseData.getData().get(0).getResult().getRanks().size() == 0) {
                     myRankTextView.setText("--");
-                    languageTextView.setText("");
+                    languageTextView.setText(getString(R.string.analytics_lang_rank, ""));
                 } else if (responseData.getData().get(0).getResult().getRanks().size() < 2) {
                     myRankTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(0).getRank());
                     if (isAdded()) {
                         if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(0).getLangKey())) {
-                            languageTextView.setText(getString(R.string.ranking_in) + " ENGLISH");
+                            languageTextView.setText(getString(R.string.analytics_lang_rank, "ENGLISH"));
                         } else {
-                            languageTextView.setText(getString(R.string.ranking_in) + " " + responseData.getData().get(0).getResult().getRanks().get(0).getLangValue().toUpperCase());
+                            languageTextView.setText(getString(R.string.analytics_lang_rank,
+                                    responseData.getData().get(0).getResult().getRanks().get(0).getLangValue().toUpperCase()));
                         }
                     }
                 } else {

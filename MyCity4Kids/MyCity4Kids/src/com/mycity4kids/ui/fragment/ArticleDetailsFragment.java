@@ -1281,7 +1281,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 case R.id.follow_click:
                     followAPICall();
                     break;
-
                 case R.id.user_image:
                 case R.id.user_name:
                     Intent profileIntent = new Intent(getActivity(), UserProfileActivity.class);
@@ -1717,13 +1716,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         if (isFollowing) {
             isFollowing = false;
             followClick.setText(getString(R.string.ad_follow_author));
-            Utils.pushUnfollowAuthorEvent(getActivity(), "DetailArticleScreen", userDynamoId, authorId + "~" + author);
+            Utils.pushGenericEvent(getActivity(), "CTA_Unfollow_Article_Detail", userDynamoId, "ArticleDetailsFragment");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
             isFollowing = true;
             followClick.setText(getString(R.string.ad_following_author));
-            Utils.pushFollowAuthorEvent(getActivity(), "DetailArticleScreen", userDynamoId, authorId + "~" + author);
+            Utils.pushGenericEvent(getActivity(), "CTA_Follow_Article_Detail", userDynamoId, "ArticleDetailsFragment");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }

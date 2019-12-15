@@ -1,6 +1,8 @@
 package com.mycity4kids.ui.activity.phoneLogin
 
 import android.accounts.NetworkErrorException
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,6 +13,10 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import com.crashlytics.android.Crashlytics
+import com.google.android.gms.auth.api.credentials.Credential
+import com.google.android.gms.auth.api.credentials.Credentials
+import com.google.android.gms.auth.api.credentials.HintRequest
+import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
@@ -26,6 +32,7 @@ import retrofit2.Callback
 class SendSMSFragment : BaseFragment(), View.OnClickListener {
     var phoneEditText: EditText? = null
     var useSmsTextView: TextView? = null
+    private val CREDENTIAL_PICKER_REQUEST = 1
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_send_sms, container, false)
@@ -52,7 +59,24 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
 
         useSmsTextView?.setOnClickListener(this)
         phoneEditText?.requestFocus()
+
+        requestHint()
         return view
+    }
+
+    private fun requestHint() {
+        val hintRequest = HintRequest.Builder()
+                .setPhoneNumberIdentifierSupported(true)
+                .build()
+        activity?.let {
+            val credentialsClient = Credentials.getClient(it)
+            val intent = credentialsClient.getHintPickerIntent(hintRequest)
+            startIntentSenderForResult(
+                    intent.intentSender,
+                    CREDENTIAL_PICKER_REQUEST,
+                    null, 0, 0, 0, null
+            )
+        }
     }
 
     override fun onClick(v: View?) {
@@ -64,6 +88,7 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
                 val retrofit = BaseApplication.getInstance().retrofit
                 val loginRegistrationAPI = retrofit.create(LoginRegistrationAPI::class.java)
                 val call = loginRegistrationAPI.triggerSMS(phoneLoginRequest)
+//                launchVerifySMSFragment("dwdwdw")
                 call.enqueue(triggerSMSResponseCallback)
             }
         }
@@ -83,6 +108,9 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
                     val resData = String(response.body()!!.bytes())
                     val jObject = JSONObject(resData)
                     val sms_token = jObject.getJSONObject("data").getJSONObject("result").getString("sms_token")
+                    activity?.let {
+                        val task = SmsRetriever.getClient(it).startSmsUserConsent(null)
+                    }
                     launchVerifySMSFragment(sms_token)
                 } else {
 
@@ -106,10 +134,30 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
         bundle.putString("smsToken", sms_token)
         bundle.putString("phoneNumber", phoneEditText?.text?.toString())
         verifySMSFragment.arguments = bundle
-        (activity as ActivityLogin).replaceFragmentWithAnimation(verifySMSFragment, bundle, true)
+        (activity as ActivityLogin).addFragment(verifySMSFragment, bundle, true, null)
     }
 
     override fun updateUi(response: Response?) {
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            CREDENTIAL_PICKER_REQUEST ->
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    try {
+                        val credential = data.getParcelableExtra<Credential>(Credential.EXTRA_KEY)
+                        if (credential.id.startsWith("+91")) {
+                            phoneEditText?.setText(credential.id.substring(3))
+                        } else {
+                            phoneEditText?.setText(credential.id)
+                        }
+                    } catch (e: Exception) {
+                        Crashlytics.logException(e)
+                        Log.d("MC4kException", Log.getStackTraceString(e))
+                    }
+                }
+        }
     }
 }

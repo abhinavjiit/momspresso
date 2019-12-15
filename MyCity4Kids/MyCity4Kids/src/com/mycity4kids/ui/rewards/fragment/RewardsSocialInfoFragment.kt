@@ -41,6 +41,7 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import org.json.JSONObject
 import java.util.*
 import java.util.regex.Pattern
 import kotlin.collections.ArrayList
@@ -64,7 +65,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
 
     }
 
-    override fun getFacebookUser(user: String?) {
+    override fun getFacebookUser(jObject:JSONObject?, user: String?) {
         try {
             if (user != null) {activity
                 facebookAuthToken = user

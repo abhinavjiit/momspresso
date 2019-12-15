@@ -37,7 +37,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -238,7 +237,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        // Obtain the FirebaseAnalytics instance.
+
         BaseApplication.startSocket();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(720).build();
@@ -246,24 +245,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
         if (SharedPrefUtils.getFirebaseRemoteConfigUpdateFlag(BaseApplication.getAppContext())) {
             showProgressDialog(getString(R.string.please_wait));
-            mFirebaseRemoteConfig.fetch(0).addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    removeProgressDialog();
-                    mFirebaseRemoteConfig.activate();
-                    SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(BaseApplication.getAppContext(), false);
-                }
+            mFirebaseRemoteConfig.fetch(0).addOnCompleteListener(this, task -> {
+                removeProgressDialog();
+                mFirebaseRemoteConfig.activate();
+                SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(BaseApplication.getAppContext(), false);
             });
         } else {
             mFirebaseRemoteConfig.fetchAndActivate()
-                    .addOnCompleteListener(this, new OnCompleteListener<Boolean>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Boolean> task) {
-                            if (task.isSuccessful()) {
-                                boolean updated = task.getResult();
-                                Log.d("FirebaseRemoteConfig", "Config params updated: " + updated);
-                            } else {
-                            }
+                    .addOnCompleteListener(this, task -> {
+                        if (task.isSuccessful()) {
+                            boolean updated = task.getResult();
+                            Log.d("FirebaseRemoteConfig", "Config params updated: " + updated);
+                        } else {
                         }
                     });
         }
@@ -271,21 +264,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         ((BaseApplication) getApplication()).setDashboardActivity(this);
         ((BaseApplication) getApplication()).setActivity(this);
 
-
         t = ((BaseApplication) getApplication()).getTracker(
                 BaseApplication.TrackerName.APP_TRACKER);
-        // Enable Display Features.
         t.enableAdvertisingIdCollection(true);
-        // Set screen name.
         t.setScreenName("DashBoard");
-        // You only need to set User ID on a tracker once. By setting it on the tracker, the ID will be
-        // sent with all subsequent hits.
-        // new code
         t.set("&uid", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-
-        // This hit will be sent with the User ID value and be visible in User-ID-enabled views (profiles).
         t.send(new HitBuilders.EventBuilder().setCategory("UX").setAction("User Sign In").build());
-        // Send a screen view.
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
         mMixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
@@ -604,70 +588,67 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         bottomNavigationView.setIconSize(24, 24);
         bottomNavigationView.setTextSize(12.0f);
         bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-                        Fragment selectedFragment = null;
-                        switch (item.getItemId()) {
-                            case R.id.action_profile:
-                                hideCreateContentView();
-                                if (topFragment instanceof ExploreArticleListingTypeFragment) {
-                                    return true;
-                                }
-                                ExploreArticleListingTypeFragment fragment0 = new ExploreArticleListingTypeFragment();
-                                Bundle mBundle0 = new Bundle();
-                                fragment0.setArguments(mBundle0);
-                                addFragment(fragment0, mBundle0, true);
-                                break;
-                            case R.id.action_momVlog:
-                                MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
-                                Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Bottom_nav_videos",
-                                        "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-                                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
-                                        String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
-                                Intent cityIntent = new Intent(DashboardActivity.this, CategoryVideosListingActivity.class);
-                                cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
-                                startActivity(cityIntent);
-                                break;
-                            case R.id.action_home:
-                                hideCreateContentView();
-                                if (topFragment instanceof FragmentMC4KHomeNew) {
-                                    return true;
-                                }
-                                FragmentMC4KHomeNew fragment1 = new FragmentMC4KHomeNew();
-                                Bundle mBundle1 = new Bundle();
-                                fragment1.setArguments(mBundle1);
-                                addFragment(fragment1, mBundle1, true);
-                                break;
-                            case R.id.action_write:
-                                userAllDraftsRecyclerAdapter.notifyDataSetChanged();
-                                if (createContentContainer.getVisibility() == View.VISIBLE) {
+                item -> {
+                    final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+                    Fragment selectedFragment = null;
+                    switch (item.getItemId()) {
+                        case R.id.action_profile:
+                            hideCreateContentView();
+                            if (topFragment instanceof ExploreArticleListingTypeFragment) {
+                                return true;
+                            }
+                            ExploreArticleListingTypeFragment fragment0 = new ExploreArticleListingTypeFragment();
+                            Bundle mBundle0 = new Bundle();
+                            fragment0.setArguments(mBundle0);
+                            addFragment(fragment0, mBundle0, true);
+                            break;
+                        case R.id.action_momVlog:
+                            MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
+                            Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Bottom_nav_videos",
+                                    "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                                    String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
+                            Intent cityIntent = new Intent(DashboardActivity.this, CategoryVideosListingActivity.class);
+                            cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
+                            startActivity(cityIntent);
+                            break;
+                        case R.id.action_home:
+                            hideCreateContentView();
+                            if (topFragment instanceof FragmentMC4KHomeNew) {
+                                return true;
+                            }
+                            FragmentMC4KHomeNew fragment1 = new FragmentMC4KHomeNew();
+                            Bundle mBundle1 = new Bundle();
+                            fragment1.setArguments(mBundle1);
+                            addFragment(fragment1, mBundle1, true);
+                            break;
+                        case R.id.action_write:
+                            userAllDraftsRecyclerAdapter.notifyDataSetChanged();
+                            if (createContentContainer.getVisibility() == View.VISIBLE) {
 
-                                } else {
-                                    allDraftsList.clear();
-                                    loadAllDrafts();
-                                    createContentContainer.setVisibility(View.VISIBLE);
-                                    actionItemContainer.setVisibility(View.VISIBLE);
-                                    overlayView.setVisibility(View.VISIBLE);
-                                    actionItemContainer.startAnimation(slideAnim);
-                                    overlayView.startAnimation(fadeAnim);
-                                }
-                                break;
-                            case R.id.action_location:
-                                hideCreateContentView();
-                                if (topFragment instanceof GroupsViewFragment) {
-                                    return true;
-                                }
-                                Utils.groupsEvent(DashboardActivity.this, "Home Screen", "Group_bottom_nav", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Group_listing", "", "");
-                                GroupsViewFragment groupsFragment = new GroupsViewFragment();
-                                Bundle eBundle = new Bundle();
-                                groupsFragment.setArguments(eBundle);
-                                addFragment(groupsFragment, eBundle, true);
-                                break;
-                        }
-                        return true;
+                            } else {
+                                allDraftsList.clear();
+                                loadAllDrafts();
+                                createContentContainer.setVisibility(View.VISIBLE);
+                                actionItemContainer.setVisibility(View.VISIBLE);
+                                overlayView.setVisibility(View.VISIBLE);
+                                actionItemContainer.startAnimation(slideAnim);
+                                overlayView.startAnimation(fadeAnim);
+                            }
+                            break;
+                        case R.id.action_location:
+                            hideCreateContentView();
+                            if (topFragment instanceof GroupsViewFragment) {
+                                return true;
+                            }
+                            Utils.groupsEvent(DashboardActivity.this, "Home Screen", "Group_bottom_nav", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Group_listing", "", "");
+                            GroupsViewFragment groupsFragment = new GroupsViewFragment();
+                            Bundle eBundle = new Bundle();
+                            groupsFragment.setArguments(eBundle);
+                            addFragment(groupsFragment, eBundle, true);
+                            break;
                     }
+                    return true;
                 });
 
         if (Constants.BUSINESS_EVENTLIST_FRAGMENT.equals(fragmentToLoad)) {
@@ -907,6 +888,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     }
                 });
             } else if (notificationExtras.getString("type").equalsIgnoreCase("article_details")) {
+                pushEvent("article_details");
                 String articleId = notificationExtras.getString("id");
                 String authorId = notificationExtras.getString("userId");
                 String blogSlug = notificationExtras.getString("blogSlug");
@@ -921,48 +903,49 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent1.putExtra(Constants.ARTICLE_INDEX, "-1");
                 intent1.putExtra(Constants.AUTHOR, authorId + "~");
                 startActivity(intent1);
-                pushEvent("article_details");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("collection_detail")) {
+                pushEvent("collection_detail");
                 Intent intent = new Intent(DashboardActivity.this, UserCollectionItemListActivity.class);
                 intent.putExtra("id", notificationExtras.getString("id"));
                 startActivity(intent);
-                pushEvent("collection_detail");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("create_content_prompt")) {
+                pushEvent("create_content_prompt");
                 fragmentToLoad = Constants.CREATE_CONTENT_PROMPT;
             } else if (notificationExtras.getString("type").equalsIgnoreCase("momsights_screen")) {
+                pushEvent("momsights_screen");
                 Intent intent1 = new Intent(DashboardActivity.this, RewardsContainerActivity.class);
                 startActivity(intent1);
-                pushEvent("momsights_screen");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("campaign_listing")) {
+                pushEvent("campaign_listing");
                 Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
                 campaignIntent.putExtra("campaign_listing", "campaign_listing");
                 startActivity(campaignIntent);
-                pushEvent("campaign_listing");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("choose_video_category")) {
+                pushEvent("choose_video_category");
                 Intent createVideoIntent = new Intent(this, ChooseVideoCategoryActivity.class);
                 createVideoIntent.putExtra("comingFrom", "notification");
                 startActivity(createVideoIntent);
-                pushEvent("choose_video_category");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("video_challenge_details")) {
+                pushEvent("video_challenge_details");
                 Intent videoChallengeIntent = new Intent(this, NewVideoChallengeActivity.class);
                 videoChallengeIntent.putExtra(Constants.CHALLENGE_ID, "" + notificationExtras.getString("challengeId"));
                 videoChallengeIntent.putExtra("comingFrom", "notification");
                 startActivity(videoChallengeIntent);
-                pushEvent("video_challenge_details");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("campaign_detail")) {
+                pushEvent("campaign_detail");
                 Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
                 campaignIntent.putExtra("campaign_id", notificationExtras.getString("campaign_id"));
                 campaignIntent.putExtra("campaign_detail", "campaign_detail");
                 campaignIntent.putExtra("fromNotification", true);
                 startActivity(campaignIntent);
-                pushEvent("campaign_detail");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("campaign_submit_proof")) {
+                pushEvent("campaign_submit_proof");
                 Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
                 campaignIntent.putExtra("campaign_Id", notificationExtras.getString("campaign_id"));
                 campaignIntent.putExtra("campaign_submit_proof", "campaign_submit_proof");
                 startActivity(campaignIntent);
-                pushEvent("campaign_submit_proof");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("mymoney_bankdetails")) {
+                pushEvent("mymoney_bankdetails");
                 Intent campaignIntent = new Intent(this, RewardsContainerActivity.class);
                 campaignIntent.putExtra("isComingfromCampaign", true);
                 campaignIntent.putExtra("pageLimit", 4);
@@ -970,8 +953,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 campaignIntent.putExtra("campaign_Id", notificationExtras.getString("campaign_id"));
                 campaignIntent.putExtra("mymoney_bankdetails", "mymoney_bankdetails");
                 startActivity(campaignIntent);
-                pushEvent("mymoney_bankdetails");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("mymoney_pancard")) {
+                pushEvent("mymoney_pancard");
                 Intent campaignIntent = new Intent(this, RewardsContainerActivity.class);
                 campaignIntent.putExtra("isComingFromRewards", true);
                 campaignIntent.putExtra("pageLimit", 5);
@@ -979,8 +962,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 campaignIntent.putExtra("panCardFormNotification", "mymoney_pancard");
                 campaignIntent.putExtra("mymoney_pancard", "mymoney_pancard");
                 startActivity(campaignIntent);
-                pushEvent("mymoney_pancard");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("shortStoryDetails")) {
+                pushEvent("shortStoryDetails");
                 Intent ssIntent = new Intent(DashboardActivity.this, ShortStoryContainerActivity.class);
                 ssIntent.putExtra(Constants.AUTHOR_ID, notificationExtras.getString("userId"));
                 ssIntent.putExtra(Constants.ARTICLE_ID, notificationExtras.getString("id"));
@@ -991,8 +974,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 ssIntent.putExtra(Constants.ARTICLE_INDEX, "-1");
                 ssIntent.putExtra(Constants.AUTHOR, notificationExtras.getString("userId") + "~");
                 startActivity(ssIntent);
-                pushEvent("shortStoryDetails");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("video_details")) {
+                pushEvent("video_details");
                 String articleId = notificationExtras.getString("id");
                 String authorId = notificationExtras.getString("userId");
                 Intent intent1 = new Intent(DashboardActivity.this, ParallelFeedActivity.class);
@@ -1004,39 +987,39 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent1.putExtra(Constants.ARTICLE_INDEX, "-1");
                 intent1.putExtra(Constants.AUTHOR, authorId + "~");
                 startActivity(intent1);
-                pushEvent("video_details");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_membership")
                     || notificationExtras.getString("type").equalsIgnoreCase("group_new_post")
                     || notificationExtras.getString("type").equalsIgnoreCase("group_admin_group_edit")
                     || notificationExtras.getString("type").equalsIgnoreCase("group_admin")) {
+                pushEvent(notificationExtras.getString(notificationExtras.getString("type")));
                 GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
                 groupMembershipStatus.checkMembershipStatus(Integer.parseInt(notificationExtras.getString("groupId")), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                pushEvent(notificationExtras.getString("type"));
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_new_response")) {
+                pushEvent("group_new_response");
                 Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
                 gpPostIntent.putExtra("postId", Integer.parseInt(notificationExtras.getString("postId")));
                 gpPostIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
                 gpPostIntent.putExtra("responseId", Integer.parseInt(notificationExtras.getString("responseId")));
                 startActivity(gpPostIntent);
-                pushEvent("group_new_response");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_new_reply")) {
+                pushEvent("group_new_reply");
                 Intent gpPostIntent = new Intent(this, ViewGroupPostCommentsRepliesActivity.class);
                 gpPostIntent.putExtra("postId", Integer.parseInt(notificationExtras.getString("postId")));
                 gpPostIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
                 gpPostIntent.putExtra("responseId", Integer.parseInt(notificationExtras.getString("responseId")));
                 startActivity(gpPostIntent);
-                pushEvent("group_new_reply");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_admin_membership")) {
+                pushEvent("group_admin_membership");
                 Intent memberIntent = new Intent(this, GroupMembershipActivity.class);
                 memberIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
                 startActivity(memberIntent);
-                pushEvent("group_admin_membership");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_admin_reported")) {
+                pushEvent("group_admin_reported");
                 Intent reportIntent = new Intent(this, GroupsReportedContentActivity.class);
                 reportIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
                 startActivity(reportIntent);
-                pushEvent("group_admin_reported");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("event_details")) {
+                pushEvent("event_details");
                 String eventId = notificationExtras.getString("id");
                 Intent resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);
                 resultIntent.putExtra("fromNotification", true);
@@ -1046,18 +1029,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 resultIntent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
                 resultIntent.putExtra(Constants.DISTANCE, "0");
                 startActivity(resultIntent);
-                pushEvent("event_details");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("webView")) {
+                pushEvent("webView");
                 String url = notificationExtras.getString("url");
                 Intent intent1 = new Intent(this, LoadWebViewActivity.class);
                 intent1.putExtra("fromNotification", true);
                 intent1.putExtra(Constants.WEB_VIEW_URL, url);
                 startActivity(intent1);
-                pushEvent("webView");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("write_blog")) {
-                launchEditor();
                 pushEvent("write_blog");
+                launchEditor();
             } else if (notificationExtras.getString("type").equalsIgnoreCase("profile")) {
+                pushEvent("profile");
                 String u_id = notificationExtras.getString("userId");
                 if (!SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(u_id)) {
                     Intent intent1 = new Intent(this, UserProfileActivity.class);
@@ -1069,44 +1052,44 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 } else {
                     fragmentToLoad = Constants.PROFILE_FRAGMENT;
                 }
-                pushEvent("profile");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("badge_list")) {
+                pushEvent("badge_list");
                 Intent badgeIntent = new Intent(this, BadgeActivity.class);
                 startActivity(badgeIntent);
-                pushEvent("badge_list");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("upcoming_event_list")) {
-                fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
                 pushEvent("upcoming_event_list");
+                fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
             } else if (notificationExtras.getString("type").equalsIgnoreCase("suggested_topics")) {
-                fragmentToLoad = Constants.SUGGESTED_TOPICS_FRAGMENT;
                 pushEvent("suggested_topics");
+                fragmentToLoad = Constants.SUGGESTED_TOPICS_FRAGMENT;
             } else if (notificationExtras.getString("type").equalsIgnoreCase(AppConstants.APP_SETTINGS_DEEPLINK)) {
+                pushEvent(AppConstants.APP_SETTINGS_DEEPLINK);
                 Intent intent1 = new Intent(this, AppSettingsActivity.class);
                 intent1.putExtra("fromNotification", true);
                 intent1.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
                 startActivity(intent1);
-                pushEvent(AppConstants.APP_SETTINGS_DEEPLINK);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("my_money_earnings")) {
+                pushEvent("my_money_earnings");
                 Intent intent1 = new Intent(this, MyTotalEarningActivity.class);
                 startActivity(intent1);
-                pushEvent("my_money_earnings");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("my_money_profile")) {
+                pushEvent("my_money_profile");
                 Intent intent1 = new Intent(this, EditProfileNewActivity.class);
                 intent1.putExtra("isComingfromCampaign", true);
                 startActivity(intent1);
-                pushEvent("my_money_profile");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("category_listing")) {
+                pushEvent("category_listing");
                 Intent intent1 = new Intent(this, TopicsListingActivity.class);
                 intent1.putExtra("parentTopicId", notificationExtras.getString("categoryId"));
                 startActivity(intent1);
-                pushEvent("category_listing");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("shortStoryListing")) {
+                pushEvent("shortStoryListing");
                 Intent intent1 = new Intent(this, ShortStoriesListingContainerActivity.class);
                 intent1.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
                 intent1.putExtra("selectedTabCategoryId", notificationExtras.getString("categoryId"));
                 startActivity(intent1);
-                pushEvent("shortStoryListing");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("shortStoryListingInChallengeListing")) {
+                pushEvent("shortStoryListingInChallenge");
                 findValues(notificationExtras.getString("categoryId"));
                 Intent intent1 = new Intent(this, ChallengeDetailListingActivity.class);
                 intent1.putExtra("Display_Name", deepLinkDisplayName);
@@ -1116,10 +1099,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent1.putExtra("parentId", shortStoriesTopicList.get(0).getId());
                 intent1.putExtra("StringUrl", deepLinkImageUrl);
                 startActivity(intent1);
-                pushEvent("shortStoryListingInChallenge");
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_listing")) {
-                fragmentToLoad = Constants.GROUP_LISTING_FRAGMENT;
                 pushEvent("group_listing");
+                fragmentToLoad = Constants.GROUP_LISTING_FRAGMENT;
             }
         } else if (_intent.hasExtra("branchLink") || _intent.hasExtra(AppConstants.BRANCH_DEEPLINK_URL)) {
             String branchdata = BaseApplication.getInstance().getBranchData();

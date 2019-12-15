@@ -111,16 +111,16 @@ class CollectionFollowFollowersListAdapter(val mContext: Context, val listType: 
             holder.followingTextView.visibility = View.INVISIBLE
             holder.followTextView.visibility = View.INVISIBLE
             val jsonString = Gson().toJson(followUnfollowUserRequest)
-            Utils.pushFollowAuthorEvent(mContext, screenName, SharedPrefUtils.getUserDetailModel(mContext).dynamoId,
-                    mDataList?.get(position)?.userId + "~" + mDataList?.get(position)?.firstName + " " + mDataList?.get(position)?.lastName)
+            Utils.pushGenericEvent(mContext, "CTA_Follow_Collection_Followers",
+                    SharedPrefUtils.getUserDetailModel(mContext).dynamoId, "CollectionFollowFollowersListAdapter")
             FollowUnfollowAsyncTask(holder, "follow", position).execute(jsonString, "follow")
         } else {
             holder.relativeLoadingView.visibility = View.VISIBLE
             holder.followingTextView.visibility = View.INVISIBLE
             holder.followTextView.visibility = View.INVISIBLE
             val jsonString = Gson().toJson(followUnfollowUserRequest)
-            Utils.pushUnfollowAuthorEvent(mContext, screenName, SharedPrefUtils.getUserDetailModel(mContext).dynamoId,
-                    mDataList?.get(position)?.userId + "~" + mDataList?.get(position)?.firstName + " " + mDataList?.get(position)?.lastName)
+            Utils.pushGenericEvent(mContext, "CTA_Unfollow_Collection_Followers",
+                    SharedPrefUtils.getUserDetailModel(mContext).dynamoId, "CollectionFollowFollowersListAdapter")
             FollowUnfollowAsyncTask(holder, "unfollow", position).execute(jsonString, "unfollow")
         }
     }
