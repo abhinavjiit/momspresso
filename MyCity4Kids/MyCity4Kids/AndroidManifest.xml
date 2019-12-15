@@ -549,9 +549,6 @@
         <activity
             android:name=".ui.activity.ProfileWebViewActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.phoneLogin.MainActivity"
-            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="io.branch.sdk.BranchKey"
