@@ -10,6 +10,7 @@ import com.mycity4kids.ui.campaign.*
 import com.mycity4kids.ui.campaign.fragment.ProofInstructionResult
 import com.mycity4kids.ui.mymoneytracker.model.TrackerDataModel
 import io.reactivex.Observable
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -117,4 +118,6 @@ interface CampaignAPI {
     fun unapplyCampaign(@Body body: CampaignParticipate)
             : Call<ParticipateCampaignResponse>
 
+    @GET
+    fun getAdSlotData(@Url url: String): Call<ResponseBody>
 }

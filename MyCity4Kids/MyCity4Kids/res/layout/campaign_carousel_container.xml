@@ -8,12 +8,25 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/adSlotContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/space_12">
+
+        <WebView
+            android:id="@+id/adSlotWebView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/relativeLayoutContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="8dp"
         android:background="#FFFFFF"
-        android:paddingTop="10dp">
+        android:paddingTop="10dp"
+        android:visibility="gone">
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/campaignLabelTextView"
@@ -34,7 +47,9 @@
         android:id="@+id/videoCarouselContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_12">
+        android:background="@color/white"
+        android:paddingTop="@dimen/space_12"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/linearLayoutVideoCrousalConatiner"
@@ -47,6 +62,7 @@
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
+                android:paddingTop="4dp"
                 android:paddingBottom="10dp">
 
                 <androidx.cardview.widget.CardView

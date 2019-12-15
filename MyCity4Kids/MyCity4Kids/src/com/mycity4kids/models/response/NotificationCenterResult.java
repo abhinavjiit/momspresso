@@ -23,18 +23,8 @@ public class NotificationCenterResult {
     private int postId;
     private int responseId;
     private int campaign_id;
-    private int category_id;
     private String categoryId;
     private String badgeId;
-
-//    public int getCategoryId() {
-//        return category_id;
-//    }
-//
-//    public void setCategoryId(int categoryId) {
-//        this.category_id = categoryId;
-//    }
-
 
     public String getCategoryId() {
         return categoryId;

@@ -102,14 +102,11 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
         popularSortFAB.setOnClickListener(this);
         recentSortFAB.setOnClickListener(this);
         /*   writeAtricleCell.setOnClickListener(this);*/
-        fabSort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (fabMenu.isExpanded()) {
-                    fabMenu.collapse();
-                } else {
-                    fabMenu.expand();
-                }
+        fabSort.setOnClickListener(v -> {
+            if (fabMenu.isExpanded()) {
+                fabMenu.collapse();
+            } else {
+                fabMenu.expand();
             }
         });
         fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {

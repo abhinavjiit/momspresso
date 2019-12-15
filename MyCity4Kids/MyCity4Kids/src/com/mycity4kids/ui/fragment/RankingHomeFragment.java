@@ -43,6 +43,7 @@ public class RankingHomeFragment extends BaseFragment {
 
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.ranking_tabs_your_rank_label)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.ranking_tabs_page_views_label)));
+        tabLayout.addTab(tabLayout.newTab().setText("ddddd"));
         AppUtils.changeTabsFont(tabLayout);
         RankingPagerAdapter rankingPagerAdapter = new RankingPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount(), authorId);
         viewPager.setAdapter(rankingPagerAdapter);

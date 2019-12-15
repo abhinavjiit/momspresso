@@ -190,17 +190,6 @@ class UserProfileActivity : BaseActivity(),
             showBadgeDialog(deeplinkBadgeId)
         }
 
-//        profileImageView.setOnClickListener {
-//            if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId == authorId) {
-//                val pIntent = Intent(this, PrivateProfileActivity::class.java)
-//                startActivity(pIntent)
-//            } else {
-//                val intentnn = Intent(this, PublicProfileActivity::class.java)
-//                intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, authorId)
-//                startActivity(intentnn)
-//            }
-//        }
-
         if (AppUtils.isPrivateProfile(authorId)) {
             authorId = SharedPrefUtils.getUserDetailModel(this).dynamoId
             followerContainer.setOnClickListener(this)
@@ -517,7 +506,7 @@ class UserProfileActivity : BaseActivity(),
             if (AppConstants.LANG_KEY_ENGLISH == responseData.data[0].result.ranks[0].langKey) {
                 rankLanguageTextView.text = getString(R.string.blogger_profile_rank_in, "ENGLISH")
             } else {
-                rankLanguageTextView.text = (getString(R.string.blogger_profile_rank_in, responseData.data[0].result.ranks[0].langValue.toUpperCase()))
+                rankLanguageTextView.text = getString(R.string.blogger_profile_rank_in, responseData.data[0].result.ranks[0].langValue.toUpperCase())
             }
         } else {
             rankContainer.setOnClickListener(this)
@@ -802,9 +791,11 @@ class UserProfileActivity : BaseActivity(),
                         false
                     }
                     val intent = Intent(this, RankingActivity::class.java)
+                    intent.putExtra(Constants.AUTHOR_ID, authorId)
                     startActivity(intent)
                 } else {
                     val intent = Intent(this, RankingActivity::class.java)
+                    intent.putExtra(Constants.AUTHOR_ID, authorId)
                     startActivity(intent)
                 }
             }
@@ -843,12 +834,9 @@ class UserProfileActivity : BaseActivity(),
     private fun shareGenericImage() {
         try {
             val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/profile.jpg")
-            val shareIntent: Intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_STREAM, uri)
-                type = "image/jpeg"
-            }
-            startActivity(Intent.createChooser(shareIntent, resources.getText(R.string.ad_bottom_bar_generic_share)))
+            val shareText = getString(R.string.profile_follow_author, authorNameTextView.text.toString()) +
+                    AppConstants.USER_PROFILE_SHARE_BASE_URL + authorId
+            AppUtils.shareGenericImageAndOrLink(this, uri, shareText)
             if (AppUtils.isPrivateProfile(authorId)) {
                 Utils.pushProfileEvents(this, "CTA_Share_Private_Profile", "UserProfileActivity",
                         "Share", "-")

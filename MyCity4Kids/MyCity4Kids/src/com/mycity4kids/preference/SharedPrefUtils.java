@@ -129,6 +129,7 @@ public class SharedPrefUtils {
 
     private static final String DEFAULT_CAMPAIGN_SHOWN_FLAG = "defaultcampaignshownflag";
 
+    private static final String HOME_AD_SLOT_URL = "homeAdSlotUrl";
 
     /**
      * this shared preference save current versions for control city,locality,category APIs .
@@ -836,4 +837,15 @@ public class SharedPrefUtils {
         _editor.commit();
     }
 
+    public static String getHomeAdSlotUrl(Context pContext) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (_sharedPref.getString(HOME_AD_SLOT_URL, ""));
+    }
+
+    public static void setHomeAdSlotUrl(Context pContext, String adSlotUrl) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putString(HOME_AD_SLOT_URL, adSlotUrl);
+        _editor.commit();
+    }
 }

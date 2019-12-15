@@ -153,16 +153,17 @@ class ProfileShareCardWidget : RelativeLayout {
         } else if (responseData.ranks.size < 2) {
             rankCountTextView.text = "" + responseData.ranks[0].rank
             if (AppConstants.LANG_KEY_ENGLISH == responseData.ranks[0].langKey) {
-                rankLanguageTextView.text = context.getString(R.string.blogger_profile_rank_in) + " ENGLISH"
+                rankLanguageTextView.text = context.getString(R.string.blogger_profile_rank_in, "ENGLISH")
             } else {
-                rankLanguageTextView.text = (context.getString(R.string.blogger_profile_rank_in)
-                        + " " + responseData.ranks[0].langValue.toUpperCase())
+                rankLanguageTextView.text = context.getString(R.string.blogger_profile_rank_in,
+                        responseData.ranks[0].langValue.toUpperCase())
+
             }
         } else {
             responseData.ranks.sort()
             rankCountTextView.text = "" + responseData.ranks[0].rank
-            rankLanguageTextView.text = (context.getString(R.string.blogger_profile_rank_in)
-                    + " " + responseData.ranks[0].langValue.toUpperCase())
+            rankLanguageTextView.text = context.getString(R.string.blogger_profile_rank_in,
+                    responseData.ranks[0].langValue.toUpperCase())
         }
     }
 }

@@ -180,6 +180,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                         _args.putParcelableArrayList("accountList", (ArrayList<? extends Parcelable>) responseData.getData().get(0).getResult());
                         chooseLoginAccountFragment.setArguments(_args);
                         FragmentManager fm = getSupportFragmentManager();
+                        chooseLoginAccountFragment.setCancelable(false);
                         chooseLoginAccountFragment.show(fm, "Accounts");
                     } else {
                         loginWithAccount(responseData.getData().get(0).getResult().get(0));
@@ -242,7 +243,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    public void getFacebookUser(String user) {
+    public void getFacebookUser(JSONObject jObject, String user) {
         try {
             if (user != null) {
                 loginMode = "fb";

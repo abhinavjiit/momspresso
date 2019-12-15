@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
@@ -16,6 +14,9 @@ import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -38,7 +39,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
@@ -61,7 +62,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     private int videoSurfaceDefaultHeight = 0;
     private int screenDefaultHeight = 0;
     public SimpleExoPlayer player;
-    public SimpleExoPlayerView videoSurfaceView;
+    public PlayerView videoSurfaceView;
     private ImageView mCoverImage;
     public RelativeLayout videoCell;
     public RelativeLayout frameLayout;
@@ -133,7 +134,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
      * prepare for video play
      */
     //remove the player from the row
-    private void removeVideoView(SimpleExoPlayerView videoView) {
+    private void removeVideoView(PlayerView videoView) {
 
         ViewGroup parent = (ViewGroup) videoView.getParent();
         if (parent == null) {
@@ -279,8 +280,8 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             DefaultHttpDataSourceFactory httpDataSourceFactory = new DefaultHttpDataSourceFactory(userAgent, null, DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS, DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS, true);
             DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(appContext, null, httpDataSourceFactory);
             Uri daUri = Uri.parse(uriString);
-
-            mVideoSource = new HlsMediaSource(daUri, dataSourceFactory, 1, null, null);
+            mVideoSource = new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(daUri);
+//            mVideoSource = new HlsMediaSource(daUri, dataSourceFactory, 1, null, null);
 
             // Prepare the player with the source.
             player.prepare(mVideoSource);
@@ -341,7 +342,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         videoSurfaceDefaultHeight = point.x;
 
         screenDefaultHeight = point.y;
-        videoSurfaceView = new SimpleExoPlayerView(appContext);
+        videoSurfaceView = new PlayerView(appContext);
         videoSurfaceView.setFastForwardIncrementMs(5000);
 
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
@@ -395,8 +396,9 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         });
 
         player.addListener(new Player.EventListener() {
+
             @Override
-            public void onTimelineChanged(Timeline timeline, Object manifest) {
+            public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
 
             }
 
@@ -460,12 +462,17 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             }
 
             @Override
+            public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+
+            }
+
+            @Override
             public void onPlayerError(ExoPlaybackException error) {
 
             }
 
             @Override
-            public void onPositionDiscontinuity() {
+            public void onPositionDiscontinuity(int reason) {
 
             }
 
@@ -473,10 +480,15 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
 
             }
+
+            @Override
+            public void onSeekProcessed() {
+
+            }
         });
     }
 
-    public SimpleExoPlayerView getSimpleExo() {
+    public PlayerView getSimpleExo() {
         return videoSurfaceView;
     }
 

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import com.mycity4kids.ui.fragment.MilestonesFragment;
 import com.mycity4kids.ui.fragment.RankingInfoTabFragment;
 import com.mycity4kids.ui.fragment.RankingStatsTabFragment;
 
@@ -16,6 +17,7 @@ public class RankingPagerAdapter extends FragmentStatePagerAdapter {
     private int mNumOfTabs;
     private RankingInfoTabFragment rankingInfoTabFragment;
     private RankingStatsTabFragment rankingStatsTabFragment;
+    private MilestonesFragment fragmentMilestones;
 
     public RankingPagerAdapter(FragmentManager fm, int NumOfTabs) {
         super(fm);
@@ -47,6 +49,12 @@ public class RankingPagerAdapter extends FragmentStatePagerAdapter {
                 }
                 rankingStatsTabFragment.setArguments(bundle);
                 return rankingStatsTabFragment;
+            case 2:
+                if (fragmentMilestones == null) {
+                    fragmentMilestones = new MilestonesFragment();
+                }
+                fragmentMilestones.setArguments(bundle);
+                return fragmentMilestones;
         }
         return null;
 

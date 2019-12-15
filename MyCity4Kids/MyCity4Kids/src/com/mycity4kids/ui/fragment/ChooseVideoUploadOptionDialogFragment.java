@@ -15,6 +15,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import com.kelltontech.utils.StringUtils;
@@ -29,11 +34,6 @@ import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
-
 /**
  * Created by user on 08-06-2015.
  */
@@ -41,9 +41,6 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final int REQUEST_GALLERY_PERMISSION = 2;
-
-    private static String[] PERMISSIONS_STORAGE_CAMERA = {Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
     private String activity;
     private View rootLayout;
@@ -56,7 +53,8 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
         final View rootView = inflater.inflate(R.layout.choose_video_option_dialog, container,
                 false);
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Utils.pushOpenScreenEvent(getActivity(), "PickVideoScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "PickVideoScreen",
+                SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
         Bundle extras = getArguments();
         if (extras != null) {
             activity = extras.getString("activity");
@@ -84,7 +82,6 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                 timeLimitTextView.setTextColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.app_red));
             }
         }
-
         return rootView;
     }
 
@@ -92,6 +89,12 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.optionCameraTextView:
+                if (isAdded()) {
+                    Utils.momVlogEvent(getActivity(), "Video Upload", "Take_video", "N/A", "android",
+                            SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                            String.valueOf(System.currentTimeMillis()), "Show_camera", "", "");
+                }
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED
@@ -99,7 +102,6 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                             != PackageManager.PERMISSION_GRANTED
                             || ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED) {
-//                        requestPermissions("camera");
                         if ("dashboard".equals(activity)) {
                             ((DashboardActivity) getActivity()).requestPermissions("camera");
                         } else if ("myfunnyvideos".equals(activity)) {
@@ -111,18 +113,21 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                         } else if ("challengeDetailFragment".equals(activity)) {
                             ((NewVideoChallengeActivity) getActivity()).requestPermissions("camera");
                         }
-
-
                     } else {
                         openVideoCapture();
                     }
                 } else {
                     openVideoCapture();
                 }
-//                openVideoCapture();
                 dismiss();
                 break;
             case R.id.optionGalleryTextView:
+                if (isAdded()) {
+                    Utils.momVlogEvent(getActivity(), "Video Upload", "Choose_from_gallery", "N/A", "android",
+                            SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                            String.valueOf(System.currentTimeMillis()), "Show_gallery", "", "");
+                }
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED
@@ -147,8 +152,6 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                 } else {
                     pickFromGallery();
                 }
-
-
                 dismiss();
                 break;
             case R.id.cancelTextView:

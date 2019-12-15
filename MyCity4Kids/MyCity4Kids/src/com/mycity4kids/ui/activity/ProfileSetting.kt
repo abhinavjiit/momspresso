@@ -269,7 +269,7 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
                 e.printStackTrace()
             }
 
-            FacebookUtils.logout(this)
+            FacebookUtils.logout()
             gPlusSignOut()
 
             val pushToken = SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext())

@@ -124,21 +124,15 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
             override fun onError(e: Throwable) {
                 removeProgressDialog()
                 Log.e("exception in error", e.message.toString())
-
             }
-
-
         })
     }
 
     override fun onClick(p0: View?) {
         if (!panCardDetailEditTextView.text.toString().isNullOrEmpty()) {
             val panCardNumber = panCardDetailEditTextView.text.toString().trim()
-
             val pattern = Pattern.compile("[A-Z]{5}[0-9]{4}[A-Z]{1}")
             val matcher = pattern.matcher(panCardNumber)
-
-
             if (matcher.matches()) {
                 if (!panNumber.isNullOrEmpty()) {
                     val proofPostModel = ProofPostModel(pan = panCardDetailEditTextView.text.toString())
@@ -177,13 +171,8 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                                 var reason = jsonObject.get("reason")
                                 Toast.makeText(context, reason.asString, Toast.LENGTH_SHORT).show()
                             }
-
                             Log.e("exception in error", e.message.toString())
-
-
                         }
-
-
                     })
                 } else {
                     val proofPostModel = ProofPostModel(pan = panCardDetailEditTextView.text.toString())
@@ -191,7 +180,6 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                     BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).addPanNumber(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
                         override fun onComplete() {
                             removeProgressDialog()
-
                         }
 
                         override fun onSubscribe(d: Disposable) {
@@ -208,8 +196,6 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                                             CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
                                             .commit()
                                 }
-
-
                             }
                         }
 
@@ -224,21 +210,13 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                                 var reason = jsonObject.get("reason")
                                 Toast.makeText(context, reason.asString, Toast.LENGTH_SHORT).show()
                             }
-
                             Log.e("exception in error", e.message.toString())
                         }
-
-
                     })
                 }
-
-
             } else {
                 Toast.makeText(activity, panCardNumber + " is Not Matching the Correct Formate", Toast.LENGTH_SHORT).show()
-
             }
-
-
         } else {
             Toast.makeText(activity, "field cann't be empty", Toast.LENGTH_SHORT).show()
         }

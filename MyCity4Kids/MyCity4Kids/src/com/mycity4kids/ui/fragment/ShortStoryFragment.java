@@ -1304,14 +1304,14 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             isFollowing = false;
             adapter.setAuthorFollowingStatus(AppConstants.STATUS_NOT_FOLLOWING);
             adapter.notifyItemChanged(0);
-            Utils.pushUnfollowAuthorEvent(getActivity(), "ShortStoryDetailsScreen", userDynamoId, authorId + "~" + author);
+            Utils.pushGenericEvent(getActivity(), "CTA_Unfollow_100WS_Detail", userDynamoId, "ShortStoryFragment");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
             isFollowing = true;
             adapter.setAuthorFollowingStatus(AppConstants.STATUS_FOLLOWING);
             adapter.notifyItemChanged(0);
-            Utils.pushFollowAuthorEvent(getActivity(), "ShortStoryDetailsScreen", userDynamoId, authorId + "~" + author);
+            Utils.pushGenericEvent(getActivity(), "CTA_Follow_100WS_Detail", userDynamoId, "ShortStoryFragment");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }

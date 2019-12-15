@@ -1,67 +1,33 @@
 package com.mycity4kids.ui.activity;
 
-import android.Manifest;
 import android.accounts.NetworkErrorException;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-
 import com.crashlytics.android.Crashlytics;
 import com.facebook.applinks.AppLinkData;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.tagmanager.Container;
-import com.google.android.gms.tagmanager.ContainerHolder;
-import com.google.android.gms.tagmanager.TagManager;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
-import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.asynctask.HeavyDbTask;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.dbtable.TableAdult;
-import com.mycity4kids.fragmentdialog.FragmentAlertDialog;
-import com.mycity4kids.gtmutils.ContainerHolderSingleton;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.interfaces.OnUIView;
 import com.mycity4kids.listener.OnButtonClicked;
-import com.mycity4kids.models.VersionApiModel;
-import com.mycity4kids.models.city.City;
-import com.mycity4kids.models.city.MetroCity;
-import com.mycity4kids.models.configuration.ConfigurationApiModel;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.newmodels.ForceUpdateModel;
@@ -71,42 +37,26 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.utils.AppUtils;
-import com.mycity4kids.utils.NearMyCity;
-import com.mycity4kids.utils.PermissionUtil;
-import com.mycity4kids.utils.location.GPSTracker;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import io.branch.referral.Branch;
-import io.branch.referral.BranchError;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 public class SplashActivity extends BaseActivity {
 
-    private static final int REQUEST_INIT_PERMISSION = 1;
-
-    private static String[] PERMISSIONS_INIT = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
-
-    private boolean isLocationScreen = false;
     private String _deepLinkURL;
-    private int isFirstLaunch = 0;
-    private GoogleApiClient mClient;
-    private Uri mUrl;
-    private String mTitle;
-    private String mDescription;
     Bundle extras;
     FirebaseAnalytics mFirebaseAnalytics;
-    private View mLayout;
-    private boolean shouldResumeSplash = false;
     MixpanelAPI mixpanel;
     private String branchData;
+    private Handler handler, handler1;
 
     // The onNewIntent() is overridden to get and resolve the data for deep linking
     @Override
@@ -140,15 +90,9 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         Utils.pushAppOpenEvent(this, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         onNewIntent(getIntent());
-        //generateFacebookHashcode();
+        AppUtils.printHashKey(this);
         extras = getIntent().getExtras();
-        setUpGTM();
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-                Log.d("Admob", "Initialized");
-            }
-        });
+        MobileAds.initialize(this, initializationStatus -> Log.d("Admob", "Initialized"));
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         if (getIntent().getBooleanExtra("fromNotification", false)) {
@@ -156,21 +100,12 @@ public class SplashActivity extends BaseActivity {
         }
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        /* mFirebaseAnalytics.setUserProperty("CityId","1");*/
-        mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-        // mUrl = Uri.parse("http://www.mycity4kids.com/parenting/kalpana---without-boundaries/article/From-the-Bicycle-to-the-Recycle-days...");
-        mUrl = Uri.parse("android-app://com.mycity4kids/http/momspresso.com");
-        mTitle = "Momspresso";
-        mDescription = "Parenting made easy with Mommy Blogs, Kids Activities and Family Organizer";
         try {
 
             setContentView(R.layout.splash_activity);
-            mLayout = findViewById(R.id.rootLayout);
+            View mLayout = findViewById(R.id.rootLayout);
             ((BaseApplication) getApplication()).setView(mLayout);
             ((BaseApplication) getApplication()).setActivity(this);
-
-
-            /* AnalyticsHelper.logEvent("Application Launch...");*/
 
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
@@ -180,19 +115,7 @@ public class SplashActivity extends BaseActivity {
             _spin.startAnimation(AnimationUtils.loadAnimation(this,
                     R.anim.rotate_indefinitely));
 
-            if (Build.VERSION.SDK_INT >= 23) {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED
-                        || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    Log.i("PERMISSIONS", "storage permissions has NOT been granted. Requesting permissions.");
-                    requestLocationAndStoragePermissions();
-                } else {
-                    resumeSplash();
-                }
-            } else {
-                resumeSplash();
-            }
+            resumeSplash();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -202,233 +125,52 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (shouldResumeSplash) {
-            resumeSplash();
-        }
     }
 
     private void resumeSplash() {
-
         String version = AppUtils.getAppVersion(this);
-
-        final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(BaseApplication.getAppContext());
-        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        /**
-         * for first time we will check that gps is enabled or not:
-         */
-        if (versionApiModel.getCategoryVersion() == 0.0 && versionApiModel.getCityVersion() == 0.0 && versionApiModel.getLocalityVersion() == 0.0) {
-            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER) && (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))) {
-
-                buildAlertMessageNoGps();
-//                return;
-            }
-        }
-
         Intent mServiceIntent = new Intent(SplashActivity.this, CategorySyncService.class);
-        //     mServiceIntent.setData(Uri.parse("test"));
         startService(mServiceIntent);
-
-        /**
-         * configuration Controller for fetching category,locality,city
-         * according to api versions:
-         */
-        final ConfigurationController _controller = new ConfigurationController(this, this);
-
-
-        /**
-         * this method will give current city model & we get city id according
-         * to current City:- CityId will pass in configuration controller &
-         * according to city id we will get latest locality & category :)
-         */
-
-        if (versionApiModel.getCategoryVersion() == 0.0 && versionApiModel.getCityVersion() == 0.0 && versionApiModel.getLocalityVersion() == 0.0) {
-            if (Build.VERSION.SDK_INT >= 23) {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED
-                        || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED) {
-                    GPSTracker getCurrentLocation = new GPSTracker(this);
-                    double _latitude = getCurrentLocation.getLatitude();
-                    double _longitude = getCurrentLocation.getLongitude();
-
-                    SharedPrefUtils.setUserLocationLatitude(BaseApplication.getAppContext(), _latitude);
-                    SharedPrefUtils.setUserLocationLongitude(BaseApplication.getAppContext(), _longitude);
-                    new NearMyCity(this, _latitude, _longitude, new NearMyCity.FetchCity() {
-
-                        @Override
-                        public void nearCity(City cityModel) {
-
-
-                            int cityId = cityModel.getCityId();
-                            // mFirebaseAnalytics = FirebaseAnalytics.getInstance(SplashActivity.this);
-                            mFirebaseAnalytics.setUserProperty("CityId", cityId + "");
-                            /**
-                             * save current city id in shared preference
-                             */
-                            MetroCity model = new MetroCity();
-                            model.setId(cityModel.getCityId());
-                            model.setName(cityModel.getCityName());
-                            model.setNewCityId(cityModel.getNewCityId());
-                            /**
-                             * this city model will be save only one time on splash:
-                             */
-                            SharedPrefUtils.setCurrentCityModel(BaseApplication.getAppContext(), model);
-
-                            if (cityId > 0) {
-                                versionApiModel.setCityId(cityId);
-                                mFirebaseAnalytics.setUserProperty("CityId", cityId + "");
-                                /**
-                                 * get current version code ::
-                                 */
-                                PackageInfo pInfo = null;
-                                try {
-                                    pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-
-                                } catch (PackageManager.NameNotFoundException e) {
-                                    e.printStackTrace();
-                                }
-
-                                String version = pInfo.versionName;
-                                Log.e("version number ", version);
-                                if (!StringUtils.isNullOrEmpty(version)) {
-                                    versionApiModel.setAppUpdateVersion(version);
-                                }
-
-                                if (!ConnectivityUtils.isNetworkEnabled(SplashActivity.this)) {
-                                    ToastUtils.showToast(SplashActivity.this, getString(R.string.error_network));
-                                    return;
-
-                                }
-                                isFirstLaunch = 1;
-                                _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
-                            }
-
-                        }
-                    });
-                } else {
-                    versionApiModel.setCityId(SharedPrefUtils.getCurrentCityModel(this).getId());
-                    mFirebaseAnalytics.setUserProperty("CityId", SharedPrefUtils.getCurrentCityModel(this).getId() + "");
-                    versionApiModel.setAppUpdateVersion(version);
-                    if (ConnectivityUtils.isNetworkEnabled(SplashActivity.this)) {
-                        _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
-                        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                        ForceUpdateAPI forceUpdateAPI = retrofit.create(ForceUpdateAPI.class);
-                        Call<ForceUpdateModel> call = forceUpdateAPI.checkForceUpdateRequired(version, "android");
-                        call.enqueue(checkForceUpdateResponseCallback);
-                    } else {
-                        if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
-                            String message = SharedPrefUtils.getAppUgradeMessage(BaseApplication.getAppContext());
-                            showUpgradeAppAlertDialog("Momspresso", message, new OnButtonClicked() {
-                                @Override
-                                public void onButtonCLick(int buttonId) {
-                                }
-                            });
-                            return;
-                        }
-                        isFirstLaunch = 0;
-                        navigateToNextScreen(true);
-                    }
-                }
-            } else {
-                /**
-                 * this will call every time on splash:
-                 */
-                versionApiModel.setCityId(SharedPrefUtils.getCurrentCityModel(this).getId());
-                mFirebaseAnalytics.setUserProperty("CityId", SharedPrefUtils.getCurrentCityModel(this).getId() + "");
-                versionApiModel.setAppUpdateVersion(version);
-                if (ConnectivityUtils.isNetworkEnabled(SplashActivity.this)) {
-
-                    _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
-                    Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                    ForceUpdateAPI forceUpdateAPI = retrofit.create(ForceUpdateAPI.class);
-                    Call<ForceUpdateModel> call = forceUpdateAPI.checkForceUpdateRequired(version, "android");
-                    call.enqueue(checkForceUpdateResponseCallback);
-                } else {
-                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
-                        String message = SharedPrefUtils.getAppUgradeMessage(BaseApplication.getAppContext());
-                        showUpgradeAppAlertDialog("Momspresso", message, new OnButtonClicked() {
-                            @Override
-                            public void onButtonCLick(int buttonId) {
-                            }
-                        });
-                        return;
-                    }
-                    isFirstLaunch = 0;
-                    navigateToNextScreen(true);
-                }
-            }
+        if (ConnectivityUtils.isNetworkEnabled(SplashActivity.this)) {
+            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+            ForceUpdateAPI forceUpdateAPI = retrofit.create(ForceUpdateAPI.class);
+            Call<ForceUpdateModel> call = forceUpdateAPI.checkForceUpdateRequired(version, "android");
+            call.enqueue(checkForceUpdateResponseCallback);
         } else {
-            versionApiModel.setCityId(SharedPrefUtils.getCurrentCityModel(this).getId());
-            mFirebaseAnalytics.setUserProperty("CityId", SharedPrefUtils.getCurrentCityModel(this).getId() + "");
-            versionApiModel.setAppUpdateVersion(version);
-            if (ConnectivityUtils.isNetworkEnabled(SplashActivity.this)) {
-                _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
-                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                ForceUpdateAPI forceUpdateAPI = retrofit.create(ForceUpdateAPI.class);
-                Call<ForceUpdateModel> call = forceUpdateAPI.checkForceUpdateRequired(version, "android");
-                call.enqueue(checkForceUpdateResponseCallback);
-            } else {
-                if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
-                    String message = SharedPrefUtils.getAppUgradeMessage(BaseApplication.getAppContext());
-                    showUpgradeAppAlertDialog("Momspresso", message, new OnButtonClicked() {
-                        @Override
-                        public void onButtonCLick(int buttonId) {
-                        }
-                    });
-                    return;
-                }
-                isFirstLaunch = 0;
-                navigateToNextScreen(true);
+            if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
+                String message = SharedPrefUtils.getAppUgradeMessage(BaseApplication.getAppContext());
+                showUpgradeAppAlertDialog("Momspresso", message, new OnButtonClicked() {
+                    @Override
+                    public void onButtonCLick(int buttonId) {
+                    }
+                });
+                return;
             }
+            navigateToNextScreen(true);
         }
     }
-
-    public Action getAction() {
-        Thing object = new Thing.Builder()
-                .setName(mTitle)
-                .setDescription(mDescription)
-                .setUrl(mUrl)
-                .build();
-
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
-
-    Handler handler;
 
     @Override
     public void onStart() {
         super.onStart();
-
-        // Branch init
         handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Branch.getInstance().initSession(new Branch.BranchReferralInitListener() {
-                    @Override
-                    public void onInitFinished(JSONObject referringParams, BranchError error) {
-                        if (error == null) {
-                            String type = "";
-                            Log.i("BRANCH_SDK", referringParams.toString());
-                            branchData = referringParams.toString();
-                            try {
-                                if (!StringUtils.isNullOrEmpty(referringParams.getString("type"))) {
-                                    BaseApplication.getInstance().setBranchData(branchData);
-                                    BaseApplication.getInstance().setBranchLink("true");
-                                }
-                            } catch (Exception e) {
-                                Log.e("Branch_Tag", e.getMessage());
-                            }
-                        } else {
-                            Log.i("BRANCH SDK", error.getMessage());
-                        }
+        handler.postDelayed(() -> Branch.getInstance().initSession((referringParams, error) -> {
+            if (error == null) {
+                String type = "";
+                Log.i("BRANCH_SDK", referringParams.toString());
+                branchData = referringParams.toString();
+                try {
+                    if (!StringUtils.isNullOrEmpty(referringParams.getString("type"))) {
+                        BaseApplication.getInstance().setBranchData(branchData);
+                        BaseApplication.getInstance().setBranchLink("true");
                     }
-                }, SplashActivity.this.getIntent().getData(), SplashActivity.this);
+                } catch (Exception e) {
+                    Log.e("Branch_Tag", e.getMessage());
+                }
+            } else {
+                Log.i("BRANCH SDK", error.getMessage());
             }
-        }, 1000);
+        }, SplashActivity.this.getIntent().getData(), SplashActivity.this), 1000);
 
         AppLinkData.fetchDeferredAppLinkData(this, new AppLinkData.CompletionHandler() {
             @Override
@@ -446,21 +188,10 @@ public class SplashActivity extends BaseActivity {
                 }
             }
         });
-        mClient.connect();
-        if (!BuildConfig.DEBUG)
-            AppIndex.AppIndexApi.start(mClient, getAction());
     }
 
-    @Override
-    public void onStop() {
-        if (!BuildConfig.DEBUG)
-            AppIndex.AppIndexApi.end(mClient, getAction());
-        mClient.disconnect();
-        super.onStop();
-    }
 
     private void navigateToNextScreen(boolean isConfigurationAvailable) {
-
         UserInfo userInfo = SharedPrefUtils.getUserDetailModel(this);
         TableAdult _table = new TableAdult(BaseApplication.getInstance());
         if (null != userInfo && !StringUtils.isNullOrEmpty(userInfo.getMc4kToken()) && AppConstants.VALIDATED_USER.equals(userInfo.getIsValidated())) { // if he signup
@@ -472,7 +203,6 @@ public class SplashActivity extends BaseActivity {
                 startService(intent5);
             }
             startSyncingUserInfo();
-
             try {
                 JSONObject prop = new JSONObject();
                 prop.put("userId", SharedPrefUtils.getUserDetailModel(this).getDynamoId());
@@ -504,76 +234,16 @@ public class SplashActivity extends BaseActivity {
                     finish();
                 } else {
                     handler1 = new Handler();
-                    handler1.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Intent intent = new Intent(SplashActivity.this, LanguageSelectionActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            });
-                        }
-                    }, 1000);
+                    handler1.postDelayed(() -> runOnUiThread(() -> {
+                        Intent intent = new Intent(SplashActivity.this, LanguageSelectionActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    }), 1000);
                 }
             }
         }
         Log.d("GCM Token ", SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext()));
-    }
-
-    private void requestLocationAndStoragePermissions() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION)
-                || ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)) {
-            Snackbar.make(mLayout, R.string.permission_location_rationale,
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            requestUngrantedPermissions();
-                        }
-                    })
-                    .show();
-        } else {
-            requestUngrantedPermissions();
-        }
-    }
-
-    private void requestUngrantedPermissions() {
-        ArrayList<String> permissionList = new ArrayList<>();
-        for (int i = 0; i < PERMISSIONS_INIT.length; i++) {
-            if (ActivityCompat.checkSelfPermission(this, PERMISSIONS_INIT[i]) != PackageManager.PERMISSION_GRANTED) {
-                permissionList.add(PERMISSIONS_INIT[i]);
-            }
-        }
-        String[] requiredPermission = permissionList.toArray(new String[permissionList.size()]);
-        ActivityCompat.requestPermissions(this, requiredPermission, REQUEST_INIT_PERMISSION);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_INIT_PERMISSION) {
-            if (PermissionUtil.verifyPermissions(grantResults)) {
-                Snackbar.make(mLayout, R.string.permision_available_init,
-                        Snackbar.LENGTH_SHORT)
-                        .show();
-                shouldResumeSplash = true;
-                Utils.pushGenericEvent(SplashActivity.this, "Location_permission_granted_event", "NA", "SplashActivity");
-            } else {
-                Snackbar.make(mLayout, R.string.permissions_not_granted,
-                        Snackbar.LENGTH_SHORT)
-                        .show();
-                shouldResumeSplash = true;
-                Utils.pushGenericEvent(SplashActivity.this, "Location_permission_denied_event", "NA", "SplashActivity");
-            }
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
     }
 
     private Callback<FollowUnfollowCategoriesResponse> getFollowedTopicsResponseCallback = new Callback<FollowUnfollowCategoriesResponse>() {
@@ -611,29 +281,18 @@ public class SplashActivity extends BaseActivity {
             Log.d("MC4kException", Log.getStackTraceString(t));
             gotoDashboard();
         }
-
     };
-    Handler handler1;
 
     private void gotoDashboard() {
-
         if (!StringUtils.isNullOrEmpty(_deepLinkURL) && (_deepLinkURL.contains(AppConstants.BRANCH_DEEPLINK) || _deepLinkURL.contains(AppConstants.BRANCH_DEEPLINK_URL))) {
             handler1 = new Handler();
-            handler1.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
-                            intent.putExtra("branchLink", _deepLinkURL);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            startActivity(intent);
-                            finish();
-                        }
-                    });
-                }
-            }, 1000);
+            handler1.postDelayed(() -> runOnUiThread(() -> {
+                Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
+                intent.putExtra("branchLink", _deepLinkURL);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                finish();
+            }), 1000);
         } else {
             Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
             if (!StringUtils.isNullOrEmpty(_deepLinkURL)) {
@@ -650,67 +309,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        // again check location
-
-        if (isLocationScreen) {
-
-            final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER) && (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))) {
-
-            } else
-                navigateToNextScreen(true);
-        }
-    }
-
-    @Override
     protected void updateUi(Response response) {
-        if (response == null) {
-            navigateToNextScreen(false);
-
-        }
-        switch (response.getDataType()) {
-
-            case AppConstants.CONFIGURATION_REQUEST:
-                Object responseObject = response.getResponseObject();
-                if (responseObject instanceof ConfigurationApiModel) {
-                    ConfigurationApiModel _configurationResponse = (ConfigurationApiModel) responseObject;
-
-                    /**
-                     * Save data into tables :-
-                     */
-                    HeavyDbTask _heavyDbTask = new HeavyDbTask(this,
-                            _configurationResponse, new OnUIView() {
-
-                        @Override
-                        public void comeBackOnUI() {
-                            if (isFirstLaunch == 1) {
-                                PackageInfo pInfo = null;
-                                try {
-                                    pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-                                } catch (PackageManager.NameNotFoundException e) {
-                                    e.printStackTrace();
-                                }
-                                String version = pInfo.versionName;
-                                Log.e("version number ", version);
-
-                                //First launch or logout or Shared prefs cleared scenario.
-                                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                                ForceUpdateAPI forceUpdateAPI = retrofit.create(ForceUpdateAPI.class);
-                                Call<ForceUpdateModel> call = forceUpdateAPI.checkForceUpdateRequired(version, "android");
-                                call.enqueue(checkForceUpdateResponseCallback);
-                            }
-
-                        }
-                    });
-                    _heavyDbTask.execute();
-
-                }
-                break;
-            default:
-                break;
-        }
 
     }
 
@@ -718,86 +317,6 @@ public class SplashActivity extends BaseActivity {
     public void onBackPressed() {
         super.onBackPressed();
         moveTaskToBack(true);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-            System.out.println("Touch outside the dialog ******************** ");
-        }
-        return false;
-    }
-
-    private void buildAlertMessageNoGps() {
-        isLocationScreen = true;
-        FragmentAlertDialog _dialog = new FragmentAlertDialog();
-        FragmentAlertDialog fragment = _dialog.newInstance(this, getString(R.string.gps_enabled_alert));
-        getSupportFragmentManager().beginTransaction().add(fragment, "MAGIC_TAG").commit();
-        return;
-    }
-
-    private void setUpGTM() {
-        TagManager tagManager = TagManager.getInstance(this);
-
-        // Modify the log level of the logger to print out not only
-        // warning and error messages, but also verbose, debug, info messages.
-        tagManager.setVerboseLoggingEnabled(true);
-
-        PendingResult<ContainerHolder> pending =
-                tagManager.loadContainerPreferNonDefault(AppConstants.CONTAINER_ID,
-                        R.raw.gtmms864s_v4);
-        // The onResult method will be called as soon as one of the following happens:
-        //     1. a saved container is loaded
-        //     2. if there is no saved container, a network container is loaded
-        //     3. the 2-second timeout occurs
-        pending.setResultCallback(new ResultCallback<ContainerHolder>() {
-            @Override
-            public void onResult(ContainerHolder containerHolder) {
-                ContainerHolderSingleton.setContainerHolder(containerHolder);
-                Container container = containerHolder.getContainer();
-                if (!containerHolder.getStatus().isSuccess()) {
-//                    Log.e("CuteAnimals", "failure loading container");
-                    displayErrorToUser(R.string.load_error);
-                    return;
-                }
-                ContainerHolderSingleton.setContainerHolder(containerHolder);
-                ContainerLoadedCallback.registerCallbacksForContainer(container);
-                containerHolder.setContainerAvailableListener(new ContainerLoadedCallback());
-                //startMainActivity();
-            }
-        }, 2, TimeUnit.SECONDS);
-    }
-
-    private static class ContainerLoadedCallback implements ContainerHolder.ContainerAvailableListener {
-        @Override
-        public void onContainerAvailable(ContainerHolder containerHolder, String containerVersion) {
-            // We load each container when it becomes available.
-            Container container = containerHolder.getContainer();
-            registerCallbacksForContainer(container);
-        }
-
-        public static void registerCallbacksForContainer(Container container) {
-            // Register two custom function call macros to the container.
-            //       container.registerFunctionCallMacroCallback("increment", new CustomMacroCallback());
-            //       container.registerFunctionCallMacroCallback("mod", new CustomMacroCallback());
-            //       // Register a custom function call tag to the container.
-            //       container.registerFunctionCallTagCallback("custom_tag", new CustomTagCallback());
-
-        }
-
-    }
-
-    private void displayErrorToUser(int stringKey) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setTitle("Error");
-        alertDialog.setMessage(getResources().getString(stringKey));
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
-                "OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-        alertDialog.show();
     }
 
     Callback<ForceUpdateModel> checkForceUpdateResponseCallback = new Callback<ForceUpdateModel>() {
@@ -810,11 +329,9 @@ public class SplashActivity extends BaseActivity {
             try {
                 ForceUpdateModel responseData = response.body();
                 if (responseData.getResponseCode() == 200) {
-
                     if (responseData.getResult().getData().getIsAppUpdateRequired() == 1) {
                         SharedPrefUtils.setAppUgrade(BaseApplication.getAppContext(), true);
                         String message = responseData.getResult().getData().getMessage();
-
                         SharedPrefUtils.setAppUgradeMessage(BaseApplication.getAppContext(), message);
                         showUpgradeAppAlertDialog("Momspresso", SharedPrefUtils.getAppUgradeMessage(BaseApplication.getAppContext()), new OnButtonClicked() {
                             @Override
@@ -823,7 +340,6 @@ public class SplashActivity extends BaseActivity {
                         });
                     } else {
                         SharedPrefUtils.setAppUgrade(BaseApplication.getAppContext(), false);
-                        isFirstLaunch = 0;
                         navigateToNextScreen(true);
                     }
                 } else if (responseData.getResponseCode() == 400) {
@@ -833,11 +349,8 @@ public class SplashActivity extends BaseActivity {
                     } else {
                         showToast(getString(R.string.went_wrong));
                     }
-                }
-                //TODO to be removed used only because force update API not available on Phoenix.
-                else {
+                } else {
                     SharedPrefUtils.setAppUgrade(BaseApplication.getAppContext(), false);
-                    isFirstLaunch = 0;
                     navigateToNextScreen(true);
                 }
             } catch (Exception e) {
@@ -846,11 +359,8 @@ public class SplashActivity extends BaseActivity {
                 Log.d("MC4KException", Log.getStackTraceString(e));
                 //Uncomment to run on phoenix
                 SharedPrefUtils.setAppUgrade(BaseApplication.getAppContext(), false);
-                isFirstLaunch = 0;
                 navigateToNextScreen(true);
-
             }
-
         }
 
         @Override
@@ -869,6 +379,5 @@ public class SplashActivity extends BaseActivity {
             handler1.removeCallbacksAndMessages(null);
         }
         super.onDestroy();
-
     }
 }

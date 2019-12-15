@@ -549,6 +549,9 @@
         <activity
             android:name=".ui.activity.ProfileWebViewActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.phoneLogin.MainActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="io.branch.sdk.BranchKey"
@@ -591,7 +594,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ui.activity.BadgeActivity" />
         <activity android:name=".ui.activity.NotificationProfileSetting" />
-        <activity android:name=".ui.activity.collection.AddMultipleCollectionItemActivity" />
+        <activity android:name=".ui.activity.phoneLogin.FacebookFriends" />
 
         <receiver android:name=".reminders.CancelNotificationReceiver" />
 

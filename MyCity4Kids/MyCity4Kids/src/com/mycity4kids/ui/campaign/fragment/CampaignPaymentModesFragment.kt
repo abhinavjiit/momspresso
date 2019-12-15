@@ -322,7 +322,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         }
 
         textLater.setOnClickListener {
-//            submitOnClickListener.onPaymentModeDone(-1)
+            //            submitOnClickListener.onPaymentModeDone(-1)
             if (isComingFromRewards) {
                 submitOnClickListener.onPanCardDone()
             } else {
@@ -466,7 +466,5 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
             /*fetch faq data from server*/
             fetchPaymentModes()
         }
-
     }
-
 }

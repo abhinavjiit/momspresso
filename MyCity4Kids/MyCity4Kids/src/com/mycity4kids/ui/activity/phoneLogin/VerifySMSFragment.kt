@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.activity.phoneLogin
 
 import android.accounts.NetworkErrorException
+import android.content.*
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
@@ -13,10 +14,14 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import com.crashlytics.android.Crashlytics
+import com.google.android.gms.auth.api.phone.SmsRetriever
+import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.gms.common.api.Status
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.models.request.PhoneLoginRequest
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI
 import com.mycity4kids.ui.activity.ActivityLogin
@@ -24,6 +29,7 @@ import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
+import java.util.regex.Pattern
 
 class VerifySMSFragment : BaseFragment(), View.OnClickListener {
 
@@ -79,7 +85,62 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
 
         verifySmsTextView?.setOnClickListener(this)
         resendSmsTextView?.setOnClickListener(this)
+
+        startSMSRetrieverAPI()
+
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val intentFilter = IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
+        activity?.registerReceiver(smsVerificationReceiver, intentFilter)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activity?.unregisterReceiver(smsVerificationReceiver)
+
+    }
+
+    private fun startSMSRetrieverAPI() {
+        activity?.let {
+            val client = SmsRetriever.getClient(it)
+            val task = client.startSmsRetriever()
+            task.addOnSuccessListener {
+                Log.d("SMS Retriever", "SUCCESS")
+            }
+
+            task.addOnFailureListener {
+                Log.d("SMS Retriever", "FAILURE")
+            }
+        }
+    }
+
+    private val smsVerificationReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (SmsRetriever.SMS_RETRIEVED_ACTION == intent.action) {
+                val extras = intent.extras
+                val smsRetrieverStatus = extras?.get(SmsRetriever.EXTRA_STATUS) as Status
+
+                when (smsRetrieverStatus.statusCode) {
+                    CommonStatusCodes.SUCCESS -> {
+                        try {
+                            // Get SMS message contents
+                            val message = extras.getString(SmsRetriever.EXTRA_SMS_MESSAGE)
+                            // Extract one-time code from the message and complete verification
+                            // by sending the code back to your server.
+                            parseAndFillOTP(message)
+                        } catch (e: ActivityNotFoundException) {
+                            // Handle the exception ...
+                        }
+                    }
+                    CommonStatusCodes.TIMEOUT -> {
+                        // Time out occurred, handle the error.
+                    }
+                }
+            }
+        }
     }
 
     private fun setKeyListenerForEditText(currentEditText: EditText?, nextEditText: EditText?) {
@@ -309,11 +370,32 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
         }
 
         override fun onTick(millisUntilFinished: Long) {
-            countdownTimerTextView?.text = getString(R.string.login_remaining_time, millisUntilFinished / 1000)
+            activity?.let {
+                countdownTimerTextView?.text = getString(R.string.login_remaining_time, millisUntilFinished / 1000)
+            }
         }
     }
 
     override fun updateUi(response: Response?) {
 
+    }
+
+    fun parseAndFillOTP(message: String?) {
+        try {
+            if (!message.isNullOrBlank()) {
+                val pattern = AppConstants.OTP_REGEX.toRegex()
+                val matchedResult = pattern.find(message)
+                val otp = matchedResult?.value
+                otpEditText1?.setText(otp?.get(0)?.toString())
+                otpEditText2?.setText(otp?.get(1)?.toString())
+                otpEditText3?.setText(otp?.get(2)?.toString())
+                otpEditText4?.setText(otp?.get(3)?.toString())
+                otpEditText5?.setText(otp?.get(4)?.toString())
+                otpEditText6?.setText(otp?.get(5)?.toString())
+            }
+        } catch (e: Exception) {
+            Crashlytics.logException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
+        }
     }
 }
