@@ -47,8 +47,7 @@
                     android:layout_height="@dimen/article_listing.article_image"
                     android:layout_alignParentTop="true"
                     android:layout_centerInParent="true"
-                    android:contentDescription="@string/author_img"
-                    android:scaleType="centerCrop" />
+                    android:contentDescription="@string/author_img" />
 
                 <RelativeLayout
                     android:id="@+id/winnerLayout"

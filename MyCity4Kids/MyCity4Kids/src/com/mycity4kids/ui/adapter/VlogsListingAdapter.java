@@ -4,9 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-
-import androidx.core.graphics.drawable.DrawableCompat;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,8 +35,8 @@ import com.squareup.picasso.Picasso;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
+import androidx.core.graphics.drawable.DrawableCompat;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -68,12 +65,15 @@ public class VlogsListingAdapter extends BaseAdapter {
     private int num_of_categorys;
     private TopicsResponse res;
     private Topics videoAd;
+    private int screenWidth;
+    private String imageUrl;
 
     public VlogsListingAdapter(Context pContext, Topics topic) {
         density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
         this.topic = topic;
+        screenWidth = mContext.getResources().getDisplayMetrics().widthPixels;
         findActiveVideoChallenge();
     }
 
@@ -245,7 +245,8 @@ public class VlogsListingAdapter extends BaseAdapter {
                 holder.txvAuthorName.setText("NA");
             }
             try {
-                Picasso.with(mContext).load(articleDataModelsNew.get(position).getThumbnail())
+                imageUrl = articleDataModelsNew.get(position).getThumbnail() + "/tr:w-" + screenWidth + ",h-" + screenWidth / 2 + ",fo-auto";
+                Picasso.with(mContext).load(imageUrl)
                         .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
             } catch (Exception e) {
                 holder.articleImageView.setImageResource(R.drawable.default_article);
