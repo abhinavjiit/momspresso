@@ -1533,7 +1533,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         bottomToolbarLL.setVisibility(View.GONE);
-                        if (collectionTooltip.isShowing()) {
+                        if (collectionTooltip != null && collectionTooltip.isShowing()) {
                             startCollectionHandler.postAtTime(new Runnable() {
                                 @Override
                                 public void run() {
