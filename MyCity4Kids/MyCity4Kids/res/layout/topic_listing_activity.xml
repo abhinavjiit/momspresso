@@ -279,7 +279,7 @@
             android:layout_marginRight="@dimen/space_10"
             android:layout_marginBottom="@dimen/space_20"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/tapToCreateTextView"

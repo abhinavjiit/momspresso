@@ -34,7 +34,6 @@
             android:layout_marginTop="15dp"
             android:layout_marginEnd="@dimen/space_16"
             android:background="@drawable/dark_border_rounded_corner"
-            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 "
             android:gravity="center_vertical"
             android:hint="eg: My top 10 blogs"
             android:maxLength="65"

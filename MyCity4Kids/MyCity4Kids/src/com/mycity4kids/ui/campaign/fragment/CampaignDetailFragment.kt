@@ -677,6 +677,7 @@ class CampaignDetailFragment : BaseFragment() {
                 Toast.makeText(it, it.resources.getString(R.string.toast_campaign_started), Toast.LENGTH_SHORT).show()
             }
             labelText.visibility = View.GONE
+            unapplyCampaign.visibility = View.VISIBLE
         } else if (status == 21) {
             hideShowReferral(status)
             applicationStatus.setBackgroundResource(R.drawable.campaign_subscription_open)
