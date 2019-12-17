@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/milestoneBgImageView"
-            android:background="@color/grey_light"
+            android:background="#F7F7F7"
             android:padding="16dp">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -69,7 +69,8 @@
                 android:layout_marginTop="4dp"
                 android:layout_toEndOf="@+id/contentImageView"
                 android:maxLines="2"
-                android:text="da dad awdadawdwadawdawda adwad"
+                android:text=""
+                android:textColor="@color/app_light_black"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -80,8 +81,9 @@
                 android:layout_alignBottom="@id/contentImageView"
                 android:layout_marginStart="16dp"
                 android:layout_toEndOf="@+id/contentImageView"
-                android:text="12/12/12212"
+                android:text=""
                 android:textColor="@color/grey"
+                android:visibility="invisible"
                 android:textSize="12sp" />
 
         </RelativeLayout>

@@ -19,6 +19,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
@@ -184,10 +185,15 @@ class UserProfileActivity : BaseActivity(),
 
         authorId = intent.getStringExtra(Constants.USER_ID)
         deeplinkBadgeId = intent.getStringExtra(AppConstants.BADGE_ID)
+        val milestoneId: String? = intent.getStringExtra(AppConstants.MILESTONE_ID)
         profileDetail = intent.getStringExtra("detail")
 
         if (!deeplinkBadgeId.isNullOrBlank()) {
             showBadgeDialog(deeplinkBadgeId)
+        }
+
+        if (!milestoneId.isNullOrBlank()) {
+            showMilestoneDialog(milestoneId)
         }
 
         if (AppUtils.isPrivateProfile(authorId)) {
@@ -715,6 +721,18 @@ class UserProfileActivity : BaseActivity(),
             fm?.let {
                 crownDialogFragment.show(fm!!, "CrownDetailDialog")
             }
+        }
+    }
+
+    private fun showMilestoneDialog(milestoneId: String) {
+        val milestonesDialogFragment = MilestonesDialogFragment()
+        val bundle = Bundle()
+        bundle.putString(Constants.USER_ID, authorId)
+        bundle.putString("id", milestoneId)
+        milestonesDialogFragment.arguments = bundle
+        val fm: FragmentManager? = supportFragmentManager
+        fm?.let {
+            milestonesDialogFragment.show(it, "MilestonesDialogFragment")
         }
     }
 

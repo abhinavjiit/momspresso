@@ -1258,4 +1258,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="add_to_collection">Add to Collection</string>
     <string name="profile_follow_author">Follow %1$s on Momspresso!</string>
     <string name="analytics_lang_rank">तुमचा क्रमांक \nया मध्ये %1$s</string>
+    <string name="analytics_milestones">MILESTONES</string>
+    <string name="badges_list_share_text">Checkout %1$s\'s achievements on Momspresso! \n%2$s</string>
 </resources>

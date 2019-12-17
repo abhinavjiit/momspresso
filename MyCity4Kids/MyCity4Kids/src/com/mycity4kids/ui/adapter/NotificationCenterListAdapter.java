@@ -178,6 +178,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     Intent pIntent = new Intent(mContext, UserProfileActivity.class);
                     pIntent.putExtra(Constants.USER_ID, authorId);
                     pIntent.putExtra(AppConstants.BADGE_ID, notificationList.get(position).getBadgeId());
+                    pIntent.putExtra(AppConstants.BADGE_ID, notificationList.get(position).getMilestoneId());
                     mContext.startActivity(pIntent);
                     pushEvent("NOTIFICATION_CENTER_PROFILE");
                 }

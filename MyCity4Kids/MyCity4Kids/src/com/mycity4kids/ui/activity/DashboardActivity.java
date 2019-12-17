@@ -29,6 +29,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
@@ -127,18 +140,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
@@ -1047,6 +1048,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     intent1.putExtra("fromNotification", true);
                     intent1.putExtra(Constants.USER_ID, u_id);
                     intent1.putExtra(AppConstants.BADGE_ID, notificationExtras.getString(AppConstants.BADGE_ID));
+                    intent1.putExtra(AppConstants.MILESTONE_ID, notificationExtras.getString(AppConstants.MILESTONE_ID));
                     intent1.putExtra(Constants.FROM_SCREEN, "Notification");
                     startActivity(intent1);
                 } else {
@@ -1884,6 +1886,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;
             case R.id.referral:
+                Utils.pushGenericEvent(this, "CTA_MyMoney_Sidebar_Refer",
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), "Home Screen");
                 Intent intent = new Intent(this, RewardsShareReferralCodeActivity.class);
                 startActivity(intent);
                 break;
@@ -2914,6 +2918,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Matcher matcher4 = pattern4.matcher(urlWithNoParams);
             if (matcher4.matches()) {
                 String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(this, UserProfileActivity.class);
+                intent.putExtra(AppConstants.MILESTONE_ID, separated[separated.length - 1]);
+                intent.putExtra(Constants.USER_ID, separated[separated.length - 3]);
+                startActivity(intent);
                 return true;
             }
 

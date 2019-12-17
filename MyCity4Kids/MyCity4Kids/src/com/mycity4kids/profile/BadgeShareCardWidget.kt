@@ -34,4 +34,11 @@ class BadgeShareCardWidget : LinearLayout {
         Picasso.with(context).load(data?.badge_bg_url).error(R.drawable.default_article)
                 .fit().into(badgeBgImageViewBitmap)
     }
+
+    fun populateMilestonesDetails(data: MilestonesResult?) {
+        Picasso.with(context).load(data?.milestone_image_url).error(R.drawable.default_article)
+                .fit().into(badgeImageViewBitmap)
+        Picasso.with(context).load(data?.milestone_bg_url).error(R.drawable.default_article)
+                .fit().into(badgeBgImageViewBitmap)
+    }
 }

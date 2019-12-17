@@ -31,6 +31,7 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.BadgeListResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.BadgesDialogFragment;
 import com.mycity4kids.retrofitAPIsInterfaces.BadgeAPI;
 import com.mycity4kids.ui.adapter.BadgeListGridAdapter;
@@ -236,7 +237,9 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
     private void shareBadgeList() {
         AppUtils.getBitmapFromView(gridview, FILENAME);
         Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/" + FILENAME + ".jpg");
-        String shareUrl = "https://www.momspresso.com/user/" + userId + "/badges";
+        String shareUrl = getString(R.string.badges_list_share_text,
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getFirst_name(),
+                "https://www.momspresso.com/user/" + userId + "/badges");
         AppUtils.shareGenericImageAndOrLink(this, uri, shareUrl);
     }
 

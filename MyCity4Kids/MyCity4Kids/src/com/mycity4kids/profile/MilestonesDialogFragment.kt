@@ -16,7 +16,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.*
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.DialogFragment
@@ -26,15 +29,13 @@ import com.facebook.share.widget.ShareDialog
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.snackbar.Snackbar
 import com.kelltontech.utils.ToastUtils
-import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
-import com.mycity4kids.models.response.BadgeListResponse
 import com.mycity4kids.preference.SharedPrefUtils
-import com.mycity4kids.retrofitAPIsInterfaces.BadgeAPI
+import com.mycity4kids.retrofitAPIsInterfaces.MilestonesAPI
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity
 import com.mycity4kids.ui.activity.ParallelFeedActivity
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity
@@ -45,19 +46,19 @@ import retrofit2.Call
 import retrofit2.Callback
 import java.util.*
 
-class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
+class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
 
     val REQUEST_GALLERY_PERMISSION = 1
     val PERMISSIONS_INIT = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    val sharableBadgeImageName = "badge"
+    val sharableMilestoneImageName = "milestone"
 
-    private var badgeData: BadgeListResponse.BadgeListData.BadgeListResult? = null
+    private var milestoneData: MilestonesResult? = null
 
     private lateinit var rootLayout: RelativeLayout
-    private lateinit var badgeImageView: ImageView
-    private lateinit var badgeBgImageView: ImageView
-    private lateinit var badgeTitleTextView: TextView
-    private lateinit var badgeDescTextView: TextView
+    private lateinit var milestoneImageView: ImageView
+    private lateinit var milestoneBgImageView: ImageView
+    private lateinit var milestoneTitleTextView: TextView
+    private lateinit var milestoneDescTextView: TextView
     private lateinit var viewContentTextView: TextView
     private lateinit var whatsappShareImageView: ImageView
     private lateinit var facebookShareImageView: ImageView
@@ -65,23 +66,23 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
     private lateinit var genericShareImageView: ImageView
     private lateinit var shareJoyContainer: RelativeLayout
     private lateinit var shareContainer: ConstraintLayout
-    private lateinit var badgesSharableCard: BadgeShareCardWidget
-    private lateinit var badgesShimmerContainer: ShimmerFrameLayout
+    private lateinit var milestonesSharableCard: BadgeShareCardWidget
+    private lateinit var milestonesShimmerContainer: ShimmerFrameLayout
 
     var userId: String? = null
-    var badgeId: String? = null
+    var milestoneId: String? = null
     var shareMedium: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.badge_dialog_fragment, container,
+        val rootView = inflater.inflate(R.layout.milestones_dialog_fragment, container,
                 false)
 
         rootLayout = rootView.findViewById(R.id.rootLayout)
-        badgeImageView = rootView.findViewById(R.id.badgeImageView)
-        badgesSharableCard = rootView.findViewById(R.id.badgesSharableCard)
-        badgeBgImageView = rootView.findViewById(R.id.badgeBgImageView)
-        badgeTitleTextView = rootView.findViewById(R.id.badgeTitleTextView)
-        badgeDescTextView = rootView.findViewById(R.id.badgeDescTextView)
+        milestoneImageView = rootView.findViewById(R.id.milestoneImageView)
+        milestonesSharableCard = rootView.findViewById(R.id.milestonesSharableCard)
+        milestoneBgImageView = rootView.findViewById(R.id.milestoneBgImageView)
+        milestoneTitleTextView = rootView.findViewById(R.id.milestoneTitleTextView)
+        milestoneDescTextView = rootView.findViewById(R.id.milestoneDescTextView)
         viewContentTextView = rootView.findViewById(R.id.viewContentTextView)
         shareJoyContainer = rootView.findViewById(R.id.shareJoyContainer)
         shareContainer = rootView.findViewById(R.id.shareContainer)
@@ -89,7 +90,7 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
         facebookShareImageView = rootView.findViewById(R.id.facebookShareImageView)
         instagramShareImageView = rootView.findViewById(R.id.instagramShareImageView)
         genericShareImageView = rootView.findViewById(R.id.genericShareImageView)
-        badgesShimmerContainer = rootView.findViewById(R.id.badgesShimmerContainer)
+        milestonesShimmerContainer = rootView.findViewById(R.id.milestonesShimmerContainer)
 
         whatsappShareImageView.setOnClickListener(this)
         facebookShareImageView.setOnClickListener(this)
@@ -99,9 +100,9 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
 
         val bundle = arguments
         userId = bundle?.getString(Constants.USER_ID)
-        badgeId = bundle?.getString("id")
+        milestoneId = bundle?.getString("id")
 
-        if (userId.isNullOrBlank() || badgeId.isNullOrBlank()) {
+        if (userId.isNullOrBlank() || milestoneId.isNullOrBlank()) {
             activity?.let {
                 ToastUtils.showToast(it, it.getString(R.string.empty_screen), Toast.LENGTH_SHORT)
             }
@@ -112,29 +113,29 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
             shareJoyContainer.visibility = View.VISIBLE
             viewContentTextView.visibility = View.GONE
         } else {
-            if (BuildConfig.DEBUG) {
-                shareContainer.visibility = View.VISIBLE
-                shareJoyContainer.visibility = View.VISIBLE
-            } else {
-                shareContainer.visibility = View.GONE
-                shareJoyContainer.visibility = View.GONE
-            }
+//            if (BuildConfig.DEBUG) {
+//                shareContainer.visibility = View.VISIBLE
+//                shareJoyContainer.visibility = View.VISIBLE
+//            } else {
+            shareContainer.visibility = View.GONE
+            shareJoyContainer.visibility = View.GONE
+//            }
         }
 
-        badgesShimmerContainer.startShimmerAnimation()
-        fetchBadgeDetail(userId!!, badgeId!!)
+        milestonesShimmerContainer.startShimmerAnimation()
+        fetchMilestoneDetail(userId!!, milestoneId!!)
 
         return rootView
     }
 
-    private fun fetchBadgeDetail(userId: String, badgeId: String) {
+    private fun fetchMilestoneDetail(userId: String, milestoneId: String) {
         val retrofit = BaseApplication.getInstance().retrofit
-        val badgeAPI = retrofit.create(BadgeAPI::class.java)
-        val badgeListResponseCall = badgeAPI.getBadgeDetail(userId, badgeId)
-        badgeListResponseCall.enqueue(object : Callback<BadgeListResponse> {
-            override fun onResponse(call: Call<BadgeListResponse>, response: retrofit2.Response<BadgeListResponse>) {
+        val milestoneAPI = retrofit.create(MilestonesAPI::class.java)
+        val milestoneListResponseCall = milestoneAPI.getMilestoneDetail(userId, milestoneId)
+        milestoneListResponseCall.enqueue(object : Callback<MilestonesResponse> {
+            override fun onResponse(call: Call<MilestonesResponse>, response: retrofit2.Response<MilestonesResponse>) {
                 try {
-                    badgesShimmerContainer.visibility = View.GONE
+                    milestonesShimmerContainer.visibility = View.GONE
                     if (response.body() == null) {
                         if (response.raw() != null) {
                             val nee = NetworkErrorException(response.raw().toString())
@@ -142,10 +143,10 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
                         }
                         return
                     }
-                    val responseModel = response.body() as BadgeListResponse
+                    val responseModel = response.body() as MilestonesResponse
                     if (responseModel.code == 200 && Constants.SUCCESS == responseModel.status) {
-                        if (responseModel.data != null && !responseModel.data.isEmpty() && responseModel.data[0] != null) {
-                            populateBadgeDetails(userId, responseModel.data[0].result)
+                        if (responseModel.data != null) {
+                            populateMilestoneDetails(userId, responseModel.data.result)
                         } else {
                         }
                     }
@@ -155,27 +156,36 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
                 }
             }
 
-            override fun onFailure(call: Call<BadgeListResponse>, t: Throwable) {
-                badgesShimmerContainer.visibility = View.GONE
+            override fun onFailure(call: Call<MilestonesResponse>, t: Throwable) {
+                milestonesShimmerContainer.visibility = View.GONE
                 Crashlytics.logException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         })
     }
 
-    private fun populateBadgeDetails(userId: String, result: ArrayList<BadgeListResponse.BadgeListData.BadgeListResult>?) {
+    private fun populateMilestoneDetails(userId: String, result: List<MilestonesResult>?) {
         activity?.let {
-            badgeData = result?.get(0)
-            Picasso.with(it).load(result?.get(0)?.badge_image_url).error(R.drawable.default_article)
-                    .fit().into(badgeImageView)
-            Picasso.with(it).load(result?.get(0)?.badge_bg_url).error(R.drawable.default_article)
-                    .fit().into(badgeBgImageView)
-            badgeTitleTextView.text = result?.get(0)?.badge_title
-            badgeDescTextView.text = result?.get(0)?.badge_desc
+            milestoneData = result?.get(0)
+//            if (milestoneData?.item_type == AppConstants.CONTENT_TYPE_ARTICLE) {
+//
+//            } else if (milestoneData?.item_type == AppConstants.CONTENT_TYPE_ARTICLE) {
+//
+//            } else if (milestoneData?.item_type == AppConstants.CONTENT_TYPE_VIDEO) {
+//
+//            }
+            Picasso.with(it).load(milestoneData?.milestone_image_url).error(R.drawable.default_article)
+                    .fit().into(milestoneImageView)
+            Picasso.with(it).load(milestoneData?.milestone_bg_url).error(R.drawable.default_article)
+                    .fit().into(milestoneBgImageView)
+            milestoneTitleTextView.text = milestoneData?.milestone_title
+            milestoneDescTextView.text = milestoneData?.milestone_desc
             if (AppUtils.isPrivateProfile(userId)) {
-                Utils.pushProfileEvents(it, "Show_Private_Badge_Detail", "BadgesDialogFragment", "-", badgeData?.badge_name)
+                Utils.pushProfileEvents(it, "Show_Private_Milestone_Detail", "MilestonesDialogFragment",
+                        "-", milestoneData?.milestone_name)
             } else {
-                Utils.pushProfileEvents(it, "Show_Public_Badge_Detail", "BadgesDialogFragment", "-", badgeData?.badge_name)
+                Utils.pushProfileEvents(it, "Show_Public_Milestone_Detail", "MilestonesDialogFragment",
+                        "-", milestoneData?.milestone_name)
                 when {
                     result?.get(0)?.item_type == AppConstants.CONTENT_TYPE_ARTICLE -> {
                         viewContentTextView.visibility = View.VISIBLE
@@ -189,7 +199,7 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
                     else -> viewContentTextView.visibility = View.GONE
                 }
             }
-            badgesSharableCard.populateBadgesDetails(badgeData)
+            milestonesSharableCard.populateMilestonesDetails(milestoneData)
         }
     }
 
@@ -227,30 +237,30 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
             }
             view?.id == R.id.viewContentTextView -> {
                 when {
-                    badgeData?.item_type == AppConstants.CONTENT_TYPE_ARTICLE -> {
+                    milestoneData?.item_type == AppConstants.CONTENT_TYPE_ARTICLE -> {
                         activity?.let {
-                            Utils.pushProfileEvents(it, "CTA_View_Article_Public_Badge_Detail",
-                                    "BadgesDialogFragment", "View article", badgeData?.badge_name)
+                            Utils.pushProfileEvents(it, "CTA_View_Article_Public_Milestone_Detail",
+                                    "MilestonesDialogFragment", "View article", milestoneData?.milestone_name)
                             val intent = Intent(it, ArticleDetailsContainerActivity::class.java)
-                            intent.putExtra(Constants.ARTICLE_ID, badgeData?.content_id)
+                            intent.putExtra(Constants.ARTICLE_ID, milestoneData?.content_id)
                             startActivity(intent)
                         }
                     }
-                    badgeData?.item_type == AppConstants.CONTENT_TYPE_SHORT_STORY -> {
+                    milestoneData?.item_type == AppConstants.CONTENT_TYPE_SHORT_STORY -> {
                         activity?.let {
-                            Utils.pushProfileEvents(it, "CTA_View_Story_Public_Badge_Detail",
-                                    "BadgesDialogFragment", "View Story", badgeData?.badge_name)
+                            Utils.pushProfileEvents(it, "CTA_View_Story_Public_Milestone_Detail",
+                                    "MilestonesDialogFragment", "View Story", milestoneData?.milestone_name)
                             val intent = Intent(it, ShortStoryContainerActivity::class.java)
-                            intent.putExtra(Constants.ARTICLE_ID, badgeData?.content_id)
+                            intent.putExtra(Constants.ARTICLE_ID, milestoneData?.content_id)
                             startActivity(intent)
                         }
                     }
-                    badgeData?.item_type == AppConstants.CONTENT_TYPE_VIDEO -> {
+                    milestoneData?.item_type == AppConstants.CONTENT_TYPE_VIDEO -> {
                         activity?.let {
-                            Utils.pushProfileEvents(it, "CTA_View_Video_Public_Badge_Detail",
-                                    "BadgesDialogFragment", "View Video", badgeData?.badge_name)
+                            Utils.pushProfileEvents(it, "CTA_View_Video_Public_Milestone_Detail",
+                                    "MilestonesDialogFragment", "View Video", milestoneData?.milestone_name)
                             val intent = Intent(activity, ParallelFeedActivity::class.java)
-                            intent.putExtra(Constants.VIDEO_ID, badgeData?.content_id)
+                            intent.putExtra(Constants.VIDEO_ID, milestoneData?.content_id)
                             startActivity(intent)
                         }
                     }
@@ -261,9 +271,9 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
 
     private fun shareWithGeneric() {
         activity?.let {
-            if (AppUtils.shareGenericLinkWithSuccessStatus(activity, badgeData?.badge_sharing_url)) {
-                Utils.pushProfileEvents(it, "CTA_Generic_Share_Private_Badge_Detail",
-                        "BadgesDialogFragment", "Generic Share", badgeData?.badge_name)
+            if (AppUtils.shareGenericLinkWithSuccessStatus(activity, milestoneData?.milestone_sharing_url)) {
+                Utils.pushProfileEvents(it, "CTA_Generic_Share_Private_Milestone_Detail",
+                        "MilestonesDialogFragment", "Generic Share", milestoneData?.milestone_name)
             }
         }
     }
@@ -273,10 +283,10 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
             return
         }
         activity?.let {
-            val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/badge.jpg")
+            val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/milestone.jpg")
             if (AppUtils.shareImageWithInstagram(it, uri)) {
-                Utils.pushProfileEvents(it, "CTA_IG_Share_Private_Badge_Detail",
-                        "BadgesDialogFragment", "IG Share", badgeData?.badge_name)
+                Utils.pushProfileEvents(it, "CTA_IG_Share_Private_Milestone_Detail",
+                        "MilestonesDialogFragment", "IG Share", milestoneData?.milestone_name)
             }
         }
     }
@@ -284,12 +294,12 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
     private fun shareWithFB() {
         if (ShareDialog.canShow(ShareLinkContent::class.java)) {
             val content = ShareLinkContent.Builder()
-                    .setContentUrl(Uri.parse(badgeData?.badge_sharing_url))
+                    .setContentUrl(Uri.parse(milestoneData?.milestone_sharing_url))
                     .build()
             ShareDialog(this).show(content)
             activity?.let {
-                Utils.pushProfileEvents(it, "CTA_FB_Share_Private_Badge_Detail",
-                        "BadgesDialogFragment", "FB Share", badgeData?.badge_name)
+                Utils.pushProfileEvents(it, "CTA_FB_Share_Private_Milestone_Detail",
+                        "MilestonesDialogFragment", "FB Share", milestoneData?.milestone_name)
             }
         }
     }
@@ -299,13 +309,10 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
             return
         }
         activity?.let {
-            val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/badge.jpg")
-            if (AppUtils.shareImageWithWhatsApp(it, uri, getString(R.string.badges_winner_share_text,
-                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).first_name,
-                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).last_name,
-                            badgeData?.badge_name, badgeData?.badge_sharing_url))) {
-                Utils.pushProfileEvents(it, "CTA_Whatsapp_Share_Private_Badge_Detail",
-                        "BadgesDialogFragment", "Whatsapp Share", badgeData?.badge_name)
+            val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/milestone.jpg")
+            if (AppUtils.shareImageWithWhatsApp(it, uri, milestoneData?.milestone_sharing_url)) {
+                Utils.pushProfileEvents(it, "CTA_Whatsapp_Share_Private_Milestone_Detail",
+                        "MilestonesDialogFragment", "Whatsapp Share", milestoneData?.milestone_name)
             }
         }
     }
@@ -320,18 +327,18 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
                     requestPermissions()
                     return true
                 } else {
-                    if (createSharableCardWithBadgeName()) return true
+                    if (createSharableCardWithMilestoneName()) return true
                 }
             } else {
-                if (createSharableCardWithBadgeName()) return true
+                if (createSharableCardWithMilestoneName()) return true
             }
         }
         return false
     }
 
-    private fun createSharableCardWithBadgeName(): Boolean {
+    private fun createSharableCardWithMilestoneName(): Boolean {
         try {
-            AppUtils.getBitmapFromView(badgesSharableCard, sharableBadgeImageName)
+            AppUtils.getBitmapFromView(milestonesSharableCard, sharableMilestoneImageName)
         } catch (e: Exception) {
             Crashlytics.logException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
