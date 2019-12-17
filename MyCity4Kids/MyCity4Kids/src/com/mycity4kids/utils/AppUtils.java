@@ -1224,11 +1224,8 @@ public class AppUtils {
     }
 
     public static boolean isPrivateProfile(String authorId) {
-        if (StringUtils.isNullOrEmpty(authorId) || SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(authorId)) {
-            return true;
-        } else {
-            return false;
-        }
+        return StringUtils.isNullOrEmpty(authorId) ||
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(authorId);
     }
 
     public static Bitmap getBitmapFromView(View view, String filename) {

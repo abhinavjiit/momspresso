@@ -1,5 +1,7 @@
 package com.mycity4kids.profile
 
+import com.mycity4kids.models.response.ImageURL
+
 data class MilestonesResponse(
         val code: Int?,
         val `data`: MilestonesData?,
@@ -25,5 +27,17 @@ data class MilestonesResult(
         val milestone_name: String?,
         val milestone_sharing_url: String?,
         val milestone_title: String?,
-        val user_id: String?
+        val user_id: String?,
+        val meta_data: MilestoneMetaData?
+)
+
+data class MilestoneMetaData(
+        val content_info: ContentInfo?
+)
+
+data class ContentInfo(
+        val imageUrl: Any?,
+        val title: String?,
+        val created_at: String?,
+        val thumbnail:String?
 )

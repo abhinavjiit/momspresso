@@ -109,68 +109,70 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
     }
 
     private fun populateCollectionsForEachItem(position: Int, holder: UserFeaturedContentViewHolder) {
-        when {
-            (userFeaturedOnList?.get(position)?.collectionList == null)
-                    || (userFeaturedOnList?.get(position)?.collectionList?.size == 0) -> {
-                holder.collectionsFLContainer.visibility = GONE
+        try {
+            when {
+                (userFeaturedOnList?.get(position)?.collectionListTotal == null)
+                        || (userFeaturedOnList?.get(position)?.collectionListTotal == 0) -> {
+                    holder.collectionsFLContainer.visibility = GONE
+                }
+                (userFeaturedOnList?.get(position)?.collectionListTotal ?: 0) == 1 -> {
+                    holder.collectionItem2TextView.visibility = GONE
+                    holder.collectionItem3TextView.visibility = GONE
+                    holder.collectionItem4TextView.visibility = GONE
+                    holder.collectionItem1TextView.visibility = VISIBLE
+                    holder.collectionItem1TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(0)?.name
+                    holder.moreItemsTextView.visibility = GONE
+                }
+                (userFeaturedOnList?.get(position)?.collectionListTotal ?: 0) == 2 -> {
+                    holder.collectionItem3TextView.visibility = GONE
+                    holder.collectionItem4TextView.visibility = GONE
+                    holder.collectionItem1TextView.visibility = VISIBLE
+                    holder.collectionItem1TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(0)?.name
+                    holder.collectionItem2TextView.visibility = VISIBLE
+                    holder.collectionItem2TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(1)?.name
+                    holder.moreItemsTextView.visibility = GONE
+                }
+                (userFeaturedOnList?.get(position)?.collectionListTotal ?: 0) == 3 -> {
+                    holder.collectionItem4TextView.visibility = GONE
+                    holder.collectionItem1TextView.visibility = VISIBLE
+                    holder.collectionItem1TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(0)?.name
+                    holder.collectionItem2TextView.visibility = VISIBLE
+                    holder.collectionItem2TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(1)?.name
+                    holder.collectionItem3TextView.visibility = VISIBLE
+                    holder.collectionItem3TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(2)?.name
+                    holder.moreItemsTextView.visibility = GONE
+                }
+                (userFeaturedOnList?.get(position)?.collectionListTotal ?: 0) == 4 -> {
+                    holder.collectionItem1TextView.visibility = VISIBLE
+                    holder.collectionItem1TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(0)?.name
+                    holder.collectionItem2TextView.visibility = VISIBLE
+                    holder.collectionItem2TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(1)?.name
+                    holder.collectionItem3TextView.visibility = VISIBLE
+                    holder.collectionItem3TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(2)?.name
+                    holder.collectionItem4TextView.visibility = VISIBLE
+                    holder.collectionItem4TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(3)?.name
+                    holder.moreItemsTextView.visibility = GONE
+                }
+                (userFeaturedOnList?.get(position)?.collectionListTotal ?: 0) > 4 -> {
+                    val moreItemCount = userFeaturedOnList?.get(position)?.collectionListTotal!! - 4
+                    holder.collectionItem1TextView.visibility = VISIBLE
+                    holder.collectionItem1TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(0)?.name
+                    holder.collectionItem2TextView.visibility = VISIBLE
+                    holder.collectionItem2TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(1)?.name
+                    holder.collectionItem3TextView.visibility = VISIBLE
+                    holder.collectionItem3TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(2)?.name
+                    holder.collectionItem4TextView.visibility = VISIBLE
+                    holder.collectionItem4TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(3)?.name
+                    holder.moreItemsTextView.visibility = VISIBLE
+                    holder.moreItemsTextView.text = holder.itemView.context.getString(R.string.profile_featured_more, moreItemCount)
+                }
             }
-            (userFeaturedOnList?.get(position)?.collectionList?.size
-                    ?: 0) == 1 -> {
-                holder.collectionItem2TextView.visibility = GONE
-                holder.collectionItem3TextView.visibility = GONE
-                holder.collectionItem4TextView.visibility = GONE
-                holder.collectionItem1TextView.visibility = VISIBLE
-                holder.collectionItem1TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(0)?.name
-                holder.moreItemsTextView.visibility = GONE
-            }
-            (userFeaturedOnList?.get(position)?.collectionList?.size
-                    ?: 0) == 2 -> {
-                holder.collectionItem3TextView.visibility = GONE
-                holder.collectionItem4TextView.visibility = GONE
-                holder.collectionItem1TextView.visibility = VISIBLE
-                holder.collectionItem1TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(0)?.name
-                holder.collectionItem2TextView.visibility = VISIBLE
-                holder.collectionItem2TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(1)?.name
-                holder.moreItemsTextView.visibility = GONE
-            }
-            (userFeaturedOnList?.get(position)?.collectionList?.size
-                    ?: 0) == 3 -> {
-                holder.collectionItem4TextView.visibility = GONE
-                holder.collectionItem1TextView.visibility = VISIBLE
-                holder.collectionItem1TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(0)?.name
-                holder.collectionItem2TextView.visibility = VISIBLE
-                holder.collectionItem2TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(1)?.name
-                holder.collectionItem3TextView.visibility = VISIBLE
-                holder.collectionItem3TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(2)?.name
-                holder.moreItemsTextView.visibility = GONE
-            }
-            (userFeaturedOnList?.get(position)?.collectionList?.size
-                    ?: 0) == 4 -> {
-                holder.collectionItem1TextView.visibility = VISIBLE
-                holder.collectionItem1TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(0)?.name
-                holder.collectionItem1TextView.setOnClickListener(holder)
-                holder.collectionItem2TextView.visibility = VISIBLE
-                holder.collectionItem2TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(1)?.name
-                holder.collectionItem3TextView.visibility = VISIBLE
-                holder.collectionItem3TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(2)?.name
-                holder.collectionItem4TextView.visibility = VISIBLE
-                holder.collectionItem4TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(3)?.name
-                holder.moreItemsTextView.visibility = GONE
-            }
-            (userFeaturedOnList?.get(position)?.collectionList?.size
-                    ?: 0) > 4 -> {
-                val moreItemCount = userFeaturedOnList?.get(position)?.collectionListTotal!! - 4
-                holder.collectionItem1TextView.visibility = VISIBLE
-                holder.collectionItem1TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(0)?.name
-                holder.collectionItem2TextView.visibility = VISIBLE
-                holder.collectionItem2TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(1)?.name
-                holder.collectionItem3TextView.visibility = VISIBLE
-                holder.collectionItem3TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(2)?.name
-                holder.collectionItem4TextView.visibility = VISIBLE
-                holder.collectionItem4TextView.text = userFeaturedOnList?.get(position)?.collectionList?.get(3)?.name
-                holder.moreItemsTextView.visibility = VISIBLE
-                holder.moreItemsTextView.text = holder.itemView.context.getString(R.string.profile_featured_more, moreItemCount)
-            }
+        } catch (e: IndexOutOfBoundsException) {
+            Crashlytics.logException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
+        } catch (e: Exception) {
+            Crashlytics.logException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
 

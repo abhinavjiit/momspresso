@@ -1,29 +1,29 @@
 package com.mycity4kids.ui.fragment
 
 import android.accounts.NetworkErrorException
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.ToastUtils
+import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.profile.BadgesDialogFragment
+import com.mycity4kids.profile.MilestonesDialogFragment
 import com.mycity4kids.profile.MilestonesResponse
 import com.mycity4kids.profile.MilestonesResult
 import com.mycity4kids.retrofitAPIsInterfaces.MilestonesAPI
-import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity
-import com.mycity4kids.ui.activity.ParallelFeedActivity
-import com.mycity4kids.ui.activity.ShortStoryContainerActivity
 import com.mycity4kids.ui.adapter.MilestonesListAdapter
 import retrofit2.Call
 import retrofit2.Callback
@@ -45,7 +45,11 @@ class MilestonesFragment : BaseFragment(), View.OnClickListener, MilestonesListA
         recyclerView = rootView?.findViewById(R.id.recyclerView)
         progressBar = rootView?.findViewById(R.id.progressBar)
 
-        userId = "fdf2b966ae8841cda022d397cbbf85c8" //arguments?.getString(Constants.AUTHOR_ID)
+        if (BuildConfig.DEBUG) {
+            userId = "fdf2b966ae8841cda022d397cbbf85c8"
+        } else {
+            userId = arguments?.getString(Constants.AUTHOR_ID)
+        }
         milestonesList = ArrayList()
 
         if (userId.isNullOrBlank()) {
@@ -102,44 +106,25 @@ class MilestonesFragment : BaseFragment(), View.OnClickListener, MilestonesListA
 
     private fun processMilestoneResponse(result: List<MilestonesResult>?) {
         result?.let {
-            milestonesList?.addAll(result)
+            for (element in result) {
+                if (element.item_type == AppConstants.CONTENT_TYPE_ARTICLE ||
+                        element.item_type == AppConstants.CONTENT_TYPE_SHORT_STORY ||
+                        element.item_type == AppConstants.CONTENT_TYPE_VIDEO)
+                    milestonesList?.add(element)
+            }
             milestonesAdapter?.notifyDataSetChanged()
         }
     }
 
     override fun onClick(view: View, position: Int) {
-        when {
-            milestonesList?.get(position)?.item_type == AppConstants.CONTENT_TYPE_ARTICLE -> {
-                activity?.let {
-                    val intent = Intent(it, ArticleDetailsContainerActivity::class.java)
-                    intent.putExtra(Constants.ARTICLE_ID, milestonesList?.get(position)?.content_id)
-                    intent.putExtra(Constants.AUTHOR_ID, milestonesList?.get(position)?.user_id)
-                    intent.putExtra(Constants.FROM_SCREEN, "MilestonesFragment")
-                    intent.putExtra(Constants.AUTHOR, milestonesList?.get(position)?.user_id + "~")
-                    startActivity(intent)
-                }
-            }
-            milestonesList?.get(position)?.item_type == AppConstants.CONTENT_TYPE_SHORT_STORY -> {
-                activity?.let {
-                    val intent = Intent(it, ShortStoryContainerActivity::class.java)
-                    intent.putExtra(Constants.ARTICLE_ID, milestonesList?.get(position)?.content_id)
-                    intent.putExtra(Constants.AUTHOR_ID, milestonesList?.get(position)?.user_id)
-                    intent.putExtra(Constants.FROM_SCREEN, "MilestonesFragment")
-                    intent.putExtra(Constants.AUTHOR, milestonesList?.get(position)?.user_id + "~")
-                    startActivity(intent)
-                }
-            }
-            milestonesList?.get(position)?.item_type == AppConstants.CONTENT_TYPE_VIDEO -> {
-                activity?.let {
-                    val intent = Intent(it, ParallelFeedActivity::class.java)
-                    intent.putExtra(Constants.VIDEO_ID, milestonesList?.get(position)?.content_id)
-                    intent.putExtra(Constants.FROM_SCREEN, "MilestonesFragment")
-                    startActivity(intent)
-                }
-            }
-            else -> {
-
-            }
+        val milestonesDialogFragment = MilestonesDialogFragment()
+        val bundle = Bundle()
+        bundle.putString(Constants.USER_ID, userId)
+        bundle.putString("id", milestonesList?.get(position)?.id)
+        milestonesDialogFragment.arguments = bundle
+        val fm: FragmentManager? = fragmentManager
+        fragmentManager?.let {
+            milestonesDialogFragment.show(it, "MilestonesDialogFragment")
         }
     }
 

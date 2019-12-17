@@ -1,17 +1,21 @@
 package com.mycity4kids.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.kelltontech.utils.StringUtils
+import com.crashlytics.android.Crashlytics
+import com.google.gson.Gson
+import com.kelltontech.utils.DateTimeUtils
 import com.mycity4kids.R
 import com.mycity4kids.constants.AppConstants
+import com.mycity4kids.models.response.ImageURL
 import com.mycity4kids.profile.MilestonesResult
-import com.mycity4kids.utils.AppUtils
 import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
 import java.util.*
 
 class MilestonesListAdapter(
@@ -42,6 +46,8 @@ class MilestonesListAdapter(
             }
         } catch (e: Exception) {
             holder.milestoneBgImageView?.setBackgroundResource(R.drawable.default_article)
+            Crashlytics.logException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
         }
 
         try {
@@ -52,19 +58,74 @@ class MilestonesListAdapter(
             }
         } catch (e: Exception) {
             holder.milestoneImageView?.setBackgroundResource(R.drawable.default_article)
+            Crashlytics.logException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
         }
 
         if (milestonesList?.get(position)?.item_type == AppConstants.CONTENT_TYPE_ARTICLE) {
+            holder.contentTypeImageView?.visibility = View.VISIBLE
             holder.contentTypeImageView?.setImageResource(R.drawable.draft_red)
+            try {
+                val jsonObject = Gson().toJsonTree(milestonesList?.get(position)?.meta_data?.content_info?.imageUrl).asJsonObject
+                val imageUrl = Gson().fromJson<ImageURL>(jsonObject, ImageURL::class.java)
+                Picasso.with(holder.itemView.context).load(imageUrl?.thumbMin).into(holder.contentImageView)
+            } catch (e: Exception) {
+                holder.contentImageView?.setBackgroundResource(R.drawable.default_article)
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+            }
         } else if (milestonesList?.get(position)?.item_type == AppConstants.CONTENT_TYPE_SHORT_STORY) {
+            holder.contentTypeImageView?.visibility = View.VISIBLE
             holder.contentTypeImageView?.setImageResource(R.drawable.shortstory_red)
+            try {
+                val imageUrl: String? = milestonesList?.get(position)?.meta_data?.content_info?.imageUrl as String
+                Picasso.with(holder.itemView.context).load(imageUrl).into(holder.contentImageView)
+            } catch (e: Exception) {
+                holder.contentImageView?.setBackgroundResource(R.drawable.default_article)
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+            }
         } else if (milestonesList?.get(position)?.item_type == AppConstants.CONTENT_TYPE_VIDEO) {
+            holder.contentTypeImageView?.visibility = View.VISIBLE
             holder.contentTypeImageView?.setImageResource(R.drawable.ic_video)
+            try {
+                Picasso.with(holder.itemView.context).load(
+                        milestonesList?.get(position)?.meta_data?.content_info?.thumbnail).into(holder.contentImageView)
+            } catch (e: Exception) {
+                holder.contentImageView?.setBackgroundResource(R.drawable.default_article)
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+            }
         } else {
-            // Need Icon for my money type
-            //holder.contentTypeImageView?.setImageResource(R.drawable.ic_video)
+            //My Money Handling for Later
         }
-        holder.contentTextView?.text = milestonesList?.get(position)?.milestone_title
+        holder.contentTextView?.text = milestonesList?.get(position)?.meta_data?.content_info?.title
+
+        if (milestonesList?.get(position)?.item_type == AppConstants.CONTENT_TYPE_VIDEO) {
+            try {
+                val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ")
+                val formatter = SimpleDateFormat("dd MMM yyyy")
+                holder.dateTextView?.text = formatter.format((parser.parse(milestonesList?.get(position)?.meta_data?.content_info?.created_at)))
+                holder.dateTextView?.visibility = View.VISIBLE
+            } catch (e: Exception) {
+                holder.dateTextView?.visibility = View.GONE
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+            }
+        } else {
+            try {
+                if (!milestonesList?.get(position)?.meta_data?.content_info?.created_at.isNullOrBlank()) {
+                    holder.dateTextView?.text = milestonesList?.get(position)?.meta_data?.content_info?.created_at?.toLong()?.let {
+                        DateTimeUtils.getDateFromTimestamp(it)
+                    }
+                }
+                holder.dateTextView?.visibility = View.VISIBLE
+            } catch (e: Exception) {
+                holder.dateTextView?.visibility = View.GONE
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+            }
+        }
     }
 
     inner class MilestonesViewHolder internal constructor(
@@ -74,6 +135,7 @@ class MilestonesListAdapter(
 
         var milestoneBgImageView: ImageView? = null
         var milestoneImageView: ImageView? = null
+        var contentImageView: ImageView? = null
         var contentTypeImageView: ImageView? = null
         var contentTextView: TextView? = null
         var dateTextView: TextView? = null
@@ -81,6 +143,7 @@ class MilestonesListAdapter(
         init {
             milestoneBgImageView = view.findViewById(R.id.milestoneBgImageView)
             milestoneImageView = view.findViewById(R.id.milestoneImageView)
+            contentImageView = view.findViewById(R.id.contentImageView)
             contentTypeImageView = view.findViewById(R.id.contentTypeImageView)
             contentTextView = view.findViewById(R.id.contentTextView)
             dateTextView = view.findViewById(R.id.dateTextView)

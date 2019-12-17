@@ -23,7 +23,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.activity.MyTotalEarningActivity
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.ui.rewards.activity.RewardsShareReferralCodeActivity
-import kotlinx.android.synthetic.main.fragment_rewards.*
 import retrofit2.Call
 import retrofit2.Callback
 
@@ -64,7 +63,7 @@ class RewardsTabFragment : BaseFragment() {
         relativeShareReferralCode = containerView.findViewById(R.id.relativeShareReferralCode)
 
         fetchTotalEarning()
-       // val isRewardAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
+        // val isRewardAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
 
         textPersonalInfo.setOnClickListener {
             Utils.campaignEvent(activity, "personalInfo", "reward_tab", "personalInfoText", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "personal_info_detail")
@@ -75,6 +74,10 @@ class RewardsTabFragment : BaseFragment() {
         }
 
         relativeShareReferralCode.setOnClickListener {
+            activity?.let {
+                Utils.pushGenericEvent(activity, "CTA_MyMoney_Profile_Refer",
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, "Home Screen")
+            }
             var intent = Intent(activity, RewardsShareReferralCodeActivity::class.java)
             startActivity(intent)
 
@@ -108,7 +111,6 @@ class RewardsTabFragment : BaseFragment() {
         }
 
         myEarningLayout.setOnClickListener {
-            //            Utils.campaignEvent(activity, "myearning", "rewards_tab", "myearningText", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "my_earning")
 
             var intent = Intent(activity, MyTotalEarningActivity::class.java)
             intent.putExtra("totalPayout", totalPayout)
