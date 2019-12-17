@@ -166,7 +166,8 @@ public class VlogsListingAdapter extends BaseAdapter {
                 addVlogViewHolder.txvAuthorName.setText("NA");
             }
             try {
-                Picasso.with(mContext).load(articleDataModelsNew.get(position).getThumbnail())
+                imageUrl = articleDataModelsNew.get(position).getThumbnail() + "/tr:w-" + screenWidth + ",h-" + screenWidth / 2 + ",fo-auto";
+                Picasso.with(mContext).load(imageUrl)
                         .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(addVlogViewHolder.articleImageView);
             } catch (Exception e) {
                 addVlogViewHolder.articleImageView.setImageResource(R.drawable.default_article);
