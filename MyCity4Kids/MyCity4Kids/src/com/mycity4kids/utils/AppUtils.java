@@ -527,7 +527,7 @@ public class AppUtils {
     }
 
     public static Intent getArticleShareIntent(String userType, String blogSlug, String titleSlug, String shareMsg, String title, String userName) {
-        String shareUrl = getShortStoryShareUrl(userType, blogSlug, titleSlug);
+        String shareUrl = getShareUrl(userType, blogSlug, titleSlug);
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         String shareData;
