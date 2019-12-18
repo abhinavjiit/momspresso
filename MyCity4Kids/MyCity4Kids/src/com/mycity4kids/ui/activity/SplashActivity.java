@@ -90,7 +90,7 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         Utils.pushAppOpenEvent(this, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         onNewIntent(getIntent());
-        AppUtils.printHashKey(this);
+//        AppUtils.printHashKey(this);
         extras = getIntent().getExtras();
         MobileAds.initialize(this, initializationStatus -> Log.d("Admob", "Initialized"));
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);

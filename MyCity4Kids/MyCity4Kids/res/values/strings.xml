@@ -5,7 +5,7 @@
     <string name="resend_email" translatable="false">Resend Email</string>
 
     <string name="azure_api_key" translatable="false">239ccdc75d084c5ba992836575821d56</string>
-    <string name="facebook_app_id" translatable="false">286814231953969</string>
+    <string name="facebook_app_id" translatable="false">206155642763202</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb206155642763202</string>
     <string name="ACCOUNT_KIT_CLIENT_TOKEN" translatable="false">089d77e1898bf3ef59048cc2fe58408b</string>
     <string name="admob_id" translatable="false">ca-app-pub-9305149859515387~7341831189</string>
@@ -1430,5 +1430,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="analytics_lang_rank">YOUR RANK \nIN %1$s</string>
     <string name="analytics_milestones">MILESTONES</string>
     <string name="badges_list_share_text">Checkout %1$s\'s achievements on Momspresso! \n%2$s</string>
+    <string name="milestones_share_text">%1$s\'s %2$s \'%3$s\' got %4$s! | Momspresso \n%5$s</string>
 </resources>
 

@@ -45,11 +45,11 @@ class MilestonesFragment : BaseFragment(), View.OnClickListener, MilestonesListA
         recyclerView = rootView?.findViewById(R.id.recyclerView)
         progressBar = rootView?.findViewById(R.id.progressBar)
 
-        if (BuildConfig.DEBUG) {
-            userId = "fdf2b966ae8841cda022d397cbbf85c8"
-        } else {
+//        if (BuildConfig.DEBUG) {
+//            userId = "fdf2b966ae8841cda022d397cbbf85c8"
+//        } else {
             userId = arguments?.getString(Constants.AUTHOR_ID)
-        }
+//        }
         milestonesList = ArrayList()
 
         if (userId.isNullOrBlank()) {
