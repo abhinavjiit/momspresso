@@ -178,6 +178,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     Intent pIntent = new Intent(mContext, UserProfileActivity.class);
                     pIntent.putExtra(Constants.USER_ID, authorId);
                     pIntent.putExtra(AppConstants.BADGE_ID, notificationList.get(position).getBadgeId());
+                    pIntent.putExtra(AppConstants.BADGE_ID, notificationList.get(position).getMilestoneId());
                     mContext.startActivity(pIntent);
                     pushEvent("NOTIFICATION_CENTER_PROFILE");
                 }
@@ -323,12 +324,9 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                 }
                 break;
                 case AppConstants.NOTIFICATION_CENTER_CAMPAIGN_LISTING: {
-                    Intent intent = new Intent(mContext, ParallelFeedActivity.class);
-                    intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getArticleId());
-                    intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
-                    intent.putExtra(Constants.FROM_SCREEN, "Home Screen");
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
-                    mContext.startActivity(intent);
+                    Intent campaignIntent = new Intent(mContext, CampaignContainerActivity.class);
+                    campaignIntent.putExtra("campaign_listing", "campaign_listing");
+                    mContext.startActivity(campaignIntent);
                     pushEvent("NOTIFICATION_CENTER_CAMPAIGN_LISTING");
                 }
                 break;

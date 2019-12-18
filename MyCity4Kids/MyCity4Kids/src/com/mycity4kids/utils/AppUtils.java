@@ -10,6 +10,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.pm.Signature;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -31,6 +32,7 @@ import android.text.Spanned;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -74,6 +76,8 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -115,6 +119,22 @@ public class AppUtils {
         int randomNum = rand.nextInt((max - min) + 1) + min;
 
         return randomNum;
+    }
+
+    public static void printHashKey(Context pContext) {
+        try {
+            PackageInfo info = pContext.getPackageManager().getPackageInfo(pContext.getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String hashKey = new String(Base64.encode(md.digest(), 0));
+                Log.i("FB Hash", "printHashKey() Hash Key: " + hashKey);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            Log.e("FB Hash", "printHashKey()", e);
+        } catch (Exception e) {
+            Log.e("FB Hash", "printHashKey()", e);
+        }
     }
 
     public static String getYoutubeThumbnailURL(String youtubeUrl) {
@@ -1100,6 +1120,21 @@ public class AppUtils {
         }
     }
 
+    public static boolean shareGenericImageAndOrLink(Context context, Uri uri, String shareTextAndLink) {
+        try {
+            Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+            shareIntent.setType("image/jpeg");
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareTextAndLink);
+            context.startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+            return true;
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+            return false;
+        }
+    }
+
     public static void shareCampaignWithWhatsApp(Context mContext, String shareUrl, String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
         if (StringUtils.isNullOrEmpty(shareUrl)) {
             Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
@@ -1189,11 +1224,8 @@ public class AppUtils {
     }
 
     public static boolean isPrivateProfile(String authorId) {
-        if (StringUtils.isNullOrEmpty(authorId) || SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(authorId)) {
-            return true;
-        } else {
-            return false;
-        }
+        return StringUtils.isNullOrEmpty(authorId) ||
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(authorId);
     }
 
     public static Bitmap getBitmapFromView(View view, String filename) {

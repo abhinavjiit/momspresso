@@ -624,7 +624,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
     }
 
     @Override
-    public void getFacebookUser(String user) {
+    public void getFacebookUser(JSONObject jObject, String user) {
         try {
             if (user != null) {
                 SocialConnectRequest socialConnectRequest = new SocialConnectRequest();

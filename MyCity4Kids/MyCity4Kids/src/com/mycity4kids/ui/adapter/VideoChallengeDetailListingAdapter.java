@@ -61,6 +61,8 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
     private ArrayList<String> Display_Name, videoDisplay_Name;
     private TopicsResponse res;
     private int num_of_categorys;
+    private int screenWidth;
+    private String imageUrl;
 
 
     public VideoChallengeDetailListingAdapter(Context pContext, String selectedId, Topics topics) {
@@ -69,6 +71,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
         mContext = pContext;
         this.topics = topics;
         String selectedId1 = selectedId;
+        screenWidth = mContext.getResources().getDisplayMetrics().widthPixels;
         findActiveVideoChallenge();
     }
 
@@ -195,7 +198,8 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                 addVlogViewHolder.txvAuthorName.setText("NA");
             }
             try {
-                Picasso.with(mContext).load(articleDataModelsNew.get(position).getThumbnail())
+                imageUrl = articleDataModelsNew.get(position).getThumbnail() + "/tr:w-" + screenWidth + ",h-" + screenWidth / 2 + ",fo-auto";
+                Picasso.with(mContext).load(imageUrl)
                         .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(addVlogViewHolder.articleImageView);
             } catch (Exception e) {
                 addVlogViewHolder.articleImageView.setImageResource(R.drawable.default_article);
@@ -268,7 +272,8 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                 holder.txvAuthorName.setText("NA");
             }
             try {
-                Picasso.with(mContext).load(articleDataModelsNew.get(position).getThumbnail())
+                imageUrl = articleDataModelsNew.get(position).getThumbnail() + "/tr:w-" + screenWidth + ",h-" + screenWidth / 2 + ",fo-auto";
+                Picasso.with(mContext).load(imageUrl)
                         .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
             } catch (Exception e) {
                 holder.articleImageView.setImageResource(R.drawable.default_article);

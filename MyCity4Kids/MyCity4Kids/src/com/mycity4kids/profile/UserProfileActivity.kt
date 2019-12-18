@@ -19,6 +19,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
@@ -184,22 +185,16 @@ class UserProfileActivity : BaseActivity(),
 
         authorId = intent.getStringExtra(Constants.USER_ID)
         deeplinkBadgeId = intent.getStringExtra(AppConstants.BADGE_ID)
+        val milestoneId: String? = intent.getStringExtra(AppConstants.MILESTONE_ID)
         profileDetail = intent.getStringExtra("detail")
 
         if (!deeplinkBadgeId.isNullOrBlank()) {
             showBadgeDialog(deeplinkBadgeId)
         }
 
-//        profileImageView.setOnClickListener {
-//            if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId == authorId) {
-//                val pIntent = Intent(this, PrivateProfileActivity::class.java)
-//                startActivity(pIntent)
-//            } else {
-//                val intentnn = Intent(this, PublicProfileActivity::class.java)
-//                intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, authorId)
-//                startActivity(intentnn)
-//            }
-//        }
+        if (!milestoneId.isNullOrBlank()) {
+            showMilestoneDialog(milestoneId)
+        }
 
         if (AppUtils.isPrivateProfile(authorId)) {
             authorId = SharedPrefUtils.getUserDetailModel(this).dynamoId
@@ -517,7 +512,7 @@ class UserProfileActivity : BaseActivity(),
             if (AppConstants.LANG_KEY_ENGLISH == responseData.data[0].result.ranks[0].langKey) {
                 rankLanguageTextView.text = getString(R.string.blogger_profile_rank_in, "ENGLISH")
             } else {
-                rankLanguageTextView.text = (getString(R.string.blogger_profile_rank_in, responseData.data[0].result.ranks[0].langValue.toUpperCase()))
+                rankLanguageTextView.text = getString(R.string.blogger_profile_rank_in, responseData.data[0].result.ranks[0].langValue.toUpperCase())
             }
         } else {
             rankContainer.setOnClickListener(this)
@@ -729,6 +724,18 @@ class UserProfileActivity : BaseActivity(),
         }
     }
 
+    private fun showMilestoneDialog(milestoneId: String) {
+        val milestonesDialogFragment = MilestonesDialogFragment()
+        val bundle = Bundle()
+        bundle.putString(Constants.USER_ID, authorId)
+        bundle.putString("id", milestoneId)
+        milestonesDialogFragment.arguments = bundle
+        val fm: FragmentManager? = supportFragmentManager
+        fm?.let {
+            milestonesDialogFragment.show(it, "MilestonesDialogFragment")
+        }
+    }
+
     override fun onClick(view: View?) {
         when {
             view?.id == R.id.creatorTab -> {
@@ -802,9 +809,11 @@ class UserProfileActivity : BaseActivity(),
                         false
                     }
                     val intent = Intent(this, RankingActivity::class.java)
+                    intent.putExtra(Constants.AUTHOR_ID, authorId)
                     startActivity(intent)
                 } else {
                     val intent = Intent(this, RankingActivity::class.java)
+                    intent.putExtra(Constants.AUTHOR_ID, authorId)
                     startActivity(intent)
                 }
             }
@@ -843,12 +852,9 @@ class UserProfileActivity : BaseActivity(),
     private fun shareGenericImage() {
         try {
             val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/profile.jpg")
-            val shareIntent: Intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_STREAM, uri)
-                type = "image/jpeg"
-            }
-            startActivity(Intent.createChooser(shareIntent, resources.getText(R.string.ad_bottom_bar_generic_share)))
+            val shareText = getString(R.string.profile_follow_author, authorNameTextView.text.toString()) +
+                    AppConstants.USER_PROFILE_SHARE_BASE_URL + authorId
+            AppUtils.shareGenericImageAndOrLink(this, uri, shareText)
             if (AppUtils.isPrivateProfile(authorId)) {
                 Utils.pushProfileEvents(this, "CTA_Share_Private_Profile", "UserProfileActivity",
                         "Share", "-")

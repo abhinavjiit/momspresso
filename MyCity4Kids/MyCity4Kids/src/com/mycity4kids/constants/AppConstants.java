@@ -164,6 +164,7 @@ public class AppConstants {
     public static final String VIDEO_UPLOAD_URL = LIVE_URL + "v1/media/videos/";
     public static final String BLOG_SHARE_BASE_URL = "https://www.momspresso.com";
 //    public static final String ARTICLE_SHARE_URL = BASE_URL + "newparenting/";
+    public static final String USER_PROFILE_SHARE_BASE_URL = "https://www.momspresso.com/parenting/user/";
 
     /*New Login/Sign Up Constants*/
     public static final String SMS_ORIGIN = "MCKOTP";
@@ -725,6 +726,7 @@ public class AppConstants {
     public static final String FOLLOW = "0";
     public static final String CONTENT_ID = "contentId";
 
+    public static final String OTP_REGEX = "(?<!\\d)\\d{6}(?!\\d)";
     public static final String COLLECTION_LIST_REGEX = ".+?(user\\/)[a-zA-Z0-9]+\\/(collections)$";
     public static final String COLLECTION_DETAIL_REGEX = ".+?(user\\/)[a-zA-Z0-9]+(\\/(collections\\/))[a-zA-Z0-9]+$";
     public static final String BADGES_LISTING_REGEX = ".+?(user\\/)[a-zA-Z0-9]+\\/(badges)$";
@@ -733,7 +735,7 @@ public class AppConstants {
     public static final String USER_PROFILE_REGEX = ".+?(user\\/)[a-zA-Z0-9]+$";
     public static final String USER_ANALYTICS_REGEX = ".+?(user\\/)[a-zA-Z0-9]+\\/(rank)$";
     public static final String BADGE_ID = "badgeId";
-
+    public static final String MILESTONE_ID = "milestoneId";
 
     enum SocialPlatformName {
 

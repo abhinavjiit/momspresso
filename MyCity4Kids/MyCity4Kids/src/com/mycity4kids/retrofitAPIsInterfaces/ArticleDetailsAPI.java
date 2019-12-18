@@ -99,7 +99,7 @@ public interface ArticleDetailsAPI {
     @GET("v1/articles/views/{articleId}")
     Call<ViewCountResponse> getViewCount(@Path("articleId") String articleId);
 
-    @GET("crowns/v1/user/crowns/{userId}")
+    @GET("crowns/v1/user/crowns/{userId}/")
     Call<CrownDataResponse> getCrownData(@Path("userId") String userId);
 
     @GET("v1/comments/fb/{articleId}")

@@ -23,18 +23,9 @@ public class NotificationCenterResult {
     private int postId;
     private int responseId;
     private int campaign_id;
-    private int category_id;
     private String categoryId;
     private String badgeId;
-
-//    public int getCategoryId() {
-//        return category_id;
-//    }
-//
-//    public void setCategoryId(int categoryId) {
-//        this.category_id = categoryId;
-//    }
-
+    private String milestoneId;
 
     public String getCategoryId() {
         return categoryId;
@@ -202,5 +193,13 @@ public class NotificationCenterResult {
 
     public void setBadgeId(String badgeId) {
         this.badgeId = badgeId;
+    }
+
+    public String getMilestoneId() {
+        return milestoneId;
+    }
+
+    public void setMilestoneId(String milestoneId) {
+        this.milestoneId = milestoneId;
     }
 }

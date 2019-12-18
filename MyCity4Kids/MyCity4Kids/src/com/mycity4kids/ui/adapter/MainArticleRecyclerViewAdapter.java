@@ -8,7 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -90,6 +93,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     private String screenName;
     private Gson gson;
     private boolean showVideoFlag;
+    private String htmlContent = "";
+    private String dataType = "";
 
 
     public MainArticleRecyclerViewAdapter(Context pContext, RecyclerViewClickListener listener, boolean topicHeaderVisibilityFlag, String screenName, boolean showVideoFlag) {
@@ -111,8 +116,10 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         articleDataModelsNew = mParentingLists_new;
     }
 
-    public void setCampaignList(ArrayList<CampaignDataListResult> mCampaignList) {
+    public void setCampaignOrAdSlotData(String dataType, ArrayList<CampaignDataListResult> mCampaignList, String adSlotHtml) {
+        this.dataType = dataType;
         campaignListDataModels = mCampaignList;
+        this.htmlContent = adSlotHtml;
     }
 
     public void setGroupInfo(int groupId, String heading, String subHeading, String gpImageUrl) {
@@ -260,17 +267,34 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             }
         } else if (holder instanceof CampaignCarouselViewHolder) {
             CampaignCarouselViewHolder viewHolder = (CampaignCarouselViewHolder) holder;
-            try {
-                if (campaignListDataModels != null && campaignListDataModels.size() > 4) {
-                    addCampaignCard(viewHolder.campaignHeader, viewHolder.brandImg, viewHolder.brandName, viewHolder.campaignName, viewHolder.campaignStatus, campaignListDataModels.get(0), position, viewHolder);
-                    addCampaignCard(viewHolder.campaignHeader2, viewHolder.brandImg2, viewHolder.brandName2, viewHolder.campaignName2, viewHolder.campaignStatus2, campaignListDataModels.get(1), position, viewHolder);
-                    addCampaignCard(viewHolder.campaignHeader3, viewHolder.brandImg3, viewHolder.brandName3, viewHolder.campaignName3, viewHolder.campaignStatus3, campaignListDataModels.get(2), position, viewHolder);
-                    addCampaignCard(viewHolder.campaignHeader4, viewHolder.brandImg4, viewHolder.brandName4, viewHolder.campaignName4, viewHolder.campaignStatus4, campaignListDataModels.get(3), position, viewHolder);
-                    addCampaignCard(viewHolder.campaignHeader5, viewHolder.brandImg5, viewHolder.brandName5, viewHolder.campaignName5, viewHolder.campaignStatus5, campaignListDataModels.get(4), position, viewHolder);
+            if ("adslot".equals(dataType)) {
+                viewHolder.adSlotContainer.setVisibility(View.VISIBLE);
+                viewHolder.adSlotWebView.setVisibility(View.VISIBLE);
+                viewHolder.relativeLayoutContainer.setVisibility(View.GONE);
+                viewHolder.videoCarouselContainer.setVisibility(View.GONE);
+                viewHolder.adSlotWebView.loadDataWithBaseURL("", htmlContent, "text/html", "utf-8", "");
+            } else if ("campaign".equals(dataType)) {
+                viewHolder.adSlotContainer.setVisibility(View.GONE);
+                viewHolder.adSlotWebView.setVisibility(View.GONE);
+                viewHolder.relativeLayoutContainer.setVisibility(View.VISIBLE);
+                viewHolder.videoCarouselContainer.setVisibility(View.VISIBLE);
+                try {
+                    if (campaignListDataModels != null && campaignListDataModels.size() > 4) {
+                        addCampaignCard(viewHolder.campaignHeader, viewHolder.brandImg, viewHolder.brandName, viewHolder.campaignName, viewHolder.campaignStatus, campaignListDataModels.get(0), position, viewHolder);
+                        addCampaignCard(viewHolder.campaignHeader2, viewHolder.brandImg2, viewHolder.brandName2, viewHolder.campaignName2, viewHolder.campaignStatus2, campaignListDataModels.get(1), position, viewHolder);
+                        addCampaignCard(viewHolder.campaignHeader3, viewHolder.brandImg3, viewHolder.brandName3, viewHolder.campaignName3, viewHolder.campaignStatus3, campaignListDataModels.get(2), position, viewHolder);
+                        addCampaignCard(viewHolder.campaignHeader4, viewHolder.brandImg4, viewHolder.brandName4, viewHolder.campaignName4, viewHolder.campaignStatus4, campaignListDataModels.get(3), position, viewHolder);
+                        addCampaignCard(viewHolder.campaignHeader5, viewHolder.brandImg5, viewHolder.brandName5, viewHolder.campaignName5, viewHolder.campaignStatus5, campaignListDataModels.get(4), position, viewHolder);
+                    }
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
                 }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
+            } else {
+                viewHolder.adSlotContainer.setVisibility(View.GONE);
+                viewHolder.adSlotWebView.setVisibility(View.GONE);
+                viewHolder.relativeLayoutContainer.setVisibility(View.GONE);
+                viewHolder.videoCarouselContainer.setVisibility(View.GONE);
             }
             if (AppConstants.CONTENT_TYPE_ARTICLE.equals(articleDataModelsNew.get(position).getContentType())) {
                 viewHolder.headerArticleView.setVisibility(View.VISIBLE);
@@ -678,6 +702,10 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
     public class CampaignCarouselViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        RelativeLayout adSlotContainer;
+        WebView adSlotWebView;
+        RelativeLayout relativeLayoutContainer;
+        HorizontalScrollView videoCarouselContainer;
         ImageView campaignHeader, campaignHeader2, campaignHeader3, campaignHeader4, campaignHeader5;
         CircularImageView brandImg, brandImg2, brandImg3, brandImg4, brandImg5;
         TextView brandName, campaignName, campaignStatus, brandName2, campaignName2, campaignStatus2, brandName3, campaignName3, campaignStatus3, brandName4, campaignName4, campaignStatus4, brandName5, campaignName5, campaignStatus5;
@@ -712,6 +740,10 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
         CampaignCarouselViewHolder(View view) {
             super(view);
+            adSlotContainer = view.findViewById(R.id.adSlotContainer);
+            adSlotWebView = view.findViewById(R.id.adSlotWebView);
+            relativeLayoutContainer = view.findViewById(R.id.relativeLayoutContainer);
+            videoCarouselContainer = view.findViewById(R.id.videoCarouselContainer);
             campaignHeader = view.findViewById(R.id.campaign_header);
             campaignHeader2 = view.findViewById(R.id.campaign_header2);
             campaignHeader3 = view.findViewById(R.id.campaign_header3);
@@ -780,6 +812,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             whatsappShareImageView = (ImageView) view.findViewById(R.id.whatsappShareImageView);
             instagramShareImageView = (ImageView) view.findViewById(R.id.instagramShareImageView);
             genericShareImageView = (ImageView) view.findViewById(R.id.genericShareImageView);
+            adSlotWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
 
             view.setOnClickListener(this);
             headerArticleView.setOnClickListener(this);

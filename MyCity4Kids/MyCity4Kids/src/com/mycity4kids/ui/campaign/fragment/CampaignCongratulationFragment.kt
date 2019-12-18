@@ -119,6 +119,4 @@ class CampaignCongratulationFragment : BaseFragment() {
     interface SubmitListener {
         fun congratulateScreenDone()
     }
-
-
 }

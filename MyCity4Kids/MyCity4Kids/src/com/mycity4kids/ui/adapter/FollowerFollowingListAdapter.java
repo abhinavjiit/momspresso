@@ -156,16 +156,16 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
             holder.followingTextView.setVisibility(View.INVISIBLE);
             holder.followTextView.setVisibility(View.INVISIBLE);
             String jsonString = new Gson().toJson(followUnfollowUserRequest);
-            Utils.pushFollowAuthorEvent(mContext, screenName, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(),
-                    mDataList.get(position).getUserId() + "~" + mDataList.get(position).getFirstName() + " " + mDataList.get(position).getLastName());
+            Utils.pushGenericEvent(mContext, "CTA_Follow_Profile_Followers",
+                    SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "FollowerFollowingListAdapter");
             new FollowUnfollowAsyncTask(holder, "follow", position).execute(jsonString, "follow");
         } else {
             holder.relativeLoadingView.setVisibility(View.VISIBLE);
             holder.followingTextView.setVisibility(View.INVISIBLE);
             holder.followTextView.setVisibility(View.INVISIBLE);
             String jsonString = new Gson().toJson(followUnfollowUserRequest);
-            Utils.pushUnfollowAuthorEvent(mContext, screenName, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(),
-                    mDataList.get(position).getUserId() + "~" + mDataList.get(position).getFirstName() + " " + mDataList.get(position).getLastName());
+            Utils.pushGenericEvent(mContext, "CTA_Unfollow_Profile_Followers",
+                    SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "FollowerFollowingListAdapter");
             new FollowUnfollowAsyncTask(holder, "unfollow", position).execute(jsonString, "unfollow");
         }
     }

@@ -18,6 +18,7 @@ import com.kelltontech.utils.StringUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.campaignmodels.AllCampaignTotalPayoutResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
@@ -82,6 +83,8 @@ class MyTotalEarningActivity : BaseActivity() {
         }
 
         referEarnContainerCL.setOnClickListener {
+            Utils.pushGenericEvent(this, "CTA_MyMoney_Earning_Screen_Refer",
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, "MyTotalEarningActivity")
             val intent = Intent(this, RewardsShareReferralCodeActivity::class.java)
             startActivity(intent)
         }

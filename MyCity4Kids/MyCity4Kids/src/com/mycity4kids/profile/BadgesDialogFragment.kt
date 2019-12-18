@@ -250,7 +250,7 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
                             Utils.pushProfileEvents(it, "CTA_View_Video_Public_Badge_Detail",
                                     "BadgesDialogFragment", "View Video", badgeData?.badge_name)
                             val intent = Intent(activity, ParallelFeedActivity::class.java)
-                            intent.putExtra(Constants.ARTICLE_ID, badgeData?.content_id)
+                            intent.putExtra(Constants.VIDEO_ID, badgeData?.content_id)
                             startActivity(intent)
                         }
                     }

@@ -79,7 +79,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         this.gpHeading = gpHeading;
         this.gpSubHeading = gpSubHeading;
         this.gpImageUrl = gpImageUrl;
-        hitTrendingDataAPI();
+//        hitTrendingDataAPI();
     }
 
     private void hitTrendingDataAPI() {
@@ -126,6 +126,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
     };
 
     private void processTrendingResponse(TrendingListingResponse responseData) {
+        tabLayout.removeAllTabs();
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 //        feedOrderArray = mFirebaseRemoteConfig.getString(HOME_PAGE_FEED_ORDER).split(",");
@@ -173,7 +174,6 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
                 viewPager.setCurrentItem(tab.getPosition());
             }
         });
-
     }
 
     @Override
@@ -215,7 +215,6 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
                     } else {
                         ((DashboardActivity) getActivity()).showHideNotificationCenterMark(true);
                     }
-//                    ((DashboardActivity) getActivity()).updateUnreadNotificationCount(responseData.getData().getTotal());
                 } else {
                     ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
                 }

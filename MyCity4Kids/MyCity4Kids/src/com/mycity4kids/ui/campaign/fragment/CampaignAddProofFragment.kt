@@ -732,6 +732,3 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         fun proofSubmitDone()
     }
 }
-
-
-

@@ -60,19 +60,8 @@ public class LoadingActivity extends BaseActivity {
             navigateToDashboard();
             return;
         }
-        try {
-            cityIdFromLocation = Integer.parseInt(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getCityId());
-//        SharedPrefUtils.getCurrentCityModel(LoadingActivity.this).getId();
-            if (SharedPrefUtils.getCurrentCityModel(BaseApplication.getAppContext()).getId() == AppConstants.OTHERS_CITY_ID) {
-                fetchingLocation();
-            } else {
-                navigateToDashboard();
-            }
-        } catch (NumberFormatException e) {
-            navigateToDashboard();
-        }
-
         type = BaseApplication.getInstance().getBranchLink();
+        navigateToDashboard();
     }
 
     private void fetchingLocation() {

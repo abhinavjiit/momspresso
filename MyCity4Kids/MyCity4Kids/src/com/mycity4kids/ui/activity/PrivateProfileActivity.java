@@ -617,7 +617,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                 e.printStackTrace();
             }
 
-            FacebookUtils.logout(this);
+            FacebookUtils.logout();
             gPlusSignOut();
 
             String pushToken = SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext());
