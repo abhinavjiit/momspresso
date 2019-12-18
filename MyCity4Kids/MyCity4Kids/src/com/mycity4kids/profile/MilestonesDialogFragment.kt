@@ -309,8 +309,25 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
             return
         }
         activity?.let {
+            val username = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).first_name + " " +
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).last_name
+            var contentType: String? = ""
+            when {
+                milestoneData?.item_type == AppConstants.CONTENT_TYPE_ARTICLE -> {
+                    contentType = "Article"
+                }
+                milestoneData?.item_type == AppConstants.CONTENT_TYPE_SHORT_STORY -> {
+                    contentType = "Story"
+                }
+                milestoneData?.item_type == AppConstants.CONTENT_TYPE_VIDEO -> {
+                    contentType = "Video"
+                }
+                else -> viewContentTextView.visibility = View.GONE
+            }
             val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/milestone.jpg")
-            if (AppUtils.shareImageWithWhatsApp(it, uri, milestoneData?.milestone_sharing_url)) {
+            if (AppUtils.shareImageWithWhatsApp(it, uri, getString(R.string.milestones_share_text, username, contentType,
+                            milestoneData?.meta_data?.content_info?.title, milestoneData?.milestone_name, milestoneData?.milestone_sharing_url)
+                    )) {
                 Utils.pushProfileEvents(it, "CTA_Whatsapp_Share_Private_Milestone_Detail",
                         "MilestonesDialogFragment", "Whatsapp Share", milestoneData?.milestone_name)
             }

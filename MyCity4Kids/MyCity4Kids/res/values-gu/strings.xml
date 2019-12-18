@@ -1315,9 +1315,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="badges">Badges</string>
     <string name="profile_setting">Profile settings</string>
     <string name="accounts">Accounts</string>
-    <string name="profile_my_collections">My Collections</string>
-    <string name="profile_view_all_collections">View All</string>
-    <string name="profile_add_new">Add New</string>
+    <string name="profile_my_collections">મારો સંગ્રહ </string>
+    <string name="profile_view_all_collections">બધું જુઓ </string>
+    <string name="profile_add_new">નવું જોડો </string>
     <string name="profile_featured_more">+%d More</string>
     <string name="all_drafts">Drafts</string>
     <string name="all_story">100 Word Story</string>
@@ -1374,4 +1374,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="analytics_lang_rank">%1$s \nમાં તમારો ક્રમ</string>
     <string name="analytics_milestones">MILESTONES</string>
     <string name="badges_list_share_text">Checkout %1$s\'s achievements on Momspresso! \n%2$s</string>
+    <string name="milestones_share_text">%1$s\'s %2$s \'%3$s\' got %4$s! | Momspresso \n%5$s</string>
 </resources>
