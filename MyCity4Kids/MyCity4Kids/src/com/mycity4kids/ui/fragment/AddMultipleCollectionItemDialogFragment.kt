@@ -179,6 +179,7 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(), AddMultipleCol
                     val responsee = response.body()
                     if (responsee?.code == 200 && responsee.status == "success" && !responsee.data?.result?.listItemId.isNullOrEmpty()) {
                         ToastUtils.showToast(activity, responsee.data?.msg)
+                        dismiss()
                     } else {
                         ToastUtils.showToast(activity, responsee?.data?.msg)
                     }
