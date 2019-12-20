@@ -49,7 +49,7 @@ public final class FacebookUtils {
                                     }
                                 });
                         Bundle parameters = new Bundle();
-                        parameters.putString("fields", "id,name,email,gender,friends");
+                        parameters.putString("fields", "id,name,email,gender");
                         request.setParameters(parameters);
                         request.executeAsync();
                     }
@@ -68,7 +68,7 @@ public final class FacebookUtils {
                     }
                 });
 
-        LoginManager.getInstance().logInWithReadPermissions(context, Arrays.asList("public_profile", "email", "user_gender", "user_friends"));
+        LoginManager.getInstance().logInWithReadPermissions(context, Arrays.asList("public_profile", "email", "user_gender"));
     }
 
     public static void logout() {
