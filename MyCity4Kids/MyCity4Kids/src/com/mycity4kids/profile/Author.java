@@ -1,13 +1,20 @@
 package com.mycity4kids.profile;
 
+import com.google.gson.annotations.SerializedName;
 import com.mycity4kids.models.response.ProfilePic;
 
 public class Author {
+    @SerializedName("id")
     private String id;
+    @SerializedName("firstName")
     private String firstName;
+    @SerializedName("lastName")
     private String lastName;
+    @SerializedName("blogTitleSlug")
     private String blogTitleSlug;
+    @SerializedName("userType")
     private String userType;
+    @SerializedName("profilePicUrl")
     private ProfilePic profilePicUrl;
 
     public String getId() {

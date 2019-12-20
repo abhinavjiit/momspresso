@@ -1,14 +1,22 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by anshul on 7/12/16.
  */
-public class ConfigCategory {
-    int version;
-    String location;
 
+public class ConfigCategory {
+
+    @SerializedName("version")
+    int version;
+    @SerializedName("location")
+    String location;
+    @SerializedName("popularVersion")
     int popularVersion;
+    @SerializedName("userTypeVersion")
     int userTypeVersion;
+    @SerializedName("popularLocation")
     String popularLocation;
 
     public int getVersion() {

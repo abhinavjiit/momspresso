@@ -907,7 +907,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } else if (notificationExtras.getString("type").equalsIgnoreCase("collection_detail")) {
                 pushEvent("collection_detail");
                 Intent intent = new Intent(DashboardActivity.this, UserCollectionItemListActivity.class);
-                intent.putExtra("id", notificationExtras.getString("id"));
+                intent.putExtra("id", notificationExtras.getString(AppConstants.COLLECTION_ID));
                 startActivity(intent);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("create_content_prompt")) {
                 pushEvent("create_content_prompt");

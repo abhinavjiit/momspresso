@@ -1,7 +1,11 @@
 package com.mycity4kids.models.parentingdetails;
 
+import com.google.gson.annotations.SerializedName;
+
 public class VideoData {
+    @SerializedName("key")
     private String key;
+    @SerializedName("videoUrl")
     private String videoUrl;
 
     public String getKey() {

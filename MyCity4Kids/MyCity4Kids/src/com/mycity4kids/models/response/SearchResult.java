@@ -1,15 +1,22 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
  * Created by hemant on 21/7/16.
  */
 public class SearchResult {
+    @SerializedName("article")
     private ArrayList<SearchArticleResult> article;
+    @SerializedName("author")
     private ArrayList<SearchAuthorResult> author;
+    @SerializedName("blog")
     private ArrayList<SearchBlogResult> blog;
+    @SerializedName("topic")
     private ArrayList<SearchTopicResult> topic;
+    @SerializedName("video")
     private ArrayList<SearchVideoResult> video;
 
     public ArrayList<SearchArticleResult> getArticle() {

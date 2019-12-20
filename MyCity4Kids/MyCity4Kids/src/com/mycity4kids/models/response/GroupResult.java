@@ -3,6 +3,8 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 import java.util.Map;
 
@@ -11,27 +13,49 @@ import java.util.Map;
  */
 
 public class GroupResult implements Parcelable {
+    @SerializedName("id")
     private int id;
+    @SerializedName("title")
     private String title;
+    @SerializedName("logoImage")
     private String logoImage;
+    @SerializedName("headerImage")
     private String headerImage;
+    @SerializedName("description")
     private String description;
+    @SerializedName("type")
     private String type;
+    @SerializedName("url")
     private String url;
+    @SerializedName("createdBy")
     private String createdBy;
+    @SerializedName("createdOn")
     private String createdOn;
+    @SerializedName("hashId")
     private String hashId;
+    @SerializedName("lang")
     private String lang;
+    @SerializedName("isActive")
     private int isActive;
+    @SerializedName("notificationOn")
     private int notificationOn;
+    @SerializedName("annonAllowed")
     private int annonAllowed;
+    @SerializedName("dmAllowed")
     private int dmAllowed;
+    @SerializedName("sentiment")
     private String sentiment;
+    @SerializedName("createdAt")
     private long createdAt;
+    @SerializedName("updatedAt")
     private long updatedAt;
+    @SerializedName("questionnaire")
     private Map<String, String> questionnaire;
+    @SerializedName("memberCount")
     private int memberCount;
+    @SerializedName("adminMembers")
     private AdminMembers adminMembers;
+    @SerializedName("highlight")
     private int highlight;
 
     protected GroupResult(Parcel in) {
@@ -275,8 +299,11 @@ public class GroupResult implements Parcelable {
     }
 
     public class AdminMembers {
+        @SerializedName("total")
         private int total;
+        @SerializedName("limit")
         private int limit;
+        @SerializedName("skip")
         private int skip;
 
         private List<AdminMemberData> data;
@@ -314,19 +341,33 @@ public class GroupResult implements Parcelable {
         }
 
         public class AdminMemberData {
+            @SerializedName("id")
             private int id;
+            @SerializedName("groupId")
             private int groupId;
+            @SerializedName("userId")
             private String userId;
+            @SerializedName("status")
             private String status;
+            @SerializedName("lastActivityOn")
             private String lastActivityOn;
+            @SerializedName("isOwner")
             private int isOwner;
+            @SerializedName("isAdmin")
             private int isAdmin;
+            @SerializedName("isModerator")
             private int isModerator;
+            @SerializedName("referedBy")
             private String referedBy;
+            @SerializedName("questionnaireResponse")
             private Map<String, String> questionnaireResponse;
+            @SerializedName("inviteCode")
             private String inviteCode;
+            @SerializedName("createdAt")
             private long createdAt;
+            @SerializedName("updatedAt")
             private long updatedAt;
+            @SerializedName("userInfo")
             private UserDetailResult userInfo;
 
             public int getId() {

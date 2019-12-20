@@ -736,6 +736,7 @@ public class AppConstants {
     public static final String USER_ANALYTICS_REGEX = ".+?(user\\/)[a-zA-Z0-9]+\\/(rank)$";
     public static final String BADGE_ID = "badgeId";
     public static final String MILESTONE_ID = "milestoneId";
+    public static final String COLLECTION_ID = "collectionId";
 
     enum SocialPlatformName {
 

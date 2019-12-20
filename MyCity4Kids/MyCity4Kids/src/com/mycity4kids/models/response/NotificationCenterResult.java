@@ -1,31 +1,57 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 21/12/16.
  */
 public class NotificationCenterResult {
+    @SerializedName("id")
     private String id;
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("title")
     private String title;
+    @SerializedName("articleId")
     private String articleId;
+    @SerializedName("videoId")
     private String videoId;
+    @SerializedName("authorId")
     private String authorId;
+    @SerializedName("titleSlug")
     private String titleSlug;
+    @SerializedName("blogTitleSlug")
     private String blogTitleSlug;
+    @SerializedName("body")
     private String body;
+    @SerializedName("createdTime")
     private String createdTime;
+    @SerializedName("isRead")
     private String isRead;
+    @SerializedName("notifType")
     private String notifType;
+    @SerializedName("sharingUrl")
     private String sharingUrl;
+    @SerializedName("url")
     private String url;
+    @SerializedName("thumbNail")
     private String thumbNail;
+    @SerializedName("groupId")
     private int groupId;
+    @SerializedName("postId")
     private int postId;
+    @SerializedName("responseId")
     private int responseId;
+    @SerializedName("campaign_id")
     private int campaign_id;
+    @SerializedName("categoryId")
     private String categoryId;
+    @SerializedName("badgeId")
     private String badgeId;
+    @SerializedName("milestoneId")
     private String milestoneId;
+    @SerializedName("collectionId")
+    private String collectionId;
 
     public String getCategoryId() {
         return categoryId;
@@ -201,5 +227,13 @@ public class NotificationCenterResult {
 
     public void setMilestoneId(String milestoneId) {
         this.milestoneId = milestoneId;
+    }
+
+    public String getCollectionId() {
+        return collectionId;
+    }
+
+    public void setCollectionId(String collectionId) {
+        this.collectionId = collectionId;
     }
 }

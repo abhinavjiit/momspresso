@@ -1,13 +1,20 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 21/7/16.
  */
 public class SearchAuthorResult {
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("profile_image")
     private ProfilePic profile_image;
+    @SerializedName("first_name")
     private String first_name;
+    @SerializedName("last_name")
     private String last_name;
+    @SerializedName("isFollowed")
     private int isFollowed;
 
     public String getUserId() {

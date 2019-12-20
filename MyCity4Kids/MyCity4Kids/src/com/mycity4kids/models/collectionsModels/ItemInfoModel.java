@@ -6,18 +6,29 @@ import com.mycity4kids.profile.Author;
 
 public class ItemInfoModel {
 
+    @SerializedName("author")
     private Author author;
+    @SerializedName("title")
     private String title;
+    @SerializedName("thumbnail")
     private String thumbnail;
+    @SerializedName("userName")
     private String userName;
+    @SerializedName("imageUrl")
     private ImageURL imageUrl;
+    @SerializedName("storyImage")
     private String storyImage;
+    @SerializedName("viewCount")
     private int viewCount;
+    @SerializedName("id")
     private String id;
     @SerializedName("url")
     private String streamUrl;
+    @SerializedName("blogTitleSlug")
     private String blogTitleSlug;
+    @SerializedName("titleSlug")
     private String titleSlug;
+    @SerializedName("userId")
     private String userId;
 
     public String getUserId() {

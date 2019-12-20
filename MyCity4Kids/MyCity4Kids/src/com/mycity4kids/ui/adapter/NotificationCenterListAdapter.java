@@ -178,7 +178,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     Intent pIntent = new Intent(mContext, UserProfileActivity.class);
                     pIntent.putExtra(Constants.USER_ID, authorId);
                     pIntent.putExtra(AppConstants.BADGE_ID, notificationList.get(position).getBadgeId());
-                    pIntent.putExtra(AppConstants.BADGE_ID, notificationList.get(position).getMilestoneId());
+                    pIntent.putExtra(AppConstants.MILESTONE_ID, notificationList.get(position).getMilestoneId());
                     mContext.startActivity(pIntent);
                     pushEvent("NOTIFICATION_CENTER_PROFILE");
                 }
@@ -379,7 +379,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                 break;
                 case AppConstants.NOTIFICATION_CENTER_COLLECTION_DETAIL: {
                     Intent intent = new Intent(mContext, UserCollectionItemListActivity.class);
-                    intent.putExtra("id", "" + notificationList.get(position).getId());
+                    intent.putExtra("id", "" + notificationList.get(position).getCollectionId());
                     intent.putExtra("comingFrom", "notification");
                     mContext.startActivity(intent);
                     pushEvent("NOTIFICATION_CENTER_COLLECTION_DETAIL");

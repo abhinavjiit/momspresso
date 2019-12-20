@@ -1,5 +1,7 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -7,7 +9,9 @@ import java.util.List;
  */
 public class FBPhoneLoginData {
 
+    @SerializedName("msg")
     private String msg;
+    @SerializedName("result")
     private List<UserDetailResult> result;
 
     public String getMsg() {

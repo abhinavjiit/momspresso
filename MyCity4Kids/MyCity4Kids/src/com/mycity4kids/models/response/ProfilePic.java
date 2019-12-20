@@ -3,12 +3,20 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 public class ProfilePic implements Parcelable {
+    @SerializedName("mobileWebMin")
     private String mobileWebMin;
+    @SerializedName("clientAppMin")
     private String clientAppMin;
+    @SerializedName("webMin")
     private String webMin;
+    @SerializedName("web")
     private String web;
+    @SerializedName("mobileWeb")
     private String mobileWeb;
+    @SerializedName("clientApp")
     private String clientApp;
 
     public ProfilePic() {

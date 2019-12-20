@@ -1,12 +1,17 @@
 package com.mycity4kids.newmodels;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 6/5/16.
  */
 public class ForceUpdateModel {
 
+    @SerializedName("responseCode")
     private int responseCode;
+    @SerializedName("response")
     private String response;
+    @SerializedName("result")
     private ForceUpdateResult result;
 
     public int getResponseCode() {
@@ -34,7 +39,9 @@ public class ForceUpdateModel {
     }
 
     public class ForceUpdateResult {
+        @SerializedName("message")
         private String message;
+        @SerializedName("data")
         private ForceUpdateData data;
 
         public String getMessage() {
@@ -54,7 +61,12 @@ public class ForceUpdateModel {
         }
 
         public class ForceUpdateData {
+            @SerializedName("isAppUpdateRequired")
             private int isAppUpdateRequired;
+            @SerializedName("message")
+            private String message;
+            @SerializedName("onlineVersionCode")
+            private String onlineVersionCode;
 
             public String getOnlineVersionCode() {
                 return onlineVersionCode;
@@ -63,9 +75,6 @@ public class ForceUpdateModel {
             public void setOnlineVersionCode(String onlineVersionCode) {
                 this.onlineVersionCode = onlineVersionCode;
             }
-
-            private String message;
-            private String onlineVersionCode;
 
             public int getIsAppUpdateRequired() {
                 return isAppUpdateRequired;

@@ -1,11 +1,19 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 public class SearchVideoResult {
+    @SerializedName("title")
     private String title;
+    @SerializedName("id")
     private String id;
+    @SerializedName("title_slug")
     private String  title_slug;
+    @SerializedName("created_at")
     private String created_at;
+    @SerializedName("author")
     private VideoAuthor author;
+    @SerializedName("imageUrl")
     private String imageUrl;
 
     public String getTitle() {
