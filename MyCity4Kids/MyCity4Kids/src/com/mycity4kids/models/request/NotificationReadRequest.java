@@ -1,10 +1,14 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 6/2/17.
  */
 public class NotificationReadRequest {
+    @SerializedName("notifId")
     private String notifId;
+    @SerializedName("readAll")
     private String readAll;
 
     public String getNotifId() {

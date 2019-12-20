@@ -1,8 +1,11 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by anshul on 7/12/16.
  */
+
 public class ConfigData extends BaseData {
     public ConfigResult getResult() {
         return result;
@@ -12,6 +15,7 @@ public class ConfigData extends BaseData {
         this.result = result;
     }
 
+    @SerializedName("result")
     ConfigResult result;
 
 }

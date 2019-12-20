@@ -1,11 +1,16 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 28/7/16.
  */
 public class RecommendUnrecommendArticleRequest {
+    @SerializedName("articleId")
     private String articleId;
+    @SerializedName("status")
     private String status;
+    @SerializedName("type")
     private String type;
 
     public String getArticleId() {

@@ -1,13 +1,18 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
  * Created by hemant on 21/12/16.
  */
 public class NotificationCenterData {
+    @SerializedName("result")
     private ArrayList<NotificationCenterResult> result;
+    @SerializedName("pagination")
     private Pagination pagination;
+    @SerializedName("total")
     private String total;
 
     public ArrayList<NotificationCenterResult> getResult() {
@@ -35,8 +40,11 @@ public class NotificationCenterData {
     }
 
     public class Pagination {
+        @SerializedName("id")
         private String id;
+        @SerializedName("userId")
         private String userId;
+        @SerializedName("createdTime")
         private String createdTime;
 
         public String getId() {

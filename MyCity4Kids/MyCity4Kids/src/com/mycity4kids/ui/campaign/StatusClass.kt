@@ -1,4 +1,8 @@
 package com.mycity4kids.ui.campaign
 
-data class StatusClass(var recm_status: Int = 0) {
-}
+import com.google.gson.annotations.SerializedName
+
+data class StatusClass(
+        @SerializedName("recm_status")
+        var recm_status: Int = 0
+)

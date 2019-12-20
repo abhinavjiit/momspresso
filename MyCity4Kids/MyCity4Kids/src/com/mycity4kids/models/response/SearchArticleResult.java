@@ -1,18 +1,29 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 21/7/16.
  */
 public class SearchArticleResult {
 
+    @SerializedName("id")
     private String id;
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("titleSlug")
     private String titleSlug;
+    @SerializedName("image")
     private String image;
+    @SerializedName("title")
     private String title;
+    @SerializedName("body")
     private String body;
+    @SerializedName("blogSlug")
     private String blogSlug;
+    @SerializedName("contentType")
     private String contentType;
+    @SerializedName("imageUrl")
     private ImageURL imageUrl;
 
     public String getId() {

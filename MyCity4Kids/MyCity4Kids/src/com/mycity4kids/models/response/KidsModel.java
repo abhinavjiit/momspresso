@@ -3,10 +3,16 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 public class KidsModel implements Parcelable {
+    @SerializedName("name")
     private String name;
+    @SerializedName("birthDay")
     private String birthDay;
+    @SerializedName("colorCode")
     private String colorCode;
+    @SerializedName("gender")
     private String gender;
 
     public KidsModel() {

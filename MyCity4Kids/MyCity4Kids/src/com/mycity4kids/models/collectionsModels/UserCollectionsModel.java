@@ -1,24 +1,44 @@
 package com.mycity4kids.models.collectionsModels;
 
 
+import com.google.gson.annotations.SerializedName;
+
 public class UserCollectionsModel {
+    @SerializedName("userCollectionId")
     private String userCollectionId;
+    @SerializedName("created_at")
     private String created_at;
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("enabled")
     private String enabled;
+    @SerializedName("deleted")
     private String deleted;
+    @SerializedName("updated_at")
     private String updated_at;
+    @SerializedName("imageUrl")
     private String imageUrl;
+    @SerializedName("sortOrder")
     private int sortOrder;
+    @SerializedName("totalCollectionItems")
     private String totalCollectionItems;
+    @SerializedName("name")
     private String name;
+    @SerializedName("isPublic")
     private String isPublic;
+    @SerializedName("slugUrl")
     private String slugUrl;
+    @SerializedName("itemId")
     private String itemId;
+    @SerializedName("item")
     private String item; //articleId
+    @SerializedName("itemType")
     private String itemType;
+    @SerializedName("isFollowing")
     private boolean isFollowing;
+    @SerializedName("item_info")
     private ItemInfoModel item_info;
+    @SerializedName("user_info")
     private CollectionUserInfo user_info;
 
     public ItemInfoModel getItem_info() {
@@ -166,8 +186,11 @@ public class UserCollectionsModel {
     }
 
     public class CollectionUserInfo {
+        @SerializedName("id")
         private String id;
+        @SerializedName("firstName")
         private String firstName;
+        @SerializedName("lastName")
         private String lastName;
 
 

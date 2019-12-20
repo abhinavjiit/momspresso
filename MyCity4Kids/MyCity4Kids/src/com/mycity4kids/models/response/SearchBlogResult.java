@@ -1,12 +1,17 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 21/7/16.
  */
 public class SearchBlogResult {
 
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("titleSlug")
     private String titleSlug;
+    @SerializedName("title")
     private String title;
 
     public String getUserId() {

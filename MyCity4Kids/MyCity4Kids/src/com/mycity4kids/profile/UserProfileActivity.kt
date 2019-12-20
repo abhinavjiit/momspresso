@@ -660,7 +660,7 @@ class UserProfileActivity : BaseActivity(),
                         isRequestRunning = false
                         bottomLoadingView.visibility = View.GONE
                         val responseData = response.body() as FeaturedOnModel
-                        if (responseData.code == 200 && Constants.SUCCESS == responseData.status) {
+                        if (responseData.code == 200 && Constants.SUCCESS ==  responseData.status) {
                             processFeaturedContentResponse(responseData.data?.result?.item_list)
                         } else {
                         }
@@ -938,7 +938,7 @@ class UserProfileActivity : BaseActivity(),
                     val addCollectionAndCollectionitemDialogFragment = AddCollectionAndCollectionItemDialogFragment()
                     val bundle = Bundle()
                     bundle.putString("articleId", userContentList?.get(position)?.id)
-                    bundle.putString("type", AppConstants.ARTICLE_COLLECTION_TYPE)
+                    bundle.putString("type", AppConstants.SHORT_STORY_COLLECTION_TYPE)
                     addCollectionAndCollectionitemDialogFragment.arguments = bundle
                     val fm = supportFragmentManager
                     addCollectionAndCollectionitemDialogFragment.show(fm!!, "collectionAdd")

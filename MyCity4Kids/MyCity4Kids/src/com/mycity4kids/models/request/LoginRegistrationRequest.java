@@ -1,16 +1,22 @@
 package com.mycity4kids.models.request;
 
-import com.mycity4kids.models.BaseResponseModel;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by hemant on 21/6/16.
  */
 public class LoginRegistrationRequest {
 
+    @SerializedName("cityId")
     private String cityId;
+    @SerializedName("email")
     private String email;
+    @SerializedName("password")
     private String password;
+    @SerializedName("requestMedium")
     private String requestMedium;
+    @SerializedName("socialToken")
     private String socialToken;
 
     public String getCityId() {

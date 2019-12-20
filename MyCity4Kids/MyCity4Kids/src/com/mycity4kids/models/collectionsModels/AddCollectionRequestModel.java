@@ -1,16 +1,26 @@
 package com.mycity4kids.models.collectionsModels;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 public class AddCollectionRequestModel {
 
+    @SerializedName("name")
     private String name;
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("userCollectionId")
     private String userCollectionId;
+    @SerializedName("item")
     private String item;
+    @SerializedName("itemType")
     private String itemType;
+    @SerializedName("itemId")
     private String itemId;
+    @SerializedName("deleted")
     private Boolean deleted;
+    @SerializedName("listItemId")
     private ArrayList<String> listItemId;
 
     public ArrayList<String> getListItemId() {

@@ -3,6 +3,8 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -10,59 +12,95 @@ import java.util.Map;
  * Created by hemant on 22/6/16.
  */
 public class UserDetailResult implements Parcelable {
+
+    @SerializedName("id")
     private String id;
+    @SerializedName("sqlId")
     private String sqlId;
+    @SerializedName("mc4kToken")
     private String mc4kToken;
+    @SerializedName("firstName")
     private String firstName;
+    @SerializedName("lastName")
     private String lastName;
+    @SerializedName("email")
     private String email = "";
+    @SerializedName("cityId")
     private String cityId;
+    @SerializedName("cityName")
     private String cityName;
+    @SerializedName("userType")
     private String userType;
+    @SerializedName("isValidated")
     private String isValidated;
+    @SerializedName("profilePicUrl")
     private ProfilePic profilePicUrl;
+    @SerializedName("kids")
     private ArrayList<KidsModel> kids;
+    @SerializedName("blogTitle")
     private String blogTitle = "";
+    @SerializedName("followersCount")
     private String followersCount;
+    @SerializedName("followingCount")
     private String followingCount;
+    @SerializedName("rank")
     private String rank;
+    @SerializedName("ranks")
     private ArrayList<LanguageRanksModel> ranks;
+    @SerializedName("userBio")
     private String userBio = "";
+    @SerializedName("sessionId")
     private String sessionId;
+    @SerializedName("phoneNumber")
     private String phoneNumber;
+    @SerializedName("phone")
     private PhoneDetails phone;
+    @SerializedName("socialTokens")
     private SocialTokens socialTokens;
+    @SerializedName("isLangSelection")
     private String isLangSelection = "0";
+    @SerializedName("subscriptionEmail")
     private String subscriptionEmail;
+    @SerializedName("crownData")
     private Object crownData;
-
+    @SerializedName("langSubscription")
     private Map<String, String> langSubscription;
+    @SerializedName("totalArticles")
     private String totalArticles;
+    @SerializedName("totalArticlesViews")
     private String totalArticlesViews;
+    @SerializedName("userTag")
     private ArrayList<String> userTag;
+    @SerializedName("createrLangs")
     private ArrayList<String> createrLangs = new ArrayList<>();
-
-    public String getRewardsAdded() {
-        return rewardsAdded;
-    }
-
-    public void setRewardsAdded(String rewardsAdded) {
-        this.rewardsAdded = rewardsAdded;
-    }
-
+    @SerializedName("rewardsAdded")
     private String rewardsAdded;
+    @SerializedName("latitude")
     private double latitude;
+    @SerializedName("longitude")
     private double longitude;
+    @SerializedName("preferredLanguages")
     private ArrayList<String> preferredLanguages;
+    @SerializedName("interests")
     private ArrayList<String> interests;
+    @SerializedName("isMother")
     private String isMother;
+    @SerializedName("workStatus")
     private String workStatus;
+    @SerializedName("dob")
     private String dob;
+    @SerializedName("isExpected")
     private String isExpected;
+    @SerializedName("expectedDate")
     private String expectedDate;
+    @SerializedName("mobileToken")
     private String mobileToken;
+    @SerializedName("mobile")
     private String mobile;
-
+    @SerializedName("gender")
+    private String gender;
+    @SerializedName("blogTitleSlug")
+    private String blogTitleSlug;
 
     protected UserDetailResult(Parcel in) {
         id = in.readString();
@@ -124,11 +162,16 @@ public class UserDetailResult implements Parcelable {
         this.blogTitleSlug = blogTitleSlug;
     }
 
-    private String gender;
-    private String blogTitleSlug;
-
     public UserDetailResult() {
 
+    }
+
+    public String getRewardsAdded() {
+        return rewardsAdded;
+    }
+
+    public void setRewardsAdded(String rewardsAdded) {
+        this.rewardsAdded = rewardsAdded;
     }
 
     public double getLatitude() {
@@ -518,8 +561,11 @@ public class UserDetailResult implements Parcelable {
     }
 
     public class SocialTokens {
+        @SerializedName("fb")
         private SocialTokenDesc fb;
+        @SerializedName("twitter")
         private SocialTokenDesc twitter;
+        @SerializedName("google")
         private SocialTokenDesc google;
 
         public SocialTokenDesc getFb() {
@@ -547,7 +593,9 @@ public class UserDetailResult implements Parcelable {
         }
 
         public class SocialTokenDesc {
+            @SerializedName("isExpired")
             private String isExpired;
+            @SerializedName("token")
             private String token;
 
             public String getIsExpired() {

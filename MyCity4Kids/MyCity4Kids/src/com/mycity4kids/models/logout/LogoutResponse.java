@@ -1,11 +1,16 @@
 package com.mycity4kids.models.logout;
 
+import com.google.gson.annotations.SerializedName;
+
 public class LogoutResponse {
+	@SerializedName("responseCode")
 	private int responseCode;
+	@SerializedName("response")
 	private String response;
+	@SerializedName("result")
 	private Result result;
-	
-	
+
+
 	public int getResponseCode() {
 		return responseCode;
 	}
@@ -24,6 +29,6 @@ public class LogoutResponse {
 	public void setResult(Result result) {
 		this.result = result;
 	}
-	
+
 
 }

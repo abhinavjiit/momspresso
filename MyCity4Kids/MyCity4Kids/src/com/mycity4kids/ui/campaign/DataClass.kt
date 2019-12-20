@@ -1,3 +1,8 @@
 package com.mycity4kids.ui.campaign
 
-data class DataClass(var result: StatusClass)
+import com.google.gson.annotations.SerializedName
+
+data class DataClass(
+        @SerializedName("result")
+        var result: StatusClass
+)

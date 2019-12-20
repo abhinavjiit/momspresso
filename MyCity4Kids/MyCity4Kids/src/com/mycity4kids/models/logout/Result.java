@@ -1,10 +1,13 @@
 package com.mycity4kids.models.logout;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * @author sachin.gupta
  */
 public class Result {
 
+	@SerializedName("message")
 	private String message;
 	
 

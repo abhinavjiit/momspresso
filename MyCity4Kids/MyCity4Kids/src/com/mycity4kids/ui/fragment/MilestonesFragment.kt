@@ -19,7 +19,6 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
-import com.mycity4kids.profile.BadgesDialogFragment
 import com.mycity4kids.profile.MilestonesDialogFragment
 import com.mycity4kids.profile.MilestonesResponse
 import com.mycity4kids.profile.MilestonesResult
@@ -45,11 +44,11 @@ class MilestonesFragment : BaseFragment(), View.OnClickListener, MilestonesListA
         recyclerView = rootView?.findViewById(R.id.recyclerView)
         progressBar = rootView?.findViewById(R.id.progressBar)
 
-//        if (BuildConfig.DEBUG) {
-//            userId = "fdf2b966ae8841cda022d397cbbf85c8"
-//        } else {
+        if (BuildConfig.DEBUG) {
+            userId = "0a80bbe4e193424e8fd555adc14a2155"
+        } else {
             userId = arguments?.getString(Constants.AUTHOR_ID)
-//        }
+        }
         milestonesList = ArrayList()
 
         if (userId.isNullOrBlank()) {

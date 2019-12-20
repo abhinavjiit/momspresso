@@ -1,10 +1,15 @@
 package com.mycity4kids.models.parentingdetails;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 public class DetailsBody {
+    @SerializedName("text")
     private String text;
+    @SerializedName("image")
     private ArrayList<ImageData> image;
+    @SerializedName("video")
     private ArrayList<VideoData> video;
 
     public String getText() {

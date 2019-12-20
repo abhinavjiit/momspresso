@@ -3,10 +3,16 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 public class VideoAuthor implements Parcelable {
+    @SerializedName("blogTitleSlug")
     private String blogTitleSlug;
+    @SerializedName("blogTitle")
     private String blogTitle;
+    @SerializedName("firstName")
     private String firstName;
+    @SerializedName("lastName")
     private String lastName;
 
     public VideoAuthor(){

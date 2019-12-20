@@ -1,12 +1,17 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 4/5/17.
  */
 public class LanguageRanksModel implements Comparable<LanguageRanksModel> {
 
+    @SerializedName("langValue")
     private String langValue;
+    @SerializedName("langKey")
     private String langKey;
+    @SerializedName("rank")
     private int rank;
 
     public String getLangKey() {

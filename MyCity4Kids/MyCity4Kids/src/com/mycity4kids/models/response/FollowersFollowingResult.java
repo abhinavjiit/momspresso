@@ -8,11 +8,17 @@ import com.google.gson.annotations.SerializedName;
 public class FollowersFollowingResult {
     @SerializedName(value = "userId", alternate = {"id"})
     private String userId;
+    @SerializedName("followerId")
     private String followerId;
+    @SerializedName("followingId")
     private String followingId;
+    @SerializedName("firstName")
     private String firstName;
+    @SerializedName("lastName")
     private String lastName;
+    @SerializedName("profilePicUrl")
     private ProfilePic profilePicUrl;
+    @SerializedName("isFollowed")
     private int isFollowed;
 
 

@@ -3,15 +3,25 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 public class ImageURL implements Parcelable {
 
+    @SerializedName("mobileWebThumbnail")
     private String mobileWebThumbnail;
+    @SerializedName("clientAppThumbnail")
     private String clientAppThumbnail;
+    @SerializedName("webThumbnail")
     private String webThumbnail;
+    @SerializedName("clientApp")
     private String clientApp;
+    @SerializedName("web")
     private String web;
+    @SerializedName("mobileWeb")
     private String mobileWeb;
+    @SerializedName("thumbMin")
     private String thumbMin;
+    @SerializedName("thumbMax")
     private String thumbMax;
 
     public ImageURL() {

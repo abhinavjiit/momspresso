@@ -1,20 +1,31 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.Map;
 
 /**
  * Created by anshul on 7/12/16.
  */
+
 public class ConfigResult {
 
+    @SerializedName("userTypeVersion")
     int userTypeVersion;
+    @SerializedName("articleTypeVersion")
     int articleTypeVersion;
+    @SerializedName("category")
     ConfigCategory category;
+    @SerializedName("notificationSettings")
     private Map<String, String> notificationSettings;
+    @SerializedName("notificationType")
     private ArrayList<String> notificationType;
+    @SerializedName("language")
     private Map<String, String> language;
+    @SerializedName("languages")
     private Map<String, LanguageConfigModel> languages;
+    @SerializedName("homeCarouselUrl")
     private String homeCarouselUrl = "";
 
     public int getUserTypeVersion() {

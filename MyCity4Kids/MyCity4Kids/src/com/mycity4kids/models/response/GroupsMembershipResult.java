@@ -1,5 +1,7 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Map;
 
 /**
@@ -7,20 +9,35 @@ import java.util.Map;
  */
 
 public class GroupsMembershipResult {
+    @SerializedName("id")
     private int id;
+    @SerializedName("groupId")
     private int groupId;
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("status")
     private String status;
+    @SerializedName("lastActivityOn")
     private String lastActivityOn;
+    @SerializedName("isOwner")
     private int isOwner;
+    @SerializedName("isAdmin")
     private int isAdmin;
+    @SerializedName("isModerator")
     private int isModerator;
+    @SerializedName("referedBy")
     private String referedBy;
+    @SerializedName("questionnaireResponse")
     private Map<String, String> questionnaireResponse;
+    @SerializedName("inviteCode")
     private String inviteCode;
+    @SerializedName("createdAt")
     private long createdAt;
+    @SerializedName("updatedAt")
     private long updatedAt;
+    @SerializedName("userInfo")
     private UserDetailResult userInfo;
+    @SerializedName("groupInfo")
     private GroupResult groupInfo;
 
     public int getId() {
