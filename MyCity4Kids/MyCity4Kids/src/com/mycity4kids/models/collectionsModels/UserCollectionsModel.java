@@ -38,6 +38,8 @@ public class UserCollectionsModel {
     private boolean isFollowing;
     @SerializedName("item_info")
     private ItemInfoModel item_info;
+    @SerializedName("isFollowed")
+    private String isFollowed;
     @SerializedName("user_info")
     private CollectionUserInfo user_info;
 
@@ -175,6 +177,15 @@ public class UserCollectionsModel {
 
     public void setFollowing(boolean following) {
         isFollowing = following;
+    }
+
+
+    public String getIsFollowed() {
+        return isFollowed;
+    }
+
+    public void setIsFollowed(String isFollowed) {
+        this.isFollowed = isFollowed;
     }
 
     public CollectionUserInfo getUser_info() {

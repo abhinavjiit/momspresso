@@ -47,7 +47,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
     private ArrayList<UserCollectionsModel> finalFeaturedDataList;
     private String authorId;
     private int updateFollowPos, changeFollowUnfollowTextPos;
-    private Boolean isFollowing = false;
+    private String isFollowing;
     private String userId;
     private RelativeLayout mLodingView;
     private String contentId;
@@ -184,23 +184,22 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
         authorId = id;
         updateFollowPos = pos;
         changeFollowUnfollowTextPos = pos;
-        isFollowing = finalFeaturedDataList.get(pos).isFollowing();
+        isFollowing = finalFeaturedDataList.get(pos).getIsFollowed();
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         CollectionsAPI collectionsAPI = retrofit.create(CollectionsAPI.class);
         FollowCollectionRequestModel request = new FollowCollectionRequestModel();
         request.setUserId(userId);
         request.setUserCollectionId(collectionId);
         request.setSortOrder(sortOrder);
+        showProgressDialog(getResources().getString(R.string.please_wait));
 
-        if (isFollowing) {
-            isFollowing = false;
+        if (isFollowing.equalsIgnoreCase("1")) {
             request.setDeleted(true);
-            finalFeaturedDataList.get(updateFollowPos).setFollowing(false);
+            finalFeaturedDataList.get(updateFollowPos).setIsFollowed("0");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = collectionsAPI.followCollection(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
-            isFollowing = true;
-            finalFeaturedDataList.get(updateFollowPos).setFollowing(true);
+            finalFeaturedDataList.get(updateFollowPos).setIsFollowed("1");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = collectionsAPI.followCollection(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }
@@ -210,6 +209,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
     Callback<FollowUnfollowUserResponse> followUserResponseCallback = new Callback<FollowUnfollowUserResponse>() {
         @Override
         public void onResponse(Call<FollowUnfollowUserResponse> call, retrofit2.Response<FollowUnfollowUserResponse> response) {
+            removeProgressDialog();
             if (response == null || response.body() == null) {
                 showToast(getString(R.string.went_wrong));
                 return;
@@ -226,8 +226,8 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
                         ToastUtils.showToast(FeaturedOnActivity.this, responseData.getData().getMsg());
                         return;
                     } else {
-                        finalFeaturedDataList.get(updateFollowPos).setFollowing(false);
-                        isFollowing = false;
+                        finalFeaturedDataList.get(updateFollowPos).setIsFollowed("0");
+                        isFollowing = "0";
                     }
                 }
                 featureOnRecyclerAdapter.setListUpdate(updateFollowPos, finalFeaturedDataList);
@@ -241,6 +241,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
         @Override
         public void onFailure(Call<FollowUnfollowUserResponse> call, Throwable t) {
             showToast(getString(R.string.server_went_wrong));
+            removeProgressDialog();
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
@@ -249,6 +250,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
     Callback<FollowUnfollowUserResponse> unfollowUserResponseCallback = new Callback<FollowUnfollowUserResponse>() {
         @Override
         public void onResponse(Call<FollowUnfollowUserResponse> call, retrofit2.Response<FollowUnfollowUserResponse> response) {
+            removeProgressDialog();
             if (response == null || response.body() == null) {
                 showToast(getString(R.string.went_wrong));
                 return;
@@ -265,8 +267,8 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
                         ToastUtils.showToast(FeaturedOnActivity.this, responseData.getData().getMsg());
                         return;
                     } else {
-                        finalFeaturedDataList.get(updateFollowPos).setFollowing(true);
-                        isFollowing = true;
+                        finalFeaturedDataList.get(updateFollowPos).setIsFollowed("1");
+                        isFollowing = "1";
                     }
                 }
                 featureOnRecyclerAdapter.setListUpdate(updateFollowPos, finalFeaturedDataList);
@@ -280,6 +282,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
         @Override
         public void onFailure(Call<FollowUnfollowUserResponse> call, Throwable t) {
             showToast(getString(R.string.server_went_wrong));
+            removeProgressDialog();
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }

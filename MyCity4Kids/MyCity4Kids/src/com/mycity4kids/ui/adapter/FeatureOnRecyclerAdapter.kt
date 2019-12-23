@@ -16,7 +16,7 @@ import java.util.*
 class FeatureOnRecyclerAdapter(private val mListener: RecyclerViewClickListener) : RecyclerView.Adapter<FeatureOnRecyclerAdapter.FeatureOnViewHolder>() {
     private var featuredList: ArrayList<UserCollectionsModel>? = null
     internal var recyclerView: RecyclerView? = null
-    private val mHolder: FeatureOnViewHolder? = null
+    private var mHolder: FeatureOnViewHolder? = null
 
     fun setData(featuredList: ArrayList<UserCollectionsModel>) {
         this.featuredList = featuredList
@@ -24,7 +24,7 @@ class FeatureOnRecyclerAdapter(private val mListener: RecyclerViewClickListener)
 
     fun setListUpdate(updatePos: Int, featuredList: ArrayList<UserCollectionsModel>) {
         this.featuredList = featuredList
-        notifyItemChanged(updatePos, mHolder!!.follow_text)
+        notifyItemChanged(updatePos, mHolder?.follow_text)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeatureOnViewHolder {
@@ -33,6 +33,7 @@ class FeatureOnRecyclerAdapter(private val mListener: RecyclerViewClickListener)
     }
 
     override fun onBindViewHolder(holder: FeatureOnViewHolder, position: Int) {
+        mHolder = holder
         try {
             if (!featuredList?.get(position)?.imageUrl.isNullOrBlank()) {
                 Picasso.with(holder.itemView.context).load(featuredList?.get(position)?.imageUrl).placeholder(
@@ -47,7 +48,7 @@ class FeatureOnRecyclerAdapter(private val mListener: RecyclerViewClickListener)
         holder.featured_name.text = featuredList?.get(position)?.name
         holder.author_name.text = featuredList?.get(position)?.user_info?.firstName + " " +
                 featuredList?.get(position)?.user_info?.lastName
-        if (featuredList?.get(position)?.isFollowing!!) {
+        if (featuredList?.get(position)?.isFollowed.equals("1")) {
             holder.follow_text.text = holder.itemView.context.resources.getString(R.string.ad_following_author)
         } else {
             holder.follow_text.text = holder.itemView.context.resources.getString(R.string.ad_follow_author)

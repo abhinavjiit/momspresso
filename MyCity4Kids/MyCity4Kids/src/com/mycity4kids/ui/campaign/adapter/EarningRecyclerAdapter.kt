@@ -66,7 +66,7 @@ class EarningRecyclerAdapter(
             } else {
                 for (i in 0 until item.payment_meta.size) {
                     if (item.payment_meta[i].source.equals("rewards")) {
-                        holder.totalAmount.setText("\u20b9" + item.payment_meta[0].total_amount.toString())
+                        holder.totalAmount.setText("\u20b9" + item.payment_meta[i].total_amount.toString())
 
                         totalEarning = totalEarning + item.payment_meta[i].net_amount
                         holder.tds.setText("TDS (" + item.payment_meta[i].tax_percentage + "%)")
