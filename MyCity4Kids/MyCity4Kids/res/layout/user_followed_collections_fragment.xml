@@ -52,4 +52,11 @@
 
     </com.facebook.shimmer.ShimmerFrameLayout>
 
+    <include
+        android:id="@+id/bottomLoadingView"
+        layout="@layout/bottom_loading_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       android:layout_alignParentBottom="true" />
+
 </RelativeLayout>

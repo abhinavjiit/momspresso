@@ -4,9 +4,12 @@ import android.Manifest;
 import android.accounts.AccountManager;
 import android.accounts.NetworkErrorException;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -14,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -28,19 +32,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -134,12 +125,28 @@ import org.json.JSONObject;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
@@ -435,6 +442,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         uploadVideo.setOnClickListener(this);
         uploadChallenge.setOnClickListener(this);
         overLayChooseVideo.setOnClickListener(this);
+
+        AppSignatureHelper appSignatureHelper = new AppSignatureHelper(this);
+        appSignatureHelper.getAppSignatures();
 
         slideAnim = AnimationUtils.loadAnimation(this, R.anim.appear_from_bottom);
         fadeAnim = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
@@ -2949,5 +2959,66 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         return false;
+    }
+
+    public class AppSignatureHelper extends ContextWrapper {
+        public final String TAG = "AppSignatureHelper";
+
+        private static final String HASH_TYPE = "SHA-256";
+        public static final int NUM_HASHED_BYTES = 9;
+        public static final int NUM_BASE64_CHAR = 11;
+
+        public AppSignatureHelper(Context context) {
+            super(context);
+        }
+
+        /**
+         * Get all the app signatures for the current package
+         *
+         * @return
+         */
+        public ArrayList<String> getAppSignatures() {
+            ArrayList<String> appCodes = new ArrayList<>();
+
+            try {
+                // Get all package signatures for the current package
+                String packageName = getPackageName();
+                PackageManager packageManager = getPackageManager();
+                Signature[] signatures = packageManager.getPackageInfo(packageName,
+                        PackageManager.GET_SIGNATURES).signatures;
+
+                // For each signature create a compatible hash
+                for (Signature signature : signatures) {
+                    String hash = hash(packageName, signature.toCharsString());
+                    if (hash != null) {
+                        appCodes.add(String.format("%s", hash));
+                    }
+                }
+            } catch (PackageManager.NameNotFoundException e) {
+                Log.e(TAG, "Unable to find package to obtain hash.", e);
+            }
+            return appCodes;
+        }
+
+        private String hash(String packageName, String signature) {
+            String appInfo = packageName + " " + signature;
+            try {
+                MessageDigest messageDigest = MessageDigest.getInstance(HASH_TYPE);
+                messageDigest.update(appInfo.getBytes(StandardCharsets.UTF_8));
+                byte[] hashSignature = messageDigest.digest();
+
+                // truncated into NUM_HASHED_BYTES
+                hashSignature = Arrays.copyOfRange(hashSignature, 0, NUM_HASHED_BYTES);
+                // encode into Base64
+                String base64Hash = Base64.encodeToString(hashSignature, Base64.NO_PADDING | Base64.NO_WRAP);
+                base64Hash = base64Hash.substring(0, NUM_BASE64_CHAR);
+
+                Log.d(TAG, String.format("pkg: %s -- hash: %s", packageName, base64Hash));
+                return base64Hash;
+            } catch (NoSuchAlgorithmException e) {
+                Log.e(TAG, "hash:NoSuchAlgorithm", e);
+            }
+            return null;
+        }
     }
 }

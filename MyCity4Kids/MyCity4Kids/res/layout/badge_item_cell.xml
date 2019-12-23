@@ -17,12 +17,14 @@
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/badgeName"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/badgeImageView"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/space_10"
         android:layout_marginBottom="@dimen/space_16"
+        android:gravity="center_horizontal"
+        android:lines="2"
+        android:maxLines="2"
         android:textColor="@color/campaign_4A4A4A"
         android:textSize="14sp"
         app:fontName="open_sans.ttf" />

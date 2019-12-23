@@ -190,11 +190,11 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
                 Log.d("MC4KException", Log.getStackTraceString(e))
                 try {
                     //    Log.d("CODE", code.toString())
-                    var data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
-                    var jsonParser = JsonParser()
-                    var jsonObject = jsonParser.parse(
+                    val data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
+                    val jsonParser = JsonParser()
+                    val jsonObject = jsonParser.parse(
                             InputStreamReader(data, "UTF-8")) as JsonObject
-                    var reason = jsonObject.get("reason")
+                    val reason = jsonObject.get("reason")
                     Toast.makeText(activity, reason.asString, Toast.LENGTH_SHORT).show()
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
@@ -214,8 +214,6 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
             val fm = fragmentManager
             addMultipleCollectionItemDialogFragment.setTargetFragment(this, 0)
             addMultipleCollectionItemDialogFragment.show(fm!!, "collectionAdd")
-            /*    Utils.pushProfileEvents(activity, "CTA_100WS_Add_To_Collection",
-                        "TopicsShortStoriesTabFragment", "Add to Collection", "-")*/
         } catch (e: Exception) {
             Crashlytics.logException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))

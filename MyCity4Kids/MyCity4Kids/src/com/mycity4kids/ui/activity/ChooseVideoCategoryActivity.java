@@ -185,26 +185,23 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
             });
         }
 
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                view.setSelected(true);
-                ExploreTopicsModel topic = (ExploreTopicsModel) adapterView.getAdapter().getItem(position);
-                if (topic == null) {
-                    return;
-                }
-                categoryId = topic.getId();
-                if (topic.getExtraData() == null || topic.getExtraData().isEmpty()) {
-                    duration = "60";
-                } else if (StringUtils.isNullOrEmpty(topic.getExtraData().get(0).getMax_duration())) {
-                    duration = "60";
-                } else {
-                    duration = topic.getExtraData().get(0).getMax_duration();
-                }
-
-                launchAddVideoOptions();
-                Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Category_Name", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_upload_video", categoryId, "");
+        gridview.setOnItemClickListener((adapterView, view, position, id) -> {
+            view.setSelected(true);
+            ExploreTopicsModel topic = (ExploreTopicsModel) adapterView.getAdapter().getItem(position);
+            if (topic == null) {
+                return;
             }
+            categoryId = topic.getId();
+            if (topic.getExtraData() == null || topic.getExtraData().isEmpty()) {
+                duration = "60";
+            } else if (StringUtils.isNullOrEmpty(topic.getExtraData().get(0).getMax_duration())) {
+                duration = "60";
+            } else {
+                duration = topic.getExtraData().get(0).getMax_duration();
+            }
+
+            launchAddVideoOptions();
+            Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Category_Name", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_upload_video", categoryId, "");
         });
     }
 
