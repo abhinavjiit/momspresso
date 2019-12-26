@@ -22,6 +22,7 @@ import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
 import com.mycity4kids.models.request.UpdateUsersGpLevelNotificationSettingRequest;
 import com.mycity4kids.models.response.AddGpPostCommentReplyResponse;
 import com.mycity4kids.models.response.AddGroupPostResponse;
+import com.mycity4kids.models.response.BaseResponse;
 import com.mycity4kids.models.response.GroupDetailResponse;
 import com.mycity4kids.models.response.GroupIdCategoryIdMappingResponse;
 import com.mycity4kids.models.response.GroupPostCommentResponse;
@@ -29,7 +30,6 @@ import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupsActionResponse;
 import com.mycity4kids.models.response.GroupsActionVoteResponse;
 import com.mycity4kids.models.response.GroupsCategoryMappingResponse;
-import com.mycity4kids.models.response.GroupsJoinResponse;
 import com.mycity4kids.models.response.GroupsListingResponse;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.GroupsReportContentResponse;
@@ -170,7 +170,7 @@ public interface GroupsAPI {
     Call<GroupsListingResponse> getSingleMember(@Path("membershipId") String membershipId);
 
     @POST("/api/v1/groups/members")
-    Call<GroupsJoinResponse> createMember(@Body JoinGroupRequest joinGroupRequest);
+    Call<BaseResponse> createMember(@Body JoinGroupRequest joinGroupRequest);
 
     @PATCH("/api/v1/groups/members/{memberId}")
     Call<GroupsMembershipResponse> updateMember(@Path("memberId") int memberId,

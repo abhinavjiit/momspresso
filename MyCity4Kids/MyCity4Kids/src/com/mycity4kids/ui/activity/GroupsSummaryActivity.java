@@ -3,10 +3,6 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +10,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.internal.LinkedTreeMap;
@@ -27,11 +28,11 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.JoinGroupRequest;
 import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
+import com.mycity4kids.models.response.BaseResponse;
 import com.mycity4kids.models.response.GroupDetailResponse;
 import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupResult;
-import com.mycity4kids.models.response.GroupsJoinResponse;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
@@ -298,14 +299,14 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
             JoinGroupRequest joinGroupRequest = new JoinGroupRequest();
             joinGroupRequest.setGroupId(selectedGroup.getId());
             joinGroupRequest.setUserId(SharedPrefUtils.getUserDetailModel(GroupsSummaryActivity.this).getDynamoId());
-            Call<GroupsJoinResponse> call = groupsAPI.createMember(joinGroupRequest);
+            Call<BaseResponse> call = groupsAPI.createMember(joinGroupRequest);
             call.enqueue(groupJoinResponseCallback);
         } else {
             if (questionMap == null || questionMap.isEmpty()) {
                 JoinGroupRequest joinGroupRequest = new JoinGroupRequest();
                 joinGroupRequest.setGroupId(selectedGroup.getId());
                 joinGroupRequest.setUserId(SharedPrefUtils.getUserDetailModel(GroupsSummaryActivity.this).getDynamoId());
-                Call<GroupsJoinResponse> call = groupsAPI.createMember(joinGroupRequest);
+                Call<BaseResponse> call = groupsAPI.createMember(joinGroupRequest);
                 call.enqueue(groupJoinResponseCallback);
             } else {
                 Intent intent = new Intent(GroupsSummaryActivity.this, GroupsQuestionnaireActivity.class);
@@ -346,9 +347,9 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
 //        joinGroupRequest();
     }
 
-    private Callback<GroupsJoinResponse> groupJoinResponseCallback = new Callback<GroupsJoinResponse>() {
+    private Callback<BaseResponse> groupJoinResponseCallback = new Callback<BaseResponse>() {
         @Override
-        public void onResponse(Call<GroupsJoinResponse> call, retrofit2.Response<GroupsJoinResponse> response) {
+        public void onResponse(Call<BaseResponse> call, retrofit2.Response<BaseResponse> response) {
             progressBar.setVisibility(View.GONE);
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
@@ -428,7 +429,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
         }
 
         @Override
-        public void onFailure(Call<GroupsJoinResponse> call, Throwable t) {
+        public void onFailure(Call<BaseResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
