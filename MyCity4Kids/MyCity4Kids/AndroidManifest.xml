@@ -593,6 +593,7 @@
         <activity android:name=".ui.activity.BadgeActivity" />
         <activity android:name=".ui.activity.NotificationProfileSetting" />
         <activity android:name=".ui.activity.phoneLogin.FacebookFriends" />
+        <activity android:name=".ui.activity.collection.AddMultipleCollectionItemActivity" />
 
         <receiver android:name=".reminders.CancelNotificationReceiver" />
 

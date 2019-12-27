@@ -112,7 +112,7 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(), AddMultipleCol
         llm.orientation = RecyclerView.VERTICAL
         recyclerView.layoutManager = llm
         articleDataModelsNew = ArrayList()
-        addMultipleCollectionAdapter = AddMultipleCollectionAdapter(context!!, this)
+     //   addMultipleCollectionAdapter = AddMultipleCollectionAdapter( this)
         recyclerView.adapter = addMultipleCollectionAdapter
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -249,19 +249,19 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(), AddMultipleCol
             } else {
                 // No results
                 articleDataModelsNew.addAll(dataList)
-                addMultipleCollectionAdapter.setListData(articleDataModelsNew)
+           //     addMultipleCollectionAdapter.setListData(articleDataModelsNew)
                 addMultipleCollectionAdapter.notifyDataSetChanged()
                 noBlogsTextView?.visibility = View.VISIBLE
             }
         } else {
             if (nextPageNumber == 1) {
                 articleDataModelsNew.addAll(dataList)
-                addMultipleCollectionAdapter.setListData(articleDataModelsNew)
+             //   addMultipleCollectionAdapter.setListData(articleDataModelsNew)
                 addMultipleCollectionAdapter.notifyDataSetChanged()
             } else {
                 articleDataModelsNew.addAll(dataList)
             }
-            addMultipleCollectionAdapter.setListData(articleDataModelsNew)
+         //   addMultipleCollectionAdapter.setListData(articleDataModelsNew)
             nextPageNumber = nextPageNumber + 1
             addMultipleCollectionAdapter.notifyDataSetChanged()
         }

@@ -343,8 +343,6 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
     }
 
     private void joinAndBecomeAdmin() {
-//        loopHoleFlag = true;
-//        joinGroupRequest();
     }
 
     private Callback<BaseResponse> groupJoinResponseCallback = new Callback<BaseResponse>() {
