@@ -134,7 +134,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                 updateCollection(delete = false, isPublic = false)
             }
         }
-
         val linearLayoutManager = LinearLayoutManager(this)
         collectionItemsListAdapter = CollectionItemsListAdapter(this@UserCollectionItemListActivity, this)
         collectionItemRecyclerView.layoutManager = linearLayoutManager
@@ -144,10 +143,14 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         setting.setOnClickListener {
             chooseImageOptionPopUp(it)
         }
-
         followFollowingTextView.setOnClickListener {
             followUnfollow()
         }
+        collectionItemRecyclerView.addOnScrollListener(object : EndlessScrollListener(linearLayoutManager) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
+                getUserCollectionItems(totalItemsCount)
+            }
+        })
         collectionNameTextView?.setOnClickListener(this)
         followersCount.setOnClickListener(this)
         followersTextView.setOnClickListener(this)
@@ -155,12 +158,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         share?.setOnClickListener(this)
         confirmTextView.setOnClickListener(this)
         cancel.setOnClickListener(this)
-
-        collectionItemRecyclerView.addOnScrollListener(object : EndlessScrollListener(linearLayoutManager) {
-            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                getUserCollectionItems(totalItemsCount)
-            }
-        })
     }
 
     private fun chooseImageOptionPopUp(view: View) {
@@ -217,10 +214,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                 Crashlytics.logException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
             }
-
         })
-
-
     }
 
     private fun updateCollection(delete: Boolean, isPublic: Boolean) {
@@ -245,6 +239,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                     if (delete) {
                         val intent = Intent()
                         intent.putExtra(AppConstants.COLLECTION_EDIT_TYPE, "deleteCollection")
+                        intent.putExtra("CollectionId", collectionId)
                         setResult(Activity.RESULT_OK, intent)
                         finish()
                     }
@@ -324,8 +319,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                     Crashlytics.logException(e)
                     Log.d("MC4KException", Log.getStackTraceString(e))
                     ToastUtils.showToast(this@UserCollectionItemListActivity, "something went wrong")
-
-
                 }
             }
 
@@ -341,7 +334,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                     var reason = jsonObject.get("reason")
                     Toast.makeText(this@UserCollectionItemListActivity, reason.asString, Toast.LENGTH_SHORT).show()
                 }
-
                 Log.e("exception in error", e.message.toString())
             }
         })
@@ -362,6 +354,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                 intent.putExtra(AppConstants.COLLECTION_EDIT_TYPE, "editCollection")
                 intent.putExtra("collectionName", collectionNameTextView?.text.toString())
                 intent.putExtra("collectionImage", userCollectionsListModel.imageUrl)
+                intent.putExtra("CollectionId", collectionId)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             }
@@ -461,6 +454,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         intent.putExtra(AppConstants.COLLECTION_EDIT_TYPE, editType)
         intent.putExtra("collectionName", collectionNameTextView?.text.toString())
         intent.putExtra("collectionImage", userCollectionsListModel.imageUrl)
+        intent.putExtra("CollectionId", collectionId)
         setResult(Activity.RESULT_OK, intent)
         super.onBackPressed()
     }
@@ -502,7 +496,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                 Utils.pushGenericEvent(this@UserCollectionItemListActivity, "Show_Private_Collection_Detail",
                         userCollectionsListModel.userId, "UserCollectionItemListActivity")
             } else {
-                //  share?.visibility = View.GONE
                 if (userCollectionsListModel.collectionItems.isEmpty()) {
                     itemNotAddedTextView.visibility = View.VISIBLE
                     itemNotAddedTextView.text = getString(R.string.no_collection_items)

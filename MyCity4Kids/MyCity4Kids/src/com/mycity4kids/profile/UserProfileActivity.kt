@@ -660,7 +660,7 @@ class UserProfileActivity : BaseActivity(),
                         isRequestRunning = false
                         bottomLoadingView.visibility = View.GONE
                         val responseData = response.body() as FeaturedOnModel
-                        if (responseData.code == 200 && Constants.SUCCESS ==  responseData.status) {
+                        if (responseData.code == 200 && Constants.SUCCESS == responseData.status) {
                             processFeaturedContentResponse(responseData.data?.result?.item_list)
                         } else {
                         }

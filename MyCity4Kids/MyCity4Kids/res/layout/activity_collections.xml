@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -17,7 +16,6 @@
         app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
         app:theme="@style/ToolbarTheme"
         app:titleTextAppearance="@style/ToolbarTheme.Title">
-
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/back"
@@ -42,26 +40,9 @@
         app:tabSelectedTextColor="@color/all_drafts.title"
         app:tabTextColor="@color/grey_faded" />
 
-    <!-- <com.mycity4kids.ui.videochallengenewui.ExpandableHeightGridView
-         android:id="@+id/collectionGridView"
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         android:layout_below="@id/collectionTabLayout"
-         android:layout_marginLeft="16dp"
-         android:layout_marginTop="16dp"
-         android:layout_marginRight="16dp"
-         android:horizontalSpacing="16dp"
-         android:nestedScrollingEnabled="true"
-         android:numColumns="2"
-         android:scrollbars="none"
-         android:stretchMode="columnWidth"
-         android:verticalSpacing="16dp"
-         android:visibility="visible" />-->
-
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/collectionsViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/collectionTabLayout" />
-
 </RelativeLayout>

@@ -34,4 +34,10 @@
 -keepclassmembers class * {
     @org.greenrobot.eventbus.Subscribe <methods>;
 }
--keep enum org.greenrobot.eventbus.ThreadMode { *; }
+-keepclassmembers,allowobfuscation class * {
+  @com.google.gson.annotations.SerializedName <fields>;
+}
+-dontwarn kotlinx.coroutines.flow.**
+-dontwarn org.reactivestreams.FlowAdapters
+-dontwarn org.reactivestreams.**
+-dontwarn java.util.concurrent.flow.**

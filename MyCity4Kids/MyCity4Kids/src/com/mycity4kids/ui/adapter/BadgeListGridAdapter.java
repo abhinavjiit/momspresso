@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class BadgeListGridAdapter extends BaseAdapter {
 
-    private ArrayList<BadgeListResponse.BadgeListData.BadgeListResult> badgeList;
+    private ArrayList<BadgeListResponse.BadgeListData.BadgeListResult> badgeList=new ArrayList<>();
     private Context mContext;
     private LayoutInflater mInflator;
     private final float density;
@@ -85,7 +85,7 @@ public class BadgeListGridAdapter extends BaseAdapter {
     }
 
     public void setDatalist(ArrayList<BadgeListResponse.BadgeListData.BadgeListResult> datalist) {
-        this.badgeList = datalist;
+       badgeList = datalist;
     }
 
     class ViewHolder {

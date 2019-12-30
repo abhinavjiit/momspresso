@@ -22,4 +22,21 @@ class UpdateCollectionRequestModel {
     var isPublic: Boolean? = false
     @SerializedName("summary")
     var summary: String? = null
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as UpdateCollectionRequestModel
+
+        if (item != other.item) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return item?.hashCode() ?: 0
+    }
+
+
 }

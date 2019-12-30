@@ -70,11 +70,8 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
     private var deletedItemPosition: Int = -1
     private lateinit var back: TextView
 
-
     override fun updateUi(response: Response?) {
-
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,7 +97,6 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                 editCollection()
         }
         back.setOnClickListener {
-
             val intent = Intent()
             intent.putExtra("deletedItemPosition", deletedItemPosition)
             setResult(Activity.RESULT_OK, intent)
@@ -120,10 +116,7 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
                 getUserCollectionItems(totalItemsCount)
             }
-
         })
-
-
     }
 
     fun isValid(): Boolean {
@@ -151,7 +144,6 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                                 itemNotAddedTextView.visibility = View.VISIBLE
                             } else {
                                 itemNotAddedTextView.visibility = View.GONE
-
                             }
                             collectionNameChangeEditTextView.setText(userCollectionsListModel.name)
                             userCollectionsListModel.summary?.let { descriptionEditTextView?.setText(userCollectionsListModel.summary) }
@@ -182,10 +174,7 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                 Crashlytics.logException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
             }
-
         })
-
-
     }
 
 
@@ -216,7 +205,6 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                         deletedItemPosition = position
                         if (dataList.isEmpty()) {
                             itemNotAddedTextView.visibility = View.VISIBLE
-
                         }
                         collectionItemsListAdapter.setItemListData(dataList)
                         collectionItemsListAdapter.notifyDataSetChanged()
@@ -228,18 +216,13 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
                     Log.d("MC4KException", Log.getStackTraceString(e))
-
                 }
-
             }
 
             override fun onError(e: Throwable) {
                 Crashlytics.logException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
-                //   ToastUtils.showToast(this@EditCollectionActivity, e.message)
-
                 try {
-                    //    Log.d("CODE", code.toString())
                     var data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
                     var jsonParser = JsonParser()
                     var jsonObject = jsonParser.parse(
@@ -250,10 +233,7 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                     Crashlytics.logException(e)
                     Log.e("exception in error", e.message.toString())
                 }
-
             }
-
-
         })
     }
 
@@ -298,14 +278,12 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
             override fun onError(e: Throwable) {
                 Crashlytics.logException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
-                //   ToastUtils.showToast(this@EditCollectionActivity, e.message)
                 try {
-                    //       Log.d("CODE", code.toString())
-                    var data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
-                    var jsonParser = JsonParser()
-                    var jsonObject = jsonParser.parse(
+                    val data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
+                    val jsonParser = JsonParser()
+                    val jsonObject = jsonParser.parse(
                             InputStreamReader(data, "UTF-8")) as JsonObject
-                    var reason = jsonObject.get("reason")
+                    val reason = jsonObject.get("reason")
                     Toast.makeText(this@EditCollectionActivity, reason.asString, Toast.LENGTH_SHORT).show()
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
@@ -313,8 +291,6 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                 }
             }
         })
-
-
     }
 
     override fun onStart() {

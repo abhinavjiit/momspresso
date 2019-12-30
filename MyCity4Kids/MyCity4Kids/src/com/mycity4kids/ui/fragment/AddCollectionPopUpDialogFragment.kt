@@ -2,6 +2,7 @@ package com.mycity4kids.ui.fragment
 
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -22,7 +23,6 @@ import com.kelltontech.utils.StringUtils
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
-import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.collectionsModels.AddCollectionRequestModel
@@ -30,6 +30,7 @@ import com.mycity4kids.models.collectionsModels.UpdateCollectionRequestModel
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
+import com.mycity4kids.ui.activity.collection.AddMultipleCollectionItemActivity
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -190,11 +191,11 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
                 Log.d("MC4KException", Log.getStackTraceString(e))
                 try {
                     //    Log.d("CODE", code.toString())
-                    var data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
-                    var jsonParser = JsonParser()
-                    var jsonObject = jsonParser.parse(
+                    val data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
+                    val jsonParser = JsonParser()
+                    val jsonObject = jsonParser.parse(
                             InputStreamReader(data, "UTF-8")) as JsonObject
-                    var reason = jsonObject.get("reason")
+                    val reason = jsonObject.get("reason")
                     Toast.makeText(activity, reason.asString, Toast.LENGTH_SHORT).show()
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
@@ -205,21 +206,9 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
     }
 
     private fun addMultipleCollectionItemsInCollection(collectionId: String) {
-        try {
-            val addMultipleCollectionItemDialogFragment = AddMultipleCollectionItemDialogFragment()
-            val bundle = Bundle()
-            bundle.putString("collectionId", collectionId)
-            bundle.putString("type", AppConstants.ARTICLE_COLLECTION_TYPE)
-            addMultipleCollectionItemDialogFragment.arguments = bundle
-            val fm = fragmentManager
-            addMultipleCollectionItemDialogFragment.setTargetFragment(this, 0)
-            addMultipleCollectionItemDialogFragment.show(fm!!, "collectionAdd")
-            /*    Utils.pushProfileEvents(activity, "CTA_100WS_Add_To_Collection",
-                        "TopicsShortStoriesTabFragment", "Add to Collection", "-")*/
-        } catch (e: Exception) {
-            Crashlytics.logException(e)
-            Log.d("MC4kException", Log.getStackTraceString(e))
-        }
+        val intent = Intent(activity, AddMultipleCollectionItemActivity::class.java)
+        intent.putExtra("collectionId", collectionId)
+        startActivity(intent)
     }
 
 

@@ -50,7 +50,6 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
     private static final int RC_STORAGE_PERM = 123;
     private static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private static final String FILENAME = "badgelist";
-
     private GridView gridview;
     private BadgeListGridAdapter adapter;
     private ArrayList<BadgeListResponse.BadgeListData.BadgeListResult> badgeList;
@@ -100,7 +99,7 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
                 shareTextView.setVisibility(View.GONE);
             }
         }
-
+        badgeList = new ArrayList<>();
         adapter = new BadgeListGridAdapter(this);
         adapter.setDatalist(badgeList);
         gridview.setAdapter(adapter);

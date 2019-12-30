@@ -44,6 +44,9 @@ public interface TopicsCategoryAPI {
     @GET("/v1/categories/")
     Call<ResponseBody> downloadTopicsJSON();
 
+    @GET("http://192.168.1.12/remote/response.json")
+    Call<ResponseBody> TopicsJSON();
+
     @GET("/v1/articles/topics/{categoryId}")
     Call<ArticleListingResponse> getArticlesForCategory(@Path("categoryId") String categoryId,
                                                         @Query("sort") int sort,

@@ -26,6 +26,8 @@ data class MixFeedData(
 )
 
 data class MixFeedResult(
+        @SerializedName("isCollectionItemSelected")
+        var isCollectionItemSelected: Boolean = false,
         @SerializedName("admin_action_status")
         val admin_action_status: Int = -1,
         @SerializedName("approval_time")
