@@ -61,7 +61,7 @@ class FacebookFriends : BaseActivity(), FBFriendsAdapter.RecyclerViewClickListen
                 list.add(FBObject(arr.getJSONObject(i).getString("id"), arr.getJSONObject(i).getString("name")))
             }
         }
-        adapter?.setListData(list)
+//        adapter?.setListData(list)
         adapter?.notifyDataSetChanged()
     }
 

@@ -138,6 +138,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.QBadgeView;
@@ -585,7 +586,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             @Override
             public void run() {
                 if (collectionTooltip.isShowing()) {
-                    collectionTooltip.dismiss();
+                    try {
+                        collectionTooltip.dismiss();
+                    } catch (Exception e) {
+
+                    }
                 }
             }
         }, 5000);
@@ -595,7 +600,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private void bindSponsored() {
         for (int i = 0; i < shortStoriesTopicList.get(0).getChild().size(); i++) {
             if (parentId.equals(shortStoriesTopicList.get(0).getChild().get(i).getId())) {
-                if (shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryImage() != null && !shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryImage().isEmpty()) {
+                if (shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryImage() != null &&
+                        !shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryImage().isEmpty()) {
                     sponsoredViewContainer.setVisibility(View.VISIBLE);
                     Picasso.with(getActivity()).load(shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryImage()).placeholder(R.drawable.default_article).into(sponsoredImage);
                     sponsoredTextView.setText("this story is sponsored by ");
@@ -1791,8 +1797,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         if (var.size() > 0) {
                             for (Map.Entry<String, String> entry : var.entrySet()) {
                                 if (topic.getId().equalsIgnoreCase(entry.getKey())) {
-                                    if (topic.getExtraData() != null && topic.getExtraData().size() != 0 && topic.getExtraData().get(0).getCategoryTag() != null) {
-                                        if (topic.getExtraData().get(0).getCategoryTag().getCategoryImage() != null && !topic.getExtraData().get(0).getCategoryTag().getCategoryImage().isEmpty()) {
+                                    if (topic.getExtraData() != null && topic.getExtraData().size() != 0 &&
+                                            topic.getExtraData().get(0).getCategoryTag() != null) {
+                                        if (topic.getExtraData().get(0).getCategoryTag().getCategoryImage() != null &&
+                                                !topic.getExtraData().get(0).getCategoryTag().getCategoryImage().isEmpty()) {
                                             sponsoredViewContainer.setVisibility(View.VISIBLE);
                                             Picasso.with(getActivity()).load(topic.getExtraData().get(0).getCategoryTag().getCategoryImage()).into(sponsoredImage);
                                             sponsoredTextView.setText("this story is sponsored by ");
@@ -1806,9 +1814,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                         } else {
                                             badge.setVisibility(View.GONE);
                                         }
+                                        flag = true;
+                                        break;
                                     }
-                                    flag = true;
-                                    break;
                                 }
                             }
                         }

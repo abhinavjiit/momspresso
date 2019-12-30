@@ -1,10 +1,14 @@
 package com.mycity4kids.models.request;
 
-public class CampaignReferral {
-    private String user_id;
-    private int campaign_id;
-    private String referral_code;
+import com.google.gson.annotations.SerializedName;
 
+public class CampaignReferral {
+    @SerializedName("user_id")
+    private String user_id;
+    @SerializedName("campaign_id")
+    private int campaign_id;
+    @SerializedName("referral_code")
+    private String referral_code;
 
     public String getUser_id() {
         return user_id;

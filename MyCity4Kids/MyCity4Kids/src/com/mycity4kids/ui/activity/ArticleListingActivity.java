@@ -37,7 +37,6 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.RecommendationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
-import com.mycity4kids.ui.fragment.ForYouInfoDialogFragment;
 
 import java.util.ArrayList;
 
@@ -48,7 +47,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 4/8/16.
  */
-public class ArticleListingActivity extends BaseActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, ForYouInfoDialogFragment.IForYourArticleRemove, /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
+public class ArticleListingActivity extends BaseActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,  /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     private MainArticleRecyclerViewAdapter recyclerAdapter;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
@@ -398,25 +397,6 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
         }
         return true;
     }
-
-    @Override
-    public void onForYouArticleRemoved(int position) {
-        Log.d("Remove For YOu", "position = " + position);
-        if (articleDataModelsNew != null && articleDataModelsNew.size() > position) {
-            articleDataModelsNew.remove(position);
-            recyclerAdapter.notifyDataSetChanged();
-        }
-    }
-
-//    @Override
-//    public void onFinishToLoadAds() {
-//
-//    }
-//
-//    @Override
-//    public void onErrorToLoadAd() {
-//
-//    }
 
     @Override
     public void onRecyclerItemClick(View view, int position) {

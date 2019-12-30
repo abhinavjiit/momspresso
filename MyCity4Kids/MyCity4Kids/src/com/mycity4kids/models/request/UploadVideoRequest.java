@@ -1,26 +1,40 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
  * Created by hemant on 12/1/17.
  */
 public class UploadVideoRequest {
+    @SerializedName("video_id")
     private String video_id;
+    @SerializedName("title")
     private String title;
+    @SerializedName("filename")
     private String filename;
+    @SerializedName("file_location")
     private String file_location;
+    @SerializedName("publication_status")
     private String publication_status;
+    @SerializedName("uploaded_url")
     private String uploaded_url;
+    @SerializedName("description")
     private String description;
+    @SerializedName("user_id")
     private String user_id;
+    @SerializedName("user_agent")
     private String user_agent;
+    @SerializedName("published_url")
     private String published_url;
+    @SerializedName("thumbnail_milliseconds")
     private String thumbnail_milliseconds;
+    @SerializedName("reason")
     private String reason;
-//    private boolean is_popular;
+    @SerializedName("category_id")
     private ArrayList<String> category_id;
-//    private boolean has_special_cat;
+    @SerializedName("thumbnail")
     private String thumbnail;
 
     public String getVideo_id() {
@@ -103,14 +117,6 @@ public class UploadVideoRequest {
         this.published_url = published_url;
     }
 
-//    public boolean isIs_popular() {
-//        return is_popular;
-//    }
-//
-//    public void setIs_popular(boolean is_popular) {
-//        this.is_popular = is_popular;
-//    }
-
     public ArrayList<String> getCategory_id() {
         return category_id;
     }
@@ -118,14 +124,6 @@ public class UploadVideoRequest {
     public void setCategory_id(ArrayList<String> category_id) {
         this.category_id = category_id;
     }
-
-//    public boolean isHas_special_cat() {
-//        return has_special_cat;
-//    }
-//
-//    public void setHas_special_cat(boolean has_special_cat) {
-//        this.has_special_cat = has_special_cat;
-//    }
 
     public String getThumbnail() {
         return thumbnail;

@@ -175,7 +175,11 @@
         android:layout_above="@+id/continueTextView"
         android:layout_below="@+id/selectLangtextView"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="10dp"
+        android:fadeScrollbars="false"
+        android:scrollIndicators="end"
+        android:scrollbarThumbVertical="@color/app_red"
+        android:scrollbars="vertical" />
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/continueTextView"

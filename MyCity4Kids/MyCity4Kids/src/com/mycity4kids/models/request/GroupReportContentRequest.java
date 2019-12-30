@@ -1,16 +1,24 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 17/7/18.
  */
 
 public class GroupReportContentRequest {
 
+    @SerializedName("reportedBy")
     private String reportedBy;
+    @SerializedName("groupId")
     private int groupId;
+    @SerializedName("postId")
     private int postId;
+    @SerializedName("reason")
     private String reason;
+    @SerializedName("type")
     private String type;
+    @SerializedName("responseId")
     private int responseId;
 
     public String getReportedBy() {

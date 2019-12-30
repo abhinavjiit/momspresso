@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.annotations.SerializedName;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
@@ -135,8 +136,8 @@ public class CustomSignUpActivity extends BaseActivity implements View.OnClickLi
                     model.setUserType(responseData.getData().get(0).getResult().getUserType());
                     model.setProfilePicUrl(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
                     model.setSessionId(responseData.getData().get(0).getResult().getSessionId());
-
                     model.setBlogTitle(responseData.getData().get(0).getResult().getBlogTitle());
+                    model.setIsNewUser(responseData.getData().get(0).getResult().getIsNewUser());
 
                     SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), model);
                     SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
@@ -239,10 +240,17 @@ public class CustomSignUpActivity extends BaseActivity implements View.OnClickLi
 
     public class RegistrationRequest {
 
-        private String firstName = "fn", lastName = "ln";
+        @SerializedName("firstName")
+        private String firstName = "fn";
+        @SerializedName("lastName")
+        private String lastName = "ln";
+        @SerializedName("cityId")
         private String cityId = "1";
+        @SerializedName("email")
         private String email;
+        @SerializedName("password")
         private String password;
+        @SerializedName("requestMedium")
         private String requestMedium = "custom";
 
         public String getCityId() {

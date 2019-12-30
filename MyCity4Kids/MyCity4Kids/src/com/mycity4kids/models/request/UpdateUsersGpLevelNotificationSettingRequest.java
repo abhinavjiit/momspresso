@@ -1,15 +1,23 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 1/5/18.
  */
 
 public class UpdateUsersGpLevelNotificationSettingRequest {
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("postId")
     private int postId;
+    @SerializedName("groupId")
     private int groupId;
+    @SerializedName("isBookmarked")
     private int isBookmarked;
+    @SerializedName("isAnno")
     private int isAnno;
+    @SerializedName("notificationOff")
     private int notificationOff;
 
     public String getUserId() {

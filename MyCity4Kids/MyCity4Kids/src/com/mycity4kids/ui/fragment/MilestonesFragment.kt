@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
@@ -38,14 +37,14 @@ class MilestonesFragment : BaseFragment(), View.OnClickListener, MilestonesListA
     private var userId: String? = null
     private var milestonesAdapter: MilestonesListAdapter? = null
     private var milestonesList: ArrayList<MilestonesResult>? = null
-
+    private var page: Int = 0
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = inflater.inflate(R.layout.fragment_milestones, container, false)
         recyclerView = rootView?.findViewById(R.id.recyclerView)
         progressBar = rootView?.findViewById(R.id.progressBar)
 
         if (BuildConfig.DEBUG) {
-            userId = "0a80bbe4e193424e8fd555adc14a2155"
+            userId = "3021794b38254a48bb5b6ffd3a0e62e2"
         } else {
             userId = arguments?.getString(Constants.AUTHOR_ID)
         }
@@ -89,6 +88,10 @@ class MilestonesFragment : BaseFragment(), View.OnClickListener, MilestonesListA
                 val responseData = response.body()
                 if (responseData?.code == 200 && Constants.SUCCESS == responseData.status) {
                     processMilestoneResponse(responseData.data?.result)
+                    if (BuildConfig.DEBUG && page == 0) {
+                        page++
+                        getUsersMilestones("0a80bbe4e193424e8fd555adc14a2155")
+                    }
                 } else {
                 }
             } catch (e: Exception) {
@@ -108,7 +111,8 @@ class MilestonesFragment : BaseFragment(), View.OnClickListener, MilestonesListA
             for (element in result) {
                 if (element.item_type == AppConstants.CONTENT_TYPE_ARTICLE ||
                         element.item_type == AppConstants.CONTENT_TYPE_SHORT_STORY ||
-                        element.item_type == AppConstants.CONTENT_TYPE_VIDEO)
+                        element.item_type == AppConstants.CONTENT_TYPE_VIDEO ||
+                        element.item_type == AppConstants.CONTENT_TYPE_MYMONEY)
                     milestonesList?.add(element)
             }
             milestonesAdapter?.notifyDataSetChanged()
@@ -118,10 +122,17 @@ class MilestonesFragment : BaseFragment(), View.OnClickListener, MilestonesListA
     override fun onClick(view: View, position: Int) {
         val milestonesDialogFragment = MilestonesDialogFragment()
         val bundle = Bundle()
-        bundle.putString(Constants.USER_ID, userId)
+        if (BuildConfig.DEBUG) {
+            if (position == 0) {
+                bundle.putString(Constants.USER_ID, userId)
+            } else {
+                bundle.putString(Constants.USER_ID, "0a80bbe4e193424e8fd555adc14a2155")
+            }
+        } else {
+            bundle.putString(Constants.USER_ID, userId)
+        }
         bundle.putString("id", milestonesList?.get(position)?.id)
         milestonesDialogFragment.arguments = bundle
-        val fm: FragmentManager? = fragmentManager
         fragmentManager?.let {
             milestonesDialogFragment.show(it, "MilestonesDialogFragment")
         }

@@ -1,5 +1,7 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Map;
 
 /**
@@ -7,14 +9,20 @@ import java.util.Map;
  */
 
 public class AddGpPostCommentOrReplyRequest {
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("postId")
     private int postId;
+    @SerializedName("groupId")
     private int groupId;
+    @SerializedName("content")
     private String content;
+    @SerializedName("parentId")
     private int parentId;
+    @SerializedName("isAnnon")
     private int isAnnon;
+    @SerializedName("mediaUrls")
     private Map<String, String> mediaUrls;
-
 
     public String getUserId() {
         return userId;

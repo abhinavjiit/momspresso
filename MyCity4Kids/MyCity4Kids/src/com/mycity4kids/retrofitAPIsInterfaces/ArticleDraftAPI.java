@@ -2,7 +2,6 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.request.SaveDraftRequest;
 import com.mycity4kids.models.response.ArticleDraftResponse;
-import com.mycity4kids.models.response.BaseResponse;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -13,7 +12,6 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.Url;
 
@@ -22,15 +20,6 @@ import retrofit2.http.Url;
  */
 public interface ArticleDraftAPI {
     @FormUrlEncoded
-    @POST("v1/drafts/")
-    Call<BaseResponse> draftArticle(
-            @Field("title") String title,
-            @Field("body") String body,
-            @Field("id") String id,
-            @Field("status") String status,
-            @Field("sourceId") String sourceId);
-
-    @FormUrlEncoded
     @POST("v1/articles/")
     Call<ArticleDraftResponse> saveDraft(
             @Field("title") String title,
@@ -38,17 +27,9 @@ public interface ArticleDraftAPI {
             @Field("articleType") String articleType,
             @Field("userAgent1") String userAgent1);
 
-    @POST("v1/articles/")
-    Call<ArticleDraftResponse> saveDraft(@Body SaveDraftRequest saveDraftRequest);
-
     @PUT
     Call<ArticleDraftResponse> updateDrafts(@Url String url,
                                             @Body SaveDraftRequest saveDraftRequest);
-
-    @PUT("v1/articles/{draftId}")
-    Call<ArticleDraftResponse> updateDraft(@Path("draftId") String draftId,
-                                           @Body SaveDraftRequest saveDraftRequest);
-
 
     @GET("v1/articles/")
     Call<ResponseBody> getDraftsList(@Query("aType") String aType);

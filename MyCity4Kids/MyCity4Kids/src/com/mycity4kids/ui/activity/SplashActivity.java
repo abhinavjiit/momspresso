@@ -37,6 +37,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.utils.AppUtils;
+import com.smartlook.sdk.smartlook.Smartlook;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -139,14 +140,11 @@ public class SplashActivity extends BaseActivity {
         } else {
             if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                 String message = SharedPrefUtils.getAppUgradeMessage(BaseApplication.getAppContext());
-                showUpgradeAppAlertDialog("Momspresso", message, new OnButtonClicked() {
-                    @Override
-                    public void onButtonCLick(int buttonId) {
-                    }
+                showUpgradeAppAlertDialog("Momspresso", message, buttonId -> {
                 });
                 return;
             }
-            navigateToNextScreen(true);
+            navigateToNextScreen();
         }
     }
 
@@ -191,10 +189,11 @@ public class SplashActivity extends BaseActivity {
     }
 
 
-    private void navigateToNextScreen(boolean isConfigurationAvailable) {
+    private void navigateToNextScreen() {
         UserInfo userInfo = SharedPrefUtils.getUserDetailModel(this);
         TableAdult _table = new TableAdult(BaseApplication.getInstance());
-        if (null != userInfo && !StringUtils.isNullOrEmpty(userInfo.getMc4kToken()) && AppConstants.VALIDATED_USER.equals(userInfo.getIsValidated())) { // if he signup
+        if (null != userInfo && !StringUtils.isNullOrEmpty(userInfo.getMc4kToken()) &&
+                AppConstants.VALIDATED_USER.equals(userInfo.getIsValidated())) { // if he signup
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Intent intent5 = new Intent(this, PushTokenService.class);
                 startForegroundService(intent5);
@@ -214,33 +213,26 @@ public class SplashActivity extends BaseActivity {
 
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsCategoryAPI = retrofit.create(TopicsCategoryAPI.class);
-            Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.getFollowedCategories(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+            Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.getFollowedCategories(
+                    SharedPrefUtils.getUserDetailModel(this).getDynamoId());
             call.enqueue(getFollowedTopicsResponseCallback);
         } else {
             Log.e("MYCITY4KIDS", "USER logged Out");
-            if (!isConfigurationAvailable) {
-                showAlertDialog(getString(R.string.error), getString(R.string.server_went_wrong), new OnButtonClicked() {
-                    @Override
-                    public void onButtonCLick(int buttonId) {
-                        finish();
-                    }
-                });
-                return;
+            if (SharedPrefUtils.getLogoutFlag(BaseApplication.getAppContext())) {
+                Intent intent = new Intent(SplashActivity.this, ActivityLogin.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
             } else {
-                if (SharedPrefUtils.getLogoutFlag(BaseApplication.getAppContext())) {
-                    Intent intent = new Intent(SplashActivity.this, ActivityLogin.class);
+                Smartlook.setupAndStartRecording(getString(R.string.smart_look_key));
+                Smartlook.enableCrashlytics(true);
+                handler1 = new Handler();
+                handler1.postDelayed(() -> runOnUiThread(() -> {
+                    Intent intent = new Intent(SplashActivity.this, LanguageSelectionActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
-                } else {
-                    handler1 = new Handler();
-                    handler1.postDelayed(() -> runOnUiThread(() -> {
-                        Intent intent = new Intent(SplashActivity.this, LanguageSelectionActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finish();
-                    }), 1000);
-                }
+                }), 1000);
             }
         }
         Log.d("GCM Token ", SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext()));
@@ -340,7 +332,7 @@ public class SplashActivity extends BaseActivity {
                         });
                     } else {
                         SharedPrefUtils.setAppUgrade(BaseApplication.getAppContext(), false);
-                        navigateToNextScreen(true);
+                        navigateToNextScreen();
                     }
                 } else if (responseData.getResponseCode() == 400) {
                     String message = responseData.getResult().getMessage();
@@ -351,7 +343,7 @@ public class SplashActivity extends BaseActivity {
                     }
                 } else {
                     SharedPrefUtils.setAppUgrade(BaseApplication.getAppContext(), false);
-                    navigateToNextScreen(true);
+                    navigateToNextScreen();
                 }
             } catch (Exception e) {
                 showToast(getString(R.string.went_wrong));
@@ -359,7 +351,7 @@ public class SplashActivity extends BaseActivity {
                 Log.d("MC4KException", Log.getStackTraceString(e));
                 //Uncomment to run on phoenix
                 SharedPrefUtils.setAppUgrade(BaseApplication.getAppContext(), false);
-                navigateToNextScreen(true);
+                navigateToNextScreen();
             }
         }
 

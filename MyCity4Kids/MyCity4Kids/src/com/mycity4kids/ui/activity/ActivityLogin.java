@@ -72,6 +72,7 @@ import java.util.Date;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentManager;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -327,6 +328,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         model.setIsLangSelection(userDetailResult.getIsLangSelection());
         model.setUserType(userDetailResult.getUserType());
         model.setBlogTitle(userDetailResult.getBlogTitle());
+        model.setIsNewUser(userDetailResult.getIsNewUser());
 
         int cityIdFromLocation = SharedPrefUtils.getCurrentCityModel(ActivityLogin.this).getId();
         if (cityIdFromLocation == AppConstants.OTHERS_CITY_ID) {
@@ -383,13 +385,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             bundle.putString(AppConstants.FROM_ACTIVITY, AppConstants.ACTIVITY_LOGIN);
             dialogFragment.setArguments(bundle);
             dialogFragment.show(getFragmentManager(), "verify email");
-        }
-        //Custom sign up user but email is not yet verfifed.
-//        else if (!AppConstants.VALIDATED_USER.equals(model.getIsValidated())) {
-//            showVerifyEmailDialog("Error", "Please verify your account to login");
-//        }
-        //Verified User
-        else {
+        } else {
             if (null != userDetailResult.getKids()) {
                 saveKidsInformation(userDetailResult.getKids());
             }
@@ -410,7 +406,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                 startService(mServiceIntent);
                 Intent intent1 = new Intent(ActivityLogin.this, LoadingActivity.class);
                 startActivity(intent1);
-                startSyncingUserInfo();
+//                startSyncingUserInfo();
             }
 
         }
@@ -488,6 +484,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     model.setUserType(responseData.getData().get(0).getResult().getUserType());
                     model.setGender("" + responseData.getData().get(0).getResult().getGender());
                     model.setBlogTitle(responseData.getData().get(0).getResult().getBlogTitle());
+                    model.setIsNewUser(responseData.getData().get(0).getResult().getIsNewUser());
                     int cityIdFromLocation = SharedPrefUtils.getCurrentCityModel(ActivityLogin.this).getId();
                     if (cityIdFromLocation == AppConstants.OTHERS_CITY_ID) {
                         model.setCityId(responseData.getData().get(0).getResult().getCityId());

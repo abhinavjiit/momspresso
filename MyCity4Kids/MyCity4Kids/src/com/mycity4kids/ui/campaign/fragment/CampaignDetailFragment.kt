@@ -376,7 +376,9 @@ class CampaignDetailFragment : BaseFragment() {
         }
 
         if (apiGetResponsee?.amount != null) {
-            showRewardText.setText(resources.getString(R.string.dialog_you_can_earn) + apiGetResponsee?.amount?.toInt())
+            activity?.let {
+                showRewardText.text = resources.getString(R.string.dialog_you_can_earn) + apiGetResponsee?.amount?.toInt()
+            }
         } else {
             showRewardText.visibility = View.GONE
         }

@@ -16,7 +16,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.*
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.DialogFragment
@@ -136,10 +139,8 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
                 try {
                     badgesShimmerContainer.visibility = View.GONE
                     if (response.body() == null) {
-                        if (response.raw() != null) {
-                            val nee = NetworkErrorException(response.raw().toString())
-                            Crashlytics.logException(nee)
-                        }
+                        val nee = NetworkErrorException(response.raw().toString())
+                        Crashlytics.logException(nee)
                         return
                     }
                     val responseModel = response.body() as BadgeListResponse

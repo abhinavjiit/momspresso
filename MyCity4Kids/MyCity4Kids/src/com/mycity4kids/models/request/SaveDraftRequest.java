@@ -1,13 +1,19 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 26/9/18.
  */
 
 public class SaveDraftRequest {
+    @SerializedName("title")
     private String title;
+    @SerializedName("body")
     private String body;
+    @SerializedName("articleType")
     private String articleType;
+    @SerializedName("userAgent1")
     private String userAgent1;
 
     public String getTitle() {

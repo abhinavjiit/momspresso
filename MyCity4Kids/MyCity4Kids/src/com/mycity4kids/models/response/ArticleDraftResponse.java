@@ -1,5 +1,7 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -7,6 +9,7 @@ import java.util.List;
  */
 public class ArticleDraftResponse extends BaseResponse {
 
+    @SerializedName("data")
     private List<ArticleDraftData> data;
 
     public List<ArticleDraftData> getData() {

@@ -1,5 +1,7 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
@@ -7,6 +9,7 @@ import java.util.ArrayList;
  */
 public class AddEditKidsInformationRequest {
 
+    @SerializedName("kids")
     private ArrayList<AddRemoveKidsRequest> kids;
 
     public ArrayList<AddRemoveKidsRequest> getKids() {

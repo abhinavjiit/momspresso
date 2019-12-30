@@ -36,6 +36,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ArticleListingActivity;
+import com.mycity4kids.ui.activity.BadgeActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
@@ -371,7 +372,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                 break;
                 case AppConstants.NOTIFICATION_CENTER_VIDEO_CHALLENGE_DETAIL: {
                     Intent videoChallengeIntent = new Intent(mContext, NewVideoChallengeActivity.class);
-                    videoChallengeIntent.putExtra(Constants.CHALLENGE_ID, "" + notificationList.get(position).getCategoryId());
+                    videoChallengeIntent.putExtra(Constants.CHALLENGE_ID, "" + notificationList.get(position).getChallengeId());
                     videoChallengeIntent.putExtra("comingFrom", "notification");
                     mContext.startActivity(videoChallengeIntent);
                     pushEvent("NOTIFICATION_CENTER_VIDEO_CHALLENGE_DETAIL");
@@ -383,6 +384,12 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     intent.putExtra("comingFrom", "notification");
                     mContext.startActivity(intent);
                     pushEvent("NOTIFICATION_CENTER_COLLECTION_DETAIL");
+                }
+                break;
+                case AppConstants.NOTIFICATION_CENTER_BADGE_LISTING: {
+                    Intent intent = new Intent(mContext, BadgeActivity.class);
+                    mContext.startActivity(intent);
+                    pushEvent("NOTIFICATION_CENTER_BADGE_LISTING");
                 }
                 break;
             }

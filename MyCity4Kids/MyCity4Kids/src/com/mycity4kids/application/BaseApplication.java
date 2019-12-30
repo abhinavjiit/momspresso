@@ -366,10 +366,6 @@ public class BaseApplication extends Application {
         Crashlytics.setUserIdentifier("" + SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         Crashlytics.setUserEmail("" + SharedPrefUtils.getUserDetailModel(this).getEmail());
 
-        Smartlook.setupAndStartRecording(getString(R.string.smart_look_key));
-        Smartlook.setUserIdentifier("" + SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-        Smartlook.enableCrashlytics(true);
-
         setInstance(this);
         VolleyLog.setTag("VolleyLogs");
 

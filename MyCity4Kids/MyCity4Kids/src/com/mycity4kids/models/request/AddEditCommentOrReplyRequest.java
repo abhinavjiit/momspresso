@@ -1,14 +1,20 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 6/6/18.
  */
 
 public class AddEditCommentOrReplyRequest {
 
+    @SerializedName("post_id")
     private String post_id;
+    @SerializedName("message")
     private String message;
+    @SerializedName("parent_id")
     private String parent_id;
+    @SerializedName("type")
     private String type;
 
     public String getPost_id() {

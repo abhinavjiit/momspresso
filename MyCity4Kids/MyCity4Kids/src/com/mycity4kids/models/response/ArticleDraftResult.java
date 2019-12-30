@@ -1,10 +1,14 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by anshul on 7/4/16.
  */
 public class ArticleDraftResult {
+    @SerializedName("id")
     String id;
+    @SerializedName("url")
     String url;
 
     public String getId() {

@@ -1,13 +1,16 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.HashMap;
 
 /**
  * Created by hemant on 9/3/17.
  */
 public class SubscriptionUpdateRequest {
+    @SerializedName("email")
     private String email;
-
+    @SerializedName("subscribe")
     private HashMap<String, String> subscribe;
 
     public String getEmail() {

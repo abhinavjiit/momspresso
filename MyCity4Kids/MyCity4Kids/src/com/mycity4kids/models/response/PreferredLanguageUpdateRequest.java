@@ -1,5 +1,7 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.HashMap;
 
 /**
@@ -7,6 +9,7 @@ import java.util.HashMap;
  */
 public class PreferredLanguageUpdateRequest {
 
+    @SerializedName("langSubscription")
     private HashMap<String, String> langSubscription;
 
     public HashMap<String, String> getLangSubscription() {

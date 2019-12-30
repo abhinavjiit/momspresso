@@ -1,5 +1,7 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Map;
 
 /**
@@ -8,8 +10,11 @@ import java.util.Map;
 
 public class JoinGroupRequest {
 
+    @SerializedName("groupId")
     private int groupId;
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("questionnaireResponse")
     private Map<String, String> questionnaireResponse;
 
     public int getGroupId() {
