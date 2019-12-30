@@ -6,21 +6,179 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/bottomText"
         android:layout_below="@id/toolbar"
         android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/space_7"
-            android:background="@color/white"
-            android:scrollbars="vertical" />
+            android:clipToPadding="false">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/dashboard_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_49D6BE"
+                    android:visibility="gone"
+                    android:paddingBottom="@dimen/space_20">
+
+                    <com.mikhaellopez.circularimageview.CircularImageView
+                        android:id="@+id/profileImageView"
+                        android:layout_width="@dimen/space_56"
+                        android:layout_height="@dimen/space_56"
+                        android:layout_marginLeft="@dimen/space_20"
+                        android:layout_marginTop="@dimen/space_20"
+                        android:src="@drawable/family_xxhdpi"
+                        app:civ_border_color="@color/white"
+                        app:civ_border_width="@dimen/space_2"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_10"
+                        android:layout_marginLeft="@dimen/space_10"
+                        android:layout_toRightOf="@id/profileImageView"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toEndOf="@id/profileImageView"
+                        app:layout_constraintTop_toTopOf="@id/profileImageView" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/campaign_nos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/user_name"
+                        android:layout_marginStart="@dimen/space_10"
+                        android:layout_marginLeft="@dimen/space_10"
+                        android:layout_marginTop="@dimen/space_10"
+                        android:layout_toRightOf="@id/profileImageView"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        app:layout_constraintStart_toEndOf="@id/profileImageView"
+                        app:layout_constraintTop_toBottomOf="@id/user_name" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/total_earning"
+                        android:layout_width="@dimen/space_100"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/space_15"
+                        android:background="@drawable/campaign_list_total_payout_bg"
+                        android:gravity="center"
+                        android:paddingLeft="@dimen/space_7"
+                        android:paddingTop="@dimen/space_10"
+                        android:paddingRight="@dimen/space_7"
+                        android:paddingBottom="@dimen/space_10"
+                        android:textColor="@color/color_0EA095"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@id/profileImageView"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/profileImageView" />
+
+
+                    <ProgressBar
+                        android:id="@+id/loader"
+                        style="@android:style/Widget.ProgressBar.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="@+id/total_earning"
+                        app:layout_constraintEnd_toEndOf="@+id/total_earning"
+                        app:layout_constraintStart_toStartOf="@+id/total_earning"
+                        app:layout_constraintTop_toTopOf="@+id/total_earning" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/header_mymoney"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/space_20"
+                        android:layout_marginTop="@dimen/space_16"
+                        android:text="@string/mymoney_profile"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/profileImageView" />
+
+                    <com.mycity4kids.widget.RoundedHorizontalProgressBar
+                        android:id="@+id/progress_bar_1"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="200dp"
+                        android:layout_height="9dp"
+                        android:layout_marginStart="@dimen/space_20"
+                        android:layout_marginTop="@dimen/space_13"
+                        android:indeterminate="true"
+                        android:maxHeight="9dp"
+                        android:minHeight="9dp"
+                        android:progress="0"
+                        app:backgroundColor="@color/color_B4ECE4"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/header_mymoney"
+                        app:progressColor="@color/color_0EA095" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/profilePercentageTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/space_15"
+                        android:layout_marginTop="@dimen/space_5"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/progress_bar_1"
+                        app:layout_constraintTop_toBottomOf="@id/header_mymoney" />
+
+                    <ImageView
+                        android:id="@+id/edit_profile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/white_border"
+                        android:paddingTop="@dimen/space_7"
+                        android:paddingBottom="@dimen/space_7"
+                        android:paddingLeft="@dimen/space_13"
+                        android:paddingRight="@dimen/space_13"
+                        android:layout_marginRight="@dimen/space_15"
+                        app:srcCompat="@drawable/ic_campaign_list_edit_icon"
+                        app:layout_constraintTop_toBottomOf="@+id/header_mymoney"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/space_10"
+                    android:layout_marginTop="@dimen/space_20"
+                    android:layout_marginBottom="@dimen/space_20"
+                    android:text="@string/campaigns"
+                    android:textColor="@color/campaign_4A4A4A"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/profileImageView" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/space_7"
+                    android:background="@color/white"
+                    android:scrollbars="vertical" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmer1"
@@ -43,7 +201,7 @@
             </LinearLayout>
 
         </com.facebook.shimmer.ShimmerFrameLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -68,14 +226,20 @@
                 android:src="@drawable/back_xxhdpi"
                 android:tint="@color/black" />
 
-            <ImageView
-                android:id="@+id/profile_icon"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/refer_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/space_10"
-                app:srcCompat="@drawable/profile_icon" />
+                android:textColor="@color/white"
+                android:background="@drawable/campaign_list_refer_bg"
+                android:text="@string/refer_text"
+                android:textAllCaps="true"
+                android:padding="@dimen/space_7"
+                android:textStyle="bold"
+                android:visibility="gone"
+                android:layout_marginRight="@dimen/space_10" />
 
             <View
                 android:layout_width="match_parent"

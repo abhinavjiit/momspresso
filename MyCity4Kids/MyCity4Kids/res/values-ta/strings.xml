@@ -1260,4 +1260,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="analytics_milestones">MILESTONES</string>
     <string name="badges_list_share_text">Checkout %1$s\'s achievements on Momspresso! \n%2$s</string>
     <string name="milestones_share_text">%1$s\'s %2$s \'%3$s\' got %4$s! | Momspresso \n%5$s</string>
+    <string name="campaigns">Campaigns</string>
+    <string name="refer_text">Refer</string>
 </resources>

@@ -378,7 +378,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/userbioTextView"
                 android:background="@drawable/shape_round_rectangle"
-                android:visibility="invisible">
+                android:visibility="visible">
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/profileCompletionLabel"

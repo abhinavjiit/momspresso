@@ -9,10 +9,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.TextWatcher
+import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Log
@@ -440,7 +437,7 @@ class CampaignDetailFragment : BaseFragment() {
         if (matchStart != null && matchEnd != null) {
             spannable!!.setSpan(clickableSpan, matchStart, matchEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         };
-        textView.text = spannable
+        textView.text = Html.fromHtml(spannable.toString())
         textView.movementMethod = LinkMovementMethod.getInstance()
 //        textView.highlightColor = Color.TRANSPARENT
     }
