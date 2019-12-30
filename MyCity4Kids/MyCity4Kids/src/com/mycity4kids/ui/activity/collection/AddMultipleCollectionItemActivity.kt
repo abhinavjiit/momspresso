@@ -40,7 +40,7 @@ class AddMultipleCollectionItemActivity : BaseActivity(), View.OnClickListener {
     var userReadSelectedList: List<ArticleListingResult>? = null
     private var multipleCollectionList: ArrayList<UpdateCollectionRequestModel>? = null
     private var multipleUserCreatedCollectionList: ArrayList<UpdateCollectionRequestModel>? = null
-    private var finalList: HashSet<UpdateCollectionRequestModel>? = null
+    private var mixedReadAndCreatedSelectedList: HashSet<UpdateCollectionRequestModel>? = null
 
 
     override fun updateUi(response: Response?) {
@@ -58,7 +58,7 @@ class AddMultipleCollectionItemActivity : BaseActivity(), View.OnClickListener {
         getUserDetail(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId)
         add.setOnClickListener(this)
         skipTextView.setOnClickListener(this)
-        viewPager.offscreenPageLimit = 2
+        back.setOnClickListener(this)
         viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
@@ -103,15 +103,15 @@ class AddMultipleCollectionItemActivity : BaseActivity(), View.OnClickListener {
                     dataList.add(updateCollectionRequestModel)
                     multipleCollectionList!!.addAll(dataList)
                 }
-                finalList = HashSet()
+                mixedReadAndCreatedSelectedList = HashSet()
                 if (!multipleCollectionList.isNullOrEmpty()) {
-                    finalList!!.addAll(multipleCollectionList!!)
+                    mixedReadAndCreatedSelectedList!!.addAll(multipleCollectionList!!)
                 }
                 if (!multipleUserCreatedCollectionList.isNullOrEmpty()) {
-                    finalList!!.addAll(multipleUserCreatedCollectionList!!)
+                    mixedReadAndCreatedSelectedList!!.addAll(multipleUserCreatedCollectionList!!)
                 }
-                if (!finalList.isNullOrEmpty()) {
-                    postDataToServer(finalList!!)
+                if (!mixedReadAndCreatedSelectedList.isNullOrEmpty()) {
+                    postDataToServer(mixedReadAndCreatedSelectedList!!)
                 }
             }
             R.id.back -> {
