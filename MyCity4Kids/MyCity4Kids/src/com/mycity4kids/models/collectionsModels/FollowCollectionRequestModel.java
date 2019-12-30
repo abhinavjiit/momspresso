@@ -1,9 +1,15 @@
 package com.mycity4kids.models.collectionsModels;
 
+import com.google.gson.annotations.SerializedName;
+
 public class FollowCollectionRequestModel {
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("userCollectionId")
     private String userCollectionId;
+    @SerializedName("sortOrder")
     private int sortOrder;
+    @SerializedName("deleted")
     private boolean deleted;
 
     public String getUserId() {

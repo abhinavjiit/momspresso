@@ -28,6 +28,7 @@ public class UserInfo extends BaseDataModel implements Parcelable {
     private String subscriptionEmail;
     private String gender;
     private String blogTitle = "";
+    private String isNewUser = "";
 
     public UserInfo() {
         super();
@@ -209,6 +210,14 @@ public class UserInfo extends BaseDataModel implements Parcelable {
         this.gender = gender;
     }
 
+    public String getIsNewUser() {
+        return isNewUser;
+    }
+
+    public void setIsNewUser(String isNewUser) {
+        this.isNewUser = isNewUser;
+    }
+
     protected UserInfo(Parcel in) {
         id = in.readString();
         dynamoId = in.readString();
@@ -232,6 +241,7 @@ public class UserInfo extends BaseDataModel implements Parcelable {
         subscriptionEmail = in.readString();
         gender = in.readString();
         blogTitle = in.readString();
+        isNewUser = in.readString();
     }
 
     @Override
@@ -258,6 +268,7 @@ public class UserInfo extends BaseDataModel implements Parcelable {
         dest.writeString(subscriptionEmail);
         dest.writeString(gender);
         dest.writeString(blogTitle);
+        dest.writeString(isNewUser);
     }
 
     @Override

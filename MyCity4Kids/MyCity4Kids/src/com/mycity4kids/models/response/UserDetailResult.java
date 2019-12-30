@@ -101,6 +101,8 @@ public class UserDetailResult implements Parcelable {
     private String gender;
     @SerializedName("blogTitleSlug")
     private String blogTitleSlug;
+    @SerializedName("isNewUser")
+    private String isNewUser;
 
     protected UserDetailResult(Parcel in) {
         id = in.readString();
@@ -140,6 +142,7 @@ public class UserDetailResult implements Parcelable {
         expectedDate = in.readString();
         mobileToken = in.readString();
         mobile = in.readString();
+        isNewUser = in.readString();
     }
 
     public static final Creator<UserDetailResult> CREATOR = new Creator<UserDetailResult>() {
@@ -514,6 +517,14 @@ public class UserDetailResult implements Parcelable {
         this.crownData = crownData;
     }
 
+    public String getIsNewUser() {
+        return isNewUser;
+    }
+
+    public void setIsNewUser(String isNewUser) {
+        this.isNewUser = isNewUser;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -558,6 +569,7 @@ public class UserDetailResult implements Parcelable {
         parcel.writeString(expectedDate);
         parcel.writeString(mobileToken);
         parcel.writeString(mobile);
+        parcel.writeString(isNewUser);
     }
 
     public class SocialTokens {

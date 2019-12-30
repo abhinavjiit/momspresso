@@ -66,7 +66,7 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 public class ArticleListingFragment extends BaseFragment implements GroupIdCategoryMap.GroupCategoryInterface, View.OnClickListener,
-        SwipeRefreshLayout.OnRefreshListener, ForYouInfoDialogFragment.IForYourArticleRemove, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
+        SwipeRefreshLayout.OnRefreshListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     private final static int LIMIT = 15;
     private final static int FORYOU_LIMIT = 10;
@@ -580,15 +580,6 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 break;
         }
         return true;
-    }
-
-    @Override
-    public void onForYouArticleRemoved(int position) {
-        Log.d("Remove For YOu", "position = " + position);
-        if (articleDataModelsNew != null && articleDataModelsNew.size() > position) {
-            articleDataModelsNew.remove(position);
-            recyclerAdapter.notifyDataSetChanged();
-        }
     }
 
     @Override

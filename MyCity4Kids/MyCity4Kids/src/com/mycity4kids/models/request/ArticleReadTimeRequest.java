@@ -1,12 +1,17 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 2/12/16.
  */
 public class ArticleReadTimeRequest {
 
+    @SerializedName("articleId")
     private String articleId;
+    @SerializedName("startTime")
     private String startTime;
+    @SerializedName("timeSpent")
     private String timeSpent;
 
     public String getArticleId() {

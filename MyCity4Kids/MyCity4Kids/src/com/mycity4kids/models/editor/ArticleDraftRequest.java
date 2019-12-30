@@ -1,6 +1,6 @@
 package com.mycity4kids.models.editor;
 
-import org.json.JSONArray;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 import java.util.Map;
@@ -9,17 +9,29 @@ import java.util.Map;
  * Created by anshul on 3/14/16.
  */
 public class ArticleDraftRequest {
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("title")
     private String title;
+    @SerializedName("body")
     private String body;
+    @SerializedName("id")
     private String id;
+    @SerializedName("status")
     private String status;
+    @SerializedName("imageName")
     private String imageName;
+    @SerializedName("sourceId")
     private String sourceId;
+    @SerializedName("imageUrl")
     private String imageUrl;
+    @SerializedName("articleType")
     private String articleType;
+    @SerializedName("tags")
     private List<Map<String, String>> tags;
+    @SerializedName("cities")
     private List<Map<String, String>> cities;
+    @SerializedName("userAgent1")
     private String userAgent1;
 
     public String getBody() {

@@ -1,5 +1,7 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 import java.util.Map;
 
@@ -8,13 +10,21 @@ import java.util.Map;
  */
 
 public class ShortStoryDraftOrPublishRequest {
+    @SerializedName("id")
     private String id;
+    @SerializedName("title")
     private String title;
+    @SerializedName("body")
     private String body;
+    @SerializedName("lang")
     private String lang;
+    @SerializedName("type")
     private String type;
+    @SerializedName("userAgent")
     private String userAgent;
+    @SerializedName("storyImage")
     private String storyImage;
+    @SerializedName("tags")
     private List<Map<String, String>> tags;
 
     public String getId() {

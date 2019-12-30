@@ -52,6 +52,8 @@ public class NotificationCenterResult {
     private String milestoneId;
     @SerializedName("collectionId")
     private String collectionId;
+    @SerializedName("challengeId")
+    private String challengeId;
 
     public String getCategoryId() {
         return categoryId;
@@ -235,5 +237,13 @@ public class NotificationCenterResult {
 
     public void setCollectionId(String collectionId) {
         this.collectionId = collectionId;
+    }
+
+    public String getChallengeId() {
+        return challengeId;
+    }
+
+    public void setChallengeId(String challengeId) {
+        this.challengeId = challengeId;
     }
 }

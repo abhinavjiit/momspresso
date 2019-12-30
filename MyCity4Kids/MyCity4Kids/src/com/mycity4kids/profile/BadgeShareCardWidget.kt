@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.mycity4kids.R
+import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.models.response.BadgeListResponse
 import com.squareup.picasso.Picasso
 
@@ -36,9 +37,13 @@ class BadgeShareCardWidget : LinearLayout {
     }
 
     fun populateMilestonesDetails(data: MilestonesResult?) {
-        Picasso.with(context).load(data?.milestone_image_url).error(R.drawable.default_article)
-                .fit().into(badgeImageViewBitmap)
         Picasso.with(context).load(data?.milestone_bg_url).error(R.drawable.default_article)
                 .fit().into(badgeBgImageViewBitmap)
+        if (data?.item_type == AppConstants.CONTENT_TYPE_MYMONEY) {
+            badgeImageViewBitmap.setImageDrawable(null)
+        } else {
+            Picasso.with(context).load(data?.milestone_image_url).error(R.drawable.default_article)
+                    .fit().into(badgeImageViewBitmap)
+        }
     }
 }

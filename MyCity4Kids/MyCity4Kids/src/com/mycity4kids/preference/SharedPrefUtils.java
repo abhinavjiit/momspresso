@@ -80,6 +80,7 @@ public class SharedPrefUtils {
     private static final String SUBSCRIPTION_EMAIL = "subscriptionEmail";
     private static final String USER_TYPE = "userType";
     private static final String GENDER = "gender";
+    private static final String NEW_USER_FLAG = "newUserFlag";
 
     public static final String APPOINTMENT_TIMESTAMP = "appointment_timestamp";
     private static final String DEVICE_TOKEN = "device_token";
@@ -243,23 +244,8 @@ public class SharedPrefUtils {
         _editor.putString(SUBSCRIPTION_EMAIL, pModel.getSubscriptionEmail());
         _editor.putString(USER_TYPE, pModel.getUserType());
         _editor.putString(GENDER, pModel.getGender());
+        _editor.putString(NEW_USER_FLAG, pModel.getIsNewUser());
         _editor.commit();
-    }
-
-
-    public static void setBranchModel(Context pContext, String pModel) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putString("branchData", pModel);
-
-        _editor.commit();
-    }
-
-    public static String getBranchModel(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return _sharedPref.getString("branchData", "0");
-
-
     }
 
     public static UserInfo getUserDetailModel(Context pContext) {
@@ -286,6 +272,7 @@ public class SharedPrefUtils {
         user.setSubscriptionEmail(_sharedPref.getString(SUBSCRIPTION_EMAIL, _sharedPref.getString(EMAIL, "")));
         user.setUserType(_sharedPref.getString(USER_TYPE, "0"));
         user.setGender(_sharedPref.getString(GENDER, "0"));
+        user.setIsNewUser(_sharedPref.getString(NEW_USER_FLAG, "0"));
         return user;
     }
 
@@ -396,13 +383,6 @@ public class SharedPrefUtils {
     public static String getDeviceToken(Context context) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return _sharedPref.getString(DEVICE_TOKEN, "");
-    }
-
-    public static void setpinCode(Context context, String pincode) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putString(PINCODE, pincode);
-        _editor.commit();
     }
 
     public static String getpinCode(Context context) {
@@ -683,7 +663,6 @@ public class SharedPrefUtils {
         _editor.commit();
     }
 
-
     public static void setLastNotificationIdForUnreadFlag(Context pContext, String flag) {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         Editor _editor = _sharedPref.edit();
@@ -787,7 +766,6 @@ public class SharedPrefUtils {
         _editor.commit();
     }
 
-
     public static void myMoneyCoachMark(Context pContext, int count) {
         SharedPreferences _sharedPref1 = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         Editor _editor = _sharedPref1.edit();
@@ -811,7 +789,6 @@ public class SharedPrefUtils {
         SharedPreferences _sharedPref1 = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return (_sharedPref1.getInt("count", 0));
     }
-
 
     public static void setFirebaseRemoteConfigUpdateFlag(Context pContext, boolean b) {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);

@@ -22,10 +22,10 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/milestoneBgImageView"
-            android:layout_width="250dp"
+            android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_centerHorizontal="true"
-            android:scaleType="fitXY" />
+            android:scaleType="fitCenter" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/milestoneImageView"
@@ -83,8 +83,8 @@
                 android:layout_toEndOf="@+id/contentImageView"
                 android:text=""
                 android:textColor="@color/grey"
-                android:visibility="invisible"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:visibility="invisible" />
 
         </RelativeLayout>
     </RelativeLayout>

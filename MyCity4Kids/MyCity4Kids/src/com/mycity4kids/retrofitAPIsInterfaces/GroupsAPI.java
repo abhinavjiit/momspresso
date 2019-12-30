@@ -34,8 +34,6 @@ import com.mycity4kids.models.response.GroupsListingResponse;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.GroupsReportContentResponse;
 import com.mycity4kids.models.response.GroupsReportedContentResponse;
-import com.mycity4kids.models.response.GroupsSettingResponse;
-import com.mycity4kids.models.response.SetupBlogResponse;
 import com.mycity4kids.models.response.UserPostSettingResponse;
 
 import java.util.ArrayList;
@@ -48,7 +46,6 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -79,12 +76,6 @@ public interface GroupsAPI {
     @GET("/api/v1/groups/group")
     Call<GroupsListingResponse> getTop4SuggestedGroups(@Query("id[$nin]") List<String> groupIdList);
 
-    @GET("/api/v1/groups/group?{params}")
-    Call<GroupsListingResponse> getTop4SuggestedGroupss(@Path("params") String param);
-
-    @POST("/api/v1/groups/group")
-    Call<SetupBlogResponse> createGroup();
-
     @GET("/api/v1/groups/group/{groupId}")
     Call<GroupDetailResponse> getGroupById(@Path("groupId") int groupId);
 
@@ -95,20 +86,6 @@ public interface GroupsAPI {
     @PATCH("/api/v1/groups/group/{groupId}")
     Call<GroupDetailResponse> updateGroupNotification(@Path("groupId") int groupId,
                                                       @Body GroupNotificationToggleRequest body);
-
-    //Group Settings Functionalities
-    @GET("/api/v1/groups/settings/")
-    Call<GroupsSettingResponse> getGroupsAllSetting(@Query("groupId") String groupId);
-
-    @GET("/api/v1/groups/settings/{settingsId}")
-    Call<GroupsListingResponse> getSingleGroupSettings(@Path("settingsId") String settingsId);
-
-    @POST("/api/v1/groups/settings/")
-    Call<GroupsListingResponse> createGroupSettings();
-
-    @PUT("/api/v1/groups/settings/")
-    Call<GroupsListingResponse> updateGroupSettings();
-
 
     //Group Posts
     @GET("/api/v1/groups/post")
@@ -151,11 +128,6 @@ public interface GroupsAPI {
     Call<GroupPostResponse> disablePostComment(@Path("postId") int postId,
                                                @Body UpdateGroupPostRequest updateGroupPostRequest);
 
-    //Group Members
-    @GET("/api/v1/groups/members")
-    Call<GroupsListingResponse> getAllMembers();
-
-
     @GET("/api/v1/groups/members")
     Call<GroupsMembershipResponse> getGroupMembersByStatus(@Query("groupId") int groupId,
                                                            @Query("status") String status,
@@ -165,9 +137,6 @@ public interface GroupsAPI {
     @GET("/api/v1/groups/members")
     Call<GroupsMembershipResponse> getUsersMembershipDetailsForGroup(@Query("groupId") int groupId,
                                                                      @Query("userId") String userId);
-
-    @GET("/api/v1/groups/members/{membershipId}")
-    Call<GroupsListingResponse> getSingleMember(@Path("membershipId") String membershipId);
 
     @POST("/api/v1/groups/members")
     Call<BaseResponse> createMember(@Body JoinGroupRequest joinGroupRequest);
@@ -232,10 +201,6 @@ public interface GroupsAPI {
     @PATCH("/api/v1/groups/response/{responseId}")
     Call<AddGpPostCommentReplyResponse> deleteCommentOrReply(@Path("responseId") int responseId,
                                                              @Body DeleteGpPostCommentOrReplyRequest deleteGpPostCommentOrReplyRequest);
-//    @PUT("/api/v1/groups/usersettings/{userSettingId}")
-//    Call<UserPostSettingResponse> updatePostSettingsForUser(@Path("userSettingId") int userSettingId,
-//                                                            @Body UpdateUserPostSettingsRequest joinGroupRequest);
-
 
     //Group Action Items
     @POST("/api/v1/groups/action")

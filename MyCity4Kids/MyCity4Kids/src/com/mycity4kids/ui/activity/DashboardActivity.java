@@ -81,6 +81,7 @@ import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.version.RateVersion;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.profile.MyMoneyRegistrationDialogFragment;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
@@ -92,6 +93,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.collection.CollectionsActivity;
 import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity;
+import com.mycity4kids.ui.activity.phoneLogin.FacebookFriends;
 import com.mycity4kids.ui.adapter.UserAllDraftsRecyclerAdapter;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.fragment.AddArticleVideoFragment;
@@ -294,10 +296,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
-        appUpdatePopUp();
-        onNewIntent(getIntent());
         Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
+        appUpdatePopUp();
+        onNewIntent(intent);
 
         if (null != intent.getParcelableExtra("notificationExtras")) {
             if ("upcoming_event_list".equals(((Bundle) intent.getParcelableExtra("notificationExtras")).getString("type")))
@@ -669,6 +670,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             replaceFragment(fragment, mBundle, true);
         } else if (Constants.PROFILE_FRAGMENT.equals(fragmentToLoad)) {
             Intent pIntent = new Intent(this, UserProfileActivity.class);
+            Bundle notificationExtras = getIntent().getParcelableExtra("notificationExtras");
+            pIntent.putExtra(Constants.USER_ID, SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+            pIntent.putExtra(AppConstants.BADGE_ID, notificationExtras.getString(AppConstants.BADGE_ID));
+            pIntent.putExtra(AppConstants.MILESTONE_ID, notificationExtras.getString(AppConstants.MILESTONE_ID));
             startActivity(pIntent);
         } else if (Constants.SUGGESTED_TOPICS_FRAGMENT.equals(fragmentToLoad)) {
             SuggestedTopicsFragment fragment0 = new SuggestedTopicsFragment();
@@ -715,6 +720,19 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         findActiveChallenge();
         getUsersData();
+    }
+
+    private void showMyMoneyRegistrationPrompt(Intent _intent) {
+        if (!_intent.hasExtra("branchLink") &&
+                !_intent.hasExtra(AppConstants.BRANCH_DEEPLINK_URL) &&
+                "1".equals(SharedPrefUtils.getUserDetailModel(this).getIsNewUser())) {
+            MyMoneyRegistrationDialogFragment mmRegistrationDialogFragment = new MyMoneyRegistrationDialogFragment();
+            FragmentManager fm = getSupportFragmentManager();
+            Bundle _args = new Bundle();
+            mmRegistrationDialogFragment.setArguments(_args);
+            mmRegistrationDialogFragment.setCancelable(true);
+            mmRegistrationDialogFragment.show(fm, "MyMoney");
+        }
     }
 
     private void loadAllDrafts() {
@@ -1111,7 +1129,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 pushEvent("group_listing");
                 fragmentToLoad = Constants.GROUP_LISTING_FRAGMENT;
             }
-        } else if (_intent.hasExtra("branchLink") || _intent.hasExtra(AppConstants.BRANCH_DEEPLINK_URL)) {
+        } else if (_intent.hasExtra("branchLink") ||
+                _intent.hasExtra(AppConstants.BRANCH_DEEPLINK_URL)) {
             String branchdata = BaseApplication.getInstance().getBranchData();
             JsonParser parser = new JsonParser();
             JsonElement mJson = parser.parse(branchdata);
@@ -1161,23 +1180,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         showAlertDialog("Message", "Logged in as " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name(), new OnButtonClicked() {
                             @Override
                             public void onButtonCLick(int buttonId) {
-                                if (Build.VERSION.SDK_INT > 15) {
-                                    Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT,
-                                            SharedPrefUtils.getUserDetailModel(DashboardActivity.this).getDynamoId() + "", "Mobile Deep Link");
-                                    launchEditor();
-                                } else {
-                                    showToast(getString(R.string.android_version_unsupported));
-                                }
+                                Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT,
+                                        SharedPrefUtils.getUserDetailModel(DashboardActivity.this).getDynamoId() + "", "Mobile Deep Link");
+                                launchEditor();
                             }
                         });
                     } else {
-                        if (Build.VERSION.SDK_INT > 15) {
-                            Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT,
-                                    SharedPrefUtils.getUserDetailModel(DashboardActivity.this).getDynamoId() + "", "Mobile Deep Link");
-                            launchEditor();
-                        } else {
-                            showToast(getString(R.string.android_version_unsupported));
-                        }
+                        Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT,
+                                SharedPrefUtils.getUserDetailModel(DashboardActivity.this).getDynamoId() + "", "Mobile Deep Link");
+                        launchEditor();
                     }
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_ADD_FUNNY_VIDEO_URL) || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_ADD_FUNNY_VIDEO_URL)) {
                     final String bloggerId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
@@ -1742,6 +1753,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.menuCoachmark: {
                 menuCoachmark.setVisibility(View.GONE);
                 SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "HomeScreen", true);
+                showMyMoneyRegistrationPrompt(getIntent());
             }
             break;
             case R.id.viewBookmarkedArticleTextView: {
@@ -2590,14 +2602,17 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 menu.findItem(R.id.action_momVlog).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
             } else if (topFragment instanceof SuggestedTopicsFragment) {
-                Utils.pushOpenScreenEvent(this, "SuggestedTopicScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+                Utils.pushOpenScreenEvent(this, "SuggestedTopicScreen",
+                        SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_suggested_topic_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
                 menu.findItem(R.id.action_write).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
             } else if (topFragment instanceof FragmentMC4KHomeNew) {
-                Utils.pushOpenScreenEvent(this, "HomeScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "HomeScreen")) {
+                Utils.pushOpenScreenEvent(this, "HomeScreen",
+                        SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+                if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "HomeScreen") &&
+                        !BuildConfig.DEBUG) {
                     homeCoachmark.setVisibility(View.VISIBLE);
                 }
                 if (SharedPrefUtils.isTopicSelectionChanged(this)) {
@@ -2845,19 +2860,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         dialog.setContentView(R.layout.update_app_pop_up_layout);
                         dialog.setCancelable(true);
                         TextView updateNow = dialog.findViewById(R.id.updateNowTextView);
-                        updateNow.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                String appPackage = DashboardActivity.this.getPackageName();
-                                try {
-                                    Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackage));
-                                    startActivity(rateIntent);
-                                } catch (Exception e) {
-                                    Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackage));
-                                    startActivity(rateIntent);
-                                }
-                                dialog.dismiss();
+                        updateNow.setOnClickListener(view -> {
+                            String appPackage = DashboardActivity.this.getPackageName();
+                            try {
+                                Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackage));
+                                startActivity(rateIntent);
+                            } catch (Exception e) {
+                                Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackage));
+                                startActivity(rateIntent);
                             }
+                            dialog.dismiss();
                         });
                         dialog.show();
                         SharedPrefUtils.setFrequencyForShowingAppUpdate(BaseApplication.getAppContext(), frequecy);

@@ -1,5 +1,7 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -9,13 +11,21 @@ import java.util.Map;
 
 public class AddGroupPostRequest {
 
+    @SerializedName("content")
     private String content;
+    @SerializedName("type")
     private String type;
+    @SerializedName("pollType")
     private String pollType;
+    @SerializedName("pollOptions")
     private Map<String, String> pollOptions;
+    @SerializedName("mediaUrls")
     private LinkedHashMap<String, String> mediaUrls;
+    @SerializedName("groupId")
     private int groupId;
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("isAnnon")
     private int isAnnon;
 
     public String getContent() {

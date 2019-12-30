@@ -1,15 +1,22 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 27/9/18.
  */
 
 public class PhoneLoginRequest {
 
+    @SerializedName("code")
     private String code;
+    @SerializedName("phone")
     private String phone;
+    @SerializedName("verification_code")
     private String verification_code;
+    @SerializedName("sms_token")
     private String sms_token;
+    @SerializedName("auth_token")
     private String auth_token;
 
     public String getCode() {

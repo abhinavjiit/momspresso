@@ -54,50 +54,65 @@ class MilestonesListAdapter(
             if (!milestonesList?.get(position)?.milestone_image_url.isNullOrBlank()) {
                 Picasso.with(holder.itemView.context).load(milestonesList?.get(position)?.milestone_image_url).into(holder.milestoneImageView)
             } else {
-                holder.milestoneImageView?.setBackgroundResource(R.drawable.default_article)
+                holder.milestoneImageView?.setImageResource(R.drawable.default_article)
             }
         } catch (e: Exception) {
-            holder.milestoneImageView?.setBackgroundResource(R.drawable.default_article)
+            holder.milestoneImageView?.setImageResource(R.drawable.default_article)
             Crashlytics.logException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
 
-        if (milestonesList?.get(position)?.item_type == AppConstants.CONTENT_TYPE_ARTICLE) {
-            holder.contentTypeImageView?.visibility = View.VISIBLE
-            holder.contentTypeImageView?.setImageResource(R.drawable.draft_red)
-            try {
-                val jsonObject = Gson().toJsonTree(milestonesList?.get(position)?.meta_data?.content_info?.imageUrl).asJsonObject
-                val imageUrl = Gson().fromJson<ImageURL>(jsonObject, ImageURL::class.java)
-                Picasso.with(holder.itemView.context).load(imageUrl?.thumbMin).into(holder.contentImageView)
-            } catch (e: Exception) {
-                holder.contentImageView?.setBackgroundResource(R.drawable.default_article)
-                Crashlytics.logException(e)
-                Log.d("MC4kException", Log.getStackTraceString(e))
+        when (milestonesList?.get(position)?.item_type) {
+            AppConstants.CONTENT_TYPE_ARTICLE -> {
+                holder.contentTypeImageView?.visibility = View.VISIBLE
+                holder.contentTypeImageView?.setImageResource(R.drawable.draft_red)
+                try {
+                    val jsonObject = Gson().toJsonTree(milestonesList?.get(position)?.meta_data?.content_info?.imageUrl).asJsonObject
+                    val imageUrl = Gson().fromJson<ImageURL>(jsonObject, ImageURL::class.java)
+                    Picasso.with(holder.itemView.context).load(imageUrl?.thumbMin).into(holder.contentImageView)
+                } catch (e: Exception) {
+                    holder.contentImageView?.setImageResource(R.drawable.default_article)
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
             }
-        } else if (milestonesList?.get(position)?.item_type == AppConstants.CONTENT_TYPE_SHORT_STORY) {
-            holder.contentTypeImageView?.visibility = View.VISIBLE
-            holder.contentTypeImageView?.setImageResource(R.drawable.shortstory_red)
-            try {
-                val imageUrl: String? = milestonesList?.get(position)?.meta_data?.content_info?.imageUrl as String
-                Picasso.with(holder.itemView.context).load(imageUrl).into(holder.contentImageView)
-            } catch (e: Exception) {
-                holder.contentImageView?.setBackgroundResource(R.drawable.default_article)
-                Crashlytics.logException(e)
-                Log.d("MC4kException", Log.getStackTraceString(e))
+            AppConstants.CONTENT_TYPE_SHORT_STORY -> {
+                holder.contentTypeImageView?.visibility = View.VISIBLE
+                holder.contentTypeImageView?.setImageResource(R.drawable.shortstory_red)
+                try {
+                    val imageUrl: String? = milestonesList?.get(position)?.meta_data?.content_info?.imageUrl as String
+                    Picasso.with(holder.itemView.context).load(imageUrl).into(holder.contentImageView)
+                } catch (e: Exception) {
+                    holder.contentImageView?.setImageResource(R.drawable.default_article)
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
             }
-        } else if (milestonesList?.get(position)?.item_type == AppConstants.CONTENT_TYPE_VIDEO) {
-            holder.contentTypeImageView?.visibility = View.VISIBLE
-            holder.contentTypeImageView?.setImageResource(R.drawable.ic_video)
-            try {
-                Picasso.with(holder.itemView.context).load(
-                        milestonesList?.get(position)?.meta_data?.content_info?.thumbnail).into(holder.contentImageView)
-            } catch (e: Exception) {
-                holder.contentImageView?.setBackgroundResource(R.drawable.default_article)
-                Crashlytics.logException(e)
-                Log.d("MC4kException", Log.getStackTraceString(e))
+            AppConstants.CONTENT_TYPE_VIDEO -> {
+                holder.contentTypeImageView?.visibility = View.VISIBLE
+                holder.contentTypeImageView?.setImageResource(R.drawable.ic_video)
+                try {
+                    Picasso.with(holder.itemView.context).load(
+                            milestonesList?.get(position)?.meta_data?.content_info?.thumbnail).into(holder.contentImageView)
+                } catch (e: Exception) {
+                    holder.contentImageView?.setImageResource(R.drawable.default_article)
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
             }
-        } else {
-            //My Money Handling for Later
+            AppConstants.CONTENT_TYPE_MYMONEY -> {
+                holder.contentTypeImageView?.visibility = View.VISIBLE
+                holder.contentTypeImageView?.setImageResource(R.drawable.ic_rupee)
+                holder.milestoneImageView?.setImageDrawable(null)
+                try {
+                    val imageUrl: String? = milestonesList?.get(position)?.meta_data?.content_info?.imageUrl as String
+                    Picasso.with(holder.itemView.context).load(imageUrl).into(holder.contentImageView)
+                } catch (e: Exception) {
+                    holder.contentImageView?.setImageResource(R.drawable.default_article)
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            }
         }
         holder.contentTextView?.text = milestonesList?.get(position)?.meta_data?.content_info?.title
 

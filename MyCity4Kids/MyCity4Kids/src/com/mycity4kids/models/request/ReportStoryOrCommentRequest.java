@@ -1,13 +1,18 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 12/6/18.
  */
 
 public class ReportStoryOrCommentRequest {
 
+    @SerializedName("id")
     private String id;
+    @SerializedName("reason")
     private String reason;
+    @SerializedName("type")
     private int type;
 
     public String getId() {

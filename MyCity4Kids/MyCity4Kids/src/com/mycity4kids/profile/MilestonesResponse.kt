@@ -64,5 +64,9 @@ data class ContentInfo(
         @SerializedName("created_at")
         val created_at: String?,
         @SerializedName("thumbnail")
-        val thumbnail: String?
+        val thumbnail: String?,
+        @SerializedName("payment_value")
+        val payment_value: Long?,
+        @SerializedName("referral_code")
+        val referral_code: String?
 )

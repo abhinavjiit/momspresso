@@ -1,21 +1,30 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 22/5/18.
  */
 
 public class GroupActionsRequest {
 
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("groupId")
     private int groupId;
+    @SerializedName("postId")
     private int postId;
 
     // {'0': 'helpfull', '1': 'nothelpfull', '2': 'share', '3': 'vote', '4': 'tag'}
+    @SerializedName("type")
     private String type;
+    @SerializedName("voteOption")
     private String voteOption;
 
     // {'0': '1', '1': 'fb', '2': 'insta', '3': 'twitter', '4': 'whatsapp', '5': 'others'}
+    @SerializedName("sharedOn")
     private String sharedOn;
+    @SerializedName("taggedUserId")
     private String taggedUserId;
 
     public String getUserId() {

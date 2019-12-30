@@ -567,6 +567,7 @@ public class AppConstants {
     public static final String NOTIFICATION_CENTER_CAMPAIGN_BANKDETAIL = "26";
     public static final String NOTIFICATION_CENTER_VIDEO_CHALLENGE_DETAIL = "27";
     public static final String NOTIFICATION_CENTER_COLLECTION_DETAIL = "28";
+    public static final String NOTIFICATION_CENTER_BADGE_LISTING = "29";
 
     public static final String FOLLOWING_STATUS_ACTIVITY_RESULT = "followingStatusActivityResult";
     public static final String VIDEO_STATUS_DRAFT = "0";
@@ -663,6 +664,7 @@ public class AppConstants {
     public static final String GROUP_ACTION_TYPE_VOTE_KEY = "3";
     public static final String GROUP_ACTION_TYPE_TAG_KEY = "4";
 
+    public static final String CONTENT_TYPE_MYMONEY = "4";
     public static final String CONTENT_TYPE_VIDEO = "2";
     public static final String CONTENT_TYPE_SHORT_STORY = "1";
     public static final String CONTENT_TYPE_ARTICLE = "0";

@@ -1,10 +1,14 @@
 package com.mycity4kids.models.request;
 
-public class CampaignParticipate {
-    private String user_id;
-    private int campaign_id;
-    private int payment_mode_id;
+import com.google.gson.annotations.SerializedName;
 
+public class CampaignParticipate {
+    @SerializedName("user_id")
+    private String user_id;
+    @SerializedName("campaign_id")
+    private int campaign_id;
+    @SerializedName("payment_mode_id")
+    private int payment_mode_id;
 
     public String getUser_id() {
         return user_id;

@@ -4,30 +4,20 @@ import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
-import com.mycity4kids.models.request.ArticleReadTimeRequest;
-import com.mycity4kids.models.request.DeleteBookmarkRequest;
-import com.mycity4kids.models.request.GroupNotificationToggleRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
 import com.mycity4kids.models.request.UpdateVlogTitleRequest;
 import com.mycity4kids.models.request.UploadVideoRequest;
 import com.mycity4kids.models.request.VlogsEventRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.AddCommentResponse;
-import com.mycity4kids.models.response.ArticleDetailResponse;
-import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
-import com.mycity4kids.models.response.FBCommentResponse;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
-import com.mycity4kids.models.response.ViewCountResponse;
 import com.mycity4kids.models.response.VlogsDetailResponse;
 import com.mycity4kids.models.response.VlogsListingResponse;
-
-import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
 import retrofit2.http.PATCH;
@@ -35,7 +25,6 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.Url;
 
 /**
  * Created by hemant on 3/5/16.
@@ -48,9 +37,6 @@ public interface VlogsListingAndDetailsAPI {
 
     @GET("/v2/videos/{videoId}")
     Call<VlogsDetailResponse> getVlogDetail(@Path("videoId") String videoId);
-
-    @GET("v1/videos/{videoId}/views")
-    Call<ViewCountResponse> getViewCount(@Path("videoId") String videoId);
 
     @PUT("v2/videos/{videoId}/views/")
     Call<ResponseBody> updateViewCount(@Path("videoId") String videoId);
@@ -93,32 +79,14 @@ public interface VlogsListingAndDetailsAPI {
                                                      @Query("category_id") String categoryId,
                                                      @Query("$order_by") String orderBy);
 
-
     @POST("v2/videos/")
-    Call<ResponseBody> publishHomeVideo(@Body UploadVideoRequest uploadVideoRequest/*@Query("start") int start,
-                                                  @Query("end") int end,
-                                                  @Query("sort") int sort,
-                                                  @Query("type") int type*/);
+    Call<ResponseBody> publishHomeVideo(@Body UploadVideoRequest uploadVideoRequest);
 
     @GET("/v1/categories/videochallenges/")
     Call<TopicsResponse> getVlogChallenges();
 
-
-    @GET("/v1/articles/doc/")
-    Call<ArticleDetailResponse> getArticleDetailsFromWebservice(@Query("articleId") String articleId);
-
     @GET("v1/users/vlog/bookmarkVideo/")
     Call<AddBookmarkResponse> checkFollowingBookmarkStatus(@Body ArticleDetailRequest articleDetailRequest);
-
-    @GET
-    Call<ResponseBody> getComments(@Url String url);
-
-    @GET("v1/comments/fb/{articleId}")
-    Call<FBCommentResponse> getFBComments(@Path("articleId") String articleId,
-                                          @Query("pagination") String pagination);
-
-    @POST("v1/comments/")
-    Call<AddCommentResponse> addComment(@Body AddCommentRequest body);
 
     @PUT("v1/comments/{commentId}")
     Call<AddCommentResponse> editComment(@Path("commentId") String commentId,
@@ -130,20 +98,11 @@ public interface VlogsListingAndDetailsAPI {
     @HTTP(method = "DELETE", path = "v1/users/vlog/deleteBookmarkVideo/", hasBody = true)
     Call<AddBookmarkResponse> deleteBookmark(@Body ArticleDetailRequest body);
 
-    @POST("/v1/users/isBookmarkVideo/")
-    Call<ArticleDetailResponse> checkBookmarkVideoStatus(@Body ArticleDetailRequest body);
-
-    @GET("v1/recommend/related/{articleId}")
-    Call<ArticleListingResponse> getCategoryRelatedArticles(@Path("articleId") String articleId);
-
     @GET("v1/users/likes/{articleId}")
     Call<ArticleRecommendationStatusResponse> getArticleRecommendedStatus(@Path("articleId") String articleId);
 
     @PUT("v1/users/likes/")
     Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle(@Body RecommendUnrecommendArticleRequest body);
-
-    @POST("v1/articles/chronos/")
-    Call<ResponseBody> updateArticleTimeSpent(@Body ArticleReadTimeRequest body);
 
     @GET("v1/recommendations/video_ad")
     Call<Topics> getRecommendedVideoAd();

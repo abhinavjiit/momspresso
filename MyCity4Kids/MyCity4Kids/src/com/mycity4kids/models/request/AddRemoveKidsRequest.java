@@ -1,12 +1,18 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 26/7/17.
  */
 public class AddRemoveKidsRequest {
+    @SerializedName("name")
     private String name;
+    @SerializedName("birthDay")
     private long birthDay;
+    @SerializedName("colorCode")
     private String colorCode;
+    @SerializedName("gender")
     private String gender;
 
     public String getName() {

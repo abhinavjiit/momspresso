@@ -1,5 +1,7 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
@@ -7,19 +9,33 @@ import java.util.ArrayList;
  */
 public class UpdateUserDetailsRequest {
 
+    @SerializedName("attributeName")
     private String attributeName;
+    @SerializedName("attributeValue")
     private String attributeValue;
+    @SerializedName("attributeType")
     private String attributeType;
+    @SerializedName("firstName")
     private String firstName;
+    @SerializedName("lastName")
     private String lastName;
+    @SerializedName("email")
     private String email;
+    @SerializedName("mobile")
     private String mobile;
+    @SerializedName("userBio")
     private String userBio;
+    @SerializedName("cityId")
     private String cityId;
+    @SerializedName("cityName")
     private String cityName;
+    @SerializedName("blogTitle")
     private String blogTitle;
+    @SerializedName("subscriptionEmail")
     private String subscriptionEmail;
+    @SerializedName("isValidated")
     private String isValidated;
+    @SerializedName("kids")
     private ArrayList<AddRemoveKidsRequest> kids;
 
     public String getFirstName() {

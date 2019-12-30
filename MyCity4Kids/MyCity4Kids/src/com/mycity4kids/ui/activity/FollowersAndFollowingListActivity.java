@@ -224,7 +224,6 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
                 } else {
                     noResultTextView.setText(getResources().getString(R.string.profile_empty_following));
                 }
-                noResultTextView.setText(getResources().getString(R.string.empty_followers_in_profile));
                 noResultTextView.setVisibility(View.VISIBLE);
                 followerFollowingListView.setVisibility(View.GONE);
             } else {

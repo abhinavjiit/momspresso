@@ -1,9 +1,15 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 public class VlogsEventRequest {
+    @SerializedName("topic")
     private String topic;
+    @SerializedName("payload")
     private Payload payload = new Payload();
+    @SerializedName("createdTime")
     private long createdTime;
+    @SerializedName("key")
     private String key;
 
     public String getTopic() {
