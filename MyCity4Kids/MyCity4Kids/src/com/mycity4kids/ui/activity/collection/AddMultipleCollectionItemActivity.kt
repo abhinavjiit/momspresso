@@ -36,8 +36,8 @@ class AddMultipleCollectionItemActivity : BaseActivity(), View.OnClickListener {
     private lateinit var add: TextView
     private lateinit var multipleCollectionItemPagerAdapter: MultipleCollectionItemPagerAdapter
     private lateinit var collectionId: String
-    var userCreatedSelectedItemList: List<MixFeedResult>? = null
-    var userReadSelectedList: List<ArticleListingResult>? = null
+    private var userCreatedSelectedItemList: List<MixFeedResult>? = null
+    private var userReadSelectedList: List<ArticleListingResult>? = null
     private var multipleCollectionList: ArrayList<UpdateCollectionRequestModel>? = null
     private var multipleUserCreatedCollectionList: ArrayList<UpdateCollectionRequestModel>? = null
     private var mixedReadAndCreatedSelectedList: HashSet<UpdateCollectionRequestModel>? = null

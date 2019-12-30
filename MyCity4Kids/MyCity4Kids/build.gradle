@@ -166,8 +166,8 @@ android {
         }
         debug {
             buildConfigField 'String', 'GROUPS_LIVE_URL', '"http://35.200.142.199/"'
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }

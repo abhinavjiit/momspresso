@@ -43,14 +43,12 @@
         app:tabSelectedTextColor="@color/all_drafts.title"
         app:tabTextColor="@color/grey_faded" />
 
-
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottomLayout"
         android:layout_below="@id/tabLayout" />
-
 
     <LinearLayout
         android:id="@+id/bottomLayout"
@@ -90,8 +88,5 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-
     </LinearLayout>
-
-
 </RelativeLayout>
