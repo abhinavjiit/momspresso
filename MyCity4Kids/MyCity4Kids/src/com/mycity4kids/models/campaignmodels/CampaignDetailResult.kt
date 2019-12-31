@@ -80,9 +80,6 @@ class CampaignDetailResult {
     @SerializedName("referral_code")
     @Expose
     var referralCode: String? = null
-    @SerializedName("segments")
-    @Expose
-    var segments: List<CampaignDetailSegment>? = null
     @SerializedName("start_time")
     @Expose
     var startTime: Long? = null

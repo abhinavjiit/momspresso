@@ -12,8 +12,6 @@ public class SearchResult {
     private ArrayList<SearchArticleResult> article;
     @SerializedName("author")
     private ArrayList<SearchAuthorResult> author;
-    @SerializedName("blog")
-    private ArrayList<SearchBlogResult> blog;
     @SerializedName("topic")
     private ArrayList<SearchTopicResult> topic;
     @SerializedName("video")
@@ -33,14 +31,6 @@ public class SearchResult {
 
     public void setAuthor(ArrayList<SearchAuthorResult> author) {
         this.author = author;
-    }
-
-    public ArrayList<SearchBlogResult> getBlog() {
-        return blog;
-    }
-
-    public void setBlog(ArrayList<SearchBlogResult> blog) {
-        this.blog = blog;
     }
 
     public ArrayList<SearchTopicResult> getTopic() {
