@@ -180,8 +180,8 @@
 
                 <com.mikhaellopez.circularimageview.CircularImageView
                     android:id="@+id/user_image"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:clickable="true"
                     android:src="@drawable/default_commentor_img"
                     app:civ_border="true"
@@ -193,11 +193,9 @@
 
                 <ImageView
                     android:id="@+id/crownImageView"
-                    android:layout_width="40dp"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_alignBottom="@+id/user_image"
-                    android:layout_alignParentBottom="true"
+                    android:layout_width="30dp"
+                    android:layout_height="23dp"
+                    android:layout_marginTop="48dp"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/profile_crown_bg"
                     android:elevation="4dp"
