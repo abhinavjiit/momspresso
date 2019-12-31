@@ -75,8 +75,9 @@ class AddMultipleCollectionItemActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.add -> {
-                multipleCollectionList = ArrayList()
-                multipleCollectionList?.clear()
+
+                multipleUserCreatedCollectionList = ArrayList()
+                multipleUserCreatedCollectionList?.clear()
                 userCreatedSelectedItemList?.forEach { data ->
                     val updateCollectionRequestModel = UpdateCollectionRequestModel()
                     val list = ArrayList<String>()
@@ -89,8 +90,8 @@ class AddMultipleCollectionItemActivity : BaseActivity(), View.OnClickListener {
                     dataList.add(updateCollectionRequestModel)
                     multipleUserCreatedCollectionList!!.addAll(dataList)
                 }
-                multipleUserCreatedCollectionList = ArrayList()
-                multipleUserCreatedCollectionList?.clear()
+                multipleCollectionList = ArrayList()
+                multipleCollectionList?.clear()
                 userReadSelectedList?.forEach { data ->
                     val updateCollectionRequestModel = UpdateCollectionRequestModel()
                     val list = ArrayList<String>()

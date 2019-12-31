@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kelltontech.utils.StringUtils;
@@ -122,7 +122,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
             if (view == null) {
                 videoChallengeHeaderView = new VideoChallengeHeaderView();
                 view = mInflator.inflate(R.layout.video_challenge_detail_listing_header, null);
-                videoChallengeHeaderView.mExoPlayerView = (PlayerView) view.findViewById(R.id.exoplayerChallengeDetailListing);
+                videoChallengeHeaderView.mExoPlayerView = (SimpleExoPlayerView) view.findViewById(R.id.exoplayerChallengeDetailListing);
                 videoChallengeHeaderView.challengeNameText = (TextView) view.findViewById(R.id.ChallengeNameText);
                 videoChallengeHeaderView.rootChallengeHeaderContainer = (RelativeLayout) view.findViewById(R.id.rootChallengeHeaderContainer);
                 videoChallengeHeaderView.submitButtonVideoChallenge = (TextView) view.findViewById(R.id.submit_story_text);
@@ -431,7 +431,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
         RelativeLayout rootChallengeHeaderContainer;
         TextView submitButtonVideoChallenge;
         TextView challengeNameText;
-        PlayerView mExoPlayerView;
+        SimpleExoPlayerView mExoPlayerView;
 
     }
 }

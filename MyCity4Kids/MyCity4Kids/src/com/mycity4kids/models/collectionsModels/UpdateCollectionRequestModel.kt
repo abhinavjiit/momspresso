@@ -19,7 +19,7 @@ class UpdateCollectionRequestModel {
     @SerializedName("deleted")
     var deleted: Boolean? = false
     @SerializedName("isPublic")
-    var isPublic: Boolean? = false
+    var isPublic: Boolean? = null
     @SerializedName("summary")
     var summary: String? = null
 
