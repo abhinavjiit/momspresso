@@ -15,7 +15,7 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.preference.SharedPrefUtils
-import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
+import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 
 class MyMoneyRegistrationDialogFragment : DialogFragment(), View.OnClickListener {
 
@@ -53,9 +53,11 @@ class MyMoneyRegistrationDialogFragment : DialogFragment(), View.OnClickListener
                             "Get_Started_Button", "", "android",
                             SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
                             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                            System.currentTimeMillis().toString(), "Show_Campaign_Listing")
-                    val cityIntent = Intent(it, CampaignContainerActivity::class.java)
-                    startActivity(cityIntent)
+                            System.currentTimeMillis().toString(), "CTA_MyMoney_GetStarted")
+                    val intent = Intent(it, RewardsContainerActivity::class.java)
+                    intent.putExtra("pageLimit", 2)
+                    startActivity(intent)
+                    dismiss()
                 }
             }
         }
