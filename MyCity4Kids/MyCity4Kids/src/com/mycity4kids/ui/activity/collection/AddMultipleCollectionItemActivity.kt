@@ -3,9 +3,6 @@ package com.mycity4kids.ui.activity.collection
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.viewpager.widget.ViewPager
 import com.crashlytics.android.Crashlytics
 import com.google.android.material.tabs.TabLayout
 import com.kelltontech.network.Response
@@ -25,15 +22,11 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
 import com.mycity4kids.ui.adapter.MultipleCollectionItemPagerAdapter
+import kotlinx.android.synthetic.main.multiple_collection_item_activity.*
 import retrofit2.Call
 import retrofit2.Callback
 
 class AddMultipleCollectionItemActivity : BaseActivity(), View.OnClickListener {
-    private lateinit var back: ImageView
-    private lateinit var tabLayout: TabLayout
-    private lateinit var viewPager: ViewPager
-    private lateinit var skipTextView: TextView
-    private lateinit var add: TextView
     private lateinit var multipleCollectionItemPagerAdapter: MultipleCollectionItemPagerAdapter
     private lateinit var collectionId: String
     private var userCreatedSelectedItemList: List<MixFeedResult>? = null
@@ -49,12 +42,8 @@ class AddMultipleCollectionItemActivity : BaseActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.multiple_collection_item_activity)
-        back = findViewById(R.id.back)
-        tabLayout = findViewById(R.id.tabLayout)
-        viewPager = findViewById(R.id.viewPager)
-        skipTextView = findViewById(R.id.skipTextView)
-        add = findViewById(R.id.add)
         collectionId = intent.getStringExtra("collectionId")
+        toolbarTitleTextView.text = getString(R.string.please_add_item_multicollection_activity)
         getUserDetail(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId)
         add.setOnClickListener(this)
         skipTextView.setOnClickListener(this)
