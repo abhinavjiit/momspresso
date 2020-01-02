@@ -21,12 +21,12 @@
                 android:src="@drawable/cross_icon_back" />
 
             <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/toolbarTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/space_20"
                 android:layout_toEndOf="@id/back"
-                android:text="Please Add Items"
                 android:textColor="#515151"
                 android:textSize="@dimen/space_20"
                 android:textStyle="bold" />

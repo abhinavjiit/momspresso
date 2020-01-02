@@ -1336,4 +1336,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="all_terms_conditions"><![CDATA[T&C]]></string>
     <string name="milestone_mm_share">I earned Rs.%1$d from Momspresso MyMoney and you can earn too! Simply register using my code %2$s and complete your first campaign. It\'s that simple, so register now! \n%3$s</string>
     <string name="all_refer_url">https://www.momspresso.com/usersprofile/rewardsform?referrer=%1$s</string>
+    <string name="please_add_item_multicollection_activity">Please Add Items</string>
 </resources>
