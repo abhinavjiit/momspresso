@@ -72,7 +72,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
             is VideosViewHolder -> addVideoItem(holder.winnerLayout, holder.txvArticleTitle, holder.txvAuthorName, holder.articleImageView,
                     holder.viewCountTextView, holder.commentCountTextView, holder.recommendCountTextView,
                     holder.goldLogo, mixFeedList?.get(position), holder, isPrivate)
-            is ShortStoriesViewHolder -> addShortStoryItem(holder.mainView, holder.storyTitleTextView, holder.storyBodyTextView, holder.authorNameTextView,
+            is ShortStoriesViewHolder -> addShortStoryItem(holder.storyImage, holder.authorNameTextView,
                     holder.storyCommentCountTextView, holder.storyRecommendationCountTextView, holder.likeImageView,
                     mixFeedList?.get(position), holder, isPrivate)
         }
@@ -144,37 +144,35 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
     }
 
     inner class ShortStoriesViewHolder(itemView: View, val listener: RecyclerViewClickListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        internal var storyTitleTextView: TextView
-        internal var storyBodyTextView: TextView
         internal var authorNameTextView: TextView
         internal var storyCommentCountTextView: TextView
         internal var storyRecommendationContainer: LinearLayout
         internal var storyCommentContainer: LinearLayout
         internal var storyRecommendationCountTextView: TextView
-        internal var storyOptionImageView: ImageView
+        internal var storyImage: ImageView
         internal var likeImageView: ImageView
         internal var facebookShareImageView: ImageView
         internal var whatsappShareImageView: ImageView
         internal var instagramShareImageView: ImageView
         internal var addToCollectionImageView: ImageView
-        internal var mainView: RelativeLayout
+        internal var followAuthorTextView: TextView
+        internal var menuItem: ImageView
 
         init {
-            mainView = itemView.findViewById<View>(R.id.mainView) as RelativeLayout
-            storyTitleTextView = itemView.findViewById<View>(R.id.storyTitleTextView) as TextView
-            storyBodyTextView = itemView.findViewById<View>(R.id.storyBodyTextView) as TextView
             authorNameTextView = itemView.findViewById<View>(R.id.authorNameTextView) as TextView
             storyRecommendationContainer = itemView.findViewById<View>(R.id.storyRecommendationContainer) as LinearLayout
             storyCommentContainer = itemView.findViewById<View>(R.id.storyCommentContainer) as LinearLayout
             storyCommentCountTextView = itemView.findViewById<View>(R.id.storyCommentCountTextView) as TextView
             storyRecommendationCountTextView = itemView.findViewById<View>(R.id.storyRecommendationCountTextView) as TextView
-            storyOptionImageView = itemView.findViewById<View>(R.id.storyOptionImageView) as ImageView
+            storyImage = itemView.findViewById<View>(R.id.storyImageView) as ImageView
             likeImageView = itemView.findViewById<View>(R.id.likeImageView) as ImageView
             facebookShareImageView = itemView.findViewById<View>(R.id.facebookShareImageView) as ImageView
             whatsappShareImageView = itemView.findViewById<View>(R.id.whatsappShareImageView) as ImageView
             instagramShareImageView = itemView.findViewById<View>(R.id.instagramShareImageView) as ImageView
             addToCollectionImageView = itemView.findViewById<View>(R.id.genericShareImageView) as ImageView
-
+            followAuthorTextView = itemView.findViewById<View>(R.id.followAuthorTextView) as TextView
+            followAuthorTextView.visibility = View.INVISIBLE
+            menuItem = itemView.findViewById<View>(R.id.menuItem) as ImageView
             whatsappShareImageView.tag = itemView
 
             storyRecommendationContainer.setOnClickListener(this)
@@ -183,7 +181,9 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
             instagramShareImageView.setOnClickListener(this)
             addToCollectionImageView.setOnClickListener(this)
             authorNameTextView.setOnClickListener(this)
-            storyOptionImageView.setOnClickListener(this)
+            storyImage.setOnClickListener(this)
+            followAuthorTextView.setOnClickListener(this)
+            menuItem.setOnClickListener(this)
             itemView.setOnClickListener(this)
         }
 
@@ -328,12 +328,9 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
 //        }
     }
 
-    private fun addShortStoryItem(mainViewRL: RelativeLayout, storyTitleTV: TextView, storyBodyTV: TextView, authorNameTV: TextView,
+    private fun addShortStoryItem(storyImage: ImageView, authorNameTV: TextView,
                                   storyCommentCountTV: TextView, storyRecommendationCountTV: TextView, likeIV: ImageView,
                                   data: MixFeedResult?, holder: ShortStoriesViewHolder, private: Boolean) {
-        mainViewRL.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.short_story_card_bg_1))
-        storyTitleTV.text = data?.title?.trim { it <= ' ' }
-        storyBodyTV.text = data?.body?.trim { it <= ' ' }
         authorNameTV.text = data?.userName
         if (null == data?.commentsCount) {
             storyCommentCountTV.text = "0"
@@ -345,7 +342,21 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         } else {
             storyRecommendationCountTV.text = "" + data.likesCount
         }
-        likeIV.setImageDrawable(ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_ss_like))
+        data?.isLiked?.let {
+            if (it) {
+                holder.likeImageView.setImageDrawable(ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_recommended))
+
+            } else {
+                likeIV.setImageDrawable(ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_ss_like))
+            }
+        }
+
+        try {
+            Picasso.with(holder.itemView.context).load(data?.storyImage?.trim { it <= ' ' }).into(storyImage)
+        } catch (e: Exception) {
+            holder.storyImage.setImageResource(R.drawable.default_article)
+        }
+
     }
 
     private fun addVideoItem(winnerLayout: RelativeLayout, txvArticleTitle: TextView, txvAuthorName: TextView, articleImageView: ImageView,

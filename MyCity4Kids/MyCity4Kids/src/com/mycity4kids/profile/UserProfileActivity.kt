@@ -2,8 +2,10 @@ package com.mycity4kids.profile
 
 import android.Manifest
 import android.accounts.NetworkErrorException
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +18,9 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.appcompat.view.menu.MenuBuilder
+import androidx.appcompat.view.menu.MenuPopupHelper
+import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
@@ -31,6 +36,7 @@ import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.ConnectivityUtils
 import com.kelltontech.utils.StringUtils
+import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.animation.MyCityAnimationsUtil
 import com.mycity4kids.application.BaseApplication
@@ -40,6 +46,7 @@ import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.collectionsModels.FeaturedOnModel
 import com.mycity4kids.models.request.ArticleDetailRequest
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
+import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest
 import com.mycity4kids.models.response.*
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
@@ -50,6 +57,7 @@ import com.mycity4kids.ui.activity.*
 import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity
 import com.mycity4kids.ui.fragment.AddCollectionAndCollectionItemDialogFragment
 import com.mycity4kids.ui.fragment.AddCollectionPopUpDialogFragment
+import com.mycity4kids.ui.fragment.ReportContentDialogFragment
 import com.mycity4kids.ui.fragment.UserBioDialogFragment
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.PermissionUtil
@@ -74,6 +82,9 @@ class UserProfileActivity : BaseActivity(),
     var shareMedium: String? = null
     var shareContentPosition: Int? = null
     lateinit var isRewardAdded: String
+    var isRecommendRequestRunning: Boolean = false
+    lateinit var likeStatus: String
+    var currentShortStoryPosition: Int = -1
 
 
     private lateinit var rootLayout: CoordinatorLayout
@@ -952,7 +963,126 @@ class UserProfileActivity : BaseActivity(),
             view.id == R.id.bookmarkArticleImageView -> {
                 bookmarkItem(position)
             }
+            view.id == R.id.menuItem -> {
+                chooseMenuOptionsItem(view, position)
+            }
+            view.id == R.id.storyRecommendationContainer -> {
+                if (!isRecommendRequestRunning) {
+                    userContentList?.get(position)?.isLiked?.let {
+                        if (it) {
+                            likeStatus = "0";
+                            currentShortStoryPosition = position;
+                            recommendUnrecommentArticleAPI("0", userContentList?.get(position)?.id, userContentList?.get(position)?.userId, userContentList?.get(position)?.userName)
+                        } else {
+                            likeStatus = "1"
+                            currentShortStoryPosition = position
+                            recommendUnrecommentArticleAPI("1", userContentList?.get(position)?.id, userContentList?.get(position)?.userId, userContentList?.get(position)?.userName)
+                        }
+                    }
+                }
+            }
+
         }
+    }
+
+    private fun recommendUnrecommentArticleAPI(status: String, articleId: String?, authorId: String?, author: String?) {
+        Utils.pushLikeStoryEvent(this@UserProfileActivity, "ArticleListingFragment", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + "", articleId, "$authorId~$author")
+        val retro = BaseApplication.getInstance().retrofit
+        val articleDetailsAPI = retro.create(ArticleDetailsAPI::class.java)
+
+        isRecommendRequestRunning = true
+        val recommendUnrecommendArticleRequest = RecommendUnrecommendArticleRequest()
+        recommendUnrecommendArticleRequest.articleId = articleId
+        recommendUnrecommendArticleRequest.status = likeStatus
+        val recommendUnrecommendArticle = articleDetailsAPI.recommendUnrecommendArticle(recommendUnrecommendArticleRequest)
+        recommendUnrecommendArticle.enqueue(recommendUnrecommendArticleResponseCallback)
+    }
+
+    private val recommendUnrecommendArticleResponseCallback = object : Callback<RecommendUnrecommendArticleResponse> {
+        override fun onResponse(call: Call<RecommendUnrecommendArticleResponse>, response: retrofit2.Response<RecommendUnrecommendArticleResponse>) {
+            isRecommendRequestRunning = false
+            if (response.body() == null) {
+                ToastUtils.showToast(this@UserProfileActivity, getString(R.string.server_went_wrong))
+                return
+            }
+
+            try {
+                val responseData = response.body()
+                if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                    if (likeStatus == "1") {
+                        if (responseData.data.isNotEmpty()) {
+                            userContentList?.get(currentShortStoryPosition)?.likesCount = userContentList?.get(currentShortStoryPosition)?.likesCount?.plus(1)!!
+                        }
+                        userContentList?.get(currentShortStoryPosition)?.isLiked = true
+                    } else {
+                        if (responseData.data.isNotEmpty()) {
+                            userContentList?.get(currentShortStoryPosition)?.likesCount = userContentList?.get(currentShortStoryPosition)?.likesCount?.minus(1)!!
+                        }
+                        userContentList?.get(currentShortStoryPosition)?.isLiked = false
+                    }
+                    userContentAdapter.notifyDataSetChanged()
+
+                    ToastUtils.showToast(this@UserProfileActivity, responseData.reason)
+
+                } else {
+
+                    ToastUtils.showToast(this@UserProfileActivity, getString(R.string.server_went_wrong))
+                }
+            } catch (e: Exception) {
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+                ToastUtils.showToast(this@UserProfileActivity, getString(R.string.went_wrong))
+            }
+
+        }
+
+        override fun onFailure(call: Call<RecommendUnrecommendArticleResponse>, t: Throwable) {
+            isRecommendRequestRunning = false
+            Crashlytics.logException(t)
+            Log.d("MC4kException", Log.getStackTraceString(t))
+        }
+    }
+
+
+    @SuppressLint("RestrictedApi")
+    private fun chooseMenuOptionsItem(view: View, position: Int) {
+
+        val popupMenu = PopupMenu(this@UserProfileActivity, view)
+        popupMenu.menuInflater.inflate(R.menu.choose_short_story_menu, popupMenu.menu)
+        for (i in 0 until popupMenu.menu.size()) {
+            val drawable = popupMenu.menu.getItem(i).icon
+            if (drawable != null) {
+                drawable.mutate()
+                drawable.setColorFilter(resources.getColor(R.color.app_red), PorterDuff.Mode.SRC_ATOP)
+            }
+        }
+        popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
+            override fun onMenuItemClick(item: MenuItem?): Boolean {
+                var id = item?.itemId
+                if (id == R.id.shareShortStory) {
+                    AppUtils.shareStoryGeneric(this@UserProfileActivity, userContentList?.get(position)?.userType, userContentList?.get(position)?.blogTitleSlug, userContentList?.get(position)?.titleSlug,
+                            "UserProfileActivity", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, userContentList?.get(position)?.id, userContentList?.get(position)?.userId, userContentList?.get(position)?.userName)
+                    return true
+                } else if (id == R.id.reportContentShortStory) {
+                    val reportContentDialogFragment = ReportContentDialogFragment()
+                    val fm = supportFragmentManager
+                    val _args = Bundle()
+                    _args.putString("postId", userContentList?.get(position)?.id)
+                    _args.putInt("type", AppConstants.REPORT_TYPE_STORY)
+                    reportContentDialogFragment.arguments = _args
+                    reportContentDialogFragment.isCancelable = true
+                    reportContentDialogFragment.show(fm, "Report Content")
+                    return true
+                }
+                return false
+            }
+        })
+
+        val menuPopupHelper = MenuPopupHelper(view.context, popupMenu.menu as MenuBuilder, view)
+        menuPopupHelper.setForceShowIcon(true)
+        menuPopupHelper.show()
+
+
     }
 
     private fun bookmarkItem(position: Int) {

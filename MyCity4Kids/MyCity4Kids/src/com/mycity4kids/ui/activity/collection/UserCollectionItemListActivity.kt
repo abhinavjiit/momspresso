@@ -325,7 +325,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
             override fun onError(e: Throwable) {
                 Crashlytics.logException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
-                val code = (e as HttpException).code()
+                val code = (e as retrofit2.HttpException).code()
                 if (code == 402) {
                     var data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
                     var jsonParser = JsonParser()

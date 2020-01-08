@@ -1,7 +1,5 @@
 package com.mycity4kids.models.response;
 
-import com.mycity4kids.models.parentingdetails.DetailsBody;
-
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -36,6 +34,7 @@ public class ShortStoryDetailResult {
     private String likeCount;
     private String lang;
     private boolean isLiked;
+    String storyImage;
 
     public String getId() {
         return id;
@@ -251,5 +250,13 @@ public class ShortStoryDetailResult {
 
     public void setLiked(boolean liked) {
         isLiked = liked;
+    }
+
+    public String getStoryImage() {
+        return storyImage;
+    }
+
+    public void setStoryImage(String storyImage) {
+        this.storyImage = storyImage;
     }
 }

@@ -2,8 +2,11 @@ package com.mycity4kids.ui.fragment;
 
 import android.Manifest;
 import android.accounts.NetworkErrorException;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,13 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.share.model.ShareLinkContent;
@@ -74,6 +70,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -621,7 +625,11 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onClick(View view, int position, View whatsappShare) {
         switch (view.getId()) {
-            case R.id.storyOptionImageView: {
+
+            case R.id.menuItem:
+                chooseMenuOptionsItem(view, position);
+                break;
+           /* case R.id.storyOptionImageView: {
                 ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
                 Bundle _args = new Bundle();
@@ -631,7 +639,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 reportContentDialogFragment.setCancelable(true);
                 reportContentDialogFragment.show(fm, "Report Content");
             }
-            break;
+            break;*/
             case R.id.commentRootLayout: {
                 CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
@@ -1413,4 +1421,49 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         }, 3000);
 
     }
+
+
+    @SuppressLint("RestrictedApi")
+    private void chooseMenuOptionsItem(View view, int position) {
+
+        final androidx.appcompat.widget.PopupMenu popupMenu = new androidx.appcompat.widget.PopupMenu(getActivity(), view);
+        popupMenu.getMenuInflater().inflate(R.menu.choose_short_story_menu, popupMenu.getMenu());
+        for (int i = 0; i < popupMenu.getMenu().size(); i++) {
+            Drawable drawable = popupMenu.getMenu().getItem(i).getIcon();
+            if (drawable != null) {
+                drawable.mutate();
+                drawable.setColorFilter(getResources().getColor(R.color.app_red), PorterDuff.Mode.SRC_ATOP);
+            }
+        }
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.shareShortStory) {
+                if (isAdded()) {
+                    AppUtils.shareStoryGeneric(getActivity(), headerModel.getSsResult().getUserType(), headerModel.getSsResult().getBlogTitleSlug(), headerModel.getSsResult().getTitleSlug(),
+                            "ShortStoryListingScreen", userDynamoId, articleId, authorId, author);
+                }
+
+                return true;
+            } else if (item.getItemId() == R.id.bookmarkShortStory) {
+
+
+                return true;
+            } else if (item.getItemId() == R.id.reportContentShortStory) {
+                ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
+                FragmentManager fm = getChildFragmentManager();
+                Bundle _args = new Bundle();
+                _args.putString("postId", consolidatedList.get(position).getSsResult().getId());
+                _args.putInt("type", AppConstants.REPORT_TYPE_STORY);
+                reportContentDialogFragment.setArguments(_args);
+                reportContentDialogFragment.setCancelable(true);
+                reportContentDialogFragment.show(fm, "Report Content");
+                return true;
+            }
+            return false;
+        });
+
+        MenuPopupHelper menuPopupHelper = new MenuPopupHelper(view.getContext(), (MenuBuilder) popupMenu.getMenu(), view);
+        menuPopupHelper.setForceShowIcon(true);
+        menuPopupHelper.show();
+    }
+
 }

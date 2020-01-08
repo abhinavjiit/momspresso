@@ -4,6 +4,7 @@ import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.FollowersFollowingResponse;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -25,8 +26,14 @@ public interface FollowAPI {
     @POST("/v1/users/followers/")
     Call<FollowUnfollowUserResponse> followUser(@Body FollowUnfollowUserRequest body);
 
+    @POST("/v1/users/followers/")
+    Call<ResponseBody> followUserInShortStoryListing(@Body FollowUnfollowUserRequest body);
+
     @POST("/v1/users/unfollow/")
     Call<FollowUnfollowUserResponse> unfollowUser(@Body FollowUnfollowUserRequest body);
+
+    @POST("/v1/users/unfollow/")
+    Call<ResponseBody> unfollowUserInShortStoryListing(@Body FollowUnfollowUserRequest body);
 
     @GET("/v1/collections/followers/{collectionId}")
     Call<FollowersFollowingResponse> getCollectionFollowingList(@Path("collectionId") String collectionId,

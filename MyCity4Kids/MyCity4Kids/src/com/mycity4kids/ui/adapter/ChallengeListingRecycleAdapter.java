@@ -1,11 +1,6 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
-import q.rorbin.badgeview.QBadgeView;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +9,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.mycity4kids.R;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResult;
-
+import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+import q.rorbin.badgeview.QBadgeView;
 
 public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<ChallengeListingRecycleAdapter.ChallengeListingViewHolder> {
     private Context mContext;
@@ -86,39 +83,22 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
         } else {
             holder.rootview.setVisibility(View.VISIBLE);
             holder.challengeHeaderText.setVisibility(View.GONE);
-            holder.mainView.setVisibility(View.VISIBLE);
             viewListingResult(holder, position - 1);
 
         }
-
-
     }
 
     private void viewListingResult(ChallengeListingViewHolder holder, int position) {
-        switch (((position) % 6)) {
-            case 0:
-                holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_1));
-                break;
-            case 1:
-                holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_2));
-                break;
-            case 2:
-                holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_3));
-                break;
-            case 3:
-                holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_4));
-                break;
-            case 4:
-                holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_5));
-                break;
-            case 5:
-                holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_6));
-                break;
-        }
+        if (articleDataModelsNew.get(position).getIsfollowing().equals("1"))
+            holder.followAuthorTextView.setText("following");
+        else
+            holder.followAuthorTextView.setText("follow");
 
-        holder.storyTitleTextView.setText(articleDataModelsNew.get(position).getTitle().trim());
-        holder.storyBodyTextView.setText(articleDataModelsNew.get(position).getBody().trim());
-        holder.authorNameTextView.setText(articleDataModelsNew.get(position).getUserName());
+        try {
+            Picasso.with(holder.itemView.getContext()).load(articleDataModelsNew.get(position).getStoryImage().trim()).into(holder.storyImage);
+        } catch (Exception e) {
+            holder.storyImage.setImageResource(R.drawable.default_article);
+        }
 
         if (null == articleDataModelsNew.get(position).getCommentsCount()) {
             holder.storyCommentCountTextView.setText("0");
@@ -138,6 +118,7 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
             holder.likeImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_ss_like));
         }
 
+        holder.authorNameTextView.setText(articleDataModelsNew.get(position).getUserName());
     }
 
     @Override
@@ -148,8 +129,6 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
 
     public class ChallengeListingViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private RelativeLayout rootview;
-        private RelativeLayout mainview;
-        private RelativeLayout titlecontainer;
         private RelativeLayout challengeHeaderText;
         private TextView ChallengeNameText;
         TextView storyTitleTextView;
@@ -158,11 +137,10 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
         TextView storyCommentCountTextView;
         LinearLayout storyRecommendationContainer, storyCommentContainer;
         TextView storyRecommendationCountTextView;
-        ImageView storyOptionImageView, likeImageView;
+        ImageView storyImage, likeImageView;
         ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView;
-        RelativeLayout mainView;
-        TextView submitChallenegLayout;
-        ImageView challengeNameImage;
+        TextView submitChallenegLayout, followAuthorTextView;
+        ImageView challengeNameImage, menuItem;
 
 
         public ChallengeListingViewHolder(View itemView, RecyclerViewClickListener recyclerViewClickListener) {
@@ -170,15 +148,12 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
             challengeNameImage = (ImageView) itemView.findViewById(R.id.ChallengeNameImage);
             challengeHeaderText = (RelativeLayout) itemView.findViewById(R.id.challenge_header_text);
             ChallengeNameText = (TextView) itemView.findViewById(R.id.ChallengeNameText);
-            mainView = (RelativeLayout) itemView.findViewById(R.id.mainView);
-            storyTitleTextView = (TextView) itemView.findViewById(R.id.storyTitleTextView);
-            storyBodyTextView = (TextView) itemView.findViewById(R.id.storyBodyTextView);
             authorNameTextView = (TextView) itemView.findViewById(R.id.authorNameTextView);
             storyRecommendationContainer = (LinearLayout) itemView.findViewById(R.id.storyRecommendationContainer);
             storyCommentContainer = (LinearLayout) itemView.findViewById(R.id.storyCommentContainer);
             storyCommentCountTextView = (TextView) itemView.findViewById(R.id.storyCommentCountTextView);
             storyRecommendationCountTextView = (TextView) itemView.findViewById(R.id.storyRecommendationCountTextView);
-            storyOptionImageView = (ImageView) itemView.findViewById(R.id.storyOptionImageView);
+            storyImage = (ImageView) itemView.findViewById(R.id.storyImageView);
             likeImageView = (ImageView) itemView.findViewById(R.id.likeImageView);
             facebookShareImageView = (ImageView) itemView.findViewById(R.id.facebookShareImageView);
             whatsappShareImageView = (ImageView) itemView.findViewById(R.id.whatsappShareImageView);
@@ -186,6 +161,8 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
             genericShareImageView = (ImageView) itemView.findViewById(R.id.genericShareImageView);
             rootview = (RelativeLayout) itemView.findViewById(R.id.rootView);
             submitChallenegLayout = (TextView) itemView.findViewById(R.id.submit_story_text);
+            menuItem = itemView.findViewById(R.id.menuItem);
+            followAuthorTextView = itemView.findViewById(R.id.followAuthorTextView);
             whatsappShareImageView.setTag(itemView);
             submitChallenegLayout.setOnClickListener(this);
             storyRecommendationContainer.setOnClickListener(this);
@@ -194,12 +171,12 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
             instagramShareImageView.setOnClickListener(this);
             genericShareImageView.setOnClickListener(this);
             authorNameTextView.setOnClickListener(this);
-            storyOptionImageView.setOnClickListener(this);
+            storyImage.setOnClickListener(this);
             challengeHeaderText.setOnClickListener(this);
             itemView.setOnClickListener(this);
             rootview.setOnClickListener(this);
-            mainView.setOnClickListener(this);
-
+            menuItem.setOnClickListener(this);
+            followAuthorTextView.setOnClickListener(this);
 
         }
 

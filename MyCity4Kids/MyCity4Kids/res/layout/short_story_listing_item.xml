@@ -1,108 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rootView"
+    xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    android:background="@drawable/short_story_border_bg">
+    android:background="#f9f9f9"
+    card_view:cardCornerRadius="0dp"
+    card_view:cardElevation="0dp">
 
     <RelativeLayout
-        android:id="@+id/mainView"
+        android:id="@+id/rootView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/short_story.card_bg_1"
-        android:elevation="2dp">
+        android:layout_height="wrap_content"
+        android:background="@drawable/article_listing_item_border_bg">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/storyImageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/default_article" />
+
 
         <RelativeLayout
-            android:id="@+id/titleContainer"
+            android:id="@+id/followAuthorRelativeContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/storyImageView"
+            android:layout_marginEnd="@dimen/space_10">
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/storyTitleTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/storyOptionImageView"
-                android:maxLines="2"
-                android:paddingLeft="14dp"
-                android:paddingTop="14dp"
-                android:paddingRight="14dp"
-                android:paddingBottom="14dp"
-                android:text=""
-                android:textColor="@color/short_story.light_black_color"
-                android:textSize="18sp"
-                app:fontName="georgia.ttf" />
-
-            <View
-                android:id="@+id/viewId"
-                android:layout_width="100dp"
-                android:layout_height="1dp"
-                android:layout_below="@+id/storyTitleTextView"
-                android:layout_marginLeft="14dp"
-                android:background="@color/common_underline" />
-
-            <ImageView
-                android:id="@+id/storyOptionImageView"
+                android:id="@+id/authorNameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:padding="14dp"
+                android:text=""
+                android:textColor="#465391"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/followAuthorTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/followAuthorTextView"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:padding="15dp"
+                android:layout_marginEnd="@dimen/space_30"
+                android:padding="14dp"
+                android:text="@string/ad.follow_author"
+                android:textColor="@color/app_red"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/menuItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/followAuthorTextView"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
                 android:src="@drawable/ic_more_vert_black_24dp" />
+
         </RelativeLayout>
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/storyBodyTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/titleContainer"
-            android:paddingLeft="14dp"
-            android:paddingTop="14dp"
-            android:paddingRight="14dp"
-            android:text=""
-            android:textColor="@color/short_story.light_black_color"
-            android:textSize="17sp"
-            app:fontName="georgia.ttf" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/authorNameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/storyBodyTextView"
-            android:padding="14dp"
-            android:text=""
-            android:textColor="@color/app_blue"
-            android:textSize="16sp"
-            app:fontName="georgia.ttf" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/followAuthorTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/storyBodyTextView"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/short_story_follow_author_bg"
-            android:paddingStart="10dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="10dp"
-            android:paddingBottom="8dp"
-            android:textColor="@color/app_red"
-            android:textSize="14sp"
-            android:visibility="gone"
-            app:fontName="oswald.ttf" />
-
 
         <View
             android:id="@+id/underline"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/authorNameTextView"
+            android:layout_below="@+id/followAuthorRelativeContainer"
+            android:layout_marginStart="@dimen/space_10"
+            android:layout_marginEnd="@dimen/space_10"
             android:background="@color/light_underline" />
 
         <RelativeLayout
@@ -239,20 +210,8 @@
                         android:src="@drawable/ic_ss_comment"
                         android:tint="@color/app_red" />
                 </LinearLayout>
-
             </LinearLayout>
-            <!--<com.mycity4kids.widget.CustomFontTextView-->
-            <!--android:id="@+id/articleViewCountTextView"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginBottom="10dp"-->
-            <!--android:layout_marginRight="10dp"-->
-            <!--android:drawableLeft="@drawable/ic_views"-->
-            <!--android:drawablePadding="3dp"-->
-            <!--android:text=""-->
-            <!--android:textColor="@color/ad.stats.text"-->
-            <!--android:textSize="12sp"-->
-            <!--app:fontName="open_sans.ttf" />-->
         </RelativeLayout>
+
     </RelativeLayout>
-</RelativeLayout>
+</androidx.cardview.widget.CardView>

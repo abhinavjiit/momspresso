@@ -97,7 +97,7 @@ data class MixFeedResult(
         @SerializedName("like_count")
         val like_count: Int = -1,
         @SerializedName("likesCount")
-        val likesCount: Int = -1,
+        var likesCount: Int = -1,
         @SerializedName("old_video_id")
         val old_video_id: String = "",
         @SerializedName("orientation")
@@ -157,5 +157,7 @@ data class MixFeedResult(
         @SerializedName("collectionListTotal")
         val collectionListTotal: Int = 0,
         @SerializedName("isbookmark")
-        var isbookmark: Int = 0
+        var isbookmark: Int = 0,
+        @SerializedName("isLiked")
+        var isLiked: Boolean = false
 )
