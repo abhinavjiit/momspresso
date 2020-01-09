@@ -184,10 +184,15 @@
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/storyBodyEditText"
                 android:layout_alignRight="@+id/storyBodyEditText"
-                android:padding="5dp"
-                android:text=""
-                android:textColor="@color/app_grey"
-                android:textSize="12sp"
+                android:background="@drawable/short_story_word_count_bg"
+                android:paddingLeft="@dimen/space_8"
+                android:paddingTop="@dimen/space_5"
+                android:paddingRight="@dimen/space_8"
+                android:paddingBottom="@dimen/space_5"
+                android:gravity="center"
+                android:text="100"
+                android:textColor="@color/white"
+                android:textSize="15sp"
                 app:fontName="oswald.ttf" />
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>

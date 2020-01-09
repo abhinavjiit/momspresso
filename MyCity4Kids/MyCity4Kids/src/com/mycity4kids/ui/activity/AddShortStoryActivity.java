@@ -22,16 +22,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.widget.AppCompatRadioButton;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SnapHelper;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
@@ -77,6 +67,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.AppCompatRadioButton;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -106,7 +105,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     MediaType MEDIA_TYPE_PNG;
     RequestBody requestBodyFile;
     RequestBody imageType;
-    private static final int MAX_WORDS = 100;
+    private static final int MAX_WORDS = 100, MAX_TITLE_WORDS = 10;
     private ArrayList<Topics> subTopicsList = new ArrayList<>();
     private ArrayList<Map<String, String>> listDraft;
     private TopicsResponse res;
@@ -320,6 +319,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             chooseLayout.setVisibility(View.GONE);
 
         }
+
         storyBodyEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -349,7 +349,13 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             @Override
             public void afterTextChanged(Editable s) {
                 int wordsLength = countWords(s.toString());
-                wordCounterTextView.setText(wordsLength + " " + getString(R.string.app_settings_edit_profile_toast_user_bio_words));
+                if (wordsLength <= MAX_WORDS) {
+                    wordCounterTextView.setText("" + (100 - wordsLength));
+                    wordCounterTextView.setBackground(getResources().getDrawable(R.drawable.short_story_word_count_bg));
+                } else {
+                    wordCounterTextView.setText("" + (wordsLength - 100));
+                    wordCounterTextView.setBackground(getResources().getDrawable(R.drawable.campaign_detail_red_bg));
+                }
             }
         });
 
@@ -721,6 +727,12 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     } else {
                         saveDraftBeforePublishRequest(storyTitleEditText.getText().toString().trim(), storyBodyEditText.getText().toString().trim(), draftId);
                     }
+                } else {
+                    Intent intent = new Intent(this, ShortStoriesCardActivity.class);
+                    intent.putExtra("ssTopicsText" , ssTopicsText);
+                    intent.putExtra("title", storyTitleEditText.getText().toString().trim());
+                    intent.putExtra("story", storyBodyEditText.getText().toString().trim());
+                    startActivity(intent);
                 }
                 break;
             case R.id.start_writing:
