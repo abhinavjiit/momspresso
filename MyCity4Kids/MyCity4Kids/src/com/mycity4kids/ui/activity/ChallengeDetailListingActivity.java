@@ -1,9 +1,12 @@
 package com.mycity4kids.ui.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,22 +14,10 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.AppCompatRadioButton;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -45,7 +36,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.ExploreTopicsModel;
 import com.mycity4kids.models.ExploreTopicsResponse;
-import com.mycity4kids.models.Topics;
+import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
@@ -53,6 +44,7 @@ import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ChallengeListingRecycleAdapter;
@@ -61,16 +53,25 @@ import com.mycity4kids.ui.fragment.ReportContentDialogFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.PermissionUtil;
-import com.mycity4kids.widget.FeedNativeAd;
 
-import org.apmem.tools.layouts.FlowLayout;
+import org.json.JSONObject;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.appcompat.widget.AppCompatRadioButton;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -133,6 +134,7 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
     private SwipeRefreshLayout pullToRefresh;
     private String shareMedium;
     private int sharedStoryPosition;
+    int position;
 
 
     @Override
@@ -521,7 +523,10 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
     public void
     onClick(View view, final int position, String ActiveUrl) {
         switch (view.getId()) {
-            case R.id.storyOptionImageView: {
+            case R.id.menuItem:
+                chooseMenuOptionsItem(view, position);
+                break;
+           /* case R.id.storyOptionImageView: {
                 relative_frame.setVisibility(View.VISIBLE);
                 ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
@@ -534,8 +539,8 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
                 reportContentDialogFragment.show(fm, "report_dialog");
                 fragmentTransaction.commit();
             }
-            break;
-            case R.id.mainView:
+            break;*/
+            case R.id.storyImageView:
                 Intent intent = new Intent(this, ShortStoryContainerActivity.class);
                 intent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
                 intent.putExtra(Constants.AUTHOR_ID, mDatalist.get(position).getUserId());
@@ -612,9 +617,101 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
 
             case R.id.submit_story_text:
                 chooseLayout.setVisibility(View.VISIBLE);
+                break;
+            case R.id.followAuthorTextView:
+                followAPICall(mDatalist.get(position).getUserId(), position);
 
         }
     }
+
+    private void followAPICall(String authorId, int position) {
+        this.position = position;
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        FollowAPI followAPI = retrofit.create(FollowAPI.class);
+        FollowUnfollowUserRequest request = new FollowUnfollowUserRequest();
+        request.setFollowerId(authorId);
+        if (mDatalist.get(position).getIsfollowing().equals("1")) {
+            Utils.pushGenericEvent(this, "CTA_Unfollow_100WS_Detail", userDynamoId, "TopicsShortStoryTabFragment");
+            Call<ResponseBody> followUnfollowUserResponseCall = followAPI.unfollowUserInShortStoryListing(request);
+            followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
+        } else {
+            Utils.pushGenericEvent(this, "CTA_Follow_100WS_Detail", userDynamoId, "TopicsShortStoryTabFragment");
+            Call<ResponseBody> followUnfollowUserResponseCall = followAPI.followUserInShortStoryListing(request);
+            followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
+        }
+    }
+
+    private Callback<ResponseBody> unfollowUserResponseCallback = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+            if (response.body() == null) {
+
+                ToastUtils.showToast(ChallengeDetailListingActivity.this, "some thing went wrong ");
+                return;
+            }
+            try {
+                String resData = new String(response.body().bytes());
+                JSONObject jObject = new JSONObject(resData);
+                int code = jObject.getInt("code");
+                String status = jObject.getString("status");
+                String reason = jObject.getString("reason");
+                if (code == 200 && Constants.SUCCESS.equals(status)) {
+                    mDatalist.get(position).setIsfollowing("0");
+                    challengeListingRecycleAdapter.notifyDataSetChanged();
+                } else {
+                    ToastUtils.showToast(ChallengeDetailListingActivity.this, reason);
+                }
+            } catch (Exception e) {
+                ToastUtils.showToast(ChallengeDetailListingActivity.this, "some thing went wrong at the server ");
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
+            ToastUtils.showToast(ChallengeDetailListingActivity.this, "some thing went wrong at the server ");
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private Callback<ResponseBody> followUserResponseCallback = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+            if (response.body() == null) {
+                ToastUtils.showToast(ChallengeDetailListingActivity.this, "some thing went wrong ");
+                return;
+            }
+            try {
+                String resData = new String(response.body().bytes());
+                JSONObject jObject = new JSONObject(resData);
+                int code = jObject.getInt("code");
+                String status = jObject.getString("status");
+                String reason = jObject.getString("reason");
+                if (code == 200 && Constants.SUCCESS.equals(status)) {
+                    mDatalist.get(position).setIsfollowing("1");
+                    challengeListingRecycleAdapter.notifyDataSetChanged();
+                } else if (code == 200 && "failure".equals(status) && "Already following!".equals(reason)) {
+                    mDatalist.get(position).setIsfollowing("1");
+                    challengeListingRecycleAdapter.notifyDataSetChanged();
+                } else {
+                    ToastUtils.showToast(ChallengeDetailListingActivity.this, reason);
+                }
+            } catch (Exception e) {
+                ToastUtils.showToast(ChallengeDetailListingActivity.this, "some thing went wrong at the server ");
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
+            ToastUtils.showToast(ChallengeDetailListingActivity.this, "some thing went wrong at the server ");
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 
     private boolean checkPermissionAndCreateShareableImage(int position) {
         if (Build.VERSION.SDK_INT >= 23) {
@@ -810,5 +907,51 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void chooseMenuOptionsItem(View view, int position) {
+
+        final androidx.appcompat.widget.PopupMenu popupMenu = new androidx.appcompat.widget.PopupMenu(this, view);
+        popupMenu.getMenuInflater().inflate(R.menu.choose_short_story_menu, popupMenu.getMenu());
+        for (int i = 0; i < popupMenu.getMenu().size(); i++) {
+            Drawable drawable = popupMenu.getMenu().getItem(i).getIcon();
+            if (drawable != null) {
+                drawable.mutate();
+                drawable.setColorFilter(getResources().getColor(R.color.app_red), PorterDuff.Mode.SRC_ATOP);
+            }
+        }
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.shareShortStory) {
+
+                AppUtils.shareStoryGeneric(this, mDatalist.get(position).getUserType(), mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug(),
+                        "ShortStoryListingScreen", userDynamoId, mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
+                return true;
+            } else if (item.getItemId() == R.id.bookmarkShortStory) {
+
+
+                return true;
+            } else if (item.getItemId() == R.id.reportContentShortStory) {
+                relative_frame.setVisibility(View.VISIBLE);
+                ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
+                FragmentManager fm = getSupportFragmentManager();
+                Bundle _args = new Bundle();
+                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                _args.putString("postId", mDatalist.get(position).getId());
+                _args.putInt("type", AppConstants.REPORT_TYPE_STORY);
+                reportContentDialogFragment.setArguments(_args);
+                reportContentDialogFragment.setCancelable(true);
+                reportContentDialogFragment.show(fm, "report_dialog");
+                fragmentTransaction.commit();
+                return true;
+            }
+            return false;
+        });
+
+        MenuPopupHelper menuPopupHelper = new MenuPopupHelper(view.getContext(), (MenuBuilder) popupMenu.getMenu(), view);
+        menuPopupHelper.setForceShowIcon(true);
+        menuPopupHelper.show();
+
+
     }
 }

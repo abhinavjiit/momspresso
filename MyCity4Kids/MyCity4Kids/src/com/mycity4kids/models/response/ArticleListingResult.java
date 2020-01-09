@@ -48,6 +48,8 @@ public class ArticleListingResult implements Parcelable, StickyMainData {
     private String disableComment = "";
     private boolean isCollectionItemSelected = false;
     private ArrayList<VlogsListingAndDetailResult> carouselVideoList;
+    private String storyImage;
+    private String isfollowing = "0";
 
     public ArticleListingResult() {
     }
@@ -78,7 +80,8 @@ public class ArticleListingResult implements Parcelable, StickyMainData {
         url = in.readString();
         is_bookmark = in.readString();
         disableComment = in.readString();
-
+        storyImage = in.readString();
+        isfollowing = in.readString();
     }
 
     public static final Creator<ArticleListingResult> CREATOR = new Creator<ArticleListingResult>() {
@@ -196,6 +199,14 @@ public class ArticleListingResult implements Parcelable, StickyMainData {
 
     public void setCommentCount(String commentCount) {
         this.commentCount = commentCount;
+    }
+
+    public String getStoryImage() {
+        return storyImage;
+    }
+
+    public void setStoryImage(String storyImage) {
+        this.storyImage = storyImage;
     }
 
     public String getCommentsCount() {
@@ -358,6 +369,14 @@ public class ArticleListingResult implements Parcelable, StickyMainData {
         this.responseReceived = responseReceived;
     }
 
+    public String getIsfollowing() {
+        return isfollowing;
+    }
+
+    public void setIsfollowing(String isfollwing) {
+        this.isfollowing = isfollwing;
+    }
+
     public String getDisableComment() {
         return disableComment;
     }
@@ -405,5 +424,7 @@ public class ArticleListingResult implements Parcelable, StickyMainData {
         dest.writeString(url);
         dest.writeString(is_bookmark);
         dest.writeString(disableComment);
+        dest.writeString(storyImage);
+        dest.writeString(isfollowing);
     }
 }

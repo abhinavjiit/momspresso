@@ -415,7 +415,8 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.activity.ShortStoryContainerActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/EditorTheme" />
         <activity
             android:name=".ui.activity.GroupCategoriesSelectionActivity"
             android:screenOrientation="portrait" />
@@ -439,7 +440,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.ShortStoriesListingContainerActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/EditorTheme" />
         <activity
             android:name=".ui.activity.TopicsListingActivity"
             android:parentActivityName=".ui.activity.DashboardActivity"
@@ -492,7 +494,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.ChallengeDetailListingActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/EditorTheme" />
         <activity
             android:name=".ui.activity.ChooseVideoCategoryActivity"
             android:parentActivityName=".ui.activity.DashboardActivity"
@@ -539,7 +542,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".profile.UserProfileActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/EditorTheme" />
         <activity
             android:name=".ui.activity.FeaturedOnActivity"
             android:screenOrientation="portrait" />
