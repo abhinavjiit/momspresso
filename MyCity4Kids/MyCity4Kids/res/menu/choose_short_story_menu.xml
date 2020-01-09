@@ -13,6 +13,6 @@
     <item
         android:id="@+id/reportContentShortStory"
         android:icon="@drawable/ic_collection_add"
-        android:title="REPORT CONTENT" />
+        android:title="@string/all_report_content" />
 
 </menu>
