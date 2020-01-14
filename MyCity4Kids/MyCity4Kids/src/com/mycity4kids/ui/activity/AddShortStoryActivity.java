@@ -105,7 +105,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     MediaType MEDIA_TYPE_PNG;
     RequestBody requestBodyFile;
     RequestBody imageType;
-    private static final int MAX_WORDS = 100, MAX_TITLE_WORDS = 10;
+    private static final int MAX_WORDS = 100;
     private ArrayList<Topics> subTopicsList = new ArrayList<>();
     private ArrayList<Map<String, String>> listDraft;
     private TopicsResponse res;
@@ -143,6 +143,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private String ssTopicsText;
     private TextView wordCounterTextView;
     private RelativeLayout root;
+    private boolean isValidTitle, isValidBody, isCategorySelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -320,6 +321,28 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
 
         }
 
+        storyTitleEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    isValidTitle = true;
+                } else {
+                    isValidTitle = false;
+                }
+                setNextColor();
+            }
+        });
+
         storyBodyEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -332,10 +355,15 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                             showToast(getString(R.string.short_s_max_word));
                             isMaxLengthToastShown = true;
                         }
+                        isValidBody = false;
+//                        publishTextView.setTextColor(getResources().getColor(R.color.color_979797));
                     } else {
                         removeFilter(storyBodyEditText);
                         isMaxLengthToastShown = false;
+                        isValidBody = true;
+//                        publishTextView.setTextColor(getResources().getColor(R.color.app_red));
                     }
+                    setNextColor();
                 } catch (Exception e) {
 
                 }
@@ -448,6 +476,13 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 }
             });
         }
+    }
+
+    private void setNextColor() {
+        if (isCategorySelected && isValidTitle && isValidBody)
+            publishTextView.setTextColor(getResources().getColor(R.color.app_red));
+        else
+            publishTextView.setTextColor(getResources().getColor(R.color.color_979797));
     }
 
 
@@ -702,7 +737,24 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         switch (v.getId()) {
             case R.id.publishTextView:
                 if (isValid()) {
-                    if ("publishedList".equals(source)) {
+                    Intent intent = new Intent(this, ShortStoriesCardActivity.class);
+                    intent.putExtra("ssTopicsText", ssTopicsText);
+                    intent.putExtra("challengeName", challengeName);
+                    intent.putExtra("challengeId", challengeId);
+                    intent.putExtra("runningrequest", runningrequest);
+                    intent.putExtra("draftId", draftId);
+                    intent.putExtra("articleId", articleId);
+                    intent.putExtra("source", source);
+                    intent.putExtra("flag", flag);
+                    intent.putExtra("listDraft", listDraft);
+                    intent.putParcelableArrayListExtra("ssTopicsList", ssTopicsList);
+                    intent.putExtra("currentActiveChallengeId", currentActiveChallengeId);
+                    intent.putExtra("currentActiveChallenge", currentActiveChallenge);
+                    intent.putExtra("tagsList", tagsList);
+                    intent.putExtra("title", storyTitleEditText.getText().toString().trim());
+                    intent.putExtra("story", storyBodyEditText.getText().toString().trim());
+                    startActivity(intent);
+                    /*if ("publishedList".equals(source)) {
                         shortStoryDraftOrPublishRequest = new ShortStoryDraftOrPublishRequest();
                         shortStoryDraftOrPublishRequest.setTitle(storyTitleEditText.getText().toString().trim());
                         shortStoryDraftOrPublishRequest.setBody(storyBodyEditText.getText().toString());
@@ -726,14 +778,25 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                         getBlogPage();
                     } else {
                         saveDraftBeforePublishRequest(storyTitleEditText.getText().toString().trim(), storyBodyEditText.getText().toString().trim(), draftId);
-                    }
-                } else {
+                    }*/
+                }/* else {
                     Intent intent = new Intent(this, ShortStoriesCardActivity.class);
                     intent.putExtra("ssTopicsText" , ssTopicsText);
+                    intent.putExtra("challengeName" , challengeName);
+                    intent.putExtra("challengeId" , challengeId);
+                    intent.putExtra("runningrequest" , runningrequest);
+                    intent.putExtra("draftId" , draftId);
+                    intent.putExtra("articleId" , articleId);
+                    intent.putExtra("source" , source);
+                    intent.putExtra("flag" , flag);
+                    intent.putExtra("listDraft" , listDraft);
+                    intent.putExtra("currentActiveChallengeId" , currentActiveChallengeId);
+                    intent.putExtra("currentActiveChallenge" , currentActiveChallenge);
+                    intent.putExtra("tagsList" , tagsList);
                     intent.putExtra("title", storyTitleEditText.getText().toString().trim());
                     intent.putExtra("story", storyBodyEditText.getText().toString().trim());
                     startActivity(intent);
-                }
+                }*/
                 break;
             case R.id.start_writing:
                 if (ssTopicsText != null) {
@@ -760,6 +823,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             storyTitleEditText.setHint(R.string.short_s_add_title_hint);
             storyBodyEditText.setHint(R.string.short_s_add_body_hint);
         }
+        isCategorySelected = true;
+        setNextColor();
         adapter.notifyDataSetChanged();
     }
 

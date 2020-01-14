@@ -37,19 +37,23 @@ class ShortShortiesBackgroundThumbnail(
     }
 }
 
-class ImageListData(@SerializedName("next")
+class ImageListData(@SerializedName("count")
+                    var count: Int? = 0,
+                    @SerializedName("next")
                     var next: String? = null,
                     @SerializedName("previous")
                     var previous: String? = null,
                     @SerializedName("results")
                     var results: ArrayList<Images>? = null) : Parcelable {
 
-    constructor(parcel: Parcel) : this(parcel.readString(),
+    constructor(parcel: Parcel) : this(parcel.readInt(),
+            parcel.readString(),
             parcel.readString(),
             parcel.createTypedArrayList(Images.CREATOR)) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        count?.let { parcel.writeInt(it) }
         parcel.writeString(next)
         parcel.writeString(previous)
         parcel.writeTypedList(results)

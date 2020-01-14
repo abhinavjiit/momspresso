@@ -42,15 +42,15 @@ class ShortStoryTextFormatFragment : BaseFragment() {
         }
 
         textAlignLeft.setOnClickListener {
-            (context as ShortStoriesCardActivity).textAlign(0)
+            (context as ShortStoriesCardActivity).textAlign("LEFT")
         }
 
         textAlignCenter.setOnClickListener {
-            (context as ShortStoriesCardActivity).textAlign(1)
+            (context as ShortStoriesCardActivity).textAlign("CENTER")
         }
 
         textAlignRight.setOnClickListener {
-            (context as ShortStoriesCardActivity).textAlign(2)
+            (context as ShortStoriesCardActivity).textAlign("RIGHT")
         }
 
         return view

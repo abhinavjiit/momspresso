@@ -52,8 +52,8 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:padding="12dp"
-                        android:text="@string/editor.publish"
-                        android:textColor="@color/app_red"
+                        android:text="@string/editor.next"
+                        android:textColor="@color/color_979797"
                         android:textSize="20sp"
                         app:fontName="oswald_regular.ttf" />
                 </RelativeLayout>
