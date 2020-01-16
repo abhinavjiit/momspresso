@@ -62,9 +62,8 @@ public final class FacebookUtils {
 
                     @Override
                     public void onError(FacebookException exception) {
-
                         AccessToken.setCurrentAccessToken(null);
-                        Log.e("faceboook on error", "onError ");
+                        Log.e("faceboook on error", "onError " + exception.toString());
                     }
                 });
 

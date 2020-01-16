@@ -46,9 +46,9 @@ public class ArticleListingResult implements Parcelable, StickyMainData {
     private boolean isCarouselRequestRunning = false;
     private boolean responseReceived = false;
     private String disableComment = "";
+    private String storyImage = "";
     private boolean isCollectionItemSelected = false;
     private ArrayList<VlogsListingAndDetailResult> carouselVideoList;
-    private String storyImage;
     private String isfollowing = "0";
 
     public ArticleListingResult() {
@@ -199,14 +199,6 @@ public class ArticleListingResult implements Parcelable, StickyMainData {
 
     public void setCommentCount(String commentCount) {
         this.commentCount = commentCount;
-    }
-
-    public String getStoryImage() {
-        return storyImage;
-    }
-
-    public void setStoryImage(String storyImage) {
-        this.storyImage = storyImage;
     }
 
     public String getCommentsCount() {
@@ -383,6 +375,14 @@ public class ArticleListingResult implements Parcelable, StickyMainData {
 
     public void setDisableComment(String disableComment) {
         this.disableComment = disableComment;
+    }
+
+    public String getStoryImage() {
+        return storyImage;
+    }
+
+    public void setStoryImage(String storyImage) {
+        this.storyImage = storyImage;
     }
 
     public ArrayList<VlogsListingAndDetailResult> getCarouselVideoList() {

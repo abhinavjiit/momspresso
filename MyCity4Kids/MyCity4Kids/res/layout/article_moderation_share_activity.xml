@@ -26,7 +26,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
             android:text="@string/moderation_or_share.way_to_go"
-            android:textColor="@color/moderation_or_share.way_to_go"
+            android:textColor="@color/app_light_black"
             android:textSize="18sp"
             app:fontName="oswald_regular.ttf" />
 
@@ -57,7 +57,7 @@
                 android:paddingLeft="60dp"
                 android:paddingRight="60dp"
                 android:text="@string/moderation_or_share.moderation_message"
-                android:textColor="@color/moderation_or_share.moderation_message"
+                android:textColor="@color/app_grey"
                 android:textSize="18sp"
                 app:fontName="oswald.ttf" />
 
@@ -73,7 +73,7 @@
                 android:paddingRight="60dp"
                 android:paddingBottom="14dp"
                 android:text="@string/moderation_or_share.okay"
-                android:textColor="@color/moderation_or_share.okay"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 app:fontName="oswald.ttf" />
         </LinearLayout>
@@ -103,8 +103,6 @@
                 android:id="@+id/shareContainerLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/shareTextView"
-                android:layout_centerHorizontal="true"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="20dp"
                 android:paddingLeft="20dp"

@@ -553,6 +553,9 @@
         <activity
             android:name=".ui.activity.ProfileWebViewActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.FollowingListFBSuggestionActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="io.branch.sdk.BranchKey"
@@ -598,6 +601,9 @@
         <activity android:name=".ui.activity.phoneLogin.FacebookFriends" />
         <activity android:name=".ui.activity.collection.AddMultipleCollectionItemActivity" />
         <activity android:name=".ui.activity.ShortStoriesCardActivity" />
+        <activity
+            android:name=".ui.activity.ShortStoryModerationOrShareActivity"
+            android:theme="@style/ShareStoryTheme" />
 
         <receiver android:name=".reminders.CancelNotificationReceiver" />
 

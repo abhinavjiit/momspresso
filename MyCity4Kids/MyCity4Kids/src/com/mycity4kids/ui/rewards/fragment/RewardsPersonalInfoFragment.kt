@@ -45,6 +45,7 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.listener.OnButtonClicked
 import com.mycity4kids.models.campaignmodels.ReferralCodeResult
 import com.mycity4kids.models.response.BaseResponseGeneric
@@ -206,6 +207,11 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.fragment_rewards_personal_info, container, false)
+
+        activity?.let {
+            Utils.pushGenericEvent(activity, "Show_MyMoney_RegistrationForm_Unregistered",
+                    SharedPrefUtils.getUserDetailModel(it).dynamoId, "RewardsPersonalInfoFragment")
+        }
 
         textReferCodeError = containerView.findViewById(R.id.textReferCodeError)
         editReferralCode = containerView.findViewById(R.id.editReferralCode)
@@ -882,7 +888,9 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
     /*post data to server*/
     private fun postDataofRewardsToServer() {
-        val userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+        val userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
+        Utils.pushGenericEvent(activity, "CTA_Submit_MyMoney_RegistrationForm_Unregistered",
+                userId, "RewardsPersonalInfoFragment")
         if (!userId.isNullOrEmpty()) {
             showProgressDialog(resources.getString(R.string.please_wait))
 

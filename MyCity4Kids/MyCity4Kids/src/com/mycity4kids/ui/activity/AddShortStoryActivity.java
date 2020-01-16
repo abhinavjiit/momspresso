@@ -30,6 +30,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
+import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -1306,6 +1307,15 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 ArticleDraftResponse responseModel = response.body();
                 if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                     Utils.pushPublishStoryEvent(AddShortStoryActivity.this, "AddShortStoryScreen", SharedPrefUtils.getUserDetailModel(AddShortStoryActivity.this).getDynamoId(), "published");
+//                    Intent intent = new Intent(AddShortStoryActivity.this, ShortStoryModerationOrShareActivity.class);
+//                    if (BuildConfig.DEBUG) {
+//                        intent.putExtra("shareUrl", "");
+//                        intent.putExtra(Constants.ARTICLE_ID, "article-ef1d9a7ca0ae42d48b6f986f249681f3");
+//                    } else {
+//                        intent.putExtra("shareUrl", "" + responseModel.getData().get(0).getResult().getUrl());
+//                        intent.putExtra(Constants.ARTICLE_ID, responseModel.getData().get(0).getResult().getId());
+//                    }
+//                    startActivity(intent);
                     Intent intent = new Intent(AddShortStoryActivity.this, ArticleModerationOrShareActivity.class);
                     intent.putExtra("shareUrl", "" + responseModel.getData().get(0).getResult().getUrl());
                     intent.putExtra("source", "addStory");

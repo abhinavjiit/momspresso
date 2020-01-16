@@ -4,6 +4,8 @@ import android.net.Uri;
 
 import com.mycity4kids.BuildConfig;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * @author Hemant Parmar
  */
@@ -739,6 +741,7 @@ public class AppConstants {
     public static final String BADGE_ID = "badgeId";
     public static final String MILESTONE_ID = "milestoneId";
     public static final String COLLECTION_ID = "collectionId";
+    public static final String STORY_SHARE_IMAGE_NAME = "storyShareImage";
 
     enum SocialPlatformName {
 

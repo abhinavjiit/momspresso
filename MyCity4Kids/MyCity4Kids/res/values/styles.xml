@@ -194,8 +194,6 @@
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
         <item name="android:itemTextAppearance">@style/myCustomMenuTextApearance</item>
-        <!--<item name="android:actionMenuTextColor">@color/white_color</item>-->
-        <!--<item name="actionMenuTextColor">@color/white_color</item>-->
     </style>
 
     <style name="CollectionItemListingTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -347,6 +345,19 @@
     <style name="CollectionDialogAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_in_up</item>
         <item name="android:windowExitAnimation">@anim/slide_out_down</item>
+    </style>
+
+    <style name="ShareStoryTheme" parent="Theme.AppCompat.Light">
+        <item name="android:homeAsUpIndicator">@drawable/cross_icon_back</item>
+        <item name="colorControlActivated">@color/color_control_activated</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/app_light_black</item>
+        <item name="colorPrimaryDark">@color/app_light_black</item>
+        <item name="colorAccent">@color/app_light_black</item>
+        <item name="android:textColorPrimary">@color/app_light_black</item>
+        <item name="android:textColorSecondary">@color/app_light_black</item>
+        <item name="android:itemTextAppearance">@style/myCustomMenuTextApearance</item>
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">

@@ -60,5 +60,12 @@
     <declare-styleable name="ResizableTextView">
         <attr name="maxLines" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="ShareButtonWidget">
+        <attr name="shareText" format="string" localization="suggested" />
+        <attr name="shareImage" format="integer"/>
+        <attr name="shareBgColor" format="reference|color" />
+        <attr name="shareBgDrawable" format="reference"/>
+    </declare-styleable>
     <!--<declare-styleable name="KidsInfoComponent">--><!--<attr name="searchArticleTitle" format="string" localization="suggested" />--><!--<attr name="searchArticleDesc" format="string" localization="suggested" />--><!--<attr name="searchArticleImage" format="integer" />--><!--</declare-styleable>-->
 </resources>

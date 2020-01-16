@@ -152,7 +152,7 @@ class UserProfileActivity : BaseActivity(),
 
         rootLayout = findViewById(R.id.rootLayout)
         toolbar = findViewById(R.id.toolbar)
-        appBarLayout = findViewById(R.id.appBarLayout);
+        appBarLayout = findViewById(R.id.appBarLayout)
         recyclerView = findViewById(R.id.recyclerView)
         profileShimmerLayout = findViewById(R.id.profileShimmerLayout)
         profileImageView = findViewById(R.id.profileImageView)
@@ -380,14 +380,14 @@ class UserProfileActivity : BaseActivity(),
             val followUnfollowUserResponseCall = followAPI.unfollowUser(request)
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback)
             Utils.pushProfileEvents(this, "CTA_Unfollow_Profile", "UserProfileActivity",
-                    "Unfollow", "-");
+                    "Unfollow", "-")
         } else {
             isFollowing = true
             followAuthorTextView.setText(R.string.ad_following_author)
             val followUnfollowUserResponseCall = followAPI.followUser(request)
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback)
             Utils.pushProfileEvents(this, "CTA_Follow_Profile", "UserProfileActivity",
-                    "Follow", "-");
+                    "Follow", "-")
         }
     }
 
@@ -835,6 +835,7 @@ class UserProfileActivity : BaseActivity(),
                 startActivity(intent)
             }
             view?.id == R.id.followingContainer -> {
+//                val intent = Intent(this, FollowingListFBSuggestionActivity::class.java)
                 val intent = Intent(this, FollowersAndFollowingListActivity::class.java)
                 intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWING_LIST)
                 intent.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, authorId)
@@ -863,8 +864,8 @@ class UserProfileActivity : BaseActivity(),
     private fun shareGenericImage() {
         try {
             val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/profile.jpg")
-            val shareText = getString(R.string.profile_follow_author, authorNameTextView.text.toString()) +
-                    AppConstants.USER_PROFILE_SHARE_BASE_URL + authorId
+            val shareText = getString(R.string.profile_follow_author,
+                    authorNameTextView.text.toString(), (AppConstants.USER_PROFILE_SHARE_BASE_URL + authorId))
             AppUtils.shareGenericImageAndOrLink(this, uri, shareText)
             if (AppUtils.isPrivateProfile(authorId)) {
                 Utils.pushProfileEvents(this, "CTA_Share_Private_Profile", "UserProfileActivity",

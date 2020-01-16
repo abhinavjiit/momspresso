@@ -62,7 +62,8 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         body = getIntent().getStringExtra("body");
 
         authorId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
-        authorName = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getLast_name();
+        authorName = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getFirst_name() +
+                " " + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getLast_name();
 
         LinearLayout moderationContainer = (LinearLayout) findViewById(R.id.moderationContainer);
         LinearLayout publishContainer = (LinearLayout) findViewById(R.id.publishContainer);
@@ -212,13 +213,7 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                     startActivity(intent);
                 }
                 break;
-            case R.id.laterTextView: {
-                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
-                Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                call.enqueue(getUserDetailsResponseCallback);
-            }
-            break;
+            case R.id.laterTextView:
             case R.id.okayTextView: {
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                 BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);

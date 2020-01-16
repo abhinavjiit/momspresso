@@ -1,22 +1,30 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.crashlytics.android.Crashlytics;
+import com.kelltontech.utils.StringUtils;
+import com.mycity4kids.R;
+import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.widget.StoryShareCardWidget;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import q.rorbin.badgeview.QBadgeView;
 
 /**
@@ -112,6 +120,11 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
         TextView storyRecommendationCountTextView;
         ImageView likeImageView, menuItem;
         ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView, storyImage;
+        ImageView storyOptionImageView;
+        RelativeLayout mainView;
+        StoryShareCardWidget storyShareCardWidget;
+        ImageView shareStoryImageView;
+        TextView storyAuthorTextView;
 
         public ShortStoriesViewHolder(View itemView, RecyclerViewClickListener listener) {
             super(itemView);
@@ -128,6 +141,10 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
             genericShareImageView = (ImageView) itemView.findViewById(R.id.genericShareImageView);
             storyImage = (ImageView) itemView.findViewById(R.id.storyImageView);
             menuItem = (ImageView) itemView.findViewById(R.id.menuItem);
+            storyShareCardWidget = (StoryShareCardWidget) itemView.findViewById(R.id.storyShareCardWidget);
+            shareStoryImageView = (ImageView) storyShareCardWidget.findViewById(R.id.storyImageView);
+            storyAuthorTextView = (TextView) storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
+
             whatsappShareImageView.setTag(itemView);
 
             storyRecommendationContainer.setOnClickListener(this);

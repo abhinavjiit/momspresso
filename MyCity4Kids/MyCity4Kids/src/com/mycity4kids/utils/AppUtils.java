@@ -123,7 +123,8 @@ public class AppUtils {
 
     public static void printHashKey(Context pContext) {
         try {
-            PackageInfo info = pContext.getPackageManager().getPackageInfo(pContext.getPackageName(), PackageManager.GET_SIGNATURES);
+            PackageInfo info = pContext.getPackageManager()
+                    .getPackageInfo(pContext.getPackageName(), PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
@@ -251,8 +252,8 @@ public class AppUtils {
     }
 
     /**
-     * Converts a file to a content uri, by inserting it into the media store.
-     * Requires this permission: <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+     * Converts a file to a content uri, by inserting it into the media store. Requires this
+     * permission: <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
      */
     protected static Uri convertFileToContentUri(Context context, File file) throws Exception {
 
@@ -262,11 +263,13 @@ public class AppUtils {
         String imagePath = file.getAbsolutePath();
         String imageName = null;
         String imageDescription = null;
-        String uriString = MediaStore.Images.Media.insertImage(cr, imagePath, imageName, imageDescription);
+        String uriString = MediaStore.Images.Media
+                .insertImage(cr, imagePath, imageName, imageDescription);
         return Uri.parse(uriString);
     }
 
-    public static Uri exportToGallery(String filename, ContentResolver contentResolver, Context mContext) {
+    public static Uri exportToGallery(String filename, ContentResolver contentResolver,
+                                      Context mContext) {
         // Save the name and description of a video in a ContentValues map.
         final ContentValues values = new ContentValues(2);
         values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
@@ -279,7 +282,8 @@ public class AppUtils {
         return uri;
     }
 
-    public static final Uri getVideoUriFromMediaProvider(String videoFile, ContentResolver contentResolver) {
+    public static final Uri getVideoUriFromMediaProvider(String videoFile,
+                                                         ContentResolver contentResolver) {
         String selection = MediaStore.Video.VideoColumns.DATA + "=?";
         String[] selectArgs = {videoFile};
         String[] projection = {MediaStore.Video.VideoColumns._ID};
@@ -306,7 +310,8 @@ public class AppUtils {
     }
 
 
-    public static Uri exportAudioToGallery(String filename, ContentResolver contentResolver, Context mContext) {
+    public static Uri exportAudioToGallery(String filename, ContentResolver contentResolver,
+                                           Context mContext) {
         // Save the name and description of a video in a ContentValues map.
         final ContentValues values = new ContentValues(2);
         values.put(MediaStore.Video.Media.MIME_TYPE, "audio/3gp");
@@ -319,7 +324,8 @@ public class AppUtils {
         return uri;
     }
 
-    public static final Uri getAudioUriFromMediaProvider(String videoFile, ContentResolver contentResolver) {
+    public static final Uri getAudioUriFromMediaProvider(String videoFile,
+                                                         ContentResolver contentResolver) {
         String selection = MediaStore.Video.VideoColumns.DATA + "=?";
         String[] selectArgs = {videoFile};
         String[] projection = {MediaStore.Audio.AudioColumns._ID};
@@ -358,8 +364,9 @@ public class AppUtils {
 
     public static void deleteFile(String filePath) {
         File dir = new File(Environment.getExternalStorageDirectory() + File.separator + filePath);
-        if (dir.exists())
+        if (dir.exists()) {
             dir.delete();
+        }
     }
 
     public static String getAppVersion(Context mContext) {
@@ -406,7 +413,8 @@ public class AppUtils {
 
     public static String getDeviceId(Context context) {
         try {
-            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            TelephonyManager telephonyManager = (TelephonyManager) context
+                    .getSystemService(Context.TELEPHONY_SERVICE);
             return telephonyManager.getDeviceId();
         } catch (Exception se) {
             return "";
@@ -436,7 +444,8 @@ public class AppUtils {
         }
     }
 
-    public static boolean writeResponseBodyToDisk(Context mContext, String fileName, ResponseBody body) {
+    public static boolean writeResponseBodyToDisk(Context mContext, String fileName,
+                                                  ResponseBody body) {
         if (body != null) {
             try {
                 InputStream inputStream = null;
@@ -512,7 +521,8 @@ public class AppUtils {
 
     public static String getShortStoryShareUrl(String userType, String blogSlug, String titleSlug) {
         String shareUrl = "";
-        if (AppConstants.USER_TYPE_BLOGGER.equals(userType) || AppConstants.USER_TYPE_USER.equals(userType)) {
+        if (AppConstants.USER_TYPE_BLOGGER.equals(userType) || AppConstants.USER_TYPE_USER
+                .equals(userType)) {
             shareUrl = AppConstants.ARTICLE_SHARE_URL + blogSlug + "/story/" + titleSlug;
         } else if (AppConstants.USER_TYPE_EXPERT.equals(userType)) {
             shareUrl = AppConstants.ARTICLE_SHARE_URL + "story/" + titleSlug;
@@ -526,7 +536,8 @@ public class AppUtils {
         return shareUrl;
     }
 
-    public static Intent getArticleShareIntent(String userType, String blogSlug, String titleSlug, String shareMsg, String title, String userName) {
+    public static Intent getArticleShareIntent(String userType, String blogSlug, String titleSlug,
+                                               String shareMsg, String title, String userName) {
         String shareUrl = getShareUrl(userType, blogSlug, titleSlug);
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
@@ -569,7 +580,8 @@ public class AppUtils {
         for (final ResolveInfo app : activityList) {
             if ((app.activityInfo.packageName).contains("com.facebook.katana")) {
                 final ActivityInfo activityInfo = app.activityInfo;
-                final ComponentName name = new ComponentName(activityInfo.applicationInfo.packageName, activityInfo.name);
+                final ComponentName name = new ComponentName(activityInfo.applicationInfo.packageName,
+                        activityInfo.name);
                 shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
                 shareIntent.setComponent(name);
                 facebookAppFound = true;
@@ -584,7 +596,8 @@ public class AppUtils {
     }
 
     public static void changeTabsFont(TabLayout tabLayout) {
-        Typeface myTypeface = Typeface.createFromAsset(tabLayout.getContext().getAssets(), "fonts/" + "oswald_regular.ttf");
+        Typeface myTypeface = Typeface
+                .createFromAsset(tabLayout.getContext().getAssets(), "fonts/" + "oswald_regular.ttf");
         ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
         int tabsCount = vg.getChildCount();
         for (int j = 0; j < tabsCount; j++) {
@@ -594,10 +607,22 @@ public class AppUtils {
                 View tabViewChild = vgTab.getChildAt(i);
                 if (tabViewChild instanceof TextView) {
                     ((TextView) tabViewChild).setTypeface(myTypeface, Typeface.NORMAL);
-                    if (((TextView) tabViewChild).getText().toString().equals("Challenges") || ((TextView) tabViewChild).getText().toString().equals("challenges") || ((TextView) tabViewChild).getText().toString().equals("चैलेंज") || ((TextView) tabViewChild).getText().toString().equals("চ্যালেঞ্জ") || ((TextView) tabViewChild).getText().toString().equals("ചാലഞ്ച്") || ((TextView) tabViewChild).getText().toString().equals("चॅलेंज") || ((TextView) tabViewChild).getText().toString().equals("சவால்கள்") || ((TextView) tabViewChild).getText().toString().equals("ఛాలెంజ్") || ((TextView) tabViewChild).getText().toString().equals("ಸವಾಲು") || ((TextView) tabViewChild).getText().toString().equals("પડકારો") || ((TextView) tabViewChild).getText().toString().equals("ਚੈਲੇੰਜਸ")) {
-                        Drawable drawable = tabLayout.getContext().getResources().getDrawable(R.drawable.ic_winner_tablayout_icon);
+                    if (((TextView) tabViewChild).getText().toString().equals("Challenges")
+                            || ((TextView) tabViewChild).getText().toString().equals("challenges")
+                            || ((TextView) tabViewChild).getText().toString().equals("चैलेंज")
+                            || ((TextView) tabViewChild).getText().toString().equals("চ্যালেঞ্জ")
+                            || ((TextView) tabViewChild).getText().toString().equals("ചാലഞ്ച്")
+                            || ((TextView) tabViewChild).getText().toString().equals("चॅलेंज")
+                            || ((TextView) tabViewChild).getText().toString().equals("சவால்கள்")
+                            || ((TextView) tabViewChild).getText().toString().equals("ఛాలెంజ్")
+                            || ((TextView) tabViewChild).getText().toString().equals("ಸವಾಲು")
+                            || ((TextView) tabViewChild).getText().toString().equals("પડકારો")
+                            || ((TextView) tabViewChild).getText().toString().equals("ਚੈਲੇੰਜਸ")) {
+                        Drawable drawable = tabLayout.getContext().getResources()
+                                .getDrawable(R.drawable.ic_winner_tablayout_icon);
                         // drawable.setTint(ContextCompat.getColor(tabLayout.getContext(), R.color.topic_articles_tabbar_text));
-                        ((TextView) tabViewChild).setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+                        ((TextView) tabViewChild)
+                                .setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
                         ((TextView) tabViewChild).setCompoundDrawablePadding(15);
                     }
                 }
@@ -606,14 +631,17 @@ public class AppUtils {
     }
 
     public static String withSuffix(long count) {
-        if (count < 1000) return "" + count;
+        if (count < 1000) {
+            return "" + count;
+        }
         int exp = (int) (Math.log(count) / Math.log(1000));
         return String.format("%.1f %c",
                 count / Math.pow(1000, exp),
                 "kMGTPE".charAt(exp - 1));
     }
 
-    public static ArrayList<ArticleListingResult> getFilteredContentList(ArrayList<ArticleListingResult> originalList, String contentType) {
+    public static ArrayList<ArticleListingResult> getFilteredContentList(
+            ArrayList<ArticleListingResult> originalList, String contentType) {
         ArrayList<ArticleListingResult> filteredList = new ArrayList<>();
         for (int i = 0; i < originalList.size(); i++) {
             if (contentType.equals(originalList.get(i).getContentType())) {
@@ -623,7 +651,8 @@ public class AppUtils {
         return filteredList;
     }
 
-    public static int getFilteredPosition(int position, ArrayList<ArticleListingResult> filteredList, String contentType) {
+    public static int getFilteredPosition(int position, ArrayList<ArticleListingResult> filteredList,
+                                          String contentType) {
         int effectivePosition = 0;
         for (int i = 0; i < position; i++) {
             if (contentType.equals(filteredList.get(i).getContentType())) {
@@ -633,27 +662,36 @@ public class AppUtils {
         return effectivePosition;
     }
 
-    public static Bitmap drawMultilineTextToBitmap(String title, String body, String authorName, boolean isRequiredForUpload) {
+    public static Bitmap drawMultilineTextToBitmap(String title, String body, String authorName,
+                                                   boolean isRequiredForUpload) {
         Random rand = new Random();
         switch (rand.nextInt(6)) {
             case 0:
-                return drawMultilineTextToBitmap(R.color.short_story_card_bg_1, title, body, authorName, isRequiredForUpload);
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_1, title, body, authorName,
+                        isRequiredForUpload);
             case 1:
-                return drawMultilineTextToBitmap(R.color.short_story_card_bg_2, title, body, authorName, isRequiredForUpload);
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_2, title, body, authorName,
+                        isRequiredForUpload);
             case 2:
-                return drawMultilineTextToBitmap(R.color.short_story_card_bg_3, title, body, authorName, isRequiredForUpload);
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_3, title, body, authorName,
+                        isRequiredForUpload);
             case 3:
-                return drawMultilineTextToBitmap(R.color.short_story_card_bg_4, title, body, authorName, isRequiredForUpload);
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_4, title, body, authorName,
+                        isRequiredForUpload);
             case 4:
-                return drawMultilineTextToBitmap(R.color.short_story_card_bg_5, title, body, authorName, isRequiredForUpload);
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_5, title, body, authorName,
+                        isRequiredForUpload);
             case 5:
-                return drawMultilineTextToBitmap(R.color.short_story_card_bg_6, title, body, authorName, isRequiredForUpload);
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_6, title, body, authorName,
+                        isRequiredForUpload);
             default:
-                return drawMultilineTextToBitmap(R.color.short_story_card_bg_6, title, body, authorName, isRequiredForUpload);
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_6, title, body, authorName,
+                        isRequiredForUpload);
         }
     }
 
-    private static Bitmap drawMultilineTextToBitmap(int bgColor, String title, String body, String authorName, boolean isRequiredForUpload) {
+    private static Bitmap drawMultilineTextToBitmap(int bgColor, String title, String body,
+                                                    String authorName, boolean isRequiredForUpload) {
         if (isRequiredForUpload) {
             return drawMultilineTextToBitmapForUpload(bgColor, title, body, authorName);
         } else {
@@ -661,7 +699,8 @@ public class AppUtils {
         }
     }
 
-    private static Bitmap drawMultilineTextToBitmapForUpload(int bgColor, String title, String body, String authorName) {
+    private static Bitmap drawMultilineTextToBitmapForUpload(int bgColor, String title, String body,
+                                                             String authorName) {
         Bitmap bitmap;
         String author = " - " + authorName;
         Resources resources = BaseApplication.getAppContext().getResources();
@@ -675,8 +714,10 @@ public class AppUtils {
         int bodyAndAuthorSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
                 12, resources.getDisplayMetrics());
 
-        Typeface georgiaTypeface = Typeface.createFromAsset(BaseApplication.getAppContext().getAssets(), "fonts/georgia.ttf");
-        Typeface geoBoldTypeface = Typeface.createFromAsset(BaseApplication.getAppContext().getAssets(), "fonts/georgia_bold.ttf");
+        Typeface georgiaTypeface = Typeface
+                .createFromAsset(BaseApplication.getAppContext().getAssets(), "fonts/georgia.ttf");
+        Typeface geoBoldTypeface = Typeface
+                .createFromAsset(BaseApplication.getAppContext().getAssets(), "fonts/georgia_bold.ttf");
         TextPaint titlePaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         titlePaint.setTypeface(geoBoldTypeface);
         titlePaint.setColor(Color.rgb(61, 61, 61));
@@ -695,13 +736,16 @@ public class AppUtils {
 
         StaticLayout bodyLayout, titleLayout, authorLayout;
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            StaticLayout.Builder bodyStaticBuilder = StaticLayout.Builder.obtain(body, 0, body.length(), bodyPaint, textWidth)
+            StaticLayout.Builder bodyStaticBuilder = StaticLayout.Builder
+                    .obtain(body, 0, body.length(), bodyPaint, textWidth)
                     .setAlignment(Layout.Alignment.ALIGN_CENTER)
                     .setIncludePad(false);
-            StaticLayout.Builder titleStaticBuilder = StaticLayout.Builder.obtain(title, 0, title.length(), titlePaint, textWidth)
+            StaticLayout.Builder titleStaticBuilder = StaticLayout.Builder
+                    .obtain(title, 0, title.length(), titlePaint, textWidth)
                     .setAlignment(Layout.Alignment.ALIGN_CENTER)
                     .setIncludePad(false);
-            StaticLayout.Builder authorStaticBuilder = StaticLayout.Builder.obtain(author, 0, author.length(), authorPaint, textWidth)
+            StaticLayout.Builder authorStaticBuilder = StaticLayout.Builder
+                    .obtain(author, 0, author.length(), authorPaint, textWidth)
                     .setAlignment(Layout.Alignment.ALIGN_CENTER)
                     .setIncludePad(false);
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -729,7 +773,8 @@ public class AppUtils {
                 + 30; //For Padding at Top
 
         if (currentContentHeight >= SS_FB_CARD_HEIGHT) {
-            bitmap = Bitmap.createBitmap(SS_FB_CARD_WIDTH, SS_FB_CARD_HEIGHT_WITHOUT_AUTHOR, Bitmap.Config.ARGB_8888);
+            bitmap = Bitmap.createBitmap(SS_FB_CARD_WIDTH, SS_FB_CARD_HEIGHT_WITHOUT_AUTHOR,
+                    Bitmap.Config.ARGB_8888);
         } else {
             bitmap = Bitmap.createBitmap(SS_FB_CARD_WIDTH, SS_FB_CARD_HEIGHT, Bitmap.Config.ARGB_8888);
         }
@@ -755,7 +800,8 @@ public class AppUtils {
         float xBodyInitial = (bitmap.getWidth() - textWidth) / 2.0f;
 
         Paint p = new Paint();
-        p.setColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.short_story_light_black_color));
+        p.setColor(ContextCompat
+                .getColor(BaseApplication.getAppContext(), R.color.short_story_light_black_color));
         p.setStrokeWidth(2);
 
         if (currentContentHeight > SS_FB_CARD_HEIGHT) {
@@ -770,8 +816,10 @@ public class AppUtils {
             bodyLayout.draw(canvas);
             canvas.restore();
             canvas.save();
-            canvas.drawLine(bitmap.getWidth() / 2.0f - 20, ySeparator, bitmap.getWidth() / 2.0f + 20, ySeparator, p);
-            canvas.translate(xBodyInitial, ySeparator - titleHeight - 10 * scale); //subtract 10*scale for spacing between title and body
+            canvas.drawLine(bitmap.getWidth() / 2.0f - 20, ySeparator, bitmap.getWidth() / 2.0f + 20,
+                    ySeparator, p);
+            canvas.translate(xBodyInitial, ySeparator - titleHeight
+                    - 10 * scale); //subtract 10*scale for spacing between title and body
             titleLayout.draw(canvas);
             canvas.restore();
             bitmap = authorSectionBitmap(bitmap, xBodyInitial, authorLayout, bgColor);
@@ -789,20 +837,25 @@ public class AppUtils {
             bodyLayout.draw(canvas);
             canvas.restore();
             canvas.save();
-            canvas.drawLine(bitmap.getWidth() / 2.0f - 20, ySeparator, bitmap.getWidth() / 2.0f + 20, ySeparator, p);
-            canvas.translate(xBodyInitial, ySeparator - titleHeight - 10 * scale); //subtract 10*scale for spacing between title and body
+            canvas.drawLine(bitmap.getWidth() / 2.0f - 20, ySeparator, bitmap.getWidth() / 2.0f + 20,
+                    ySeparator, p);
+            canvas.translate(xBodyInitial, ySeparator - titleHeight
+                    - 10 * scale); //subtract 10*scale for spacing between title and body
             titleLayout.draw(canvas);
             canvas.restore();
             canvas.save();
-            canvas.translate(xBodyInitial, yAuthor + 10 * scale);//Add 10*scale for spacing between author and body
+            canvas.translate(xBodyInitial,
+                    yAuthor + 10 * scale);//Add 10*scale for spacing between author and body
             authorLayout.draw(canvas);
             canvas.restore();
             canvas.save();
-            canvas.drawBitmap(logoBitmap, bitmap.getWidth() - 30 * scale, bitmap.getHeight() - 30 * scale, null);
+            canvas.drawBitmap(logoBitmap, bitmap.getWidth() - 30 * scale, bitmap.getHeight() - 30 * scale,
+                    null);
         }
         AppUtils.createDirIfNotExists("MyCity4Kids/videos");
         try {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(
+                    Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
         } catch (FileNotFoundException e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
@@ -810,13 +863,16 @@ public class AppUtils {
         return bitmap;
     }
 
-    private static Bitmap authorSectionBitmap(Bitmap bitmap, float xInitial, StaticLayout authorLayout, int bgColor) {
+    private static Bitmap authorSectionBitmap(Bitmap bitmap, float xInitial,
+                                              StaticLayout authorLayout, int bgColor) {
         Resources resources = BaseApplication.getAppContext().getResources();
         Bitmap logoBitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_notify);
         float scale = resources.getDisplayMetrics().density;
         int height = authorLayout.getHeight() + logoBitmap.getHeight();
-        Log.d("drawMultilineText", "Author Section = " + height + "  bitmap height = " + bitmap.getHeight());
-        Bitmap cs = Bitmap.createBitmap(bitmap.getWidth(), height + bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Log.d("drawMultilineText",
+                "Author Section = " + height + "  bitmap height = " + bitmap.getHeight());
+        Bitmap cs = Bitmap
+                .createBitmap(bitmap.getWidth(), height + bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas comboImage = new Canvas(cs);
         comboImage.drawColor(ContextCompat.getColor(BaseApplication.getAppContext(), bgColor));
         comboImage.drawBitmap(bitmap, 0, 0, null);
@@ -825,11 +881,19 @@ public class AppUtils {
         authorLayout.draw(comboImage);
         comboImage.restore();
         comboImage.save();
-        comboImage.drawBitmap(logoBitmap, comboImage.getWidth() - 30 * scale, comboImage.getHeight() - 30 * scale, null);
+        comboImage.drawBitmap(logoBitmap, comboImage.getWidth() - 30 * scale,
+                comboImage.getHeight() - 30 * scale, null);
         return cs;
     }
 
-    public static Bitmap drawMultilineTextToBitmap(int bgColor, String title, String body, String authorName) {
+    public static Bitmap drawMultilineTextToBitmap(int bgColor, String title, String body,
+                                                   String authorName, String imageName) {
+        File file = new File(
+                Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/" + imageName + ".jpg");
+        if (file.exists()) {
+            return BitmapFactory.decodeFile(file.getPath());
+        }
+
         Resources resources = BaseApplication.getAppContext().getResources();
         float scale = resources.getDisplayMetrics().density;
         Bitmap bitmap = Bitmap.createBitmap(800, 800, Bitmap.Config.ARGB_8888);
@@ -853,8 +917,10 @@ public class AppUtils {
         int bodyAndAuthorSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
                 12, resources.getDisplayMetrics());
 
-        Typeface georgiaTypeface = Typeface.createFromAsset(BaseApplication.getAppContext().getAssets(), "fonts/georgia.ttf");
-        Typeface geoBoldTypeface = Typeface.createFromAsset(BaseApplication.getAppContext().getAssets(), "fonts/georgia_bold.ttf");
+        Typeface georgiaTypeface = Typeface
+                .createFromAsset(BaseApplication.getAppContext().getAssets(), "fonts/georgia.ttf");
+        Typeface geoBoldTypeface = Typeface
+                .createFromAsset(BaseApplication.getAppContext().getAssets(), "fonts/georgia_bold.ttf");
 
         TextPaint titlePaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         titlePaint.setTypeface(geoBoldTypeface);
@@ -877,13 +943,16 @@ public class AppUtils {
 
         StaticLayout bodyLayout, titleLayout, authorLayout;
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            StaticLayout.Builder bodyStaticBuilder = StaticLayout.Builder.obtain(body, 0, body.length(), bodyPaint, textWidth)
+            StaticLayout.Builder bodyStaticBuilder = StaticLayout.Builder
+                    .obtain(body, 0, body.length(), bodyPaint, textWidth)
                     .setAlignment(Layout.Alignment.ALIGN_CENTER)
                     .setIncludePad(false);
-            StaticLayout.Builder titleStaticBuilder = StaticLayout.Builder.obtain(title, 0, title.length(), titlePaint, textWidth)
+            StaticLayout.Builder titleStaticBuilder = StaticLayout.Builder
+                    .obtain(title, 0, title.length(), titlePaint, textWidth)
                     .setAlignment(Layout.Alignment.ALIGN_CENTER)
                     .setIncludePad(false);
-            StaticLayout.Builder authorStaticBuilder = StaticLayout.Builder.obtain(author, 0, author.length(), authorPaint, textWidth)
+            StaticLayout.Builder authorStaticBuilder = StaticLayout.Builder
+                    .obtain(author, 0, author.length(), authorPaint, textWidth)
                     .setAlignment(Layout.Alignment.ALIGN_CENTER)
                     .setIncludePad(false);
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -927,7 +996,8 @@ public class AppUtils {
         float yAuthor = bitmap.getHeight() - yBodyInitial;
 
         Paint p = new Paint();
-        p.setColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.short_story_light_black_color));
+        p.setColor(ContextCompat
+                .getColor(BaseApplication.getAppContext(), R.color.short_story_light_black_color));
         p.setStrokeWidth(2);
         // draw text to the Canvas center
         canvas.save();
@@ -935,20 +1005,164 @@ public class AppUtils {
         bodyLayout.draw(canvas);
         canvas.restore();
         canvas.save();
-        canvas.drawLine(bitmap.getWidth() / 2.0f - 20, ySeparator, bitmap.getWidth() / 2.0f + 20, ySeparator, p);
-        canvas.translate(xBodyInitial, ySeparator - titleHeight - 10 * scale); //subtract 10*scale for spacing between title and body
+        canvas.drawLine(bitmap.getWidth() / 2.0f - 20, ySeparator, bitmap.getWidth() / 2.0f + 20,
+                ySeparator, p);
+        canvas.translate(xBodyInitial, ySeparator - titleHeight
+                - 10 * scale); //subtract 10*scale for spacing between title and body
         titleLayout.draw(canvas);
         canvas.restore();
         canvas.save();
-        canvas.translate(xBodyInitial, yAuthor + 10 * scale);//Add 10*scale for spacing between author and body
+        canvas.translate(xBodyInitial,
+                yAuthor + 10 * scale);//Add 10*scale for spacing between author and body
         authorLayout.draw(canvas);
         canvas.restore();
         canvas.save();
-        canvas.drawBitmap(logoBitmap, bitmap.getWidth() - 30 * scale, bitmap.getHeight() - 30 * scale, null);
+        canvas.drawBitmap(logoBitmap, bitmap.getWidth() - 30 * scale, bitmap.getHeight() - 30 * scale,
+                null);
 
         AppUtils.createDirIfNotExists("MyCity4Kids/videos");
         try {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(
+                    Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/" + imageName + ".jpg"));
+        } catch (FileNotFoundException e) {
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+        return bitmap;
+    }
+
+    public static Bitmap drawMultilineTextToBitmap(int bgColor, String title, String body,
+                                                   String authorName) {
+        Resources resources = BaseApplication.getAppContext().getResources();
+        float scale = resources.getDisplayMetrics().density;
+        Bitmap bitmap = Bitmap.createBitmap(800, 800, Bitmap.Config.ARGB_8888);
+        Bitmap logoBitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_notify);
+        Bitmap watermark = BitmapFactory.decodeResource(resources, R.drawable.share_bg);
+        android.graphics.Bitmap.Config bitmapConfig = bitmap.getConfig();
+        // set default bitmap config if none
+        if (bitmapConfig == null) {
+            bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
+        }
+        // resource bitmaps are immutable,
+        // so we need to convert it to mutable one
+        bitmap = bitmap.copy(bitmapConfig, true);
+
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawColor(ContextCompat.getColor(BaseApplication.getAppContext(), bgColor));
+
+        int titleSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                14, resources.getDisplayMetrics());
+
+        int bodyAndAuthorSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                12, resources.getDisplayMetrics());
+
+        Typeface georgiaTypeface = Typeface
+                .createFromAsset(BaseApplication.getAppContext().getAssets(), "fonts/georgia.ttf");
+        Typeface geoBoldTypeface = Typeface
+                .createFromAsset(BaseApplication.getAppContext().getAssets(), "fonts/georgia_bold.ttf");
+
+        TextPaint titlePaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        titlePaint.setTypeface(geoBoldTypeface);
+        titlePaint.setColor(Color.rgb(61, 61, 61));
+        titlePaint.setTextSize(titleSize);
+
+        TextPaint bodyPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        bodyPaint.setTypeface(georgiaTypeface);
+        bodyPaint.setColor(Color.rgb(61, 61, 61));
+        bodyPaint.setTextSize(bodyAndAuthorSize);
+
+        TextPaint authorPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        authorPaint.setTypeface(geoBoldTypeface);
+        authorPaint.setColor(Color.rgb(61, 61, 61));
+        authorPaint.setTextSize(bodyAndAuthorSize);
+        // set text width to canvas width minus 40dp padding
+        int textWidth = canvas.getWidth() - (int) (36 * scale);
+
+        String author = " - " + authorName;
+
+        StaticLayout bodyLayout, titleLayout, authorLayout;
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            StaticLayout.Builder bodyStaticBuilder = StaticLayout.Builder
+                    .obtain(body, 0, body.length(), bodyPaint, textWidth)
+                    .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                    .setIncludePad(false);
+            StaticLayout.Builder titleStaticBuilder = StaticLayout.Builder
+                    .obtain(title, 0, title.length(), titlePaint, textWidth)
+                    .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                    .setIncludePad(false);
+            StaticLayout.Builder authorStaticBuilder = StaticLayout.Builder
+                    .obtain(author, 0, author.length(), authorPaint, textWidth)
+                    .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                    .setIncludePad(false);
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                bodyStaticBuilder.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
+                titleStaticBuilder.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
+                authorStaticBuilder.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
+            }
+            bodyLayout = bodyStaticBuilder.build();
+            titleLayout = titleStaticBuilder.build();
+            authorLayout = authorStaticBuilder.build();
+        } else {
+            bodyLayout = new StaticLayout(
+                    body, bodyPaint, textWidth, Layout.Alignment.ALIGN_CENTER, 1.0f, 0.0f, false);
+            titleLayout = new StaticLayout(
+                    title, titlePaint, textWidth, Layout.Alignment.ALIGN_CENTER, 1.0f, 0.0f, false);
+            authorLayout = new StaticLayout(
+                    author, authorPaint, textWidth, Layout.Alignment.ALIGN_CENTER, 1.0f, 0.0f, false);
+        }
+
+        // get height of multiline text
+        int bodyHeight = bodyLayout.getHeight();
+        int titleHeight = titleLayout.getHeight();
+
+        float currentContentHeight = bodyHeight + titleHeight + authorLayout.getHeight()
+                + (50 * scale) //50*scale for spacing between title, body, author and logo
+                + 30; //For Padding at Top
+        if (currentContentHeight > singleContentHeight) {
+            bitmap = extendBitmap(bitmap, currentContentHeight - singleContentHeight, bgColor);
+            canvas = new Canvas(bitmap);
+        }
+
+        float xPosWatermark = (bitmap.getWidth() - watermark.getWidth()) / 2.0f;
+        float yPosWatermark = (bitmap.getHeight() - watermark.getHeight()) / 2.0f;
+        canvas.drawBitmap(watermark, xPosWatermark, yPosWatermark, null);
+
+        // get position of text's top left corner
+        float xBodyInitial = (bitmap.getWidth() - textWidth) / 2.0f;
+        float yBodyInitial = (bitmap.getHeight() - bodyHeight) / 2.0f;
+
+        float ySeparator = yBodyInitial - 10 * scale;
+        float yAuthor = bitmap.getHeight() - yBodyInitial;
+
+        Paint p = new Paint();
+        p.setColor(ContextCompat
+                .getColor(BaseApplication.getAppContext(), R.color.short_story_light_black_color));
+        p.setStrokeWidth(2);
+        // draw text to the Canvas center
+        canvas.save();
+        canvas.translate(xBodyInitial, yBodyInitial);
+        bodyLayout.draw(canvas);
+        canvas.restore();
+        canvas.save();
+        canvas.drawLine(bitmap.getWidth() / 2.0f - 20, ySeparator, bitmap.getWidth() / 2.0f + 20,
+                ySeparator, p);
+        canvas.translate(xBodyInitial, ySeparator - titleHeight
+                - 10 * scale); //subtract 10*scale for spacing between title and body
+        titleLayout.draw(canvas);
+        canvas.restore();
+        canvas.save();
+        canvas.translate(xBodyInitial,
+                yAuthor + 10 * scale);//Add 10*scale for spacing between author and body
+        authorLayout.draw(canvas);
+        canvas.restore();
+        canvas.save();
+        canvas.drawBitmap(logoBitmap, bitmap.getWidth() - 30 * scale, bitmap.getHeight() - 30 * scale,
+                null);
+
+        AppUtils.createDirIfNotExists("MyCity4Kids/videos");
+        try {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(
+                    Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
         } catch (FileNotFoundException e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
@@ -967,7 +1181,8 @@ public class AppUtils {
         return cs;
     }
 
-    public static Bitmap combineImages(Bitmap c, int s) { // can add a 3rd parameter 'String loc' if you want to save the new image - left some code to do that at the bottom
+    public static Bitmap combineImages(Bitmap c,
+                                       int s) { // can add a 3rd parameter 'String loc' if you want to save the new image - left some code to do that at the bottom
         Bitmap cs;
         int width, height;
         height = s * c.getHeight();
@@ -984,8 +1199,10 @@ public class AppUtils {
         return cs;
     }
 
-    public static void shareStoryWithFB(Activity context, String userType, String blogSlug, String titleSlug,
-                                        String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
+    public static void shareStoryWithFB(Activity context, String userType, String blogSlug,
+                                        String titleSlug,
+                                        String screenName, String userDynamoId, String articleId, String authorId,
+                                        String authorName) {
         String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
 
         if (ShareDialog.canShow(ShareLinkContent.class)) {
@@ -994,25 +1211,33 @@ public class AppUtils {
                     .build();
             new ShareDialog(context).show(content);
         }
-        Utils.pushShareStoryEvent(context, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Facebook");
+        Utils.pushShareStoryEvent(context, screenName, userDynamoId + "", articleId,
+                authorId + "~" + authorName, "Facebook");
     }
 
-    public static void shareStoryWithWhatsApp(Context mContext, String userType, String blogSlug, String titleSlug,
-                                              String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
+    public static void shareStoryWithWhatsApp(Context mContext, String userType, String blogSlug,
+                                              String titleSlug,
+                                              String screenName, String userDynamoId, String articleId, String authorId,
+                                              String authorName) {
         String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
-        shareStoryWithWhatsApp(mContext, shareUrl, screenName, userDynamoId, articleId, authorId, authorName);
+        shareStoryWithWhatsApp(mContext, shareUrl, screenName, userDynamoId, articleId, authorId,
+                authorName);
     }
 
-    public static void shareStoryWithWhatsApp(Context mContext, String shareUrl, String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
-        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
+    public static void shareStoryWithWhatsApp(Context mContext, String shareUrl, String screenName,
+                                              String userDynamoId, String articleId, String authorId, String authorName) {
+        Uri uri = Uri.parse(
+                "file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
         if (shareImageWithWhatsApp(mContext, uri, shareUrl)) {
-            Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Whatsapp");
+            Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId,
+                    authorId + "~" + authorName, "Whatsapp");
         }
     }
 
     public static boolean shareImageWithWhatsApp(Context mContext, Uri uri, String shareUrl) {
         if (StringUtils.isNullOrEmpty(shareUrl)) {
-            Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_fail),
+                    Toast.LENGTH_SHORT).show();
             return false;
         } else {
             Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
@@ -1023,17 +1248,22 @@ public class AppUtils {
             try {
                 mContext.startActivity(Intent.createChooser(whatsappIntent, "Share image via:"));
             } catch (android.content.ActivityNotFoundException ex) {
-                Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext,
+                        mContext.getString(R.string.moderation_or_share_whatsapp_not_installed),
+                        Toast.LENGTH_SHORT).show();
                 return false;
             }
             return true;
         }
     }
 
-    public static void shareStoryWithInstagram(Context mContext, String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
-        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
+    public static void shareStoryWithInstagram(Context mContext, String screenName,
+                                               String userDynamoId, String articleId, String authorId, String authorName) {
+        Uri uri = Uri.parse(
+                "file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
         if (shareImageWithInstagram(mContext, uri)) {
-            Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Instagram");
+            Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId,
+                    authorId + "~" + authorName, "Instagram");
         }
     }
 
@@ -1045,36 +1275,17 @@ public class AppUtils {
         try {
             mContext.startActivity(Intent.createChooser(instaIntent, "Share image via:"));
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_insta_not_installed), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_insta_not_installed),
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
     }
 
-    public static void shareStoryWithFB(BaseFragment topicsShortStoriesTabFragment, String userType, String blogSlug, String titleSlug,
-                                        String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
-        String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
-
-        if (ShareDialog.canShow(ShareLinkContent.class)) {
-            ShareLinkContent content = new ShareLinkContent.Builder()
-                    .setContentUrl(Uri.parse(shareUrl))
-                    .build();
-            new ShareDialog(topicsShortStoriesTabFragment).show(content);
-        }
-        Utils.pushShareStoryEvent(topicsShortStoriesTabFragment.getContext(), screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Facebook");
-    }
-
-    public static void shareWithFBForCampaign(BaseFragment campaignCongratulationFragment, String shareUrl) {
-        if (ShareDialog.canShow(ShareLinkContent.class)) {
-            ShareLinkContent content = new ShareLinkContent.Builder()
-                    .setContentUrl(Uri.parse(shareUrl))
-                    .build();
-            new ShareDialog(campaignCongratulationFragment).show(content);
-        }
-    }
-
-    public static void shareStoryWithFBC(BaseFragment topicsChallengeTabFragment, String userType, String blogSlug, String titleSlug,
-                                         String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
+    public static void shareStoryWithFBC(BaseFragment topicsChallengeTabFragment, String userType,
+                                         String blogSlug, String titleSlug,
+                                         String screenName, String userDynamoId, String articleId, String authorId,
+                                         String authorName) {
         String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
 
         if (ShareDialog.canShow(ShareLinkContent.class)) {
@@ -1083,11 +1294,15 @@ public class AppUtils {
                     .build();
             new ShareDialog(topicsChallengeTabFragment).show(content);
         }
-        Utils.pushShareStoryEvent(topicsChallengeTabFragment.getContext(), screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Facebook");
+        Utils
+                .pushShareStoryEvent(topicsChallengeTabFragment.getContext(), screenName, userDynamoId + "",
+                        articleId, authorId + "~" + authorName, "Facebook");
     }
 
-    public static void shareStoryWithFB(Activity ChallnegeDetailListingActivity, Context mContext, String userType, String blogSlug, String titleSlug,
-                                        String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
+    public static void shareStoryWithFB(Activity ChallnegeDetailListingActivity, Context mContext,
+                                        String userType, String blogSlug, String titleSlug,
+                                        String screenName, String userDynamoId, String articleId, String authorId,
+                                        String authorName) {
         String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
 
         if (ShareDialog.canShow(ShareLinkContent.class)) {
@@ -1096,11 +1311,14 @@ public class AppUtils {
                     .build();
             new ShareDialog(ChallnegeDetailListingActivity).show(content);
         }
-        Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Facebook");
+        Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId,
+                authorId + "~" + authorName, "Facebook");
     }
 
-    public static void shareStoryGeneric(Context mContext, String userType, String blogSlug, String titleSlug,
-                                         String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
+    public static void shareStoryGeneric(Context mContext, String userType, String blogSlug,
+                                         String titleSlug,
+                                         String screenName, String userDynamoId, String articleId, String authorId,
+                                         String authorName) {
         String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
         if (shareGenericLinkWithSuccessStatus(mContext, shareUrl)) {
             Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId,
@@ -1120,7 +1338,8 @@ public class AppUtils {
         }
     }
 
-    public static boolean shareGenericImageAndOrLink(Context context, Uri uri, String shareTextAndLink) {
+    public static boolean shareGenericImageAndOrLink(Context context, Uri uri,
+                                                     String shareTextAndLink) {
         try {
             Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
             shareIntent.setType("image/jpeg");
@@ -1135,9 +1354,11 @@ public class AppUtils {
         }
     }
 
-    public static void shareCampaignWithWhatsApp(Context mContext, String shareUrl, String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
+    public static void shareCampaignWithWhatsApp(Context mContext, String shareUrl, String screenName,
+                                                 String userDynamoId, String articleId, String authorId, String authorName) {
         if (StringUtils.isNullOrEmpty(shareUrl)) {
-            Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_fail),
+                    Toast.LENGTH_SHORT).show();
         } else {
             Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
             whatsappIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
@@ -1146,10 +1367,13 @@ public class AppUtils {
             try {
                 mContext.startActivity(Intent.createChooser(whatsappIntent, "Share Url:"));
             } catch (android.content.ActivityNotFoundException ex) {
-                Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext,
+                        mContext.getString(R.string.moderation_or_share_whatsapp_not_installed),
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
-            Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Whatsapp");
+            Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId,
+                    authorId + "~" + authorName, "Whatsapp");
         }
     }
 
@@ -1225,23 +1449,27 @@ public class AppUtils {
 
     public static boolean isPrivateProfile(String authorId) {
         return StringUtils.isNullOrEmpty(authorId) ||
-                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(authorId);
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()
+                        .equals(authorId);
     }
 
     public static Bitmap getBitmapFromView(View view, String filename) {
-        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap returnedBitmap = Bitmap
+                .createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(returnedBitmap);
         Drawable bgDrawable = view.getBackground();
-        if (bgDrawable != null)
+        if (bgDrawable != null) {
             bgDrawable.draw(canvas);
-        else
+        } else {
             canvas.drawColor(Color.WHITE);
+        }
 
         view.draw(canvas);
         AppUtils.createDirIfNotExists("MyCity4Kids/videos");
         try {
             returnedBitmap.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(
-                    Environment.getExternalStorageDirectory().toString() + "/MyCity4Kids/videos/" + filename + ".jpg"));
+                    Environment.getExternalStorageDirectory().toString() + "/MyCity4Kids/videos/" + filename
+                            + ".jpg"));
         } catch (FileNotFoundException e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));

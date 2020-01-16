@@ -9,6 +9,12 @@
     card_view:cardCornerRadius="0dp"
     card_view:cardElevation="0dp">
 
+    <com.mycity4kids.widget.StoryShareCardWidget
+        android:id="@+id/storyShareCardWidget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"/>
+
     <RelativeLayout
         android:id="@+id/rootView"
         android:layout_width="match_parent"
