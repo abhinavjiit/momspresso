@@ -109,7 +109,7 @@ class ShortStoriesCardActivity : BaseActivity() {
     private var shortStoryId: String = "article-bd64fa1c15814b8cae079bf4cdadc126"
     private var count: Int = 0
     private lateinit var rlLayout: RelativeLayout
-    private lateinit var categoryId: String
+    private var categoryId: String = "category-743892a865774baf9c20cbcc5c01d35f"
     private var x: Int = 0
     private var y: Int = 0
 
