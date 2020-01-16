@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+        <RelativeLayout
+            android:id="@+id/toolbarRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/toolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/user_article.published.edit"
+                android:textColor="@color/user_activities.toolbar.title"
+                android:textSize="20sp"
+                app:fontName="oswald_regular.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/publishTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:padding="12dp"
+                android:text="@string/editor.publish"
+                android:textColor="@color/app_red"
+                android:textSize="20sp"
+                app:fontName="oswald_regular.ttf" />
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <View
+        android:id="@+id/toolbarUnderline"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/toolbar"
+        android:background="@color/light_underline" />
+
+    <RelativeLayout
+        android:id="@+id/rl_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbarUnderline"
+        android:orientation="vertical">
+
+        <!--    <androitraintlayout.widget.ConstraintLayout
+               android:id="@+id/dashboard_layout"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">-->
+
+        <ImageView
+            android:id="@+id/card_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/default_article" />
+
+        <LinearLayout
+            android:id="@+id/short_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/card_bg"
+            android:layout_marginLeft="@dimen/space_25"
+            android:layout_marginTop="@dimen/space_20"
+            android:focusable="false"
+            android:orientation="vertical">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/short_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Please Add Items"
+                android:textColor="#ffffff"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="@dimen/space_80"
+                android:layout_height="@dimen/space_2"
+                android:layout_marginTop="@dimen/space_10"
+                android:background="@drawable/white_filled_bg" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/short_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_10"
+                android:text="shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_layout"
+        android:background="@color/white"
+        android:elevation="@dimen/space_20">
+
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/space_10"
+            android:clickable="false"
+            android:src="@drawable/ic_back_svg" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/collectionTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="3dp"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:tabIndicatorColor="@color/app_red"
+            app:tabSelectedTextColor="@color/all_drafts.title"
+            app:tabTextColor="@color/grey_faded" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/tab_layout"
+        android:background="#0000001E" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/collectionsViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/view"
+        android:background="@color/white"
+        android:elevation="@dimen/space_20"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
+</RelativeLayout>

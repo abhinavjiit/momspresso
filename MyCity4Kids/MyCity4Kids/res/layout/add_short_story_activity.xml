@@ -52,8 +52,8 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:padding="12dp"
-                        android:text="@string/editor.publish"
-                        android:textColor="@color/app_red"
+                        android:text="@string/editor.next"
+                        android:textColor="@color/color_979797"
                         android:textSize="20sp"
                         app:fontName="oswald_regular.ttf" />
                 </RelativeLayout>
@@ -184,10 +184,15 @@
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/storyBodyEditText"
                 android:layout_alignRight="@+id/storyBodyEditText"
-                android:padding="5dp"
-                android:text=""
-                android:textColor="@color/app_grey"
-                android:textSize="12sp"
+                android:background="@drawable/short_story_word_count_bg"
+                android:paddingLeft="@dimen/space_8"
+                android:paddingTop="@dimen/space_5"
+                android:paddingRight="@dimen/space_8"
+                android:paddingBottom="@dimen/space_5"
+                android:gravity="center"
+                android:visibility="gone"
+                android:textColor="@color/white"
+                android:textSize="15sp"
                 app:fontName="oswald.ttf" />
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>

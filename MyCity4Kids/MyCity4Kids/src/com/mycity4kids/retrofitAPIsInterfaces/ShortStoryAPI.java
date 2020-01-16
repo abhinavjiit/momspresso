@@ -4,14 +4,17 @@ import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
 import com.mycity4kids.models.request.ReportStoryOrCommentRequest;
+import com.mycity4kids.models.request.ShortStoryConfigRequest;
 import com.mycity4kids.models.request.ShortStoryDraftOrPublishRequest;
 import com.mycity4kids.models.request.UpdateViewCountRequest;
 import com.mycity4kids.models.response.AddCommentResponse;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
+import com.mycity4kids.models.response.BaseResponse;
 import com.mycity4kids.models.response.CommentListResponse;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ReportStoryOrCommentResponse;
+import com.mycity4kids.models.response.ShortStoryConfigData;
 import com.mycity4kids.models.response.ShortStoryDetailResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.models.response.ViewCountResponse;
@@ -92,4 +95,13 @@ public interface ShortStoryAPI {
     @PUT("v1/users/likes/")
     Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle(@Body RecommendUnrecommendArticleRequest body);
 
+    @POST("/article-category-images/article-config/")
+    Call<ResponseBody> shortStoryConfig(@Body ShortStoryConfigRequest body);
+
+    @GET("/article-category-images/article-config/{ss_id}/")
+    Call<ShortStoryConfigData> getConfig(@Path("ss_id") String shortStoryId);
+
+
+    @PUT("/article-category-images/article-config/{ss_id}/")
+    Call<ResponseBody> updateConfig(@Path("ss_id") String shortStoryId, @Body ShortStoryConfigRequest body);
 }

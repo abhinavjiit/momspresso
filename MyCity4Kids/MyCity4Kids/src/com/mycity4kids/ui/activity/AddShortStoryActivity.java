@@ -22,16 +22,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.widget.AppCompatRadioButton;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SnapHelper;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
@@ -77,6 +67,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.AppCompatRadioButton;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -144,6 +143,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private String ssTopicsText;
     private TextView wordCounterTextView;
     private RelativeLayout root;
+    private boolean isValidTitle, isValidBody, isCategorySelected, isStoryValid;
+    private String categoryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -320,6 +321,29 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             chooseLayout.setVisibility(View.GONE);
 
         }
+
+        storyTitleEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    isValidTitle = true;
+                } else {
+                    isValidTitle = false;
+                }
+                setNextColor();
+            }
+        });
+
         storyBodyEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -332,10 +356,13 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                             showToast(getString(R.string.short_s_max_word));
                             isMaxLengthToastShown = true;
                         }
+//                        publishTextView.setTextColor(getResources().getColor(R.color.color_979797));
                     } else {
                         removeFilter(storyBodyEditText);
                         isMaxLengthToastShown = false;
+//                        publishTextView.setTextColor(getResources().getColor(R.color.app_red));
                     }
+
                 } catch (Exception e) {
 
                 }
@@ -349,7 +376,21 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             @Override
             public void afterTextChanged(Editable s) {
                 int wordsLength = countWords(s.toString());
-                wordCounterTextView.setText(wordsLength + " " + getString(R.string.app_settings_edit_profile_toast_user_bio_words));
+                wordCounterTextView.setVisibility(View.VISIBLE);
+                if (wordsLength <= MAX_WORDS) {
+                    wordCounterTextView.setText("" + (100 - wordsLength));
+                    wordCounterTextView.setBackground(getResources().getDrawable(R.drawable.short_story_word_count_bg));
+                } else {
+                    wordCounterTextView.setText("-" + (wordsLength - 100));
+                    wordCounterTextView.setBackground(getResources().getDrawable(R.drawable.campaign_detail_red_bg));
+                }
+
+                if (s.length() > 0 && wordsLength <= MAX_WORDS) {
+                    isValidBody = true;
+                } else {
+                    isValidBody = false;
+                }
+                setNextColor();
             }
         });
 
@@ -441,6 +482,16 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
             });
+        }
+    }
+
+    private void setNextColor() {
+        if (isCategorySelected && isValidTitle && (isValidBody || !StringUtils.isNullOrEmpty(draftId))) {
+            publishTextView.setTextColor(getResources().getColor(R.color.app_red));
+            isStoryValid = true;
+        }else {
+            publishTextView.setTextColor(getResources().getColor(R.color.color_979797));
+            isStoryValid = false;
         }
     }
 
@@ -696,7 +747,25 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         switch (v.getId()) {
             case R.id.publishTextView:
                 if (isValid()) {
-                    if ("publishedList".equals(source)) {
+                    Intent intent = new Intent(this, ShortStoriesCardActivity.class);
+                    intent.putExtra("ssTopicsText", ssTopicsText);
+                    intent.putExtra("challengeName", challengeName);
+                    intent.putExtra("challengeId", challengeId);
+                    intent.putExtra("runningrequest", runningrequest);
+                    intent.putExtra("draftId", draftId);
+                    intent.putExtra("articleId", articleId);
+                    intent.putExtra("source", source);
+                    intent.putExtra("flag", flag);
+                    intent.putExtra("listDraft", listDraft);
+                    intent.putParcelableArrayListExtra("ssTopicsList", ssTopicsList);
+                    intent.putExtra("currentActiveChallengeId", currentActiveChallengeId);
+                    intent.putExtra("currentActiveChallenge", currentActiveChallenge);
+                    intent.putExtra("tagsList", tagsList);
+                    intent.putExtra("title", storyTitleEditText.getText().toString().trim());
+                    intent.putExtra("story", storyBodyEditText.getText().toString().trim());
+                    intent.putExtra("categoryId",categoryId);
+                    startActivity(intent);
+                    /*if ("publishedList".equals(source)) {
                         shortStoryDraftOrPublishRequest = new ShortStoryDraftOrPublishRequest();
                         shortStoryDraftOrPublishRequest.setTitle(storyTitleEditText.getText().toString().trim());
                         shortStoryDraftOrPublishRequest.setBody(storyBodyEditText.getText().toString());
@@ -720,8 +789,25 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                         getBlogPage();
                     } else {
                         saveDraftBeforePublishRequest(storyTitleEditText.getText().toString().trim(), storyBodyEditText.getText().toString().trim(), draftId);
-                    }
-                }
+                    }*/
+                }/* else {
+                    Intent intent = new Intent(this, ShortStoriesCardActivity.class);
+                    intent.putExtra("ssTopicsText" , ssTopicsText);
+                    intent.putExtra("challengeName" , challengeName);
+                    intent.putExtra("challengeId" , challengeId);
+                    intent.putExtra("runningrequest" , runningrequest);
+                    intent.putExtra("draftId" , draftId);
+                    intent.putExtra("articleId" , articleId);
+                    intent.putExtra("source" , source);
+                    intent.putExtra("flag" , flag);
+                    intent.putExtra("listDraft" , listDraft);
+                    intent.putExtra("currentActiveChallengeId" , currentActiveChallengeId);
+                    intent.putExtra("currentActiveChallenge" , currentActiveChallenge);
+                    intent.putExtra("tagsList" , tagsList);
+                    intent.putExtra("title", storyTitleEditText.getText().toString().trim());
+                    intent.putExtra("story", storyBodyEditText.getText().toString().trim());
+                    startActivity(intent);
+                }*/
                 break;
             case R.id.start_writing:
                 if (ssTopicsText != null) {
@@ -739,6 +825,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             ssTopicsList.get(i).setIsSelected(false);
         }
         ssTopicsList.get(position).setIsSelected(true);
+        categoryId = ssTopicsList.get(position).getId();
 
         if (ssTopicsList.get(position).getId().equalsIgnoreCase(AppConstants.VICHAAR_SAGAR_CATEGORY_ID)) {
             storyTitleEditText.setText(getString(R.string.story_text_title_hindi));
@@ -748,6 +835,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             storyTitleEditText.setHint(R.string.short_s_add_title_hint);
             storyBodyEditText.setHint(R.string.short_s_add_body_hint);
         }
+        isCategorySelected = true;
+        setNextColor();
         adapter.notifyDataSetChanged();
     }
 
@@ -778,6 +867,9 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         }
         if (storyBodyEditText.getText() == null || StringUtils.isNullOrEmpty(storyBodyEditText.getText().toString())) {
             Toast.makeText(this, getString(R.string.editor_body_empty), Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (countWords(storyBodyEditText.getText().toString()) > MAX_WORDS){
+            Toast.makeText(this, getString(R.string.short_s_max_word), Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

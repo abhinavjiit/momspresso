@@ -597,6 +597,7 @@
         <activity android:name=".ui.activity.NotificationProfileSetting" />
         <activity android:name=".ui.activity.phoneLogin.FacebookFriends" />
         <activity android:name=".ui.activity.collection.AddMultipleCollectionItemActivity" />
+        <activity android:name=".ui.activity.ShortStoriesCardActivity" />
 
         <receiver android:name=".reminders.CancelNotificationReceiver" />
 
