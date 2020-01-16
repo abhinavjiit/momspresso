@@ -1263,7 +1263,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="login_resend_otp">Resend OTP</string>
     <string name="login_remaining_time">Seconds remaining: %1$d</string>
     <string name="add_to_collection">Add to Collection</string>
-    <string name="profile_follow_author">Follow %1$s on Momspresso!</string>
+    <string name="profile_follow_author">Follow %1$s on Momspresso! \n %2$s</string>
     <string name="analytics_lang_rank">আপনার স্থান \nIN %1$s</string>
     <string name="analytics_milestones">MILESTONES</string>
     <string name="badges_list_share_text">Checkout %1$s\'s achievements on Momspresso! \n%2$s</string>
@@ -1278,4 +1278,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="all_terms_conditions"><![CDATA[T&C]]></string>
     <string name="milestone_mm_share">I earned Rs.%1$d from Momspresso MyMoney and you can earn too! Simply register using my code %2$s and complete your first campaign. It\'s that simple, so register now! \n%3$s</string>
     <string name="all_refer_url">https://www.momspresso.com/usersprofile/rewardsform?referrer=%1$s</string>
+    <string name="ss_share_with_friends">Share with Friends</string>
 </resources>

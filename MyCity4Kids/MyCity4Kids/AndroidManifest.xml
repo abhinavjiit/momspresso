@@ -5,7 +5,6 @@
     android:versionCode="181"
     android:versionName="12.3.5">
 
-
     <uses-sdk tools:overrideLibrary="io.branch.referral, com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
     <!-- So that we can get the account name -->
     <uses-permission android:name="android.permission.CAMERA" /> <!-- Used to request data from the Google+ APIs in the SignInActivity -->
@@ -550,6 +549,9 @@
         <activity
             android:name=".ui.activity.ProfileWebViewActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.FollowingListFBSuggestionActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="io.branch.sdk.BranchKey"
@@ -594,6 +596,9 @@
         <activity android:name=".ui.activity.NotificationProfileSetting" />
         <activity android:name=".ui.activity.phoneLogin.FacebookFriends" />
         <activity android:name=".ui.activity.collection.AddMultipleCollectionItemActivity" />
+        <activity
+            android:name=".ui.activity.ShortStoryModerationOrShareActivity"
+            android:theme="@style/ShareStoryTheme" />
 
         <receiver android:name=".reminders.CancelNotificationReceiver" />
 

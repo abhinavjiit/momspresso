@@ -46,6 +46,7 @@ public class ArticleListingResult implements Parcelable, StickyMainData {
     private boolean isCarouselRequestRunning = false;
     private boolean responseReceived = false;
     private String disableComment = "";
+    private String storyImage = "";
     private boolean isCollectionItemSelected = false;
     private ArrayList<VlogsListingAndDetailResult> carouselVideoList;
 
@@ -78,7 +79,7 @@ public class ArticleListingResult implements Parcelable, StickyMainData {
         url = in.readString();
         is_bookmark = in.readString();
         disableComment = in.readString();
-
+        storyImage = in.readString();
     }
 
     public static final Creator<ArticleListingResult> CREATOR = new Creator<ArticleListingResult>() {
@@ -366,6 +367,14 @@ public class ArticleListingResult implements Parcelable, StickyMainData {
         this.disableComment = disableComment;
     }
 
+    public String getStoryImage() {
+        return storyImage;
+    }
+
+    public void setStoryImage(String storyImage) {
+        this.storyImage = storyImage;
+    }
+
     public ArrayList<VlogsListingAndDetailResult> getCarouselVideoList() {
         return carouselVideoList;
     }
@@ -405,5 +414,6 @@ public class ArticleListingResult implements Parcelable, StickyMainData {
         dest.writeString(url);
         dest.writeString(is_bookmark);
         dest.writeString(disableComment);
+        dest.writeString(storyImage);
     }
 }

@@ -870,7 +870,12 @@ class CampaignDetailFragment : BaseFragment() {
 
 
     fun showRewardDialog() {
-        Utils.campaignEvent(activity, "Rewards 1st screen", "Campaign Detail", "Rewards_popup_ok", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Rewards_Detail")
+        Utils.pushGenericEvent(activity, "CTA_CampaignDetail_Register",
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, "CampaignDetailFragment")
+        Utils.campaignEvent(activity, "Rewards 1st screen", "Campaign Detail", "Rewards_popup_ok",
+                apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                System.currentTimeMillis().toString(), "Show_Rewards_Detail")
         val intent = Intent(context, RewardsContainerActivity::class.java)
         intent.putExtra("isComingfromCampaign", true)
         intent.putExtra("pageLimit", 2)

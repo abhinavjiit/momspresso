@@ -24,6 +24,7 @@ import com.kelltontech.utils.StringUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.campaignmodels.AllCampaignDataResponse
 import com.mycity4kids.models.campaignmodels.CampaignDataListResult
 import com.mycity4kids.models.campaignmodels.CampaignDetailResult
@@ -147,7 +148,7 @@ class CampaignListFragment : BaseFragment() {
             profileImageView.setImageResource(R.drawable.family_xxhdpi)
         }
         fetchForYou()
-        if (SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext()).equals("1")){
+        if (SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext()) == "1") {
             dashboardLayout.visibility = View.VISIBLE
             referText.visibility = View.VISIBLE
             fetchTotalEarning()
@@ -217,6 +218,10 @@ class CampaignListFragment : BaseFragment() {
 
     fun checkRewardForm() {
         if (isRewardAdded.isEmpty() || isRewardAdded.equals("0")) {
+            activity?.let {
+                Utils.pushGenericEvent(it, "CTA_CampaignListing_Register",
+                        SharedPrefUtils.getUserDetailModel(it).dynamoId, "CampaignListFragment")
+            }
             val intent = Intent(context, RewardsContainerActivity::class.java)
             intent.putExtra("isComingfromCampaign", true)
             intent.putExtra("pageLimit", 2)
@@ -357,7 +362,6 @@ class CampaignListFragment : BaseFragment() {
     private fun fetchRewardsData() {
         val userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         if (userId != null) {
-//            showProgressDialog(resources.getString(R.string.please_wait))
             BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getUserDetails(userId, "yes").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserDetailResult>> {
                 override fun onComplete() {
                 }
@@ -370,9 +374,8 @@ class CampaignListFragment : BaseFragment() {
                     if (response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
                         progressBar.isIndeterminate = false
                         apiResponse = response.data!!.result
-                        progressBar.setProgress(getProfileCompletionPecentage(apiResponse))
+                        progressBar.progress = getProfileCompletionPecentage(apiResponse)
                         profilePercentageTextView.text = "" + getProfileCompletionPecentage(apiResponse) + "%"
-//                        profilePercentageTextView.setText(getProfileCompletionPecentage(apiResponse) + "%")
                     } else {
                     }
                 }
@@ -390,38 +393,36 @@ class CampaignListFragment : BaseFragment() {
         val totalProgress = 100
         var progress = 0
         if (result.profilePicUrl == null || StringUtils.isNullOrEmpty(result.profilePicUrl.clientApp)) {
-            progress = progress + 10
+            progress += 10
         }
         if (StringUtils.isNullOrEmpty(result.firstName)) {
-            progress = progress + 10
+            progress += 10
         }
         if (StringUtils.isNullOrEmpty(result.lastName)) {
-            progress = progress + 10
+            progress += 10
         }
         if (StringUtils.isNullOrEmpty(result.email)) {
-            progress = progress + 10
+            progress += 10
         }
         if (StringUtils.isNullOrEmpty(result.phone.mobile)) {
-            progress = progress + 10
+            progress += 10
         }
         if (StringUtils.isNullOrEmpty(result.blogTitle)) {
-            progress = progress + 10
+            progress += 10
         }
         if (StringUtils.isNullOrEmpty(result.userBio)) {
-            progress = progress + 10
+            progress += 10
         }
         if (result.kids == null || result.kids.isEmpty()) {
-            progress = progress + 10
+            progress += 10
         }
-        if (StringUtils.isNullOrEmpty(SharedPrefUtils.getCurrentCityModel(activity).name)) {
-            progress = progress + 10
+        if (StringUtils.isNullOrEmpty(SharedPrefUtils.getCurrentCityModel(BaseApplication.getAppContext()).name)) {
+            progress += 10
         }
-
         return totalProgress - progress
     }
 
     private fun fetchTotalEarning() {
-//        showProgressDialog(resources.getString(R.string.please_wait))
         val userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
         val retrofit = BaseApplication.getInstance().retrofit
         val campaignAPI = retrofit.create(CampaignAPI::class.java)
@@ -432,8 +433,7 @@ class CampaignListFragment : BaseFragment() {
 
     internal var getTotalPayout: Callback<TotalPayoutResponse> = object : Callback<TotalPayoutResponse> {
         override fun onResponse(call: Call<TotalPayoutResponse>, response: retrofit2.Response<TotalPayoutResponse>) {
-//            removeProgressDialog()
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 return
             }
             try {
@@ -451,11 +451,9 @@ class CampaignListFragment : BaseFragment() {
                 Crashlytics.logException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
-
         }
 
         override fun onFailure(call: Call<TotalPayoutResponse>, t: Throwable) {
-//            removeProgressDialog()
             loader.visibility = View.GONE
             Crashlytics.logException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))

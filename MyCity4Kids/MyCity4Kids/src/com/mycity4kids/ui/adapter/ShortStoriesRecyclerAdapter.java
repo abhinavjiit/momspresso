@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,14 +11,18 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.widget.StoryShareCardWidget;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import q.rorbin.badgeview.QBadgeView;
 
 /**
@@ -78,6 +83,7 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
         if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getBody())) {
             holder.storyBodyTextView.setText(articleDataModelsNew.get(position).getBody().trim());
         }
+
         holder.authorNameTextView.setText(articleDataModelsNew.get(position).getUserName());
 
         if (null == articleDataModelsNew.get(position).getCommentsCount()) {
@@ -96,6 +102,14 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
             holder.likeImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_recommended));
         } else {
             holder.likeImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_ss_like));
+        }
+
+        try {
+            holder.storyAuthorTextView.setText(articleDataModelsNew.get(position).getUserName());
+            Picasso.with(mContext).load(articleDataModelsNew.get(position).getStoryImage()).into(holder.shareStoryImageView);
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4KException", Log.getStackTraceString(e));
         }
 
         new QBadgeView(mContext)
@@ -123,6 +137,9 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
         ImageView storyOptionImageView, likeImageView;
         ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView;
         RelativeLayout mainView;
+        StoryShareCardWidget storyShareCardWidget;
+        ImageView shareStoryImageView;
+        TextView storyAuthorTextView;
 
         public ShortStoriesViewHolder(View itemView, RecyclerViewClickListener listener) {
             super(itemView);
@@ -140,6 +157,9 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
             whatsappShareImageView = (ImageView) itemView.findViewById(R.id.whatsappShareImageView);
             instagramShareImageView = (ImageView) itemView.findViewById(R.id.instagramShareImageView);
             genericShareImageView = (ImageView) itemView.findViewById(R.id.genericShareImageView);
+            storyShareCardWidget = (StoryShareCardWidget) itemView.findViewById(R.id.storyShareCardWidget);
+            shareStoryImageView = (ImageView) storyShareCardWidget.findViewById(R.id.storyImageView);
+            storyAuthorTextView = (TextView) storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
 
             whatsappShareImageView.setTag(itemView);
 

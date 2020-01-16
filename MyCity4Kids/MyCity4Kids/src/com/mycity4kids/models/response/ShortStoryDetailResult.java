@@ -1,5 +1,6 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
 import com.mycity4kids.models.parentingdetails.DetailsBody;
 
 import java.util.ArrayList;
@@ -9,33 +10,60 @@ import java.util.Map;
  * Created by hemant on 29/7/16.
  */
 public class ShortStoryDetailResult {
+    @SerializedName("id")
     private String id;
+    @SerializedName("title")
     private String title;
+    @SerializedName("body")
     private String body;
+    @SerializedName("imageUrl")
     private ImageURL imageUrl;
+    @SerializedName("profilePic")
     private ProfilePic profilePic;
+    @SerializedName("excerpt")
     private String excerpt;
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("titleSlug")
     private String titleSlug;
+    @SerializedName("blogTitleSlug")
     private String blogTitleSlug;
+    @SerializedName("authorImage")
     private String authorImage;
+    @SerializedName("createdTime")
     private String createdTime;
+    @SerializedName("userType")
     private String userType;
+    @SerializedName("userName")
     private String userName;
+    @SerializedName("isBookmarked")
     private String isBookmarked;
+    @SerializedName("isFollowed")
     private String isFollowed;
+    @SerializedName("url")
     private String url;
+    @SerializedName("author_image")
     private String author_image;
+    @SerializedName("commentUri")
     private String commentUri;
+    @SerializedName("tags")
     private ArrayList<Map<String, String>> tags;
+    @SerializedName("cities")
     private ArrayList<Map<String, String>> cities;
+    @SerializedName("bookmarkId")
     private String bookmarkId;
-
+    @SerializedName("count")
     private String count;
+    @SerializedName("commentCount")
     private String commentCount;
+    @SerializedName("likeCount")
     private String likeCount;
+    @SerializedName("lang")
     private String lang;
+    @SerializedName("isLiked")
     private boolean isLiked;
+    @SerializedName("storyImage")
+    private String storyImage;
 
     public String getId() {
         return id;
@@ -251,5 +279,13 @@ public class ShortStoryDetailResult {
 
     public void setLiked(boolean liked) {
         isLiked = liked;
+    }
+
+    public String getStoryImage() {
+        return storyImage;
+    }
+
+    public void setStoryImage(String storyImage) {
+        this.storyImage = storyImage;
     }
 }

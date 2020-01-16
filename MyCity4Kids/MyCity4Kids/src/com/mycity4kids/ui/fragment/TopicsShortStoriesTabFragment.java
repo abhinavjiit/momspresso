@@ -4,11 +4,15 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
@@ -19,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
@@ -38,6 +43,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
+import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -57,10 +63,13 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.AddShortStoryActivity;
 import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
+import com.mycity4kids.ui.activity.ShortStoryModerationOrShareActivity;
 import com.mycity4kids.ui.activity.TopicsListingFragment;
 import com.mycity4kids.ui.adapter.ShortStoriesRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
+import com.mycity4kids.utils.SharingUtils;
+import com.mycity4kids.widget.StoryShareCardWidget;
 import com.mycity4kids.widget.TrackingData;
 
 import java.util.ArrayList;
@@ -115,20 +124,26 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private int currentShortStoryPosition;
     private String jsonMyObject;
     private SwipeRefreshLayout pullToRefresh;
-    private int sharedStoryPosition;
     private String shareMedium;
     private RelativeLayout rootLayout;
     private SimpleTooltip simpleTooltip;
-    private int TOOLTIP_SHOW_TIMES = 0;
     private Handler handler;
+    private Bitmap bitmap;
+
+    int uploadCounter = 0;
+    private StoryShareCardWidget storyShareCardWidget;
+    private ImageView shareStoryImageView;
+    private ArticleListingResult sharedStoryItem;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.topics_short_stories_tab_fragment, container, false);
 
-        userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
+        userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                .getDynamoId();
 
         rootLayout = (RelativeLayout) view.findViewById(R.id.rootLayout);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -136,6 +151,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         guideOverlay = (RelativeLayout) view.findViewById(R.id.guideOverlay);
         writeArticleCell = (RelativeLayout) view.findViewById(R.id.writeArticleCell);
         frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
+
         pullToRefresh = view.findViewById(R.id.pullToRefresh);
 
         frameLayout.getBackground().setAlpha(0);
@@ -161,25 +177,26 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             }
         });
 
-        fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
-            @Override
-            public void onMenuExpanded() {
-                frameLayout.getBackground().setAlpha(240);
-                frameLayout.setOnTouchListener(new View.OnTouchListener() {
+        fabMenu.setOnFloatingActionsMenuUpdateListener(
+                new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
                     @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        fabMenu.collapse();
-                        return true;
+                    public void onMenuExpanded() {
+                        frameLayout.getBackground().setAlpha(240);
+                        frameLayout.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                fabMenu.collapse();
+                                return true;
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onMenuCollapsed() {
+                        frameLayout.getBackground().setAlpha(0);
+                        frameLayout.setOnTouchListener(null);
                     }
                 });
-            }
-
-            @Override
-            public void onMenuCollapsed() {
-                frameLayout.getBackground().setAlpha(0);
-                frameLayout.setOnTouchListener(null);
-            }
-        });
 
         mDatalist = new ArrayList<>();
         recyclerAdapter = new ShortStoriesRecyclerAdapter(getActivity(), this);
@@ -344,7 +361,9 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 frag.hideTabLayer();
                 if (isAdded()) {
 //                    ((ShortStoriesListingContainerActivity) getActivity()).hideToolbarAndNavigationLayer();
-                    SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article", true);
+                    SharedPrefUtils
+                            .setCoachmarksShownFlag(BaseApplication.getAppContext(),
+                                    "topics_article", true);
                 }
                 break;
             case R.id.recentSortFAB:
@@ -366,7 +385,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         }
     }
 
-    public void hitArticleListingSortByRecent() {
+    private void hitArticleListingSortByRecent() {
         fabMenu.collapse();
         mDatalist.clear();
         recyclerAdapter.notifyDataSetChanged();
@@ -375,7 +394,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         hitFilteredTopicsArticleListingApi(0);
     }
 
-    public void hitArticleListingSortByPopular() {
+    private void hitArticleListingSortByPopular() {
         fabMenu.collapse();
         mDatalist.clear();
         recyclerAdapter.notifyDataSetChanged();
@@ -400,55 +419,56 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             }
             break;
             case R.id.rootView:
-                Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
-                intent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
-                intent.putExtra(Constants.AUTHOR_ID, mDatalist.get(position).getUserId());
-                intent.putExtra(Constants.BLOG_SLUG, mDatalist.get(position).getBlogPageSlug());
-                intent.putExtra(Constants.TITLE_SLUG, mDatalist.get(position).getTitleSlug());
-                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + currentSubTopic.getParentName());
-                intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
-                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                intent.putParcelableArrayListExtra("pagerListData", mDatalist);
-                intent.putExtra(Constants.AUTHOR, mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName());
-                startActivity(intent);
+                if (BuildConfig.DEBUG) {
+                    Intent Tintent = new Intent(getActivity(), ShortStoryModerationOrShareActivity.class);
+                    Tintent.putExtra("shareUrl", mDatalist.get(position).getStoryImage());
+                    Tintent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
+                    startActivity(Tintent);
+                } else {
+                    Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
+                    intent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, mDatalist.get(position).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, mDatalist.get(position).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, mDatalist.get(position).getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM,
+                            "" + currentSubTopic.getParentName());
+                    intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                    intent.putParcelableArrayListExtra("pagerListData", mDatalist);
+                    intent.putExtra(Constants.AUTHOR,
+                            mDatalist.get(position).getUserId() + "~" + mDatalist.get(position)
+                                    .getUserName());
+                    startActivity(intent);
+                }
                 break;
             case R.id.storyRecommendationContainer:
                 if (!isRecommendRequestRunning) {
                     if (mDatalist.get(position).isLiked()) {
                         likeStatus = "0";
                         currentShortStoryPosition = position;
-                        recommendUnrecommentArticleAPI("0", mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
+                        recommendUnrecommentArticleAPI("0", mDatalist.get(position).getId(),
+                                mDatalist.get(position).getUserId(),
+                                mDatalist.get(position).getUserName());
                     } else {
                         tooltipForShare(shareImageView);
                         likeStatus = "1";
                         currentShortStoryPosition = position;
-                        recommendUnrecommentArticleAPI("1", mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
+                        recommendUnrecommentArticleAPI("1", mDatalist.get(position).getId(),
+                                mDatalist.get(position).getUserId(),
+                                mDatalist.get(position).getUserName());
                     }
                 }
                 break;
             case R.id.facebookShareImageView: {
-                if (isAdded()) {
-                    AppUtils.shareStoryWithFB(this, mDatalist.get(position).getUserType(), mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug(),
-                            "ShortStoryListingScreen", userDynamoId, mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
-                }
+                getSharableViewForPosition(position, AppConstants.MEDIUM_FACEBOOK);
             }
             break;
             case R.id.whatsappShareImageView: {
-                shareMedium = AppConstants.MEDIUM_WHATSAPP;
-                if (checkPermissionAndCreateShareableImage(position)) return;
-                if (isAdded()) {
-                    AppUtils.shareStoryWithWhatsApp(getActivity(), mDatalist.get(position).getUserType(), mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug(),
-                            "ShortStoryListingScreen", userDynamoId, mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
-                }
+                getSharableViewForPosition(position, AppConstants.MEDIUM_WHATSAPP);
             }
             break;
             case R.id.instagramShareImageView: {
-                shareMedium = AppConstants.MEDIUM_INSTAGRAM;
-                if (checkPermissionAndCreateShareableImage(position)) return;
-                if (isAdded()) {
-                    AppUtils.shareStoryWithInstagram(getActivity(), "ShortStoryListingScreen", userDynamoId, mDatalist.get(position).getId(),
-                            mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
-                }
+                getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM);
             }
             break;
             case R.id.genericShareImageView: {
@@ -478,62 +498,97 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         }
     }
 
-    private boolean checkPermissionAndCreateShareableImage(int position) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+    private void checkPermissionAndCreateShareableImage() {
+        if (Build.VERSION.SDK_INT >= 23 && isAdded()) {
+            if (ActivityCompat
+                    .checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED
-                    || ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    || ActivityCompat
+                    .checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions();
-                return true;
             } else {
                 try {
-                    sharedStoryPosition = position;
-                    createBitmapForSharingStory(position);
+                    createBitmapForSharingStory();
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
-                    return true;
                 }
             }
         } else {
             try {
-                sharedStoryPosition = position;
-                createBitmapForSharingStory(position);
+                createBitmapForSharingStory();
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                return true;
             }
         }
-        return false;
     }
 
-    private void createBitmapForSharingStory(int position) {
-        switch (position % 6) {
-            case 0:
-                AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_1, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
-                break;
-            case 1:
-                AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_2, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
-                break;
-            case 2:
-                AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_3, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
-                break;
-            case 3:
-                AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_4, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
-                break;
-            case 4:
-                AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_5, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
-                break;
-            case 5:
-                AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_6, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
-                break;
+    private void getSharableViewForPosition(int position, String medium) {
+        shareStoryImageView = recyclerView.getLayoutManager().findViewByPosition(position).findViewById(R.id.storyImageView);
+        storyShareCardWidget = recyclerView.getLayoutManager().findViewByPosition(position).findViewById(R.id.storyShareCardWidget);
+        shareMedium = medium;
+        sharedStoryItem = mDatalist.get(position);
+        checkPermissionAndCreateShareableImage();
+    }
+
+    private void createBitmapForSharingStory() {
+        if (isAdded()) {
+            Bitmap bitmap1 = ((BitmapDrawable) shareStoryImageView.getDrawable()).getBitmap();
+            shareStoryImageView.setImageBitmap(SharingUtils.getRoundCornerBitmap(bitmap1, AppUtils.dpTopx(4.0f)));
+            AppUtils.getBitmapFromView(storyShareCardWidget, AppConstants.STORY_SHARE_IMAGE_NAME);
+            shareStory();
         }
     }
 
-    private void recommendUnrecommentArticleAPI(String status, String articleId, String authorId, String author) {
-        Utils.pushLikeStoryEvent(getActivity(), "ShortStoryListingScreen", userDynamoId + "", articleId, authorId + "~" + author);
+    private void shareStory() {
+        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() +
+                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg");
+        if (isAdded()) {
+            switch (shareMedium) {
+                case AppConstants.MEDIUM_FACEBOOK: {
+                    SharingUtils.shareViaFacebook(this);
+                    Utils.pushShareStoryEvent(getActivity(), "TopicsShortStoriesTabFragment",
+                            userDynamoId + "", sharedStoryItem.getId(),
+                            sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Facebook");
+                }
+                break;
+                case AppConstants.MEDIUM_WHATSAPP: {
+                    if (AppUtils.shareImageWithWhatsApp(getActivity(), uri, getString(R.string.profile_follow_author,
+                            sharedStoryItem.getUserName(), AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
+                        Utils.pushShareStoryEvent(getActivity(), "TopicsShortStoriesTabFragment",
+                                userDynamoId + "", sharedStoryItem.getId(),
+                                sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Whatsapp");
+                    }
+                }
+                break;
+                case AppConstants.MEDIUM_INSTAGRAM: {
+                    if (AppUtils.shareImageWithInstagram(getActivity(), uri)) {
+                        Utils.pushShareStoryEvent(getActivity(), "TopicsShortStoriesTabFragment",
+                                userDynamoId + "", sharedStoryItem.getId(),
+                                sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Instagram");
+                    }
+                }
+                break;
+                case AppConstants.MEDIUM_GENERIC: {
+                    if (AppUtils.shareGenericImageAndOrLink(getActivity(), uri, getString(R.string.profile_follow_author,
+                            sharedStoryItem.getUserName(), AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
+                        Utils.pushShareStoryEvent(getActivity(), "TopicsShortStoriesTabFragment",
+                                userDynamoId + "", sharedStoryItem.getId(),
+                                sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Generic");
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    private void recommendUnrecommentArticleAPI(String status, String articleId, String authorId,
+                                                String author) {
+        Utils.pushLikeStoryEvent(getActivity(), "ShortStoryListingScreen", userDynamoId + "",
+                articleId,
+                authorId + "~" + author);
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
 
@@ -541,25 +596,29 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         RecommendUnrecommendArticleRequest recommendUnrecommendArticleRequest = new RecommendUnrecommendArticleRequest();
         recommendUnrecommendArticleRequest.setArticleId(articleId);
         recommendUnrecommendArticleRequest.setStatus(likeStatus);
-        Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle = articleDetailsAPI.recommendUnrecommendArticle(recommendUnrecommendArticleRequest);
+        Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle = articleDetailsAPI
+                .recommendUnrecommendArticle(recommendUnrecommendArticleRequest);
         recommendUnrecommendArticle.enqueue(recommendUnrecommendArticleResponseCallback);
     }
 
     private Callback<RecommendUnrecommendArticleResponse> recommendUnrecommendArticleResponseCallback = new Callback<RecommendUnrecommendArticleResponse>() {
         @Override
-        public void onResponse(Call<RecommendUnrecommendArticleResponse> call, retrofit2.Response<RecommendUnrecommendArticleResponse> response) {
+        public void onResponse(Call<RecommendUnrecommendArticleResponse> call,
+                               retrofit2.Response<RecommendUnrecommendArticleResponse> response) {
             isRecommendRequestRunning = false;
             if (response == null || null == response.body()) {
                 if (!isAdded()) {
                     return;
                 }
-                ((ShortStoriesListingContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                ((ShortStoriesListingContainerActivity) getActivity())
+                        .showToast(getString(R.string.server_went_wrong));
                 return;
             }
 
             try {
                 RecommendUnrecommendArticleResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                if (responseData.getCode() == 200 && Constants.SUCCESS
+                        .equals(responseData.getStatus())) {
 //                    if (!responseData.getData().isEmpty()) {
 //                        for (int i = 0; i < mDatalist.size(); i++) {
 //                            if (responseData.getData().get(0).equals(mDatalist.get(i).getId())) {
@@ -571,12 +630,18 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 //                    }
                     if (likeStatus.equals("1")) {
                         if (!responseData.getData().isEmpty()) {
-                            mDatalist.get(currentShortStoryPosition).setLikesCount("" + (Integer.parseInt(mDatalist.get(currentShortStoryPosition).getLikesCount()) + 1));
+                            mDatalist.get(currentShortStoryPosition).setLikesCount(
+                                    "" + (Integer.parseInt(mDatalist.get(currentShortStoryPosition)
+                                            .getLikesCount())
+                                            + 1));
                         }
                         mDatalist.get(currentShortStoryPosition).setLiked(true);
                     } else {
                         if (!responseData.getData().isEmpty()) {
-                            mDatalist.get(currentShortStoryPosition).setLikesCount("" + (Integer.parseInt(mDatalist.get(currentShortStoryPosition).getLikesCount()) - 1));
+                            mDatalist.get(currentShortStoryPosition).setLikesCount(
+                                    "" + (Integer.parseInt(mDatalist.get(currentShortStoryPosition)
+                                            .getLikesCount())
+                                            - 1));
                         }
                         mDatalist.get(currentShortStoryPosition).setLiked(false);
                     }
@@ -586,14 +651,18 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                     }
 
                 } else {
-                    if (isAdded())
-                        ((ShortStoriesListingContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                    if (isAdded()) {
+                        ((ShortStoriesListingContainerActivity) getActivity())
+                                .showToast(getString(R.string.server_went_wrong));
+                    }
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                if (isAdded())
-                    ((ShortStoriesListingContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                if (isAdded()) {
+                    ((ShortStoriesListingContainerActivity) getActivity())
+                            .showToast(getString(R.string.went_wrong));
+                }
             }
         }
 
@@ -821,7 +890,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 
     private void updateViewCount(int position) {
         UpdateViewCountRequest updateViewCountRequest = new UpdateViewCountRequest();
-        updateViewCountRequest.setUserId(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+        updateViewCountRequest.setUserId(
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         ArrayList<Map<String, String>> tagData = mDatalist.get(position).getTags();
         Map<String, String> tagMap = new HashMap<>();
         for (Map.Entry<String, String> entry : tagData.get(0).entrySet()) {
@@ -834,7 +904,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         requestTagList.add(tagMap);
         updateViewCountRequest.setTags(requestTagList);
         updateViewCountRequest.setContentType("1");
-        Call<ResponseBody> callUpdateViewCount = shortStoryAPI.updateViewCount(mDatalist.get(position).getId(), updateViewCountRequest);
+        Call<ResponseBody> callUpdateViewCount = shortStoryAPI
+                .updateViewCount(mDatalist.get(position).getId(), updateViewCountRequest);
         callUpdateViewCount.enqueue(updateViewCountResponseCallback);
     }
 
@@ -857,21 +928,23 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.dialog_sort_by);
             dialog.setCancelable(true);
-            dialog.findViewById(R.id.linearSortByPopular).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    hitArticleListingSortByPopular();
-                    dialog.dismiss();
-                }
-            });
+            dialog.findViewById(R.id.linearSortByPopular)
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            hitArticleListingSortByPopular();
+                            dialog.dismiss();
+                        }
+                    });
 
-            dialog.findViewById(R.id.linearSortByRecent).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    hitArticleListingSortByRecent();
-                    dialog.dismiss();
-                }
-            });
+            dialog.findViewById(R.id.linearSortByRecent)
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            hitArticleListingSortByRecent();
+                            dialog.dismiss();
+                        }
+                    });
 
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.findViewById(R.id.textUpdate).setOnClickListener(new View.OnClickListener() {
@@ -906,7 +979,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private void requestUngrantedPermissions() {
         ArrayList<String> permissionList = new ArrayList<>();
         for (String s : PERMISSIONS_INIT) {
-            if (ActivityCompat.checkSelfPermission(getActivity(), s) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(getActivity(), s)
+                    != PackageManager.PERMISSION_GRANTED) {
                 permissionList.add(s);
             }
         }
@@ -922,17 +996,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 Snackbar.make(rootLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
                         .show();
-                createBitmapForSharingStory(sharedStoryPosition);
-                if (isAdded()) {
-                    if (AppConstants.MEDIUM_WHATSAPP.equals(shareMedium)) {
-                        AppUtils.shareStoryWithWhatsApp(getActivity(), mDatalist.get(sharedStoryPosition).getUserType(), mDatalist.get(sharedStoryPosition).getBlogPageSlug(),
-                                mDatalist.get(sharedStoryPosition).getTitleSlug(), "ShortStoryListingScreen", userDynamoId, mDatalist.get(sharedStoryPosition).getId(),
-                                mDatalist.get(sharedStoryPosition).getUserId(), mDatalist.get(sharedStoryPosition).getUserName());
-                    } else if (AppConstants.MEDIUM_INSTAGRAM.equals(shareMedium)) {
-                        AppUtils.shareStoryWithInstagram(getActivity(), "ShortStoryListingScreen", userDynamoId, mDatalist.get(sharedStoryPosition).getId(),
-                                mDatalist.get(sharedStoryPosition).getUserId(), mDatalist.get(sharedStoryPosition).getUserName());
-                    }
-                }
+                createBitmapForSharingStory();
             } else {
                 Log.i("Permissions", "storage permissions were NOT granted.");
                 Snackbar.make(rootLayout, R.string.permissions_not_granted,
@@ -962,8 +1026,9 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (simpleTooltip.isShowing())
+                if (simpleTooltip.isShowing()) {
                     simpleTooltip.dismiss();
+                }
             }
         }, 3000);
 
