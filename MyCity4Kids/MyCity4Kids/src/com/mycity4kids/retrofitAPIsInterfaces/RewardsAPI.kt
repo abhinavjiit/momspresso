@@ -48,7 +48,7 @@ interface RewardsAPI {
                               @Query("fn") pageValue: Int)
             : Observable<RewardsPersonalResponse>
 
-    @GET("/article_category_images/category_images/{categoryId}/")
+    @GET("/article-category-images/category-images/{categoryId}/")
     fun getBackgroundThumbnail(@Path("categoryId") categoryId: String,
                                @Query("page") pageValue: Int)
             : Call<ShortStoryImageData>

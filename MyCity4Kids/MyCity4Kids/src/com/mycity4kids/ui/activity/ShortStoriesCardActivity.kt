@@ -17,7 +17,9 @@ import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -57,7 +59,6 @@ import retrofit2.Callback
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
-import androidx.appcompat.widget.Toolbar
 
 
 class ShortStoriesCardActivity : BaseActivity() {
@@ -111,6 +112,8 @@ class ShortStoriesCardActivity : BaseActivity() {
     private lateinit var shareUrl: String
     private var shortStoryId: String = "article-bd64fa1c15814b8cae079bf4cdadc126"
     private var count: Int = 0
+    private lateinit var rlLayout: RelativeLayout
+    private lateinit var categoryId: String
 
 
     private var pageNumber = 0
@@ -127,12 +130,18 @@ class ShortStoriesCardActivity : BaseActivity() {
         tabs = findViewById(R.id.collectionTabLayout)
         cardBg = findViewById(R.id.card_bg)
         titleTv = findViewById(R.id.short_title)
+        rlLayout = findViewById(R.id.rl_layout)
 //        parent = findViewById(R.id.rl_layout)
         back = findViewById(R.id.back)
         storyTv = findViewById(R.id.short_text)
         divider = findViewById(R.id.divider)
         publishTextView = findViewById(R.id.publishTextView)
         collectionsViewPager = findViewById<ViewPager>(R.id.collectionsViewPager)
+
+        val params: ViewGroup.LayoutParams = rlLayout.layoutParams
+        params.width = resources.displayMetrics.widthPixels
+        params.height = resources.displayMetrics.widthPixels
+        rlLayout.layoutParams = params
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -152,6 +161,8 @@ class ShortStoriesCardActivity : BaseActivity() {
             articleId = intent.getStringExtra("articleId")
         if (intent.getStringExtra("source") != null)
             source = intent.getStringExtra("source")
+        if (intent.getStringExtra("categoryId") != null)
+            categoryId = intent.getStringExtra("categoryId")
 
         flag = intent.getBooleanExtra("flag", false)
         if (intent.getSerializableExtra("listDraft") != null)
@@ -188,13 +199,12 @@ class ShortStoriesCardActivity : BaseActivity() {
 
         if (!shortStoryId.isNullOrEmpty())
             getConfig()
-        getImages("category-f1a5dcea3d884bd8b75e0da8fb1763d3", 1)
 
         adapter = ShortStoriesThumbnailAdapter(supportFragmentManager)
-//        collectionsViewPager.adapter = adapter
+        collectionsViewPager.adapter = adapter
         collectionsViewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
 
-        shortLayout.setOnTouchListener(OnDragTouchListener(shortLayout, cardBg))
+        shortLayout.setOnTouchListener(OnDragTouchListener(shortLayout, rlLayout))
         tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
 
@@ -226,6 +236,14 @@ class ShortStoriesCardActivity : BaseActivity() {
             publishStory()
         }
 
+    }
+
+    fun setCategoryId(id: String){
+        categoryId = id
+    }
+
+    fun getCategoryId(): String{
+        return categoryId
     }
 
     private fun publishStory() {
@@ -629,14 +647,6 @@ class ShortStoriesCardActivity : BaseActivity() {
         call.enqueue(getConfigData)
     }
 
-    fun getImages(categoryId: String, pageValue: Int) {
-        pageNumber = pageValue
-        val retro = BaseApplication.getInstance().retrofit
-        val rewardAPI = retro.create(RewardsAPI::class.java)
-        val call = rewardAPI.getBackgroundThumbnail(categoryId, pageValue)
-        call.enqueue(getThumbnailList)
-    }
-
     override fun onBackPressed() {
         if (fragment is ShortStoryLibraryFragment && !isTextFragment) {
             setEnabledDisabled(false)
@@ -645,78 +655,6 @@ class ShortStoriesCardActivity : BaseActivity() {
             finish()
         }
         super.onBackPressed()
-    }
-
-    fun setImageListToNull() {
-        dataList = ArrayList<Images>()
-    }
-
-    private val getThumbnailList = object : Callback<ShortStoryImageData> {
-        override fun onResponse(call: Call<ShortStoryImageData>, response: retrofit2.Response<ShortStoryImageData>) {
-            if (null == response.body()) {
-                val nee = NetworkErrorException(response.raw().toString())
-                Crashlytics.logException(nee)
-                return
-            }
-            try {
-                val responseData = response.body()!!.data?.result
-                /*var libraryList = mutableListOf<ShortStoryLibraryListData>()
-                var shortStoryLibraryListData = ShortStoryLibraryListData()
-                val responseData = response.body()!!.data?.result
-                for (i in 0 until responseData!!.size) {
-                    shortStoryLibraryListData.id = responseData.get(i).id
-                    shortStoryLibraryListData.name = responseData.get(i).name
-                    shortStoryLibraryListData.image_url = "https://static.momspresso.com/assets/badges/meta/Golden-Crown.jpg"
-                    libraryList.add(i, shortStoryLibraryListData)
-                }
-
-                System.out.println("------" + libraryList)*/
-                Picasso.with(BaseApplication.getAppContext()).load(responseData?.images?.results?.get(0)?.image_url).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                        .fit().into(cardBg)
-                responseData?.images?.results?.get(0)?.font_colour?.let { setDividerColor(it) }
-                responseData?.images?.results?.get(0)?.font_colour?.let { getHexColor(it) }?.let { titleTv.setTextColor(it) }
-                responseData?.images?.results?.get(0)?.font_colour?.let { getHexColor(it) }?.let { storyTv.setTextColor(it) }
-//                response.body()!!.data?.result?.let { adapter.setListData(it, pageNumber) }
-//                response.body()!!.data?.result?.let { adapter.setListData(it) }
-                processResponse(responseData)
-                collectionsViewPager.adapter = adapter
-                font_Color = responseData?.images?.results?.get(0)?.font_colour!!
-                categoryImageId = responseData?.images?.results?.get(0)?.id!!
-            } catch (e: Exception) {
-                Crashlytics.logException(e)
-                Log.d("MC4kException", Log.getStackTraceString(e))
-            }
-        }
-
-        override fun onFailure(call: Call<ShortStoryImageData>, t: Throwable) {
-            Crashlytics.logException(t)
-            Log.d("MC4kException", Log.getStackTraceString(t))
-        }
-    }
-
-    private fun processResponse(responseData: ShortShortiesBackgroundThumbnail?) {
-        count = responseData?.images?.count!!
-        val newDatalist = responseData?.images?.results
-        val categorieslist = responseData?.categories
-        isReuqestRunning = false
-        if (newDatalist?.size == 0) {
-            isLastPageReached = true
-            if (dataList?.isNotEmpty()!!) {
-            } else {
-                dataList = newDatalist
-                categorieslist?.let { adapter.setListData(dataList!!, it, pageNumber, count) }
-                adapter.notifyDataSetChanged()
-            }
-        } else {
-            if (pageNumber == 0) {
-                dataList = newDatalist!!
-            } else {
-                dataList?.addAll(newDatalist!!)
-            }
-            pageNumber++
-            categorieslist?.let { dataList?.let { it1 -> adapter.setListData(it1, it, pageNumber, count) } }
-            adapter.notifyDataSetChanged()
-        }
     }
 
     private val getConfigData = object : Callback<ShortStoryConfigData> {
@@ -753,10 +691,10 @@ class ShortStoriesCardActivity : BaseActivity() {
     fun getHexColor(color: String): Int? {
         val colors = color.substring(5, color.length - 1).split(",")
         try {
-            val red = colors.get(0).toInt()
-            val green = colors.get(1).toInt()
-            val blue = colors.get(2).toInt()
-            val alpha = colors.get(3).toFloat()
+            val red = colors.get(0).trim().toInt()
+            val green = colors.get(1).trim().toInt()
+            val blue = colors.get(2).trim().toInt()
+            val alpha = colors.get(3).trim().toFloat()
             if (0 <= red && red <= 255 &&
                     0 <= green && green <= 255 &&
                     0 <= blue && blue <= 255 &&
@@ -781,6 +719,7 @@ class ShortStoriesCardActivity : BaseActivity() {
         getHexColor(fontColor)?.let { titleTv.setTextColor(it) }
         getHexColor(fontColor)?.let { storyTv.setTextColor(it) }
         font_Color = fontColor
+        categoryImageId = imageId
     }
 
     fun setEnabledDisabled(isEnabled: Boolean) {
@@ -800,19 +739,27 @@ class ShortStoriesCardActivity : BaseActivity() {
     fun increaseTextSize() {
         titleTvSize = (titleTv.textSize) / resources.displayMetrics.scaledDensity
         storyTvSize = (storyTv.textSize) / resources.displayMetrics.scaledDensity
-        titleTvSize = titleTvSize + 2
-        storyTvSize = storyTvSize + 2
-        titleTv.textSize = titleTvSize
-        storyTv.textSize = storyTvSize
+        if (titleTvSize < 30) {
+            titleTvSize = titleTvSize + 2
+            storyTvSize = storyTvSize + 2
+            titleTv.textSize = titleTvSize
+            storyTv.textSize = storyTvSize
+        } else {
+            showToast(getString(R.string.max_limit))
+        }
     }
 
     fun decreaseTextSize() {
         titleTvSize = titleTv.textSize / resources.displayMetrics.scaledDensity
         storyTvSize = storyTv.textSize / resources.displayMetrics.scaledDensity
-        titleTvSize = titleTvSize - 2
-        storyTvSize = storyTvSize - 2
-        titleTv.textSize = titleTvSize
-        storyTv.textSize = storyTvSize
+        if (titleTvSize > 10) {
+            titleTvSize = titleTvSize - 2
+            storyTvSize = storyTvSize - 2
+            titleTv.textSize = titleTvSize
+            storyTv.textSize = storyTvSize
+        } else {
+            showToast(getString(R.string.min_limit))
+        }
     }
 
     fun textAlign(align: String) {

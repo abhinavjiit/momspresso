@@ -54,71 +54,70 @@
         android:layout_below="@+id/toolbar"
         android:background="@color/light_underline" />
 
-    <!--    <RelativeLayout
-         android:id="@+id/rl_layout"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_below="@id/toolbarUnderline"
-         android:orientation="vertical">
-
-        <androitraintlayout.widget.ConstraintLayout
-             android:id="@+id/dashboard_layout"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content">-->
-
-    <ImageView
-        android:id="@+id/card_bg"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/rl_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
         android:layout_below="@id/toolbarUnderline"
-        android:scaleType="fitXY"
-        android:src="@drawable/default_article" />
-
-    <LinearLayout
-        android:id="@+id/short_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/card_bg"
-        android:layout_marginLeft="@dimen/space_25"
-        android:focusable="false"
         android:orientation="vertical">
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/short_title"
+        <!--    <androitraintlayout.widget.ConstraintLayout
+               android:id="@+id/dashboard_layout"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">-->
+
+        <ImageView
+            android:id="@+id/card_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/default_article" />
+
+        <LinearLayout
+            android:id="@+id/short_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@id/card_bg"
+            android:layout_marginLeft="@dimen/space_25"
             android:layout_marginTop="@dimen/space_20"
-            android:text="Please Add Items"
-            android:textColor="#ffffff"
-            android:textSize="13sp"
-            android:textStyle="bold" />
+            android:focusable="false"
+            android:orientation="vertical">
 
-        <View
-            android:id="@+id/divider"
-            android:layout_width="@dimen/space_80"
-            android:layout_height="@dimen/space_2"
-            android:layout_marginTop="@dimen/space_10"
-            android:background="@drawable/white_filled_bg" />
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/short_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Please Add Items"
+                android:textColor="#ffffff"
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/short_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_10"
-            android:textColor="#FFFFFF"
-            android:text="shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c"
-            android:textSize="11sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-    <!--</androidx.constraintlayout.widget.ConstraintLayout>
-</RelativeLayout>-->
+            <View
+                android:id="@+id/divider"
+                android:layout_width="@dimen/space_80"
+                android:layout_height="@dimen/space_2"
+                android:layout_marginTop="@dimen/space_10"
+                android:background="@drawable/white_filled_bg" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/short_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_10"
+                android:text="shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/card_bg"
+        android:layout_below="@+id/rl_layout"
         android:background="@color/white"
         android:elevation="@dimen/space_20">
 
@@ -157,8 +156,8 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/view"
         android:background="@color/white"
+        android:elevation="@dimen/space_20"
         android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:elevation="@dimen/space_20" />
+        android:focusableInTouchMode="true" />
 
 </RelativeLayout>

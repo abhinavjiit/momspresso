@@ -28,7 +28,7 @@ class ShortStoriesAdapter(activity: Context, showCategory: Boolean) : BaseAdapte
             view = mInflater.inflate(R.layout.short_stories_thumbnail_adapter, parent, false)
             viewHolder = ViewHolder()
             viewHolder.tagImageView = view.findViewById<ImageView>(R.id.tagImageView)
-            viewHolder.topicsNameTextView = view.findViewById<TextView>(R.id.topicsNameTextView)
+            viewHolder.topicsNameTextView = view.findViewById<TextView>(R.id.topicsTextView)
             view.tag = viewHolder
 
         } else {
@@ -41,12 +41,7 @@ class ShortStoriesAdapter(activity: Context, showCategory: Boolean) : BaseAdapte
         if (position == 0) {
             viewHolder.topicsNameTextView?.visibility = View.VISIBLE
             viewHolder.topicsNameTextView?.text = "Library"
-            try {
-                Picasso.with(BaseApplication.getAppContext()).load(R.drawable.default_article).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                        .fit().into(viewHolder.tagImageView)
-            } catch (e: Exception) {
-                viewHolder.tagImageView?.setImageDrawable(ContextCompat.getDrawable(BaseApplication.getAppContext(), R.drawable.default_article))
-            }
+
             viewHolder.tagImageView?.clipToOutline = true
         } else {
             viewHolder.topicsNameTextView?.visibility = View.GONE

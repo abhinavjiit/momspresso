@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.FragmentTransaction
 import com.kelltontech.network.Response
@@ -17,9 +18,9 @@ class ShortStoryTextFormatFragment : BaseFragment() {
 
     private lateinit var textSizeUp: TextView
     private lateinit var textSizeDown: TextView
-    private lateinit var textAlignLeft: TextView
-    private lateinit var textAlignCenter: TextView
-    private lateinit var textAlignRight: TextView
+    private lateinit var textAlignLeft: ImageView
+    private lateinit var textAlignCenter: ImageView
+    private lateinit var textAlignRight: ImageView
 
     override fun updateUi(response: Response?) {
 

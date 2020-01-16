@@ -1342,4 +1342,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="align">Alignment</string>
     <string name="short_s_max_title_word">Your title can have maximum 10 words.</string>
     <string name="editor.next">NEXT</string>
+    <string name="max_limit">You have reached maximum limit</string>
+    <string name="min_limit">You have reached minimum limit</string>
+    <string name="library">Library</string>
 </resources>

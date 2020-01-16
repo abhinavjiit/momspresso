@@ -95,9 +95,9 @@ public interface ShortStoryAPI {
     @PUT("v1/users/likes/")
     Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle(@Body RecommendUnrecommendArticleRequest body);
 
-    @POST("/article_category_images/article_config/")
+    @POST("/article-category-images/article-config/")
     Call<ResponseBody> shortStoryConfig(@Body ShortStoryConfigRequest body);
 
-    @GET("/article_category_images/article_config/{ss_id}/")
+    @GET("/article-category-images/article-config/{ss_id}/")
     Call<ShortStoryConfigData> getConfig(@Path("ss_id") String shortStoryId);
 }

@@ -143,7 +143,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private String ssTopicsText;
     private TextView wordCounterTextView;
     private RelativeLayout root;
-    private boolean isValidTitle, isValidBody, isCategorySelected;
+    private boolean isValidTitle, isValidBody, isCategorySelected, isStoryValid;
+    private String categoryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -355,15 +356,13 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                             showToast(getString(R.string.short_s_max_word));
                             isMaxLengthToastShown = true;
                         }
-                        isValidBody = false;
 //                        publishTextView.setTextColor(getResources().getColor(R.color.color_979797));
                     } else {
                         removeFilter(storyBodyEditText);
                         isMaxLengthToastShown = false;
-                        isValidBody = true;
 //                        publishTextView.setTextColor(getResources().getColor(R.color.app_red));
                     }
-                    setNextColor();
+
                 } catch (Exception e) {
 
                 }
@@ -384,6 +383,13 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     wordCounterTextView.setText("" + (wordsLength - 100));
                     wordCounterTextView.setBackground(getResources().getDrawable(R.drawable.campaign_detail_red_bg));
                 }
+
+                if (s.length() > 0 && wordsLength <= MAX_WORDS) {
+                    isValidBody = true;
+                } else {
+                    isValidBody = false;
+                }
+                setNextColor();
             }
         });
 
@@ -479,10 +485,13 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     }
 
     private void setNextColor() {
-        if (isCategorySelected && isValidTitle && isValidBody)
+        if (isCategorySelected && isValidTitle && isValidBody) {
             publishTextView.setTextColor(getResources().getColor(R.color.app_red));
-        else
+            isStoryValid = true;
+        }else {
             publishTextView.setTextColor(getResources().getColor(R.color.color_979797));
+            isStoryValid = false;
+        }
     }
 
 
@@ -753,6 +762,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     intent.putExtra("tagsList", tagsList);
                     intent.putExtra("title", storyTitleEditText.getText().toString().trim());
                     intent.putExtra("story", storyBodyEditText.getText().toString().trim());
+                    intent.putExtra("categoryId",categoryId);
                     startActivity(intent);
                     /*if ("publishedList".equals(source)) {
                         shortStoryDraftOrPublishRequest = new ShortStoryDraftOrPublishRequest();
@@ -814,6 +824,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             ssTopicsList.get(i).setIsSelected(false);
         }
         ssTopicsList.get(position).setIsSelected(true);
+        categoryId = ssTopicsList.get(position).getId();
 
         if (ssTopicsList.get(position).getId().equalsIgnoreCase(AppConstants.VICHAAR_SAGAR_CATEGORY_ID)) {
             storyTitleEditText.setText(getString(R.string.story_text_title_hindi));
@@ -855,6 +866,9 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         }
         if (storyBodyEditText.getText() == null || StringUtils.isNullOrEmpty(storyBodyEditText.getText().toString())) {
             Toast.makeText(this, getString(R.string.editor_body_empty), Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (countWords(storyBodyEditText.getText().toString()) > MAX_WORDS){
+            Toast.makeText(this, getString(R.string.short_s_max_word), Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
