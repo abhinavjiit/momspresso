@@ -789,7 +789,7 @@ class ShortStoriesCardActivity : BaseActivity() {
         shortLayout.getLocationOnScreen(location)
         x = location[0]
         y = location[1]
-        if (rlLayout.height < (y + (titleTv.measuredHeight + (divider.measuredHeight) + storyTv.measuredHeight))) {
+        if (rlLayout.height < (y - toolbar.height + ((titleTv.lineHeight*titleTv.lineCount) + (divider.measuredHeight) + (storyTv.lineHeight*storyTv.lineCount)))) {
             showToast("Your story is too long. Please reduce the font size or shorten the story.")
             return false
         }
