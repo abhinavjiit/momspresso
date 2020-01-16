@@ -639,8 +639,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     }
 
     private void getSharableViewForPosition(int position, String medium) {
-        shareStoryImageView = recyclerView.getLayoutManager().findViewByPosition(position).findViewById(R.id.storyImageView);
         storyShareCardWidget = recyclerView.getLayoutManager().findViewByPosition(position).findViewById(R.id.storyShareCardWidget);
+        shareStoryImageView = storyShareCardWidget.findViewById(R.id.storyImageView);
         shareMedium = medium;
         sharedStoryItem = mDatalist.get(position);
         checkPermissionAndCreateShareableImage();

@@ -1316,7 +1316,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
 //                        intent.putExtra(Constants.ARTICLE_ID, responseModel.getData().get(0).getResult().getId());
 //                    }
 //                    startActivity(intent);
-                    Intent intent = new Intent(AddShortStoryActivity.this, ArticleModerationOrShareActivity.class);
+                    Intent intent = new Intent(AddShortStoryActivity.this, ShortStoryModerationOrShareActivity.class);
                     intent.putExtra("shareUrl", "" + responseModel.getData().get(0).getResult().getUrl());
                     intent.putExtra("source", "addStory");
                     intent.putExtra("title", shortStoryDraftOrPublishRequest.getTitle());

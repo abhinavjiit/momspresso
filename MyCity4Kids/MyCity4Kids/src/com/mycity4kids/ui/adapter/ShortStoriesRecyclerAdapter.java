@@ -11,19 +11,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.mycity4kids.R;
-import com.mycity4kids.models.response.ArticleListingResult;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.widget.StoryShareCardWidget;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import q.rorbin.badgeview.QBadgeView;
 
@@ -65,11 +62,19 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
 
     @Override
     public void onBindViewHolder(ShortStoriesViewHolder holder, int position) {
-
+        try {
+            Picasso.with(mContext).load(articleDataModelsNew.get(position).getStoryImage()).into(holder.shareStoryImageView);
+            holder.storyAuthorTextView.setText(articleDataModelsNew.get(position).getUserName());
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
         try {
             Picasso.with(holder.itemView.getContext()).load(articleDataModelsNew.get(position).getStoryImage().trim()).placeholder(R.drawable.default_article).into(holder.storyImage);
         } catch (Exception e) {
             holder.storyImage.setImageResource(R.drawable.default_article);
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
         }
 
         holder.authorNameTextView.setText(articleDataModelsNew.get(position).getUserName());
@@ -139,7 +144,7 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
             whatsappShareImageView = (ImageView) itemView.findViewById(R.id.whatsappShareImageView);
             instagramShareImageView = (ImageView) itemView.findViewById(R.id.instagramShareImageView);
             genericShareImageView = (ImageView) itemView.findViewById(R.id.genericShareImageView);
-            storyImage = (ImageView) itemView.findViewById(R.id.storyImageView);
+            storyImage = (ImageView) itemView.findViewById(R.id.storyImageView1);
             menuItem = (ImageView) itemView.findViewById(R.id.menuItem);
             storyShareCardWidget = (StoryShareCardWidget) itemView.findViewById(R.id.storyShareCardWidget);
             shareStoryImageView = (ImageView) storyShareCardWidget.findViewById(R.id.storyImageView);

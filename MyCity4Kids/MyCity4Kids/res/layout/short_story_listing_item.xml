@@ -22,7 +22,7 @@
         android:background="@drawable/article_listing_item_border_bg">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/storyImageView"
+            android:id="@+id/storyImageView1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
@@ -33,7 +33,7 @@
             android:id="@+id/followAuthorRelativeContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/storyImageView"
+            android:layout_below="@+id/storyImageView1"
             android:layout_marginEnd="@dimen/space_10">
 
             <com.mycity4kids.widget.CustomFontTextView
