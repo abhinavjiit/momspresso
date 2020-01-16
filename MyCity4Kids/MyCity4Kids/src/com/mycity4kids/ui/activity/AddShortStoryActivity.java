@@ -376,11 +376,12 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             @Override
             public void afterTextChanged(Editable s) {
                 int wordsLength = countWords(s.toString());
+                wordCounterTextView.setVisibility(View.VISIBLE);
                 if (wordsLength <= MAX_WORDS) {
                     wordCounterTextView.setText("" + (100 - wordsLength));
                     wordCounterTextView.setBackground(getResources().getDrawable(R.drawable.short_story_word_count_bg));
                 } else {
-                    wordCounterTextView.setText("" + (wordsLength - 100));
+                    wordCounterTextView.setText("-" + (wordsLength - 100));
                     wordCounterTextView.setBackground(getResources().getDrawable(R.drawable.campaign_detail_red_bg));
                 }
 
@@ -485,7 +486,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     }
 
     private void setNextColor() {
-        if (isCategorySelected && isValidTitle && isValidBody) {
+        if (isCategorySelected && isValidTitle && (isValidBody || !StringUtils.isNullOrEmpty(draftId))) {
             publishTextView.setTextColor(getResources().getColor(R.color.app_red));
             isStoryValid = true;
         }else {

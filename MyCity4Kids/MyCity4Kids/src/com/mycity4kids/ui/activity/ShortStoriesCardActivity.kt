@@ -14,10 +14,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.Gravity
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
@@ -44,7 +41,6 @@ import com.mycity4kids.models.response.*
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI
-import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI
 import com.mycity4kids.ui.adapter.ShortStoriesThumbnailAdapter
 import com.mycity4kids.ui.fragment.ShortStoryLibraryFragment
@@ -114,6 +110,8 @@ class ShortStoriesCardActivity : BaseActivity() {
     private var count: Int = 0
     private lateinit var rlLayout: RelativeLayout
     private lateinit var categoryId: String
+    private var x: Int = 0
+    private var y: Int = 0
 
 
     private var pageNumber = 0
@@ -157,8 +155,10 @@ class ShortStoriesCardActivity : BaseActivity() {
             runningrequest = intent.getStringExtra("runningrequest")
         if (intent.getStringExtra("draftId") != null)
             draftId = intent.getStringExtra("draftId")
-        if (intent.getStringExtra("articleId") != null)
+        if (intent.getStringExtra("articleId") != null) {
             articleId = intent.getStringExtra("articleId")
+            shortStoryId = articleId
+        }
         if (intent.getStringExtra("source") != null)
             source = intent.getStringExtra("source")
         if (intent.getStringExtra("categoryId") != null)
@@ -233,16 +233,43 @@ class ShortStoriesCardActivity : BaseActivity() {
         }
 
         publishTextView.setOnClickListener {
-            publishStory()
+            if (checkViewAndUpdate())
+                publishStory()
         }
+
+        rlLayout.getViewTreeObserver().addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                val location = IntArray(2)
+                shortLayout.getLocationOnScreen(location)
+                x = location[0]
+                y = location[1]
+//                checkViewAndUpdate();
+            }
+        });
+
+//        checkViewAndUpdate()
 
     }
 
-    fun setCategoryId(id: String){
+    fun setCategoryId(id: String) {
         categoryId = id
     }
 
-    fun getCategoryId(): String{
+    fun getCategoryId(): String {
+        if ("publishedList".equals(source)) {
+            for (i in 0 until tagsList.size) {
+                val myMap = tagsList.get(i)
+                for (entrySet in myMap.entries) {
+                    for (j in 0 until ssTopicsList!!.size) {
+                        if (ssTopicsList?.get(j)?.getDisplay_name().equals(entrySet.value)) {
+                            categoryId = entrySet.key
+                            return categoryId
+                        }
+                    }
+                }
+            }
+        }
+
         return categoryId
     }
 
@@ -618,8 +645,13 @@ class ShortStoriesCardActivity : BaseActivity() {
         shortStoryConfigRequest.font_colour = font_Color
         shortStoryConfigRequest.user_id = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
         shortStoryConfigRequest.category_image = categoryImageId
-        val call = shortStoryAPI.shortStoryConfig(shortStoryConfigRequest)
-        call.enqueue(shortStoryConfig)
+        if ("publishedList".equals(source)) {
+            val call = shortStoryAPI.updateConfig(draftId, shortStoryConfigRequest)
+            call.enqueue(shortStoryConfig)
+        } else {
+            val call = shortStoryAPI.shortStoryConfig(shortStoryConfigRequest)
+            call.enqueue(shortStoryConfig)
+        }
     }
 
     private val shortStoryConfig = object : Callback<ResponseBody> {
@@ -747,6 +779,21 @@ class ShortStoriesCardActivity : BaseActivity() {
         } else {
             showToast(getString(R.string.max_limit))
         }
+
+//        checkViewAndUpdate()
+    }
+
+    fun checkViewAndUpdate(): Boolean {
+        var check = true
+        val location = IntArray(2)
+        shortLayout.getLocationOnScreen(location)
+        x = location[0]
+        y = location[1]
+        if (rlLayout.height < (y + (titleTv.measuredHeight + (divider.measuredHeight) + storyTv.measuredHeight))) {
+            showToast("Your story is too long. Please reduce the font size or shorten the story.")
+            return false
+        }
+        return true
     }
 
     fun decreaseTextSize() {

@@ -190,7 +190,7 @@
                 android:paddingRight="@dimen/space_8"
                 android:paddingBottom="@dimen/space_5"
                 android:gravity="center"
-                android:text="100"
+                android:visibility="gone"
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 app:fontName="oswald.ttf" />

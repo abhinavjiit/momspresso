@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white">
 
     <RelativeLayout
         android:id="@+id/imvAuthorThumbContainer"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:background="#F9F9F9"
@@ -15,18 +15,18 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/imageCardView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/space_3"
             app:cardElevation="@dimen/space_2">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/tagImageView"
-                    android:layout_width="@dimen/space_80"
+                    android:layout_width="match_parent"
                     android:layout_height="@dimen/space_80"
                     android:background="@drawable/shape_collection_grid_view_rounded"
                     android:scaleType="fitXY"

@@ -16,8 +16,8 @@ import com.mycity4kids.ui.adapter.ShortStoriesAdapter
 
 class ShortStoryTextFormatFragment : BaseFragment() {
 
-    private lateinit var textSizeUp: TextView
-    private lateinit var textSizeDown: TextView
+    private lateinit var textSizeUp: ImageView
+    private lateinit var textSizeDown: ImageView
     private lateinit var textAlignLeft: ImageView
     private lateinit var textAlignCenter: ImageView
     private lateinit var textAlignRight: ImageView

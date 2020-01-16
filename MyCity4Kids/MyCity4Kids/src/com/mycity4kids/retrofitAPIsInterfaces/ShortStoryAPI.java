@@ -100,4 +100,8 @@ public interface ShortStoryAPI {
 
     @GET("/article-category-images/article-config/{ss_id}/")
     Call<ShortStoryConfigData> getConfig(@Path("ss_id") String shortStoryId);
+
+
+    @PUT("/article-category-images/article-config/{ss_id}/")
+    Call<ResponseBody> updateConfig(@Path("ss_id") String shortStoryId, @Body ShortStoryConfigRequest body);
 }
