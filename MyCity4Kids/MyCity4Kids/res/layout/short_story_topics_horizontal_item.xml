@@ -29,10 +29,12 @@
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/topicsNameTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:text=""
             android:textColor="@color/explore_listing.explore_categories.category_name"
             android:textSize="18sp"

@@ -1283,4 +1283,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="min_limit">You have reached minimum limit</string>
     <string name="library">Library</string>
     <string name="ss_share_with_friends">Share with Friends</string>
+    <string name="short_s_add_title_Optional">पर्यायी</string>
+    <string name="story_text_description_hindi">तुम्ही इथे सुविचार (कोट्स) लिहू शकता.</string>
+    <string name="stroy_overflow_layout">तुमची कथा खूप मोठी झाली आहे कृपया फॉन्टचा आकार कमी करा किंवा कथा छोटी करा.</string>
+    <string name="short_s_write">लिहा</string>
 </resources>

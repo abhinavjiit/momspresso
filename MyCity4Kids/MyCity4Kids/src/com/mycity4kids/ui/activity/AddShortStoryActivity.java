@@ -30,7 +30,6 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
-import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -146,6 +145,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private RelativeLayout root;
     private boolean isValidTitle, isValidBody, isCategorySelected, isStoryValid;
     private String categoryId;
+    private boolean hasQuote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,7 +195,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         if ("draftList".equals(source)) {
             draftObject = (DraftListResult) getIntent().getSerializableExtra("draftItem");
             storyTitleEditText.setText(draftObject.getTitle());
-            storyBodyEditText.setText(draftObject.getBody());
+            if (!StringUtils.isNullOrEmpty(draftObject.getBody()))
+                storyBodyEditText.setText(draftObject.getBody());
             draftId = draftObject.getId();
             listDraft = draftObject.getTags();
             checkTagIsActive();
@@ -490,7 +491,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         if (isCategorySelected && isValidTitle && (isValidBody || !StringUtils.isNullOrEmpty(draftId))) {
             publishTextView.setTextColor(getResources().getColor(R.color.app_red));
             isStoryValid = true;
-        }else {
+        } else {
             publishTextView.setTextColor(getResources().getColor(R.color.color_979797));
             isStoryValid = false;
         }
@@ -685,6 +686,16 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
 
             tagsList.addAll(tagsList1);
             tagsList.addAll(tagsList2);
+
+            for (Map<String, String> listItem : tagsList) {
+                for (Map.Entry<String, String> stringStringEntry : listItem.entrySet()) {
+                    if (((Map.Entry) stringStringEntry).getKey().equals(AppConstants.VICHAAR_SAGAR_CATEGORY_ID)) {
+                        hasQuote = true;
+                        categoryId = AppConstants.VICHAAR_SAGAR_CATEGORY_ID;
+                        break;
+                    }
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -764,7 +775,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     intent.putExtra("tagsList", tagsList);
                     intent.putExtra("title", storyTitleEditText.getText().toString().trim());
                     intent.putExtra("story", storyBodyEditText.getText().toString().trim());
-                    intent.putExtra("categoryId",categoryId);
+                    intent.putExtra("categoryId", categoryId);
                     startActivity(intent);
                     /*if ("publishedList".equals(source)) {
                         shortStoryDraftOrPublishRequest = new ShortStoryDraftOrPublishRequest();
@@ -829,9 +840,12 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         categoryId = ssTopicsList.get(position).getId();
 
         if (ssTopicsList.get(position).getId().equalsIgnoreCase(AppConstants.VICHAAR_SAGAR_CATEGORY_ID)) {
-            storyTitleEditText.setText(getString(R.string.story_text_title_hindi));
+            hasQuote = true;
+            isValidTitle = true;
+            storyTitleEditText.setHint(getString(R.string.short_s_add_title_hint) + "(" + getString(R.string.short_s_add_title_Optional) + ")");
             storyBodyEditText.setHint(getString(R.string.story_text_description_hindi));
         } else {
+            hasQuote = false;
             storyTitleEditText.setText("");
             storyTitleEditText.setHint(R.string.short_s_add_title_hint);
             storyBodyEditText.setHint(R.string.short_s_add_body_hint);
@@ -862,14 +876,14 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             }
         }
 
-        if (storyTitleEditText.getText() == null || StringUtils.isNullOrEmpty(storyTitleEditText.getText().toString())) {
+        if (!hasQuote && (storyTitleEditText.getText() == null || StringUtils.isNullOrEmpty(storyTitleEditText.getText().toString()))) {
             Toast.makeText(this, getString(R.string.editor_title_empty), Toast.LENGTH_SHORT).show();
             return false;
         }
         if (storyBodyEditText.getText() == null || StringUtils.isNullOrEmpty(storyBodyEditText.getText().toString())) {
             Toast.makeText(this, getString(R.string.editor_body_empty), Toast.LENGTH_SHORT).show();
             return false;
-        } else if (countWords(storyBodyEditText.getText().toString()) > MAX_WORDS){
+        } else if (countWords(storyBodyEditText.getText().toString()) > MAX_WORDS) {
             Toast.makeText(this, getString(R.string.short_s_max_word), Toast.LENGTH_SHORT).show();
             return false;
         }

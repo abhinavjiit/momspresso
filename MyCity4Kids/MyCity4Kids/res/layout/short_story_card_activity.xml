@@ -88,7 +88,6 @@
                 android:id="@+id/short_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Please Add Items"
                 android:textColor="#ffffff"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -105,7 +104,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_10"
-                android:text="shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c shckhaskc schsc d for for g FD cvbn jhg fc b GF x bhgf dx vbg trfd cvbg FD CB hf c bgf c"
                 android:textColor="#FFFFFF"
                 android:textSize="11sp"
                 android:textStyle="bold" />

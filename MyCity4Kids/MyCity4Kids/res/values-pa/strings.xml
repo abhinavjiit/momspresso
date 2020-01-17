@@ -1062,7 +1062,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="notification">Notification</string>
     <string name="about_video">ਬਾਰੇ</string>
     <string name="story_text_title_hindi">विचारसागर</string>
-    <string name="story_text_description_hindi">यहाँ आप सुविचार (कोट्स) लिख सकते हैं.</string>
+    <string name="story_text_description_hindi">ਤੁਸੀਂ ਆਪਣੇ ਵਿਚਾਰ ਇੱਥੇ ਲਿਖ ਸਕਦੇ ਹੋ</string>
     <string name="campaign_name">Campaign Name \n Facebook Campaign</string>
 
 
@@ -1348,4 +1348,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="min_limit">You have reached minimum limit</string>
     <string name="library">Library</string>
     <string name="ss_share_with_friends">Share with Friends</string>
+    <string name="short_s_add_title_Optional">ਵਿਕਲਪਿਕ</string>
+    <string name="stroy_overflow_layout">ਤੁਹਾਡੀ ਕਹਾਣੀ ਬਹੁਤ ਲੰਬੀ ਹੈ. ਕਿਰਪਾ ਕਰਕੇ ਫੋਂਟ ਦਾ ਆਕਾਰ ਘਟਾਓ ਜਾਂ ਕਹਾਣੀ ਨੂੰ ਛੋਟਾ ਕਰੋ</string>
+    <string name="short_s_write">ਲਿਖੋ</string>
 </resources>

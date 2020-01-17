@@ -997,7 +997,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
 
     //groupdetail Activity toast String
-    <string name="story_text_description_hindi">यहाँ आप सुविचार (कोट्स) लिख सकते हैं.</string>
+    <string name="story_text_description_hindi">તમે તમારા સુવાક્ય અહીં લખી શકો છો</string>
     <string name="campaign_name">Campaign Name \n Facebook Campaign</string>
     <string name="reward_campaign_add_proof">ADD PROOF</string>
     <string name="select_payment_method">PREFERRED METHOD OF PAYMENT</string>
@@ -1397,4 +1397,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="min_limit">You have reached minimum limit</string>
     <string name="library">Library</string>
     <string name="ss_share_with_friends">Share with Friends</string>
+    <string name="short_s_add_title_Optional">વૈકલ્પિક</string>
+    <string name="stroy_overflow_layout">તમારી વાર્તા લાંબી છે, કૃપા કરી ફોન્ટ સાઈઝ બદલો અથવા વાર્તા ટૂંકી કરો.</string>
+    <string name="short_s_write">લખો</string>
 </resources>

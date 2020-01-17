@@ -143,7 +143,13 @@ class ShortStoriesCardActivity : BaseActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        title = intent.getStringExtra("title")
+        if (!intent.getStringExtra("title").isNullOrEmpty()) {
+            title = intent.getStringExtra("title")
+            titleTv.text = title
+        } else {
+            titleTv.visibility = View.GONE
+            divider.visibility = View.GONE
+        }
         story = intent.getStringExtra("story")
         if (intent.getStringExtra("ssTopicsText") != null)
             ssTopicsText = intent.getStringExtra("ssTopicsText")
@@ -176,8 +182,9 @@ class ShortStoriesCardActivity : BaseActivity() {
         if (intent.getParcelableArrayListExtra<ExploreTopicsModel>("ssTopicsList") != null)
             ssTopicsList = intent.getParcelableArrayListExtra<ExploreTopicsModel>("ssTopicsList")
 
-        titleTv.text = title
         storyTv.text = story
+        titleTvSize = (titleTv.textSize) / resources.displayMetrics.scaledDensity
+        storyTvSize = (storyTv.textSize) / resources.displayMetrics.scaledDensity
 
         tabs.apply {
             addTab(tabs.newTab().setText(resources.getString(R.string.background)))
@@ -576,7 +583,7 @@ class ShortStoriesCardActivity : BaseActivity() {
                     val list1 = ArrayList<Map<String, String>>()
                     val list2 = ArrayList<Map<String, String>>()
                     val map = HashMap<String, String>()
-                    ssTopicsList?.get(i)?.id = ssTopicsList?.get(i)?.getDisplay_name()
+                    ssTopicsList?.get(i)?.id?.let { ssTopicsList?.get(i)?.getDisplay_name()?.let { it1 -> map.put(it, it1) } }
                     list.add(map)
                     if (runningrequest == "challenge") {
                         map1.put(challengeId, challengeName)
@@ -790,8 +797,8 @@ class ShortStoriesCardActivity : BaseActivity() {
         shortLayout.getLocationOnScreen(location)
         x = location[0]
         y = location[1]
-        if (rlLayout.height < (y - toolbar.height + ((titleTv.lineHeight*titleTv.lineCount) + (divider.measuredHeight) + (storyTv.lineHeight*storyTv.lineCount)))) {
-            showToast("Your story is too long. Please reduce the font size or shorten the story.")
+        if (rlLayout.height < (y - toolbar.height + ((titleTv.lineHeight * titleTv.lineCount) + (divider.measuredHeight) + (storyTv.lineHeight * storyTv.lineCount)))) {
+            showToast(resources.getString(R.string.stroy_overflow_layout))
             return false
         }
         return true
