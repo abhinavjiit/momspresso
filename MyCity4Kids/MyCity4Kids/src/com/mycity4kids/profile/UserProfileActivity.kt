@@ -6,6 +6,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.PorterDuff
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -62,8 +63,10 @@ import com.mycity4kids.ui.fragment.UserBioDialogFragment
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.PermissionUtil
 import com.mycity4kids.utils.RoundedTransformation
+import com.mycity4kids.utils.SharingUtils
 import com.mycity4kids.widget.BadgesProfileWidget
 import com.mycity4kids.widget.ResizableTextView
+import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
@@ -141,6 +144,10 @@ class UserProfileActivity : BaseActivity(),
     private var userFeaturedOnList: ArrayList<MixFeedResult>? = null
     private var deeplinkBadgeId: String? = null
     private var profileDetail: String? = null
+    private lateinit var storyShareCardWidget: StoryShareCardWidget
+    private lateinit var shareStoryImageView: ImageView
+    private lateinit var sharedStoryItem: MixFeedResult
+
 
     private val userContentAdapter: UserContentAdapter by lazy { UserContentAdapter(this, AppUtils.isPrivateProfile(authorId)) }
     private val usersFeaturedContentAdapter: UsersFeaturedContentAdapter by lazy { UsersFeaturedContentAdapter(this) }
@@ -922,28 +929,13 @@ class UserProfileActivity : BaseActivity(),
                 shareContent(userContentList?.get(position))
             }
             view.id == R.id.facebookShareImageView -> {
-                AppUtils.shareStoryWithFB(this, userContentList?.get(position)?.userType, userContentList?.get(position)?.blogTitleSlug,
-                        userContentList?.get(position)?.titleSlug, "Profile",
-                        SharedPrefUtils.getUserDetailModel(this).dynamoId + "",
-                        userContentList?.get(position)?.id, authorId, userContentList?.get(position)?.userName)
+                getSharableViewForPosition(position, AppConstants.MEDIUM_FACEBOOK)
             }
             view.id == R.id.whatsappShareImageView -> {
-                shareContentPosition = position
-                shareCardType = "story"
-                shareMedium = AppConstants.MEDIUM_WHATSAPP
-                if (createSharableImageWhileCheckingPermissions()) return
-                AppUtils.shareStoryWithWhatsApp(this, userContentList?.get(position)?.userType,
-                        userContentList?.get(position)?.blogTitleSlug, userContentList?.get(position)?.titleSlug,
-                        "Profile", SharedPrefUtils.getUserDetailModel(this).dynamoId,
-                        userContentList?.get(position)?.id, authorId, userContentList?.get(position)?.userName)
+                getSharableViewForPosition(position, AppConstants.MEDIUM_WHATSAPP)
             }
             view.id == R.id.instagramShareImageView -> {
-                shareContentPosition = position
-                shareCardType = "story"
-                shareMedium = AppConstants.MEDIUM_INSTAGRAM
-                if (createSharableImageWhileCheckingPermissions()) return
-                AppUtils.shareStoryWithInstagram(this, "Profile", SharedPrefUtils.getUserDetailModel(this).dynamoId,
-                        userContentList?.get(position)?.id, authorId, userContentList?.get(position)?.userName)
+                getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM)
             }
             view.id == R.id.genericShareImageView -> {
                 try {
@@ -1061,8 +1053,7 @@ class UserProfileActivity : BaseActivity(),
             override fun onMenuItemClick(item: MenuItem?): Boolean {
                 var id = item?.itemId
                 if (id == R.id.shareShortStory) {
-                    AppUtils.shareStoryGeneric(this@UserProfileActivity, userContentList?.get(position)?.userType, userContentList?.get(position)?.blogTitleSlug, userContentList?.get(position)?.titleSlug,
-                            "UserProfileActivity", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, userContentList?.get(position)?.id, userContentList?.get(position)?.userId, userContentList?.get(position)?.userName)
+                    getSharableViewForPosition(position, AppConstants.MEDIUM_GENERIC)
                     return true
                 } else if (id == R.id.reportContentShortStory) {
                     val reportContentDialogFragment = ReportContentDialogFragment()
@@ -1378,4 +1369,84 @@ class UserProfileActivity : BaseActivity(),
     override fun updateUi(response: Response?) {
 
     }
+
+    private fun getSharableViewForPosition(position: Int, medium: String) {
+        storyShareCardWidget = recyclerView.layoutManager!!.findViewByPosition(position)!!.findViewById<StoryShareCardWidget>(R.id.storyShareCardWidget)
+        shareStoryImageView = storyShareCardWidget.findViewById(R.id.storyImageView)
+        shareMedium = medium
+        sharedStoryItem = userContentList?.get(position)!!
+        checkPermissionAndCreateShareableImage()
+    }
+
+    private fun checkPermissionAndCreateShareableImage() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (ActivityCompat
+                            .checkSelfPermission(this@UserProfileActivity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ActivityCompat
+                            .checkSelfPermission(this@UserProfileActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions()
+            } else {
+                try {
+                    createBitmapForSharingStory()
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+
+            }
+        } else {
+            try {
+                createBitmapForSharingStory()
+            } catch (e: Exception) {
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+            }
+
+        }
+    }
+
+    private fun createBitmapForSharingStory() {
+        val bitmap1 = (shareStoryImageView.drawable as BitmapDrawable).bitmap!!
+        shareStoryImageView.setImageBitmap(SharingUtils.getRoundCornerBitmap(bitmap1, AppUtils.dpTopx(4.0f)))
+        AppUtils.getBitmapFromView(storyShareCardWidget, AppConstants.STORY_SHARE_IMAGE_NAME)
+        shareStory()
+    }
+
+    private fun shareStory() {
+        val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() +
+                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg")
+        when (shareMedium) {
+            AppConstants.MEDIUM_FACEBOOK -> {
+                SharingUtils.shareViaFacebook(this)
+                Utils.pushShareStoryEvent(this@UserProfileActivity, "TopicsShortStoriesTabFragment",
+                        authorId + "", sharedStoryItem.id,
+                        sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Facebook")
+            }
+            AppConstants.MEDIUM_WHATSAPP -> {
+                if (AppUtils.shareImageWithWhatsApp(this@UserProfileActivity, uri, getString(R.string.profile_follow_author,
+                                sharedStoryItem.userName, AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId))) {
+                    Utils.pushShareStoryEvent(this@UserProfileActivity, "TopicsShortStoriesTabFragment",
+                            authorId + "", sharedStoryItem.id,
+                            sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Whatsapp")
+                }
+            }
+            AppConstants.MEDIUM_INSTAGRAM -> {
+                if (AppUtils.shareImageWithInstagram(this@UserProfileActivity, uri)) {
+                    Utils.pushShareStoryEvent(this@UserProfileActivity, "TopicsShortStoriesTabFragment",
+                            authorId + "", sharedStoryItem.id,
+                            sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Instagram")
+                }
+            }
+            AppConstants.MEDIUM_GENERIC -> {
+                if (AppUtils.shareGenericImageAndOrLink(this@UserProfileActivity, uri, getString(R.string.profile_follow_author,
+                                sharedStoryItem.userName, AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId))) {
+                    Utils.pushShareStoryEvent(this@UserProfileActivity, "TopicsShortStoriesTabFragment",
+                            authorId + "", sharedStoryItem.id,
+                            sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Generic")
+                }
+            }
+        }
+
+    }
+
 }
+

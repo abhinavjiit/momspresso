@@ -5,15 +5,20 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -53,6 +58,8 @@ import com.mycity4kids.ui.fragment.ReportContentDialogFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.PermissionUtil;
+import com.mycity4kids.utils.SharingUtils;
+import com.mycity4kids.widget.StoryShareCardWidget;
 
 import org.json.JSONObject;
 
@@ -135,6 +142,9 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
     private String shareMedium;
     private int sharedStoryPosition;
     int position;
+    private StoryShareCardWidget storyShareCardWidget;
+    private ImageView shareStoryImageView;
+    private ArticleListingResult sharedStoryItem;
 
 
     @Override
@@ -526,20 +536,6 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
             case R.id.menuItem:
                 chooseMenuOptionsItem(view, position);
                 break;
-           /* case R.id.storyOptionImageView: {
-                relative_frame.setVisibility(View.VISIBLE);
-                ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
-                FragmentManager fm = getSupportFragmentManager();
-                Bundle _args = new Bundle();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                _args.putString("postId", mDatalist.get(position).getId());
-                _args.putInt("type", AppConstants.REPORT_TYPE_STORY);
-                reportContentDialogFragment.setArguments(_args);
-                reportContentDialogFragment.setCancelable(true);
-                reportContentDialogFragment.show(fm, "report_dialog");
-                fragmentTransaction.commit();
-            }
-            break;*/
             case R.id.storyImageView:
                 Intent intent = new Intent(this, ShortStoryContainerActivity.class);
                 intent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
@@ -567,23 +563,15 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
                 }
                 break;
             case R.id.facebookShareImageView: {
-                AppUtils.shareStoryWithFB(this, this, mDatalist.get(position).getUserType(), mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug(),
-                        "ShortStoryListingScreen", userDynamoId, mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
-
+                getSharableViewForPosition(position, AppConstants.MEDIUM_FACEBOOK);
             }
             break;
             case R.id.whatsappShareImageView: {
-                shareMedium = AppConstants.MEDIUM_WHATSAPP;
-                if (checkPermissionAndCreateShareableImage(position)) return;
-                AppUtils.shareStoryWithWhatsApp(this, mDatalist.get(position).getUserType(), mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug(),
-                        "ShortStoryListingScreen", userDynamoId, mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
+                getSharableViewForPosition(position, AppConstants.MEDIUM_WHATSAPP);
             }
             break;
             case R.id.instagramShareImageView: {
-                shareMedium = AppConstants.MEDIUM_INSTAGRAM;
-                if (checkPermissionAndCreateShareableImage(position)) return;
-                AppUtils.shareStoryWithInstagram(this, "ShortStoryListingScreen", userDynamoId, mDatalist.get(position).getId(),
-                        mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
+                getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM);
             }
             break;
             case R.id.genericShareImageView: {
@@ -713,36 +701,6 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
         }
     };
 
-    private boolean checkPermissionAndCreateShareableImage(int position) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED
-                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions();
-                return true;
-            } else {
-                try {
-                    sharedStoryPosition = position;
-                    createBitmapForSharingStory(position);
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Log.d("MC4kException", Log.getStackTraceString(e));
-                    return true;
-                }
-            }
-        } else {
-            try {
-                sharedStoryPosition = position;
-                createBitmapForSharingStory(position);
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-                return true;
-            }
-        }
-        return false;
-    }
 
     private void createBitmapForSharingStory(int position) {
         switch (position % 6) {
@@ -768,7 +726,7 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
     }
 
     private void recommendUnrecommentArticleAPI(String status, String articleId, String authorId, String author) {
-        Utils.pushLikeStoryEvent(this, "ShortStoryListingScreen", userDynamoId + "", articleId, authorId + "~" + author);
+        Utils.pushLikeStoryEvent(this, "ChallengeDetailListingScreen", userDynamoId + "", articleId, authorId + "~" + author);
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
 
@@ -892,10 +850,10 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
                 createBitmapForSharingStory(sharedStoryPosition);
                 if (AppConstants.MEDIUM_WHATSAPP.equals(shareMedium)) {
                     AppUtils.shareStoryWithWhatsApp(this, mDatalist.get(sharedStoryPosition).getUserType(), mDatalist.get(sharedStoryPosition).getBlogPageSlug(),
-                            mDatalist.get(sharedStoryPosition).getTitleSlug(), "ShortStoryListingScreen", userDynamoId, mDatalist.get(sharedStoryPosition).getId(),
+                            mDatalist.get(sharedStoryPosition).getTitleSlug(), "ChallengeDetailListingScreen", userDynamoId, mDatalist.get(sharedStoryPosition).getId(),
                             mDatalist.get(sharedStoryPosition).getUserId(), mDatalist.get(sharedStoryPosition).getUserName());
                 } else if (AppConstants.MEDIUM_INSTAGRAM.equals(shareMedium)) {
-                    AppUtils.shareStoryWithInstagram(this, "ShortStoryListingScreen", userDynamoId, mDatalist.get(sharedStoryPosition).getId(),
+                    AppUtils.shareStoryWithInstagram(this, "ChallengeDetailListingScreen", userDynamoId, mDatalist.get(sharedStoryPosition).getId(),
                             mDatalist.get(sharedStoryPosition).getUserId(), mDatalist.get(sharedStoryPosition).getUserName());
                 }
             } else {
@@ -923,13 +881,9 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
         }
         popupMenu.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.shareShortStory) {
-
-                AppUtils.shareStoryGeneric(this, mDatalist.get(position).getUserType(), mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug(),
-                        "ShortStoryListingScreen", userDynamoId, mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
+                getSharableViewForPosition(position, AppConstants.MEDIUM_GENERIC);
                 return true;
             } else if (item.getItemId() == R.id.bookmarkShortStory) {
-
-
                 return true;
             } else if (item.getItemId() == R.id.reportContentShortStory) {
                 relative_frame.setVisibility(View.VISIBLE);
@@ -951,7 +905,89 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
         MenuPopupHelper menuPopupHelper = new MenuPopupHelper(view.getContext(), (MenuBuilder) popupMenu.getMenu(), view);
         menuPopupHelper.setForceShowIcon(true);
         menuPopupHelper.show();
+    }
 
+    private void getSharableViewForPosition(int position, String medium) {
+        storyShareCardWidget = recyclerView.getLayoutManager().findViewByPosition(position + 1).findViewById(R.id.storyShareCardWidget);
+        shareStoryImageView = storyShareCardWidget.findViewById(R.id.storyImageView);
+        shareMedium = medium;
+        sharedStoryItem = mDatalist.get(position);
+        checkPermissionAndCreateShareableImage();
+    }
 
+    private void createBitmapForSharingStory() {
+        Bitmap bitmap1 = ((BitmapDrawable) shareStoryImageView.getDrawable()).getBitmap();
+        shareStoryImageView.setImageBitmap(SharingUtils.getRoundCornerBitmap(bitmap1, AppUtils.dpTopx(4.0f)));
+        AppUtils.getBitmapFromView(storyShareCardWidget, AppConstants.STORY_SHARE_IMAGE_NAME);
+        shareStory();
+
+    }
+
+    private void shareStory() {
+        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() +
+                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg");
+        switch (shareMedium) {
+            case AppConstants.MEDIUM_FACEBOOK: {
+                SharingUtils.shareViaFacebook(this);
+                Utils.pushShareStoryEvent(this, "ChallengeDetailListingScreen",
+                        userDynamoId + "", sharedStoryItem.getId(),
+                        sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Facebook");
+            }
+            break;
+            case AppConstants.MEDIUM_WHATSAPP: {
+                if (AppUtils.shareImageWithWhatsApp(this, uri, getString(R.string.profile_follow_author,
+                        sharedStoryItem.getUserName(), AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
+                    Utils.pushShareStoryEvent(this, "ChallengeDetailListingScreen",
+                            userDynamoId + "", sharedStoryItem.getId(),
+                            sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Whatsapp");
+                }
+            }
+            break;
+            case AppConstants.MEDIUM_INSTAGRAM: {
+                if (AppUtils.shareImageWithInstagram(this, uri)) {
+                    Utils.pushShareStoryEvent(this, "ChallengeDetailListingScreen",
+                            userDynamoId + "", sharedStoryItem.getId(),
+                            sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Instagram");
+                }
+            }
+            break;
+            case AppConstants.MEDIUM_GENERIC: {
+                if (AppUtils.shareGenericImageAndOrLink(this, uri, getString(R.string.profile_follow_author,
+                        sharedStoryItem.getUserName(), AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
+                    Utils.pushShareStoryEvent(this, "ChallengeDetailListingScreen",
+                            userDynamoId + "", sharedStoryItem.getId(),
+                            sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Generic");
+                }
+            }
+            break;
+        }
+
+    }
+
+    private void checkPermissionAndCreateShareableImage() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (ActivityCompat
+                    .checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat
+                    .checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions();
+            } else {
+                try {
+                    createBitmapForSharingStory();
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                }
+            }
+        } else {
+            try {
+                createBitmapForSharingStory();
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
     }
 }

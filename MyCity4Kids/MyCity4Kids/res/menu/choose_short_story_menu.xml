@@ -12,7 +12,7 @@
 
     <item
         android:id="@+id/reportContentShortStory"
-        android:icon="@drawable/ic_collection_add"
+        android:icon="@drawable/ic_report"
         android:title="@string/all_report_content" />
 
 </menu>

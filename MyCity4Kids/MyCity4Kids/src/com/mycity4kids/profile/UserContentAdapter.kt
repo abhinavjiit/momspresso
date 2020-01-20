@@ -16,6 +16,7 @@ import com.mycity4kids.R
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.models.response.MixFeedResult
 import com.mycity4kids.utils.AppUtils
+import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
 import java.util.*
 
@@ -72,7 +73,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
             is VideosViewHolder -> addVideoItem(holder.winnerLayout, holder.txvArticleTitle, holder.txvAuthorName, holder.articleImageView,
                     holder.viewCountTextView, holder.commentCountTextView, holder.recommendCountTextView,
                     holder.goldLogo, mixFeedList?.get(position), holder, isPrivate)
-            is ShortStoriesViewHolder -> addShortStoryItem(holder.storyImage, holder.authorNameTextView,
+            is ShortStoriesViewHolder -> addShortStoryItem(holder.storyAuthorTextView, holder.shareStoryImageView, holder.storyImage, holder.authorNameTextView,
                     holder.storyCommentCountTextView, holder.storyRecommendationCountTextView, holder.likeImageView,
                     mixFeedList?.get(position), holder, isPrivate)
         }
@@ -157,6 +158,9 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         internal var addToCollectionImageView: ImageView
         internal var followAuthorTextView: TextView
         internal var menuItem: ImageView
+        internal var storyShareCardWidget: StoryShareCardWidget
+        internal var shareStoryImageView: ImageView
+        internal var storyAuthorTextView: TextView
 
         init {
             authorNameTextView = itemView.findViewById<View>(R.id.authorNameTextView) as TextView
@@ -164,13 +168,16 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
             storyCommentContainer = itemView.findViewById<View>(R.id.storyCommentContainer) as LinearLayout
             storyCommentCountTextView = itemView.findViewById<View>(R.id.storyCommentCountTextView) as TextView
             storyRecommendationCountTextView = itemView.findViewById<View>(R.id.storyRecommendationCountTextView) as TextView
-            storyImage = itemView.findViewById<View>(R.id.storyImageView) as ImageView
+            storyImage = itemView.findViewById<View>(R.id.storyImageView1) as ImageView
             likeImageView = itemView.findViewById<View>(R.id.likeImageView) as ImageView
             facebookShareImageView = itemView.findViewById<View>(R.id.facebookShareImageView) as ImageView
             whatsappShareImageView = itemView.findViewById<View>(R.id.whatsappShareImageView) as ImageView
             instagramShareImageView = itemView.findViewById<View>(R.id.instagramShareImageView) as ImageView
             addToCollectionImageView = itemView.findViewById<View>(R.id.genericShareImageView) as ImageView
             followAuthorTextView = itemView.findViewById<View>(R.id.followAuthorTextView) as TextView
+            storyShareCardWidget = itemView.findViewById<View>(R.id.storyShareCardWidget) as StoryShareCardWidget
+            shareStoryImageView = storyShareCardWidget.findViewById(R.id.storyImageView) as ImageView
+            storyAuthorTextView = storyShareCardWidget.findViewById(R.id.storyAuthorTextView) as TextView
             followAuthorTextView.visibility = View.INVISIBLE
             menuItem = itemView.findViewById<View>(R.id.menuItem) as ImageView
             whatsappShareImageView.tag = itemView
@@ -328,7 +335,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
 //        }
     }
 
-    private fun addShortStoryItem(storyImage: ImageView, authorNameTV: TextView,
+    private fun addShortStoryItem(storyAuthorTextView: TextView, shareStoryImageView: ImageView, storyImage: ImageView, authorNameTV: TextView,
                                   storyCommentCountTV: TextView, storyRecommendationCountTV: TextView, likeIV: ImageView,
                                   data: MixFeedResult?, holder: ShortStoriesViewHolder, private: Boolean) {
         authorNameTV.text = data?.userName
@@ -353,6 +360,12 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
 
         try {
             Picasso.with(holder.itemView.context).load(data?.storyImage?.trim { it <= ' ' }).into(storyImage)
+        } catch (e: Exception) {
+            holder.storyImage.setImageResource(R.drawable.default_article)
+        }
+        try {
+            Picasso.with(holder.itemView.context).load(data?.storyImage?.trim { it <= ' ' }).into(shareStoryImageView)
+            storyAuthorTextView.text = data?.userName
         } catch (e: Exception) {
             holder.storyImage.setImageResource(R.drawable.default_article)
         }
