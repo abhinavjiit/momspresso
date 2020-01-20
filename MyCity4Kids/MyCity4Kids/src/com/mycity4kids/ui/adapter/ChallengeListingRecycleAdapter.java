@@ -89,9 +89,9 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
 
     private void viewListingResult(ChallengeListingViewHolder holder, int position) {
         if (articleDataModelsNew.get(position).getIsfollowing().equals("1"))
-            holder.followAuthorTextView.setText("following");
+            holder.followAuthorTextView.setText(mContext.getResources().getString(R.string.ad_following_author));
         else
-            holder.followAuthorTextView.setText("follow");
+            holder.followAuthorTextView.setText(mContext.getResources().getString(R.string.ad_follow_author));
         try {
             Picasso.with(holder.itemView.getContext()).load(articleDataModelsNew.get(position).getStoryImage().trim()).into(holder.storyImage);
         } catch (Exception e) {
