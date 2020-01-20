@@ -8,8 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.AdapterView.OnItemClickListener
+import android.widget.RelativeLayout
 import androidx.fragment.app.FragmentTransaction
 import com.crashlytics.android.Crashlytics
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
@@ -38,10 +40,17 @@ class ShortStoryThumbnailListFragment : BaseFragment() {
     private var isReuqestRunning = false
     private var categoriesList: ArrayList<Categories>? = null
     private var dataList = ArrayList<Images>()
+    private var mLodingView: RelativeLayout? = null
+    private lateinit var shimmer1: ShimmerFrameLayout
+    private var bottomLoadingView: RelativeLayout? = null
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.short_story_thumbnail_list_fragment, container, false)
         collectionGridView = view.findViewById(R.id.collectionGridView)
+        bottomLoadingView = view.findViewById(R.id.bottomLoadingView)
+        mLodingView = view.findViewById(R.id.relativeLoadingView)
+        shimmer1 = view.findViewById(R.id.shimmer1)
         dataList.clear()
         getImages((context as ShortStoriesCardActivity).getCategoryId(), 1)
         context?.run {
@@ -75,6 +84,7 @@ class ShortStoryThumbnailListFragment : BaseFragment() {
             override fun onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
                 val loadMore = firstVisibleItem + visibleItemCount >= totalItemCount
                 if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
+                    bottomLoadingView?.visibility = View.VISIBLE
                     getImages((context as ShortStoriesCardActivity).getCategoryId(), pageNumber)
                     isReuqestRunning = true
                 }
@@ -92,17 +102,29 @@ class ShortStoryThumbnailListFragment : BaseFragment() {
         call.enqueue(getThumbnailList)
     }
 
+    override fun onStart() {
+        super.onStart()
+        shimmer1.startShimmerAnimation()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        shimmer1.stopShimmerAnimation()
+    }
 
     private val getThumbnailList = object : Callback<ShortStoryImageData> {
         override fun onResponse(call: Call<ShortStoryImageData>, response: retrofit2.Response<ShortStoryImageData>) {
+//            removeProgressDialog()
             if (null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
                 Crashlytics.logException(nee)
                 return
             }
             try {
+                shimmer1.stopShimmerAnimation()
+                shimmer1.visibility = View.GONE
+                bottomLoadingView?.visibility = View.GONE
                 val responseData = response.body()!!.data?.result
-
                 categoriesList = responseData?.categories
                 count = responseData?.images?.count!!
                 if (pageNumber == 1)
@@ -115,6 +137,7 @@ class ShortStoryThumbnailListFragment : BaseFragment() {
         }
 
         override fun onFailure(call: Call<ShortStoryImageData>, t: Throwable) {
+            removeProgressDialog()
             Crashlytics.logException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
         }
