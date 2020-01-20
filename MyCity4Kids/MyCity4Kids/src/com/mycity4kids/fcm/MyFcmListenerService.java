@@ -44,6 +44,7 @@ import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.MyTotalEarningActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity;
+import com.mycity4kids.ui.activity.ShortStoryModerationOrShareActivity;
 import com.mycity4kids.ui.activity.SplashActivity;
 import com.mycity4kids.ui.activity.TopicsListingActivity;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
@@ -704,6 +705,36 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         }
                     } else {
                         Log.e("NOTIFICATION_TYPE", "shortStoryListingInChallengeListing ----- Notification MixFeedData");
+                        prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
+                                , contentIntent, pushNotificationModel.getSound());
+                    }
+                } else if (type.equalsIgnoreCase("shortStoryPublishSuccess")) {
+                    Intent resultIntent;
+                    PendingIntent contentIntent;
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
+                        resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
+                        contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    } else {
+                        resultIntent = new Intent(getApplicationContext(), ShortStoryModerationOrShareActivity.class);
+                        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        resultIntent.putExtra("fromNotification", true);
+                        resultIntent.putExtra("shareUrl", "");
+                        resultIntent.putExtra(Constants.ARTICLE_ID, pushNotificationModel.getId());
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        stackBuilder.addNextIntentWithParentStack(resultIntent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    }
+                    if (remoteMessage.getNotification() != null) {
+                        String title = remoteMessage.getNotification().getTitle();
+                        String body = remoteMessage.getNotification().getBody();
+                        Log.e("NOTIFICATION_TYPE", "shortStoryPublishSuccess ----- Notification Message --- " + remoteMessage.getNotification().getImageUrl());
+                        if (remoteMessage.getNotification().getImageUrl() != null) {
+                            prepareNotification(title, body, remoteMessage.getNotification().getImageUrl().toString(), contentIntent, pushNotificationModel.getSound());
+                        } else {
+                            prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
+                        }
+                    } else {
+                        Log.e("NOTIFICATION_TYPE", "shortStoryPublishSuccess ----- Notification MixFeedData");
                         prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(), pushNotificationModel.getRich_image_url()
                                 , contentIntent, pushNotificationModel.getSound());
                     }

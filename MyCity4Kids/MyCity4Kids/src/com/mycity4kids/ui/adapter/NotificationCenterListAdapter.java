@@ -45,6 +45,7 @@ import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
+import com.mycity4kids.ui.activity.ShortStoryModerationOrShareActivity;
 import com.mycity4kids.ui.activity.SuggestedTopicsActivity;
 import com.mycity4kids.ui.activity.TopicsListingActivity;
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
@@ -390,6 +391,14 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     Intent intent = new Intent(mContext, BadgeActivity.class);
                     mContext.startActivity(intent);
                     pushEvent("NOTIFICATION_CENTER_BADGE_LISTING");
+                }
+                break;
+                case AppConstants.NOTIFICATION_CENTER_STORY_PUBLISH_SUCCESS: {
+                    Intent intent = new Intent(mContext, ShortStoryModerationOrShareActivity.class);
+                    intent.putExtra("shareUrl", "");
+                    intent.putExtra(Constants.ARTICLE_ID, notificationList.get(position).getArticleId());
+                    mContext.startActivity(intent);
+                    pushEvent("NOTIFICATION_CENTER_STORY_PUBLISH_SUCCESS");
                 }
                 break;
             }

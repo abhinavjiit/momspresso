@@ -234,15 +234,10 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
 
             UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                if (responseData.getData().get(0).getResult().getKids() == null || responseData.getData().get(0).getResult().getKids().size() == 0) {
-                    Intent intent = new Intent(ArticleModerationOrShareActivity.this, CompleteBloggerProfileActivity.class);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(ArticleModerationOrShareActivity.this, DashboardActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    finish();
-                }
+                Intent intent = new Intent(ArticleModerationOrShareActivity.this, DashboardActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
             } else {
                 showToast("" + responseData.getReason());
             }

@@ -670,12 +670,11 @@ class ShortStoriesCardActivity : BaseActivity() {
     private val shortStoryConfig = object : Callback<ResponseBody> {
         override fun onResponse(call: Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {
             removeProgressDialog()
-            Utils.pushPublishStoryEvent(this@ShortStoriesCardActivity, "AddShortStoryScreen", SharedPrefUtils.getUserDetailModel(this@ShortStoriesCardActivity).dynamoId, "published")
-            val intent = Intent(this@ShortStoriesCardActivity, ArticleModerationOrShareActivity::class.java)
+            Utils.pushPublishStoryEvent(this@ShortStoriesCardActivity, "ShortStoriesCardActivity",
+                    SharedPrefUtils.getUserDetailModel(this@ShortStoriesCardActivity).dynamoId, "published")
+            val intent = Intent(this@ShortStoriesCardActivity, ShortStoryModerationOrShareActivity::class.java)
             intent.putExtra("shareUrl", "" + shareUrl)
-            intent.putExtra("source", "addStory")
-            intent.putExtra("title", shortStoryDraftOrPublishRequest.title)
-            intent.putExtra("body", shortStoryDraftOrPublishRequest.body)
+            intent.putExtra(Constants.ARTICLE_ID, draftId)
             startActivity(intent)
         }
 
