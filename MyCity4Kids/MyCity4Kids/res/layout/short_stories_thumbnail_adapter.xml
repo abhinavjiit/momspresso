@@ -30,7 +30,7 @@
                     android:layout_height="@dimen/space_80"
                     android:background="@drawable/shape_collection_grid_view_rounded"
                     android:scaleType="fitXY"
-                    android:src="@drawable/ic_library_gradient"
+                    app:srcCompat="@drawable/ic_library_gradient"
                     app:layout_constraintDimensionRatio="H,16:9"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"

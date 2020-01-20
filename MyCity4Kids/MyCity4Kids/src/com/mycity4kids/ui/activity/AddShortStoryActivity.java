@@ -195,8 +195,10 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         if ("draftList".equals(source)) {
             draftObject = (DraftListResult) getIntent().getSerializableExtra("draftItem");
             storyTitleEditText.setText(draftObject.getTitle());
-            if (!StringUtils.isNullOrEmpty(draftObject.getBody()))
+            if (!StringUtils.isNullOrEmpty(draftObject.getBody())) {
                 storyBodyEditText.setText(draftObject.getBody());
+                countWord(storyBodyEditText.getText().toString());
+            }
             draftId = draftObject.getId();
             listDraft = draftObject.getTags();
             checkTagIsActive();
@@ -215,8 +217,17 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 break;
             }
         } else if ("publishedList".equals(source)) {
-            storyTitleEditText.setText(getIntent().getStringExtra("title"));
-            storyBodyEditText.setText(getIntent().getStringExtra("body"));
+            if (!StringUtils.isNullOrEmpty(getIntent().getStringExtra("title"))) {
+                storyTitleEditText.setText(getIntent().getStringExtra("title"));
+                isValidTitle = true;
+            }
+            if (!StringUtils.isNullOrEmpty(getIntent().getStringExtra("body"))) {
+                storyBodyEditText.setText(getIntent().getStringExtra("body"));
+                isValidBody = true;
+                countWord(storyBodyEditText.getText().toString());
+            }
+            isCategorySelected = true;
+            setNextColor();
             articleId = getIntent().getStringExtra("articleId");
             tagsJson = getIntent().getStringExtra("tag");
             getTagListFromJason(tagsJson);
@@ -484,6 +495,18 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
             });
+        }
+    }
+
+    private void countWord(String text){
+        int wordsLength = countWords(text);
+        wordCounterTextView.setVisibility(View.VISIBLE);
+        if (wordsLength <= MAX_WORDS) {
+            wordCounterTextView.setText("" + (100 - wordsLength));
+            wordCounterTextView.setBackground(getResources().getDrawable(R.drawable.short_story_word_count_bg));
+        } else {
+            wordCounterTextView.setText("-" + (wordsLength - 100));
+            wordCounterTextView.setBackground(getResources().getDrawable(R.drawable.campaign_detail_red_bg));
         }
     }
 

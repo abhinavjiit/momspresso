@@ -387,6 +387,7 @@ class ShortStoriesCardActivity : BaseActivity() {
     }
 
     private fun getBlogPage() {
+        showProgressDialog(resources.getString(R.string.please_wait))
         BaseApplication.getInstance().destroyRetrofitInstance()
         val retrofit = BaseApplication.getInstance().retrofit
         val bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI::class.java)
@@ -508,6 +509,7 @@ class ShortStoriesCardActivity : BaseActivity() {
         }
         imageType = RequestBody.create(MediaType.parse("text/plain"), "4")
         if (requestBodyFile != null) {
+            showProgressDialog(resources.getString(R.string.please_wait))
             val call = imageUploadAPI.uploadImage(imageType, requestBodyFile)
             call.enqueue(ssImageUploadCallback)
         }
@@ -542,7 +544,7 @@ class ShortStoriesCardActivity : BaseActivity() {
     }
 
     private fun publishArticleRequest(url: String) {
-
+        showProgressDialog(resources.getString(R.string.please_wait))
         val retrofit = BaseApplication.getInstance().retrofit
         // prepare call in Retrofit 2.0
         val shortStoryAPI = retrofit.create(ShortStoryAPI::class.java)
@@ -640,6 +642,7 @@ class ShortStoriesCardActivity : BaseActivity() {
     }
 
     private fun postConfigAPI() {
+        showProgressDialog(resources.getString(R.string.please_wait))
         val retrofit = BaseApplication.getInstance().retrofit
         // prepare call in Retrofit 2.0
         val shortStoryAPI = retrofit.create(ShortStoryAPI::class.java)
@@ -664,6 +667,7 @@ class ShortStoriesCardActivity : BaseActivity() {
 
     private val shortStoryConfig = object : Callback<ResponseBody> {
         override fun onResponse(call: Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {
+            removeProgressDialog()
             Utils.pushPublishStoryEvent(this@ShortStoriesCardActivity, "AddShortStoryScreen", SharedPrefUtils.getUserDetailModel(this@ShortStoriesCardActivity).dynamoId, "published")
             val intent = Intent(this@ShortStoriesCardActivity, ArticleModerationOrShareActivity::class.java)
             intent.putExtra("shareUrl", "" + shareUrl)
@@ -674,7 +678,10 @@ class ShortStoriesCardActivity : BaseActivity() {
         }
 
         override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-
+            removeProgressDialog()
+            Crashlytics.logException(t)
+            Log.d("MC4KException", Log.getStackTraceString(t))
+            showToast(getString(R.string.went_wrong))
         }
     }
 
