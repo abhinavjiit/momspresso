@@ -1273,15 +1273,15 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="all_refer_url">https://www.momspresso.com/usersprofile/rewardsform?referrer=%1$s</string>
     <string name="please_add_item_multicollection_activity">Please Add Items</string>
     <string name="all_report_content">REPORT CONTENT</string>
-    <string name="background">BACKGROUND</string>
-    <string name="text">TEXT</string>
-    <string name="size">Size</string>
-    <string name="align">Alignment</string>
+    <string name="background">पार्श्वभूमी</string>
+    <string name="text">मथळा</string>
+    <string name="size">शब्दांची साईज</string>
+    <string name="align">अलाइनमेंट</string>
     <string name="short_s_max_title_word">Your title can have maximum 10 words.</string>
-    <string name="editor.next">NEXT</string>
-    <string name="max_limit">You have reached maximum limit</string>
-    <string name="min_limit">You have reached minimum limit</string>
-    <string name="library">Library</string>
+    <string name="editor.next">पुढील</string>
+    <string name="max_limit">तुम्ही शब्दांची फॉन्ट साईज च्या अधिकतम सीमा पर्यंत पोहचला आहात.</string>
+    <string name="min_limit">तुम्ही शब्दांची फॉन्ट साईज च्या कमीत कमी सीमा पर्यंत पोहचला आहात.</string>
+    <string name="library">ग्रंथालय</string>
     <string name="ss_share_with_friends">Share with Friends</string>
     <string name="short_s_add_title_Optional">पर्यायी</string>
     <string name="story_text_description_hindi">तुम्ही इथे सुविचार (कोट्स) लिहू शकता.</string>

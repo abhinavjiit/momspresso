@@ -1454,7 +1454,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="library">Library</string>
     <string name="ss_share_with_friends">Share with Friends</string>
     <string name="short_s_add_title_Optional">Optional</string>
-    <string name="stroy_overflow_layout">Your story is too long. Please reduce the font size or shorten the story.</string>
+    <string name="stroy_overflow_layout">Please reduce the text font size or shorten the story length to proceed.</string>
     <string name="short_s_write">Write</string>
 </resources>
 

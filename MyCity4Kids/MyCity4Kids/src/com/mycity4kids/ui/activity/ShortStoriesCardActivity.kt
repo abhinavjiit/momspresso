@@ -190,7 +190,9 @@ class ShortStoriesCardActivity : BaseActivity() {
             addTab(tabs.newTab().setText(resources.getString(R.string.background)))
             addTab(tabs.newTab().setText(resources.getString(R.string.text)))
         }
-
+        if ("publishedList".equals(source)) {
+            setPublishedCategoryId()
+        }
 
         setEnabledDisabled(false)
 
@@ -258,25 +260,25 @@ class ShortStoriesCardActivity : BaseActivity() {
 
     }
 
+    private fun setPublishedCategoryId() {
+        for (i in 0 until tagsList.size) {
+            val myMap = tagsList.get(i)
+            for (entrySet in myMap.entries) {
+                for (j in 0 until ssTopicsList!!.size) {
+                    if (ssTopicsList?.get(j)?.getDisplay_name().equals(entrySet.value)) {
+                        setCategoryId(entrySet.key)
+                    }
+                }
+            }
+        }
+    }
+
+
     fun setCategoryId(id: String) {
         categoryId = id
     }
 
     fun getCategoryId(): String {
-        if ("publishedList".equals(source)) {
-            for (i in 0 until tagsList.size) {
-                val myMap = tagsList.get(i)
-                for (entrySet in myMap.entries) {
-                    for (j in 0 until ssTopicsList!!.size) {
-                        if (ssTopicsList?.get(j)?.getDisplay_name().equals(entrySet.value)) {
-                            categoryId = entrySet.key
-                            return categoryId
-                        }
-                    }
-                }
-            }
-        }
-
         return categoryId
     }
 

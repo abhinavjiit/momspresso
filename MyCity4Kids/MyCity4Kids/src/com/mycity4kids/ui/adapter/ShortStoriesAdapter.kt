@@ -40,7 +40,7 @@ class ShortStoriesAdapter(activity: Context, showCategory: Boolean) : BaseAdapte
 
         if (position == 0) {
             viewHolder.topicsNameTextView?.visibility = View.VISIBLE
-            viewHolder.topicsNameTextView?.text = "Library"
+            viewHolder.topicsNameTextView?.text = context.resources.getString(R.string.library)
 
             viewHolder.tagImageView?.clipToOutline = true
         } else {
