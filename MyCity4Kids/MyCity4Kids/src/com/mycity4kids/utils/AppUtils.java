@@ -1,6 +1,8 @@
 package com.mycity4kids.utils;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -59,6 +61,8 @@ import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.widget.Hashids;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,6 +93,8 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.ResponseBody;
+
+import static android.content.Context.CLIPBOARD_SERVICE;
 
 /**
  * Created by hemant on 22/11/16.
@@ -1475,5 +1481,28 @@ public class AppUtils {
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         return returnedBitmap;
+    }
+
+    public static String getHasTagFromCategoryList(@NotNull ArrayList<String> storyCategoriesList) {
+        if (storyCategoriesList.contains(AppConstants.STORY_CATEGORY_QUOTES)) {
+            return "#Quotes#Momspresso#Motherhood#Parents#Parenting#Kids#Babies#Children#MomsOfInstagram#real#relatable#IgMoms#MomspressoQuotes#Designyourwords#personaliseyourstory";
+        } else if (storyCategoriesList.contains(AppConstants.STORY_CATEGORY_ROMANCE)) {
+            return "#Romance#Momspresso#100wordstories#shortstories#Love#Motherhood#Parents#Parenting#Kids#Babies#Children#MomsOfInstagram#real#relatable#IgMoms#MomspressoStories#Designyourwords#personaliseyourstory";
+        } else if (storyCategoriesList.contains(AppConstants.STORY_CATEGORY_COMEDY)) {
+            return "#Comedy#Momspresso#100wordstories#shortstories#Laugh#Motherhood#Parents#Parenting#Kids#Babies#Children#Laughs#Laughters#Lol#Comic#Funny#MomsOfInstagram#real#relatable#IgMoms#JustForLaughs#MomspressoStories#Designyourwords#personaliseyourstory";
+        } else if (storyCategoriesList.contains(AppConstants.STORY_CATEGORY_THRILLER)) {
+            return "#Thriller#Suspense#100wordstories#shortstories#Motherhood#Parents#Parenting#Kids#Babies#Children#MomsOfInstagram#real#relatable#IgMoms#MomspressoStories#Designyourwords#personaliseyourstory";
+        } else if (storyCategoriesList.contains(AppConstants.STORY_CATEGORY_INSPIRATIONAL)) {
+            return "#Inspirational#Momspresso#100wordstories#shortstories#InspirationalStories#Motherhood#Parents#Parenting#Kids#Babies#Children#MomsOfInstagram#real#IgMoms#MomspressoStories#Designyourwords#personaliseyourstory";
+        } else if (storyCategoriesList.contains(AppConstants.STORY_CATEGORY_DARK)) {
+            return "#Dark#Darkstories#Momspresso#100wordstories#shortstories#Motherhood#Parents#Parenting#Kids#Babies#Children#MomsOfInstagram#IgMoms#MomspressoStories#Designyourwords#personaliseyourstory";
+        }
+        return "#Momspresso#100wordstories#shortstories#MomsOfInstagram#real#IgMoms#MomspressoStories#Designyourwords#personaliseyourstory";
+    }
+
+    public static void copyToClipboard(@Nullable String hashtags) {
+        ClipboardManager clipboard = (ClipboardManager) BaseApplication.getAppContext().getSystemService(CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("label", hashtags);
+        clipboard.setPrimaryClip(clip);
     }
 }

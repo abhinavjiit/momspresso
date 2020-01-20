@@ -18,6 +18,7 @@ import androidx.cardview.widget.CardView
 import com.crashlytics.android.Crashlytics
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
+import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
@@ -38,6 +39,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import java.util.*
 
 
 class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener,
@@ -52,6 +54,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
     private var shareUrl: String? = null
     private var userId: String? = null
     private var authorName: String? = null
+    private val storyCategoriesList = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,6 +121,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
                 Picasso.with(this@ShortStoryModerationOrShareActivity).load(responseData?.storyImage).into(storyImageView)
                 Picasso.with(this@ShortStoryModerationOrShareActivity).load(responseData?.storyImage).into(shareStoryImageView)
                 storyAuthorTextView?.text = WordUtils.capitalizeFully(responseData?.userName)
+                processTags(responseData?.tags)
             } catch (e: Exception) {
                 removeProgressDialog()
                 Crashlytics.logException(e)
@@ -128,6 +132,16 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
         override fun onFailure(call: Call<ShortStoryDetailResult>, t: Throwable) {
             removeProgressDialog()
             handleExceptions(t)
+        }
+    }
+
+    private fun processTags(tags: ArrayList<MutableMap<String, String>>?) {
+        tags?.let {
+            for (i in 0 until it.size) {
+                for ((j, k) in it[i]) {
+                    storyCategoriesList.add(j)
+                }
+            }
         }
     }
 
@@ -158,6 +172,9 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
                 shareStory()
             }
             R.id.instagramShareWidget -> {
+                val hashtags = AppUtils.getHasTagFromCategoryList(storyCategoriesList)
+                AppUtils.copyToClipboard(hashtags)
+                ToastUtils.showToast(this, "Copied hashtags to clipboard")
                 shareMedium = AppConstants.MEDIUM_INSTAGRAM
                 if (!createSharableImageWhileCheckingPermissions()) {
                     return

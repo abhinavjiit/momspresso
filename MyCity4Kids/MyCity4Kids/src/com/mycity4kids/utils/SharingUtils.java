@@ -1,7 +1,6 @@
 package com.mycity4kids.utils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -17,10 +16,7 @@ import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 import com.kelltontech.ui.BaseFragment;
-import com.mycity4kids.R;
-import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.preference.SharedPrefUtils;
 
 import java.util.ArrayList;
 
@@ -51,7 +47,7 @@ public class SharingUtils {
     public static void shareViaFacebook(Activity activity) {
         Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() +
                 "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg");
-        ShareHashtag shareHashTag = new ShareHashtag.Builder().setHashtag("#momspresso").build();
+        ShareHashtag shareHashTag = new ShareHashtag.Builder().setHashtag("#Momspressoshortstories").build();
         SharePhoto sharePhoto = new SharePhoto.Builder().setImageUrl(uri).build();
         ArrayList<SharePhoto> photoList = new ArrayList<>();
         photoList.add(sharePhoto);
@@ -65,7 +61,7 @@ public class SharingUtils {
     public static void shareViaFacebook(BaseFragment fragment) {
         Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() +
                 "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg");
-        ShareHashtag shareHashTag = new ShareHashtag.Builder().setHashtag("#momspresso").build();
+        ShareHashtag shareHashTag = new ShareHashtag.Builder().setHashtag("#Momspressoshortstories").build();
         SharePhoto sharePhoto = new SharePhoto.Builder().setImageUrl(uri).build();
         ArrayList<SharePhoto> photoList = new ArrayList<>();
         photoList.add(sharePhoto);

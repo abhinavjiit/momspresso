@@ -34,9 +34,7 @@ class MyCollectionsWidget : RelativeLayout, OnClickListener {
     private lateinit var collectionsHSV: HorizontalScrollView
     private lateinit var collectionsHSVContainer: LinearLayout
     private lateinit var viewAllTextView: TextView
-
     private var authorId: String? = null
-
     private lateinit var userCollectionsListModel: UserCollectionsListModel
 
     constructor(context: Context) : this(context, null)

@@ -1,12 +1,19 @@
 package com.mycity4kids.ui.fragment;
 
+import android.Manifest;
 import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -14,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -23,6 +31,7 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.material.snackbar.Snackbar;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -59,14 +68,19 @@ import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.GroupIdCategoryMap;
 import com.mycity4kids.utils.MixPanelUtils;
+import com.mycity4kids.utils.PermissionUtil;
+import com.mycity4kids.utils.SharingUtils;
+import com.mycity4kids.widget.StoryShareCardWidget;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -81,6 +95,9 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
 
     private final static int LIMIT = 15;
     private final static int FORYOU_LIMIT = 10;
+    private static final int REQUEST_INIT_PERMISSION = 2;
+    private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private MainArticleRecyclerViewAdapter recyclerAdapter;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
     private ArrayList<CampaignDataListResult> campaignListDataModels;
@@ -110,6 +127,11 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
     private String likeStatus;
     private int currentShortStoryPosition;
     private boolean isRecommendRequestRunning;
+    private RelativeLayout rootLayout;
+    private StoryShareCardWidget storyShareCardWidget;
+    private ImageView shareStoryImageView;
+    private ArticleListingResult sharedStoryItem;
+    private String shareMedium;
 
 
     @Override
@@ -130,6 +152,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         addTopicsLayout = rootView.findViewById(R.id.addTopicsLayout);
         headerArticleCardLayout = rootView.findViewById(R.id.headerArticleView);
         pullToRefresh = rootView.findViewById(R.id.pullToRefresh);
+        rootLayout = rootView.findViewById(R.id.rootLayout);
 
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
@@ -783,8 +806,14 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                     followAPICall(articleDataModelsNew.get(position).getUserId(), position);
                     break;
                 case R.id.whatsappShareImageView:
+                    getSharableViewForPosition(position, AppConstants.MEDIUM_WHATSAPP);
+                    break;
                 case R.id.facebookShareImageView:
+                    getSharableViewForPosition(position, AppConstants.MEDIUM_FACEBOOK);
+                    break;
                 case R.id.instagramShareImageView:
+                    getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM);
+                    break;
                 case R.id.genericShareImageView: {
                     try {
                         AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment = new AddCollectionAndCollectionItemDialogFragment();
@@ -959,9 +988,9 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         popupMenu.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.shareShortStory) {
                 if (isAdded()) {
-                    AppUtils.shareStoryGeneric(getActivity(), articleDataModelsNew.get(position).getUserType(), articleDataModelsNew.get(position).getBlogPageSlug(), articleDataModelsNew.get(position).getTitleSlug(),
-                            "ArticleListingScreen", userDynamoId, articleDataModelsNew.get(position).getId(), articleDataModelsNew.get(position).getUserId(), articleDataModelsNew.get(position).getUserName());
+                    getSharableViewForPosition(position, AppConstants.MEDIUM_GENERIC);
                 }
+
 
                 return true;
             } else if (item.getItemId() == R.id.bookmarkShortStory) {
@@ -1083,4 +1112,141 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
+
+    private void requestPermissions() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                || ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Snackbar.make(rootLayout, R.string.permission_storage_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            requestUngrantedPermissions();
+                        }
+                    }).show();
+        } else {
+            requestUngrantedPermissions();
+        }
+    }
+
+    private void requestUngrantedPermissions() {
+        ArrayList<String> permissionList = new ArrayList<>();
+        for (String s : PERMISSIONS_INIT) {
+            if (ActivityCompat.checkSelfPermission(getActivity(), s)
+                    != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(s);
+            }
+        }
+        String[] requiredPermission = permissionList.toArray(new String[permissionList.size()]);
+        requestPermissions(requiredPermission, REQUEST_INIT_PERMISSION);
+    }
+
+
+    private void checkPermissionAndCreateShareableImage() {
+        if (Build.VERSION.SDK_INT >= 23 && isAdded()) {
+            if (ActivityCompat
+                    .checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat
+                    .checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions();
+            } else {
+                try {
+                    createBitmapForSharingStory();
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                }
+            }
+        } else {
+            try {
+                createBitmapForSharingStory();
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_INIT_PERMISSION) {
+            if (PermissionUtil.verifyPermissions(grantResults)) {
+                Snackbar.make(rootLayout, R.string.permision_available_init,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+                createBitmapForSharingStory();
+            } else {
+                Log.i("Permissions", "storage permissions were NOT granted.");
+                Snackbar.make(rootLayout, R.string.permissions_not_granted,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void getSharableViewForPosition(int position, String medium) {
+        storyShareCardWidget = recyclerView.getLayoutManager().findViewByPosition(position).findViewById(R.id.storyShareCardWidget);
+        shareStoryImageView = storyShareCardWidget.findViewById(R.id.storyImageView);
+        shareMedium = medium;
+        sharedStoryItem = articleDataModelsNew.get(position);
+        checkPermissionAndCreateShareableImage();
+    }
+
+    private void createBitmapForSharingStory() {
+        if (isAdded()) {
+            Bitmap bitmap1 = ((BitmapDrawable) shareStoryImageView.getDrawable()).getBitmap();
+            shareStoryImageView.setImageBitmap(SharingUtils.getRoundCornerBitmap(bitmap1, AppUtils.dpTopx(4.0f)));
+            AppUtils.getBitmapFromView(storyShareCardWidget, AppConstants.STORY_SHARE_IMAGE_NAME);
+            shareStory();
+        }
+    }
+
+    private void shareStory() {
+        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() +
+                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg");
+        if (isAdded()) {
+            switch (shareMedium) {
+                case AppConstants.MEDIUM_FACEBOOK: {
+                    SharingUtils.shareViaFacebook(this);
+                    Utils.pushShareStoryEvent(getActivity(), "ArticleListingFragment",
+                            userDynamoId + "", sharedStoryItem.getId(),
+                            sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Facebook");
+                }
+                break;
+                case AppConstants.MEDIUM_WHATSAPP: {
+                    if (AppUtils.shareImageWithWhatsApp(getActivity(), uri, getString(R.string.profile_follow_author,
+                            sharedStoryItem.getUserName(), AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
+                        Utils.pushShareStoryEvent(getActivity(), "ArticleListingFragment",
+                                userDynamoId + "", sharedStoryItem.getId(),
+                                sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Whatsapp");
+                    }
+                }
+                break;
+                case AppConstants.MEDIUM_INSTAGRAM: {
+                    if (AppUtils.shareImageWithInstagram(getActivity(), uri)) {
+                        Utils.pushShareStoryEvent(getActivity(), "ArticleListingFragment",
+                                userDynamoId + "", sharedStoryItem.getId(),
+                                sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Instagram");
+                    }
+                }
+                break;
+                case AppConstants.MEDIUM_GENERIC: {
+                    if (AppUtils.shareGenericImageAndOrLink(getActivity(), uri, getString(R.string.profile_follow_author,
+                            sharedStoryItem.getUserName(), AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
+                        Utils.pushShareStoryEvent(getActivity(), "ArticleListingFragment",
+                                userDynamoId + "", sharedStoryItem.getId(),
+                                sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Generic");
+                    }
+                }
+                break;
+            }
+        }
+    }
 }

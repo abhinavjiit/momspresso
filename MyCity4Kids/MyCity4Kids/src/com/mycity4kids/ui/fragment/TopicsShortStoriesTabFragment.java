@@ -481,6 +481,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             }
             break;
             case R.id.instagramShareImageView: {
+                filterTags(mDatalist.get(position).getTags());
                 getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM);
             }
             break;
@@ -514,6 +515,22 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 
         }
 
+    }
+
+    private void filterTags(ArrayList<Map<String, String>> tagObjectList) {
+        ArrayList<String> tagList = new ArrayList<>();
+        for (int i = 0; i < tagObjectList.size(); i++) {
+            for (Map.Entry<String, String> mapEntry : tagObjectList.get(i).entrySet()) {
+                if (mapEntry.getKey().startsWith("category-")) {
+                    tagList.add(mapEntry.getKey());
+                }
+            }
+        }
+
+        String hashtags = AppUtils.getHasTagFromCategoryList(tagList);
+        AppUtils.copyToClipboard(hashtags);
+        if (isAdded())
+            ToastUtils.showToast(getActivity(), "Copied hashtags to clipboard");
     }
 
     private void followAPICall(String authorId, int position) {

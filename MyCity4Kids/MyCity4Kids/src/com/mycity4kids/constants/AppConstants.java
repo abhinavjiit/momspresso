@@ -4,8 +4,6 @@ import android.net.Uri;
 
 import com.mycity4kids.BuildConfig;
 
-import org.jetbrains.annotations.Nullable;
-
 /**
  * @author Hemant Parmar
  */
@@ -165,7 +163,7 @@ public class AppConstants {
     public static final String VIDEO_ARTICLE_SHARE_URL = "https://www.momspresso.com/" + "parenting/";
     public static final String VIDEO_UPLOAD_URL = LIVE_URL + "v1/media/videos/";
     public static final String BLOG_SHARE_BASE_URL = "https://www.momspresso.com";
-//    public static final String ARTICLE_SHARE_URL = BASE_URL + "newparenting/";
+    //    public static final String ARTICLE_SHARE_URL = BASE_URL + "newparenting/";
     public static final String USER_PROFILE_SHARE_BASE_URL = "https://www.momspresso.com/parenting/user/";
 
     /*New Login/Sign Up Constants*/
@@ -570,6 +568,7 @@ public class AppConstants {
     public static final String NOTIFICATION_CENTER_VIDEO_CHALLENGE_DETAIL = "27";
     public static final String NOTIFICATION_CENTER_COLLECTION_DETAIL = "28";
     public static final String NOTIFICATION_CENTER_BADGE_LISTING = "29";
+    public static final String NOTIFICATION_CENTER_STORY_PUBLISH_SUCCESS = "30";
 
     public static final String FOLLOWING_STATUS_ACTIVITY_RESULT = "followingStatusActivityResult";
     public static final String VIDEO_STATUS_DRAFT = "0";
@@ -742,6 +741,13 @@ public class AppConstants {
     public static final String MILESTONE_ID = "milestoneId";
     public static final String COLLECTION_ID = "collectionId";
     public static final String STORY_SHARE_IMAGE_NAME = "storyShareImage";
+
+    public static final String STORY_CATEGORY_QUOTES = "category-8dcc26eb81de4042b225f82ec8e88cd3";
+    public static final String STORY_CATEGORY_ROMANCE = "category-7b52fede7bd349e79bd26b24845287d8";
+    public static final String STORY_CATEGORY_COMEDY = "category-6d2efd6eeb9e414bb62cab0a72f35b78";
+    public static final String STORY_CATEGORY_THRILLER = "category-34df3cd58d4849818eda2f43f8527819";
+    public static final String STORY_CATEGORY_INSPIRATIONAL = "category-f1a5dcea3d884bd8b75e0da8fb1763d3";
+    public static final String STORY_CATEGORY_DARK = "category-c9fa6d31a7c44699a8df5814030399a2";
 
     enum SocialPlatformName {
 
