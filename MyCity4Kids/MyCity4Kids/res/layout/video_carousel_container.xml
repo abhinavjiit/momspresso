@@ -420,8 +420,14 @@
         android:layout_margin="10dp"
         android:visibility="gone">
 
+        <com.mycity4kids.widget.StoryShareCardWidget
+            android:id="@+id/storyShareCardWidget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
+
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/storyImageView"
+            android:id="@+id/storyImageView1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"

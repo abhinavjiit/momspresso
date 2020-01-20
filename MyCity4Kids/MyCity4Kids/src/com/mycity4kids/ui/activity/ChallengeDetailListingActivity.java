@@ -920,7 +920,6 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
         shareStoryImageView.setImageBitmap(SharingUtils.getRoundCornerBitmap(bitmap1, AppUtils.dpTopx(4.0f)));
         AppUtils.getBitmapFromView(storyShareCardWidget, AppConstants.STORY_SHARE_IMAGE_NAME);
         shareStory();
-
     }
 
     private void shareStory() {
