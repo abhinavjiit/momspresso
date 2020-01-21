@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -64,7 +65,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
     private LinearLayout layoutBottomSheet, bottom_sheet;
     private BottomSheetBehavior sheetBehavior;
     private TextView textHeaderUpdate, textUpdate;
-    private TextView imageSortBy;
+    private ImageView imageSortBy;
     private FloatingActionButton fabAdd, fabAddShortStory;
     private CoordinatorLayout root;
     private String selectedTabCategoryId;
@@ -135,7 +136,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
         tablayoutLayer = (FrameLayout) findViewById(R.id.topLayerGuideLayout);
         toolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitleTextView);
 
-        imageSortBy = (TextView) findViewById(R.id.imageSortBy);
+        imageSortBy = (ImageView) findViewById(R.id.imageSortBy);
 
         imageSortBy.setOnClickListener(new View.OnClickListener() {
             @Override
