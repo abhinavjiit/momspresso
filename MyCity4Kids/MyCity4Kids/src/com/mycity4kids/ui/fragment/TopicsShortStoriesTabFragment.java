@@ -415,23 +415,11 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     @Override
     public void onClick(View view, final int position, View shareImageView) {
         switch (view.getId()) {
-           /* case R.id.storyOptionImageView: {
-                ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
-                FragmentManager fm = getChildFragmentManager();
-                Bundle _args = new Bundle();
-                _args.putString("postId", mDatalist.get(position).getId());
-                _args.putInt("type", AppConstants.REPORT_TYPE_STORY);
-                reportContentDialogFragment.setArguments(_args);
-                reportContentDialogFragment.setCancelable(true);
-                // reportContentDialogFragment.setTargetFragment(this, 0);
-                reportContentDialogFragment.show(fm, "Report Content");
-            }
-            break;*/
             case R.id.menuItem: {
                 chooseMenuOptionsItem(view, position);
             }
             break;
-            case R.id.storyImageView:
+            case R.id.storyImageView1:
                 if (BuildConfig.DEBUG) {
                     Intent Tintent = new Intent(getActivity(), ShortStoryModerationOrShareActivity.class);
                     Tintent.putExtra("shareUrl", mDatalist.get(position).getStoryImage());

@@ -536,7 +536,7 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
             case R.id.menuItem:
                 chooseMenuOptionsItem(view, position);
                 break;
-            case R.id.storyImageView:
+            case R.id.storyImageView1:
                 Intent intent = new Intent(this, ShortStoryContainerActivity.class);
                 intent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
                 intent.putExtra(Constants.AUTHOR_ID, mDatalist.get(position).getUserId());

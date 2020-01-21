@@ -5,17 +5,21 @@ import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -60,6 +64,8 @@ import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.ShortStoriesDetailRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
+import com.mycity4kids.utils.SharingUtils;
+import com.mycity4kids.widget.StoryShareCardWidget;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -152,6 +158,9 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private RelativeLayout rootLayout;
     private int sharedStoryPosition;
     private String shareMedium;
+    private StoryShareCardWidget storyShareCardWidget;
+    private ImageView shareStoryImageView;
+    private ShortStoryDetailResult sharedStoryItem;
 
     @Nullable
     @Override
@@ -682,26 +691,16 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 break;
             case R.id.facebookShareImageView: {
                 if (isAdded()) {
-                    AppUtils.shareStoryWithFBC(this, headerModel.getSsResult().getUserType(), headerModel.getSsResult().getBlogTitleSlug(), headerModel.getSsResult().getTitleSlug(),
-                            "ShortStoryDetailsScreen", userDynamoId + "", articleId, authorId, author);
+                    getSharableViewForPosition(position, AppConstants.MEDIUM_FACEBOOK);
                 }
             }
             break;
             case R.id.whatsappShareImageView: {
-                shareMedium = AppConstants.MEDIUM_WHATSAPP;
-                if (checkPermissionAndCreateShareableImage(position)) return;
-                if (isAdded()) {
-                    AppUtils.shareStoryWithWhatsApp(getActivity(), headerModel.getSsResult().getUserType(), headerModel.getSsResult().getBlogTitleSlug(), headerModel.getSsResult().getTitleSlug(),
-                            "ShortStoryDetailsScreen", userDynamoId, articleId, authorId, author);
-                }
+                getSharableViewForPosition(position, AppConstants.MEDIUM_WHATSAPP);
             }
             break;
             case R.id.instagramShareImageView: {
-                shareMedium = AppConstants.MEDIUM_INSTAGRAM;
-                if (checkPermissionAndCreateShareableImage(position)) return;
-                if (isAdded()) {
-                    AppUtils.shareStoryWithInstagram(getActivity(), "ShortStoryDetailsScreen", userDynamoId, articleId, authorId, author);
-                }
+                getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM);
             }
             break;
             case R.id.genericShareImageView: {
@@ -738,35 +737,90 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         }
     }
 
-    private boolean checkPermissionAndCreateShareableImage(int position) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+    private void getSharableViewForPosition(int position, String medium) {
+        storyShareCardWidget = shortStoryRecyclerView.getLayoutManager().findViewByPosition(position).findViewById(R.id.storyShareCardWidget);
+        shareStoryImageView = storyShareCardWidget.findViewById(R.id.storyImageView);
+        shareMedium = medium;
+        sharedStoryItem = headerModel.ssResult;
+        checkPermissionAndCreateShareableImage();
+    }
+
+    private void createBitmapForSharingStory() {
+        if (isAdded()) {
+            Bitmap bitmap1 = ((BitmapDrawable) shareStoryImageView.getDrawable()).getBitmap();
+            shareStoryImageView.setImageBitmap(SharingUtils.getRoundCornerBitmap(bitmap1, AppUtils.dpTopx(4.0f)));
+            AppUtils.getBitmapFromView(storyShareCardWidget, AppConstants.STORY_SHARE_IMAGE_NAME);
+            shareStory();
+        }
+    }
+
+    private void shareStory() {
+        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() +
+                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg");
+        if (isAdded()) {
+            switch (shareMedium) {
+                case AppConstants.MEDIUM_FACEBOOK: {
+                    SharingUtils.shareViaFacebook(this);
+                    Utils.pushShareStoryEvent(getActivity(), "ShortStoryFragment",
+                            userDynamoId + "", sharedStoryItem.getId(),
+                            sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Facebook");
+                }
+                break;
+                case AppConstants.MEDIUM_WHATSAPP: {
+                    if (AppUtils.shareImageWithWhatsApp(getActivity(), uri, getString(R.string.profile_follow_author,
+                            sharedStoryItem.getUserName(), AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
+                        Utils.pushShareStoryEvent(getActivity(), "ShortStoryFragment",
+                                userDynamoId + "", sharedStoryItem.getId(),
+                                sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Whatsapp");
+                    }
+                }
+                break;
+                case AppConstants.MEDIUM_INSTAGRAM: {
+                    if (AppUtils.shareImageWithInstagram(getActivity(), uri)) {
+                        Utils.pushShareStoryEvent(getActivity(), "ShortStoryFragment",
+                                userDynamoId + "", sharedStoryItem.getId(),
+                                sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Instagram");
+                    }
+                }
+                break;
+                case AppConstants.MEDIUM_GENERIC: {
+                    if (AppUtils.shareGenericImageAndOrLink(getActivity(), uri, getString(R.string.profile_follow_author,
+                            sharedStoryItem.getUserName(), AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
+                        Utils.pushShareStoryEvent(getActivity(), "ShortStoryFragment",
+                                userDynamoId + "", sharedStoryItem.getId(),
+                                sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Generic");
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    private void checkPermissionAndCreateShareableImage() {
+        if (Build.VERSION.SDK_INT >= 23 && isAdded()) {
+            if (ActivityCompat
+                    .checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED
-                    || ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    || ActivityCompat
+                    .checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions();
-                return true;
             } else {
                 try {
-                    sharedStoryPosition = position;
-                    createBitmapForSharingStory(position);
+                    createBitmapForSharingStory();
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
-                    return true;
                 }
             }
         } else {
             try {
-                sharedStoryPosition = position;
-                createBitmapForSharingStory(position);
+                createBitmapForSharingStory();
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                return true;
             }
         }
-        return false;
     }
 
     private void createBitmapForSharingStory(int position) {
@@ -1438,8 +1492,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         popupMenu.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.shareShortStory) {
                 if (isAdded()) {
-                    AppUtils.shareStoryGeneric(getActivity(), headerModel.getSsResult().getUserType(), headerModel.getSsResult().getBlogTitleSlug(), headerModel.getSsResult().getTitleSlug(),
-                            "ShortStoryListingScreen", userDynamoId, articleId, authorId, author);
+                    getSharableViewForPosition(position, AppConstants.MEDIUM_GENERIC);
                 }
 
                 return true;

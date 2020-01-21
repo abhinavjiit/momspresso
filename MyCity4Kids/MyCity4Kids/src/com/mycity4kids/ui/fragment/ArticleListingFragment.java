@@ -627,6 +627,19 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
     public void onRecyclerItemClick(View view, int position) {
         try {
             switch (view.getId()) {
+                case R.id.storyImageView1:
+                    Intent shortStoryDetailIntent = new Intent(getActivity(), ShortStoryContainerActivity.class);
+                    shortStoryDetailIntent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
+                    shortStoryDetailIntent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
+                    shortStoryDetailIntent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
+                    shortStoryDetailIntent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
+                    shortStoryDetailIntent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + "ArticleListingFragment");
+                    shortStoryDetailIntent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
+                    shortStoryDetailIntent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                    shortStoryDetailIntent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
+                    shortStoryDetailIntent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
+                    startActivity(shortStoryDetailIntent);
+                    break;
                 case R.id.videoContainerFL1:
                     launchVideoDetailsActivity(position, 0);
                     break;
