@@ -1,14 +1,11 @@
 package com.mycity4kids.ui.activity;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -31,7 +28,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.TopicsShortStoriesPagerAdapter;
 import com.mycity4kids.ui.fragment.TopicChallengeTabFragment;
 import com.mycity4kids.ui.fragment.TopicsShortStoriesTabFragment;
-import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 
@@ -43,7 +39,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -69,7 +64,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
     private LinearLayout layoutBottomSheet, bottom_sheet;
     private BottomSheetBehavior sheetBehavior;
     private TextView textHeaderUpdate, textUpdate;
-    private ImageView imageSortBy;
+    private TextView imageSortBy;
     private FloatingActionButton fabAdd, fabAddShortStory;
     private CoordinatorLayout root;
     private String selectedTabCategoryId;
@@ -140,7 +135,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
         tablayoutLayer = (FrameLayout) findViewById(R.id.topLayerGuideLayout);
         toolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitleTextView);
 
-        imageSortBy = (ImageView) findViewById(R.id.imageSortBy);
+        imageSortBy = (TextView) findViewById(R.id.imageSortBy);
 
         imageSortBy.setOnClickListener(new View.OnClickListener() {
             @Override

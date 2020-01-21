@@ -93,7 +93,7 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
         else
             holder.followAuthorTextView.setText(mContext.getResources().getString(R.string.ad_follow_author));
         try {
-            Picasso.with(holder.itemView.getContext()).load(articleDataModelsNew.get(position).getStoryImage().trim()).into(holder.storyImage);
+            Picasso.with(holder.itemView.getContext()).load(articleDataModelsNew.get(position).getStoryImage().trim()).placeholder(R.drawable.default_article).into(holder.storyImage);
         } catch (Exception e) {
             holder.storyImage.setImageResource(R.drawable.default_article);
         }

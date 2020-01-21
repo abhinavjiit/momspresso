@@ -953,6 +953,19 @@ class UserProfileActivity : BaseActivity(),
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
+            view.id == R.id.storyImageView1 -> {
+                val intent = Intent(this, ShortStoryContainerActivity::class.java)
+                intent.putExtra(Constants.ARTICLE_ID, userContentList?.get(position)?.id)
+                intent.putExtra(Constants.AUTHOR_ID, userContentList?.get(position)?.userId)
+                intent.putExtra(Constants.BLOG_SLUG, userContentList?.get(position)?.blogTitleSlug)
+                intent.putExtra(Constants.TITLE_SLUG, userContentList?.get(position)?.titleSlug)
+                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + "userProfileActivity")
+                intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen")
+                intent.putExtra(Constants.ARTICLE_INDEX, "" + position)
+                intent.putExtra(Constants.AUTHOR, userContentList?.get(position)?.userId + "~" + userContentList?.get(position)?.userName)
+                startActivity(intent)
+
+            }
             view.id == R.id.bookmarkArticleImageView -> {
                 bookmarkItem(position)
             }

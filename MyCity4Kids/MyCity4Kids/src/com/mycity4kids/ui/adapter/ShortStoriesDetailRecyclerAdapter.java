@@ -15,6 +15,7 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.ui.fragment.ShortStoryFragment;
+import com.mycity4kids.widget.StoryShareCardWidget;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang.WordUtils;
@@ -87,6 +88,14 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
                 } catch (Exception e) {
                     ssViewHolder.storyImage.setImageResource(R.drawable.default_article);
                 }
+
+                try {
+                    Picasso.with(holder.itemView.getContext()).load(datalist.get(position).getSsResult().getStoryImage()).into(ssViewHolder.shareStoryImageView);
+                    ssViewHolder.storyAuthorTextView.setText(datalist.get(position).getSsResult().getUserName());
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                }
                 ssViewHolder.authorNameTextView.setText(datalist.get(position).getSsResult().getUserName());
                 if (StringUtils.isNullOrEmpty(followingStatus)) {
                     ssViewHolder.followAuthorTextView.setVisibility(View.GONE);
@@ -157,6 +166,9 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
         TextView storyRecommendationCountTextView;
         ImageView storyImage, likeImageView, menuItem;
         ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView;
+        StoryShareCardWidget storyShareCardWidget;
+        ImageView shareStoryImageView;
+        TextView storyAuthorTextView;
 
         ShortStoriesViewHolder(View itemView, RecyclerViewClickListener listener) {
             super(itemView);
@@ -166,13 +178,16 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
             storyCommentContainer = (LinearLayout) itemView.findViewById(R.id.storyCommentContainer);
             storyCommentCountTextView = (TextView) itemView.findViewById(R.id.storyCommentCountTextView);
             storyRecommendationCountTextView = (TextView) itemView.findViewById(R.id.storyRecommendationCountTextView);
-            storyImage = (ImageView) itemView.findViewById(R.id.storyImageView);
+            storyImage = (ImageView) itemView.findViewById(R.id.storyImageView1);
             likeImageView = (ImageView) itemView.findViewById(R.id.likeImageView);
             facebookShareImageView = (ImageView) itemView.findViewById(R.id.facebookShareImageView);
             whatsappShareImageView = (ImageView) itemView.findViewById(R.id.whatsappShareImageView);
             instagramShareImageView = (ImageView) itemView.findViewById(R.id.instagramShareImageView);
             genericShareImageView = (ImageView) itemView.findViewById(R.id.genericShareImageView);
             menuItem = (ImageView) itemView.findViewById(R.id.menuItem);
+            storyShareCardWidget = (StoryShareCardWidget) itemView.findViewById(R.id.storyShareCardWidget);
+            shareStoryImageView = (ImageView) storyShareCardWidget.findViewById(R.id.storyImageView);
+            storyAuthorTextView = (TextView) storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
 
             facebookShareImageView.setOnClickListener(this);
             whatsappShareImageView.setOnClickListener(this);

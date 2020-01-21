@@ -359,7 +359,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         }
 
         try {
-            Picasso.with(holder.itemView.context).load(data?.storyImage?.trim { it <= ' ' }).into(storyImage)
+            Picasso.with(holder.itemView.context).load(data?.storyImage?.trim { it <= ' ' }).placeholder(R.drawable.default_article).into(storyImage)
         } catch (e: Exception) {
             holder.storyImage.setImageResource(R.drawable.default_article)
         }
