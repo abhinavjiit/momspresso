@@ -45,7 +45,7 @@ data class MixFeedResult(
         @SerializedName("category_id")
         val category_id: List<String> = emptyList(),
         @SerializedName("tags")
-        private var tags: ArrayList<Map<String, String>>? = null,
+        var tags: ArrayList<Map<String, String>>? = null,
         @SerializedName("cities")
         private var cities: ArrayList<Map<String, String>>? = null,
         @SerializedName("colorCode")

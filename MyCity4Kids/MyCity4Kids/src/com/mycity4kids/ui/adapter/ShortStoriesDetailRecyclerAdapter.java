@@ -30,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 
 public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
     private static final int HEADER = 0;
     private static final int COMMENT_LEVEL_ROOT = 1;
     private Context mContext;
@@ -41,7 +40,6 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
     private String followingStatus = "";
 
     public ShortStoriesDetailRecyclerAdapter(Context pContext, RecyclerViewClickListener listener, int colorPosition) {
-
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
         this.mListener = listener;
@@ -84,11 +82,10 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
             if (holder instanceof ShortStoriesViewHolder) {
                 ShortStoriesViewHolder ssViewHolder = (ShortStoriesViewHolder) holder;
                 try {
-                    Picasso.with(holder.itemView.getContext()).load(datalist.get(position).getSsResult().getStoryImage().trim()).into(ssViewHolder.storyImage);
+                    Picasso.with(holder.itemView.getContext()).load(datalist.get(position).getSsResult().getStoryImage().trim()).placeholder(R.drawable.default_article).into(ssViewHolder.storyImage);
                 } catch (Exception e) {
                     ssViewHolder.storyImage.setImageResource(R.drawable.default_article);
                 }
-
                 try {
                     Picasso.with(holder.itemView.getContext()).load(datalist.get(position).getSsResult().getStoryImage()).into(ssViewHolder.shareStoryImageView);
                     ssViewHolder.storyAuthorTextView.setText(datalist.get(position).getSsResult().getUserName());
@@ -106,7 +103,6 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
                     ssViewHolder.followAuthorTextView.setVisibility(View.VISIBLE);
                     ssViewHolder.followAuthorTextView.setText(WordUtils.capitalizeFully(mContext.getString(R.string.ad_follow_author)));
                 }
-
                 if (null == datalist.get(position).getSsResult().getCommentCount()) {
                     ssViewHolder.storyCommentCountTextView.setText("0");
                 } else {

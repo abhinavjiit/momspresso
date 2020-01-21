@@ -48,6 +48,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
     private val RC_STORAGE_PERMISSION = 123
     private var storyShareCardWidget: StoryShareCardWidget? = null
     private var shareStoryImageView: ImageView? = null
+    private var shareStoryAuthorTextView: TextView? = null
     private var storyImageView: ImageView? = null
     private var storyAuthorTextView: TextView? = null
     private var shareMedium: String? = null
@@ -72,6 +73,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
         storyAuthorTextView = includeShareLayout?.findViewById(R.id.storyAuthorTextView)
         storyShareCardWidget = findViewById(R.id.storyShareCardWidget)
         shareStoryImageView = storyShareCardWidget?.findViewById(R.id.storyImageView)
+        shareStoryAuthorTextView = storyShareCardWidget?.findViewById(R.id.storyAuthorTextView)
 
         userId = SharedPrefUtils.getUserDetailModel(this).dynamoId
         authorName = SharedPrefUtils.getUserDetailModel(this).first_name + " " +
@@ -121,6 +123,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
                 Picasso.with(this@ShortStoryModerationOrShareActivity).load(responseData?.storyImage).into(storyImageView)
                 Picasso.with(this@ShortStoryModerationOrShareActivity).load(responseData?.storyImage).into(shareStoryImageView)
                 storyAuthorTextView?.text = WordUtils.capitalizeFully(responseData?.userName)
+                shareStoryAuthorTextView?.text = WordUtils.capitalizeFully(responseData?.userName)
                 processTags(responseData?.tags)
             } catch (e: Exception) {
                 removeProgressDialog()

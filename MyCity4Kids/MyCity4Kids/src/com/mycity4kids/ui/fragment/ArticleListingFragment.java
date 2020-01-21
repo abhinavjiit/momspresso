@@ -76,6 +76,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.view.menu.MenuBuilder;
@@ -627,19 +628,6 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
     public void onRecyclerItemClick(View view, int position) {
         try {
             switch (view.getId()) {
-                case R.id.storyImageView1:
-                    Intent shortStoryDetailIntent = new Intent(getActivity(), ShortStoryContainerActivity.class);
-                    shortStoryDetailIntent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
-                    shortStoryDetailIntent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
-                    shortStoryDetailIntent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
-                    shortStoryDetailIntent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
-                    shortStoryDetailIntent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + "ArticleListingFragment");
-                    shortStoryDetailIntent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
-                    shortStoryDetailIntent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                    shortStoryDetailIntent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
-                    shortStoryDetailIntent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
-                    startActivity(shortStoryDetailIntent);
-                    break;
                 case R.id.videoContainerFL1:
                     launchVideoDetailsActivity(position, 0);
                     break;
@@ -747,6 +735,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 case R.id.headerArticleView:
                 case R.id.fbAdArticleView:
                 case R.id.storyHeaderView:
+                case R.id.storyImageView1:
                 default:
                     int limit;
                     if (Constants.KEY_FOR_YOU.equals(sortType)) {
@@ -825,6 +814,12 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                     getSharableViewForPosition(position, AppConstants.MEDIUM_FACEBOOK);
                     break;
                 case R.id.instagramShareImageView:
+                    try {
+                        filterTags(articleDataModelsNew.get(position).getTags());
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                    }
                     getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM);
                     break;
                 case R.id.genericShareImageView: {
@@ -848,10 +843,6 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 case R.id.storyRecommendationContainer:
                     if (!isRecommendRequestRunning) {
                         if (articleDataModelsNew.get(position).isLiked()) {
-                          /*  likeStatus = "0";
-                            currentShortStoryPosition = position;
-                            recommendUnrecommentArticleAPI("0", articleDataModelsNew.get(position).getId(), articleDataModelsNew.get(position).getUserId(), articleDataModelsNew.get(position).getUserName());
-*/
                         } else {
                             likeStatus = "1";
                             currentShortStoryPosition = position;
@@ -865,6 +856,22 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
+    }
+
+    private void filterTags(ArrayList<Map<String, String>> tagObjectList) {
+        ArrayList<String> tagList = new ArrayList<>();
+        for (int i = 0; i < tagObjectList.size(); i++) {
+            for (Map.Entry<String, String> mapEntry : tagObjectList.get(i).entrySet()) {
+                if (mapEntry.getKey().startsWith("category-")) {
+                    tagList.add(mapEntry.getKey());
+                }
+            }
+        }
+
+        String hashtags = AppUtils.getHasTagFromCategoryList(tagList);
+        AppUtils.copyToClipboard(hashtags);
+        if (isAdded())
+            ToastUtils.showToast(getActivity(), "Copied hashtags to clipboard");
     }
 
     private void recommendUnrecommentArticleAPI(String status, String articleId, String authorId, String author) {
@@ -891,7 +898,6 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 ToastUtils.showToast(getActivity(), getString(R.string.server_went_wrong));
                 return;
             }
-
             try {
                 RecommendUnrecommendArticleResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {

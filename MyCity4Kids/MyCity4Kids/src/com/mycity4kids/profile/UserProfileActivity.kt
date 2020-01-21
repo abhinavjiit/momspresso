@@ -935,6 +935,12 @@ class UserProfileActivity : BaseActivity(),
                 getSharableViewForPosition(position, AppConstants.MEDIUM_WHATSAPP)
             }
             view.id == R.id.instagramShareImageView -> {
+                try {
+                    filterTags(userContentList?.get(position)?.tags!!)
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
                 getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM)
             }
             view.id == R.id.genericShareImageView -> {
@@ -989,6 +995,21 @@ class UserProfileActivity : BaseActivity(),
             }
 
         }
+    }
+
+    private fun filterTags(tagObjectList: java.util.ArrayList<Map<String, String>>) {
+        val tagList = java.util.ArrayList<String>()
+        for (i in tagObjectList.indices) {
+            for ((key) in tagObjectList[i]) {
+                if (key.startsWith("category-")) {
+                    tagList.add(key)
+                }
+            }
+        }
+
+        val hashtags = AppUtils.getHasTagFromCategoryList(tagList)
+        AppUtils.copyToClipboard(hashtags)
+        ToastUtils.showToast(this@UserProfileActivity, "Copied hashtags to clipboard")
     }
 
     private fun recommendUnrecommentArticleAPI(status: String, articleId: String?, authorId: String?, author: String?) {

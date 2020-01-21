@@ -66,6 +66,7 @@ import org.json.JSONObject;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -571,6 +572,12 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
             }
             break;
             case R.id.instagramShareImageView: {
+                try {
+                    filterTags(mDatalist.get(position).getTags());
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                }
                 getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM);
             }
             break;
@@ -610,6 +617,21 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
                 followAPICall(mDatalist.get(position).getUserId(), position);
 
         }
+    }
+
+    private void filterTags(ArrayList<Map<String, String>> tagObjectList) {
+        ArrayList<String> tagList = new ArrayList<>();
+        for (int i = 0; i < tagObjectList.size(); i++) {
+            for (Map.Entry<String, String> mapEntry : tagObjectList.get(i).entrySet()) {
+                if (mapEntry.getKey().startsWith("category-")) {
+                    tagList.add(mapEntry.getKey());
+                }
+            }
+        }
+
+        String hashtags = AppUtils.getHasTagFromCategoryList(tagList);
+        AppUtils.copyToClipboard(hashtags);
+        ToastUtils.showToast(ChallengeDetailListingActivity.this, "Copied hashtags to clipboard");
     }
 
     private void followAPICall(String authorId, int position) {

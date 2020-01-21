@@ -144,6 +144,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private StoryShareCardWidget storyShareCardWidget;
     private ImageView shareStoryImageView;
     private ArticleListingResult sharedStoryItem;
+    private ArrayList<ArticleListingResult> articleDataModelsSubList;
+
 
     @Nullable
     @Override
@@ -421,24 +423,29 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             }
             break;
             case R.id.storyImageView1:
+                int page = (position / 15);
+                int posSubList = position % 15;
+                int startIndex = page * 15;
+                int endIndex = startIndex + 15;
+                articleDataModelsSubList = new ArrayList<>(mDatalist.subList(startIndex, endIndex));
                 if (BuildConfig.DEBUG) {
                     Intent Tintent = new Intent(getActivity(), ShortStoryModerationOrShareActivity.class);
-                    Tintent.putExtra("shareUrl", mDatalist.get(position).getStoryImage());
-                    Tintent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
+                    Tintent.putExtra("shareUrl", articleDataModelsSubList.get(posSubList).getStoryImage());
+                    Tintent.putExtra(Constants.ARTICLE_ID, articleDataModelsSubList.get(posSubList).getId());
                     startActivity(Tintent);
                 } else {
                     Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
-                    intent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
-                    intent.putExtra(Constants.AUTHOR_ID, mDatalist.get(position).getUserId());
-                    intent.putExtra(Constants.BLOG_SLUG, mDatalist.get(position).getBlogPageSlug());
-                    intent.putExtra(Constants.TITLE_SLUG, mDatalist.get(position).getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_ID, articleDataModelsSubList.get(posSubList).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, articleDataModelsSubList.get(posSubList).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, articleDataModelsSubList.get(posSubList).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, articleDataModelsSubList.get(posSubList).getTitleSlug());
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM,
                             "" + currentSubTopic.getParentName());
-                    intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                    intent.putParcelableArrayListExtra("pagerListData", mDatalist);
+                    intent.putExtra(Constants.FROM_SCREEN, "TopicsShortStoryTabFragment");
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + posSubList);
+                    intent.putParcelableArrayListExtra("pagerListData", articleDataModelsSubList);
                     intent.putExtra(Constants.AUTHOR,
-                            mDatalist.get(position).getUserId() + "~" + mDatalist.get(position)
+                            articleDataModelsSubList.get(posSubList).getUserId() + "~" + articleDataModelsSubList.get(posSubList)
                                     .getUserName());
                     startActivity(intent);
                 }

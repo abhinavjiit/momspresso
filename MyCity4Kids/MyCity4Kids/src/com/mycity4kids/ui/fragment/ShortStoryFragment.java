@@ -34,6 +34,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
+import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -700,6 +701,12 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             }
             break;
             case R.id.instagramShareImageView: {
+                try {
+                    filterTags(headerModel.getSsResult().getTags());
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                }
                 getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM);
             }
             break;
@@ -735,6 +742,22 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 followAPICall();
             }
         }
+    }
+
+    private void filterTags(ArrayList<Map<String, String>> tagObjectList) {
+        ArrayList<String> tagList = new ArrayList<>();
+        for (int i = 0; i < tagObjectList.size(); i++) {
+            for (Map.Entry<String, String> mapEntry : tagObjectList.get(i).entrySet()) {
+                if (mapEntry.getKey().startsWith("category-")) {
+                    tagList.add(mapEntry.getKey());
+                }
+            }
+        }
+
+        String hashtags = AppUtils.getHasTagFromCategoryList(tagList);
+        AppUtils.copyToClipboard(hashtags);
+        if (isAdded())
+            ToastUtils.showToast(getActivity(), "Copied hashtags to clipboard");
     }
 
     private void getSharableViewForPosition(int position, String medium) {
