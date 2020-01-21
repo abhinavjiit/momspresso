@@ -1353,4 +1353,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="short_s_write">ਲਿਖੋ</string>
     <string name="ss_follow_author">Follow %1$s and check out other articles by her on Momspresso.\n %2$s</string>
     <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
+    <string name="moderation_or_share_story_moderation_message">Your article is up for moderation. You\\\'ll receive an email within 24 hours regarding the status of the story.</string>
 </resources>

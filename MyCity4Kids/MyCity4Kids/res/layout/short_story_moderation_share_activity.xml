@@ -66,7 +66,7 @@
                 android:gravity="center"
                 android:paddingLeft="60dp"
                 android:paddingRight="60dp"
-                android:text="@string/moderation_or_share.moderation_message"
+                android:text="@string/moderation_or_share_story_moderation_message"
                 android:textColor="@color/app_grey"
                 android:textSize="18sp"
                 app:fontName="oswald.ttf" />
