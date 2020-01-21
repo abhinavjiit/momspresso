@@ -7,13 +7,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +14,12 @@ import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -1071,7 +1070,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
         if (prev == null) {
 
         } else {
-            String path = MediaStore.Images.Media.insertImage(getContentResolver(), image, "Title", null);
+            String path = MediaStore.Images.Media.insertImage(getContentResolver(), image, "Title" + System.currentTimeMillis(), null);
             Uri imageUriTemp = Uri.parse(path);
             File file2 = FileUtils.getFile(this, imageUriTemp);
             removeProgressDialog();

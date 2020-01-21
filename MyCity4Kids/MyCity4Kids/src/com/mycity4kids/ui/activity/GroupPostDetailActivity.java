@@ -1898,7 +1898,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         Fragment prev = getSupportFragmentManager().findFragmentByTag("Add Comment");
         if (prev == null) {
         } else {
-            String path = MediaStore.Images.Media.insertImage(getContentResolver(), image, "Title", null);
+            String path = MediaStore.Images.Media.insertImage(getContentResolver(), image, "Title" + System.currentTimeMillis(), null);
             Uri imageUriTemp = Uri.parse(path);
             File file2 = FileUtils.getFile(this, imageUriTemp);
             removeProgressDialog();

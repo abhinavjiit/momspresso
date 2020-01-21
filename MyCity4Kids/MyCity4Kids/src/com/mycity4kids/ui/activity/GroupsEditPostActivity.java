@@ -662,7 +662,7 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
 
     @Override
     public void onPostExecute(Bitmap image) {
-        String path = MediaStore.Images.Media.insertImage(GroupsEditPostActivity.this.getContentResolver(), image, "Title", null);
+        String path = MediaStore.Images.Media.insertImage(GroupsEditPostActivity.this.getContentResolver(), image, "Title" + System.currentTimeMillis(), null);
         Uri imageUriTemp = Uri.parse(path);
         File file2 = FileUtils.getFile(this, imageUriTemp);
         sendUploadProfileImageRequest(file2);

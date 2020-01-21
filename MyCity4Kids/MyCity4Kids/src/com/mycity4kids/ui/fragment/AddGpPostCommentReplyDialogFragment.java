@@ -907,7 +907,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     @Override
     public void onPostExecute(Bitmap image) {
         if (isAdded()) {
-            String path = MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), image, "Title", null);
+            String path = MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), image, "Title" + System.currentTimeMillis(), null);
             Uri imageUriTemp = Uri.parse(path);
             File file2 = FileUtils.getFile(getActivity(), imageUriTemp);
             sendUploadProfileImageRequest(file2);

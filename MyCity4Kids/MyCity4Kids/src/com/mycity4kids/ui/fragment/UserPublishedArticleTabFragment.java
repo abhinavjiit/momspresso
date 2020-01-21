@@ -69,7 +69,6 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
     private RecyclerView recyclerView;
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
-    private ArrayList<ArticleListingResult> articleDataModelsSubList;
 
     private UserPublishedArticleAdapter adapter;
     private UserPublishedShortStoriesAdapter shortStoriesAdapter;
@@ -288,16 +287,11 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
     public void onClick(View view, int position) {
         switch (view.getId()) {
             case R.id.rootLayout:
-                int page = (position / 15);
-                int posSubList = position % 15;
-                int startIndex = page * 15;
-                int endIndex = startIndex + 15;
-                articleDataModelsSubList = new ArrayList<>(articleDataModelsNew.subList(startIndex, endIndex));
                 Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
-                intent.putExtra(Constants.ARTICLE_ID, articleDataModelsSubList.get(posSubList).getId());
-                intent.putExtra(Constants.AUTHOR_ID, articleDataModelsSubList.get(posSubList).getUserId());
-                intent.putExtra(Constants.BLOG_SLUG, articleDataModelsSubList.get(posSubList).getBlogPageSlug());
-                intent.putExtra(Constants.TITLE_SLUG, articleDataModelsSubList.get(posSubList).getTitleSlug());
+                intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
+                intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
+                intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
+                intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
                 if (authorId.equals(userDynamoId)) {
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "PrivatePublishedArticles");
                     intent.putExtra(Constants.FROM_SCREEN, "PrivateUserArticlesScreen");
@@ -305,9 +299,9 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "PublicPublishedArticles");
                     intent.putExtra(Constants.FROM_SCREEN, "PublicUserArticlesScreen");
                 }
-                intent.putExtra(Constants.ARTICLE_INDEX, "" + posSubList);
-                intent.putParcelableArrayListExtra("pagerListData", articleDataModelsSubList);
-                intent.putExtra(Constants.AUTHOR, articleDataModelsSubList.get(posSubList).getUserId() + "~" + articleDataModelsSubList.get(posSubList).getUserName());
+                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
+                intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
                 startActivity(intent);
                 break;
             case R.id.editPublishedTextView:
@@ -398,17 +392,6 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
             content = bodyImgTxt;
         }
 
-//        if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) && AppConstants.ANDROID_NEW_EDITOR.equals(detailData.getUserAgent())) {
-//            Intent intent = new Intent(getActivity(), NewEditorPostActivity.class);
-//            intent.putExtra("from", "publishedList");
-//            intent.putExtra("title", detailData.getTitle());
-//            intent.putExtra("content", content);
-//            intent.putExtra("thumbnailUrl", detailData.getImageUrl().getThumbMax());
-//            intent.putExtra("articleId", detailData.getId());
-//            intent.putExtra("tag", new Gson().toJson(detailData.getTags()));
-//            intent.putExtra("cities", new Gson().toJson(detailData.getCities()));
-//            startActivity(intent);
-//        } else {
         Intent intent = new Intent(getActivity(), EditorPostActivity.class);
         intent.putExtra("from", "publishedList");
         intent.putExtra("title", detailData.getTitle());
@@ -418,33 +401,17 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
         intent.putExtra("tag", new Gson().toJson(detailData.getTags()));
         intent.putExtra("cities", new Gson().toJson(detailData.getCities()));
         startActivity(intent);
-//        }
     }
-
-//    @Override
-//    public void onFinishToLoadAds() {
-//
-//    }
-//
-//    @Override
-//    public void onErrorToLoadAd() {
-//
-//    }
 
     @Override
     public void onShortStoryClick(View view, int position) {
         switch (view.getId()) {
             case R.id.rootLayout:
-                int page = (position / 15);
-                int posSubList = position % 15;
-                int startIndex = page * 15;
-                int endIndex = startIndex + 15;
-                articleDataModelsSubList = new ArrayList<>(articleDataModelsNew.subList(startIndex, endIndex));
                 Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
-                intent.putExtra(Constants.ARTICLE_ID, articleDataModelsSubList.get(posSubList).getId());
-                intent.putExtra(Constants.AUTHOR_ID, articleDataModelsSubList.get(posSubList).getUserId());
-                intent.putExtra(Constants.BLOG_SLUG, articleDataModelsSubList.get(posSubList).getBlogPageSlug());
-                intent.putExtra(Constants.TITLE_SLUG, articleDataModelsSubList.get(posSubList).getTitleSlug());
+                intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
+                intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
+                intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
+                intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
                 if (authorId.equals(userDynamoId)) {
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "PrivatePublishedArticles");
                     intent.putExtra(Constants.FROM_SCREEN, "PrivateUserArticlesScreen");
@@ -452,9 +419,9 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "PublicPublishedArticles");
                     intent.putExtra(Constants.FROM_SCREEN, "PublicUserArticlesScreen");
                 }
-                intent.putExtra(Constants.ARTICLE_INDEX, "" + posSubList);
-                intent.putParcelableArrayListExtra("pagerListData", articleDataModelsSubList);
-                intent.putExtra(Constants.AUTHOR, articleDataModelsSubList.get(posSubList).getUserId() + "~" + articleDataModelsSubList.get(posSubList).getUserName());
+                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
+                intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
                 startActivity(intent);
                 break;
             case R.id.editPublishedTextView:

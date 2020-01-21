@@ -471,7 +471,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         Bitmap finalBitmap = Bitmap.createScaledBitmap(imageBitmap, (int) actualWidth, (int) actualHeight, true);
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         finalBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
-                        String path = MediaStore.Images.Media.insertImage(EditorPostActivity.this.getContentResolver(), finalBitmap, "Title", null);
+                        String path = MediaStore.Images.Media.insertImage(EditorPostActivity.this.getContentResolver(), finalBitmap, "Title" + System.currentTimeMillis(), null);
                         Uri imageUriTemp = Uri.parse(path);
                         EditorFragmentAbstract.imageUploading = 0;
                         File file2 = FileUtils.getFile(this, imageUriTemp);
