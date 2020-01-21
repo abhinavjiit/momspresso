@@ -11,10 +11,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import androidx.annotation.NonNull;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.app.ActivityCompat;
-import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -28,13 +24,17 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+
 import com.crashlytics.android.Crashlytics;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -123,13 +123,11 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.article_image_tag_publish);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-//        publish = (Button) findViewById(R.id.publish);
         gridview = (GridView) findViewById(R.id.gridview);
         mLayout = findViewById(R.id.rootLayout);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setTitle("Publish Blog");
         articleImage = (ImageView) findViewById(R.id.articleImage);
         uploadImageCardView = (RelativeLayout) findViewById(R.id.uploadImageContainer);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -182,7 +180,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
                 if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
                     mLodingView.setVisibility(View.VISIBLE);
-                    //caching enabled only for page 1. so disabling it here for all other pages by passing false.
                     getImagesForCategories();
                     isReuqestRunning = true;
                 }
@@ -197,15 +194,14 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
         tagImagesCall.enqueue(tagsImagesResponseCallback);
     }
 
-
     private Callback<ArticleTagsImagesResponse> tagsImagesResponseCallback = new Callback<ArticleTagsImagesResponse>() {
         @Override
         public void onResponse(Call<ArticleTagsImagesResponse> call, retrofit2.Response<ArticleTagsImagesResponse> response) {
             progressBar.setVisibility(View.GONE);
             mLodingView.setVisibility(View.GONE);
             isReuqestRunning = false;
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -241,11 +237,8 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                 tagsImageList = datalist;
                 adapter.setDatalist(datalist);
                 adapter.notifyDataSetChanged();
-//                noBlogsTextView.setVisibility(View.VISIBLE);
-//                noBlogsTextView.setText("No articles found");
             }
         } else {
-//            noBlogsTextView.setVisibility(View.GONE);
             if (pageNumber == 1) {
                 tagsImageList = datalist;
             } else {
@@ -311,7 +304,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
     }
 
     private void setTagsList() {
-
         JSONArray jsonArray = null;
         try {
             jsonArray = new JSONArray(tags);
@@ -329,7 +321,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
 
     private void publishArticleRequest() {
         PublishDraftObject draftObject = (PublishDraftObject) getIntent().getSerializableExtra("draftItem");
-
         String cities = getIntent().getStringExtra("cities");
         String from = getIntent().getStringExtra("from");
         showProgressDialog(getResources().getString(R.string.please_wait));
@@ -425,13 +416,13 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             if (AppConstants.ANDROID_NEW_EDITOR.equals(userAgent)) {
                 articleDraftRequest.setUserAgent1(userAgent);
             }
-            Log.e("publish request to server", new Gson().toJson(articleDraftRequest));
+            Log.e("publish request", new Gson().toJson(articleDraftRequest));
             Call<ArticleDraftResponse> call1 = articlePublishAPI.updateArticle(draftObject.getId(), articleDraftRequest);
             call1.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
                 public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
                     removeProgressDialog();
-                    if (response == null || response.body() == null) {
+                    if (response.body() == null) {
                         showToast(getString(R.string.server_went_wrong));
                         return;
                     }
@@ -477,73 +468,34 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
 
     private void getBlogPage() {
         showProgressDialog(getResources().getString(R.string.please_wait));
-        /*BaseApplication.getInstance().destroyRetrofitInstance();
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
-        Call<UserDetailResponse> call = loginRegistrationAPI.getUserDetails(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-        call.enqueue(onLoginResponseReceivedListener);*/
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
         Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         call.enqueue(getUserDetailsResponseCallback);
-
     }
 
     Callback<UserDetailResponse> getUserDetailsResponseCallback = new Callback<UserDetailResponse>() {
         @Override
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
-
             Log.d("SUCCESS", "" + response);
             removeProgressDialog();
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 showToast(getString(R.string.went_wrong));
                 return;
             }
 
-
             UserDetailResponse responseData = response.body();
-            if (responseData != null) {
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-
-                    if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
-
-                        if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
-                            Intent intent = new Intent(ArticleImageTagUploadActivity.this, BlogSetupActivity.class);
-                            intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
-                            intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
-                            intent.putExtra("comingFrom", "ShortStoryAndArticle");
-                            startActivity(intent);
-                        } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
-
-                            Intent intent = new Intent(ArticleImageTagUploadActivity.this, BlogSetupActivity.class);
-                            intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
-                            intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
-                            intent.putExtra("comingFrom", "ShortStoryAndArticle");
-                            startActivity(intent);
-                        }
-
-
-                    } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
-
-
-                        if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
-                            Intent intent = new Intent(ArticleImageTagUploadActivity.this, BlogSetupActivity.class);
-                            intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
-                            intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
-                            intent.putExtra("comingFrom", "ShortStoryAndArticle");
-                            startActivity(intent);
-                        } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
-
-                            publishArticleRequest();
-                        }
+            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
+                    launchBlogSetup(responseData);
+                } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
+                    if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
+                        launchBlogSetup(responseData);
+                    } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
+                        publishArticleRequest();
                     }
                 }
-
-
-            } else {
-                ToastUtils.showToast(ArticleImageTagUploadActivity.this, "something went wrong");
             }
-
         }
 
         @Override
@@ -551,56 +503,16 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             removeProgressDialog();
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
-
         }
     };
-       /* Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
 
-        BlogPageAPI getBlogPageAPI = retrofit.create(BlogPageAPI.class);
-        if (!ConnectivityUtils.isNetworkEnabled(this)) {
-            removeProgressDialog();
-            showToast(getString(R.string.error_network));
-            return;
-        }
-
-        Call<BlogPageResponse> call = getBlogPageAPI.getBlogPage("v1/users/blogPage/" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
-        call.enqueue(new Callback<BlogPageResponse>() {
-            @Override
-            public void onResponse(Call<BlogPageResponse> call, retrofit2.Response<BlogPageResponse> response) {
-                BlogPageResponse responseModel = response
-                        .body();
-                removeProgressDialog();
-                if (responseModel.getCode() != 200) {
-                    showToast(getString(R.string.toast_response_error));
-                    return;
-                } else {
-                    if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
-                        Log.i("BlogResponse message", responseModel.getData().getMsg());
-                    }
-                    if (responseModel.getData().getResult().getIsSetup() == 1) {
-                        showProgressDialog(getResources().getString(R.string.please_wait));
-                        pref = getApplicationContext().getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
-                        SharedPreferences.Editor editor = pref.edit();
-                        editor.putBoolean("blogSetup", true);
-                        Log.e("blog setup in update ui", true + "");
-                        editor.commit();
-                        publishArticleRequest();
-                    } else if (responseModel.getData().getResult().getIsSetup() == 0) {
-                        Intent intent = new Intent(ArticleImageTagUploadActivity.this, BlogSetupActivity.class);
-                        startActivity(intent);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<BlogPageResponse> call, Throwable t) {
-                removeProgressDialog();
-                Crashlytics.logException(t);
-                Log.d("MC4KException", Log.getStackTraceString(t));
-            }
-        });
-*/
-
+    private void launchBlogSetup(UserDetailResponse responseData) {
+        Intent intent = new Intent(ArticleImageTagUploadActivity.this, BlogSetupActivity.class);
+        intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
+        intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
+        intent.putExtra("comingFrom", "ShortStoryAndArticle");
+        startActivity(intent);
+    }
 
     public void sendUploadProfileImageRequest(File file) {
         showProgressDialog(getString(R.string.please_wait));
@@ -629,11 +541,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                              ImageUploadResponse responseModel = response.body();
                              if (responseModel.getCode() != 200) {
                                  showToast(getString(R.string.toast_response_error));
-                                 return;
                              } else {
-                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getResult().getUrl())) {
-                                     Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
-                                 }
                                  url = (responseModel.getData().getResult().getUrl());
                                  articleImage.setVisibility(View.VISIBLE);
                                  uploadImageCardView.setVisibility(View.GONE);
@@ -676,7 +584,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             case R.id.uploadImageContainer:
                 Intent intent1 = new Intent(Intent.ACTION_PICK);
                 intent1.setType("image/*");
-
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (ActivityCompat.checkSelfPermission(ArticleImageTagUploadActivity.this, Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED
@@ -691,7 +598,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                 } else {
                     startActivityForResult(intent1, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
                 }
-//                startActivityForResult(intent1, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
                 break;
             case R.id.publishTextView:
                 if (null == url) {
@@ -699,34 +605,16 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                     return;
                 }
                 Utils.pushEvent(ArticleImageTagUploadActivity.this, GTMEventType.PUBLISH_ARTICLE_BUTTON_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getDynamoId() + "", "Article Image Upload");
-
                 getBlogPage();
-           /*     pref = getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
-                blogSetup = pref.getBoolean("blogSetup", false);
-                Log.e("blogsetup", blogSetup + "");
-                if (blogSetup == false) {
-                    getBlogPage();
-                } else {
-                    publishArticleRequest();
-                }*/
                 break;
         }
     }
 
     private void requestPermissions() {
-        // BEGIN_INCLUDE(contacts_permission_request)
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example, if the request has been denied previously.
-            Log.i("Permissions",
-                    "Displaying storage permission rationale to provide additional context.");
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
             Snackbar.make(mLayout, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
@@ -738,8 +626,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                     .show();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
             Snackbar.make(mLayout, R.string.permission_camera_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
@@ -765,20 +651,11 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
         ActivityCompat.requestPermissions(this, requiredPermission, REQUEST_INIT_PERMISSION);
     }
 
-    /**
-     * Callback received when a permissions request has been completed.
-     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-
         if (requestCode == REQUEST_INIT_PERMISSION) {
-            Log.i("Permissions", "Received response for storage permissions request.");
-
-            // We have requested multiple permissions for contacts, so all of them need to be
-            // checked.
             if (PermissionUtil.verifyPermissions(grantResults)) {
-                // All required permissions have been granted, display contacts fragment.
                 Snackbar.make(mLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
                         .show();
@@ -786,7 +663,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                 intent1.setType("image/*");
                 startActivityForResult(intent1, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
             } else {
-                Log.i("Permissions", "storage permissions were NOT granted.");
                 Snackbar.make(mLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
                         .show();
@@ -795,7 +671,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
-
 
     @Override
     public void onTagImageSelected(String url) {

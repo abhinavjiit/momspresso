@@ -14,15 +14,15 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.appcompat.widget.Toolbar;
 
 import com.afollestad.easyvideoplayer.EasyVideoCallback;
 import com.afollestad.easyvideoplayer.EasyVideoPlayer;
@@ -39,7 +39,6 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
@@ -119,7 +118,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         }
 
         muteSwitch.setOnClickListener(this);
-
 
 
         originalPath = getIntent().getStringExtra("uriPath");
@@ -208,10 +206,8 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                     uploadVideo();
                 }
                 break;
-
         }
     }
-
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void muteVideo() {
@@ -225,16 +221,10 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
             MediaExtractor videoExtractor = new MediaExtractor();
             videoExtractor.setDataSource(originalUri.getPath());
 
-//            MediaExtractor audioExtractor = new MediaExtractor();
-
-            Log.d("TAG", "Video Extractor Track Count " + videoExtractor.getTrackCount());
-//            Log.d("TAG", "Audio Extractor Track Count " + audioExtractor.getTrackCount());
-
             MediaMuxer muxer = new MediaMuxer(outputFile, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
 
             videoExtractor.selectTrack(0);
             MediaFormat videoFormat = videoExtractor.getTrackFormat(0);
-//            videoFormat.setInteger("rotation-degrees", 0);
             int videoTrack = muxer.addTrack(videoFormat);
 
             Log.d("TAG", "Video Format " + videoFormat.toString());
@@ -246,8 +236,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
             ByteBuffer videoBuf = ByteBuffer.allocate(sampleSize);
             ByteBuffer audioBuf = ByteBuffer.allocate(sampleSize);
             MediaCodec.BufferInfo videoBufferInfo = new MediaCodec.BufferInfo();
-//            MediaCodec.BufferInfo audioBufferInfo = new MediaCodec.BufferInfo();
-
             videoExtractor.seekTo(0, MediaExtractor.SEEK_TO_CLOSEST_SYNC);
             muxer.setOrientationHint(Integer.parseInt(vRotation));
             muxer.start();
@@ -309,13 +297,8 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                 contentURI = AppUtils.getVideoUriFromMediaProvider(mutedUri.getPath(), getContentResolver());
             }
         } else {
-//            if (removeCustomAudioTextView.getVisibility() == View.VISIBLE) {
-//                contentURI = AppUtils.exportToGallery(audioAppendedFileUri.getPath(), getContentResolver(), this);
-//                contentURI = AppUtils.getVideoUriFromMediaProvider(audioAppendedFileUri.getPath(), getContentResolver());
-//            } else {
             contentURI = AppUtils.exportToGallery(originalUri.getPath(), getContentResolver(), this);
             contentURI = AppUtils.getVideoUriFromMediaProvider(originalUri.getPath(), getContentResolver());
-//            }
         }
         removeProgressDialog();
         resumeUpload();
@@ -328,9 +311,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 
     private void launchUploadActivity() {
         Intent intt = new Intent(this, VideoUploadProgressActivity.class);
-        /*if (contentURI != null) {
-            intt.putExtra("uri", new Gson().toJson(contentURI));
-        }*/
         intt.putExtra("uri", contentURI);
         intt.putExtra("title", videoTitleEditText.getText().toString());
         intt.putExtra("categoryId", categoryId);
@@ -351,9 +331,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 
     private void getBlogPage() {
         showProgressDialog(getResources().getString(R.string.please_wait));
-       /* Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-          BlogPageAPI getBlogPageAPI = retrofit.create(BlogPageAPI.class);*/
-//        BaseApplication.getInstance().destroyRetrofitInstance();
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
         Call<UserDetailResponse> call = loginRegistrationAPI.getUserDetails(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
@@ -369,48 +346,30 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     Callback<UserDetailResponse> onLoginResponseReceivedListener = new Callback<UserDetailResponse>() {
         @Override
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
-
             Log.d("SUCCESS", "" + response);
             removeProgressDialog();
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 showToast(getString(R.string.went_wrong));
                 return;
             }
-
-
             UserDetailResponse responseData = response.body();
-            if (responseData != null) {
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-
-                    if (responseData.getData().get(0).getResult().getBlogTitleSlug() == null || responseData.getData().get(0).getResult().getBlogTitleSlug().isEmpty()) {
-
-
-                        Intent intent = new Intent(AddVideoDetailsActivity.this, BlogSetupActivity.class);
-                        intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
-                        intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
-                        intent.putExtra("comingFrom", "Videos");
-                        startActivity(intent);
-
-
-                    } else if (responseData.getData().get(0).getResult().getBlogTitleSlug() != null || !responseData.getData().get(0).getResult().getBlogTitleSlug().isEmpty()) {
-
-                        showProgressDialog(getResources().getString(R.string.please_wait));
-                        pref = getApplicationContext().getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
-                        SharedPreferences.Editor editor = pref.edit();
-                        editor.putBoolean("blogSetup", true);
-                        Log.e("blog setup in update ui", true + "");
-                        editor.commit();
-                        launchUploadActivity();
-
-
-                    }
+            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                if (responseData.getData().get(0).getResult().getBlogTitleSlug() == null || responseData.getData().get(0).getResult().getBlogTitleSlug().isEmpty()) {
+                    Intent intent = new Intent(AddVideoDetailsActivity.this, BlogSetupActivity.class);
+                    intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
+                    intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
+                    intent.putExtra("comingFrom", "Videos");
+                    startActivity(intent);
+                } else if (responseData.getData().get(0).getResult().getBlogTitleSlug() != null || !responseData.getData().get(0).getResult().getBlogTitleSlug().isEmpty()) {
+                    showProgressDialog(getResources().getString(R.string.please_wait));
+                    pref = getApplicationContext().getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putBoolean("blogSetup", true);
+                    Log.e("blog setup in update ui", true + "");
+                    editor.commit();
+                    launchUploadActivity();
                 }
-
-
-            } else {
-                ToastUtils.showToast(AddVideoDetailsActivity.this, "something went wrong");
             }
-
         }
 
         @Override
@@ -421,45 +380,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 
         }
     };
-      /*  Call<BlogPageResponse> call = getBlogPageAPI.getBlogPage("v1/users/blogPage/" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
-        call.enqueue(new Callback<BlogPageResponse>() {
-
-            @Override
-            public void onResponse(Call<BlogPageResponse> call, retrofit2.Response<BlogPageResponse> response) {
-                BlogPageResponse responseModel = response
-                        .body();
-                removeProgressDialog();
-                if (responseModel.getCode() != 200) {
-                    showToast(getString(R.string.toast_response_error));
-                    return;
-                } else {
-                    if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
-                        Log.i("BlogResponse message", responseModel.getData().getMsg());
-                    }
-                    if (responseModel.getData().getResult().getIsSetup() == 1) {
-                        showProgressDialog(getResources().getString(R.string.please_wait));
-                        pref = getApplicationContext().getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
-                        SharedPreferences.Editor editor = pref.edit();
-                        editor.putBoolean("blogSetup", true);
-                        Log.e("blog setup in update ui", true + "");
-                        editor.commit();
-                        launchUploadActivity();
-                    } else if (responseModel.getData().getResult().getIsSetup() == 0) {
-                        Intent intent = new Intent(AddVideoDetailsActivity.this, BlogSetupActivity.class);
-                        intent.putExtra("comingFrom","Videos");
-                        startActivity(intent);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<BlogPageResponse> call, Throwable t) {
-                removeProgressDialog();
-                Crashlytics.logException(t);
-                Log.d("MC4KException", Log.getStackTraceString(t));
-            }
-        });*/
-
 
     @Override
     public void onStarted(EasyVideoPlayer player) {

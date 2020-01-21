@@ -128,7 +128,6 @@ class ShortStoriesCardActivity : BaseActivity() {
         cardBg = findViewById(R.id.card_bg)
         titleTv = findViewById(R.id.short_title)
         rlLayout = findViewById(R.id.rl_layout)
-//        parent = findViewById(R.id.rl_layout)
         back = findViewById(R.id.back)
         storyTv = findViewById(R.id.short_text)
         divider = findViewById(R.id.divider)
@@ -309,7 +308,6 @@ class ShortStoriesCardActivity : BaseActivity() {
         }
     }
 
-
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
@@ -351,7 +349,6 @@ class ShortStoriesCardActivity : BaseActivity() {
             val call = shortStoryAPI.updateOrPublishShortStory(draftId1, shortStoryDraftOrPublishRequest)
             call.enqueue(saveDraftBeforePublishResponseListener)
         }
-
     }
 
     private val saveDraftBeforePublishResponseListener = object : Callback<ArticleDraftResponse> {
@@ -396,7 +393,6 @@ class ShortStoriesCardActivity : BaseActivity() {
         call.enqueue(getUserDetailsResponseCallback)
     }
 
-
     private val getUserDetailsResponseCallback: Callback<UserDetailResponse> = object : Callback<UserDetailResponse> {
         override fun onResponse(call: Call<UserDetailResponse>, response: retrofit2.Response<UserDetailResponse>) {
             removeProgressDialog()
@@ -408,26 +404,10 @@ class ShortStoriesCardActivity : BaseActivity() {
             if (responseData != null) {
                 if (responseData.code == 200 && Constants.SUCCESS == responseData.status) {
                     if (StringUtils.isNullOrEmpty(responseData.data[0].result.blogTitleSlug)) {
-                        if (StringUtils.isNullOrEmpty(responseData.data[0].result.email)) {
-                            val intent = Intent(this@ShortStoriesCardActivity, BlogSetupActivity::class.java)
-                            intent.putExtra("BlogTitle", responseData.data[0].result.blogTitle)
-                            intent.putExtra("email", responseData.data[0].result.email)
-                            intent.putExtra("comingFrom", "ShortStoryAndArticle")
-                            startActivity(intent)
-                        } else if (!StringUtils.isNullOrEmpty(responseData.data[0].result.email)) {
-                            val intent = Intent(this@ShortStoriesCardActivity, BlogSetupActivity::class.java)
-                            intent.putExtra("BlogTitle", responseData.data[0].result.blogTitle)
-                            intent.putExtra("email", responseData.data[0].result.email)
-                            intent.putExtra("comingFrom", "ShortStoryAndArticle")
-                            startActivity(intent)
-                        }
+                        launchBlogSetup(responseData)
                     } else if (!StringUtils.isNullOrEmpty(responseData.data[0].result.blogTitleSlug)) {
                         if (responseData.data[0].result.email == null || responseData.data[0].result.email.isEmpty()) {
-                            val intent = Intent(this@ShortStoriesCardActivity, BlogSetupActivity::class.java)
-                            intent.putExtra("BlogTitle", responseData.data[0].result.blogTitle)
-                            intent.putExtra("email", responseData.data[0].result.email)
-                            intent.putExtra("comingFrom", "ShortStoryAndArticle")
-                            startActivity(intent)
+                            launchBlogSetup(responseData)
                         } else if (!StringUtils.isNullOrEmpty(responseData.data[0].result.email)) {
                             if (Build.VERSION.SDK_INT >= 23) {
                                 if (ActivityCompat.checkSelfPermission(this@ShortStoriesCardActivity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this@ShortStoriesCardActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -454,6 +434,13 @@ class ShortStoriesCardActivity : BaseActivity() {
         }
     }
 
+    private fun launchBlogSetup(responseData: UserDetailResponse) {
+        val intent = Intent(this@ShortStoriesCardActivity, BlogSetupActivity::class.java)
+        intent.putExtra("BlogTitle", responseData.data[0].result.blogTitle)
+        intent.putExtra("email", responseData.data[0].result.email)
+        intent.putExtra("comingFrom", "ShortStoryAndArticle")
+        startActivity(intent)
+    }
 
     fun requestStoragePermissions() {
         // BEGIN_INCLUDE(contacts_permission_request)
@@ -480,12 +467,9 @@ class ShortStoriesCardActivity : BaseActivity() {
         ActivityCompat.requestPermissions(this, requiredPermission, REQUEST_INIT_PERMISSION)
     }
 
-
     private fun createAndUploadShareableImage() {
         var finalBitmap: Bitmap? = null
         try {
-//            finalBitmap = AppUtils.drawMultilineTextToBitmap(titleTv.getText().toString(), storyTv.getText().toString(),
-//                    SharedPrefUtils.getUserDetailModel(this).first_name + " " + SharedPrefUtils.getUserDetailModel(this).last_name, true)
             finalBitmap = AppUtils.getBitmapFromView(rlLayout, "shortStory")
         } catch (e: Exception) {
             Crashlytics.logException(e)

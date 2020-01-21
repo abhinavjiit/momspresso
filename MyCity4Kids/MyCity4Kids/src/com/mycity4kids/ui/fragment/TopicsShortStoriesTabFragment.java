@@ -29,6 +29,16 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -78,15 +88,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.view.menu.MenuBuilder;
-import androidx.appcompat.view.menu.MenuPopupHelper;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -469,7 +470,12 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             }
             break;
             case R.id.instagramShareImageView: {
-                filterTags(mDatalist.get(position).getTags());
+                try {
+                    filterTags(mDatalist.get(position).getTags());
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                }
                 getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM);
             }
             break;
@@ -518,7 +524,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         String hashtags = AppUtils.getHasTagFromCategoryList(tagList);
         AppUtils.copyToClipboard(hashtags);
         if (isAdded())
-            ToastUtils.showToast(getActivity(), "Copied hashtags to clipboard");
+            ToastUtils.showToast(getActivity(), getActivity().getString(R.string.all_insta_share_clipboard_msg));
     }
 
     private void followAPICall(String authorId, int position) {
@@ -672,7 +678,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 }
                 break;
                 case AppConstants.MEDIUM_WHATSAPP: {
-                    if (AppUtils.shareImageWithWhatsApp(getActivity(), uri, getString(R.string.profile_follow_author,
+                    if (AppUtils.shareImageWithWhatsApp(getActivity(), uri, getString(R.string.ss_follow_author,
                             sharedStoryItem.getUserName(), AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
                         Utils.pushShareStoryEvent(getActivity(), "TopicsShortStoriesTabFragment",
                                 userDynamoId + "", sharedStoryItem.getId(),
@@ -689,7 +695,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 }
                 break;
                 case AppConstants.MEDIUM_GENERIC: {
-                    if (AppUtils.shareGenericImageAndOrLink(getActivity(), uri, getString(R.string.profile_follow_author,
+                    if (AppUtils.shareGenericImageAndOrLink(getActivity(), uri, getString(R.string.ss_follow_author,
                             sharedStoryItem.getUserName(), AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
                         Utils.pushShareStoryEvent(getActivity(), "TopicsShortStoriesTabFragment",
                                 userDynamoId + "", sharedStoryItem.getId(),

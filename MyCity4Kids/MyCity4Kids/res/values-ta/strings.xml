@@ -1286,4 +1286,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="story_text_description_hindi">உங்கள் கவிதைகளை இங்கு எழுதலாம்</string>
     <string name="stroy_overflow_layout">உங்கள் கதை  நீளமாக உள்ளது . தயவுசெய்து எழுத்தளவைக் குறைக்கவும் அல்லது கதையைச் சுருக்கவும்.</string>
     <string name="short_s_write">எழுத</string>
+    <string name="ss_follow_author">Follow %1$s and check out other articles by her on Momspresso.\n %2$s</string>
+    <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
 </resources>

@@ -934,7 +934,7 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
             }
             break;
             case AppConstants.MEDIUM_WHATSAPP: {
-                if (AppUtils.shareImageWithWhatsApp(this, uri, getString(R.string.profile_follow_author,
+                if (AppUtils.shareImageWithWhatsApp(this, uri, getString(R.string.ss_follow_author,
                         sharedStoryItem.getUserName(), AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
                     Utils.pushShareStoryEvent(this, "ChallengeDetailListingScreen",
                             userDynamoId + "", sharedStoryItem.getId(),
@@ -951,7 +951,7 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
             }
             break;
             case AppConstants.MEDIUM_GENERIC: {
-                if (AppUtils.shareGenericImageAndOrLink(this, uri, getString(R.string.profile_follow_author,
+                if (AppUtils.shareGenericImageAndOrLink(this, uri, getString(R.string.ss_follow_author,
                         sharedStoryItem.getUserName(), AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
                     Utils.pushShareStoryEvent(this, "ChallengeDetailListingScreen",
                             userDynamoId + "", sharedStoryItem.getId(),

@@ -167,6 +167,7 @@
                     android:id="@+id/handleAndBlogTitleTextMainLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:layout_below="@+id/emailEditText">
 
                     <com.mycity4kids.widget.CustomFontTextView
@@ -211,6 +212,7 @@
                     android:text="@string/blog_setup.blog_title_desc"
                     android:textColor="@color/blog_setup.blog_title_desc"
                     android:textSize="15sp"
+                    android:visibility="gone"
                     app:fontName="oswald.ttf" />
 
                 <com.mycity4kids.widget.CustomFontEditText
@@ -226,6 +228,7 @@
                     android:textColor="@color/blog_setup.hint_blog_title"
                     android:textColorHint="@color/blog_setup.hint_blog_title"
                     android:textSize="15sp"
+                    android:visibility="gone"
                     app:fontName="oswald.ttf" />
 
                 <com.mycity4kids.widget.CustomFontTextView
@@ -237,12 +240,14 @@
                     android:text=""
                     android:textColor="@color/blog_setup.blog_title_desc"
                     android:textSize="15sp"
+                    android:visibility="gone"
                     app:fontName="oswald.ttf" />
 
                 <View
                     android:id="@+id/underline3"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:visibility="gone"
                     android:layout_below="@+id/blogTitleCharCountTV"
                     android:layout_marginTop="38dp"
                     android:background="@color/light_underline" />

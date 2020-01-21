@@ -1435,7 +1435,7 @@ class UserProfileActivity : BaseActivity(),
                         sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Facebook")
             }
             AppConstants.MEDIUM_WHATSAPP -> {
-                if (AppUtils.shareImageWithWhatsApp(this@UserProfileActivity, uri, getString(R.string.profile_follow_author,
+                if (AppUtils.shareImageWithWhatsApp(this@UserProfileActivity, uri, getString(R.string.ss_follow_author,
                                 sharedStoryItem.userName, AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId))) {
                     Utils.pushShareStoryEvent(this@UserProfileActivity, "TopicsShortStoriesTabFragment",
                             authorId + "", sharedStoryItem.id,
@@ -1450,7 +1450,7 @@ class UserProfileActivity : BaseActivity(),
                 }
             }
             AppConstants.MEDIUM_GENERIC -> {
-                if (AppUtils.shareGenericImageAndOrLink(this@UserProfileActivity, uri, getString(R.string.profile_follow_author,
+                if (AppUtils.shareGenericImageAndOrLink(this@UserProfileActivity, uri, getString(R.string.ss_follow_author,
                                 sharedStoryItem.userName, AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId))) {
                     Utils.pushShareStoryEvent(this@UserProfileActivity, "TopicsShortStoriesTabFragment",
                             authorId + "", sharedStoryItem.id,

@@ -1400,4 +1400,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="short_s_add_title_Optional">વૈકલ્પિક</string>
     <string name="stroy_overflow_layout">તમારી વાર્તા લાંબી છે, કૃપા કરી ફોન્ટ સાઈઝ બદલો અથવા વાર્તા ટૂંકી કરો.</string>
     <string name="short_s_write">લખો</string>
+    <string name="ss_follow_author">Follow %1$s and check out other articles by her on Momspresso.\n %2$s</string>
+    <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
 </resources>

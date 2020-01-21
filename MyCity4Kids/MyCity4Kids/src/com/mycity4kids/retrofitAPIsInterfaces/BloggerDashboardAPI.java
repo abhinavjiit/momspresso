@@ -1,6 +1,5 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
-import com.mycity4kids.models.SuggestBlogTitle;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.BloggerAnalyticsResponse;
 import com.mycity4kids.models.response.MixFeedResponse;
@@ -79,9 +78,4 @@ public interface BloggerDashboardAPI {
     Call<MixFeedResponse> getUsersAllBookmark(@Query("start") int start,
                                               @Query("size") int size,
                                               @Query("collection_type") int collectionType);
-
-    @GET("v1/users/suggestBlogTitle/")
-    Call<SuggestBlogTitle> getUserhandle();
-
-
 }

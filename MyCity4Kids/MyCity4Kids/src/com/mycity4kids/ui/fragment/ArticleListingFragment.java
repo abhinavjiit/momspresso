@@ -1234,7 +1234,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 }
                 break;
                 case AppConstants.MEDIUM_WHATSAPP: {
-                    if (AppUtils.shareImageWithWhatsApp(getActivity(), uri, getString(R.string.profile_follow_author,
+                    if (AppUtils.shareImageWithWhatsApp(getActivity(), uri, getString(R.string.ss_follow_author,
                             sharedStoryItem.getUserName(), AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
                         Utils.pushShareStoryEvent(getActivity(), "ArticleListingFragment",
                                 userDynamoId + "", sharedStoryItem.getId(),
@@ -1251,7 +1251,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 }
                 break;
                 case AppConstants.MEDIUM_GENERIC: {
-                    if (AppUtils.shareGenericImageAndOrLink(getActivity(), uri, getString(R.string.profile_follow_author,
+                    if (AppUtils.shareGenericImageAndOrLink(getActivity(), uri, getString(R.string.ss_follow_author,
                             sharedStoryItem.getUserName(), AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
                         Utils.pushShareStoryEvent(getActivity(), "ArticleListingFragment",
                                 userDynamoId + "", sharedStoryItem.getId(),

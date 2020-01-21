@@ -1310,4 +1310,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="story_text_description_hindi">यहां आप सुविचार (कोट्स) लिख सकते हैं|</string>
     <string name="stroy_overflow_layout">आपकी कहानी बहुत लंबी है। कृपया फ़ॉन्ट साइज़ कम करें या कहानी को छोटा करें।</string>
     <string name="short_s_write">लिखें</string>
+    <string name="ss_follow_author">Follow %1$s and check out other articles by her on Momspresso.\n %2$s</string>
+    <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
 </resources>

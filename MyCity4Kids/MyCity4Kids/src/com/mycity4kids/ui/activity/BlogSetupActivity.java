@@ -12,10 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import androidx.annotation.NonNull;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,7 +24,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+
 import com.crashlytics.android.Crashlytics;
+import com.google.android.material.snackbar.Snackbar;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -41,7 +42,6 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.models.SuggestBlogTitle;
 import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.City;
 import com.mycity4kids.models.city.MetroCity;
@@ -153,23 +153,16 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         email = intent.getStringExtra("email");
         if (blogTitle != null && !blogTitle.isEmpty()) {
             blogTitleEditText.setText(blogTitle);
-
         } else {
-            blogTitleEditText.setEnabled(true);
+            blogTitleEditText.setText(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         }
-
+        blogTitleEditText.setVisibility(View.GONE);
         if (email != null && !email.isEmpty()) {
             emailEditText.setText(email);
             emailEditText.setEnabled(false);
         } else {
             emailEditText.setEnabled(true);
         }
-        /*if (comingFrom == null) {
-            comingFrom = "Normal";
-        }*/
-       /* if (comingFrom.equals("Videos")) {
-            aboutSelfEditText.setText("Hey,I Am A Vlogger");
-        }*/
 
         okayTextView.setOnClickListener(this);
         cityTextView.setOnClickListener(this);
@@ -202,89 +195,36 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
             blogHandleLabelTextView.setVisibility(View.VISIBLE);
             blogTitlesLabelTextView.setVisibility(View.GONE);
             aboutSelfEditText.setText("Hey,I Am A Vlogger");
-            setUserHandle();
         } else {
             blogTitlesLabelTextView.setVisibility(View.VISIBLE);
             blogHandleLabelTextView.setVisibility(View.GONE);
         }
-
-
     }
-
-    private void setUserHandle() {
-
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
-        Call<SuggestBlogTitle> call = bloggerDashboardAPI.getUserhandle();
-        call.enqueue(getUserHandleResponseCallBack);
-
-
-    }
-
-    private Callback<SuggestBlogTitle> getUserHandleResponseCallBack = new Callback<SuggestBlogTitle>() {
-        @Override
-        public void onResponse(Call<SuggestBlogTitle> call, retrofit2.Response<SuggestBlogTitle> response) {
-            removeProgressDialog();
-            if (response == null || response.body() == null) {
-                return;
-            }
-            SuggestBlogTitle responsedata = response.body();
-            if (responsedata != null) {
-                if (responsedata.getCode() == 200 && Constants.SUCCESS.equals(responsedata.getStatus())) {
-                    if (responsedata.getData().size() != 0 && responsedata.getData() != null) {
-
-                        blogTitleEditText.setText(responsedata.getData().get(0).toString().replace("-", " "));
-                    } else {
-                        ToastUtils.showToast(BlogSetupActivity.this, "something went wrong at the server");
-                    }
-                } else {
-                    ToastUtils.showToast(BlogSetupActivity.this, "something went wrong at the server");
-                }
-
-
-            } else {
-                ToastUtils.showToast(BlogSetupActivity.this, "something went wrong at the server");
-            }
-        }
-
-        @Override
-        public void onFailure(Call<SuggestBlogTitle> call, Throwable t) {
-
-        }
-    };
-
 
     private Callback<UserDetailResponse> getUserDetailsResponseCallback = new Callback<UserDetailResponse>() {
         @Override
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
             removeProgressDialog();
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 return;
             }
 
             UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 if (comingFrom.equals("ShortStoryAndArticle")) {
-                    blogTitleEditText.setText(responseData.getData().get(0).getResult().getBlogTitle());
+                    if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitle())) {
+                        blogTitleEditText.setText(SharedPrefUtils.getUserDetailModel(BlogSetupActivity.this).getDynamoId());
+                    } else {
+                        blogTitleEditText.setText(responseData.getData().get(0).getResult().getBlogTitle());
+                    }
                     if (responseData.getData().get(0).getResult().getEmail() != null && !responseData.getData().get(0).getResult().getEmail().isEmpty()) {
                         emailEditText.setText(responseData.getData().get(0).getResult().getEmail());
-
                     }
-
                 }
-
                 if (responseData.getData().get(0).getResult().getUserBio() != null && !responseData.getData().get(0).getResult().getUserBio().isEmpty()) {
                     aboutSelfEditText.setText(responseData.getData().get(0).getResult().getUserBio());
                 }
-
-
-
-                /*if (comingFrom.equals("ShortStoryAndArticle")) {
-                    aboutSelfEditText.setText(responseData.getData().get(0).getResult().getUserBio());
-                }*/
-
                 if (null == responseData.getData().get(0).getResult().getPhone() || StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getPhone().getMobile())) {
-//                    phoneEditText.setText(" ");
                 } else {
                     if (responseData.getData().get(0).getResult().getPhone().getMobile().contains("+91")) {
                         phoneEditText.setText(responseData.getData().get(0).getResult().getPhone().getMobile().replace("+91", ""));
@@ -305,10 +245,9 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
     };
 
     private Callback<CityConfigResponse> cityConfigResponseCallback = new Callback<CityConfigResponse>() {
-
         @Override
         public void onResponse(Call<CityConfigResponse> call, retrofit2.Response<CityConfigResponse> response) {
-            if (response == null || null == response.body()) {
+            if (null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
                 return;
@@ -317,9 +256,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                 CityConfigResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     mDatalist = new ArrayList<>();
-                    if (mDatalist == null) {
-                        return;
-                    }
                     MetroCity currentCity = SharedPrefUtils.getCurrentCityModel(BlogSetupActivity.this);
                     for (int i = 0; i < responseData.getData().getResult().getCityData().size(); i++) {
                         if (!AppConstants.ALL_CITY_NEW_ID.equals(responseData.getData().getResult().getCityData().get(i).getId())) {
@@ -341,8 +277,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                             mDatalist.get(i).setSelected(false);
                         }
                     }
-
-                } else {
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
@@ -368,9 +302,9 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
             case R.id.okayTextView:
                 introLinearLayout.setVisibility(View.GONE);
                 detailsRelativeLayout.setVisibility(View.VISIBLE);
-                blogTitleEditText.requestFocus();
+                aboutSelfEditText.requestFocus();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(blogTitleEditText, InputMethodManager.SHOW_IMPLICIT);
+                imm.showSoftInput(aboutSelfEditText, InputMethodManager.SHOW_IMPLICIT);
                 break;
             case R.id.cityTextView:
                 cityFragment = new CityListingDialogFragment();
@@ -383,7 +317,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
             case R.id.savePublishTextView:
                 Utils.pushBlogSetupSubmitEvent(BlogSetupActivity.this, "BlogSetupScreen", SharedPrefUtils.getUserDetailModel(BlogSetupActivity.this).getDynamoId());
                 if (validateFields()) {
-//                    saveCityData();
                     saveUserDetails();
                 }
                 break;
@@ -572,7 +505,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
             }
         }
 
-
         if (StringUtils.isNullOrEmpty(blogTitleEditText.getText().toString().trim())) {
             Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_blog_title_empty), Toast.LENGTH_SHORT).show();
             return false;
@@ -630,7 +562,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             removeProgressDialog();
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 showToast(getString(R.string.went_wrong));
                 return;
             }
@@ -647,29 +579,10 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                     } else {
                         saveCityData();
                     }
-
-
-                    /*if (Build.VERSION.SDK_INT >= 23) {
-                        if (ActivityCompat.checkSelfPermission(BlogSetupActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                                == PackageManager.PERMISSION_GRANTED
-                                || ActivityCompat.checkSelfPermission(BlogSetupActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
-                                == PackageManager.PERMISSION_GRANTED) {
-                            saveCityData();
-                        } else {
-                            saveCityData();
-                        }
-                    } else {
-                        saveCityData();
-                    }*/
                 } else {
                     showToast("" + blogUpdateJson.getString("reason"));
                 }
-            } catch (IOException e) {
-                showToast(getString(R.string.went_wrong));
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-
-            } catch (JSONException e) {
+            } catch (IOException | JSONException e) {
                 showToast(getString(R.string.went_wrong));
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
@@ -685,7 +598,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
     };
 
     public void saveCityData() {
-
         final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(BaseApplication.getAppContext());
         final ConfigurationController _controller = new ConfigurationController(this, this);
         if (null == mDatalist || mDatalist.isEmpty()) {
@@ -754,7 +666,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                         @Override
                         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
                             removeProgressDialog();
-                            if (response == null || response.body() == null) {
+                            if (response.body() == null) {
                                 finish();
                                 return;
                             }
@@ -796,7 +708,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
             removeProgressDialog();
             Log.d("SUCCESS", "" + response);
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 return;
             }
             try {
@@ -892,9 +804,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                                          .memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.family_xxhdpi)
                                          .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(profilePicImageView);
                                  SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), responseModel.getData().getResult().getUrl());
-
                                  showToast(getString(R.string.image_upload_success));
-                                 // ((BaseActivity) this()).showSnackbar(getView().findViewById(R.id.root), "You have successfully uploaded an image.");
                              }
                          }
 
@@ -906,7 +816,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                          }
                      }
         );
-
     }
 
     public void setProfileImage(String url) {
@@ -931,17 +840,14 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                 Log.d("MC4kException", Log.getStackTraceString(t));
             }
         });
-
     }
 
     private void startCropActivity(@NonNull Uri uri) {
         String destinationFileName = SAMPLE_CROPPED_IMAGE_NAME + ".jpg";
         Log.e("instartCropActivity", "test");
-
         UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(getCacheDir(), destinationFileName)));
         uCrop.withAspectRatio(1, 1);
         uCrop.withMaxResultSize(300, 300);
         uCrop.start(BlogSetupActivity.this);
     }
-
 }

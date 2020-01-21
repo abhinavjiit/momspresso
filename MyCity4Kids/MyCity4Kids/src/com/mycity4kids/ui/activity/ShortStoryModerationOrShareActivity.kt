@@ -172,9 +172,14 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
                 shareStory()
             }
             R.id.instagramShareWidget -> {
-                val hashtags = AppUtils.getHasTagFromCategoryList(storyCategoriesList)
-                AppUtils.copyToClipboard(hashtags)
-                ToastUtils.showToast(this, "Copied hashtags to clipboard")
+                try {
+                    val hashtags = AppUtils.getHasTagFromCategoryList(storyCategoriesList)
+                    AppUtils.copyToClipboard(hashtags)
+                    ToastUtils.showToast(this, getString(R.string.all_insta_share_clipboard_msg))
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
                 shareMedium = AppConstants.MEDIUM_INSTAGRAM
                 if (!createSharableImageWhileCheckingPermissions()) {
                     return
@@ -204,7 +209,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
                         userId + "", shareUrl, "$userId~$authorName", "Facebook")
             }
             AppConstants.MEDIUM_WHATSAPP -> {
-                if (AppUtils.shareImageWithWhatsApp(this, uri, getString(R.string.profile_follow_author,
+                if (AppUtils.shareImageWithWhatsApp(this, uri, getString(R.string.ss_follow_author,
                                 authorName, AppConstants.USER_PROFILE_SHARE_BASE_URL + userId))) {
                     Utils.pushShareStoryEvent(this, "PublishSuccessScreen", userId + "", shareUrl,
                             "$userId~$authorName", "Whatsapp")
@@ -217,7 +222,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
                 }
             }
             AppConstants.MEDIUM_GENERIC -> {
-                if (AppUtils.shareGenericImageAndOrLink(this, uri, getString(R.string.profile_follow_author,
+                if (AppUtils.shareGenericImageAndOrLink(this, uri, getString(R.string.ss_follow_author,
                                 authorName, AppConstants.USER_PROFILE_SHARE_BASE_URL + userId))) {
                     Utils.pushShareStoryEvent(this, "PublishSuccessScreen", userId + "", shareUrl,
                             "$userId~$authorName", "Generic")
