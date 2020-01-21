@@ -1282,7 +1282,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="all_report_content">REPORT CONTENT</string>
     <string name="background">প্রেক্ষাপট</string>
     <string name="text">টেক্সট</string>
-    <string name="size">শব্দের আকার ও আয়তন</string>
+    <string name="size">শব্দের আকার</string>
     <string name="align">শব্দের শ্রেণী বিন্যাস</string>
     <string name="short_s_max_title_word">Your title can have maximum 10 words.</string>
     <string name="editor.next">পরের ধাপ দেখুন</string>

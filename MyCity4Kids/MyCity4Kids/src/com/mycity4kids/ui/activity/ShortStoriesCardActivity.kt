@@ -4,7 +4,6 @@ import android.Manifest
 import android.accounts.NetworkErrorException
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -200,7 +199,7 @@ class ShortStoriesCardActivity : BaseActivity() {
         if (root is LinearLayout) {
             (root as LinearLayout).showDividers = LinearLayout.SHOW_DIVIDER_MIDDLE
             val drawable = GradientDrawable()
-            drawable.setColor(resources.getColor(R.color.app_red))
+            drawable.setColor(resources.getColor(R.color.color_E2E2E2))
             drawable.setSize(5, 1)
             (root as LinearLayout).dividerPadding = 10
             (root as LinearLayout).dividerDrawable = drawable
@@ -730,12 +729,6 @@ class ShortStoriesCardActivity : BaseActivity() {
         }
     }
 
-    fun setDividerColor(color: String) {
-        val dividerColor: GradientDrawable
-        dividerColor = divider.background as GradientDrawable
-        dividerColor.color = getHexColor(color)?.let { ColorStateList.valueOf(it) }
-    }
-
     fun getHexColor(color: String): Int? {
         val colors = color.substring(5, color.length - 1).split(",")
         try {
@@ -763,7 +756,7 @@ class ShortStoriesCardActivity : BaseActivity() {
     fun setBackground(url: String, fontColor: String, imageId: Int) {
         Picasso.with(BaseApplication.getAppContext()).load(url).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                 .fit().into(cardBg)
-        setDividerColor(fontColor)
+        getHexColor(fontColor)?.let { divider.setBackgroundColor(it) }
         getHexColor(fontColor)?.let { titleTv.setTextColor(it) }
         getHexColor(fontColor)?.let { storyTv.setTextColor(it) }
         font_Color = fontColor

@@ -1315,14 +1315,14 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="all_refer_url">https://www.momspresso.com/usersprofile/rewardsform?referrer=%1$s</string>
     <string name="please_add_item_multicollection_activity">Please Add Items</string>
     <string name="all_report_content">REPORT CONTENT</string>
-    <string name="background">BACKGROUND</string>
-    <string name="text">TEXT</string>
+    <string name="background">ಹಿನ್ನೆಲೆ</string>
+    <string name="text">ಟೆಕ್ಸ್ಟ್</string>
     <string name="size">ಸೈಜ್</string>
     <string name="align">ವಿನ್ಯಾಸ</string>
     <string name="short_s_max_title_word">Your title can have maximum 10 words.</string>
     <string name="editor.next">ಮುಂದೆ</string>
-    <string name="max_limit">You have reached maximum limit</string>
-    <string name="min_limit">You have reached minimum limit</string>
+    <string name="max_limit">ನಿಮ್ಮ ಫಾಂಟ್ ಸೈಜ್  ಗರಿಷ್ಟ ಮಟ್ಟದಲ್ಲಿದೆ</string>
+    <string name="min_limit">ನಿಮ್ಮ ಫಾಂಟ್ ಸೈಜ್ ಕನಿಷ್ಠ ಮಟ್ಟದಲ್ಲಿದೆ</string>
     <string name="library">Library</string>
     <string name="ss_share_with_friends">Share with Friends</string>
     <string name="short_s_add_title_Optional">ಐಚ್ಛಿಕ</string>
