@@ -749,15 +749,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 RecommendUnrecommendArticleResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS
                         .equals(responseData.getStatus())) {
-//                    if (!responseData.getData().isEmpty()) {
-//                        for (int i = 0; i < mDatalist.size(); i++) {
-//                            if (responseData.getData().get(0).equals(mDatalist.get(i).getId())) {
-//                                mDatalist.get(i).setLikesCount("" + (Integer.parseInt(mDatalist.get(i).getLikesCount()) + 1));
-//                                mDatalist.get(i).setLiked(true);
-//                                recyclerAdapter.notifyDataSetChanged();
-//                            }
-//                        }
-//                    }
                     if (likeStatus.equals("1")) {
                         if (!responseData.getData().isEmpty()) {
                             mDatalist.get(currentShortStoryPosition).setLikesCount(

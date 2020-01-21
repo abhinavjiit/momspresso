@@ -24,6 +24,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.appcompat.widget.AppCompatRadioButton;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -68,18 +81,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.view.menu.MenuBuilder;
-import androidx.appcompat.view.menu.MenuPopupHelper;
-import androidx.appcompat.widget.AppCompatRadioButton;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -526,9 +527,7 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
                 //startTracking();
             }
         }
-
     }
-
 
     @Override
     public void
@@ -631,7 +630,7 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
 
         String hashtags = AppUtils.getHasTagFromCategoryList(tagList);
         AppUtils.copyToClipboard(hashtags);
-        ToastUtils.showToast(ChallengeDetailListingActivity.this, "Copied hashtags to clipboard");
+        ToastUtils.showToast(ChallengeDetailListingActivity.this, getString(R.string.all_insta_share_clipboard_msg));
     }
 
     private void followAPICall(String authorId, int position) {
@@ -722,30 +721,6 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
-
-
-    private void createBitmapForSharingStory(int position) {
-        switch (position % 6) {
-            case 0:
-                AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_1, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
-                break;
-            case 1:
-                AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_2, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
-                break;
-            case 2:
-                AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_3, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
-                break;
-            case 3:
-                AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_4, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
-                break;
-            case 4:
-                AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_5, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
-                break;
-            case 5:
-                AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_6, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
-                break;
-        }
-    }
 
     private void recommendUnrecommentArticleAPI(String status, String articleId, String authorId, String author) {
         Utils.pushLikeStoryEvent(this, "ChallengeDetailListingScreen", userDynamoId + "", articleId, authorId + "~" + author);
@@ -869,15 +844,7 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
                 Snackbar.make(root, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
                         .show();
-                createBitmapForSharingStory(sharedStoryPosition);
-                if (AppConstants.MEDIUM_WHATSAPP.equals(shareMedium)) {
-                    AppUtils.shareStoryWithWhatsApp(this, mDatalist.get(sharedStoryPosition).getUserType(), mDatalist.get(sharedStoryPosition).getBlogPageSlug(),
-                            mDatalist.get(sharedStoryPosition).getTitleSlug(), "ChallengeDetailListingScreen", userDynamoId, mDatalist.get(sharedStoryPosition).getId(),
-                            mDatalist.get(sharedStoryPosition).getUserId(), mDatalist.get(sharedStoryPosition).getUserName());
-                } else if (AppConstants.MEDIUM_INSTAGRAM.equals(shareMedium)) {
-                    AppUtils.shareStoryWithInstagram(this, "ChallengeDetailListingScreen", userDynamoId, mDatalist.get(sharedStoryPosition).getId(),
-                            mDatalist.get(sharedStoryPosition).getUserId(), mDatalist.get(sharedStoryPosition).getUserName());
-                }
+                createBitmapForSharingStory();
             } else {
                 Log.i("Permissions", "storage permissions were NOT granted.");
                 Snackbar.make(root, R.string.permissions_not_granted,
@@ -982,7 +949,6 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
             }
             break;
         }
-
     }
 
     private void checkPermissionAndCreateShareableImage() {

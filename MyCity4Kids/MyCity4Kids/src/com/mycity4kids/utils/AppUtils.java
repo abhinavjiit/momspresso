@@ -1205,22 +1205,6 @@ public class AppUtils {
         return cs;
     }
 
-    public static void shareStoryWithFB(Activity context, String userType, String blogSlug,
-                                        String titleSlug,
-                                        String screenName, String userDynamoId, String articleId, String authorId,
-                                        String authorName) {
-        String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
-
-        if (ShareDialog.canShow(ShareLinkContent.class)) {
-            ShareLinkContent content = new ShareLinkContent.Builder()
-                    .setContentUrl(Uri.parse(shareUrl))
-                    .build();
-            new ShareDialog(context).show(content);
-        }
-        Utils.pushShareStoryEvent(context, screenName, userDynamoId + "", articleId,
-                authorId + "~" + authorName, "Facebook");
-    }
-
     public static void shareStoryWithWhatsApp(Context mContext, String userType, String blogSlug,
                                               String titleSlug,
                                               String screenName, String userDynamoId, String articleId, String authorId,

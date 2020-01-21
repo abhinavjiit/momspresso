@@ -1009,7 +1009,7 @@ class UserProfileActivity : BaseActivity(),
 
         val hashtags = AppUtils.getHasTagFromCategoryList(tagList)
         AppUtils.copyToClipboard(hashtags)
-        ToastUtils.showToast(this@UserProfileActivity, "Copied hashtags to clipboard")
+        ToastUtils.showToast(this@UserProfileActivity, getString(R.string.all_insta_share_clipboard_msg))
     }
 
     private fun recommendUnrecommentArticleAPI(status: String, articleId: String?, authorId: String?, author: String?) {
@@ -1288,11 +1288,7 @@ class UserProfileActivity : BaseActivity(),
                     if (shareCardType == "profile") {
                         AppUtils.getBitmapFromView(profileShareCardWidget, sharableProfileImageName)
                     } else {
-                        shareContentPosition?.let {
-                            AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_1,
-                                    userContentList?.get(it)?.title,
-                                    userContentList?.get(it)?.body, userContentList?.get(it)?.userName)
-                        }
+                        createBitmapForSharingStory()
                     }
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
@@ -1305,11 +1301,7 @@ class UserProfileActivity : BaseActivity(),
                 if (shareCardType == "profile") {
                     AppUtils.getBitmapFromView(profileShareCardWidget, sharableProfileImageName)
                 } else {
-                    shareContentPosition?.let {
-                        AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_1,
-                                userContentList?.get(it)?.title,
-                                userContentList?.get(it)?.body, userContentList?.get(it)?.userName)
-                    }
+                    createBitmapForSharingStory()
                 }
             } catch (e: Exception) {
                 Crashlytics.logException(e)
@@ -1355,20 +1347,7 @@ class UserProfileActivity : BaseActivity(),
                         AppUtils.getBitmapFromView(profileShareCardWidget, sharableProfileImageName)
                         shareGenericImage()
                     } else {
-                        if (AppConstants.MEDIUM_WHATSAPP == shareMedium) {
-                            shareContentPosition?.let {
-                                AppUtils.shareStoryWithWhatsApp(this, userContentList?.get(it)?.userType,
-                                        userContentList?.get(it)?.blogTitleSlug, userContentList?.get(it)?.titleSlug, "Profile",
-                                        SharedPrefUtils.getUserDetailModel(this).dynamoId, userContentList?.get(it)?.id,
-                                        authorId, userContentList?.get(it)?.userName)
-                            }
-                        } else if (AppConstants.MEDIUM_INSTAGRAM == shareMedium) {
-                            shareContentPosition?.let {
-                                AppUtils.shareStoryWithInstagram(this, "Profile",
-                                        SharedPrefUtils.getUserDetailModel(this).dynamoId, userContentList?.get(it)?.id,
-                                        authorId, userContentList?.get(it)?.userName)
-                            }
-                        }
+                        createBitmapForSharingStory()
                     }
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
@@ -1405,6 +1384,7 @@ class UserProfileActivity : BaseActivity(),
     }
 
     private fun getSharableViewForPosition(position: Int, medium: String) {
+        shareCardType = "story"
         storyShareCardWidget = recyclerView.layoutManager!!.findViewByPosition(position)!!.findViewById<StoryShareCardWidget>(R.id.storyShareCardWidget)
         shareStoryImageView = storyShareCardWidget.findViewById(R.id.storyImageView)
         shareMedium = medium

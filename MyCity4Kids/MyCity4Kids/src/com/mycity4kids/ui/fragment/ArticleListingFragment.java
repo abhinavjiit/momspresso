@@ -871,7 +871,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         String hashtags = AppUtils.getHasTagFromCategoryList(tagList);
         AppUtils.copyToClipboard(hashtags);
         if (isAdded())
-            ToastUtils.showToast(getActivity(), "Copied hashtags to clipboard");
+            ToastUtils.showToast(getActivity(), getActivity().getString(R.string.all_insta_share_clipboard_msg));
     }
 
     private void recommendUnrecommentArticleAPI(String status, String articleId, String authorId, String author) {

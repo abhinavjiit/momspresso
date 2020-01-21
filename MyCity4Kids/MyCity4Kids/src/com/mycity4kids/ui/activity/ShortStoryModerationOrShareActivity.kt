@@ -208,26 +208,26 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
         when (shareMedium) {
             AppConstants.MEDIUM_FACEBOOK -> {
                 SharingUtils.shareViaFacebook(this)
-                Utils.pushShareStoryEvent(this, "PublishSuccessScreen",
+                Utils.pushShareStoryEvent(this, "ShortStoryModerationOrShareActivity",
                         userId + "", shareUrl, "$userId~$authorName", "Facebook")
             }
             AppConstants.MEDIUM_WHATSAPP -> {
                 if (AppUtils.shareImageWithWhatsApp(this, uri, getString(R.string.ss_follow_author,
                                 authorName, AppConstants.USER_PROFILE_SHARE_BASE_URL + userId))) {
-                    Utils.pushShareStoryEvent(this, "PublishSuccessScreen", userId + "", shareUrl,
+                    Utils.pushShareStoryEvent(this, "ShortStoryModerationOrShareActivity", userId + "", shareUrl,
                             "$userId~$authorName", "Whatsapp")
                 }
             }
             AppConstants.MEDIUM_INSTAGRAM -> {
                 if (AppUtils.shareImageWithInstagram(this, uri)) {
-                    Utils.pushShareStoryEvent(this, "PublishSuccessScreen", userId + "", shareUrl,
+                    Utils.pushShareStoryEvent(this, "ShortStoryModerationOrShareActivity", userId + "", shareUrl,
                             "$userId~$authorName", "Instagram")
                 }
             }
             AppConstants.MEDIUM_GENERIC -> {
                 if (AppUtils.shareGenericImageAndOrLink(this, uri, getString(R.string.ss_follow_author,
                                 authorName, AppConstants.USER_PROFILE_SHARE_BASE_URL + userId))) {
-                    Utils.pushShareStoryEvent(this, "PublishSuccessScreen", userId + "", shareUrl,
+                    Utils.pushShareStoryEvent(this, "ShortStoryModerationOrShareActivity", userId + "", shareUrl,
                             "$userId~$authorName", "Generic")
                 }
             }
