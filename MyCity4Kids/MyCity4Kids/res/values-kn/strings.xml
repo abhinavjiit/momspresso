@@ -1327,7 +1327,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="ss_share_with_friends">Share with Friends</string>
     <string name="short_s_add_title_Optional">ಐಚ್ಛಿಕ</string>
     <string name="story_text_description_hindi">ನಿಮ್ಮ ನುಡಿಗಟ್ಟುಗಳನ್ನು ಇಲ್ಲಿ ಬರೆಯಿರಿ</string>
-    <string name="stroy_overflow_layout">ನಿಮ್ಮ ಕಥೆ ಕೊಂಚ ಉದ್ದವೆನಿಸುತ್ತಿದೆ. ಫಾಂಟ್ ಸೈಜ್ ಅಥವಾ ಕಥೆಯ ಪದಗಳ ಸಂಖ್ಯೆಯನ್ನು ಕಡಿಮೆಗೊಳಿಸಿ.</string>
+    <string name="stroy_overflow_layout">ಮುಂದುವರಿಯಲು ಫಾಂಟ್ ಸೈಜ್ ಅಥವಾ ಪದಗಳ ಸಂಖ್ಯೆಯನ್ನು ಕೆಡಿಮೆಗೊಳಿಸಿ</string>
     <string name="short_s_write">ಬರೆಯಿರಿ</string>
     <string name="ss_follow_author">Follow %1$s and check out other articles by her on Momspresso.\n %2$s</string>
     <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
