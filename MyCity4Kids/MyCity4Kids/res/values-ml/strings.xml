@@ -1332,9 +1332,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="ss_share_with_friends">Share with Friends</string>
     <string name="short_s_add_title_Optional">ഐച്ഛികം</string>
     <string name="story_text_description_hindi">നിങ്ങളുടെ ഉദ്ധരണികൾ ഇവിടെ എഴുതാം</string>
-    <string name="stroy_overflow_layout">നിങ്ങളുടെ കഥ വളരെ ദൈർ‌ഘ്യമേറിയതാണ്. ദയവായി ഫോണ്ടിന്റെ വലുപ്പം കുറയ്‌ക്കുക അല്ലെങ്കിൽ‌ കഥ  ചെറുതാക്കുക.</string>
+    <string name="stroy_overflow_layout">തുടരാനായി, ഒന്നുകിൽ ടെക്സ്റ്റ് ഫോണ്ട് വലുപ്പം കുറയ്ക്കുക അല്ലെങ്കിൽ കഥയുടെ ദൈർഘ്യം കുറയ്ക്കുക.</string>
     <string name="short_s_write">എഴുതുക</string>
     <string name="ss_follow_author">Follow %1$s and check out other articles by her on Momspresso.\n %2$s</string>
     <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
-    <string name="moderation_or_share_story_moderation_message">Your article is up for moderation. You\\\'ll receive an email within 24 hours regarding the status of the story.</string>
+    <string name="moderation_or_share_story_moderation_message">Your article is up for moderation. You\'ll receive an email within 24 hours regarding the status of the story.</string>
 </resources>

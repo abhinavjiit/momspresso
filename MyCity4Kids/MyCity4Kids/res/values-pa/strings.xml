@@ -695,7 +695,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="editor_body_min_words">Please write atleast 300 words to publish</string>
     <string name="draft_oops">ਓਹ ਹੋ!!</string>
     <string name="draft_not_saved">Draft could not be saved, your current changes will be lost if you exit now. Would you like to exit?</string>
-    <string name="draft_save_success">Draft Successfully saved</string>
+    <string name="draft_save_success">ਡਰਾਫਟ ਸਫਲਤਾਪੂਰਵਕ ਸੇਵ ਹੋ ਗਿਆ</string>
     <string name="verify_email">Mail sent to email address. Please click and verify</string>
     <string name="video_upload_fail">Unable to upload the video. Please try again later.</string>
     <string name="connectivity_unavailable">No connectivity available</string>
@@ -944,7 +944,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="delete_comment">ਕਮੈਂਟ ਮਿਟਾਓ</string>
     <string name="edit_comment">ਕਮੈਂਟ ਚ ਬਦਲਾਵ ਕਰੋ</string>
     <string name="report">ਰਿਪੋਰਟ</string>
-    <string name="select_atleast_one_topic">Please choose atleast one topic to continue</string>
+    <string name="select_atleast_one_topic">ਕਿਰਪਾ ਕਰਕੇ ਜਾਰੀ ਰੱਖਣ ਲਈ ਘੱਟੋ ਘੱਟ ਇੱਕ ਵਿਸ਼ਾ ਚੁਣੋ</string>
     <string name="your_article_is_successfully_bookmarked">ਤੁਹਾਡਾ ਲੇਖ ਸਫਲਤਾਪੂਰਵਕ ਬੁੱਕਮਾਰਕ ਕੀਤਾ ਗਿਆ ਹੈ.</string>
     <string name="successfully_updated">ਸਫਲਤਾਪੂਰਵਕ ਅੱਪਡੇਟ ਕੀਤਾ !</string>
 
@@ -1349,9 +1349,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="library">ਲਾਇਬ੍ਰੇਰੀ</string>
     <string name="ss_share_with_friends">Share with Friends</string>
     <string name="short_s_add_title_Optional">ਵਿਕਲਪਿਕ</string>
-    <string name="stroy_overflow_layout">ਤੁਹਾਡੀ ਕਹਾਣੀ ਬਹੁਤ ਲੰਬੀ ਹੈ. ਕਿਰਪਾ ਕਰਕੇ ਫੋਂਟ ਦਾ ਆਕਾਰ ਘਟਾਓ ਜਾਂ ਕਹਾਣੀ ਨੂੰ ਛੋਟਾ ਕਰੋ</string>
+    <string name="stroy_overflow_layout">ਕਿਰਪਾ ਕਰਕੇ ਅੱਗੇ ਜਾਣ ਲਈ ਟੈਕਸਟ ਫੋਂਟ ਦਾ ਆਕਾਰ ਘਟਾਓ ਜਾਂ ਕਹਾਣੀ ਦੀ ਲੰਬਾਈ ਨੂੰ ਛੋਟਾ ਕਰੋ</string>
     <string name="short_s_write">ਲਿਖੋ</string>
     <string name="ss_follow_author">Follow %1$s and check out other articles by her on Momspresso.\n %2$s</string>
     <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
-    <string name="moderation_or_share_story_moderation_message">Your article is up for moderation. You\\\'ll receive an email within 24 hours regarding the status of the story.</string>
+    <string name="moderation_or_share_story_moderation_message">ਤੁਹਾਡੀ ਕਹਾਣੀ ਮੋਡਰੇਸ਼ਨ ਅਧੀਨ ਹੈ। ਤੁਸੀਂ ਕਹਾਣੀ ਦੀ ਸਥਿਤੀ ਦੇ ਸੰਬੰਧ ਵਿੱਚ 24 ਘੰਟਿਆਂ ਦੇ ਅੰਦਰ ਇੱਕ ਈਮੇਲ ਪ੍ਰਾਪਤ ਕਰੋਗੇ</string>
 </resources>
