@@ -605,13 +605,13 @@
     <string name="upload_bigger_image">Please upload bigger image</string>
     <string name="upload_min_width">Please upload image with minimum width of 720 pixels</string>
     <string name="image_upload_wait">Please wait while image is being uploaded</string>
-    <string name="editor_title_empty">Title can\'t be empty</string>
+    <string name="editor_title_empty">শিরোনাম ফাঁকা রাখা যাবে না</string>
     <string name="editor_body_empty">Body can\'t be empty</string>
     <string name="editor_title_char_limit">Unable to publish. Title should smaller than 150 characters</string>
     <string name="editor_body_min_words">Please write atleast 300 words to publish</string>
     <string name="draft_oops">Oops!</string>
     <string name="draft_not_saved">Draft could not be saved, your current changes will be lost if you exit now. Would you like to exit?</string>
-    <string name="draft_save_success">Draft Successfully saved</string>
+    <string name="draft_save_success">সফলভাবে ড্রাফ্ট সেভ হয়েছে</string>
     <string name="verify_email">Mail sent to email address. Please click and verify</string>
     <string name="video_upload_fail">Unable to upload the video. Please try again later.</string>
     <string name="connectivity_unavailable">No connectivity available</string>
