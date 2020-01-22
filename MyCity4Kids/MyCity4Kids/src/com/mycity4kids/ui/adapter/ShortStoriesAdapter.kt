@@ -41,7 +41,7 @@ class ShortStoriesAdapter(activity: Context, showCategory: Boolean) : BaseAdapte
         if (position == 0) {
             viewHolder.topicsNameTextView?.visibility = View.VISIBLE
             viewHolder.topicsNameTextView?.text = context.resources.getString(R.string.library)
-            viewHolder.tagImageView?.setImageDrawable(context.resources.getDrawable(R.drawable.ic_library_gradient))
+            viewHolder.tagImageView?.setImageDrawable(context.resources.getDrawable(R.drawable.ic_library_gradient, null))
             viewHolder.tagImageView?.clipToOutline = true
         } else {
             viewHolder.topicsNameTextView?.visibility = View.GONE

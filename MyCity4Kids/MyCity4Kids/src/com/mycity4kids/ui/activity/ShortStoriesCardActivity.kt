@@ -478,7 +478,7 @@ class ShortStoriesCardActivity : BaseActivity() {
 
         val retro = BaseApplication.getInstance().retrofit
         val imageUploadAPI = retro.create(ImageUploadAPI::class.java)
-        path = MediaStore.Images.Media.insertImage(contentResolver, finalBitmap, "Title", null)
+        path = MediaStore.Images.Media.insertImage(contentResolver, finalBitmap, "Title" + System.currentTimeMillis(), null)
         Log.d("ShortStory", "Path = $path")
 
         if (path != null) {

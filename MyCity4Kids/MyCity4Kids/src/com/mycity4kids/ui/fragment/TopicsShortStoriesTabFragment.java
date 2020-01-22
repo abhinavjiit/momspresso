@@ -48,7 +48,6 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
-import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -70,7 +69,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.AddShortStoryActivity;
 import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
-import com.mycity4kids.ui.activity.ShortStoryModerationOrShareActivity;
 import com.mycity4kids.ui.activity.TopicsListingFragment;
 import com.mycity4kids.ui.adapter.ShortStoriesRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
@@ -144,8 +142,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private StoryShareCardWidget storyShareCardWidget;
     private ImageView shareStoryImageView;
     private ArticleListingResult sharedStoryItem;
-    private ArrayList<ArticleListingResult> articleDataModelsSubList;
-
 
     @Nullable
     @Override
@@ -423,32 +419,27 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             }
             break;
             case R.id.storyImageView1:
-                int page = (position / 15);
-                int posSubList = position % 15;
-                int startIndex = page * 15;
-                int endIndex = startIndex + 15;
-                articleDataModelsSubList = new ArrayList<>(mDatalist.subList(startIndex, endIndex));
-                if (BuildConfig.DEBUG) {
-                    Intent Tintent = new Intent(getActivity(), ShortStoryModerationOrShareActivity.class);
-                    Tintent.putExtra("shareUrl", articleDataModelsSubList.get(posSubList).getStoryImage());
-                    Tintent.putExtra(Constants.ARTICLE_ID, articleDataModelsSubList.get(posSubList).getId());
-                    startActivity(Tintent);
-                } else {
-                    Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
-                    intent.putExtra(Constants.ARTICLE_ID, articleDataModelsSubList.get(posSubList).getId());
-                    intent.putExtra(Constants.AUTHOR_ID, articleDataModelsSubList.get(posSubList).getUserId());
-                    intent.putExtra(Constants.BLOG_SLUG, articleDataModelsSubList.get(posSubList).getBlogPageSlug());
-                    intent.putExtra(Constants.TITLE_SLUG, articleDataModelsSubList.get(posSubList).getTitleSlug());
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM,
-                            "" + currentSubTopic.getParentName());
-                    intent.putExtra(Constants.FROM_SCREEN, "TopicsShortStoryTabFragment");
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + posSubList);
-                    intent.putParcelableArrayListExtra("pagerListData", articleDataModelsSubList);
-                    intent.putExtra(Constants.AUTHOR,
-                            articleDataModelsSubList.get(posSubList).getUserId() + "~" + articleDataModelsSubList.get(posSubList)
-                                    .getUserName());
-                    startActivity(intent);
-                }
+//                if (BuildConfig.DEBUG) {
+//                    Intent Tintent = new Intent(getActivity(), ShortStoryModerationOrShareActivity.class);
+//                    Tintent.putExtra("shareUrl", mDatalist.get(position).getStoryImage());
+//                    Tintent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
+//                    startActivity(Tintent);
+//                } else {
+                Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
+                intent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
+                intent.putExtra(Constants.AUTHOR_ID, mDatalist.get(position).getUserId());
+                intent.putExtra(Constants.BLOG_SLUG, mDatalist.get(position).getBlogPageSlug());
+                intent.putExtra(Constants.TITLE_SLUG, mDatalist.get(position).getTitleSlug());
+                intent.putExtra(Constants.ARTICLE_OPENED_FROM,
+                        "" + currentSubTopic.getParentName());
+                intent.putExtra(Constants.FROM_SCREEN, "TopicsShortStoryTabFragment");
+                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                intent.putParcelableArrayListExtra("pagerListData", mDatalist);
+                intent.putExtra(Constants.AUTHOR,
+                        mDatalist.get(position).getUserId() + "~" + mDatalist.get(position)
+                                .getUserName());
+                startActivity(intent);
+//                }
                 break;
             case R.id.storyRecommendationContainer:
                 if (!isRecommendRequestRunning) {

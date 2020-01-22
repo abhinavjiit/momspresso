@@ -1284,9 +1284,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="ss_share_with_friends">Share with Friends</string>
     <string name="short_s_add_title_Optional">விருப்பமானவை</string>
     <string name="story_text_description_hindi">உங்கள் கவிதைகளை இங்கு எழுதலாம்</string>
-    <string name="stroy_overflow_layout">உங்கள் கதை  நீளமாக உள்ளது . தயவுசெய்து எழுத்தளவைக் குறைக்கவும் அல்லது கதையைச் சுருக்கவும்.</string>
+    <string name="stroy_overflow_layout">தொடர எழுத்தளவு  (அ) கதையின் நீளத்தை குறைக்கவும்.</string>
     <string name="short_s_write">எழுத</string>
     <string name="ss_follow_author">Follow %1$s and check out other articles by her on Momspresso.\n %2$s</string>
     <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
-    <string name="moderation_or_share_story_moderation_message">Your article is up for moderation. You\\\'ll receive an email within 24 hours regarding the status of the story.</string>
+    <string name="moderation_or_share_story_moderation_message">உங்கள் கதை மதிவாய்வுக்கு அனுப்பப்பட்டுள்ளது. இன்னும் 24 மணி நேரத்திற்குள் கதையின் நிலை குறித்த மின்னஞ்சல் உங்களை வந்தடையும்.</string>
 </resources>

@@ -574,7 +574,7 @@
     <string name="editor_body_min_words">Please write atleast 300 words to publish</string>
     <string name="draft_oops">Oops!</string>
     <string name="draft_not_saved">Draft could not be saved, your current changes will be lost if you exit now. Would you like to exit?</string>
-    <string name="draft_save_success">Draft Successfully saved</string>
+    <string name="draft_save_success">ಯಶಸ್ವಿಯಾಗಿ ಸೇವ್ ಮಾಡಲಾಗಿದೆ</string>
     <string name="verify_email">Mail sent to email address. Please click and verify</string>
     <string name="video_upload_fail">Unable to upload the video. Please try again later.</string>
     <string name="connectivity_unavailable">No connectivity available</string>
@@ -1327,9 +1327,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="ss_share_with_friends">Share with Friends</string>
     <string name="short_s_add_title_Optional">ಐಚ್ಛಿಕ</string>
     <string name="story_text_description_hindi">ನಿಮ್ಮ ನುಡಿಗಟ್ಟುಗಳನ್ನು ಇಲ್ಲಿ ಬರೆಯಿರಿ</string>
-    <string name="stroy_overflow_layout">ನಿಮ್ಮ ಕಥೆ ಕೊಂಚ ಉದ್ದವೆನಿಸುತ್ತಿದೆ. ಫಾಂಟ್ ಸೈಜ್ ಅಥವಾ ಕಥೆಯ ಪದಗಳ ಸಂಖ್ಯೆಯನ್ನು ಕಡಿಮೆಗೊಳಿಸಿ.</string>
+    <string name="stroy_overflow_layout">ಮುಂದುವರಿಯಲು ಫಾಂಟ್ ಸೈಜ್ ಅಥವಾ ಪದಗಳ ಸಂಖ್ಯೆಯನ್ನು ಕೆಡಿಮೆಗೊಳಿಸಿ</string>
     <string name="short_s_write">ಬರೆಯಿರಿ</string>
     <string name="ss_follow_author">Follow %1$s and check out other articles by her on Momspresso.\n %2$s</string>
     <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
-    <string name="moderation_or_share_story_moderation_message">Your article is up for moderation. You\\\'ll receive an email within 24 hours regarding the status of the story.</string>
+    <string name="moderation_or_share_story_moderation_message">ನಿಮ್ಮ ಲೇಖನವನ್ನು ಅನುಮೋದನೆಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.  ಮುಂದಿನ 24 ಗಂಟೆಗಳ ಒಳಗೆ ನಿಮ್ಮ ಲೇಖನದ ಅನುಮೋದನೆ ಕುರಿತು ಇಮೇಲ್ ನಿರೀಕ್ಷಿಸಿ.</string>
 </resources>

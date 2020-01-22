@@ -818,7 +818,7 @@
     <string name="delete_comment">DELETE COMMENT</string>
     <string name="edit_comment">EDIT COMMENT</string>
     <string name="report">REPORT</string>
-    <string name="select_atleast_one_topic">Please choose atleast one topic to continue</string>
+    <string name="select_atleast_one_topic">కొనసాగించడానికి దయచేసి కనీసం ఒక అంశాన్ని ఎంచుకోండి</string>
     <string name="your_article_is_successfully_bookmarked">మీ వ్యాసం విజయవంతంగా బుక్ మార్క్ చేయబడింది.</string>
     <string name="successfully_updated">Successfully updated!</string>
     <string name="submit_story_text">మీ కథను సబ్మిట్ చేయండి</string>
@@ -1287,9 +1287,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="ss_share_with_friends">Share with Friends</string>
     <string name="short_s_add_title_Optional">ఇష్ట ప్రకారం</string>
     <string name="story_text_description_hindi">మీరు మీ సూక్తులను ఇక్కడ రాయండి</string>
-    <string name="stroy_overflow_layout">మీ కథ చాలా పెద్దగా ఉంది. ఫాంట్ సైజ్ తగ్గించండి లేదా కథ నిడివి తగ్గించండి.</string>
+    <string name="stroy_overflow_layout">మీ  టెక్స్ట్ ఫాంట్ సైజ్ తగ్గించండి లేదా కథ చిన్నగా వ్రాయండి</string>
     <string name="short_s_write">వ్రాయండి</string>
     <string name="ss_follow_author">Follow %1$s and check out other articles by her on Momspresso.\n %2$s</string>
     <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
-    <string name="moderation_or_share_story_moderation_message">Your article is up for moderation. You\\\'ll receive an email within 24 hours regarding the status of the story.</string>
+    <string name="moderation_or_share_story_moderation_message">మీ కథ మాడరేషన్లో ఉంది. రాబోయే 24 గంటల్లో మీకు మీ కథ స్టేటస్  ఇమెయిల్ అందుతుంది</string>
 </resources>

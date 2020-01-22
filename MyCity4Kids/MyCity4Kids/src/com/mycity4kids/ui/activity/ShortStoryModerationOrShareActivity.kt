@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -86,7 +87,6 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.cross_icon_back)
         supportActionBar?.title = getString(R.string.ad_bottom_bar_generic_share)
-
         fbShareWidget?.setOnClickListener(this)
         whatsAppShareWidget?.setOnClickListener(this)
         instagramShareWidget?.setOnClickListener(this)
@@ -100,12 +100,11 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
             moderationContainer?.visibility = View.GONE
             publishContainer?.visibility = View.VISIBLE
         }
-
-        getShortStoryDetails(storyId)
+        showProgressDialog(getString(R.string.please_wait))
+        Handler().postDelayed(Runnable { getShortStoryDetails(storyId) }, 4000)
     }
 
     private fun getShortStoryDetails(storyId: String?) {
-        showProgressDialog(getString(R.string.please_wait))
         val retro = BaseApplication.getInstance().retrofit
         val shortStoryAPI = retro.create(ShortStoryAPI::class.java)
         val call: Call<ShortStoryDetailResult> = shortStoryAPI.getShortStoryDetails(storyId, "articleId")

@@ -18,6 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/space_3"
+            app:cardCornerRadius="3dp"
             app:cardElevation="@dimen/space_2">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,7 +29,6 @@
                     android:id="@+id/tagImageView"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/space_80"
-                    android:background="@drawable/shape_collection_grid_view_rounded"
                     android:scaleType="fitXY"
                     app:layout_constraintDimensionRatio="H,16:9"
                     app:layout_constraintEnd_toEndOf="parent"

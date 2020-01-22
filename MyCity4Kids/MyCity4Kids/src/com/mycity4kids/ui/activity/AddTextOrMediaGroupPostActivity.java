@@ -839,7 +839,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
 
     @Override
     public void onPostExecute(Bitmap image) {
-        String path = MediaStore.Images.Media.insertImage(AddTextOrMediaGroupPostActivity.this.getContentResolver(), image, "Title", null);
+        String path = MediaStore.Images.Media.insertImage(AddTextOrMediaGroupPostActivity.this.getContentResolver(), image, "Title" + System.currentTimeMillis(), null);
         if (path != null) {
             Uri imageUriTemp = Uri.parse(path);
             File file2 = FileUtils.getFile(this, imageUriTemp);

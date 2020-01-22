@@ -96,6 +96,12 @@ public class MyFcmListenerService extends FirebaseMessagingService {
             pushNotificationModel = new Gson().fromJson(msg, PushNotificationModel.class);
         } catch (JsonSyntaxException jse) {
             try {
+                Log.e("PUSH_DATA", "***---***--msg--" + msg);
+                Log.e("PUSH_DATA", "***---***--remoteMsg--" + remoteMessage.getData().toString());
+            } catch (Exception e) {
+
+            }
+            try {
                 pushNotificationModel = new Gson().fromJson(new Gson().toJson(remoteMessage.getData()), PushNotificationModel.class);
             } catch (Exception e) {
                 Crashlytics.logException(e);
@@ -745,6 +751,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
 
                 } else if (type.equals("remote_config_silent_update")) {
                     SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(BaseApplication.getAppContext(), true);
+                } else if (type.equals("shortStoryDetails")) {
+
                 } else {
                     Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "default");
                     String message = pushNotificationModel.getMessage_id();

@@ -18,13 +18,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/space_3"
+            app:cardCornerRadius="3dp"
             app:cardElevation="@dimen/space_2">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/tagImageView"
                 android:layout_width="match_parent"
                 android:layout_height="110dp"
-                android:background="@drawable/shape_collection_grid_view_rounded"
                 android:scaleType="fitXY"
                 android:src="@drawable/default_article" />
         </androidx.cardview.widget.CardView>
