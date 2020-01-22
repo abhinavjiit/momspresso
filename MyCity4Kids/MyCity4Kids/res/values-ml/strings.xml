@@ -32,7 +32,7 @@
     <string name="hint_text">What are you looking for ?</string>
     <string name="locality_txt">In which location?</string>
     <string name="error_network">ഉപകരണത്തിന് നെറ്റ്‌വർക്ക് കവറേജ് ലഭ്യമല്ല</string>
-    <string name="please_wait">Please Wait...</string>
+    <string name="please_wait">കാത്തിരിക്കൂ...</string>
     <string name="no_result_txt">No result found.</string>
     <string name="went_wrong">എന്തോ തെറ്റ് പറ്റി</string>
     <string name="server_went_wrong">സെർവറിൽ എന്തോ തെറ്റ് പറ്റി</string>
