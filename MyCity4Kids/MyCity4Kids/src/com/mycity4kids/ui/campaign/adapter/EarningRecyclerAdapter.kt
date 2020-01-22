@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
 import com.mycity4kids.models.campaignmodels.AllCampaignTotalPayoutResponse
@@ -37,21 +38,21 @@ class EarningRecyclerAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (payoutsList!!.size > 0) {
+        if (payoutsList!!.isNotEmpty()) {
             val item = payoutsList!!.get(position)
             Picasso.with(context).load(item.campaignDetails.brandDetails.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.brandImageView)
-            holder.settleAmount.setText("\u20b9" + item.final_payout)
-            holder.brandName.setText(item.campaignDetails.brandDetails.name)
-            holder.campaignName.setText(item.campaignDetails.name)
+            holder.settleAmount.text = ("\u20b9" + item.final_payout)
+            holder.brandName.text = (item.campaignDetails.brandDetails.name)
+            holder.campaignName.text = (item.campaignDetails.name)
 
             if (item.payment_meta.size == 1) {
-                if (item.payment_meta[0].source.equals("rewards")) {
+                if (item.payment_meta[0].source == "rewards") {
                     holder.relativeFour.visibility = View.GONE
-                    holder.totalAmount.setText("\u20b9" + item.payment_meta[0].total_amount.toString())
-                    holder.netAmount.setText("\u20b9" + item.payment_meta[0].net_amount)
-                    holder.tds.setText("TDS (" + item.payment_meta[0].tax_percentage + "%)")
-                    holder.paymentStatus.setText(setStatus(item.payment_status, holder))
-                    holder.taxAmount.setText("- \u20b9" + item.payment_meta[0].tax_amount)
+                    holder.totalAmount.text = ("\u20b9" + item.payment_meta[0].total_amount.toString())
+                    holder.netAmount.text = ("\u20b9" + item.payment_meta[0].net_amount)
+                    holder.tds.text = ("TDS (" + item.payment_meta[0].tax_percentage + "%)")
+                    holder.paymentStatus.text = (setStatus(item.payment_status, holder))
+                    holder.taxAmount.text = ("- \u20b9" + item.payment_meta[0].tax_amount)
                     holder.earningss.visibility = View.VISIBLE
                     holder.Tds.visibility = View.VISIBLE
                 } else {
@@ -59,28 +60,28 @@ class EarningRecyclerAdapter(
                     holder.earningss.visibility = View.GONE
                     holder.Tds.visibility = View.GONE
                     holder.relativeFour.visibility = View.VISIBLE
-                    holder.netAmount.setText("\u20b9" + item.payment_meta[0].net_amount)
-                    holder.paymentStatus.setText(setStatus(item.payment_status, holder))
+                    holder.netAmount.text = ("\u20b9" + item.payment_meta[0].net_amount)
+                    holder.paymentStatus.text = (setStatus(item.payment_status, holder))
 
                 }
             } else {
+                totalEarning = 0.0
                 for (i in 0 until item.payment_meta.size) {
-                    if (item.payment_meta[i].source.equals("rewards")) {
-                        holder.totalAmount.setText("\u20b9" + item.payment_meta[i].total_amount.toString())
+                    if (item.payment_meta[i].source == "rewards") {
+                        holder.totalAmount.text = ("\u20b9" + item.payment_meta[i].total_amount.toString())
 
-                        totalEarning = totalEarning + item.payment_meta[i].net_amount
-                        holder.tds.setText("TDS (" + item.payment_meta[i].tax_percentage + "%)")
-                        holder.paymentStatus.setText(setStatus(item.payment_status, holder))
-                        holder.taxAmount.setText("- \u20b9" + item.payment_meta[i].tax_amount)
+                        totalEarning += item.payment_meta[i].net_amount
+                        holder.tds.text = ("TDS (" + item.payment_meta[i].tax_percentage + "%)")
+                        holder.paymentStatus.text = (setStatus(item.payment_status, holder))
+                        holder.taxAmount.text = ("- \u20b9" + item.payment_meta[i].tax_amount)
                     } else {
                         holder.reimbursementAmount.text = item.payment_meta[i].total_amount.toString()
-                        holder.paymentStatus.setText(setStatus(item.payment_status, holder))
-                        totalEarning = totalEarning + item.payment_meta[i].net_amount
+                        holder.paymentStatus.text = (setStatus(item.payment_status, holder))
+                        totalEarning += item.payment_meta[i].net_amount
 
                     }
-
                 }
-                holder.netAmount.setText("\u20b9" + totalEarning)
+                holder.netAmount.text = ("\u20b9" + totalEarning)
 
             }
 
@@ -100,15 +101,15 @@ class EarningRecyclerAdapter(
     }
 
     private fun setStatus(payment_status: Int, holder: ViewHolder): String {
-        var status: String = ""
+        var status = ""
         if (payment_status == 0 || payment_status == 2) {
             status = "In Process"
-            holder.paymentStatus.setTextColor(context.resources.getColor(R.color.color_F5A623))
+            holder.paymentStatus.setTextColor(ContextCompat.getColor(context, R.color.color_F5A623))
         } else if (payment_status == 1) {
             status = "Completed"
-            holder.paymentStatus.setTextColor(context.resources.getColor(R.color.color_56CD6A))
+            holder.paymentStatus.setTextColor(ContextCompat.getColor(context, R.color.color_56CD6A))
         }
-        return status;
+        return status
     }
 
     override fun getItemCount(): Int = payoutsList!!.size
