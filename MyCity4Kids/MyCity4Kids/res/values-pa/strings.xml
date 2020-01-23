@@ -1062,7 +1062,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="notification">Notification</string>
     <string name="about_video">ਬਾਰੇ</string>
     <string name="story_text_title_hindi">विचारसागर</string>
-    <string name="story_text_description_hindi">ਤੁਸੀਂ ਆਪਣੇ ਵਿਚਾਰ ਇੱਥੇ ਲਿਖ ਸਕਦੇ ਹੋ</string>
+    <string name="story_text_description_hint">ਤੁਸੀਂ ਆਪਣੇ ਵਿਚਾਰ ਇੱਥੇ ਲਿਖ ਸਕਦੇ ਹੋ</string>
     <string name="campaign_name">Campaign Name \n Facebook Campaign</string>
 
 

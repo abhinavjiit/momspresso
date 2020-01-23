@@ -380,7 +380,7 @@
         android:layout_height="match_parent"
         android:visibility="invisible">
 
-        <include layout="@layout/choose_option_challeneg" />
+        <include layout="@layout/choose_short_story_category_pop_up" />
 
 
     </RelativeLayout>

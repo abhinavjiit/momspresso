@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -228,7 +230,7 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
                 if (isAdded()) {
                     Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_gujarati));
                 }
-                selectedLang = AppConstants.LOCAL_GUJARATI;
+                selectedLang = AppConstants.LOCALE_GUJARATI;
                 englishTextView.setSelected(false);
                 hindiTextView.setSelected(false);
                 marathiTextView.setSelected(false);
@@ -246,7 +248,7 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
                 if (isAdded()) {
                     Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_punjabi));
                 }
-                selectedLang = AppConstants.LOCAL_PUNJABI;
+                selectedLang = AppConstants.LOCALE_PUNJABI;
                 englishTextView.setSelected(false);
                 hindiTextView.setSelected(false);
                 marathiTextView.setSelected(false);

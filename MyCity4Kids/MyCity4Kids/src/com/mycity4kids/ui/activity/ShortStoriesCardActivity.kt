@@ -96,7 +96,7 @@ class ShortStoriesCardActivity : BaseActivity() {
     private lateinit var draftChallengeName: String
     private lateinit var currentActiveChallenge: String
     private lateinit var currentActiveChallengeId: String
-    private var flag: Boolean = false
+    private var isDraftTaggedInActiveChallenge: Boolean = false
     private var ssTopicsList: ArrayList<ExploreTopicsModel>? = null
     private lateinit var shortStoryDraftOrPublishRequest: ShortStoryDraftOrPublishRequest
     private var titleTvSize: Float = 0.0f
@@ -105,7 +105,7 @@ class ShortStoriesCardActivity : BaseActivity() {
     private lateinit var font_Color: String
     private var categoryImageId: Int = 0
     private lateinit var shareUrl: String
-    private var shortStoryId: String = "article-bd64fa1c15814b8cae079bf4cdadc126"
+    private var shortStoryId: String? = ""
     private var count: Int = 0
     private lateinit var rlLayout: RelativeLayout
     private var categoryId: String = "category-743892a865774baf9c20cbcc5c01d35f"
@@ -168,7 +168,7 @@ class ShortStoriesCardActivity : BaseActivity() {
         if (intent.getStringExtra("categoryId") != null)
             categoryId = intent.getStringExtra("categoryId")
 
-        flag = intent.getBooleanExtra("flag", false)
+        isDraftTaggedInActiveChallenge = intent.getBooleanExtra("isDraftTaggedInActiveChallenge", false)
         if (intent.getSerializableExtra("listDraft") != null)
             listDraft = intent.getSerializableExtra("listDraft") as ArrayList<Map<String, String>>
         if (intent.getSerializableExtra("tagsList") != null)
@@ -283,28 +283,36 @@ class ShortStoriesCardActivity : BaseActivity() {
     private fun publishStory() {
         if ("publishedList" == source) {
             shortStoryDraftOrPublishRequest = ShortStoryDraftOrPublishRequest()
-            shortStoryDraftOrPublishRequest.setTitle(titleTv.text.toString().trim({ it <= ' ' }))
-            shortStoryDraftOrPublishRequest.setBody(storyTv.text.toString())
-            shortStoryDraftOrPublishRequest.setUserAgent("android")
-            shortStoryDraftOrPublishRequest.setType("0")
-            if (AppConstants.LOCALE_ENGLISH == SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) {
-                shortStoryDraftOrPublishRequest.setLang("0")
-            } else if (AppConstants.LOCALE_HINDI == SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) {
-                shortStoryDraftOrPublishRequest.setLang("1")
-            } else if (AppConstants.LOCALE_MARATHI == SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) {
-                shortStoryDraftOrPublishRequest.setLang("2")
-            } else if (AppConstants.LOCALE_BENGALI == SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) {
-                shortStoryDraftOrPublishRequest.setLang("3")
-            } else if (AppConstants.LOCALE_TAMIL == SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) {
-                shortStoryDraftOrPublishRequest.setLang("4")
-            } else if (AppConstants.LOCALE_TELUGU == SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) {
-                shortStoryDraftOrPublishRequest.setLang("5")
+            shortStoryDraftOrPublishRequest.title = titleTv.text.toString().trim({ it <= ' ' })
+            shortStoryDraftOrPublishRequest.body = storyTv.text.toString()
+            shortStoryDraftOrPublishRequest.userAgent = "android"
+            shortStoryDraftOrPublishRequest.type = "0"
+            if (AppConstants.LOCALE_ENGLISH == SharedPrefUtils.getAppLocale(this)) {
+                shortStoryDraftOrPublishRequest.lang = "0"
+            } else if (AppConstants.LOCALE_HINDI == SharedPrefUtils.getAppLocale(this)) {
+                shortStoryDraftOrPublishRequest.lang = "1"
+            } else if (AppConstants.LOCALE_MARATHI == SharedPrefUtils.getAppLocale(this)) {
+                shortStoryDraftOrPublishRequest.lang = "2"
+            } else if (AppConstants.LOCALE_BENGALI == SharedPrefUtils.getAppLocale(this)) {
+                shortStoryDraftOrPublishRequest.lang = "3"
+            } else if (AppConstants.LOCALE_TAMIL == SharedPrefUtils.getAppLocale(this)) {
+                shortStoryDraftOrPublishRequest.lang = "4"
+            } else if (AppConstants.LOCALE_TELUGU == SharedPrefUtils.getAppLocale(this)) {
+                shortStoryDraftOrPublishRequest.lang = "5"
+            } else if (AppConstants.LOCALE_KANNADA == SharedPrefUtils.getAppLocale(this)) {
+                shortStoryDraftOrPublishRequest.lang = "6"
+            } else if (AppConstants.LOCALE_MALAYALAM == SharedPrefUtils.getAppLocale(this)) {
+                shortStoryDraftOrPublishRequest.lang = "7"
+            } else if (AppConstants.LOCALE_GUJARATI == SharedPrefUtils.getAppLocale(this)) {
+                shortStoryDraftOrPublishRequest.lang = "8"
+            } else if (AppConstants.LOCALE_PUNJABI == SharedPrefUtils.getAppLocale(this)) {
+                shortStoryDraftOrPublishRequest.lang = "9"
             } else {
-                shortStoryDraftOrPublishRequest.setLang("0")
+                shortStoryDraftOrPublishRequest.lang = "0"
             }
             getBlogPage()
         } else {
-            saveDraftBeforePublishRequest(titleTv.getText().toString().trim({ it <= ' ' }), storyTv.getText().toString().trim({ it <= ' ' }), draftId)
+            saveDraftBeforePublishRequest(titleTv.text.toString().trim({ it <= ' ' }), storyTv.text.toString().trim({ it <= ' ' }), draftId)
         }
     }
 
@@ -338,6 +346,14 @@ class ShortStoriesCardActivity : BaseActivity() {
             shortStoryDraftOrPublishRequest.lang = "4"
         } else if (AppConstants.LOCALE_TELUGU == SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) {
             shortStoryDraftOrPublishRequest.lang = "5"
+        } else if (AppConstants.LOCALE_KANNADA == SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) {
+            shortStoryDraftOrPublishRequest.lang = "6"
+        } else if (AppConstants.LOCALE_MALAYALAM == SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) {
+            shortStoryDraftOrPublishRequest.lang = "7"
+        } else if (AppConstants.LOCALE_GUJARATI == SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) {
+            shortStoryDraftOrPublishRequest.lang = "8"
+        } else if (AppConstants.LOCALE_PUNJABI == SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) {
+            shortStoryDraftOrPublishRequest.lang = "9"
         } else {
             shortStoryDraftOrPublishRequest.lang = "0"
         }
@@ -547,6 +563,14 @@ class ShortStoriesCardActivity : BaseActivity() {
             shortStoryDraftOrPublishRequest.lang = "4"
         } else if (AppConstants.LOCALE_TELUGU == SharedPrefUtils.getAppLocale(this)) {
             shortStoryDraftOrPublishRequest.lang = "5"
+        } else if (AppConstants.LOCALE_KANNADA == SharedPrefUtils.getAppLocale(this)) {
+            shortStoryDraftOrPublishRequest.lang = "6"
+        } else if (AppConstants.LOCALE_MALAYALAM == SharedPrefUtils.getAppLocale(this)) {
+            shortStoryDraftOrPublishRequest.lang = "7"
+        } else if (AppConstants.LOCALE_GUJARATI == SharedPrefUtils.getAppLocale(this)) {
+            shortStoryDraftOrPublishRequest.lang = "8"
+        } else if (AppConstants.LOCALE_PUNJABI == SharedPrefUtils.getAppLocale(this)) {
+            shortStoryDraftOrPublishRequest.lang = "9"
         } else {
             shortStoryDraftOrPublishRequest.lang = "0"
         }
@@ -564,27 +588,27 @@ class ShortStoriesCardActivity : BaseActivity() {
                 }
             }
             for (i in ssTopicsList!!.indices) {
-                if (ssTopicsList!!.get(i).isSelected()) {
+                if (ssTopicsList!!.get(i).isSelected) {
                     val map1 = HashMap<String, String>()
                     val list = ArrayList<Map<String, String>>()
                     val list1 = ArrayList<Map<String, String>>()
                     val list2 = ArrayList<Map<String, String>>()
                     val map = HashMap<String, String>()
-                    ssTopicsList?.get(i)?.id?.let { ssTopicsList?.get(i)?.getDisplay_name()?.let { it1 -> map.put(it, it1) } }
+                    ssTopicsList?.get(i)?.id?.let { ssTopicsList?.get(i)?.display_name?.let { it1 -> map.put(it, it1) } }
                     list.add(map)
                     if (runningrequest == "challenge") {
                         map1.put(challengeId, challengeName)
                         map1[challengeId] = challengeName
                         list1.add(map1)
                     } else if ("draftList" == source) {
-                        if (!flag) {
-                            if (!listDraft.isEmpty()) {
-                                map1.put(draftChallengeId, draftChallengeName)
+                        if (!isDraftTaggedInActiveChallenge) {
+                            if (listDraft.isNotEmpty()) {
+                                map1[draftChallengeId] = draftChallengeName
                                 list1.add(map1)
                             } else {
                             }
                         } else {
-                            map1.put(currentActiveChallengeId, currentActiveChallenge)
+                            map1[currentActiveChallengeId] = currentActiveChallenge
                             list1.add(map1)
                         }
                     }
@@ -697,8 +721,8 @@ class ShortStoriesCardActivity : BaseActivity() {
             }
             try {
                 val responseData = response.body()!!.data?.result
-                responseData?.font_size_body?.toFloat()?.let { storyTv.setTextSize(it) }
-                responseData?.font_size_title?.toFloat()?.let { titleTv.setTextSize(it) }
+                responseData?.font_size_body?.toFloat()?.let { storyTv.textSize = it }
+                responseData?.font_size_title?.toFloat()?.let { titleTv.textSize = it }
                 responseData?.font_alignment?.let { textAlign(it) }
                 responseData?.category_image_url?.let { responseData?.font_colour?.let { it1 -> responseData?.category_image?.let { it2 -> setBackground(it, it1, it2) } } }
             } catch (e: Exception) {

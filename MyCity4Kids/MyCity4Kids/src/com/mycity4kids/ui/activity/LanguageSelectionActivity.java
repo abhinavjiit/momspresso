@@ -138,10 +138,10 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
                 selectedLang = AppConstants.LOCALE_MALAYALAM;
                 break;
             case 8:
-                selectedLang = AppConstants.LOCAL_GUJARATI;
+                selectedLang = AppConstants.LOCALE_GUJARATI;
                 break;
             case 9:
-                selectedLang = AppConstants.LOCAL_PUNJABI;
+                selectedLang = AppConstants.LOCALE_PUNJABI;
                 break;
             default:
                 continueTextView.setVisibility(View.GONE);

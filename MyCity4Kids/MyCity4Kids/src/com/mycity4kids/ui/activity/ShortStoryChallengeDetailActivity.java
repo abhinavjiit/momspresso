@@ -86,7 +86,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class ChallengeDetailListingActivity extends BaseActivity implements View.OnClickListener, ChallengeListingRecycleAdapter.RecyclerViewClickListener {
+public class ShortStoryChallengeDetailActivity extends BaseActivity implements View.OnClickListener, ChallengeListingRecycleAdapter.RecyclerViewClickListener {
 
     private static final int REQUEST_INIT_PERMISSION = 2;
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -147,6 +147,7 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
     private StoryShareCardWidget storyShareCardWidget;
     private ImageView shareStoryImageView;
     private ArticleListingResult sharedStoryItem;
+    private String shortStoryCategoryId;
 
 
     @Override
@@ -350,6 +351,7 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 ssTopicsText = ssTopicsList.get(i).getDisplay_name();
+                shortStoryCategoryId = ssTopicsList.get(i).getId();
             }
         });
 
@@ -438,6 +440,7 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
                     intentt.putExtra("challengeName", selected_Name);
                     intentt.putExtra("Url", selectedActiveUrl);
                     intentt.putExtra("selectedCategory", ssTopicsText);
+                    intentt.putExtra("shortStoryCategoryId", shortStoryCategoryId);
                     startActivity(intentt);
                     //    chooseLayout.setVisibility(View.INVISIBLE);
                 } else {
@@ -589,7 +592,7 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
                     addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
                     addCollectionAndCollectionitemDialogFragment.show(getSupportFragmentManager(), "collectionAdd");
                     Utils.pushProfileEvents(this, "CTA_100WS_Add_To_Collection",
-                            "ChallengeDetailListingActivity", "Add to Collection", "-");
+                            "ShortStoryChallengeDetailActivity", "Add to Collection", "-");
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
@@ -630,7 +633,7 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
 
         String hashtags = AppUtils.getHasTagFromCategoryList(tagList);
         AppUtils.copyToClipboard(hashtags);
-        ToastUtils.showToast(ChallengeDetailListingActivity.this, getString(R.string.all_insta_share_clipboard_msg));
+        ToastUtils.showToast(ShortStoryChallengeDetailActivity.this, getString(R.string.all_insta_share_clipboard_msg));
     }
 
     private void followAPICall(String authorId, int position) {
@@ -655,7 +658,7 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             if (response.body() == null) {
 
-                ToastUtils.showToast(ChallengeDetailListingActivity.this, "some thing went wrong ");
+                ToastUtils.showToast(ShortStoryChallengeDetailActivity.this, "some thing went wrong ");
                 return;
             }
             try {
@@ -668,10 +671,10 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
                     mDatalist.get(position).setIsfollowing("0");
                     challengeListingRecycleAdapter.notifyDataSetChanged();
                 } else {
-                    ToastUtils.showToast(ChallengeDetailListingActivity.this, reason);
+                    ToastUtils.showToast(ShortStoryChallengeDetailActivity.this, reason);
                 }
             } catch (Exception e) {
-                ToastUtils.showToast(ChallengeDetailListingActivity.this, "some thing went wrong at the server ");
+                ToastUtils.showToast(ShortStoryChallengeDetailActivity.this, "some thing went wrong at the server ");
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
@@ -679,7 +682,7 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-            ToastUtils.showToast(ChallengeDetailListingActivity.this, "some thing went wrong at the server ");
+            ToastUtils.showToast(ShortStoryChallengeDetailActivity.this, "some thing went wrong at the server ");
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
@@ -689,7 +692,7 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             if (response.body() == null) {
-                ToastUtils.showToast(ChallengeDetailListingActivity.this, "some thing went wrong ");
+                ToastUtils.showToast(ShortStoryChallengeDetailActivity.this, "some thing went wrong ");
                 return;
             }
             try {
@@ -705,10 +708,10 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
                     mDatalist.get(position).setIsfollowing("1");
                     challengeListingRecycleAdapter.notifyDataSetChanged();
                 } else {
-                    ToastUtils.showToast(ChallengeDetailListingActivity.this, reason);
+                    ToastUtils.showToast(ShortStoryChallengeDetailActivity.this, reason);
                 }
             } catch (Exception e) {
-                ToastUtils.showToast(ChallengeDetailListingActivity.this, "some thing went wrong at the server ");
+                ToastUtils.showToast(ShortStoryChallengeDetailActivity.this, "some thing went wrong at the server ");
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
@@ -716,7 +719,7 @@ public class ChallengeDetailListingActivity extends BaseActivity implements View
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-            ToastUtils.showToast(ChallengeDetailListingActivity.this, "some thing went wrong at the server ");
+            ToastUtils.showToast(ShortStoryChallengeDetailActivity.this, "some thing went wrong at the server ");
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }

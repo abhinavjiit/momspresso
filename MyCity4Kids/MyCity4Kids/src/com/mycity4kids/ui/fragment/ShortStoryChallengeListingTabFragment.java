@@ -11,7 +11,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.activity.ChallengeDetailListingActivity;
+import com.mycity4kids.ui.activity.ShortStoryChallengeDetailActivity;
 import com.mycity4kids.ui.adapter.ChallengeRecyclerAdapter;
 import java.util.ArrayList;
 import androidx.annotation.Nullable;
@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-public class TopicChallengeTabFragment extends BaseFragment implements View.OnClickListener, ChallengeRecyclerAdapter.RecyclerViewClickListener {
+public class ShortStoryChallengeListingTabFragment extends BaseFragment implements View.OnClickListener, ChallengeRecyclerAdapter.RecyclerViewClickListener {
     RecyclerView recyclerView;
     LinearLayoutManager llm;
     String userDynamoId;
@@ -76,7 +76,7 @@ public class TopicChallengeTabFragment extends BaseFragment implements View.OnCl
         switch (view.getId()) {
             case R.id.mainView:
             case R.id.getStartedTextView:
-                Intent intent = new Intent(getContext(), ChallengeDetailListingActivity.class);
+                Intent intent = new Intent(getContext(), ShortStoryChallengeDetailActivity.class);
                 intent.putExtra("Display_Name", Display_Name);
                 intent.putExtra("challenge", challengeId);
                 intent.putExtra("position", position);

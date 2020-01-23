@@ -996,7 +996,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
 
     //groupdetail Activity toast String
-    <string name="story_text_description_hindi">તમે તમારા સુવાક્ય અહીં લખી શકો છો</string>
+    <string name="story_text_description_hint">તમે તમારા સુવાક્ય અહીં લખી શકો છો</string>
     <string name="campaign_name">Campaign Name \n Facebook Campaign</string>
     <string name="reward_campaign_add_proof">ADD PROOF</string>
     <string name="select_payment_method">PREFERRED METHOD OF PAYMENT</string>

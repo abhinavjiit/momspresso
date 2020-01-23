@@ -36,7 +36,7 @@ import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
-import com.mycity4kids.ui.activity.ChallengeDetailListingActivity;
+import com.mycity4kids.ui.activity.ShortStoryChallengeDetailActivity;
 import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.EditProfileNewActivity;
@@ -691,7 +691,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                     } else {
-                        resultIntent = new Intent(getApplicationContext(), ChallengeDetailListingActivity.class);
+                        resultIntent = new Intent(getApplicationContext(), ShortStoryChallengeDetailActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         resultIntent.putExtra("fromNotification", true);
                         resultIntent.putExtra("challenge", pushNotificationModel.getCategoryId());

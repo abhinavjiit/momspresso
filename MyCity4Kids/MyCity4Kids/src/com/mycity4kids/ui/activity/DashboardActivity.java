@@ -517,10 +517,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_malayalam));
                         selectedlangGuideTextView.setText(getString(R.string.language_label_malayalam));
-                    } else if (AppConstants.LOCAL_GUJARATI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                    } else if (AppConstants.LOCALE_GUJARATI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_gujarati));
                         selectedlangGuideTextView.setText(getString(R.string.language_label_gujarati));
-                    } else if (AppConstants.LOCAL_PUNJABI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                    } else if (AppConstants.LOCALE_PUNJABI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_punjabi));
                         selectedlangGuideTextView.setText(getString(R.string.language_label_punjabi));
                     } else {
@@ -561,10 +561,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_malayalam));
                     selectedlangGuideTextView.setText(getString(R.string.language_label_malayalam));
-                } else if (AppConstants.LOCAL_GUJARATI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                } else if (AppConstants.LOCALE_GUJARATI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_gujarati));
                     selectedlangGuideTextView.setText(getString(R.string.language_label_gujarati));
-                } else if (AppConstants.LOCAL_PUNJABI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                } else if (AppConstants.LOCALE_PUNJABI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_punjabi));
                     selectedlangGuideTextView.setText(getString(R.string.language_label_punjabi));
                 } else {
@@ -780,8 +780,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             draftsShimmerLayout.stopShimmerAnimation();
             draftsShimmerLayout.setVisibility(View.GONE);
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -1109,7 +1109,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } else if (notificationExtras.getString("type").equalsIgnoreCase("shortStoryListingInChallengeListing")) {
                 pushEvent("shortStoryListingInChallenge");
                 findValues(notificationExtras.getString("categoryId"));
-                Intent intent1 = new Intent(this, ChallengeDetailListingActivity.class);
+                Intent intent1 = new Intent(this, ShortStoryChallengeDetailActivity.class);
                 intent1.putExtra("Display_Name", deepLinkDisplayName);
                 intent1.putExtra("challenge", shortStoryChallengesList);
                 intent1.putExtra("position", 0);
@@ -1223,7 +1223,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else {
                         findValues(deepLinkChallengeId);
                         if (shortStoryChallengesList != null && deepLinkDisplayName != null && deepLinkImageUrl != null && shortStoriesTopicList != null && shortStoryChallengesList.size() != 0 && deepLinkDisplayName.size() != 0 && deepLinkImageUrl.size() != 0 && shortStoriesTopicList.size() != 0) {
-                            Intent deepLinkIntent = new Intent(this, ChallengeDetailListingActivity.class);
+                            Intent deepLinkIntent = new Intent(this, ShortStoryChallengeDetailActivity.class);
                             deepLinkIntent.putExtra("selectedrequest", FromDeepLink);
                             deepLinkIntent.putExtra("Display_Name", deepLinkDisplayName);
                             deepLinkIntent.putExtra("challenge", shortStoryChallengesList);
@@ -1234,7 +1234,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             startActivity(deepLinkIntent);
                         } else {
                             findValues(deepLinkChallengeId);
-                            Intent deepLinkIntent = new Intent(this, ChallengeDetailListingActivity.class);
+                            Intent deepLinkIntent = new Intent(this, ShortStoryChallengeDetailActivity.class);
                             deepLinkIntent.putExtra("selectedrequest", FromDeepLink);
                             deepLinkIntent.putExtra("Display_Name", deepLinkDisplayName);
                             deepLinkIntent.putExtra("challenge", shortStoryChallengesList);
@@ -1939,7 +1939,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 findActiveChallenge();
             }
             if (challengeId != null && Display_Name != null && ImageUrl != null && shortStoriesTopicList != null && challengeId.size() != 0 && Display_Name.size() != 0 && ImageUrl.size() != 0 && shortStoriesTopicList.size() != 0) {
-                Intent intent = new Intent(this, ChallengeDetailListingActivity.class);
+                Intent intent = new Intent(this, ShortStoryChallengeDetailActivity.class);
                 intent.putExtra("selectedrequest", challenge);
                 intent.putExtra("Display_Name", Display_Name);
                 intent.putExtra("challenge", challengeId);

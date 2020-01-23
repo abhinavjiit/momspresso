@@ -1307,7 +1307,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="library">लाइब्रेरी</string>
     <string name="ss_share_with_friends">Share with Friends</string>
     <string name="short_s_add_title_Optional">वैकल्पिक</string>
-    <string name="story_text_description_hindi">यहां आप सुविचार (कोट्स) लिख सकते हैं|</string>
+    <string name="story_text_description_hint">यहां आप सुविचार (कोट्स) लिख सकते हैं|</string>
     <string name="stroy_overflow_layout">आगे बढ़ने के लिए कृपया अपने टेक्स्ट का फॉण्ट साइज़ या कहानी को छोटा करें</string>
     <string name="short_s_write">लिखें</string>
     <string name="ss_follow_author">Follow %1$s and check out other articles by her on Momspresso.\n %2$s</string>

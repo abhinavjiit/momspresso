@@ -27,7 +27,7 @@ import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.TopicsShortStoriesPagerAdapter;
-import com.mycity4kids.ui.fragment.TopicChallengeTabFragment;
+import com.mycity4kids.ui.fragment.ShortStoryChallengeListingTabFragment;
 import com.mycity4kids.ui.fragment.TopicsShortStoriesTabFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
@@ -251,7 +251,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
                 viewPager.setCurrentItem(tab.getPosition());
                 Fragment fragment = pagerAdapter.getItem(tab.getPosition());
                 if (fragment != null) {
-                    if (fragment instanceof TopicChallengeTabFragment) {
+                    if (fragment instanceof ShortStoryChallengeListingTabFragment) {
                         imageSortBy.setVisibility(View.GONE);
                         fabAddShortStory.setVisibility(View.GONE);
                     } else {

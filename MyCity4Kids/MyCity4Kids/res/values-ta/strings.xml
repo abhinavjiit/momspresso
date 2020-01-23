@@ -1283,7 +1283,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="library">பெட்டகம்</string>
     <string name="ss_share_with_friends">Share with Friends</string>
     <string name="short_s_add_title_Optional">விருப்பமானவை</string>
-    <string name="story_text_description_hindi">உங்கள் கவிதைகளை இங்கு எழுதலாம்</string>
+    <string name="story_text_description_hint">உங்கள் கவிதைகளை இங்கு எழுதலாம்</string>
     <string name="stroy_overflow_layout">தொடர எழுத்தளவு  (அ) கதையின் நீளத்தை குறைக்கவும்.</string>
     <string name="short_s_write">எழுத</string>
     <string name="ss_follow_author">Follow %1$s and check out other articles by her on Momspresso.\n %2$s</string>

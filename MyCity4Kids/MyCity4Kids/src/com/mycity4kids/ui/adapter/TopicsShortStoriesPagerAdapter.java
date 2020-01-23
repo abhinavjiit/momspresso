@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.google.gson.Gson;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.Topics;
-import com.mycity4kids.ui.fragment.TopicChallengeTabFragment;
+import com.mycity4kids.ui.fragment.ShortStoryChallengeListingTabFragment;
 import com.mycity4kids.ui.fragment.TopicsShortStoriesTabFragment;
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class TopicsShortStoriesPagerAdapter extends FragmentStatePagerAdapter {
             return tab1;
         } else {
             bundle.putParcelable("currentSubTopic", subTopicsList.get(position));
-            TopicChallengeTabFragment tab2 = new TopicChallengeTabFragment();
+            ShortStoryChallengeListingTabFragment tab2 = new ShortStoryChallengeListingTabFragment();
             tab2.setArguments(bundle);
             return tab2;
         }

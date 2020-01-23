@@ -1,9 +1,7 @@
 package com.mycity4kids.ui.activity;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -64,8 +62,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -77,32 +73,23 @@ import retrofit2.Retrofit;
 
 public class AddShortStoryActivity extends BaseActivity implements View.OnClickListener, ShortStoryTopicsRecyclerAdapter.RecyclerViewClickListener {
 
-    private static final int REQUEST_INIT_PERMISSION = 1;
-    private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE};
-    private boolean flag = false;
+    private boolean isDraftTaggedInActiveChallenge = false;
     private String draftChallengeName;
     private String publishedChallengeName;
     private String publishedChallengeId;
     private String draftChallengeId;
-    private String ImageUrl;
+    private String challengeImageUrl;
     private TextView startWriting;
-    Uri imageUriTemp;
-    private String path;
     File file;
-    MediaType MEDIA_TYPE_PNG;
-    RequestBody requestBodyFile;
-    RequestBody imageType;
     private static final int MAX_WORDS = 100;
     private ArrayList<Topics> subTopicsList = new ArrayList<>();
-    private ArrayList<Map<String, String>> listDraft;
+    private ArrayList<Map<String, String>> taggedTopicList;
     private TopicsResponse res;
     private Toolbar toolbar;
     private TextView publishTextView;
     private ArrayList<Topics> shortStoriesTopicList;
-    private String dynamoUserId;
     private ArrayList<ExploreTopicsModel> ssTopicsList;
-    private Topics selectedTopic;
+    private Topics shortStoryChallengeTopic;
     private String draftId = "";
     private ImageView challengeImage;
     private ShortStoryDraftOrPublishRequest shortStoryDraftOrPublishRequest;
@@ -119,11 +106,10 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private String articleId;
     private String tagsJson;
     private boolean isMaxLengthToastShown = false;
-    private View mLayout;
     private String challengeId = "";
     private String challengeName = "";
-    private String runningrequest;
-    private RelativeLayout challengeHeader, topicheaderlayout, chooseLayout;
+    private String creationSourceNormalOrChallenge;
+    private RelativeLayout challengeHeader, chooseShortStoryTopicPopUp;
     private TextView challenegActiveText, challengeheadertext, shortstoryheadertext;
     private String currentActiveChallenge = "";
     private String currentActiveChallengeId = "";
@@ -131,7 +117,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private String ssTopicsText;
     private TextView wordCounterTextView;
     private RelativeLayout root;
-    private boolean isValidTitle, isValidBody, isCategorySelected, isStoryValid;
     private String categoryId;
     private boolean hasQuote;
 
@@ -144,12 +129,10 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         ((BaseApplication) getApplication()).setView(root);
 
         Utils.pushOpenScreenEvent(this, "AddShortStoryScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-        mLayout = findViewById(R.id.rootLayout);
         challengeHeader = (RelativeLayout) findViewById(R.id.challenge_header_layout);
         challengeImage = (ImageView) findViewById(R.id.image_challenge);
         shortstoryheadertext = (TextView) findViewById(R.id.topicHeading);
         challenegActiveText = (TextView) findViewById(R.id.challenge_topic_text);
-        topicheaderlayout = (RelativeLayout) findViewById(R.id.topicHeadinglayout);
         challengeheadertext = (TextView) findViewById(R.id.challenge_heading);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         startWriting = (TextView) findViewById(R.id.start_writing);
@@ -157,7 +140,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         storyTitleEditText = (EditText) findViewById(R.id.storyTitleEditText);
         storyBodyEditText = (EditText) findViewById(R.id.storyBodyEditText);
-        chooseLayout = (RelativeLayout) findViewById(R.id.choose_layout);
+        chooseShortStoryTopicPopUp = (RelativeLayout) findViewById(R.id.choose_layout);
         overlayLayout = (View) findViewById(R.id.overlayView_choose_story_challenge);
         RadioGroup chooseoptionradioButton = (RadioGroup) findViewById(R.id.reportReasonRadioGroup);
         RadioGroup.LayoutParams rprms;
@@ -165,11 +148,10 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         publishTextView.setOnClickListener(this);
         overlayLayout.setOnClickListener(this);
         startWriting.setOnClickListener(this);
-        chooseoptionradioButton.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                ssTopicsText = ssTopicsList.get(i).getDisplay_name();
-            }
+        chooseoptionradioButton.setOnCheckedChangeListener((radioGroup, i) -> {
+            ssTopicsText = ssTopicsList.get(i).getDisplay_name();
+            categoryId = ssTopicsList.get(i).getId();
+            regulatePublishButtonState();
         });
 
         setSupportActionBar(toolbar);
@@ -188,34 +170,31 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 countWord(storyBodyEditText.getText().toString());
             }
             draftId = draftObject.getId();
-            listDraft = draftObject.getTags();
+            taggedTopicList = draftObject.getTags();
+            //taggedTopicList should only contains tagged Challenge, tagged category is not to be saved in drafts
             checkTagIsActive();
-            for (Map<String, String> map : listDraft) {
+            for (Map<String, String> map : taggedTopicList) {
                 for (Map.Entry<String, String> mapEntry : map.entrySet()) {
                     String key = mapEntry.getKey();
                     String value = mapEntry.getValue();
                     if (key.equals(currentActiveChallengeId) && value.equals(currentActiveChallenge)) {
-                        flag = true;//draft is Active Challenge
+                        isDraftTaggedInActiveChallenge = true;//draft is Active Challenge
                         break;
                     } else {
-                        flag = false;//not a active challenge ,simple draft
+                        isDraftTaggedInActiveChallenge = false;//not a active challenge ,simple draft
                     }
-
                 }
                 break;
             }
         } else if ("publishedList".equals(source)) {
             if (!StringUtils.isNullOrEmpty(getIntent().getStringExtra("title"))) {
                 storyTitleEditText.setText(getIntent().getStringExtra("title"));
-                isValidTitle = true;
             }
             if (!StringUtils.isNullOrEmpty(getIntent().getStringExtra("body"))) {
                 storyBodyEditText.setText(getIntent().getStringExtra("body"));
-                isValidBody = true;
                 countWord(storyBodyEditText.getText().toString());
             }
-            isCategorySelected = true;
-            setNextColor();
+            regulatePublishButtonState();
             articleId = getIntent().getStringExtra("articleId");
             tagsJson = getIntent().getStringExtra("tag");
             getTagListFromJason(tagsJson);
@@ -223,24 +202,32 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             recyclerView.setVisibility(View.GONE);
         }
 
-        runningrequest = intent.getStringExtra("selectedrequest");
-        if (runningrequest == null) {
-            runningrequest = "ShortStory";
+        creationSourceNormalOrChallenge = intent.getStringExtra("selectedrequest");
+        if (creationSourceNormalOrChallenge == null) {
+            creationSourceNormalOrChallenge = "ShortStory";
             if ("publishedList".equals(source)) {
                 recyclerView.setVisibility(View.GONE);
             }
         }
-        if (runningrequest.equals("challenge") || ("draftList".equals(source) && (!listDraft.isEmpty()))) {
-            if (runningrequest.equals("challenge")) {
-                ImageUrl = intent.getStringExtra("Url");
+        if (creationSourceNormalOrChallenge.equals("challenge") || ("draftList".equals(source) && (!taggedTopicList.isEmpty()))) {
+            //Challenge Only FLOW
+            if (creationSourceNormalOrChallenge.equals("challenge")) {
+                //New Story Coming through Challenge Flow
+                challengeImageUrl = intent.getStringExtra("Url");
                 challengeId = intent.getStringExtra("challengeId");
                 challengeName = intent.getStringExtra("challengeName");
                 ssTopicsText = intent.getStringExtra("selectedCategory");
-                if (ImageUrl != null) {
+                categoryId = intent.getStringExtra("shortStoryCategoryId");
+                if (AppConstants.VICHAAR_SAGAR_CATEGORY_ID.equals(categoryId)) {
+                    hasQuote = true;
+                    storyTitleEditText.setHint(getString(R.string.short_s_add_title_hint) + "(" + getString(R.string.short_s_add_title_Optional) + ")");
+                    storyBodyEditText.setHint(getString(R.string.story_text_description_hint));
+                }
+                if (challengeImageUrl != null) {
                     try {
                         challengeImage.setVisibility(View.VISIBLE);
                         challenegActiveText.setVisibility(View.GONE);
-                        Picasso.with(this).load(ImageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                        Picasso.with(this).load(challengeImageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                                 .fit().into(challengeImage);
                     } catch (Exception e) {
                         challengeImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_article));
@@ -251,9 +238,9 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     challenegActiveText.setText(challengeName);
                 }
             }
-            if (("draftList".equals(source) && (!listDraft.isEmpty()))) {
+            if (("draftList".equals(source) && (!taggedTopicList.isEmpty()))) {
+                //Draft Story contains tagged Challenges
                 getCategoryTopicsList();
-
                 for (int i = 0; i < ssTopicsList.size(); i++) {
                     AppCompatRadioButton rbn = new AppCompatRadioButton(this);
                     rbn.setId(i);
@@ -263,7 +250,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     chooseoptionradioButton.addView(rbn, rprms);
                     rbn.setPadding(10, 0, 0, 0);
                     if (Build.VERSION.SDK_INT >= 21) {
-
                         ColorStateList colorStateList = new ColorStateList(
                                 new int[][]{
 
@@ -279,10 +265,9 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                         rbn.setButtonTintList(colorStateList);//set the color tint list
                         // radio.invalidate(); //could not be necessary
                     }
-
                 }
-                chooseLayout.setVisibility(View.VISIBLE);
-                for (Map<String, String> map : listDraft) {
+                chooseShortStoryTopicPopUp.setVisibility(View.VISIBLE);
+                for (Map<String, String> map : taggedTopicList) {
                     for (Map.Entry<String, String> mapEntry : map.entrySet()) {
                         draftChallengeId = mapEntry.getKey();
                         draftChallengeName = mapEntry.getValue();
@@ -300,20 +285,19 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             if ("publishedList".equals(source)) {
                 recyclerView.setVisibility(View.GONE);
                 shortstoryheadertext.setVisibility(View.GONE);
-                if (ImageUrl == null) {
+                if (challengeImageUrl == null) {
                     challengeHeader.setVisibility(View.GONE);
                     challengeheadertext.setVisibility(View.GONE);
                 }
             } else {
+                //New story normal flow(no challenges involved) and normal drafts
                 recyclerView.setVisibility(View.VISIBLE);
                 shortstoryheadertext.setVisibility(View.VISIBLE);
-                // challengeHeader.setVisibility(View.VISIBLE);
                 challengeheadertext.setVisibility(View.GONE);
                 challengeImage.setVisibility(View.GONE);
             }
             challenegActiveText.setVisibility(View.GONE);
-            chooseLayout.setVisibility(View.GONE);
-
+            chooseShortStoryTopicPopUp.setVisibility(View.GONE);
         }
 
         storyTitleEditText.addTextChangedListener(new TextWatcher() {
@@ -329,12 +313,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() > 0) {
-                    isValidTitle = true;
-                } else {
-                    isValidTitle = false;
-                }
-                setNextColor();
+                regulatePublishButtonState();
             }
         });
 
@@ -374,29 +353,18 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     wordCounterTextView.setText("-" + (wordsLength - 100));
                     wordCounterTextView.setBackground(getResources().getDrawable(R.drawable.campaign_detail_red_bg));
                 }
-
-                if (s.length() > 0 && wordsLength <= MAX_WORDS) {
-                    isValidBody = true;
-                } else {
-                    isValidBody = false;
-                }
-                setNextColor();
+                regulatePublishButtonState();
             }
         });
 
-        dynamoUserId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
-
         SnapHelper startSnapHelper = new StartSnapHelper();
         startSnapHelper.attachToRecyclerView(recyclerView);
-
         adapter = new ShortStoryTopicsRecyclerAdapter(this, this);
-
         final LinearLayoutManager llm1 = new LinearLayoutManager(this);
         llm1.setOrientation(LinearLayoutManager.HORIZONTAL);
-
         recyclerView.setLayoutManager(llm1);
 
-        if (("draftList".equals(source) && (!listDraft.isEmpty()))) {
+        if (("draftList".equals(source) && (!taggedTopicList.isEmpty()))) {
         } else {
             try {
                 FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
@@ -414,7 +382,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     @Override
                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                         AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
-
                         try {
                             FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                             String fileContent = AppUtils.convertStreamToString(fileInputStream);
@@ -487,36 +454,36 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         }
     }
 
-    private void setNextColor() {
-        if (isCategorySelected && isValidTitle && (isValidBody || !StringUtils.isNullOrEmpty(draftId))) {
-            publishTextView.setTextColor(getResources().getColor(R.color.app_red));
-            isStoryValid = true;
-        } else {
-            publishTextView.setTextColor(getResources().getColor(R.color.color_979797));
-            isStoryValid = false;
+    private boolean checkIfStoryIsValid() {
+        if (StringUtils.isNullOrEmpty(categoryId)) {
+            return false;
         }
+        if (AppConstants.VICHAAR_SAGAR_CATEGORY_ID.equals(categoryId)) {
+            return countWords(storyBodyEditText.getText().toString()) >= 5;
+        }
+        return countWords(storyBodyEditText.getText().toString()) >= 10 && storyTitleEditText.getText().toString().trim().length() != 0;
     }
 
     private void getImageUrlShow(String key, String value) {
         if (key != null && value != null) {
             for (int i = 0; i < subTopicsList.size() - 1; i++) {
-                if ("category-743892a865774baf9c20cbcc5c01d35f".equals(subTopicsList.get(i).getId())) {
-                    selectedTopic = subTopicsList.get(i);
+                if (AppConstants.SHORT_STORY_CHALLENGE_ID.equals(subTopicsList.get(i).getId())) {
+                    shortStoryChallengeTopic = subTopicsList.get(i);
                     break;
                 }
             }
-            for (int j = selectedTopic.getChild().size() - 1; j >= 0; j--) {
-                if (key.equals(selectedTopic.getChild().get(j).getId())) {
-                    if (value.equals(selectedTopic.getChild().get(j).getDisplay_name())) {
-                        if (selectedTopic.getChild().get(j).getExtraData() != null && selectedTopic.getChild().get(j).getExtraData().size() != 0) {
-                            ImageUrl = selectedTopic.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl();
+            for (int j = shortStoryChallengeTopic.getChild().size() - 1; j >= 0; j--) {
+                if (key.equals(shortStoryChallengeTopic.getChild().get(j).getId())) {
+                    if (value.equals(shortStoryChallengeTopic.getChild().get(j).getDisplay_name())) {
+                        if (shortStoryChallengeTopic.getChild().get(j).getExtraData() != null && shortStoryChallengeTopic.getChild().get(j).getExtraData().size() != 0) {
+                            challengeImageUrl = shortStoryChallengeTopic.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl();
                         }
                         try {
                             challengeheadertext.setVisibility(View.VISIBLE);
                             challengeHeader.setVisibility(View.VISIBLE);
                             challengeImage.setVisibility(View.VISIBLE);
                             challenegActiveText.setVisibility(View.GONE);
-                            Picasso.with(this).load(ImageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                            Picasso.with(this).load(challengeImageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                                     .fit().into(challengeImage);
                         } catch (Exception e) {
                             challengeImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_article));
@@ -545,22 +512,27 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 }
             }
             for (int i = 0; i < shortStoriesTopicList.size(); i++) {
-                if ("category-ce8bdcadbe0548a9982eec4e425a0851".equals(shortStoriesTopicList.get(i).getId())) {
+                if (AppConstants.SHORT_STORY_CATEGORYID.equals(shortStoriesTopicList.get(i).getId())) {
                     subTopicsList.addAll(shortStoriesTopicList.get(i).getChild());
                 }
             }
             for (int i = 0; i < subTopicsList.size() - 1; i++) {
-                if ("category-743892a865774baf9c20cbcc5c01d35f".equals(subTopicsList.get(i).getId())) {
-                    selectedTopic = subTopicsList.get(i);
+                if (AppConstants.SHORT_STORY_CHALLENGE_ID.equals(subTopicsList.get(i).getId())) {
+                    shortStoryChallengeTopic = subTopicsList.get(i);
                     break;
                 }
             }
-            for (int j = selectedTopic.getChild().size() - 1; j >= 0; j--) {
-                if ("1".equals(selectedTopic.getChild().get(j).getPublicVisibility())) {
-                    if (selectedTopic != null && selectedTopic.getChild() != null && selectedTopic.getChild().get(j) != null && selectedTopic.getChild().get(j).getExtraData() != null && selectedTopic.getChild().get(j).getExtraData().size() != 0 && selectedTopic.getChild().get(j).getExtraData().get(0).getChallenge() != null && selectedTopic.getChild().get(j).getExtraData().get(0).getChallenge().getActive() != null) {
-                        if ("1".equals(selectedTopic.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
-                            currentActiveChallengeId = selectedTopic.getChild().get(j).getId();
-                            currentActiveChallenge = selectedTopic.getChild().get(j).getDisplay_name();
+            for (int j = shortStoryChallengeTopic.getChild().size() - 1; j >= 0; j--) {
+                if (shortStoryChallengeTopic != null && shortStoryChallengeTopic.getChild() != null &&
+                        shortStoryChallengeTopic.getChild().get(j) != null
+                        && "1".equals(shortStoryChallengeTopic.getChild().get(j).getPublicVisibility())) {
+                    if (shortStoryChallengeTopic.getChild().get(j).getExtraData() != null &&
+                            shortStoryChallengeTopic.getChild().get(j).getExtraData().size() != 0 &&
+                            shortStoryChallengeTopic.getChild().get(j).getExtraData().get(0).getChallenge() != null &&
+                            shortStoryChallengeTopic.getChild().get(j).getExtraData().get(0).getChallenge().getActive() != null) {
+                        if ("1".equals(shortStoryChallengeTopic.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
+                            currentActiveChallengeId = shortStoryChallengeTopic.getChild().get(j).getId();
+                            currentActiveChallenge = shortStoryChallengeTopic.getChild().get(j).getDisplay_name();
                             break;
                         }
                     }
@@ -590,22 +562,23 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                             }
                         }
                         for (int i = 0; i < shortStoriesTopicList.size(); i++) {
-                            if ("category-ce8bdcadbe0548a9982eec4e425a0851".equals(shortStoriesTopicList.get(i).getId())) {
+                            if (AppConstants.SHORT_STORY_CATEGORYID.equals(shortStoriesTopicList.get(i).getId())) {
                                 subTopicsList.addAll(shortStoriesTopicList.get(i).getChild());
                             }
                         }
                         for (int i = 0; i < subTopicsList.size() - 1; i++) {
-                            if ("category-743892a865774baf9c20cbcc5c01d35f".equals(subTopicsList.get(i).getId())) {
-                                selectedTopic = subTopicsList.get(i);
+                            if (AppConstants.SHORT_STORY_CHALLENGE_ID.equals(subTopicsList.get(i).getId())) {
+                                shortStoryChallengeTopic = subTopicsList.get(i);
                                 break;
                             }
                         }
-                        for (int j = selectedTopic.getChild().size() - 1; j >= 0; j--) {
-                            if ("1".equals(selectedTopic.getChild().get(j).getPublicVisibility())) {
-                                if (selectedTopic.getChild().get(j).getExtraData() != null && selectedTopic.getChild().get(j).getExtraData().size() != 0) {
-                                    if ("1".equals(selectedTopic.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
-                                        currentActiveChallengeId = selectedTopic.getChild().get(j).getId();
-                                        currentActiveChallenge = selectedTopic.getChild().get(j).getDisplay_name();
+                        for (int j = shortStoryChallengeTopic.getChild().size() - 1; j >= 0; j--) {
+                            if ("1".equals(shortStoryChallengeTopic.getChild().get(j).getPublicVisibility())) {
+                                if (shortStoryChallengeTopic.getChild().get(j).getExtraData() != null && shortStoryChallengeTopic.getChild().get(j).getExtraData().size() != 0) {
+                                    if ("1".equals(shortStoryChallengeTopic.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
+                                        currentActiveChallengeId = shortStoryChallengeTopic.getChild().get(j).getId();
+                                        currentActiveChallenge = shortStoryChallengeTopic.getChild().get(j).getDisplay_name();
+                                        break;
                                     }
                                 }
                             }
@@ -673,9 +646,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     map.put(publishedChallengeId, publishedChallengeName);
                     if (!"ignore".equals(publishedChallengeId)) {
                         tagsList2.add(map);
-
                     }
-
                 }
             }
             tagsList.addAll(tagsList1);
@@ -756,12 +727,12 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     intent.putExtra("ssTopicsText", ssTopicsText);
                     intent.putExtra("challengeName", challengeName);
                     intent.putExtra("challengeId", challengeId);
-                    intent.putExtra("runningrequest", runningrequest);
+                    intent.putExtra("runningrequest", creationSourceNormalOrChallenge);
                     intent.putExtra("draftId", draftId);
                     intent.putExtra("articleId", articleId);
                     intent.putExtra("source", source);
-                    intent.putExtra("flag", flag);
-                    intent.putExtra("listDraft", listDraft);
+                    intent.putExtra("isDraftTaggedInActiveChallenge", isDraftTaggedInActiveChallenge);
+                    intent.putExtra("listDraft", taggedTopicList);
                     intent.putParcelableArrayListExtra("ssTopicsList", ssTopicsList);
                     intent.putExtra("currentActiveChallengeId", currentActiveChallengeId);
                     intent.putExtra("currentActiveChallenge", currentActiveChallenge);
@@ -774,7 +745,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 break;
             case R.id.start_writing:
                 if (ssTopicsText != null) {
-                    chooseLayout.setVisibility(View.INVISIBLE);
+                    chooseShortStoryTopicPopUp.setVisibility(View.INVISIBLE);
                 } else {
                     Toast.makeText(this, R.string.select_atleast_one_topic, Toast.LENGTH_SHORT).show();
                 }
@@ -791,18 +762,25 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
 
         if (ssTopicsList.get(position).getId().equalsIgnoreCase(AppConstants.VICHAAR_SAGAR_CATEGORY_ID)) {
             hasQuote = true;
-            isValidTitle = true;
             storyTitleEditText.setHint(getString(R.string.short_s_add_title_hint) + "(" + getString(R.string.short_s_add_title_Optional) + ")");
-            storyBodyEditText.setHint(getString(R.string.story_text_description_hindi));
+            storyBodyEditText.setHint(getString(R.string.story_text_description_hint));
         } else {
             hasQuote = false;
-            storyTitleEditText.setText("");
             storyTitleEditText.setHint(R.string.short_s_add_title_hint);
             storyBodyEditText.setHint(R.string.short_s_add_body_hint);
         }
-        isCategorySelected = true;
-        setNextColor();
+        regulatePublishButtonState();
         adapter.notifyDataSetChanged();
+    }
+
+    private void regulatePublishButtonState() {
+        if (checkIfStoryIsValid()) {
+            publishTextView.setEnabled(true);
+            publishTextView.setTextColor(getResources().getColor(R.color.app_red));
+        } else {
+            publishTextView.setEnabled(false);
+            publishTextView.setTextColor(getResources().getColor(R.color.color_979797));
+        }
     }
 
     private boolean isValid() {
@@ -849,7 +827,11 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             super.onBackPressed();
             finish();
         } else {
-            saveDraftRequest(storyTitleEditText.getText().toString().trim(), storyBodyEditText.getText().toString(), draftId);
+            if (storyTitleEditText.getText().toString().trim().isEmpty()) {
+                saveDraftRequest(storyTitleEditText.getText().toString(), storyBodyEditText.getText().toString(), draftId);
+            } else {
+                saveDraftRequest(storyTitleEditText.getText().toString().trim(), storyBodyEditText.getText().toString(), draftId);
+            }
         }
     }
 
@@ -878,27 +860,35 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             shortStoryDraftOrPublishRequest.setLang("4");
         } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(this))) {
             shortStoryDraftOrPublishRequest.setLang("5");
+        } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils.getAppLocale(this))) {
+            shortStoryDraftOrPublishRequest.setLang("6");
+        } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils.getAppLocale(this))) {
+            shortStoryDraftOrPublishRequest.setLang("7");
+        } else if (AppConstants.LOCALE_GUJARATI.equals(SharedPrefUtils.getAppLocale(this))) {
+            shortStoryDraftOrPublishRequest.setLang("8");
+        } else if (AppConstants.LOCALE_PUNJABI.equals(SharedPrefUtils.getAppLocale(this))) {
+            shortStoryDraftOrPublishRequest.setLang("9");
         } else {
             shortStoryDraftOrPublishRequest.setLang("0");
         }
-        if (runningrequest.equals("challenge")) {
+        if (creationSourceNormalOrChallenge.equals("challenge")) {
             ArrayList<Map<String, String>> list2 = new ArrayList<>();
-            Map map1 = new HashMap();
+            Map<String, String> map1 = new HashMap<>();
             map1.put(challengeId, challengeName);
             list2.add(map1);
             shortStoryDraftOrPublishRequest.setTags(list2);
         } else if ("draftList".equals(source)) {
-            if (!flag) {
+            if (!isDraftTaggedInActiveChallenge) {
                 ArrayList<Map<String, String>> list2 = new ArrayList<>();
-                if ((!listDraft.isEmpty())) {
-                    Map map1 = new HashMap();
+                if ((!taggedTopicList.isEmpty())) {
+                    Map<String, String> map1 = new HashMap<>();
                     map1.put(draftChallengeId, draftChallengeName);
                     list2.add(map1);
                 }
                 shortStoryDraftOrPublishRequest.setTags(list2);
             } else {
                 ArrayList<Map<String, String>> list2 = new ArrayList<>();
-                Map map1 = new HashMap();
+                Map<String, String> map1 = new HashMap<>();
                 map1.put(currentActiveChallengeId, currentActiveChallenge);
                 list2.add(map1);
                 shortStoryDraftOrPublishRequest.setTags(list2);
@@ -964,7 +954,3 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         removeProgressDialog();
     }
 }
-
-
-
-

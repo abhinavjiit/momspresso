@@ -493,7 +493,7 @@
             android:parentActivityName=".ui.activity.DashboardActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.ChallengeDetailListingActivity"
+            android:name=".ui.activity.ShortStoryChallengeDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/EditorTheme" />
         <activity
