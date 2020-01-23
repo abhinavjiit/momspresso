@@ -1305,7 +1305,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="max_limit">आप शब्दों के फॉन्ट साइज की अधिकतम सीमा तक पहुँच चुके हैं</string>
     <string name="min_limit">आप शब्दों के फॉन्ट साइज की न्यूनतम सीमा तक पहुँच चुके हैं</string>
     <string name="library">लाइब्रेरी</string>
-    <string name="ss_share_with_friends">Share with Friends</string>
+    <string name="ss_share_with_friends">दोस्तों के साथ शेयर करें</string>
     <string name="short_s_add_title_Optional">वैकल्पिक</string>
     <string name="story_text_description_hint">यहां आप सुविचार (कोट्स) लिख सकते हैं|</string>
     <string name="stroy_overflow_layout">आगे बढ़ने के लिए कृपया अपने टेक्स्ट का फॉण्ट साइज़ या कहानी को छोटा करें</string>
@@ -1313,4 +1313,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="ss_follow_author">Follow %1$s and check out other articles by her on Momspresso.\n %2$s</string>
     <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
     <string name="moderation_or_share_story_moderation_message">आपकी कहानी मोडरेशन प्रक्रिया में है ,आपको आपकी कहानी  की स्थिति के  बारे में अगले 24 घंटे में  मेल किया जाएगा</string>
+    <string name="ad.bottom_bar.instagram">इन्स्टाग्राम</string>
 </resources>

@@ -173,7 +173,7 @@
     <string name="ad.comments.toast_empty_comment">Please enter some valid text.</string>
     <string name="ad.comments.toolbar.title">അഭിപ്രായങ്ങൾ</string>
     <string name="ad.comments.replying_to">You are replying to %1$s</string>
-    <string name="ad.bottom_bar.facebook">ഇതുമായി ബന്ധപ്പെട്ട</string>
+    <string name="ad.bottom_bar.facebook">ഫേസ്ബുക്ക്</string>
     <string name="ad.bottom_bar.whatsapp">വാട്സ്ആപ്പ്</string>
     <string name="ad.bottom_bar.email">ഇ-മെയിൽ ഐഡി</string>
     <string name="ad.bottom_bar.generic_share">പങ്കിടൂ</string>
@@ -1329,7 +1329,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="max_limit">നിങ്ങൾ പരമാവധി പരിധിയിലെത്തി</string>
     <string name="min_limit">നിങ്ങൾ കുറഞ്ഞ പരിധിയിലെത്തി</string>
     <string name="library">ലൈബ്രറി</string>
-    <string name="ss_share_with_friends">Share with Friends</string>
+    <string name="ss_share_with_friends">സുഹൃത്തുക്കളുമായി പങ്കുവെക്കുക</string>
     <string name="short_s_add_title_Optional">ഐച്ഛികം</string>
     <string name="story_text_description_hint">നിങ്ങളുടെ ഉദ്ധരണികൾ ഇവിടെ എഴുതാം</string>
     <string name="stroy_overflow_layout">തുടരാനായി, ഒന്നുകിൽ ടെക്സ്റ്റ് ഫോണ്ട് വലുപ്പം കുറയ്ക്കുക അല്ലെങ്കിൽ കഥയുടെ ദൈർഘ്യം കുറയ്ക്കുക.</string>
@@ -1337,4 +1337,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="ss_follow_author">Follow %1$s and check out other articles by her on Momspresso.\n %2$s</string>
     <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
     <string name="moderation_or_share_story_moderation_message">നിങ്ങളുടെ കഥ/കുറിപ്പ് മോഡറേഷൻ പ്രക്രിയയിലാണ്, അടുത്ത 24 മണിക്കൂറിനുള്ളിൽ അതിന്റെ നിലയെക്കുറിച്ച് നിങ്ങൾക്ക് ഇമെയിൽ ലഭിക്കും.</string>
+    <string name="ad.bottom_bar.instagram">ഇൻസ്റ്റാഗ്രാം</string>
 </resources>

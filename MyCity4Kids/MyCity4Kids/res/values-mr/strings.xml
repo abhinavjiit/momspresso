@@ -860,7 +860,7 @@
     <string name="email_and_password">ईमेल आणि संकेतशब्द</string>
     <string name="location">स्थान</string>
     <string name="search">Search any article or author</string>
-    <string name="new_label">NEW</string>
+    <string name="new_label">नविन</string>
     <string name="view_profile">view profile</string>
     <string name="choose_video_category">व्हिडिओ श्रेणी निवडा</string>
     <string name="enter_valid_email">Please enter valid email id</string>
@@ -1282,7 +1282,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="max_limit">तुम्ही शब्दांची फॉन्ट साईज च्या अधिकतम सीमा पर्यंत पोहचला आहात.</string>
     <string name="min_limit">तुम्ही शब्दांची फॉन्ट साईज च्या कमीत कमी सीमा पर्यंत पोहचला आहात.</string>
     <string name="library">ग्रंथालय</string>
-    <string name="ss_share_with_friends">Share with Friends</string>
+    <string name="ss_share_with_friends">मित्रांबरोबर शेअर करा</string>
     <string name="short_s_add_title_Optional">पर्यायी</string>
     <string name="story_text_description_hint">तुम्ही इथे सुविचार (कोट्स) लिहू शकता.</string>
     <string name="stroy_overflow_layout">कृपया मजकूराचा फॉन्ट आकार कमी करा किंवा पुढे जाण्यासाठी कथेची लांबी लहान करा</string>
@@ -1290,4 +1290,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="ss_follow_author">Follow %1$s and check out other articles by her on Momspresso.\n %2$s</string>
     <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
     <string name="moderation_or_share_story_moderation_message">आपली कथा नियंत्रणासाठी आहे. आपल्याला कथेच्या स्थितीसंदर्भात 24 तासांच्या आत ईमेल प्राप्त होईल</string>
+    <string name="ad.bottom_bar.instagram">इन्स्टाग्राम</string>
 </resources>

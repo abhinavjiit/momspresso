@@ -1284,7 +1284,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="max_limit">మీ చిత్ర పరిమాణం ఎక్కువగా ఉంది</string>
     <string name="min_limit">మీ చిత్ర పరిమాణం తక్కువగా ఉంది</string>
     <string name="library">లైబ్రరీ</string>
-    <string name="ss_share_with_friends">Share with Friends</string>
+    <string name="ss_share_with_friends">మిత్రులతో షేర్ చేయండి</string>
     <string name="short_s_add_title_Optional">ఇష్ట ప్రకారం</string>
     <string name="story_text_description_hint">మీరు మీ సూక్తులను ఇక్కడ రాయండి</string>
     <string name="stroy_overflow_layout">మీ  టెక్స్ట్ ఫాంట్ సైజ్ తగ్గించండి లేదా కథ చిన్నగా వ్రాయండి</string>
@@ -1292,4 +1292,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="ss_follow_author">Follow %1$s and check out other articles by her on Momspresso.\n %2$s</string>
     <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
     <string name="moderation_or_share_story_moderation_message">మీ కథ మాడరేషన్లో ఉంది. రాబోయే 24 గంటల్లో మీకు మీ కథ స్టేటస్  ఇమెయిల్ అందుతుంది</string>
+    <string name="ad.bottom_bar.instagram">ఇన్స్టాగ్రామ్</string>
 </resources>

@@ -1395,11 +1395,12 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="max_limit">તમે મહત્તમ મર્યાદા પર છો.</string>
     <string name="min_limit">તમે લઘુતમ મર્યાદા પર છો.</string>
     <string name="library">સંગ્રહાલય</string>
-    <string name="ss_share_with_friends">Share with Friends</string>
+    <string name="ss_share_with_friends">મિત્રો સાથે શેર કરો</string>
     <string name="short_s_add_title_Optional">વૈકલ્પિક</string>
     <string name="stroy_overflow_layout">કૃપા કરી આગળ વધવા ફોન્ટ નો આકાર ઘટાડો અથવા  વાર્તા ટૂંકી કરો.</string>
     <string name="short_s_write">લખો</string>
     <string name="ss_follow_author">Follow %1$s and check out other articles by her on Momspresso.\n %2$s</string>
     <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
     <string name="moderation_or_share_story_moderation_message">આપની વાર્તા મોડરેશન માં છે. વાર્તા ની જાણકારી વિષે ૨૪ કલાક માં મેલ દ્વારા જણાવવામાં આવશે.</string>
+    <string name="ad.bottom_bar.instagram">ઇન્સટાગ્રામ</string>
 </resources>

@@ -1323,8 +1323,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="editor.next">ಮುಂದೆ</string>
     <string name="max_limit">ನಿಮ್ಮ ಫಾಂಟ್ ಸೈಜ್  ಗರಿಷ್ಟ ಮಟ್ಟದಲ್ಲಿದೆ</string>
     <string name="min_limit">ನಿಮ್ಮ ಫಾಂಟ್ ಸೈಜ್ ಕನಿಷ್ಠ ಮಟ್ಟದಲ್ಲಿದೆ</string>
-    <string name="library">Library</string>
-    <string name="ss_share_with_friends">Share with Friends</string>
+    <string name="library">ಲೈಬ್ರರಿ</string>
+    <string name="ss_share_with_friends">ಗೆಳೆಯರೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಿ</string>
     <string name="short_s_add_title_Optional">ಐಚ್ಛಿಕ</string>
     <string name="story_text_description_hint">ನಿಮ್ಮ ನುಡಿಗಟ್ಟುಗಳನ್ನು ಇಲ್ಲಿ ಬರೆಯಿರಿ</string>
     <string name="stroy_overflow_layout">ಮುಂದುವರಿಯಲು ಫಾಂಟ್ ಸೈಜ್ ಅಥವಾ ಪದಗಳ ಸಂಖ್ಯೆಯನ್ನು ಕೆಡಿಮೆಗೊಳಿಸಿ</string>
@@ -1332,4 +1332,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="ss_follow_author">Follow %1$s and check out other articles by her on Momspresso.\n %2$s</string>
     <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
     <string name="moderation_or_share_story_moderation_message">ನಿಮ್ಮ ಲೇಖನವನ್ನು ಅನುಮೋದನೆಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.  ಮುಂದಿನ 24 ಗಂಟೆಗಳ ಒಳಗೆ ನಿಮ್ಮ ಲೇಖನದ ಅನುಮೋದನೆ ಕುರಿತು ಇಮೇಲ್ ನಿರೀಕ್ಷಿಸಿ.</string>
+    <string name="ad.bottom_bar.instagram">ಇನ್ಸ್ಟಾಗ್ರಾಮ್</string>
 </resources>

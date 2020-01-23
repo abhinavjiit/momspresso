@@ -1281,7 +1281,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="max_limit">எழுத்தளவை இதை விட அதிகரிக்க முடியாது.</string>
     <string name="min_limit">எழுத்தளவை இதை விட  குறைக்க முடியாது.</string>
     <string name="library">பெட்டகம்</string>
-    <string name="ss_share_with_friends">Share with Friends</string>
+    <string name="ss_share_with_friends">நண்பர்களோடு பகிருங்கள்</string>
     <string name="short_s_add_title_Optional">விருப்பமானவை</string>
     <string name="story_text_description_hint">உங்கள் கவிதைகளை இங்கு எழுதலாம்</string>
     <string name="stroy_overflow_layout">தொடர எழுத்தளவு  (அ) கதையின் நீளத்தை குறைக்கவும்.</string>
@@ -1289,4 +1289,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="ss_follow_author">Follow %1$s and check out other articles by her on Momspresso.\n %2$s</string>
     <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
     <string name="moderation_or_share_story_moderation_message">உங்கள் கதை மதிவாய்வுக்கு அனுப்பப்பட்டுள்ளது. இன்னும் 24 மணி நேரத்திற்குள் கதையின் நிலை குறித்த மின்னஞ்சல் உங்களை வந்தடையும்.</string>
+    <string name="ad.bottom_bar.instagram">இன்ஸ்டாகிராம்</string>
 </resources>

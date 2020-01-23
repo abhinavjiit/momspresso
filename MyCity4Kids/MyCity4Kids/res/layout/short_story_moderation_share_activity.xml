@@ -199,7 +199,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/facebookShareWidget"
                     app:shareBgDrawable="@drawable/instagram_gradient_bg"
                     app:shareImage="@drawable/ic_ss_instagram"
-                    app:shareText="INSTAGRAM" />
+                    app:shareText="@string/ad.bottom_bar.instagram" />
 
                 <com.mycity4kids.widget.ShareButtonWidget
                     android:id="@+id/genericShareWidget"
