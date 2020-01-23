@@ -1403,4 +1403,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
     <string name="moderation_or_share_story_moderation_message">આપની વાર્તા મોડરેશન માં છે. વાર્તા ની જાણકારી વિષે ૨૪ કલાક માં મેલ દ્વારા જણાવવામાં આવશે.</string>
     <string name="ad.bottom_bar.instagram">ઇન્સટાગ્રામ</string>
+    <string name="editor_minimum_word_limit">Please write at least %1$d words to continue</string>
 </resources>

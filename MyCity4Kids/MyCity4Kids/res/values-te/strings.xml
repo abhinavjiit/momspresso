@@ -1293,4 +1293,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
     <string name="moderation_or_share_story_moderation_message">మీ కథ మాడరేషన్లో ఉంది. రాబోయే 24 గంటల్లో మీకు మీ కథ స్టేటస్  ఇమెయిల్ అందుతుంది</string>
     <string name="ad.bottom_bar.instagram">ఇన్స్టాగ్రామ్</string>
+    <string name="editor_minimum_word_limit">Please write at least %1$d words to continue</string>
 </resources>

@@ -1290,4 +1290,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
     <string name="moderation_or_share_story_moderation_message">உங்கள் கதை மதிவாய்வுக்கு அனுப்பப்பட்டுள்ளது. இன்னும் 24 மணி நேரத்திற்குள் கதையின் நிலை குறித்த மின்னஞ்சல் உங்களை வந்தடையும்.</string>
     <string name="ad.bottom_bar.instagram">இன்ஸ்டாகிராம்</string>
+    <string name="editor_minimum_word_limit">Please write at least %1$d words to continue</string>
 </resources>

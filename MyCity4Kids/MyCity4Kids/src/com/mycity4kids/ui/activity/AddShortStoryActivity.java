@@ -455,7 +455,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     }
 
     private boolean checkIfStoryIsValid() {
-        if (StringUtils.isNullOrEmpty(categoryId)) {
+        if (!"publishedList".equals(source) && StringUtils.isNullOrEmpty(categoryId)) {
             return false;
         }
         if (AppConstants.VICHAAR_SAGAR_CATEGORY_ID.equals(categoryId)) {
@@ -632,7 +632,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             for (int i = 0; i < jsonArray.length(); i++) {
                 if (count == 0) {
                     HashMap<String, String> map = new HashMap<>();
-                    publishedChallengeId = jsonArray.getJSONObject(i).keys().next().toString();
+                    publishedChallengeId = jsonArray.getJSONObject(i).keys().next();
                     publishedChallengeName = jsonArray.getJSONObject(i).getString(publishedChallengeId);
                     map.put(publishedChallengeId, publishedChallengeName);
                     if (!"ignore".equals(publishedChallengeId)) {
@@ -641,7 +641,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     }
                 } else {
                     HashMap<String, String> map = new HashMap<>();
-                    publishedChallengeId = jsonArray.getJSONObject(i).keys().next().toString();
+                    publishedChallengeId = jsonArray.getJSONObject(i).keys().next();
                     publishedChallengeName = jsonArray.getJSONObject(i).getString(publishedChallengeId);
                     map.put(publishedChallengeId, publishedChallengeName);
                     if (!"ignore".equals(publishedChallengeId)) {
@@ -775,47 +775,42 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
 
     private void regulatePublishButtonState() {
         if (checkIfStoryIsValid()) {
-            publishTextView.setEnabled(true);
             publishTextView.setTextColor(getResources().getColor(R.color.app_red));
         } else {
-            publishTextView.setEnabled(false);
             publishTextView.setTextColor(getResources().getColor(R.color.color_979797));
         }
     }
 
     private boolean isValid() {
-        if (!"publishedList".equals(source)) {
-            for (int i = 0; i < ssTopicsList.size(); i++) {
-                if (ssTopicsList.get(i).isSelected()) {
-                    isTopicSelected = true;
-                }
-            }
-            if (ssTopicsText != null) {
-                for (int i = 0; i < ssTopicsList.size(); i++) {
-                    if (ssTopicsList.get(i).getDisplay_name().equals(ssTopicsText)) {
-                        ssTopicsList.get(i).setIsSelected(true);
-                        isTopicSelected = true;
-                    }
-                }
-            }
-            if (!isTopicSelected) {
-                Toast.makeText(this, R.string.select_atleast_one_topic, Toast.LENGTH_SHORT).show();
+        if (!"publishedList".equals(source) && StringUtils.isNullOrEmpty(categoryId)) {
+            Toast.makeText(this, R.string.select_atleast_one_topic, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (AppConstants.VICHAAR_SAGAR_CATEGORY_ID.equals(categoryId)) {
+            if (countWords(storyBodyEditText.getText().toString()) < 5) {
+                Toast.makeText(this, getString(R.string.editor_minimum_word_limit, 5), Toast.LENGTH_SHORT).show();
                 return false;
+            } else if (countWords(storyBodyEditText.getText().toString()) > MAX_WORDS) {
+                Toast.makeText(this, getString(R.string.short_s_max_word), Toast.LENGTH_SHORT).show();
+                return false;
+            } else {
+                return true;
             }
         }
 
-        if (!hasQuote && (storyTitleEditText.getText() == null || StringUtils.isNullOrEmpty(storyTitleEditText.getText().toString()))) {
+        if (storyTitleEditText.getText() == null || StringUtils.isNullOrEmpty(storyTitleEditText.getText().toString())) {
             Toast.makeText(this, getString(R.string.editor_title_empty), Toast.LENGTH_SHORT).show();
             return false;
-        }
-        if (storyBodyEditText.getText() == null || StringUtils.isNullOrEmpty(storyBodyEditText.getText().toString())) {
-            Toast.makeText(this, getString(R.string.editor_body_empty), Toast.LENGTH_SHORT).show();
+        } else if (countWords(storyBodyEditText.getText().toString()) < 10) {
+            Toast.makeText(this, getString(R.string.editor_minimum_word_limit, 10), Toast.LENGTH_SHORT).show();
             return false;
         } else if (countWords(storyBodyEditText.getText().toString()) > MAX_WORDS) {
             Toast.makeText(this, getString(R.string.short_s_max_word), Toast.LENGTH_SHORT).show();
             return false;
+        } else {
+            return true;
         }
-        return true;
     }
 
     @Override
