@@ -13,8 +13,8 @@
         android:layout_height="match_parent"
         android:background="@drawable/ss_share_bg"
         android:gravity="center"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp">
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/titleTextView"
