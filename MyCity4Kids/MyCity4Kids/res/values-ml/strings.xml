@@ -32,7 +32,7 @@
     <string name="hint_text">What are you looking for ?</string>
     <string name="locality_txt">In which location?</string>
     <string name="error_network">ഉപകരണത്തിന് നെറ്റ്‌വർക്ക് കവറേജ് ലഭ്യമല്ല</string>
-    <string name="please_wait">Please Wait...</string>
+    <string name="please_wait">കാത്തിരിക്കൂ...</string>
     <string name="no_result_txt">No result found.</string>
     <string name="went_wrong">എന്തോ തെറ്റ് പറ്റി</string>
     <string name="server_went_wrong">സെർവറിൽ എന്തോ തെറ്റ് പറ്റി</string>
@@ -625,7 +625,7 @@
     <string name="editor_body_min_words">Please write atleast 300 words to publish</string>
     <string name="draft_oops">Oops!</string>
     <string name="draft_not_saved">Draft could not be saved, your current changes will be lost if you exit now. Would you like to exit?</string>
-    <string name="draft_save_success">Draft Successfully saved</string>
+    <string name="draft_save_success">ഡ്രാഫ്റ്റ് വിജയകരമായി സേവ് ചെയ്തു.</string>
     <string name="verify_email">Mail sent to email address. Please click and verify</string>
     <string name="video_upload_fail">Unable to upload the video. Please try again later.</string>
     <string name="connectivity_unavailable">No connectivity available</string>
