@@ -1339,4 +1339,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="moderation_or_share_story_moderation_message">നിങ്ങളുടെ കഥ/കുറിപ്പ് മോഡറേഷൻ പ്രക്രിയയിലാണ്, അടുത്ത 24 മണിക്കൂറിനുള്ളിൽ അതിന്റെ നിലയെക്കുറിച്ച് നിങ്ങൾക്ക് ഇമെയിൽ ലഭിക്കും.</string>
     <string name="ad.bottom_bar.instagram">ഇൻസ്റ്റാഗ്രാം</string>
     <string name="editor_minimum_word_limit">Please write at least %1$d words to continue</string>
+    <string name="all_copy_link">COPY LINK</string>
+    <string name="ss_story_link_copied">Story link copied</string>
 </resources>

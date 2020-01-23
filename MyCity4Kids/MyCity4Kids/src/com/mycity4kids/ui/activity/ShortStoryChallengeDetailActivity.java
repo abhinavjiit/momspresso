@@ -877,6 +877,11 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                 return true;
             } else if (item.getItemId() == R.id.bookmarkShortStory) {
                 return true;
+            } else if (item.getItemId() == R.id.copyLink) {
+                AppUtils.copyToClipboard(AppUtils.getShortStoryShareUrl(mDatalist.get(position).getUserType(),
+                        mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug()));
+                Toast.makeText(this, getString(R.string.ss_story_link_copied), Toast.LENGTH_SHORT).show();
+                return true;
             } else if (item.getItemId() == R.id.reportContentShortStory) {
                 relative_frame.setVisibility(View.VISIBLE);
                 ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();

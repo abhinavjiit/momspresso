@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -1009,12 +1010,15 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 if (isAdded()) {
                     getSharableViewForPosition(position, AppConstants.MEDIUM_GENERIC);
                 }
-
-
                 return true;
             } else if (item.getItemId() == R.id.bookmarkShortStory) {
-
-
+                return true;
+            } else if (item.getItemId() == R.id.copyLink) {
+                AppUtils.copyToClipboard(AppUtils.getShortStoryShareUrl(articleDataModelsNew.get(position).getUserType(),
+                        articleDataModelsNew.get(position).getBlogPageSlug(), articleDataModelsNew.get(position).getTitleSlug()));
+                if (isAdded()) {
+                    Toast.makeText(getActivity(), getActivity().getString(R.string.ss_story_link_copied), Toast.LENGTH_SHORT).show();
+                }
                 return true;
             } else if (item.getItemId() == R.id.reportContentShortStory) {
                 ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();

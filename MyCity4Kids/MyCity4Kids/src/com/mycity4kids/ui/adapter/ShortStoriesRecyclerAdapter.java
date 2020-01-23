@@ -11,6 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crashlytics.android.Crashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.ArticleListingResult;
@@ -19,8 +22,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import q.rorbin.badgeview.QBadgeView;
 
 /**
@@ -35,8 +36,6 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
     private RecyclerViewClickListener mListener;
 
     public ShortStoriesRecyclerAdapter(Context pContext, RecyclerViewClickListener listener) {
-
-        float density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
         this.mListener = listener;

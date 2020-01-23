@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -1518,11 +1519,15 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 if (isAdded()) {
                     getSharableViewForPosition(position, AppConstants.MEDIUM_GENERIC);
                 }
-
                 return true;
             } else if (item.getItemId() == R.id.bookmarkShortStory) {
-
-
+                return true;
+            } else if (item.getItemId() == R.id.copyLink) {
+                AppUtils.copyToClipboard(AppUtils.getShortStoryShareUrl(consolidatedList.get(position).getSsResult().getUserType(),
+                        consolidatedList.get(position).getSsResult().getBlogTitleSlug(), consolidatedList.get(position).getSsResult().getTitleSlug()));
+                if (isAdded()) {
+                    Toast.makeText(getActivity(), getActivity().getString(R.string.ss_story_link_copied), Toast.LENGTH_SHORT).show();
+                }
                 return true;
             } else if (item.getItemId() == R.id.reportContentShortStory) {
                 ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();

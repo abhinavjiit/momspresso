@@ -15,16 +15,14 @@ import android.os.Handler
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -1073,14 +1071,13 @@ class UserProfileActivity : BaseActivity(),
 
     @SuppressLint("RestrictedApi")
     private fun chooseMenuOptionsItem(view: View, position: Int) {
-
         val popupMenu = PopupMenu(this@UserProfileActivity, view)
         popupMenu.menuInflater.inflate(R.menu.choose_short_story_menu, popupMenu.menu)
         for (i in 0 until popupMenu.menu.size()) {
             val drawable = popupMenu.menu.getItem(i).icon
             if (drawable != null) {
                 drawable.mutate()
-                drawable.setColorFilter(resources.getColor(R.color.app_red), PorterDuff.Mode.SRC_ATOP)
+                drawable.setColorFilter(ContextCompat.getColor(this, R.color.app_red), PorterDuff.Mode.SRC_ATOP)
             }
         }
         popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
@@ -1088,6 +1085,11 @@ class UserProfileActivity : BaseActivity(),
                 var id = item?.itemId
                 if (id == R.id.shareShortStory) {
                     getSharableViewForPosition(position, AppConstants.MEDIUM_GENERIC)
+                    return true
+                } else if (id == R.id.copyLink) {
+                    AppUtils.copyToClipboard(AppUtils.getShortStoryShareUrl(userContentList?.get(position)?.userType,
+                            userContentList?.get(position)?.blogTitleSlug, userContentList?.get(position)?.titleSlug))
+                    Toast.makeText(this@UserProfileActivity, getString(R.string.ss_story_link_copied), Toast.LENGTH_SHORT).show()
                     return true
                 } else if (id == R.id.reportContentShortStory) {
                     val reportContentDialogFragment = ReportContentDialogFragment()

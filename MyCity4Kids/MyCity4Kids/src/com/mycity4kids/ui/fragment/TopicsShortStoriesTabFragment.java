@@ -28,6 +28,7 @@ import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -313,25 +314,19 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     };
 
     private void processArticleListingResponse(ArticleListingResponse responseData) {
-
         ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
-
         if (dataList.size() == 0) {
             isLastPageReached = false;
             if (null != mDatalist && !mDatalist.isEmpty()) {
                 //No more next results for search from pagination
                 isLastPageReached = true;
             } else {
-                // No results for search
-//                noBlogsTextView.setVisibility(View.VISIBLE);
-//                noBlogsTextView.setText(getString(R.string.no_articles_found));
                 writeArticleCell.setVisibility(View.VISIBLE);
                 mDatalist = dataList;
                 recyclerAdapter.setListData(mDatalist);
                 recyclerAdapter.notifyDataSetChanged();
             }
         } else {
-//            noBlogsTextView.setVisibility(View.GONE);
             writeArticleCell.setVisibility(View.GONE);
             if (nextPageNumber == 1) {
                 mDatalist = dataList;
@@ -346,7 +341,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 startTracking();
             }
         }
-
     }
 
     @Override
@@ -368,7 +362,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 TopicsListingFragment frag = ((TopicsListingFragment) this.getParentFragment());
                 frag.hideTabLayer();
                 if (isAdded()) {
-//                    ((ShortStoriesListingContainerActivity) getActivity()).hideToolbarAndNavigationLayer();
                     SharedPrefUtils
                             .setCoachmarksShownFlag(BaseApplication.getAppContext(),
                                     "topics_article", true);
@@ -1148,6 +1141,9 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 
     @SuppressLint("RestrictedApi")
     private void chooseMenuOptionsItem(View view, int position) {
+        if (!isAdded()) {
+            return;
+        }
         final androidx.appcompat.widget.PopupMenu popupMenu = new androidx.appcompat.widget.PopupMenu(getActivity(), view);
         popupMenu.getMenuInflater().inflate(R.menu.choose_short_story_menu, popupMenu.getMenu());
         for (int i = 0; i < popupMenu.getMenu().size(); i++) {
@@ -1164,8 +1160,13 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 }
                 return true;
             } else if (item.getItemId() == R.id.bookmarkShortStory) {
-
-
+                return true;
+            } else if (item.getItemId() == R.id.copyLink) {
+                AppUtils.copyToClipboard(AppUtils.getShortStoryShareUrl(mDatalist.get(position).getUserType(),
+                        mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug()));
+                if (isAdded()) {
+                    Toast.makeText(getActivity(), getActivity().getString(R.string.ss_story_link_copied), Toast.LENGTH_SHORT).show();
+                }
                 return true;
             } else if (item.getItemId() == R.id.reportContentShortStory) {
                 ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
@@ -1178,15 +1179,10 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 reportContentDialogFragment.show(fm, "Report Content");
                 return true;
             }
-
-
             return false;
         });
-
         MenuPopupHelper menuPopupHelper = new MenuPopupHelper(view.getContext(), (MenuBuilder) popupMenu.getMenu(), view);
         menuPopupHelper.setForceShowIcon(true);
         menuPopupHelper.show();
-
-
     }
 }
