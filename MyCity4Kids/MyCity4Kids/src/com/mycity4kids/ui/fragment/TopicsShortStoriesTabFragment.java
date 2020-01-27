@@ -49,6 +49,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
+import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -70,6 +71,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.AddShortStoryActivity;
 import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
+import com.mycity4kids.ui.activity.ShortStoryModerationOrShareActivity;
 import com.mycity4kids.ui.activity.TopicsListingFragment;
 import com.mycity4kids.ui.adapter.ShortStoriesRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
@@ -412,12 +414,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             }
             break;
             case R.id.storyImageView1:
-//                if (BuildConfig.DEBUG) {
-//                    Intent Tintent = new Intent(getActivity(), ShortStoryModerationOrShareActivity.class);
-//                    Tintent.putExtra("shareUrl", mDatalist.get(position).getStoryImage());
-//                    Tintent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
-//                    startActivity(Tintent);
-//                } else {
                 Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
                 intent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
                 intent.putExtra(Constants.AUTHOR_ID, mDatalist.get(position).getUserId());
@@ -432,7 +428,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                         mDatalist.get(position).getUserId() + "~" + mDatalist.get(position)
                                 .getUserName());
                 startActivity(intent);
-//                }
                 break;
             case R.id.storyRecommendationContainer:
                 if (!isRecommendRequestRunning) {
@@ -489,11 +484,17 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             }
             break;
             case R.id.authorNameTextView:
-                Intent pIntent = new Intent(getActivity(), UserProfileActivity.class);
-                pIntent.putExtra(Constants.USER_ID, mDatalist.get(position).getUserId());
-                startActivity(pIntent);
+                if (BuildConfig.DEBUG) {
+                    Intent Tintent = new Intent(getActivity(), ShortStoryModerationOrShareActivity.class);
+                    Tintent.putExtra("shareUrl", mDatalist.get(position).getStoryImage());
+                    Tintent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
+                    startActivity(Tintent);
+                } else {
+                    Intent pIntent = new Intent(getActivity(), UserProfileActivity.class);
+                    pIntent.putExtra(Constants.USER_ID, mDatalist.get(position).getUserId());
+                    startActivity(pIntent);
+                }
                 break;
-
             case R.id.followAuthorTextView:
                 followAPICall(mDatalist.get(position).getUserId(), position);
                 break;

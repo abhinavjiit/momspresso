@@ -20,6 +20,7 @@ import com.crashlytics.android.Crashlytics
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.ToastUtils
+import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
@@ -316,5 +317,8 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
     }
 
     override fun onBackPressed() {
+        if (BuildConfig.DEBUG) {
+            super.onBackPressed()
+        }
     }
 }
