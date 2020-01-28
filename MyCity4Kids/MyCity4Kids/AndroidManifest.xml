@@ -502,6 +502,7 @@
         <activity
             android:name=".ui.activity.ShortStoryModerationOrShareActivity"
             android:theme="@style/ShareStoryTheme" />
+        <activity android:name=".ui.activity.ChooseShortStoryCategoryActivity" />
 
         <service android:name=".sync.PushTokenService" />
         <service android:name=".sync.SyncUserInfoService" />
