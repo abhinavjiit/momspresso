@@ -1,5 +1,6 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
@@ -10,7 +11,6 @@ import com.mycity4kids.models.request.UpdateViewCountRequest;
 import com.mycity4kids.models.response.AddCommentResponse;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
-import com.mycity4kids.models.response.BaseResponse;
 import com.mycity4kids.models.response.CommentListResponse;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ReportStoryOrCommentResponse;
@@ -19,8 +19,10 @@ import com.mycity4kids.models.response.ShortStoryDetailResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.models.response.ViewCountResponse;
 
+import kotlinx.coroutines.Deferred;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -104,4 +106,14 @@ public interface ShortStoryAPI {
 
     @PUT("/article-category-images/article-config/{ss_id}/")
     Call<ResponseBody> updateConfig(@Path("ss_id") String shortStoryId, @Body ShortStoryConfigRequest body);
+
+
+    @GET("/v2/categories")
+    Deferred<Response<Topics>> getShortStoryTopicsAsync(@Query("id") String id,
+                                                        @Query("public") String isPublic);
+
+    @GET("/v2/categories")
+    Deferred<Response<Topics>> getShortStoryChallengesAsync(@Query("id") String id,
+                                                            @Query("isActive") String isActive,
+                                                            @Query("public") String isPublic);
 }

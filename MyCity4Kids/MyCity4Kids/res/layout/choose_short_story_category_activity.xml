@@ -42,7 +42,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="@string/choose_video_category"
+                        android:text="@string/select_category"
                         android:textColor="@color/campaign_515151"
                         android:textSize="20sp"
                         android:textStyle="bold"
@@ -78,10 +78,10 @@
             app:fontName="oswald_regular.ttf" />
 
         <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/draftsShimmerLayout"
+            android:id="@+id/shortStoryShimmer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
+            android:visibility="visible"
             app:duration="800">
 
             <LinearLayout
@@ -89,16 +89,16 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <include layout="@layout/drafts_shimmer_layout" />
+                <include layout="@layout/shimmer_choose_short_story_category" />
 
-                <include layout="@layout/drafts_shimmer_layout" />
 
             </LinearLayout>
+
 
         </com.facebook.shimmer.ShimmerFrameLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/horizontalRecyclerViewForVideoChallenge"
+            android:id="@+id/shortStoryChallengeHorizontalView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -121,7 +121,7 @@
             app:fontName="oswald_regular.ttf" />
 
         <com.mycity4kids.ui.videochallengenewui.ExpandableHeightGridView
-            android:id="@+id/gridview"
+            android:id="@+id/topicsGridView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="16dp"
