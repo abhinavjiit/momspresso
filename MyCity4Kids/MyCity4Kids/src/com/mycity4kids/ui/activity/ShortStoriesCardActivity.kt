@@ -52,7 +52,10 @@ import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.OnDragTouchListener
 import com.squareup.picasso.Picasso
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -453,23 +456,15 @@ class ShortStoriesCardActivity : BaseActivity() {
         val retro = BaseApplication.getInstance().retrofit
         val imageUploadAPI = retro.create(ImageUploadAPI::class.java)
         path = MediaStore.Images.Media.insertImage(contentResolver, finalBitmap, "Title" + System.currentTimeMillis(), null)
-        if (path != null) {
-            imageUriTemp = Uri.parse(path)
-        }
-        if (imageUriTemp != null) {
-            file = FileUtils.getFile(this, imageUriTemp)
-        }
+        imageUriTemp = Uri.parse(path)
+        file = FileUtils.getFile(this, imageUriTemp)
 
-        MEDIA_TYPE_PNG = MediaType.parse("image/png")!!
-        if (file != null && MEDIA_TYPE_PNG != null) {
-            requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file)
-        }
-        imageType = RequestBody.create(MediaType.parse("text/plain"), "4")
-        if (requestBodyFile != null) {
-            showProgressDialog(resources.getString(R.string.please_wait))
-            val call = imageUploadAPI.uploadImage(imageType, requestBodyFile)
-            call.enqueue(ssImageUploadCallback)
-        }
+        MEDIA_TYPE_PNG = "image/png".toMediaTypeOrNull()!!
+        requestBodyFile = file.asRequestBody(MEDIA_TYPE_PNG)
+        imageType = "4".toRequestBody("text/plain".toMediaTypeOrNull())
+        showProgressDialog(resources.getString(R.string.please_wait))
+        val call = imageUploadAPI.uploadImage(imageType, requestBodyFile)
+        call.enqueue(ssImageUploadCallback)
     }
 
     private val ssImageUploadCallback = object : Callback<ImageUploadResponse> {
@@ -722,8 +717,6 @@ class ShortStoriesCardActivity : BaseActivity() {
         } else {
             showToast(getString(R.string.max_limit))
         }
-
-//        checkViewAndUpdate()
     }
 
     fun checkViewAndUpdate(): Boolean {

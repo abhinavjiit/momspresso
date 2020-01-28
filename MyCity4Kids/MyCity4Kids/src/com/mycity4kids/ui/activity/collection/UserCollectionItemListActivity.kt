@@ -327,11 +327,11 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                 Log.d("MC4KException", Log.getStackTraceString(e))
                 val code = (e as retrofit2.HttpException).code()
                 if (code == 402) {
-                    var data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
-                    var jsonParser = JsonParser()
-                    var jsonObject = jsonParser.parse(
+                    val data = e.response()?.errorBody()!!.byteStream()
+                    val jsonParser = JsonParser()
+                    val jsonObject = jsonParser.parse(
                             InputStreamReader(data, "UTF-8")) as JsonObject
-                    var reason = jsonObject.get("reason")
+                    val reason = jsonObject.get("reason")
                     Toast.makeText(this@UserCollectionItemListActivity, reason.asString, Toast.LENGTH_SHORT).show()
                 }
                 Log.e("exception in error", e.message.toString())

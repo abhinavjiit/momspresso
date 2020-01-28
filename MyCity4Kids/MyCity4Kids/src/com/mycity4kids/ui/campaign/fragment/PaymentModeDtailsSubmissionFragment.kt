@@ -2,13 +2,13 @@ package com.mycity4kids.ui.campaign.fragment
 
 import android.app.Activity
 import android.os.Bundle
-import androidx.appcompat.widget.Toolbar
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.*
+import androidx.appcompat.widget.Toolbar
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.kelltontech.network.Response
@@ -31,7 +31,7 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.adapter.rxjava2.HttpException
+import retrofit2.HttpException
 import java.io.InputStreamReader
 
 
@@ -276,12 +276,10 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                 }
 
                 override fun onError(e: Throwable) {
-
-
                     removeProgressDialog()
                     val code = (e as HttpException).code()
                     if (code == 400) {
-                        var data = (e as HttpException).response().errorBody()!!.byteStream()
+                        var data = e.response()?.errorBody()!!.byteStream()
                         var jsonParser = JsonParser()
                         var jsonObject = jsonParser.parse(
                                 InputStreamReader(data, "UTF-8")) as JsonObject

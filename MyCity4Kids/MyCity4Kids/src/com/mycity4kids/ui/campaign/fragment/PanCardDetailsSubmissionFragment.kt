@@ -27,7 +27,7 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.adapter.rxjava2.HttpException
+import retrofit2.HttpException
 import java.io.InputStreamReader
 import java.util.regex.Pattern
 
@@ -164,7 +164,7 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                             removeProgressDialog()
                             val code = (e as HttpException).code()
                             if (code == 400) {
-                                var data = (e as HttpException).response().errorBody()!!.byteStream()
+                                var data = e.response()?.errorBody()!!.byteStream()
                                 var jsonParser = JsonParser()
                                 var jsonObject = jsonParser.parse(
                                         InputStreamReader(data, "UTF-8")) as JsonObject
@@ -203,7 +203,7 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                             removeProgressDialog()
                             val code = (e as HttpException).code()
                             if (code == 400) {
-                                var data = (e as HttpException).response().errorBody()!!.byteStream()
+                                var data = e.response()?.errorBody()!!.byteStream()
                                 var jsonParser = JsonParser()
                                 var jsonObject = jsonParser.parse(
                                         InputStreamReader(data, "UTF-8")) as JsonObject

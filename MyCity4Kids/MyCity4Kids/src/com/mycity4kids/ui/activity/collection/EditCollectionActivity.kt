@@ -36,6 +36,7 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import retrofit2.HttpException
 import java.io.InputStreamReader
 
 class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerViewClickListener, CollectionThumbnailImageChangeDialogFragmnet.SendImage {
@@ -223,7 +224,7 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                 Crashlytics.logException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
                 try {
-                    var data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
+                    var data = (e as HttpException).response()?.errorBody()!!.byteStream()
                     var jsonParser = JsonParser()
                     var jsonObject = jsonParser.parse(
                             InputStreamReader(data, "UTF-8")) as JsonObject
@@ -279,9 +280,9 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                 Crashlytics.logException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
                 try {
-                    val data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
-                    val jsonParser = JsonParser()
-                    val jsonObject = jsonParser.parse(
+                    var data = (e as HttpException).response()?.errorBody()!!.byteStream()
+                    var jsonParser = JsonParser()
+                    var jsonObject = jsonParser.parse(
                             InputStreamReader(data, "UTF-8")) as JsonObject
                     val reason = jsonObject.get("reason")
                     Toast.makeText(this@EditCollectionActivity, reason.asString, Toast.LENGTH_SHORT).show()

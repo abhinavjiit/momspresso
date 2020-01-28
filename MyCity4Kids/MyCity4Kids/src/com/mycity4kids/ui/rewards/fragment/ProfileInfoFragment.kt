@@ -29,7 +29,6 @@ import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import com.crashlytics.android.Crashlytics
 import com.facebook.FacebookSdk
 import com.facebook.accountkit.AccountKitLoginResult
@@ -80,8 +79,9 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import okhttp3.MediaType
-import okhttp3.RequestBody
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.apmem.tools.layouts.FlowLayout
 import retrofit2.Call
 import retrofit2.Callback
@@ -91,15 +91,8 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**editLanguage
- * A simple [Fragment] subclass.
- */
-
-//const val VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE = 1000
-//const val REQUEST_SELECT_PLACE = 2000
 const val ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111
 const val ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE = 1113
-
 
 class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragment.OnClickDoneListener, CityListingDialogFragment.IChangeCity, PickerDialogFragment.OnClickDoneListener {
 
@@ -715,7 +708,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
         popup.setOnMenuItemClickListener { item ->
             val i = item.itemId
             if (i == R.id.camera) {
-                val cameraIntent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+                val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                 if (cameraIntent.resolveActivity(context!!.packageManager) != null) {
                     // Create the File where the photo should go
                     try {
@@ -765,7 +758,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
     }
 
     private fun startCropActivity(uri: Uri) {
-        val destinationFileName = SAMPLE_CROPPED_IMAGE_NAME + ".jpg"
+        val destinationFileName = "$SAMPLE_CROPPED_IMAGE_NAME.jpg"
         Log.e("instartCropActivity", "test")
 
         val uCrop = UCrop.of(uri, Uri.fromFile(File(FacebookSdk.getCacheDir(), destinationFileName)))
@@ -778,9 +771,9 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
         showProgressDialog(getString(R.string.please_wait))
         val bao = ByteArrayOutputStream()
         val retro = BaseApplication.getInstance().retrofit
-        val MEDIA_TYPE_PNG = MediaType.parse("image/png")
-        val requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file)
-        val imageType = RequestBody.create(MediaType.parse("text/plain"), "0")
+        val MEDIA_TYPE_PNG = "image/png".toMediaTypeOrNull()
+        val requestBodyFile = file.asRequestBody(MEDIA_TYPE_PNG)
+        val imageType = "0".toRequestBody("text/plain".toMediaTypeOrNull())
         // prepare call in Retrofit 2.0
         val imageUploadAPI = retro.create(ImageUploadAPI::class.java)
 
@@ -807,9 +800,6 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
                             .memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.family_xxhdpi)
                             .error(R.drawable.family_xxhdpi).into(profileImageView)
                     SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), responseModel.data.result.url)
-
-                    //                                 showToast("Image successfully uploaded!");
-                    // ((BaseActivity) this()).showSnackbar(getView().findViewById(R.id.root), "You have successfully uploaded an image.");
                 }
             }
 
@@ -820,7 +810,6 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
             }
         }
         )
-
     }
 
     fun setProfileImage(url: String) {

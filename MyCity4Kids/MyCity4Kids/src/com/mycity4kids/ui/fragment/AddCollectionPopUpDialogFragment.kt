@@ -35,6 +35,7 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import retrofit2.HttpException
 import java.io.InputStreamReader
 
 class AddCollectionPopUpDialogFragment : DialogFragment() {
@@ -142,7 +143,7 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
                 Log.d("MC4KException", Log.getStackTraceString(e))
                 try {
                     //    Log.d("CODE", code.toString())
-                    var data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
+                    var data = (e as HttpException).response()?.errorBody()!!.byteStream()
                     var jsonParser = JsonParser()
                     var jsonObject = jsonParser.parse(
                             InputStreamReader(data, "UTF-8")) as JsonObject
@@ -190,8 +191,7 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
                 Crashlytics.logException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
                 try {
-                    //    Log.d("CODE", code.toString())
-                    val data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
+                    val data = (e as HttpException).response()?.errorBody()!!.byteStream()
                     val jsonParser = JsonParser()
                     val jsonObject = jsonParser.parse(
                             InputStreamReader(data, "UTF-8")) as JsonObject
