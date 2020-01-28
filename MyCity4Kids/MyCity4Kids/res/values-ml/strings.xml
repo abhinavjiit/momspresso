@@ -1192,7 +1192,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="use_picture_word_to_upload_one">Use The Picture ,Word, Phrase Or Video Given Below To Upload One</string>
 
 
-
     <string name="last_name">LAST NAME</string>
     <string name="first_name">FIRST NAME</string>
     <string name="phone">PHONE</string>
@@ -1348,4 +1347,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="ss_coachmarks_text_style">Change font size or text alignment</string>
     <string name="article_editor_min_words_body">You have written %1$d words. Please write at least 300 words to publish.</string>
     <string name="enter_valid_instagram_campaign_detail_fragment_popup">Please enter a valid Instagram handle</string>
+    <string name="select_category">Select Category</string>
 </resources>
