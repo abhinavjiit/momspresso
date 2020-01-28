@@ -2,8 +2,6 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import com.google.android.material.tabs.TabLayout;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +16,7 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
@@ -198,25 +197,19 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             });
         }
 
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                view.setSelected(true);
-                ExploreTopicsModel topic = (ExploreTopicsModel) adapterView.getAdapter().getItem(position);
-                if (topic == null) {
-                    return;
-                }
-                if (MEET_CONTRIBUTOR_ID.equals(topic.getId())) {
-                    Intent intent = new Intent(getActivity(), ContributorListActivity.class);
-                    startActivity(intent);
-                } else if (EXPLORE_SECTION_ID.equals(topic.getId())) {
-                    Intent intent = new Intent(getActivity(), ExploreEventsResourcesActivity.class);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(getActivity(), TopicsListingActivity.class);
-                    intent.putExtra("parentTopicId", topic.getId());
-                    startActivity(intent);
-                }
+        gridview.setOnItemClickListener((adapterView, view, position, id) -> {
+            view.setSelected(true);
+            ExploreTopicsModel topic = (ExploreTopicsModel) adapterView.getAdapter().getItem(position);
+            if (topic == null) {
+                return;
+            }
+            if (MEET_CONTRIBUTOR_ID.equals(topic.getId())) {
+                Intent intent = new Intent(getActivity(), ContributorListActivity.class);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(getActivity(), TopicsListingActivity.class);
+                intent.putExtra("parentTopicId", topic.getId());
+                startActivity(intent);
             }
         });
 
@@ -239,11 +232,6 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 contributorListModel.setDisplay_name(getString(R.string.explore_listing_explore_categories_meet_contributor));
                 contributorListModel.setId(MEET_CONTRIBUTOR_ID);
                 mainTopicsList.add(contributorListModel);
-
-                ExploreTopicsModel exploreSectionModel = new ExploreTopicsModel();
-                exploreSectionModel.setDisplay_name(getString(R.string.home_screen_explore_title));
-                exploreSectionModel.setId(EXPLORE_SECTION_ID);
-                mainTopicsList.add(exploreSectionModel);
             }
         } catch (Exception e) {
             Crashlytics.logException(e);

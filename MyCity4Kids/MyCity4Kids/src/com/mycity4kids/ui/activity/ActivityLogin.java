@@ -9,6 +9,10 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentManager;
+
 import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -36,8 +40,6 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.LoginController;
-import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.google.GooglePlusUtils;
 import com.mycity4kids.gtmutils.Utils;
@@ -68,10 +70,6 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.FragmentManager;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -270,7 +268,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             if (isFinishing())
                 return;
 
-            final LoginController _controller = new LoginController(this, this);
             loginMode = "gp";
             currentPersonName = result.getSignInAccount().getDisplayName();
             userId = result.getSignInAccount().getId();
@@ -603,19 +600,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             kidsInfo.setDate_of_birth(convertTime("" + kid.getBirthDay()));
             kidsInfo.setColor_code(kid.getColorCode());
             kidsInfoArrayList.add(kidsInfo);
-        }
-
-        // saving child data
-        TableKids kidsTable = new TableKids((BaseApplication) getApplicationContext());
-        kidsTable.deleteAll();
-        try {
-            kidsTable.beginTransaction();
-            for (KidsInfo kids : kidsInfoArrayList) {
-                kidsTable.insertData(kids);
-            }
-            kidsTable.setTransactionSuccessful();
-        } finally {
-            kidsTable.endTransaction();
         }
     }
 

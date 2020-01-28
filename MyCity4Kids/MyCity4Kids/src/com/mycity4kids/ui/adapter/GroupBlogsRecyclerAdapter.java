@@ -196,7 +196,6 @@ public class GroupBlogsRecyclerAdapter extends RecyclerView.Adapter<GroupBlogsRe
         TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
-        TextView authorTypeTextView;
         ImageView bookmarkArticleImageView;
         ImageView watchLaterImageView;
 
@@ -210,7 +209,6 @@ public class GroupBlogsRecyclerAdapter extends RecyclerView.Adapter<GroupBlogsRe
             viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
             commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
             recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
-            authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
             bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
             watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
 

@@ -25,24 +25,6 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.LogoutController;
-import com.mycity4kids.dbtable.ExternalCalendarTable;
-import com.mycity4kids.dbtable.TableAdult;
-import com.mycity4kids.dbtable.TableApiEvents;
-import com.mycity4kids.dbtable.TableAppointmentData;
-import com.mycity4kids.dbtable.TableAttendee;
-import com.mycity4kids.dbtable.TableFamily;
-import com.mycity4kids.dbtable.TableFile;
-import com.mycity4kids.dbtable.TableKids;
-import com.mycity4kids.dbtable.TableNotes;
-import com.mycity4kids.dbtable.TableTaskData;
-import com.mycity4kids.dbtable.TableTaskList;
-import com.mycity4kids.dbtable.TableWhoToRemind;
-import com.mycity4kids.dbtable.TaskCompletedTable;
-import com.mycity4kids.dbtable.TaskTableAttendee;
-import com.mycity4kids.dbtable.TaskTableFile;
-import com.mycity4kids.dbtable.TaskTableNotes;
-import com.mycity4kids.dbtable.TaskTableWhoToRemind;
-import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.models.logout.LogoutResponse;
 import com.mycity4kids.models.response.KidsModel;
 import com.mycity4kids.models.response.UserDetailResponse;
@@ -198,11 +180,6 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
                     }
                     //Verified User
                     else {
-                        if (null != responseData.getData().get(0).getResult().getKids()) {
-                            saveKidsInformation(responseData.getData().get(0).getResult().getKids());
-                        }
-//                        Intent intent = new Intent(IdTokenLoginActivity.this, PushTokenService.class);
-//                        startService(intent);
                         Intent intent1 = new Intent(IdTokenLoginActivity.this, LoadingActivity.class);
                         startActivity(intent1);
                     }
@@ -265,42 +242,9 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
             String pushToken = SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext());
             SharedPrefUtils.clearPrefrence(BaseApplication.getAppContext());
             SharedPrefUtils.setDeviceToken(BaseApplication.getAppContext(), pushToken);
-            /**
-             * delete table from local also;
-             */
-            UserTable _tables = new UserTable((BaseApplication) getApplicationContext());
-            _tables.deleteAll();
-
-            TableFamily _familytables = new TableFamily((BaseApplication) getApplicationContext());
-            _familytables.deleteAll();
-
-            TableAdult _adulttables = new TableAdult((BaseApplication) getApplicationContext());
-            _adulttables.deleteAll();
-
-            TableKids _kidtables = new TableKids((BaseApplication) getApplicationContext());
-            _kidtables.deleteAll();
-
-            new TableAppointmentData(BaseApplication.getInstance()).deleteAll();
-            new TableNotes(BaseApplication.getInstance()).deleteAll();
-            new TableFile(BaseApplication.getInstance()).deleteAll();
-            new TableAttendee(BaseApplication.getInstance()).deleteAll();
-            new TableWhoToRemind(BaseApplication.getInstance()).deleteAll();
-
-
-            new TableTaskData(BaseApplication.getInstance()).deleteAll();
-            new TableTaskList(BaseApplication.getInstance()).deleteAll();
-            new TaskTableAttendee(BaseApplication.getInstance()).deleteAll();
-            new TaskTableWhoToRemind(BaseApplication.getInstance()).deleteAll();
-            new TaskTableFile(BaseApplication.getInstance()).deleteAll();
-            new TaskTableNotes(BaseApplication.getInstance()).deleteAll();
-            new TaskCompletedTable(BaseApplication.getInstance()).deleteAll();
-            new TableApiEvents(BaseApplication.getInstance()).deleteAll();
-
-            new ExternalCalendarTable(BaseApplication.getInstance()).deleteAll();
 
             // clear cachee
             BaseApplication.setBlogResponse(null);
-            BaseApplication.setBusinessREsponse(null);
 
             // clear all sessions
 
@@ -313,12 +257,6 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
             // set logout flag
             SharedPrefUtils.setLogoutFlag(BaseApplication.getAppContext(), true);
             loginWithIdToken(loginUser);
-
-//            Intent intent = new Intent(this, ActivityLogin.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//            startActivity(intent);
-//
-//            finish();
 
         } else if (responseData.getResponseCode() == 400) {
             if (StringUtils.isNullOrEmpty(message)) {
@@ -333,23 +271,6 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
     private void loginWithIdToken(String loggedInUser) {
         BaseApplication.getInstance().destroyRetrofitInstance();
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-//        if ("shavet".equals(loggedInUser)) {
-//            uInfo.setDynamoId("43f6a6e57f3d4ba0b41bab18509eae1f");
-//            uInfo.setMc4kToken("438d2aeb4d53b871e5204b5ee4b6c150");
-//        } else if ("monika".equals(loggedInUser)) {
-//            uInfo.setDynamoId("9b5032cd504b4c20a9f543059f18e2e6");
-//            uInfo.setMc4kToken("ya29.Ci9rAwTDTDT7jAe0CfLZW5kgceRtPIPdOH0sirQpl0jKxRKSmsUvO4Py_P3kkcPnIQ");
-//        } else if ("priyanka".equals(loggedInUser)) {
-//            uInfo.setDynamoId("b1b10f47e32e4fdaa182e850f715414b");
-//            uInfo.setMc4kToken("f0eb6d95a80583fc4b98aabd820aa037");
-//        } else if ("rakhi".equals(loggedInUser)) {
-//            uInfo.setDynamoId("61de7db0a6114272a906662f47af78b1");
-//            uInfo.setMc4kToken("c2cdb6540e8b3b694717ee0ca0f1047d");
-//        } else {
-//            uInfo.setDynamoId(idEditText.getText().toString());
-//            uInfo.setMc4kToken(tokenEditText.getText().toString());
-//        }
-
 
         SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), uInfo);
 
@@ -357,46 +278,4 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
         Call<UserDetailResponse> call = loginRegistrationAPI.getUserDetails(uInfo.getDynamoId());
         call.enqueue(onLoginResponseReceivedListener);
     }
-
-    private void saveKidsInformation(ArrayList<KidsModel> kidsList) {
-
-        ArrayList<KidsInfo> kidsInfoArrayList = new ArrayList<>();
-
-        if (kidsList.size() == 1 && StringUtils.isNullOrEmpty(kidsList.get(0).getName())) {
-            return;
-        }
-        for (KidsModel kid : kidsList) {
-            KidsInfo kidsInfo = new KidsInfo();
-            kidsInfo.setName(kid.getName());
-            kidsInfo.setDate_of_birth(convertTime("" + kid.getBirthDay()));
-            kidsInfo.setColor_code(kid.getColorCode());
-            kidsInfoArrayList.add(kidsInfo);
-        }
-
-        // saving child data
-        TableKids kidsTable = new TableKids((BaseApplication) getApplicationContext());
-        kidsTable.deleteAll();
-        try {
-            kidsTable.beginTransaction();
-            for (KidsInfo kids : kidsInfoArrayList) {
-
-                kidsTable.insertData(kids);
-
-            }
-            kidsTable.setTransactionSuccessful();
-        } finally {
-            kidsTable.endTransaction();
-        }
-    }
-
-    public String convertTime(String time) {
-        try {
-            Date date = new Date(Long.parseLong(time) * 1000);
-            Format format = new SimpleDateFormat("dd-MM-yyyy");
-            return format.format(date);
-        } catch (NumberFormatException nfe) {
-            return "";
-        }
-    }
-
 }

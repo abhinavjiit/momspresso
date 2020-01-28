@@ -3,8 +3,6 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.mycity4kids.profile.StickyMainData;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +10,7 @@ import java.util.Map;
 /**
  * Created by hemant on 5/7/16.
  */
-public class ArticleListingResult implements Parcelable, StickyMainData {
+public class ArticleListingResult implements Parcelable {
 
     private String id;
     private String title;

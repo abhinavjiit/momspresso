@@ -39,7 +39,6 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.VersionApiModel;
@@ -599,7 +598,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
 
     public void saveCityData() {
         final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(BaseApplication.getAppContext());
-        final ConfigurationController _controller = new ConfigurationController(this, this);
         if (null == mDatalist || mDatalist.isEmpty()) {
             ToastUtils.showToast(this, getString(R.string.change_city_fetch_available_cities));
             return;
@@ -653,7 +651,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                         return;
 
                     }
-                    _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
 
                     UpdateUserDetailsRequest updateUserDetail = new UpdateUserDetailsRequest();
                     updateUserDetail.setAttributeName("cityId");

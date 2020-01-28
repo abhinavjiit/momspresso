@@ -10,15 +10,11 @@ import com.kelltontech.network.HttpClientConnection;
 import com.kelltontech.network.Response;
 import com.kelltontech.network.ServiceRequest;
 import com.kelltontech.ui.IScreen;
-import com.kelltontech.utils.DataUtils;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.dbtable.UserTable;
-import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.models.logout.LogoutResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
@@ -97,9 +93,6 @@ public class LogoutController extends BaseController {
     }
 
     private List<NameValuePair> setRequestParameters(String sessionId) {
-        UserTable _userTable = new UserTable((BaseApplication) getActivity().getApplication());
-        String userId = "" + _userTable.getUserId();
-
         UrlEncodedFormEntity encodedEntity = null;
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {

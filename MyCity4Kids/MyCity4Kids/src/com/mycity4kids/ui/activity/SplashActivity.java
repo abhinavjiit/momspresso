@@ -24,7 +24,6 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.dbtable.TableAdult;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
@@ -191,7 +190,6 @@ public class SplashActivity extends BaseActivity {
 
     private void navigateToNextScreen() {
         UserInfo userInfo = SharedPrefUtils.getUserDetailModel(this);
-        TableAdult _table = new TableAdult(BaseApplication.getInstance());
         if (null != userInfo && !StringUtils.isNullOrEmpty(userInfo.getMc4kToken()) &&
                 AppConstants.VALIDATED_USER.equals(userInfo.getIsValidated())) { // if he signup
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

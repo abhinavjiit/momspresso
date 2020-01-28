@@ -15,7 +15,7 @@
             android:layout_height="@dimen/space_30"
             android:layout_alignParentLeft="true"
             android:layout_marginRight="10dp"
-            android:src="@drawable/ic_arrow_drop_down_black_18dp"
+            android:src="@drawable/ic_arrow_drop_down_black"
             android:tint="@color/greytxt_color" />
 
         <com.mycity4kids.widget.CustomFontTextView

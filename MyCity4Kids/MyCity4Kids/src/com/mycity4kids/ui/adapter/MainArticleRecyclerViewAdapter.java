@@ -587,7 +587,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
-        TextView authorTypeTextView;
         ImageView bookmarkArticleImageView;
         ImageView watchLaterImageView;
 
@@ -601,7 +600,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
             commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
             recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
-            authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
             bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
             watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
             view.setOnClickListener(this);
@@ -678,7 +676,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
-        TextView authorTypeTextView;
         ImageView bookmarkArticleImageView;
         ImageView watchLaterImageView;
 
@@ -696,7 +693,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
             commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
             recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
-            authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
             bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
             watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
 
@@ -740,7 +736,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
-        TextView authorTypeTextView;
         ImageView bookmarkArticleImageView;
         ImageView watchLaterImageView;
         TextView viewCountTextView1;
@@ -818,7 +813,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
             commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
             recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
-            authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
             bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
             watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
 
@@ -875,7 +869,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
-        TextView authorTypeTextView;
         ImageView bookmarkArticleImageView;
         ImageView watchLaterImageView;
         TextView viewCountTextView1;
@@ -912,7 +905,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
             commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
             recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
-            authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
             bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
             watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
 
@@ -974,7 +966,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
-        TextView authorTypeTextView;
         ImageView bookmarkArticleImageView;
         ImageView watchLaterImageView, menuItem;
 
@@ -1008,7 +999,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
             commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
             recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
-            authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
             bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
             watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
 

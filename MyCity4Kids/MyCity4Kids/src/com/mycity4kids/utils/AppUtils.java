@@ -435,8 +435,6 @@ public class AppUtils {
                 outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
                 outputStream.write(jsonString.getBytes(Charset.forName("UTF-8")));
                 outputStream.flush();
-//            output.close();
-//            Toast.makeText(getApplicationContext(), "Composition saved", Toast.LENGTH_LONG).show();
                 return true;
             } catch (IOException e) {
                 return false;
@@ -458,22 +456,15 @@ public class AppUtils {
                 OutputStream outputStream = null;
                 try {
                     byte[] fileReader = new byte[4096];
-                    long fileSize = body.contentLength();
-                    long fileSizeDownloaded = 0;
-
                     inputStream = body.byteStream();
                     outputStream = mContext.openFileOutput(fileName, Context.MODE_PRIVATE);
-
                     while (true) {
                         int read = inputStream.read(fileReader);
                         if (read == -1) {
                             break;
                         }
                         outputStream.write(fileReader, 0, read);
-                        fileSizeDownloaded += read;
-                        Log.d("AppUtils", "file download: " + fileSizeDownloaded + " of " + fileSize);
                     }
-
                     outputStream.flush();
                     return true;
                 } catch (IOException e) {
@@ -484,7 +475,6 @@ public class AppUtils {
                     if (inputStream != null) {
                         inputStream.close();
                     }
-
                     if (outputStream != null) {
                         outputStream.close();
                     }

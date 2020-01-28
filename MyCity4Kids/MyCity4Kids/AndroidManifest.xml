@@ -173,12 +173,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent" />
         <activity
-            android:name=".ui.activity.MissingPlaceActivity"
-            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
             android:name=".ui.activity.NewsLetterWebviewActivity"
             android:configChanges="keyboardHidden|screenSize|orientation"
             android:label="@string/app_name"
@@ -202,53 +196,9 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".googlemap.MapActivity" />
-        <activity
-            android:name=".ui.activity.HomeCategoryActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activity.ForgotPasswordActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ui.activity.SelectLocationActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.BusinessListActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ui.activity.BusinessListActivityKidsResources"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ui.activity.WriteReviewActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
-            android:name=".ui.activity.BusinessDetailsActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ui.activity.RecentlyViewedActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ui.activity.BookOrPayWebActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ui.activity.AutoSuggestTransparentDialogActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Transparent"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activity.YouTubeVideoActivity"
@@ -256,21 +206,8 @@
             android:theme="@style/Theme.Transparent"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.activity.TopPicksActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Transparent"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".ui.activity.ReportAnErrorActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.LoadingActivity"
             android:screenOrientation="unspecified"
-            android:theme="@style/Theme.Transparent"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ui.activity.PhotoSlideActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent"
             android:windowSoftInputMode="adjustPan" />
         <activity
@@ -339,9 +276,6 @@
             android:name=".ui.activity.IdTokenLoginActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.LanguageSpecificArticleListingActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.SearchAllActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -369,9 +303,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.ArticleModerationOrShareActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.CompleteBloggerProfileActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.UserActivitiesActivity"
@@ -447,9 +378,6 @@
             android:parentActivityName=".ui.activity.DashboardActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.ExploreEventsResourcesActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.UserPublishedContentActivity"
             android:screenOrientation="portrait"
             android:theme="@style/EditorTheme" />
@@ -462,15 +390,9 @@
         <activity
             android:name=".ui.activity.NotificationActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.PrivateProfileActivity"
-            android:parentActivityName=".ui.activity.DashboardActivity" />
         <activity android:name="com.facebook.accountkit.ui.AccountKitActivity" />
         <activity
             android:name=".ui.activity.UsersBookmarkListActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.PublicProfileActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.ChangePasswordActivity"
@@ -499,9 +421,6 @@
         <activity
             android:name=".ui.activity.ChooseVideoCategoryActivity"
             android:parentActivityName=".ui.activity.DashboardActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.HeaderChallengeVideoPlayActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.videochallengenewui.activity.NewVideoChallengeActivity"
@@ -574,15 +493,6 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-        <receiver
-            android:name=".reminders.BootCompleteReceiver"
-            android:enabled="true"
-            android:exported="false"
-            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
 
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
@@ -597,15 +507,12 @@
             android:name=".ui.activity.collection.EditCollectionActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ui.activity.BadgeActivity" />
-        <activity android:name=".ui.activity.NotificationProfileSetting" />
         <activity android:name=".ui.activity.phoneLogin.FacebookFriends" />
         <activity android:name=".ui.activity.collection.AddMultipleCollectionItemActivity" />
         <activity android:name=".ui.activity.ShortStoriesCardActivity" />
         <activity
             android:name=".ui.activity.ShortStoryModerationOrShareActivity"
             android:theme="@style/ShareStoryTheme" />
-
-        <receiver android:name=".reminders.CancelNotificationReceiver" />
 
         <service android:name=".sync.PushTokenService" />
         <service android:name=".sync.SyncUserInfoService" />

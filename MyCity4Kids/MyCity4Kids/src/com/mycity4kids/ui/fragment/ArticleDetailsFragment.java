@@ -36,6 +36,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.crashlytics.android.Crashlytics;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
@@ -55,7 +62,6 @@ import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.google.android.youtube.player.YouTubePlayerView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
@@ -68,7 +74,6 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.parentingdetails.CommentsData;
@@ -94,7 +99,6 @@ import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ViewCountResponse;
 import com.mycity4kids.newmodels.FollowUnfollowCategoriesRequest;
-import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.observablescrollview.ObservableScrollView;
 import com.mycity4kids.observablescrollview.ObservableScrollViewCallbacks;
 import com.mycity4kids.observablescrollview.ScrollState;
@@ -132,12 +136,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.QBadgeView;
@@ -1987,84 +1985,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         public void onFailure(Call<ArticleDetailWebserviceResponse> call, Throwable t) {
             removeProgressDialog();
             handleExceptions(t);
-        }
-    };
-
-    private OnWebServiceCompleteListener mGetArticleListingListener = new OnWebServiceCompleteListener() {
-        @Override
-        public void onWebServiceComplete(VolleyBaseResponse response, boolean isError) {
-            if (!isAdded()) {
-                return;
-            }
-            if (isError) {
-                if (null != response && response.getResponseCode() != 999)
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-            } else {
-                if (response == null) {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-                    removeProgressDialog();
-                    return;
-                }
-
-                ArticleListingResponse responseBlogData;
-                try {
-                    Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-                    responseBlogData = gson.fromJson(response.getResponseBody(), ArticleListingResponse.class);
-                } catch (JsonSyntaxException jse) {
-                    Crashlytics.logException(jse);
-                    Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
-                    if (isAdded())
-                        ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-                    removeProgressDialog();
-                    return;
-                }
-
-                if (responseBlogData.getCode() == 200 && Constants.SUCCESS.equals(responseBlogData.getStatus())) {
-                    ArrayList<ArticleListingResult> dataList = responseBlogData.getData().get(0).getResult();
-                    if (dataList == null || dataList.size() == 0) {
-
-                    } else {
-                        trendingArticles.setVisibility(View.VISIBLE);
-                        impressionList.addAll(dataList);
-                        Collections.shuffle(dataList);
-                        if (dataList.size() >= 3) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
-                            trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            trendingRelatedArticles1.setTag(dataList);
-
-                            Picasso.with(getActivity()).load(dataList.get(1).getImageUrl().getThumbMin()).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
-                            trendingRelatedArticles2.setArticleTitle(dataList.get(1).getTitle());
-                            trendingRelatedArticles2.setTag(dataList);
-
-                            Picasso.with(getActivity()).load(dataList.get(2).getImageUrl().getThumbMin()).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles3.getArticleImageView());
-                            trendingRelatedArticles3.setArticleTitle(dataList.get(2).getTitle());
-                            trendingRelatedArticles3.setTag(dataList);
-                        } else if (dataList.size() == 2) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
-                            trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            trendingRelatedArticles1.setTag(dataList);
-
-                            Picasso.with(getActivity()).load(dataList.get(1).getImageUrl().getThumbMin()).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
-                            trendingRelatedArticles2.setArticleTitle(dataList.get(1).getTitle());
-                            trendingRelatedArticles2.setTag(dataList);
-
-                            trendingRelatedArticles3.setVisibility(View.GONE);
-                        } else if (dataList.size() == 1) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
-                            trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            trendingRelatedArticles1.setTag(dataList);
-                            trendingRelatedArticles2.setVisibility(View.GONE);
-                            trendingRelatedArticles3.setVisibility(View.GONE);
-                        }
-                    }
-                }
-            }
         }
     };
 

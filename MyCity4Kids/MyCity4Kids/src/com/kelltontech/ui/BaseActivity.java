@@ -50,7 +50,6 @@ import com.mycity4kids.sync.SyncUserInfoService;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
-import com.mycity4kids.ui.activity.BusinessDetailsActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupMembershipActivity;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
@@ -448,26 +447,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (type.equalsIgnoreCase("event_details")) {
-//            String eventId = notificationExtras.getString("id");
-            Intent resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);
-            resultIntent.putExtra("fromNotification", true);
-            resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            resultIntent.putExtra(Constants.CATEGORY_ID, SharedPrefUtils.getEventIdForCity(BaseApplication.getAppContext()));
-            resultIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, id + "");
-            resultIntent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
-            resultIntent.putExtra(Constants.DISTANCE, "0");
-            startActivity(resultIntent);
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                jsonObject.put("type", "event_details");
-                dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (type.equalsIgnoreCase("webView")) {
+        }  else if (type.equalsIgnoreCase("webView")) {
 //            String url = notificationExtras.getString("url");
             Intent intent1 = new Intent(this, LoadWebViewActivity.class);
             intent1.putExtra("fromNotification", true);

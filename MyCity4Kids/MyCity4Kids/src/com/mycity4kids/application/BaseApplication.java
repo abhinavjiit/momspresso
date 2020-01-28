@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.StrictMode;
 import android.text.TextUtils;
@@ -34,17 +33,13 @@ import com.mycity4kids.BuildConfig;
 import com.mycity4kids.MessageEvent;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.database.BaseDbHelper;
 import com.mycity4kids.models.Topics;
-import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.response.ArticleListingResult;
-import com.mycity4kids.newmodels.parentingmodel.ArticleFilterListModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.LocaleManager;
-import com.smartlook.sdk.smartlook.Smartlook;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -78,9 +73,7 @@ public class BaseApplication extends Application {
 
     private final String LOG_TAG = "BaseApplication";
     public static final String TAG = BaseApplication.class.getName();
-    private ArticleFilterListModel filterList;
 
-    private SQLiteDatabase mWritableDatabase;
     private RequestQueue mRequestQueue;
     String data = "";
     private static BaseApplication mInstance;
@@ -113,20 +106,6 @@ public class BaseApplication extends Application {
     //private static final String GA_PROPERTY_ID = "UA-50870780-1";
 
     private static final String GA_PROPERTY_ID = "UA-20533582-2";
-
-    // Dispatch period in seconds.
-    private static final int GA_DISPATCH_PERIOD = 30;
-
-    // Prevent hits from being sent to reports, i.e. during testing.
-    //private static final boolean GA_IS_DRY_RUN = false;
-
-    // GA Logger.
-    /*    private static final LogLevel GA_LOG_VERBOSITY = LogLevel.ERROR;*/
-
-    // Key used to store a user's tracking preferences in SharedPreferences.
-    private static final String TRACKING_PREF_KEY = "trackingPreference";
-
-    private static ArrayList<BusinessDataListing> businessREsponse;
 
     public static ArrayList<CommonParentingList> getBlogResponse() {
         return blogResponse;
@@ -240,14 +219,6 @@ public class BaseApplication extends Application {
     }
 
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
-
-    public static ArrayList<BusinessDataListing> getBusinessREsponse() {
-        return businessREsponse;
-    }
-
-    public static void setBusinessREsponse(ArrayList<BusinessDataListing> businessREsponse) {
-        BaseApplication.businessREsponse = businessREsponse;
-    }
 
     public synchronized Tracker getTracker(TrackerName trackerId) {
         if (!mTrackers.containsKey(trackerId)) {
@@ -417,32 +388,6 @@ public class BaseApplication extends Application {
         }
     };
 
-    /**
-     * Get the database instance.
-     *
-     * @return mWritableDatabase
-     */
-    public SQLiteDatabase getWritableDbInstance() {
-        if (mWritableDatabase == null) {
-            BaseDbHelper dbHelper = new BaseDbHelper(this);
-            mWritableDatabase = dbHelper.getWritableDatabase();
-        }
-        return mWritableDatabase;
-    }
-
-    @Override
-    public void onTerminate() {
-        Log.i(LOG_TAG, "onTerminate()");
-        if (mWritableDatabase != null) {
-            mWritableDatabase.close();
-        }
-        super.onTerminate();
-    }
-
-    public void setFilterList(ArticleFilterListModel list) {
-        filterList = list;
-    }
-
     public RequestQueue getRequestQueue() {
         return mRequestQueue;
     }
@@ -454,10 +399,6 @@ public class BaseApplication extends Application {
 
     public void cancel() {
         mRequestQueue.cancelAll(TAG);
-    }
-
-    public ArticleFilterListModel getFilterList() {
-        return filterList;
     }
 
     @Override

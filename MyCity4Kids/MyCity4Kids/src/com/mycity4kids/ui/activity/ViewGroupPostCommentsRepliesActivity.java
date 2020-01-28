@@ -51,7 +51,7 @@ import com.mycity4kids.ui.adapter.GroupPostCommentRepliesRecyclerAdapter;
 import com.mycity4kids.ui.fragment.AddGpPostCommentReplyDialogFragment;
 import com.mycity4kids.ui.fragment.GpPostCommentOptionsDialogFragment;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
-import com.mycity4kids.ui.fragment.TaskFragment;
+import com.mycity4kids.ui.fragment.ProcessBitmapTaskFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -71,7 +71,7 @@ import retrofit2.Retrofit;
  * Created by user on 08-06-2015.
  */
 public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implements OnClickListener, GroupPostCommentRepliesRecyclerAdapter.RecyclerViewClickListener,
-        GroupMembershipStatus.IMembershipStatus, TaskFragment.TaskCallbacks {
+        GroupMembershipStatus.IMembershipStatus, ProcessBitmapTaskFragment.TaskCallbacks {
 
     private static final String TAG_TASK_FRAGMENT = "task_fragment";
 
@@ -108,7 +108,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
     private int editReplyParentCommentId;
     private int deleteCommentPos;
     private int deleteReplyPos;
-    private TaskFragment mTaskFragment;
+    private ProcessBitmapTaskFragment mProcessBitmapTaskFragment;
     private RelativeLayout root;
 
     @Override
@@ -1042,13 +1042,13 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
 
     public void processImage(Uri imageUri) {
         android.app.FragmentManager fm = getFragmentManager();
-        mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
-        if (mTaskFragment == null) {
-            mTaskFragment = new TaskFragment();
+        mProcessBitmapTaskFragment = (ProcessBitmapTaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+        if (mProcessBitmapTaskFragment == null) {
+            mProcessBitmapTaskFragment = new ProcessBitmapTaskFragment();
             Bundle bundle = new Bundle();
             bundle.putParcelable("uri", imageUri);
-            mTaskFragment.setArguments(bundle);
-            fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
+            mProcessBitmapTaskFragment.setArguments(bundle);
+            fm.beginTransaction().add(mProcessBitmapTaskFragment, TAG_TASK_FRAGMENT).commit();
         } else {
             showToast("You can add only 1 image in comments");
         }

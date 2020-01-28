@@ -28,7 +28,6 @@ import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -99,7 +98,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
-import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -112,7 +110,7 @@ import static com.facebook.accountkit.internal.AccountKitController.getApplicati
 /**
  * Created by user on 08-06-2015.
  */
-public class AddGpPostCommentReplyDialogFragment extends DialogFragment implements OnClickListener, TaskFragment.TaskCallbacks,
+public class AddGpPostCommentReplyDialogFragment extends DialogFragment implements OnClickListener, ProcessBitmapTaskFragment.TaskCallbacks,
         AudioRecordView.RecordingListener, SeekBar.OnSeekBarChangeListener {
 
     private static final String TAG_TASK_FRAGMENT = "task_fragment";
@@ -165,7 +163,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     private int groupId, postId;
     private TextView addMediaTextView, audioTimeElapsed, audioTimeElapsedComment;
     private View mLayout;
-    private TaskFragment mTaskFragment;
+    private ProcessBitmapTaskFragment mProcessBitmapTaskFragment;
     private MediaRecorder mRecorder;
     private String mFileName;
     private Boolean myFeed = false;
@@ -1099,13 +1097,13 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         } else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
                         } else {
                             android.app.FragmentManager fm = getActivity().getFragmentManager();
-                            mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
-                            if (mTaskFragment == null) {
-                                mTaskFragment = new TaskFragment();
+                            mProcessBitmapTaskFragment = (ProcessBitmapTaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+                            if (mProcessBitmapTaskFragment == null) {
+                                mProcessBitmapTaskFragment = new ProcessBitmapTaskFragment();
                                 Bundle bundle = new Bundle();
                                 bundle.putParcelable("uri", imageUri);
-                                mTaskFragment.setArguments(bundle);
-                                fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
+                                mProcessBitmapTaskFragment.setArguments(bundle);
+                                fm.beginTransaction().add(mProcessBitmapTaskFragment, TAG_TASK_FRAGMENT).commit();
                             }
                         }
                     } catch (Exception e) {
@@ -1315,10 +1313,10 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                     params.addRule(RelativeLayout.LEFT_OF, R.id.recordingView);
                     addMediaImageView.setLayoutParams(params);
                     android.app.FragmentManager fm = getActivity().getFragmentManager();
-                    mTaskFragment = null;
-                    mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
-                    if (mTaskFragment != null)
-                        fm.beginTransaction().remove(mTaskFragment).commit();
+                    mProcessBitmapTaskFragment = null;
+                    mProcessBitmapTaskFragment = (ProcessBitmapTaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+                    if (mProcessBitmapTaskFragment != null)
+                        fm.beginTransaction().remove(mProcessBitmapTaskFragment).commit();
                 }
             });
         } catch (Exception e) {

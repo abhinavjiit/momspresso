@@ -104,18 +104,13 @@ import com.mycity4kids.ui.activity.collection.CollectionsActivity;
 import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity;
 import com.mycity4kids.ui.adapter.UserAllDraftsRecyclerAdapter;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
-import com.mycity4kids.ui.fragment.AddArticleVideoFragment;
 import com.mycity4kids.ui.fragment.BecomeBloggerFragment;
 import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
-import com.mycity4kids.ui.fragment.ExploreFragment;
-import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
-import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
 import com.mycity4kids.ui.fragment.GroupsViewFragment;
 import com.mycity4kids.ui.fragment.NotificationFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
-import com.mycity4kids.ui.fragment.SendFeedbackFragment;
 import com.mycity4kids.ui.fragment.SuggestedTopicsFragment;
 import com.mycity4kids.ui.fragment.UploadVideoInfoFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
@@ -650,17 +645,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     }
                     return true;
                 });
-
-        if (Constants.BUSINESS_EVENTLIST_FRAGMENT.equals(fragmentToLoad)) {
-            setTitle("Upcoming Events");
-            FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
-            Bundle mBundle = new Bundle();
-            mBundle.putInt(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
-            mBundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity(BaseApplication.getAppContext()));
-            mBundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
-            fragment.setArguments(mBundle);
-            replaceFragment(fragment, mBundle, true);
-        } else if (Constants.PROFILE_FRAGMENT.equals(fragmentToLoad)) {
+        if (Constants.PROFILE_FRAGMENT.equals(fragmentToLoad)) {
             Intent pIntent = new Intent(this, UserProfileActivity.class);
             Bundle notificationExtras = getIntent().getParcelableExtra("notificationExtras");
             pIntent.putExtra(Constants.USER_ID, SharedPrefUtils.getUserDetailModel(this).getDynamoId());
@@ -1035,17 +1020,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Intent reportIntent = new Intent(this, GroupsReportedContentActivity.class);
                 reportIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
                 startActivity(reportIntent);
-            } else if (notificationExtras.getString("type").equalsIgnoreCase("event_details")) {
-                pushEvent("event_details");
-                String eventId = notificationExtras.getString("id");
-                Intent resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);
-                resultIntent.putExtra("fromNotification", true);
-                resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                resultIntent.putExtra(Constants.CATEGORY_ID, SharedPrefUtils.getEventIdForCity(BaseApplication.getAppContext()));
-                resultIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, eventId + "");
-                resultIntent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
-                resultIntent.putExtra(Constants.DISTANCE, "0");
-                startActivity(resultIntent);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("webView")) {
                 pushEvent("webView");
                 String url = notificationExtras.getString("url");
@@ -1349,16 +1323,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 } else {
                     getDeepLinkData(tempDeepLinkURL);
                 }
-            } else if (Constants.BUSINESS_EVENTLIST_FRAGMENT.equals(_intent.getStringExtra(Constants.LOAD_FRAGMENT))) {
-                fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
-                setTitle("Upcoming Events");
-                FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
-                Bundle mBundle = new Bundle();
-                mBundle.putInt(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
-                mBundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity(BaseApplication.getAppContext()));
-                mBundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
-                fragment.setArguments(mBundle);
-                replaceFragment(fragment, mBundle, true);
             }
             deepLinkUrl = _intent.getStringExtra(AppConstants.DEEP_LINK_URL);
         }
@@ -1577,17 +1541,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             ((FragmentMC4KHomeNew) topFragment).hideFollowTopicHeader();
         }
         refreshMenu();
-        if (topFragment instanceof FragmentBusinesslistEvents) {
-
-            try {
-                ((FragmentBusinesslistEvents) topFragment).refreshList();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (topFragment instanceof SendFeedbackFragment) {
-            refreshMenu();
-            setTitle("Send Feedback");
-        }
         final Fragment topFragmentt = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         Menu menu = bottomNavigationView.getMenu();
         if (topFragmentt instanceof ExploreArticleListingTypeFragment) {
@@ -1627,16 +1580,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        // according to fragment change it
-        final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        if (topFragment instanceof FragmentMC4KHomeNew) {
-
-        } else if (topFragment instanceof FragmentBusinesslistEvents) {
-            getMenuInflater().inflate(R.menu.menu_event, menu);
-        } else if (topFragment instanceof FragmentHomeCategory) {
-            getMenuInflater().inflate(R.menu.kidsresource_listing, menu);
-        }
         return true;
     }
 
@@ -1665,27 +1608,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-
         switch (item.getItemId()) {
             case android.R.id.home: {
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
             }
-            case R.id.filter:
-                if (topFragment instanceof FragmentBusinesslistEvents) {
-                    ((FragmentBusinesslistEvents) topFragment).toggleFilter();
-                }
-                break;
             case R.id.save:
-
-                break;
-            case R.id.kidsresource_bookmark:
-                if (topFragment instanceof FragmentHomeCategory) {
-                    Log.d("KIDS RESOURCE ", "bookmark kids resource");
-                    Intent intent = new Intent(this, BusinessListActivityKidsResources.class);
-                    intent.putExtra(Constants.SHOW_BOOKMARK_RESOURCES, 1);
-                    startActivity(intent);
-                }
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -1823,11 +1751,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 changePreferredLanguageDialogFragment.show(fm, "Choose video option");
             }
             break;
-            case R.id.imgProfile:
-                Intent intent4 = new Intent(DashboardActivity.this, UserProfileActivity.class);
-                intent4.putExtra(Constants.USER_ID, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                startActivity(intent4);
-                break;
             case R.id.downArrowImageView:
             case R.id.toolbarTitle:
                 break;
@@ -2281,18 +2204,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void identifyTargetScreen(DeepLinkingResult data) {
         switch (data.getType()) {
-            case AppConstants.DEEP_LINK_BUSINESS_LISTING:
-                renderBusinessListingScreen(data);
-                break;
-            case AppConstants.DEEP_LINK_BUSINESS_DETAIL:
-                renderBusinessDetailScreen(data);
-                break;
-            case AppConstants.DEEP_LINK_EVENT_LISTING:
-                renderEventListingScreen(data);
-                break;
-            case AppConstants.DEEP_LINK_EVENT_DETAIL:
-                renderEventDetailScreen(data);
-                break;
             case AppConstants.DEEP_LINK_AUTHOR_LISTING:
                 renderAuthorListingScreen(data);
                 break;
@@ -2348,55 +2259,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             intent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
             intent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
             startActivity(intent);
-        }
-    }
-
-    private void renderBusinessListingScreen(DeepLinkingResult data) {
-        if (!StringUtils.isNullOrEmpty(data.getCategory_id())) {
-            Intent _businessListIntent = new Intent(DashboardActivity.this, BusinessListActivityKidsResources.class);
-            _businessListIntent.putExtra(Constants.EXTRA_CATEGORY_ID, Integer.parseInt(data.getCategory_id()));
-            _businessListIntent.putExtra(Constants.CITY_ID_DEEPLINK, data.getCity_id() + "");
-            _businessListIntent.putExtra(Constants.IS_FROM_DEEPLINK, true);
-            _businessListIntent.putExtra(Constants.DEEPLINK_URL, data.getUrl());
-            startActivity(_businessListIntent);
-        }
-    }
-
-    private void renderBusinessDetailScreen(DeepLinkingResult data) {
-        if (!StringUtils.isNullOrEmpty(data.getCategory_id()) && !StringUtils.isNullOrEmpty(data.getDetail_id())) {
-            Intent _eventDetailIntent = new Intent(DashboardActivity.this, BusinessDetailsActivity.class);
-            _eventDetailIntent.putExtra(Constants.CATEGORY_ID, Integer.parseInt(data.getCategory_id()));
-            _eventDetailIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, data.getDetail_id() + "");
-            _eventDetailIntent.putExtra(Constants.PAGE_TYPE, Constants.BUSINESS_PAGE_TYPE);
-            _eventDetailIntent.putExtra(Constants.DEEPLINK_URL, data.getUrl());
-            startActivity(_eventDetailIntent);
-        }
-    }
-
-    // Pending for Indexing
-    private void renderEventListingScreen(DeepLinkingResult data) {
-        if (!StringUtils.isNullOrEmpty(data.getCategory_id())) {
-            Constants.IS_SEARCH_LISTING = false;
-            setTitle("Upcoming Events");
-            FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
-            Bundle bundle = new Bundle();
-            bundle.putInt(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
-            bundle.putInt(Constants.EXTRA_CATEGORY_ID, Integer.parseInt(data.getCategory_id()));
-            bundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
-            bundle.putString(Constants.DEEPLINK_URL, data.getUrl());
-            fragment.setArguments(bundle);
-            replaceFragment(fragment, bundle, true);
-        }
-    }
-
-    private void renderEventDetailScreen(DeepLinkingResult data) {
-        if (!StringUtils.isNullOrEmpty(data.getCategory_id()) && !StringUtils.isNullOrEmpty(data.getDetail_id())) {
-            Intent _eventDetailIntent = new Intent(DashboardActivity.this, BusinessDetailsActivity.class);
-            _eventDetailIntent.putExtra(Constants.CATEGORY_ID, Integer.parseInt(data.getCategory_id()));
-            _eventDetailIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, data.getDetail_id() + "");
-            _eventDetailIntent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
-            _eventDetailIntent.putExtra(Constants.DEEPLINK_URL, data.getUrl());
-            startActivity(_eventDetailIntent);
         }
     }
 
@@ -2621,11 +2483,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-            } else if (topFragment instanceof AddArticleVideoFragment) {
-                Utils.pushOpenScreenEvent(this, "CreateContentScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                menu.findItem(R.id.action_write).setChecked(true);
-                toolbarRelativeLayout.setVisibility(View.VISIBLE);
-                toolbarUnderline.setVisibility(View.GONE);
             } else if (topFragment instanceof TopicsListingFragment) {
                 Utils.pushOpenScreenEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article")) {
@@ -2634,12 +2491,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarTitleTextView.setOnClickListener(this);
                 toolbarTitleTextView.setText(mToolbarTitle);
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
-                menu.findItem(R.id.action_home).setChecked(true);
-                toolbarRelativeLayout.setVisibility(View.VISIBLE);
-            } else if (topFragment instanceof ExploreFragment) {
-                Utils.pushOpenScreenEvent(this, "ExploreScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                toolbarTitleTextView.setText(getString(R.string.home_screen_explore_title));
-                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
             } else if (topFragment instanceof TopicsShortStoriesContainerFragment) {
@@ -2655,22 +2506,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.groups_light_black_color));
                 menu.findItem(R.id.action_location).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-            } else if (topFragment instanceof FragmentBusinesslistEvents) {
-                Utils.pushOpenScreenEvent(this, "EventsListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                toolbarTitleTextView.setText(getString(R.string.home_screen_upcoming_events_title));
-                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
-                menu.findItem(R.id.action_location).setChecked(true);
-                toolbarRelativeLayout.setVisibility(View.VISIBLE);
-                searchAllImageView.setVisibility(View.GONE);
-                notificationImg.setVisibility(View.GONE);
-            } else if (topFragment instanceof FragmentHomeCategory) {
-                Utils.pushOpenScreenEvent(this, "ResourceListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                toolbarTitleTextView.setText(getString(R.string.home_screen_kids_res_title));
-                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
-                menu.findItem(R.id.action_location).setChecked(true);
-                toolbarRelativeLayout.setVisibility(View.VISIBLE);
-                searchAllImageView.setVisibility(View.GONE);
-                notificationImg.setVisibility(View.GONE);
             }
         }
 

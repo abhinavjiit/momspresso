@@ -11,8 +11,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
-import androidx.browser.customtabs.CustomTabsIntent
-import androidx.core.content.ContextCompat
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -29,7 +27,6 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.controller.LogoutController
-import com.mycity4kids.dbtable.*
 import com.mycity4kids.facebook.FacebookUtils
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.campaignmodels.TotalPayoutResponse
@@ -288,42 +285,9 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
             SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "article_details", articleCoach)
             SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "groups", groupsCoach)
             SharedPrefUtils.setAppLocale(BaseApplication.getAppContext(), appLocale)
-            /**
-             * delete table from local also;
-             */
-            val _tables = UserTable(this.applicationContext as BaseApplication)
-            _tables.deleteAll()
-
-            val _familytables = TableFamily(this.applicationContext as BaseApplication)
-            _familytables.deleteAll()
-
-            val _adulttables = TableAdult(this.applicationContext as BaseApplication)
-            _adulttables.deleteAll()
-
-            val _kidtables = TableKids(this.applicationContext as BaseApplication)
-            _kidtables.deleteAll()
-
-            TableAppointmentData(BaseApplication.getInstance()).deleteAll()
-            TableNotes(BaseApplication.getInstance()).deleteAll()
-            TableFile(BaseApplication.getInstance()).deleteAll()
-            TableAttendee(BaseApplication.getInstance()).deleteAll()
-            TableWhoToRemind(BaseApplication.getInstance()).deleteAll()
-
-
-            TableTaskData(BaseApplication.getInstance()).deleteAll()
-            TableTaskList(BaseApplication.getInstance()).deleteAll()
-            TaskTableAttendee(BaseApplication.getInstance()).deleteAll()
-            TaskTableWhoToRemind(BaseApplication.getInstance()).deleteAll()
-            TaskTableFile(BaseApplication.getInstance()).deleteAll()
-            TaskTableNotes(BaseApplication.getInstance()).deleteAll()
-            TaskCompletedTable(BaseApplication.getInstance()).deleteAll()
-            TableApiEvents(BaseApplication.getInstance()).deleteAll()
-
-            ExternalCalendarTable(BaseApplication.getInstance()).deleteAll()
 
             // clear cachee
             BaseApplication.setBlogResponse(null)
-            BaseApplication.setBusinessREsponse(null)
             BaseApplication.getInstance().branchData = null
             BaseApplication.getInstance().branchLink = null
 

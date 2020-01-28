@@ -14,10 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import androidx.annotation.NonNull;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.app.ActivityCompat;
-import androidx.appcompat.app.AppCompatDelegate;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -32,7 +28,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
+
 import com.crashlytics.android.Crashlytics;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -49,7 +50,7 @@ import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
-import com.mycity4kids.ui.fragment.TaskFragment;
+import com.mycity4kids.ui.fragment.ProcessBitmapTaskFragment;
 import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.PermissionUtil;
 import com.squareup.picasso.Picasso;
@@ -71,14 +72,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-import static com.mycity4kids.ui.adapter.BusinessListingAdapterevent.REQUEST_INIT_PERMISSION;
-
 /**
  * Created by hemant on 14/8/18.
  */
 
-public class GroupsEditPostActivity extends BaseActivity implements View.OnClickListener, TaskFragment.TaskCallbacks {
+public class GroupsEditPostActivity extends BaseActivity implements View.OnClickListener, ProcessBitmapTaskFragment.TaskCallbacks {
 
+    public static final int REQUEST_INIT_PERMISSION = 1;
     private EditText postContentEditText;
     private ImageView closeEditorImageView;
     private GroupPostResult postData;
@@ -90,7 +90,7 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
     private static final String TAG_TASK_FRAGMENT = "task_fragment";
     public static final int ADD_IMAGE_GALLERY_ACTIVITY_REQUEST_CODE = 1111;
     public static final int ADD_IMAGE_CAMERA_ACTIVITY_REQUEST_CODE = 1112;
-    private TaskFragment mTaskFragment;
+    private ProcessBitmapTaskFragment mProcessBitmapTaskFragment;
     private GroupResult selectedGroup;
     private Uri imageUri;
     private File photoFile;
@@ -230,9 +230,9 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
 
                 UpdatePostContentRequest updatePostRequest = new UpdatePostContentRequest();
                 updatePostRequest.setContent(postContentEditText.getText().toString());
-                if("1".equals(postData.getType())){
+                if ("1".equals(postData.getType())) {
                     updatePostRequest.setType("0");
-                }else{
+                } else {
                     updatePostRequest.setType(postData.getType());
                 }
 
@@ -300,7 +300,6 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
                 } else {
                     SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
                 }
-
 
 
                 break;
@@ -461,15 +460,15 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
                         // If the Fragment is non-null, then it is currently being
                         // retained across a configuration change.
                         FragmentManager fm = getFragmentManager();
-                        mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
-                        if (mTaskFragment == null) {
-                            mTaskFragment = new TaskFragment();
+                        mProcessBitmapTaskFragment = (ProcessBitmapTaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+                        if (mProcessBitmapTaskFragment == null) {
+                            mProcessBitmapTaskFragment = new ProcessBitmapTaskFragment();
                             Bundle bundle = new Bundle();
                             bundle.putParcelable("uri", imageUri);
-                            mTaskFragment.setArguments(bundle);
-                            fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
+                            mProcessBitmapTaskFragment.setArguments(bundle);
+                            fm.beginTransaction().add(mProcessBitmapTaskFragment, TAG_TASK_FRAGMENT).commit();
                         } else {
-                            mTaskFragment.launchNewTask(imageUri);
+                            mProcessBitmapTaskFragment.launchNewTask(imageUri);
                         }
 //                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
 //                        imageBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
@@ -666,7 +665,7 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
         Uri imageUriTemp = Uri.parse(path);
         File file2 = FileUtils.getFile(this, imageUriTemp);
         sendUploadProfileImageRequest(file2);
-        mTaskFragment = null;
+        mProcessBitmapTaskFragment = null;
     }
 
 }

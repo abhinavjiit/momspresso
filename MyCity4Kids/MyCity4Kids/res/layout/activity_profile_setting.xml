@@ -172,19 +172,6 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <!--<com.mycity4kids.widget.CustomFontTextView-->
-            <!--android:id="@+id/notification_settings"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="@dimen/space_20"-->
-            <!--android:layout_marginRight="@dimen/space_8"-->
-            <!--android:drawableLeft="@drawable/ic_notification"-->
-            <!--android:drawableRight="@drawable/arrow_right"-->
-            <!--android:drawablePadding="@dimen/space_20"-->
-            <!--android:text="@string/notification_settings"-->
-            <!--android:textColor="@color/campaign_4A4A4A"-->
-            <!--android:textSize="16sp" />-->
-
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/appSettingsTextView"
                 android:layout_width="match_parent"

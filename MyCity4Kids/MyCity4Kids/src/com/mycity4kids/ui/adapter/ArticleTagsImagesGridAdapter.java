@@ -25,12 +25,10 @@ public class ArticleTagsImagesGridAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflator;
     ArrayList<CommonParentingList> articleDataModelsNew;
-    private final float density;
     private ITagImageSelect iTagImageSelect;
 
     public ArticleTagsImagesGridAdapter(Context pContext) {
         mContext = pContext;
-        density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         iTagImageSelect = (ITagImageSelect) pContext;
     }

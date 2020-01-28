@@ -1,12 +1,13 @@
 package com.mycity4kids.ui.activity;
 
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.JsonSyntaxException;
@@ -18,7 +19,6 @@ import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.ForgotPasswordController;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.LoginRegistrationRequest;
 import com.mycity4kids.models.response.ForgotPasswordResponse;
@@ -31,7 +31,6 @@ import retrofit2.Retrofit;
 
 public class ForgotPasswordActivity extends BaseActivity {
     private EditText mEmailId;
-    private ForgotPasswordController _controller;
     private Toolbar mToolbar;
     private LinearLayout root;
 
@@ -50,7 +49,6 @@ public class ForgotPasswordActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mEmailId = (EditText) findViewById(R.id.editEmail);
-        _controller = new ForgotPasswordController(this, this);
 
         getSupportActionBar().setTitle("Forgot Password");
 
