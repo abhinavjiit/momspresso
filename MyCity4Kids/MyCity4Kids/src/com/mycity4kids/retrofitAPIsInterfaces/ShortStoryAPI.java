@@ -1,7 +1,6 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
-import com.mycity4kids.models.ExploreTopicsModel;
-import com.mycity4kids.models.Topics;
+
 import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
@@ -20,12 +19,8 @@ import com.mycity4kids.models.response.ShortStoryDetailResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.models.response.ViewCountResponse;
 
-import java.util.ArrayList;
-
-import kotlinx.coroutines.Deferred;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -109,7 +104,5 @@ public interface ShortStoryAPI {
 
     @PUT("/article-category-images/article-config/{ss_id}/")
     Call<ResponseBody> updateConfig(@Path("ss_id") String shortStoryId, @Body ShortStoryConfigRequest body);
-
-
 
 }

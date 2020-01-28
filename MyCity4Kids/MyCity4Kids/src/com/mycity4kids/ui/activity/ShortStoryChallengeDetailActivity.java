@@ -120,6 +120,7 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
     private boolean showGuide = false;
     private String userDynamoId;
     private TextView titleTextView, bodyTextView, authorTextView;
+    private View shareSSView;
     private ShortStoryAPI shortStoryAPI;
     private boolean isRecommendRequestRunning;
     private String likeStatus;

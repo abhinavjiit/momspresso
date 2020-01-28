@@ -30,7 +30,7 @@ class ShortStoryTopicsGridAdapter : BaseAdapter() {
 
         try {
 
-            Picasso.with(parent?.context).load(topicsData[position].extraData[0].categoryBackImage.app).placeholder(R.drawable.default_article).error(R.drawable.default_article).fit().into(viewHolder.tagsImageView)
+            Picasso.get().load(topicsData[position].extraData[0].categoryBackImage.app).placeholder(R.drawable.default_article).error(R.drawable.default_article).fit().into(viewHolder.tagsImageView)
         } catch (e: Exception) {
 
             viewHolder.tagsImageView?.setImageResource(R.drawable.default_article)
@@ -59,5 +59,6 @@ class ShortStoryTopicsGridAdapter : BaseAdapter() {
     internal inner class ViewHolder {
         var tagsImageView: ImageView? = null
         var topicsNameTextView: TextView? = null
+
     }
 }

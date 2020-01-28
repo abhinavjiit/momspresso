@@ -43,7 +43,6 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
         holder.challengeNameText.setText(challengeTopics.get(position).getDisplay_name());
         if (challengeTopics.get(position).getExtraData().get(0).getChallenge().getIs_live().equals("1")) {
             holder.liveTextViewVideoChallenge.setVisibility(View.VISIBLE);
@@ -57,7 +56,6 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
             holder.cureentChallengesImage.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_article));
         }
     }
-
 
     @Override
     public int getItemCount() {

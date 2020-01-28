@@ -690,8 +690,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             reteVersionModel.setAppRateVersion(-20);
             rateAppDialogFragment.show(getFragmentManager(), rateAppDialogFragment.getClass().getSimpleName());
         }
-
-     //     findActiveChallenge();
         getUsersData();
         String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext());
         if (getIntent().getBooleanExtra("isFromShare", false) && !isRewardsAdded.isEmpty()
@@ -1338,7 +1336,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void findValues(String deepLinkChallengeId) {
         try {
-           // shortStoriesTopicList = BaseApplication.getShortStoryTopicList();
+            // shortStoriesTopicList = BaseApplication.getShortStoryTopicList();
             if (shortStoriesTopicList != null && shortStoriesTopicList.size() != 0) {
                 num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
                 for (int j = 0; j < num_of_categorys; j++) {
@@ -1824,7 +1822,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             default:
                 break;
         }
-
     }
 
     private void fireEventForVideoCreationIntent() {

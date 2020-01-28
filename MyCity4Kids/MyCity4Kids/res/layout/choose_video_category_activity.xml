@@ -42,7 +42,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="@string/select_category"
+                        android:text="@string/choose_video_category"
                         android:textColor="@color/campaign_515151"
                         android:textSize="20sp"
                         android:textStyle="bold"
