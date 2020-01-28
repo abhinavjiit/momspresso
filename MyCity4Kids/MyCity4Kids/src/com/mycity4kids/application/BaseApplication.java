@@ -13,8 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.multidex.MultiDex;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
@@ -29,6 +27,7 @@ import com.google.android.libraries.places.api.Places;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.MessageEvent;
 import com.mycity4kids.R;
@@ -51,6 +50,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import androidx.multidex.MultiDex;
 import io.branch.referral.Branch;
 import io.fabric.sdk.android.Fabric;
 import io.socket.client.IO;
@@ -77,7 +77,7 @@ public class BaseApplication extends Application {
     private RequestQueue mRequestQueue;
     String data = "";
     private static BaseApplication mInstance;
-    private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit, campaignRewards, azureRetrofit, testRetrofit;
+    private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit, campaignRewards, azureRetrofit, testRetrofit, coroutineRetrofit;
     private static OkHttpClient client, customTimeoutOkHttpClient;
 
     private static ArrayList<Topics> topicList;
@@ -266,6 +266,13 @@ public class BaseApplication extends Application {
         return campaignRewards;
     }
 
+    public Retrofit getCoroutineRetrofit() {
+        if (null == coroutineRetrofit) {
+            createRetrofitInstanceForCampaign(AppConstants.LIVE_URL);
+        }
+        return coroutineRetrofit;
+    }
+
     public Retrofit createRetrofitInstanceForCampaign(String base_url) {
         Interceptor mainInterceptor = new Interceptor() {
             @Override
@@ -315,7 +322,7 @@ public class BaseApplication extends Application {
         campaignRewards = new Retrofit.Builder()
                 .baseUrl(base_url)
                 .addConverterFactory(buildGsonConverter())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(CoroutineCallAdapterFactory.create())
                 .client(client)
                 .build();
 

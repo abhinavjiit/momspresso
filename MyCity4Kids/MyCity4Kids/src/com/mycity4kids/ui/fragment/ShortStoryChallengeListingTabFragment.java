@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
@@ -13,7 +14,9 @@ import com.mycity4kids.models.Topics;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ShortStoryChallengeDetailActivity;
 import com.mycity4kids.ui.adapter.ChallengeRecyclerAdapter;
+
 import java.util.ArrayList;
+
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -72,7 +75,7 @@ public class ShortStoryChallengeListingTabFragment extends BaseFragment implemen
     }
 
     @Override
-    public void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodal, ArrayList<String> activeImageUrl) {
+    public void onClick(View view, int position, String challengeId, String Display_Name, Topics articledatamodal, String activeImageUrl) {
         switch (view.getId()) {
             case R.id.mainView:
             case R.id.getStartedTextView:
