@@ -541,7 +541,7 @@ class ShortStoriesCardActivity : BaseActivity() {
             shortStoryDraftOrPublishRequest.tags = taggedList
         }
 
-        val call = shortStoryAPI.updateOrPublishShortStory("1111", shortStoryDraftOrPublishRequest)
+        val call = shortStoryAPI.updateOrPublishShortStory(draftId, shortStoryDraftOrPublishRequest)
         call.enqueue(object : Callback<ArticleDraftResponse> {
             override fun onResponse(call: Call<ArticleDraftResponse>, response: retrofit2.Response<ArticleDraftResponse>) {
                 removeProgressDialog()
