@@ -30,6 +30,7 @@ import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.StringUtils
 import com.kelltontech.utils.ToastUtils
+import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
@@ -89,8 +90,8 @@ class ShortStoriesCardActivity : BaseActivity() {
     private lateinit var imageUriTemp: Uri
     private lateinit var MEDIA_TYPE_PNG: MediaType
     private lateinit var file: File
-    private lateinit var taggedChallengeName: String
-    private lateinit var taggedChallengeId: String
+    private var taggedChallengeName: String? = null
+    private var taggedChallengeId: String? = null
     private lateinit var requestBodyFile: RequestBody
     private lateinit var imageType: RequestBody
     private var draftId: String = ""
@@ -535,7 +536,12 @@ class ShortStoriesCardActivity : BaseActivity() {
             val categoryMap = HashMap<String, String>()
             val challengeMap = HashMap<String, String>()
             categoryMap[taggedCategoryId] = taggedCategoryName
-            challengeMap[taggedChallengeId] = taggedChallengeName
+            taggedChallengeId?.let { tagChallengeId ->
+                taggedChallengeName?.let {
+                    challengeMap[tagChallengeId] = it
+                }
+            }
+
             taggedList.add(categoryMap)
             taggedList.add(challengeMap)
             shortStoryDraftOrPublishRequest.tags = taggedList
