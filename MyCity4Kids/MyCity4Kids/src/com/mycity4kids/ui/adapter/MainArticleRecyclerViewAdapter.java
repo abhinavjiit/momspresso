@@ -18,6 +18,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -63,10 +67,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Locale;
-
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by hemant on 4/12/17.
@@ -237,7 +237,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 viewHolder.storyHeaderView.setVisibility(View.VISIBLE);
                 addShortStoryItem(viewHolder, viewHolder.storyImage, viewHolder.authorNameTextView,
                         viewHolder.storyCommentCountTextView, viewHolder.storyRecommendationCountTextView, viewHolder.likeImageView,
-                        articleDataModelsNew.get(position), viewHolder.followAuthorTextView, viewHolder.storyAuthorTextView, viewHolder.shareStoryImageView);
+                        articleDataModelsNew.get(position), viewHolder.followAuthorTextView, viewHolder.storyAuthorTextView,
+                        viewHolder.shareStoryImageView, viewHolder.logoImageView);
             }
         } else if (holder instanceof VideoCarouselViewHolder) {
             if (!articleDataModelsNew.get(position).isCarouselRequestRunning() && !articleDataModelsNew.get(position).isResponseReceived()) {
@@ -263,7 +264,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 viewHolder.storyHeaderView.setVisibility(View.VISIBLE);
                 addShortStoryItem(viewHolder, viewHolder.storyImage, viewHolder.authorNameTextView,
                         viewHolder.storyCommentCountTextView, viewHolder.storyRecommendationCountTextView, viewHolder.likeImageView,
-                        articleDataModelsNew.get(position), viewHolder.followAuthorTextView, viewHolder.storyAuthorTextView, viewHolder.shareStoryImageView);
+                        articleDataModelsNew.get(position), viewHolder.followAuthorTextView, viewHolder.storyAuthorTextView,
+                        viewHolder.shareStoryImageView, viewHolder.logoImageView);
             }
         } else if (holder instanceof CampaignCarouselViewHolder) {
             CampaignCarouselViewHolder viewHolder = (CampaignCarouselViewHolder) holder;
@@ -308,13 +310,15 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 viewHolder.storyHeaderView.setVisibility(View.VISIBLE);
                 addShortStoryItem(viewHolder, viewHolder.storyImage, viewHolder.authorNameTextView,
                         viewHolder.storyCommentCountTextView, viewHolder.storyRecommendationCountTextView, viewHolder.likeImageView,
-                        articleDataModelsNew.get(position), viewHolder.followAuthorTextView, viewHolder.storyAuthorTextView, viewHolder.shareStoryImageView);
+                        articleDataModelsNew.get(position), viewHolder.followAuthorTextView, viewHolder.storyAuthorTextView,
+                        viewHolder.shareStoryImageView, viewHolder.logoImageView);
             }
         } else {
             ShortStoriesViewHolder viewHolder = (ShortStoriesViewHolder) holder;
             addShortStoryItem(viewHolder, viewHolder.storyImage, viewHolder.authorNameTextView,
                     viewHolder.storyCommentCountTextView, viewHolder.storyRecommendationCountTextView, viewHolder.likeImageView,
-                    articleDataModelsNew.get(position), viewHolder.followAuthorTextView, viewHolder.storyAuthorTextView, viewHolder.shareStoryImageView);
+                    articleDataModelsNew.get(position), viewHolder.followAuthorTextView, viewHolder.storyAuthorTextView,
+                    viewHolder.shareStoryImageView, viewHolder.logoImageView);
         }
     }
 
@@ -469,7 +473,9 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     }
 
     private void addShortStoryItem(final RecyclerView.ViewHolder holder, ImageView storyImage, TextView authorNameTV,
-                                   TextView storyCommentCountTV, TextView storyRecommendationCountTV, ImageView likeIV, ArticleListingResult data, TextView followAuthorTextView, TextView storyAuthorTextView, ImageView shareStoryImageView) {
+                                   TextView storyCommentCountTV, TextView storyRecommendationCountTV, ImageView likeIV,
+                                   ArticleListingResult data, TextView followAuthorTextView, TextView storyAuthorTextView,
+                                   ImageView shareStoryImageView, ImageView logoImageView) {
 
         authorNameTV.setText(data.getUserName());
         if (null == data.getCommentsCount()) {
@@ -621,7 +627,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         ImageView storyImage, likeImageView, menuItem;
         ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView;
         StoryShareCardWidget storyShareCardWidget;
-        ImageView shareStoryImageView;
+        ImageView shareStoryImageView, logoImageView;
         TextView storyAuthorTextView;
 
         private ShortStoriesViewHolder(View itemView) {
@@ -641,6 +647,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             followAuthorTextView = itemView.findViewById(R.id.followAuthorTextView);
             storyShareCardWidget = (StoryShareCardWidget) itemView.findViewById(R.id.storyShareCardWidget);
             shareStoryImageView = (ImageView) storyShareCardWidget.findViewById(R.id.storyImageView);
+            logoImageView = (ImageView) storyShareCardWidget.findViewById(R.id.logoImageView);
             storyAuthorTextView = (TextView) storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
 
             whatsappShareImageView.setTag(itemView);
@@ -750,7 +757,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         ImageView storyImage, likeImageView, menuItem;
         ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView;
         StoryShareCardWidget storyShareCardWidget;
-        ImageView shareStoryImageView;
+        ImageView shareStoryImageView, logoImageView;
         TextView storyAuthorTextView;
 
         CampaignCarouselViewHolder(View view) {
@@ -831,6 +838,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             adSlotWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             storyShareCardWidget = (StoryShareCardWidget) itemView.findViewById(R.id.storyShareCardWidget);
             shareStoryImageView = (ImageView) storyShareCardWidget.findViewById(R.id.storyImageView);
+            logoImageView = (ImageView) storyShareCardWidget.findViewById(R.id.logoImageView);
             storyAuthorTextView = (TextView) storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
 
             view.setOnClickListener(this);
@@ -883,7 +891,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         ImageView storyImage, likeImageView, menuItem;
         ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView;
         StoryShareCardWidget storyShareCardWidget;
-        ImageView shareStoryImageView;
+        ImageView shareStoryImageView, logoImageView;
         TextView storyAuthorTextView;
 
         VideoCarouselViewHolder(View view) {
@@ -924,6 +932,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             followAuthorTextView = view.findViewById(R.id.followAuthorTextView);
             storyShareCardWidget = (StoryShareCardWidget) itemView.findViewById(R.id.storyShareCardWidget);
             shareStoryImageView = (ImageView) storyShareCardWidget.findViewById(R.id.storyImageView);
+            logoImageView = (ImageView) storyShareCardWidget.findViewById(R.id.logoImageView);
             storyAuthorTextView = (TextView) storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
 
             whatsappShareImageView.setTag(view);
@@ -979,7 +988,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView;
         RelativeLayout mainView;
         StoryShareCardWidget storyShareCardWidget;
-        ImageView shareStoryImageView;
+        ImageView shareStoryImageView, logoImageView;
         TextView storyAuthorTextView;
 
         JoinGroupViewHolder(View view) {
@@ -1019,6 +1028,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             followAuthorTextView = (TextView) view.findViewById(R.id.followAuthorTextView);
             storyShareCardWidget = (StoryShareCardWidget) itemView.findViewById(R.id.storyShareCardWidget);
             shareStoryImageView = (ImageView) storyShareCardWidget.findViewById(R.id.storyImageView);
+            logoImageView = (ImageView) storyShareCardWidget.findViewById(R.id.logoImageView);
             storyAuthorTextView = (TextView) storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
             whatsappShareImageView.setTag(view);
 

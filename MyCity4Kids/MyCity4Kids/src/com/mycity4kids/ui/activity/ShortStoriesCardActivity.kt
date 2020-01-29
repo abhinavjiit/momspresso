@@ -14,10 +14,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.*
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -110,6 +107,7 @@ class ShortStoriesCardActivity : BaseActivity() {
     private var taggedCategoryId: String = ""
     private var x: Int = 0
     private var y: Int = 0
+    private var isImageLoaded: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -664,7 +662,7 @@ class ShortStoriesCardActivity : BaseActivity() {
         }
     }
 
-    fun getHexColor(color: String): Int? {
+    private fun getHexColor(color: String): Int? {
         val colors = color.substring(5, color.length - 1).split(",")
         try {
             val red = colors.get(0).trim().toInt()
@@ -690,7 +688,16 @@ class ShortStoriesCardActivity : BaseActivity() {
 
     fun setBackground(url: String, fontColor: String, imageId: Int) {
         Picasso.with(BaseApplication.getAppContext()).load(url).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                .fit().into(cardBg)
+                .fit().into(cardBg, object : com.squareup.picasso.Callback {
+                    override fun onSuccess() {
+                        isImageLoaded = true
+                    }
+
+                    override fun onError() {
+                        isImageLoaded = false
+                    }
+
+                })
         getHexColor(fontColor)?.let { divider.setBackgroundColor(it) }
         getHexColor(fontColor)?.let { titleTv.setTextColor(it) }
         getHexColor(fontColor)?.let { storyTv.setTextColor(it) }
@@ -726,7 +733,10 @@ class ShortStoriesCardActivity : BaseActivity() {
     }
 
     fun checkViewAndUpdate(): Boolean {
-        var check = true
+        if (!isImageLoaded) {
+            showToast(getString(R.string.ss_image_loading_msg))
+            return false
+        }
         val location = IntArray(2)
         shortLayout.getLocationOnScreen(location)
         x = location[0]
@@ -742,8 +752,8 @@ class ShortStoriesCardActivity : BaseActivity() {
         titleTvSize = titleTv.textSize / resources.displayMetrics.scaledDensity
         storyTvSize = storyTv.textSize / resources.displayMetrics.scaledDensity
         if (titleTvSize > 10) {
-            titleTvSize = titleTvSize - 2
-            storyTvSize = storyTvSize - 2
+            titleTvSize -= 2
+            storyTvSize -= 2
             titleTv.textSize = titleTvSize
             storyTv.textSize = storyTvSize
         } else {
@@ -752,12 +762,12 @@ class ShortStoriesCardActivity : BaseActivity() {
     }
 
     fun textAlign(align: String) {
-        if (align.equals("LEFT")) {
+        if (align == "LEFT") {
             fontAlignment = align
             shortLayout.gravity = Gravity.LEFT
             titleTv.gravity = Gravity.LEFT
             storyTv.gravity = Gravity.LEFT
-        } else if (align.equals("CENTER")) {
+        } else if (align == "CENTER") {
             fontAlignment = align
             shortLayout.gravity = Gravity.CENTER
             titleTv.gravity = Gravity.CENTER

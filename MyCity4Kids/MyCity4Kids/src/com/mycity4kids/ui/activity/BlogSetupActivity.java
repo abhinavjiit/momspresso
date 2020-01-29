@@ -1,11 +1,9 @@
 package com.mycity4kids.ui.activity;
 
 import android.Manifest;
-import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -26,38 +24,30 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.snackbar.Snackbar;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
-import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.models.VersionApiModel;
-import com.mycity4kids.models.city.City;
-import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.request.UpdateUserDetailsRequest;
-import com.mycity4kids.models.response.CityConfigResponse;
 import com.mycity4kids.models.response.CityInfoItem;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
-import com.mycity4kids.sync.PushTokenService;
-import com.mycity4kids.ui.fragment.CityListingDialogFragment;
 import com.mycity4kids.utils.GenericFileProvider;
-import com.mycity4kids.utils.NearMyCity;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.squareup.picasso.MemoryPolicy;
@@ -73,7 +63,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -87,6 +79,7 @@ import retrofit2.Retrofit;
  */
 public class BlogSetupActivity extends BaseActivity implements View.OnClickListener {
 
+    private static final int REQUEST_SELECT_PLACE = 1000;
     private static final int REQUEST_CAMERA = 0;
     private static final int REQUEST_EDIT_PICTURE = 1;
     private static String[] PERMISSIONS_EDIT_PICTURE = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -102,7 +95,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
     private File photoFile;
     private Uri imageUri;
     public ArrayList<CityInfoItem> mDatalist;
-    private String otherCityName;
 
     private LinearLayout introLinearLayout;
     private RelativeLayout detailsRelativeLayout;
@@ -111,7 +103,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
     private TextView savePublishTextView;
     private EditText blogTitleEditText, aboutSelfEditText;
     private EditText phoneEditText;
-    private CityListingDialogFragment cityFragment;
     private ImageView profilePicImageView, changeProfilePicImageView;
     private View mLayout;
     TextView emailLabelTextView, blogTitlesLabelTextView, blogHandleLabelTextView;
@@ -119,7 +110,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
     private String comingFrom = "Normal";
     private String blogTitle;
     private String email;
-    private int MY_PERMISSION_LOCATION = 10001;
+    private Place cityPlaceObject;
 
 
     @Override
@@ -186,10 +177,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         call.enqueue(getUserDetailsResponseCallback);
 
-        ConfigAPIs cityConfigAPI = retrofit.create(ConfigAPIs.class);
-        Call<CityConfigResponse> cityCall = cityConfigAPI.getCityConfig();
-        cityCall.enqueue(cityConfigResponseCallback);
-
         if (comingFrom.equals("Videos")) {
             blogHandleLabelTextView.setVisibility(View.VISIBLE);
             blogTitlesLabelTextView.setVisibility(View.GONE);
@@ -231,6 +218,9 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                         phoneEditText.setText(responseData.getData().get(0).getResult().getPhone().getMobile());
                     }
                 }
+                if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getCityName())) {
+                    cityTextView.setText(responseData.getData().get(0).getResult().getCityName());
+                }
             } else {
             }
         }
@@ -238,53 +228,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         @Override
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
-
-    private Callback<CityConfigResponse> cityConfigResponseCallback = new Callback<CityConfigResponse>() {
-        @Override
-        public void onResponse(Call<CityConfigResponse> call, retrofit2.Response<CityConfigResponse> response) {
-            if (null == response.body()) {
-                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
-                return;
-            }
-            try {
-                CityConfigResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    mDatalist = new ArrayList<>();
-                    MetroCity currentCity = SharedPrefUtils.getCurrentCityModel(BlogSetupActivity.this);
-                    for (int i = 0; i < responseData.getData().getResult().getCityData().size(); i++) {
-                        if (!AppConstants.ALL_CITY_NEW_ID.equals(responseData.getData().getResult().getCityData().get(i).getId())) {
-                            mDatalist.add(responseData.getData().getResult().getCityData().get(i));
-                        }
-                        if (AppConstants.OTHERS_NEW_CITY_ID.equals(responseData.getData().getResult().getCityData().get(i).getId())) {
-                            if (currentCity.getName() != null && !"Others".equals(currentCity.getName()) && currentCity.getId() == AppConstants.OTHERS_CITY_ID) {
-                                mDatalist.get(mDatalist.size() - 1).setCityName("Others(" + currentCity.getName() + ")");
-                            }
-                        }
-                    }
-
-                    for (int i = 0; i < mDatalist.size(); i++) {
-                        int cId = Integer.parseInt(mDatalist.get(i).getId().replace("city-", ""));
-                        if (currentCity.getId() == cId) {
-                            mDatalist.get(i).setSelected(true);
-                            cityTextView.setText(mDatalist.get(i).getCityName());
-                        } else {
-                            mDatalist.get(i).setSelected(false);
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<CityConfigResponse> call, Throwable t) {
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
@@ -306,12 +249,12 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                 imm.showSoftInput(aboutSelfEditText, InputMethodManager.SHOW_IMPLICIT);
                 break;
             case R.id.cityTextView:
-                cityFragment = new CityListingDialogFragment();
-                Bundle _args = new Bundle();
-                _args.putParcelableArrayList("cityList", mDatalist);
-                cityFragment.setArguments(_args);
-                FragmentManager fm = getSupportFragmentManager();
-                cityFragment.show(fm, "Replies");
+                List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
+                Intent intent = new Autocomplete.IntentBuilder(
+                        AutocompleteActivityMode.FULLSCREEN, fields)
+                        .setTypeFilter(TypeFilter.CITIES)
+                        .build(this);
+                startActivityForResult(intent, REQUEST_SELECT_PLACE);
                 break;
             case R.id.savePublishTextView:
                 Utils.pushBlogSetupSubmitEvent(BlogSetupActivity.this, "BlogSetupScreen", SharedPrefUtils.getUserDetailModel(BlogSetupActivity.this).getDynamoId());
@@ -328,7 +271,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                             != PackageManager.PERMISSION_GRANTED
                             && ActivityCompat.checkSelfPermission(BlogSetupActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED) {
-                        Log.i("PERMISSIONS", "storage permissions has NOT been granted. Requesting permissions.");
                         requestCameraAndStoragePermissions();
                     } else if (ActivityCompat.checkSelfPermission(BlogSetupActivity.this, Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED
@@ -336,7 +278,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                             == PackageManager.PERMISSION_GRANTED
                             && ActivityCompat.checkSelfPermission(BlogSetupActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                             == PackageManager.PERMISSION_GRANTED) {
-                        Log.i("PERMISSIONS", "storage permissions has NOT been granted. Requesting permissions.");
                         requestCameraPermission();
                     } else {
                         chooseImageOptionPopUp(profilePicImageView);
@@ -394,7 +335,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-
         if (requestCode == REQUEST_CAMERA) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Snackbar.make(mLayout, R.string.permision_available_camera,
@@ -411,18 +351,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                         Snackbar.LENGTH_SHORT)
                         .show();
                 chooseImageOptionPopUp(profilePicImageView);
-            } else {
-                Log.i("Permissions", "storage permissions were NOT granted.");
-                Snackbar.make(mLayout, R.string.permissions_not_granted,
-                        Snackbar.LENGTH_SHORT)
-                        .show();
-            }
-        } else if (requestCode == MY_PERMISSION_LOCATION) {
-            if (PermissionUtil.verifyPermissions(grantResults)) {
-                Snackbar.make(mLayout, R.string.permission_location_rationale,
-                        Snackbar.LENGTH_SHORT)
-                        .show();
-                saveCityData();
             } else {
                 Log.i("Permissions", "storage permissions were NOT granted.");
                 Snackbar.make(mLayout, R.string.permissions_not_granted,
@@ -486,16 +414,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         return image;
     }
 
-    public void changeCityText(CityInfoItem cityInfoItem) {
-        cityTextView.setText(cityInfoItem.getCityName());
-    }
-
-    public void setOtherCityName(final int pos, final String cityName) {
-        otherCityName = cityName;
-        mDatalist.get(pos).setCityName("Others(" + cityName + ")");
-        cityTextView.setText(mDatalist.get(pos).getCityName());
-    }
-
     private boolean validateFields() {
         if (comingFrom.equals("ShortStoryAndArticle")) {
             if (StringUtils.isNullOrEmpty(aboutSelfEditText.getText().toString().trim())) {
@@ -503,7 +421,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                 return false;
             }
         }
-
         if (StringUtils.isNullOrEmpty(blogTitleEditText.getText().toString().trim())) {
             Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_blog_title_empty), Toast.LENGTH_SHORT).show();
             return false;
@@ -549,6 +466,15 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         } else {
             updateUserDetail.setMobile(phoneEditText.getText().toString().replace("+91", "") + "");
         }
+        if (null == cityTextView.getText() || StringUtils.isNullOrEmpty(cityTextView.getText().toString().trim())) {
+            updateUserDetail.setCityName(" ");
+        } else {
+            updateUserDetail.setCityName(cityTextView.getText().toString().trim());
+            if (cityPlaceObject != null && cityPlaceObject.getLatLng() != null) {
+                updateUserDetail.setLatitude(cityPlaceObject.getLatLng().latitude);
+                updateUserDetail.setLongitude(cityPlaceObject.getLatLng().longitude);
+            }
+        }
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         showProgressDialog(getResources().getString(R.string.please_wait));
@@ -573,11 +499,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                 String status = blogUpdateJson.getString("status");
                 if (code == 200 && Constants.SUCCESS.equals(status)) {
                     Utils.pushBlogSetupSuccessEvent(BlogSetupActivity.this, "BlogSetupScreen", SharedPrefUtils.getUserDetailModel(BlogSetupActivity.this).getDynamoId());
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && BlogSetupActivity.this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && BlogSetupActivity.this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_LOCATION);
-                    } else {
-                        saveCityData();
-                    }
+                    finish();
                 } else {
                     showToast("" + blogUpdateJson.getString("reason"));
                 }
@@ -596,146 +518,15 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         }
     };
 
-    public void saveCityData() {
-        final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(BaseApplication.getAppContext());
-        if (null == mDatalist || mDatalist.isEmpty()) {
-            ToastUtils.showToast(this, getString(R.string.change_city_fetch_available_cities));
-            return;
-        }
-        showProgressDialog(getString(R.string.please_wait));
-        double _latitude = 0;
-        double _longitude = 0;
-        for (int i = 0; i < mDatalist.size(); i++) {
-            if (mDatalist.get(i).isSelected()) {
-                _latitude = mDatalist.get(i).getLat();
-                _longitude = mDatalist.get(i).getLon();
-            }
-        }
-        new NearMyCity(this, _latitude, _longitude, new NearMyCity.FetchCity() {
-
-            @Override
-            public void nearCity(City cityModel) {
-                int cityId = cityModel.getCityId();
-
-                MetroCity model = new MetroCity();
-                model.setId(cityModel.getCityId());
-                if (AppConstants.OTHERS_CITY_ID == cityModel.getCityId()) {
-                    cityModel.setCityName(otherCityName);
-                    model.setName(otherCityName);
-                } else {
-                    model.setName(cityModel.getCityName());
-                }
-
-                model.setNewCityId(cityModel.getNewCityId());
-
-                SharedPrefUtils.setCurrentCityModel(BaseApplication.getAppContext(), model);
-                SharedPrefUtils.setChangeCityFlag(BaseApplication.getAppContext(), true);
-
-                if (cityId > 0) {
-                    versionApiModel.setCityId(cityId);
-                    PackageInfo pInfo = null;
-                    try {
-                        pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
-                    }
-
-                    String version = pInfo.versionName;
-                    if (!StringUtils.isNullOrEmpty(version)) {
-                        versionApiModel.setAppUpdateVersion(version);
-                    }
-
-                    if (!ConnectivityUtils.isNetworkEnabled(BlogSetupActivity.this)) {
-                        ToastUtils.showToast(BlogSetupActivity.this, getString(R.string.error_network));
-                        return;
-
-                    }
-
-                    UpdateUserDetailsRequest updateUserDetail = new UpdateUserDetailsRequest();
-                    updateUserDetail.setAttributeName("cityId");
-                    updateUserDetail.setAttributeType("S");
-                    updateUserDetail.setAttributeValue("" + cityModel.getCityId());
-                    Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                    UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
-                    Call<UserDetailResponse> call = userAttributeUpdateAPI.updateCity(updateUserDetail);
-                    call.enqueue(new Callback<UserDetailResponse>() {
-                        @Override
-                        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
-                            removeProgressDialog();
-                            if (response.body() == null) {
-                                finish();
-                                return;
-                            }
-
-                            UserDetailResponse responseData = response.body();
-                            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                                Toast.makeText(BlogSetupActivity.this, R.string.successfully_updated, Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(BlogSetupActivity.this, PushTokenService.class);
-                                startService(intent);
-                                finish();
-                            } else {
-                                Toast.makeText(BlogSetupActivity.this, responseData.getReason(), Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
-                            removeProgressDialog();
-                            Toast.makeText(BlogSetupActivity.this, getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
-                            Crashlytics.logException(t);
-                            Log.d("MC4kException", Log.getStackTraceString(t));
-                            finish();
-                        }
-                    });
-
-                    UpdateUserDetailsRequest addOtherCityNameRequest = new UpdateUserDetailsRequest();
-                    addOtherCityNameRequest.setCityId("" + cityModel.getCityId());
-                    addOtherCityNameRequest.setCityName(cityModel.getCityName());
-                    Call<UserDetailResponse> callNew = userAttributeUpdateAPI.updateCityAndKids(addOtherCityNameRequest);
-                    callNew.enqueue(addOtherCityNameResponseCallback);
-                }
-            }
-        });
-    }
-
-    Callback<UserDetailResponse> addOtherCityNameResponseCallback = new Callback<UserDetailResponse>() {
-        @Override
-        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
-            removeProgressDialog();
-            Log.d("SUCCESS", "" + response);
-            if (response.body() == null) {
-                return;
-            }
-            try {
-                if (null != cityFragment) {
-                    cityFragment.dismiss();
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4KException", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
-            Log.d("MC4kException", Log.getStackTraceString(t));
-            Crashlytics.logException(t);
-        }
-    };
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         switch (requestCode) {
             case ADD_MEDIA_ACTIVITY_REQUEST_CODE:
                 if (data == null) {
                     return;
                 }
                 imageUri = data.getData();
-
                 if (resultCode == Activity.RESULT_OK) {
                     try {
                         startCropActivity(imageUri);
@@ -745,12 +536,20 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                 }
                 break;
             case ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE:
-
                 if (resultCode == Activity.RESULT_OK) {
                     try {
                         startCropActivity(Uri.parse(mCurrentPhotoPath));
                     } catch (Exception e) {
                         e.printStackTrace();
+                    }
+                }
+                break;
+            case REQUEST_SELECT_PLACE:
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    Place place = Autocomplete.getPlaceFromIntent(data);
+                    if (!StringUtils.isNullOrEmpty(place.getName())) {
+                        cityTextView.setText(place.getName());
+                        cityPlaceObject = place;
                     }
                 }
                 break;
@@ -784,13 +583,10 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         call.enqueue(new Callback<ImageUploadResponse>() {
                          @Override
                          public void onResponse(Call<ImageUploadResponse> call, retrofit2.Response<ImageUploadResponse> response) {
-                             int statusCode = response.code();
                              ImageUploadResponse responseModel = response.body();
-
                              removeProgressDialog();
                              if (responseModel.getCode() != 200) {
                                  showToast(getString(R.string.toast_response_error));
-                                 return;
                              } else {
                                  if (!StringUtils.isNullOrEmpty(responseModel.getData().getResult().getUrl())) {
                                      Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());

@@ -37,6 +37,10 @@ public class UpdateUserDetailsRequest {
     private String isValidated;
     @SerializedName("kids")
     private ArrayList<AddRemoveKidsRequest> kids;
+    @SerializedName("latitude")
+    private double latitude;
+    @SerializedName("longitude")
+    private double longitude;
 
     public String getFirstName() {
         return firstName;
@@ -148,5 +152,21 @@ public class UpdateUserDetailsRequest {
 
     public void setKids(ArrayList<AddRemoveKidsRequest> kids) {
         this.kids = kids;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }

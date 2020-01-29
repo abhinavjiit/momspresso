@@ -15,6 +15,7 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.ui.fragment.ShortStoryFragment;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.StoryShareCardWidget;
 import com.squareup.picasso.Picasso;
 
@@ -89,6 +90,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
                 try {
                     Picasso.with(holder.itemView.getContext()).load(datalist.get(position).getSsResult().getStoryImage()).into(ssViewHolder.shareStoryImageView);
                     ssViewHolder.storyAuthorTextView.setText(datalist.get(position).getSsResult().getUserName());
+                    AppUtils.populateLogoImageLanguageWise(holder.itemView.getContext(), ssViewHolder.logoImageView, datalist.get(position).getSsResult().getLang());
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
@@ -165,6 +167,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
         StoryShareCardWidget storyShareCardWidget;
         ImageView shareStoryImageView;
         TextView storyAuthorTextView;
+        ImageView logoImageView;
 
         ShortStoriesViewHolder(View itemView, RecyclerViewClickListener listener) {
             super(itemView);
@@ -184,6 +187,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
             storyShareCardWidget = (StoryShareCardWidget) itemView.findViewById(R.id.storyShareCardWidget);
             shareStoryImageView = (ImageView) storyShareCardWidget.findViewById(R.id.storyImageView);
             storyAuthorTextView = (TextView) storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
+            logoImageView = (ImageView) storyShareCardWidget.findViewById(R.id.logoImageView);
 
             facebookShareImageView.setOnClickListener(this);
             whatsappShareImageView.setOnClickListener(this);

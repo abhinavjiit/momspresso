@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
@@ -17,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.crashlytics.android.Crashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.StoryShareCardWidget;
 import com.squareup.picasso.Picasso;
 
@@ -54,7 +54,7 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
     public ShortStoriesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ShortStoriesViewHolder viewHolder = null;
         View v0 = mInflator.inflate(R.layout.short_story_listing_item, parent, false);
-        viewHolder = new ShortStoriesViewHolder(v0, mListener);
+        viewHolder = new ShortStoriesViewHolder(v0);
         return viewHolder;
     }
 
@@ -63,6 +63,7 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
         try {
             Picasso.with(mContext).load(articleDataModelsNew.get(position).getStoryImage()).into(holder.shareStoryImageView);
             holder.storyAuthorTextView.setText(articleDataModelsNew.get(position).getUserName());
+            AppUtils.populateLogoImageLanguageWise(holder.itemView.getContext(), holder.logoImageView, articleDataModelsNew.get(position).getLang());
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
@@ -123,30 +124,30 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
         TextView storyRecommendationCountTextView;
         ImageView likeImageView, menuItem;
         ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView, storyImage;
-        ImageView storyOptionImageView;
-        RelativeLayout mainView;
         StoryShareCardWidget storyShareCardWidget;
         ImageView shareStoryImageView;
         TextView storyAuthorTextView;
+        ImageView logoImageView;
 
-        public ShortStoriesViewHolder(View itemView, RecyclerViewClickListener listener) {
+        ShortStoriesViewHolder(View itemView) {
             super(itemView);
-            authorNameTextView = (TextView) itemView.findViewById(R.id.authorNameTextView);
-            followAuthorTextView = (TextView) itemView.findViewById(R.id.followAuthorTextView);
-            storyRecommendationContainer = (LinearLayout) itemView.findViewById(R.id.storyRecommendationContainer);
-            storyCommentContainer = (LinearLayout) itemView.findViewById(R.id.storyCommentContainer);
-            storyCommentCountTextView = (TextView) itemView.findViewById(R.id.storyCommentCountTextView);
-            storyRecommendationCountTextView = (TextView) itemView.findViewById(R.id.storyRecommendationCountTextView);
-            likeImageView = (ImageView) itemView.findViewById(R.id.likeImageView);
-            facebookShareImageView = (ImageView) itemView.findViewById(R.id.facebookShareImageView);
-            whatsappShareImageView = (ImageView) itemView.findViewById(R.id.whatsappShareImageView);
-            instagramShareImageView = (ImageView) itemView.findViewById(R.id.instagramShareImageView);
-            genericShareImageView = (ImageView) itemView.findViewById(R.id.genericShareImageView);
-            storyImage = (ImageView) itemView.findViewById(R.id.storyImageView1);
-            menuItem = (ImageView) itemView.findViewById(R.id.menuItem);
-            storyShareCardWidget = (StoryShareCardWidget) itemView.findViewById(R.id.storyShareCardWidget);
-            shareStoryImageView = (ImageView) storyShareCardWidget.findViewById(R.id.storyImageView);
-            storyAuthorTextView = (TextView) storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
+            authorNameTextView = itemView.findViewById(R.id.authorNameTextView);
+            followAuthorTextView = itemView.findViewById(R.id.followAuthorTextView);
+            storyRecommendationContainer = itemView.findViewById(R.id.storyRecommendationContainer);
+            storyCommentContainer = itemView.findViewById(R.id.storyCommentContainer);
+            storyCommentCountTextView = itemView.findViewById(R.id.storyCommentCountTextView);
+            storyRecommendationCountTextView = itemView.findViewById(R.id.storyRecommendationCountTextView);
+            likeImageView = itemView.findViewById(R.id.likeImageView);
+            facebookShareImageView = itemView.findViewById(R.id.facebookShareImageView);
+            whatsappShareImageView = itemView.findViewById(R.id.whatsappShareImageView);
+            instagramShareImageView = itemView.findViewById(R.id.instagramShareImageView);
+            genericShareImageView = itemView.findViewById(R.id.genericShareImageView);
+            storyImage = itemView.findViewById(R.id.storyImageView1);
+            menuItem = itemView.findViewById(R.id.menuItem);
+            storyShareCardWidget = itemView.findViewById(R.id.storyShareCardWidget);
+            shareStoryImageView = storyShareCardWidget.findViewById(R.id.storyImageView);
+            storyAuthorTextView = storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
+            logoImageView = storyShareCardWidget.findViewById(R.id.logoImageView);
 
             whatsappShareImageView.setTag(itemView);
 

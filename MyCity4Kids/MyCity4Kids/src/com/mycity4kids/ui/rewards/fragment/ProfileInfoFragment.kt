@@ -7,8 +7,6 @@ import android.app.Activity
 import android.app.Activity.RESULT_CANCELED
 import android.app.DatePickerDialog
 import android.app.Dialog
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -100,13 +98,6 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
     var address: String? = null
     private var lat: Double = 0.0
     private var lng: Double = 0.0
-    private var myClipboard: ClipboardManager? = null
-    private var myClip: ClipData? = null
-    private var validReferralCode: String = "empty"
-    private lateinit var Continue: String
-
-    private lateinit var editReferralCode1: EditText
-
 
     override fun onItemClick(selectedValueName: ArrayList<String>, popupType: String) {
         if (popupType == Constants.PopListRequestType.INTEREST.name) {

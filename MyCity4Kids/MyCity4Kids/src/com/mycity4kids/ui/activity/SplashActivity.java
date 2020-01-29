@@ -2,7 +2,6 @@ package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -106,11 +105,6 @@ public class SplashActivity extends BaseActivity {
             View mLayout = findViewById(R.id.rootLayout);
             ((BaseApplication) getApplication()).setView(mLayout);
             ((BaseApplication) getApplication()).setActivity(this);
-
-            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            String version = pInfo.versionName;
-            Log.e("version number ", version);
-
             ImageView _spin = (ImageView) findViewById(R.id.spin);
             _spin.startAnimation(AnimationUtils.loadAnimation(this,
                     R.anim.rotate_indefinitely));

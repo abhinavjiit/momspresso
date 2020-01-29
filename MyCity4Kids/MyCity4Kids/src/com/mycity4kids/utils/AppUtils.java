@@ -39,6 +39,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +61,7 @@ import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.widget.Hashids;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -1478,5 +1480,30 @@ public class AppUtils {
         ClipboardManager clipboard = (ClipboardManager) BaseApplication.getAppContext().getSystemService(CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("label", hashtags);
         clipboard.setPrimaryClip(clip);
+    }
+
+    public static void populateLogoImageLanguageWise(Context context, ImageView logoImageView, String lang) {
+        if (StringUtils.isNullOrEmpty(lang) || "0".equals(lang) || "en".equals(lang)) {
+            Picasso.with(context).load(R.drawable.app_logo).into(logoImageView);
+        } else if ("1".equals(lang) || "hi".equals(lang)) {
+            Picasso.with(context).load(R.drawable.app_logo_hi).into(logoImageView);
+        } else if ("2".equals(lang) || "mr".equals(lang)) {
+            Picasso.with(context).load(R.drawable.app_logo_mr).into(logoImageView);
+        } else if ("3".equals(lang) || "bn".equals(lang)) {
+            Picasso.with(context).load(R.drawable.app_logo_bn).into(logoImageView);
+        } else if ("4".equals(lang) || "ta".equals(lang)) {
+            Picasso.with(context).load(R.drawable.app_logo_ta).into(logoImageView);
+        } else if ("5".equals(lang) || "te".equals(lang)) {
+            Picasso.with(context).load(R.drawable.app_logo_te).into(logoImageView);
+        } else if ("6".equals(lang) || "kn".equals(lang)) {
+            Picasso.with(context).load(R.drawable.app_logo_kn).into(logoImageView);
+        } else if ("7".equals(lang) || "ml".equals(lang)) {
+            Picasso.with(context).load(R.drawable.app_logo_ml).into(logoImageView);
+        } else if ("8".equals(lang) || "gu".equals(lang)) {
+            Picasso.with(context).load(R.drawable.app_logo_gu).into(logoImageView);
+        } else if ("9".equals(lang) || "pa".equals(lang)) {
+            Picasso.with(context).load(R.drawable.app_logo_pa).into(logoImageView);
+        }
+
     }
 }

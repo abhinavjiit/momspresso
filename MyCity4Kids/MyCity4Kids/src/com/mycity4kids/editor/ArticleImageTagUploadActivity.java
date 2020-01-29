@@ -486,6 +486,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
 
             UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+//                launchBlogSetup(responseData);
                 if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
                     launchBlogSetup(responseData);
                 } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {

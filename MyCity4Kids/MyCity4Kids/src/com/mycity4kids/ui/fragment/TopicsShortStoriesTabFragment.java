@@ -140,8 +140,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private Handler handler;
     private String isFollowing;
     private int position;
-    private Bitmap bitmap;
-    int uploadCounter = 0;
     private StoryShareCardWidget storyShareCardWidget;
     private ImageView shareStoryImageView;
     private ArticleListingResult sharedStoryItem;
@@ -434,14 +432,14 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                     if (mDatalist.get(position).isLiked()) {
                         likeStatus = "0";
                         currentShortStoryPosition = position;
-                        recommendUnrecommentArticleAPI("0", mDatalist.get(position).getId(),
+                        recommendUnrecommentArticleAPI(mDatalist.get(position).getId(),
                                 mDatalist.get(position).getUserId(),
                                 mDatalist.get(position).getUserName());
                     } else {
                         tooltipForShare(shareImageView);
                         likeStatus = "1";
                         currentShortStoryPosition = position;
-                        recommendUnrecommentArticleAPI("1", mDatalist.get(position).getId(),
+                        recommendUnrecommentArticleAPI(mDatalist.get(position).getId(),
                                 mDatalist.get(position).getUserId(),
                                 mDatalist.get(position).getUserName());
                     }
@@ -699,7 +697,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         }
     }
 
-    private void recommendUnrecommentArticleAPI(String status, String articleId, String authorId,
+    private void recommendUnrecommentArticleAPI(String articleId, String authorId,
                                                 String author) {
         Utils.pushLikeStoryEvent(getActivity(), "ShortStoryListingScreen", userDynamoId + "",
                 articleId,

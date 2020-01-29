@@ -57,12 +57,11 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
     private var readArticlesTextView: TextView? = null
     private var isRewardAdded: String? = null
     private var toolbar: Toolbar? = null
-    private var editProfile: TextView? = null
 
     internal var getTotalPayout: Callback<TotalPayoutResponse> = object : Callback<TotalPayoutResponse> {
         override fun onResponse(call: Call<TotalPayoutResponse>, response: retrofit2.Response<TotalPayoutResponse>) {
             removeProgressDialog()
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 showToast(getString(R.string.went_wrong))
                 return
             }
@@ -108,7 +107,6 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         logout_layout = findViewById(R.id.logout_layout)
         activityTextView = findViewById(R.id.activityTextView)
         readArticlesTextView = findViewById(R.id.readArticlesTextView)
-        editProfile = findViewById(R.id.edit_Profile)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -149,8 +147,6 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         logout_layout!!.setOnClickListener(this)
         activityTextView!!.setOnClickListener(this)
         readArticlesTextView!!.setOnClickListener(this)
-        editProfile?.setOnClickListener(this)
-
     }
 
     override fun onClick(v: View) {
@@ -205,23 +201,16 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
                 startActivity(intent1)
             }
             R.id.logout_layout -> logoutUser()
-
             R.id.readArticlesTextView -> {
                 val readArticleIntent = Intent(this, UserReadArticlesContentActivity::class.java)
                 readArticleIntent.putExtra("isPrivateProfile", true)
                 readArticleIntent.putExtra(Constants.AUTHOR_ID, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId)
                 startActivity(readArticleIntent)
             }
-
             R.id.activityTextView -> {
                 val intent5 = Intent(this, UserActivitiesActivity::class.java)
                 intent5.putExtra(Constants.AUTHOR_ID, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId)
                 startActivity(intent5)
-            }
-            R.id.edit_Profile -> {
-                val intent = Intent(this, EditProfileNewActivity::class.java)
-                intent.putExtra("isRewardAdded", isRewardAdded)
-                startActivity(intent)
             }
         }
     }

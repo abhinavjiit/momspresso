@@ -72,7 +72,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
             is VideosViewHolder -> addVideoItem(holder.winnerLayout, holder.txvArticleTitle, holder.txvAuthorName, holder.articleImageView,
                     holder.viewCountTextView, holder.commentCountTextView, holder.recommendCountTextView,
                     holder.goldLogo, mixFeedList?.get(position), holder, isPrivate)
-            is ShortStoriesViewHolder -> addShortStoryItem(holder.storyAuthorTextView, holder.shareStoryImageView, holder.storyImage, holder.authorNameTextView,
+            is ShortStoriesViewHolder -> addShortStoryItem(holder.logoImageView, holder.storyAuthorTextView, holder.shareStoryImageView, holder.storyImage, holder.authorNameTextView,
                     holder.storyCommentCountTextView, holder.storyRecommendationCountTextView, holder.likeImageView,
                     mixFeedList?.get(position), holder, isPrivate)
         }
@@ -160,6 +160,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         internal var storyShareCardWidget: StoryShareCardWidget
         internal var shareStoryImageView: ImageView
         internal var storyAuthorTextView: TextView
+        internal var logoImageView: ImageView
 
         init {
             authorNameTextView = itemView.findViewById<View>(R.id.authorNameTextView) as TextView
@@ -176,6 +177,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
             followAuthorTextView = itemView.findViewById<View>(R.id.followAuthorTextView) as TextView
             storyShareCardWidget = itemView.findViewById<View>(R.id.storyShareCardWidget) as StoryShareCardWidget
             shareStoryImageView = storyShareCardWidget.findViewById(R.id.storyImageView) as ImageView
+            logoImageView = storyShareCardWidget.findViewById(R.id.logoImageView) as ImageView
             storyAuthorTextView = storyShareCardWidget.findViewById(R.id.storyAuthorTextView) as TextView
             followAuthorTextView.visibility = View.INVISIBLE
             menuItem = itemView.findViewById<View>(R.id.menuItem) as ImageView
@@ -301,40 +303,9 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
                 holder.bookmarkArticleImageView.setImageResource(R.drawable.ic_bookmarked)
             }
         }
-//        if ("1" == data?.isMomspresso) {
-//            bookmarkArticleIV.visibility = View.VISIBLE
-//            watchLaterIV.visibility = View.GONE
-//            if ("0" == data.is_bookmark) {
-//                bookmarkArticleIV.setImageDrawable(ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_bookmark))
-//            } else {
-//                bookmarkArticleIV.setImageDrawable(ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_bookmarked))
-//            }
-//        } else {
-//            bookmarkArticleIV.visibility = View.VISIBLE
-//            watchLaterIV.visibility = View.GONE
-//            if ("0" == data.is_bookmark) {
-//                bookmarkArticleIV.setImageDrawable(ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_bookmark))
-//            } else {
-//                bookmarkArticleIV.setImageDrawable(ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_bookmarked))
-//            }
-//        }
-//        watchLaterIV.setOnClickListener {
-//            addRemoveWatchLater(position, holder)
-//            Utils.pushWatchLaterArticleEvent(holder.itemView.context, "ArticleListing",
-//                    SharedPrefUtils.getUserDetailModel(holder.itemView.context).dynamoId + "",
-//                    data?.id, data?.userId + "~" + data?.userName)
-//        }
-//        bookmarkArticleIV.setOnClickListener {
-//            if (!isRequestRunning) {
-//                addRemoveBookmark(position, holder)
-//            }
-//            Utils.pushBookmarkArticleEvent(holder.itemView.context, "ArticleListing",
-//                    SharedPrefUtils.getUserDetailModel(holder.itemView.context).dynamoId + "",
-//                    data?.id, data?.userId + "~" + data?.userName)
-//        }
     }
 
-    private fun addShortStoryItem(storyAuthorTextView: TextView, shareStoryImageView: ImageView, storyImage: ImageView, authorNameTV: TextView,
+    private fun addShortStoryItem(logoImageView: ImageView, storyAuthorTextView: TextView, shareStoryImageView: ImageView, storyImage: ImageView, authorNameTV: TextView,
                                   storyCommentCountTV: TextView, storyRecommendationCountTV: TextView, likeIV: ImageView,
                                   data: MixFeedResult?, holder: ShortStoriesViewHolder, private: Boolean) {
         authorNameTV.text = data?.userName
@@ -351,7 +322,6 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         data?.isLiked?.let {
             if (it) {
                 holder.likeImageView.setImageDrawable(ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_recommended))
-
             } else {
                 likeIV.setImageDrawable(ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_ss_like))
             }
@@ -365,6 +335,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         try {
             Picasso.with(holder.itemView.context).load(data?.storyImage?.trim { it <= ' ' }).into(shareStoryImageView)
             storyAuthorTextView.text = data?.userName
+            AppUtils.populateLogoImageLanguageWise(holder.itemView.context, logoImageView, data?.lang.toString())
         } catch (e: Exception) {
             holder.storyImage.setImageResource(R.drawable.default_article)
         }
