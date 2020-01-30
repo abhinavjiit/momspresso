@@ -1216,8 +1216,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                     ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                                 } else if (viewHolder instanceof JoinGroupViewHolder) {
                                     ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
-                                } else {
-//                                    ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                                 }
                                 if (mContext instanceof DashboardActivity) {
                                     ((DashboardActivity) mContext).showBookmarkConfirmationTooltip();
@@ -1233,8 +1231,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                     ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                                 } else if (viewHolder instanceof JoinGroupViewHolder) {
                                     ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
-                                } else {
-//                                    ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                                 }
                             } else if ("bookmarkVideo".equals(type)) {
                                 articleDataModelsNew.get(i).setListingWatchLaterStatus(1);
@@ -1245,7 +1241,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                     ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
                                 } else if (viewHolder instanceof JoinGroupViewHolder) {
                                     ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
-                                } else {
                                 }
                             } else if ("unbookmarkVideo".equals(type)) {
                                 articleDataModelsNew.get(i).setListingWatchLaterStatus(0);
@@ -1256,7 +1251,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                     ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
                                 } else if (viewHolder instanceof JoinGroupViewHolder) {
                                     ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
-                                } else {
                                 }
                             }
                         }
@@ -1271,50 +1265,51 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         }
 
         void resetFollowUnfollowStatus() {
-            if (type.equals("bookmark")) {
-                if (viewHolder instanceof FeedViewHolder) {
-                    ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else if (viewHolder instanceof HeaderViewHolder) {
-                    ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else if (viewHolder instanceof JoinGroupViewHolder) {
-                    ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else if (viewHolder instanceof VideoCarouselViewHolder) {
-                    ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else {
-                }
-            } else if ("unbookmarkArticle".equals(type)) {
-                if (viewHolder instanceof FeedViewHolder) {
-                    ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
-                } else if (viewHolder instanceof HeaderViewHolder) {
-                    ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
-                } else if (viewHolder instanceof JoinGroupViewHolder) {
-                    ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else if (viewHolder instanceof VideoCarouselViewHolder) {
-                    ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else {
-                }
-            } else if ("bookmarkVideo".equals(type)) {
-                if (viewHolder instanceof FeedViewHolder) {
-                    ((FeedViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
-                } else if (viewHolder instanceof HeaderViewHolder) {
-                    ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
-                } else if (viewHolder instanceof JoinGroupViewHolder) {
-                    ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else if (viewHolder instanceof VideoCarouselViewHolder) {
-                    ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else {
-                }
-            } else if ("unbookmarkVideo".equals(type)) {
-                if (viewHolder instanceof FeedViewHolder) {
-                    ((FeedViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
-                } else if (viewHolder instanceof HeaderViewHolder) {
-                    ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
-                } else if (viewHolder instanceof JoinGroupViewHolder) {
-                    ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else if (viewHolder instanceof VideoCarouselViewHolder) {
-                    ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else {
-                }
+            switch (type) {
+                case "bookmark":
+                    if (viewHolder instanceof FeedViewHolder) {
+                        ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    } else if (viewHolder instanceof HeaderViewHolder) {
+                        ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    } else if (viewHolder instanceof JoinGroupViewHolder) {
+                        ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    } else if (viewHolder instanceof VideoCarouselViewHolder) {
+                        ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    }
+                    break;
+                case "unbookmarkArticle":
+                    if (viewHolder instanceof FeedViewHolder) {
+                        ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
+                    } else if (viewHolder instanceof HeaderViewHolder) {
+                        ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
+                    } else if (viewHolder instanceof JoinGroupViewHolder) {
+                        ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    } else if (viewHolder instanceof VideoCarouselViewHolder) {
+                        ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    }
+                    break;
+                case "bookmarkVideo":
+                    if (viewHolder instanceof FeedViewHolder) {
+                        ((FeedViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
+                    } else if (viewHolder instanceof HeaderViewHolder) {
+                        ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
+                    } else if (viewHolder instanceof JoinGroupViewHolder) {
+                        ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    } else if (viewHolder instanceof VideoCarouselViewHolder) {
+                        ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    }
+                    break;
+                case "unbookmarkVideo":
+                    if (viewHolder instanceof FeedViewHolder) {
+                        ((FeedViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
+                    } else if (viewHolder instanceof HeaderViewHolder) {
+                        ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
+                    } else if (viewHolder instanceof JoinGroupViewHolder) {
+                        ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    } else if (viewHolder instanceof VideoCarouselViewHolder) {
+                        ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    }
+                    break;
             }
         }
     }

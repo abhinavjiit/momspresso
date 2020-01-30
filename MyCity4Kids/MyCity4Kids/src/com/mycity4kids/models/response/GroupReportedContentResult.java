@@ -1,5 +1,7 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
@@ -8,21 +10,37 @@ import java.util.ArrayList;
 
 public class GroupReportedContentResult {
 
+    @SerializedName("id")
     private int id;
+    @SerializedName("groupId")
     private int groupId;
+    @SerializedName("postId")
     private int postId;
+    @SerializedName("responseId")
     private int responseId;
+    @SerializedName("isModerated")
     private int isModerated;
+    @SerializedName("createdAt")
     private long createdAt;
+    @SerializedName("updatedAt")
     private long updatedAt;
+    @SerializedName("counts")
     private ArrayList<GroupPostCounts> counts;
+    @SerializedName("actionResponse")
     private String actionResponse;
+    @SerializedName("actionBy")
     private String actionBy;
+    @SerializedName("content")
     private GroupPostResult content;
+    @SerializedName("abusiveContentCount")
     private int abusiveContentCount;
+    @SerializedName("itsASpamCount")
     private int itsASpamCount;
+    @SerializedName("notInterestingCount")
     private int notInterestingCount;
+    @SerializedName("itHurtsReligiousSentimentCount")
     private int itHurtsReligiousSentimentCount;
+    @SerializedName("otherCount")
     private int otherCount;
 
     public int getId() {

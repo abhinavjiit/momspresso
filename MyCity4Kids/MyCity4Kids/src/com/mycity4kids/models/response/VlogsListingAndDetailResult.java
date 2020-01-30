@@ -1,5 +1,6 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
 import com.mycity4kids.profile.Author;
 
 import java.util.ArrayList;
@@ -9,29 +10,53 @@ import java.util.ArrayList;
  */
 public class VlogsListingAndDetailResult {
 
+    @SerializedName("id")
     private String id;
+    @SerializedName("title")
     private String title;
+    @SerializedName("title_slug")
     private String title_slug;
+    @SerializedName("url")
     private String url;
+    @SerializedName("published_time")
     private String published_time;
+    @SerializedName("approval_time")
     private String approval_time;
+    @SerializedName("published_status")
     private String published_status;
+    @SerializedName("publication_status")
     private String publication_status;
+    @SerializedName("commentUri")
     private String commentUri;
+    @SerializedName("author")
     private Author author;
+    @SerializedName("sharing_url")
     private String sharing_url;
+    @SerializedName("view_count")
     private String view_count;
+    @SerializedName("category_id")
     private ArrayList<String> category_id;
+    @SerializedName("thumbnail")
     private String thumbnail;
+    @SerializedName("like_count")
     private String like_count;
+    @SerializedName("comment_count")
     private String comment_count;
+    @SerializedName("is_liked")
     private String is_liked;
+    @SerializedName("bookmark_id")
     private String bookmark_id;
+    @SerializedName("is_bookmark")
     private String is_bookmark;
+    @SerializedName("isLiked")
     private Boolean isLiked = false;
+    @SerializedName("isBookmarked")
     private boolean isBookmarked = false;
+    @SerializedName("isFollowed")
     private boolean isFollowed = false;
+    @SerializedName("is_gold")
     private boolean is_gold = false;
+    @SerializedName("winner")
     private int winner = 0;
 
     public String getSharing_url() {
@@ -49,7 +74,6 @@ public class VlogsListingAndDetailResult {
     public void setWinner(int winner) {
         this.winner = winner;
     }
-
 
     public boolean isIs_gold() {
         return is_gold;
@@ -90,7 +114,6 @@ public class VlogsListingAndDetailResult {
     public void setFollowed(boolean followed) {
         isFollowed = followed;
     }
-
 
     public String getId() {
         return id;

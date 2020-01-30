@@ -3,6 +3,8 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -11,8 +13,11 @@ import java.util.Map;
  */
 
 public class GroupPostCounts implements Parcelable {
+    @SerializedName("name")
     private String name;
+    @SerializedName("count")
     private int count;
+    @SerializedName("counts")
     private ArrayList<GroupPostCounts> counts;
 
     public String getName() {

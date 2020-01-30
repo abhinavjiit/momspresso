@@ -1,20 +1,33 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 21/5/18.
  */
 
 public class GroupsActionResult {
+    @SerializedName("id")
     private int id;
+    @SerializedName("sharedOn")
     private String sharedOn;
+    @SerializedName("taggedUserId")
     private String taggedUserId;
+    @SerializedName("responseId")
     private int responseId;
+    @SerializedName("groupId")
     private int groupId;
+    @SerializedName("postId")
     private int postId;
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("type")
     private String type;
+    @SerializedName("voteOption")
     private int voteOption;
+    @SerializedName("createdAt")
     private long createdAt;
+    @SerializedName("updatedAt")
     private long updatedAt;
 
     public int getId() {

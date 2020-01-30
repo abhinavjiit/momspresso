@@ -1,5 +1,7 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
@@ -8,9 +10,13 @@ import java.util.ArrayList;
 
 public class GroupsReportedContentResponse {
 
+    @SerializedName("total")
     private int total;
+    @SerializedName("skip")
     private int skip;
+    @SerializedName("limit")
     private int limit;
+    @SerializedName("data")
     private GroupsReportedContentData data;
 
     public int getTotal() {

@@ -3,6 +3,7 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.internal.LinkedTreeMap;
 import com.mycity4kids.models.user.UserInfo;
 
@@ -16,45 +17,79 @@ import java.util.Map;
 
 public class GroupPostResult extends BaseResponse implements Parcelable {
 
+    @SerializedName("id")
     private int id;
+    @SerializedName("content")
     private String content;
+    @SerializedName("url")
     private String url;
+    @SerializedName("type")
     private String type;
+    @SerializedName("lang")
     private String lang;
+    @SerializedName("isActive")
     private int isActive;
-    //    private Object mediaUrls;
+    @SerializedName("mediaUrls")
     private LinkedTreeMap<String, String> mediaUrls;
+    @SerializedName("disableComments")
     private int disableComments;
+    @SerializedName("isAnnon")
     private int isAnnon;
+    @SerializedName("pinnedBy")
     private String pinnedBy;
+    @SerializedName("isPinned")
     private int isPinned;
+    @SerializedName("moderatedBy")
     private String moderatedBy;
+    @SerializedName("moderationStatus")
     private String moderationStatus;
+    @SerializedName("moderationOn")
     private String moderationOn;
+    @SerializedName("createdOn")
     private String createdOn;
+    @SerializedName("groupId")
     private int groupId;
-
-
+    @SerializedName("markedHelpful")
     private int markedHelpful;
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("hasVoted")
     private boolean hasVoted;
+    @SerializedName("createdAt")
     private long createdAt;
+    @SerializedName("updatedAt")
     private long updatedAt;
+    @SerializedName("pollType")
     private String pollType;
+    @SerializedName("pollOptions")
     private Object pollOptions;
+    @SerializedName("isVoted")
     private boolean isVoted;
+    @SerializedName("counts")
     private ArrayList<GroupPostCounts> counts;
+    @SerializedName("userInfo")
     private UserDetailResult userInfo;
+    @SerializedName("notHelpfullCount")
     private int notHelpfullCount;
+    @SerializedName("helpfullCount")
     private int helpfullCount;
+    @SerializedName("shareCount")
     private int shareCount;
+    @SerializedName("responseCount")
     private int responseCount;
+    @SerializedName("totalVotesCount")
     private int totalVotesCount;
+    @SerializedName("option1VoteCount")
     private int option1VoteCount;
+    @SerializedName("option2VoteCount")
     private int option2VoteCount;
+    @SerializedName("option3VoteCount")
     private int option3VoteCount;
+    @SerializedName("option4VoteCount")
     private int option4VoteCount;
+    @SerializedName("commentType")
     private int commentType;
+    @SerializedName("groupInfo")
     private GroupInfoResult groupInfo;
 
     public GroupPostResult() {

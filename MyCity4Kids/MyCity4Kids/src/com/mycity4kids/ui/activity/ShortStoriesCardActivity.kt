@@ -687,7 +687,22 @@ class ShortStoriesCardActivity : BaseActivity() {
     }
 
     fun setBackground(url: String, fontColor: String, imageId: Int) {
-        Picasso.with(BaseApplication.getAppContext()).load(url).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+        //        Glide.with(this).load("https://media.giphy.com/media/3o6ozrsVQF6Fv1ljNe/giphy.gif").listener(
+//                object : RequestListener<Drawable> {
+//                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?,
+//                                              isFirstResource: Boolean): Boolean {
+//                        isImageLoaded = false
+//                        return false
+//                    }
+//
+//                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?,
+//                                                 dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+//                        //do something when picture already loaded
+//                        isImageLoaded = true
+//                        return false
+//                    }
+//                }).into(cardBg)
+        Picasso.with(this).load(url).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                 .fit().into(cardBg, object : com.squareup.picasso.Callback {
                     override fun onSuccess() {
                         isImageLoaded = true

@@ -1,5 +1,7 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,10 +11,15 @@ import java.util.List;
 
 public class GroupIdCategoryIdMappingResponse extends BaseResponse {
 
+    @SerializedName("total")
     private int total;
+    @SerializedName("skip")
     private int skip;
+    @SerializedName("limit")
     private int limit;
+    @SerializedName("data")
     private List<GroupsCategoriesMappingData> data;
+    @SerializedName("isMember")
     private boolean isMember;
 
     public List<GroupsCategoriesMappingData> getData() {
@@ -56,6 +63,7 @@ public class GroupIdCategoryIdMappingResponse extends BaseResponse {
     }
 
     public class GroupsCategoriesMappingData {
+        @SerializedName("result")
         private List<GroupsCategoriesMappingResult> result;
 
         public List<GroupsCategoriesMappingResult> getResult() {
@@ -67,17 +75,29 @@ public class GroupIdCategoryIdMappingResponse extends BaseResponse {
         }
 
         public class GroupsCategoriesMappingResult {
+            @SerializedName("id")
             private int id;
+            @SerializedName("heading")
             private String heading;
+            @SerializedName("subHeading")
             private String subHeading;
+            @SerializedName("media")
             private String media;
+            @SerializedName("platform")
             private String platform;
+            @SerializedName("categoryId")
             private String categoryId;
+            @SerializedName("groupId")
             private int groupId;
+            @SerializedName("isActive")
             private int isActive;
+            @SerializedName("cta")
             private ArrayList<String> cta = new ArrayList<>();
+            @SerializedName("lang")
             private String lang;
+            @SerializedName("createdAt")
             private long createdAt;
+            @SerializedName("updatedAt")
             private long updatedAt;
 
             public int getId() {

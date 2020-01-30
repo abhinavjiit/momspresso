@@ -3,6 +3,8 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Map;
 
 /**
@@ -10,13 +12,21 @@ import java.util.Map;
  */
 
 public class GroupSettingResult implements Parcelable {
+    @SerializedName("id")
     private String id;
+    @SerializedName("groupId")
     private String groupId;
+    @SerializedName("dmAllowed")
     private int dmAllowed;
+    @SerializedName("notificationOn")
     private int notificationOn;
+    @SerializedName("annonAllowed")
     private int annonAllowed;
+    @SerializedName("createdAt")
     private long createdAt;
+    @SerializedName("updatedAt")
     private long updatedAt;
+    @SerializedName("questionnaire")
     private Map<String, String> questionnaire;
 
     protected GroupSettingResult(Parcel in) {

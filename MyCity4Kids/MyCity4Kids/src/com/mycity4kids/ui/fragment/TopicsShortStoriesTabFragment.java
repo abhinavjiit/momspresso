@@ -719,7 +719,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         public void onResponse(Call<RecommendUnrecommendArticleResponse> call,
                                retrofit2.Response<RecommendUnrecommendArticleResponse> response) {
             isRecommendRequestRunning = false;
-            if (response == null || null == response.body()) {
+            if (null == response.body()) {
                 if (!isAdded()) {
                     return;
                 }
@@ -750,10 +750,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                         mDatalist.get(currentShortStoryPosition).setLiked(false);
                     }
                     recyclerAdapter.notifyDataSetChanged();
-                    if (isAdded()) {
-                        //  ((ShortStoriesListingContainerActivity) getActivity()).showToast("" + responseData.getReason());
-                    }
-
+                    if (isAdded())
+                        Toast.makeText(getActivity(), "" + responseData.getReason(), Toast.LENGTH_SHORT).show();
                 } else {
                     if (isAdded()) {
                         ((ShortStoriesListingContainerActivity) getActivity())
