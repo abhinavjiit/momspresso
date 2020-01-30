@@ -155,7 +155,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private String editReplyId;
     private int deleteCommentPos;
     private int deleteReplyPos;
-    private View shareSSView;
     private TextView titleTextView, bodyTextView, authorTextView;
     private int colorPosition = 0;
     private RelativeLayout rootLayout;
@@ -174,7 +173,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         shortStoryRecyclerView = (RecyclerView) fragmentView.findViewById(R.id.shortStoryRecyclerView);
         openAddCommentDialog = (FloatingActionButton) fragmentView.findViewById(R.id.openAddCommentDialog);
         mLodingView = (RelativeLayout) fragmentView.findViewById(R.id.relativeLoadingView);
-        shareSSView = fragmentView.findViewById(R.id.shareSSView);
         titleTextView = (TextView) fragmentView.findViewById(R.id.titleTextView);
         bodyTextView = (TextView) fragmentView.findViewById(R.id.bodyTextView);
         authorTextView = (TextView) fragmentView.findViewById(R.id.authorTextView);

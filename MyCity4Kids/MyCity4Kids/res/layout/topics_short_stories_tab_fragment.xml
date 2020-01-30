@@ -6,64 +6,6 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/shareSSView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/ss_share_bg"
-        android:gravity="center"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp">
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/titleTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="2"
-            android:paddingLeft="14dp"
-            android:paddingTop="15dp"
-            android:paddingRight="14dp"
-            android:paddingBottom="15dp"
-            android:text=""
-            android:textColor="@color/short_story.light_black_color"
-            android:textSize="18sp"
-            app:fontName="georgia.ttf" />
-
-        <View
-            android:id="@+id/separator"
-            android:layout_width="80dp"
-            android:layout_height="1dp"
-            android:layout_below="@+id/titleTextView"
-            android:layout_marginLeft="14dp"
-            android:background="@color/short_story.light_black_color" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/bodyTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/separator"
-            android:lineSpacingExtra="4dp"
-            android:paddingLeft="14dp"
-            android:paddingTop="15dp"
-            android:paddingRight="14dp"
-            android:text=""
-            android:textColor="@color/short_story.light_black_color"
-            android:textSize="16sp"
-            app:fontName="georgia.ttf" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/authorTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/bodyTextView"
-            android:inputType="textCapSentences"
-            android:padding="14dp"
-            android:text=""
-            android:textColor="@color/short_story.light_black_color"
-            android:textSize="16sp"
-            app:fontName="georgia_bold.ttf" />
-    </RelativeLayout>
-
-    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

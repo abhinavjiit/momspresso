@@ -124,7 +124,6 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
     private RelativeLayout writeArticleCell;
     private boolean showGuide = false;
     private String userDynamoId;
-    private View shareSSView;
     private TextView titleTextView, bodyTextView, authorTextView;
     private ShortStoryAPI shortStoryAPI;
     private boolean isRecommendRequestRunning;
@@ -170,7 +169,6 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
         guideOverlay = (RelativeLayout) findViewById(R.id.guideOverlay);
         writeArticleCell = (RelativeLayout) findViewById(R.id.writeArticleCell);
         frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
-        shareSSView = findViewById(R.id.shareSSView);
         titleTextView = (TextView) findViewById(R.id.titleTextView);
         bodyTextView = (TextView) findViewById(R.id.bodyTextView);
         authorTextView = (TextView) findViewById(R.id.authorTextView);
