@@ -118,6 +118,7 @@ public class ExploreTopicsModel implements Parcelable {
             }
         }
 
+
         private class Challenges {
             @SerializedName("active")
             private String active;
