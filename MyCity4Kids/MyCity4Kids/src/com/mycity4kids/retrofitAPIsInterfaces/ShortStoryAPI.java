@@ -1,5 +1,6 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
+import com.mycity4kids.models.ExploreTopicsModel;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest;
@@ -18,6 +19,8 @@ import com.mycity4kids.models.response.ShortStoryConfigData;
 import com.mycity4kids.models.response.ShortStoryDetailResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.models.response.ViewCountResponse;
+
+import java.util.ArrayList;
 
 import kotlinx.coroutines.Deferred;
 import okhttp3.ResponseBody;
@@ -108,12 +111,5 @@ public interface ShortStoryAPI {
     Call<ResponseBody> updateConfig(@Path("ss_id") String shortStoryId, @Body ShortStoryConfigRequest body);
 
 
-    @GET("/v2/categories")
-    Deferred<Response<Topics>> getShortStoryTopicsAsync(@Query("id") String id,
-                                                        @Query("public") String isPublic);
 
-    @GET("/v2/categories")
-    Deferred<Response<Topics>> getShortStoryChallengesAsync(@Query("id") String id,
-                                                            @Query("isActive") String isActive,
-                                                            @Query("public") String isPublic);
 }

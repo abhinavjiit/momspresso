@@ -251,19 +251,19 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                                 CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PanCardDetailsSubmissionFragment")
                                 .commit()
                     } else {*/
-                        when (paymantModeId) {
-                            1 -> {
-                                ToastUtils.showToast(context, "PaytmNumber is Updated Successfully")
-                            }
-                            else -> {
-                                ToastUtils.showToast(context, "BankDetails are Updated Successfully")
-                            }
+                    when (paymantModeId) {
+                        1 -> {
+                            ToastUtils.showToast(context, "PaytmNumber is Updated Successfully")
                         }
-                        activity!!.supportFragmentManager.popBackStack()
-                        var fragment = targetFragment
-                        if (fragment != null && fragment is CampaignPaymentModesFragment) {
-                            fragment.onActivityResult(2019, Activity.RESULT_OK, null)
+                        else -> {
+                            ToastUtils.showToast(context, "BankDetails are Updated Successfully")
                         }
+                    }
+                    activity!!.supportFragmentManager.popBackStack()
+                    var fragment = targetFragment
+                    if (fragment != null && fragment is CampaignPaymentModesFragment) {
+                        fragment.onActivityResult(2019, Activity.RESULT_OK, null)
+                    }
 
 //                    }
 
