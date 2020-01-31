@@ -63,7 +63,7 @@ class UserCreatedCollectionsFragment : BaseFragment() {
         userId = bundle?.getString("userId")
         getUserCreatedCollections()
         context?.run {
-            userCreatedFollowedCollectionAdapter = CollectionsAdapter(context!!)
+            userCreatedFollowedCollectionAdapter = CollectionsAdapter(this)
             collectionGridView.adapter = userCreatedFollowedCollectionAdapter
         }
         collectionGridView.onItemClickListener = OnItemClickListener { _, _, position, _ ->

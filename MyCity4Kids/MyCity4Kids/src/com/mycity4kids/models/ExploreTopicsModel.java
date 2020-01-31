@@ -102,7 +102,7 @@ public class ExploreTopicsModel implements Parcelable {
             }
         }
 
-        private class Challenges {
+        public class Challenges {
 
             private String active;
             private String type;
