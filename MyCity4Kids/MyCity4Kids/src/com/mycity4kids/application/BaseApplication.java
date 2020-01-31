@@ -174,7 +174,7 @@ public class BaseApplication extends Application {
 
     public Retrofit getCampaignRetrofit() {
         if (null == campaignRewards) {
-            createRetrofitInstanceForCampaign("https://testingapi.momspresso.com/");
+            createRetrofitInstanceForCampaign(AppConstants.LIVE_URL);
         }
         return campaignRewards;
     }
@@ -235,7 +235,6 @@ public class BaseApplication extends Application {
         campaignRewards = new Retrofit.Builder()
                 .baseUrl(base_url)
                 .addConverterFactory(buildGsonConverter())
-                .addCallAdapterFactory(CoroutineCallAdapterFactory.create())
                 .client(client)
                 .build();
 

@@ -1,13 +1,16 @@
 package com.mycity4kids.retrofitAPIsInterfaces
 
+import com.mycity4kids.models.ExploreTopicsModel
+import com.mycity4kids.models.Topics
 import com.mycity4kids.models.collectionsModels.*
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.FollowUnfollowUserResponse
 import com.mycity4kids.models.response.MixFeedResponse
-import com.mycity4kids.ui.campaign.BasicResponse
 import io.reactivex.Observable
+import kotlinx.coroutines.Deferred
 import okhttp3.ResponseBody
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
 
 interface CollectionsAPI {
@@ -67,5 +70,13 @@ interface CollectionsAPI {
     fun addMultipleCollectionItem(@Body multipleCollectionItems: ArrayList<UpdateCollectionRequestModel>): Call<BaseResponseGeneric<AddCollectionRequestModel>>
 
 
+    @GET("/v2/categories")
+    suspend fun getShortStoryTopicsAsync(@Query("id") id: String,
+                                         @Query("public") isPublic: String): Response<ArrayList<ExploreTopicsModel>>
+
+    @GET("/v2/categories")
+    suspend fun getShortStoryChallengesAsync(@Query("id") id: String,
+                                             @Query("isActive") isActive: String,
+                                             @Query("public") isPublic: String): Response<ArrayList<Topics>>
 }
 
