@@ -28,7 +28,6 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,15 +43,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.crashlytics.android.Crashlytics;
-import com.facebook.ads.Ad;
-import com.facebook.ads.AdError;
-import com.facebook.ads.AdIconView;
-import com.facebook.ads.AdOptionsView;
-import com.facebook.ads.MediaView;
-import com.facebook.ads.NativeAd;
-import com.facebook.ads.NativeAdLayout;
-import com.facebook.ads.NativeAdListener;
-import com.facebook.ads.NativeBannerAd;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -133,7 +123,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
@@ -237,8 +226,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     //    private AdView mAdView;
     private TextView viewCommentsTextView;
     private LayoutInflater mInflater;
-    //    private NativeAd nativeAd;
-    private NativeAdLayout nativeAdContainer;
     private LinearLayout adView;
     private RelativeLayout groupHeaderView;
     private ImageView groupHeaderImageView;
@@ -249,9 +236,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private YouTubePlayerView youTubePlayerView;
     private YouTubePlayerSupportFragment mYouTubePlayerSupportFragment;
     private FrameLayout youtubeContainer;
-    private NativeAd nativeAd;
-    private NativeBannerAd nativeBannerAd;
-    private NativeAdLayout nativeAdLayout;
     private ImageView sponsoredImage;
     private TextView sponsoredTextView;
     private RelativeLayout sponsoredViewContainer;
@@ -544,8 +528,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             scrollBounds = new Rect();
             mScrollView.getHitRect(scrollBounds);
-            showNativeAd();
-            showTopBannerAd();
+//            showNativeAd();
+//            showTopBannerAd();
         } catch (Exception e) {
             removeProgressDialog();
             Crashlytics.logException(e);
@@ -613,84 +597,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
             }
         }
-    }
-
-
-    private void showTopBannerAd() {
-        nativeBannerAd = new NativeBannerAd(getActivity(), AppConstants.FB_AD_PLACEMENT_ARTICLE_DETAILS_TOP);
-        nativeBannerAd.setAdListener(new NativeAdListener() {
-            @Override
-            public void onMediaDownloaded(Ad ad) {
-
-            }
-
-            @Override
-            public void onError(Ad ad, AdError adError) {
-
-            }
-
-            @Override
-            public void onAdLoaded(Ad ad) {
-                // Race condition, load() called again before last ad was displayed
-                if (nativeBannerAd == null || nativeBannerAd != ad) {
-                    return;
-                }
-                // Inflate Native Banner Ad into Container
-                if (isAdded())
-                    inflateAd(nativeBannerAd);
-            }
-
-            @Override
-            public void onAdClicked(Ad ad) {
-
-            }
-
-            @Override
-            public void onLoggingImpression(Ad ad) {
-
-            }
-        });
-        // load the ad
-        nativeBannerAd.loadAd();
-    }
-
-    private void inflateAd(NativeBannerAd nativeBannerAd) {
-        // Unregister last ad
-        nativeBannerAd.unregisterView();
-
-        // Add the Ad view into the ad container.
-        nativeAdLayout = (NativeAdLayout) fragmentView.findViewById(R.id.native_banner_ad_container);
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        // Inflate the Ad view.  The layout referenced is the one you created in the last step.
-        adView = (LinearLayout) inflater.inflate(R.layout.native_banner_ad_layout, nativeAdLayout, false);
-        nativeAdLayout.addView(adView);
-
-        // Add the AdChoices icon
-        RelativeLayout adChoicesContainer = adView.findViewById(R.id.ad_choices_container);
-        AdOptionsView adOptionsView = new AdOptionsView(getActivity(), nativeBannerAd, nativeAdLayout);
-        adChoicesContainer.removeAllViews();
-        adChoicesContainer.addView(adOptionsView, 0);
-
-        // Create native UI using the ad metadata.
-        TextView nativeAdTitle = adView.findViewById(R.id.native_ad_title);
-        TextView nativeAdSocialContext = adView.findViewById(R.id.native_ad_social_context);
-        TextView sponsoredLabel = adView.findViewById(R.id.native_ad_sponsored_label);
-        AdIconView nativeAdIconView = adView.findViewById(R.id.native_icon_view);
-        Button nativeAdCallToAction = adView.findViewById(R.id.native_ad_call_to_action);
-
-        // Set the Text.
-        nativeAdCallToAction.setText(nativeBannerAd.getAdCallToAction());
-        nativeAdCallToAction.setVisibility(
-                nativeBannerAd.hasCallToAction() ? View.VISIBLE : View.INVISIBLE);
-        nativeAdTitle.setText(nativeBannerAd.getAdvertiserName());
-        nativeAdSocialContext.setText(nativeBannerAd.getAdSocialContext());
-        sponsoredLabel.setText(nativeBannerAd.getSponsoredTranslation());
-
-        // Register the Title and CTA button to listen for clicks.
-        List<View> clickableViews = new ArrayList<>();
-        clickableViews.add(nativeAdTitle);
-        clickableViews.add(nativeAdCallToAction);
-        nativeBannerAd.registerViewForInteraction(adView, nativeAdIconView, clickableViews);
     }
 
     @Override
@@ -803,85 +709,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
         Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle = articleDetailsAPI.recommendUnrecommendArticle(recommendUnrecommendArticleRequest);
         recommendUnrecommendArticle.enqueue(recommendUnrecommendArticleResponseCallback);
-    }
-
-    private void showNativeAd() {
-        nativeAd = new NativeAd(getActivity(), AppConstants.FB_AD_PLACEMENT_ARTICLE_DETAILS);
-        nativeAd.setAdListener(new NativeAdListener() {
-
-            @Override
-            public void onMediaDownloaded(Ad ad) {
-
-            }
-
-            @Override
-            public void onError(Ad ad, AdError error) {
-                // Ad error callback
-                Log.e("FacebookAd", "onError_" + error.getErrorCode() + "----" + error.getErrorMessage());
-            }
-
-            @Override
-            public void onAdLoaded(Ad ad) {
-                if (nativeAd != null) {
-                    nativeAd.unregisterView();
-                }
-
-                if (isAdded()) {
-                    // Add the Ad view into the ad container.
-                    nativeAdContainer = (NativeAdLayout) fragmentView.findViewById(R.id.native_ad_container);
-                    // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
-                    adView = (LinearLayout) mInflater.inflate(R.layout.facebook_ad_unit, nativeAdContainer, false);
-                    nativeAdContainer.addView(adView);
-
-                    // Add the AdOptionsView
-                    LinearLayout adChoicesContainer = adView.findViewById(R.id.ad_choices_container);
-                    AdOptionsView adOptionsView = new AdOptionsView(getActivity(), nativeAd, nativeAdContainer);
-                    adChoicesContainer.removeAllViews();
-                    adChoicesContainer.addView(adOptionsView, 0);
-
-                    // Create native UI using the ad metadata.
-                    AdIconView nativeAdIcon = adView.findViewById(R.id.native_ad_icon);
-                    TextView nativeAdTitle = adView.findViewById(R.id.native_ad_title);
-                    MediaView nativeAdMedia = adView.findViewById(R.id.native_ad_media);
-                    TextView nativeAdSocialContext = adView.findViewById(R.id.native_ad_social_context);
-                    TextView nativeAdBody = adView.findViewById(R.id.native_ad_body);
-                    Button nativeAdCallToAction = adView.findViewById(R.id.native_ad_call_to_action);
-
-                    // Set the Text.
-                    nativeAdTitle.setText(nativeAd.getAdvertiserName());
-                    nativeAdBody.setText(nativeAd.getAdBodyText());
-                    nativeAdSocialContext.setText(nativeAd.getAdSocialContext());
-                    nativeAdCallToAction.setVisibility(nativeAd.hasCallToAction() ? View.VISIBLE : View.INVISIBLE);
-                    nativeAdCallToAction.setText(nativeAd.getAdCallToAction());
-
-                    // Create a list of clickable views
-                    List<View> clickableViews = new ArrayList<>();
-                    clickableViews.add(nativeAdTitle);
-                    clickableViews.add(nativeAdCallToAction);
-
-                    // Register the Title and CTA button to listen for clicks.
-                    nativeAd.registerViewForInteraction(
-                            adView,
-                            nativeAdMedia,
-                            nativeAdIcon,
-                            clickableViews);
-
-                }
-            }
-
-            @Override
-            public void onAdClicked(Ad ad) {
-                // Ad clicked callback
-                Log.d("FacebookAd", "onAdClicked");
-            }
-
-            @Override
-            public void onLoggingImpression(Ad ad) {
-                // Ad impression logged callback
-                Log.d("FacebookAd", "onLoggingImpression");
-            }
-        });
-        nativeAd.loadAd();
     }
 
     private void getResponseUpdateUi(ArticleDetailResult detailsResponse) {

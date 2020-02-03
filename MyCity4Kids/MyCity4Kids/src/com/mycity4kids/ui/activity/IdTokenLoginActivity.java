@@ -26,17 +26,10 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.LogoutController;
 import com.mycity4kids.models.logout.LogoutResponse;
-import com.mycity4kids.models.response.KidsModel;
 import com.mycity4kids.models.response.UserDetailResponse;
-import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
-
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -242,22 +235,14 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
             String pushToken = SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext());
             SharedPrefUtils.clearPrefrence(BaseApplication.getAppContext());
             SharedPrefUtils.setDeviceToken(BaseApplication.getAppContext(), pushToken);
-
-            // clear cachee
-            BaseApplication.setBlogResponse(null);
-
-            // clear all sessions
-
             if (StringUtils.isNullOrEmpty(message)) {
                 Toast.makeText(this, getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
-
             } else {
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             }
             // set logout flag
             SharedPrefUtils.setLogoutFlag(BaseApplication.getAppContext(), true);
             loginWithIdToken(loginUser);
-
         } else if (responseData.getResponseCode() == 400) {
             if (StringUtils.isNullOrEmpty(message)) {
                 Toast.makeText(this, getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
@@ -265,7 +250,6 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             }
         }
-
     }
 
     private void loginWithIdToken(String loggedInUser) {

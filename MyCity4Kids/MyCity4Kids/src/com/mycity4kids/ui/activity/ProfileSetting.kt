@@ -275,16 +275,11 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
             SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "groups", groupsCoach)
             SharedPrefUtils.setAppLocale(BaseApplication.getAppContext(), appLocale)
 
-            // clear cachee
-            BaseApplication.setBlogResponse(null)
             BaseApplication.getInstance().branchData = null
             BaseApplication.getInstance().branchLink = null
 
-            // clear all sessions
-
             if (StringUtils.isNullOrEmpty(message)) {
                 Toast.makeText(this, getString(R.string.went_wrong), Toast.LENGTH_SHORT).show()
-
             } else {
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             }
@@ -294,9 +289,7 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
             val intent = Intent(this, ActivityLogin::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
-
             this.finish()
-
         } else if (responseData.responseCode == 400) {
             if (StringUtils.isNullOrEmpty(message)) {
                 Toast.makeText(this, getString(R.string.went_wrong), Toast.LENGTH_SHORT).show()

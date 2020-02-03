@@ -18,18 +18,11 @@
             android:layout_height="match_parent"
             android:descendantFocusability="blocksDescendants">
 
-            <com.facebook.ads.NativeAdLayout
-                android:id="@+id/native_banner_ad_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:visibility="gone" />
-
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/article_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/native_banner_ad_container"
+                android:layout_alignParentTop="true"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:gravity="center_vertical"
@@ -46,7 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/article_title"
-                android:layout_marginLeft="10dp">
+                android:layout_marginStart="10dp">
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/article_date"
@@ -195,8 +188,8 @@
                     android:id="@+id/crownImageView"
                     android:layout_width="30dp"
                     android:layout_height="23dp"
-                    android:layout_marginTop="48dp"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginTop="48dp"
                     android:background="@drawable/profile_crown_bg"
                     android:elevation="4dp"
                     android:visibility="gone" />
@@ -403,19 +396,11 @@
                 android:layout_below="@+id/tagsLayoutContainer"
                 android:background="@color/light_underline" />
 
-            <com.facebook.ads.NativeAdLayout
-                android:id="@+id/native_ad_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/adViewSeparator"
-                android:orientation="vertical"
-                android:visibility="gone" />
-
             <RelativeLayout
                 android:id="@+id/groupHeaderView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/native_ad_container"
+                android:layout_below="@+id/adViewSeparator"
                 android:background="@color/white"
                 android:visibility="gone">
 

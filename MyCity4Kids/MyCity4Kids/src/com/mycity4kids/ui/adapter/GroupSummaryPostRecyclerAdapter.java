@@ -2,11 +2,6 @@ package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
@@ -23,8 +18,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
-import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -142,33 +140,27 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             } else {
                 ((HeaderViewHolder) holder).groupTypeTextView.setText(mContext.getString(R.string.groups_invitation_only_gp));
             }
-
             ((HeaderViewHolder) holder).groupNameTextView.setText(groupDetails.getTitle());
             ((HeaderViewHolder) holder).memberCountTextView.setText(groupDetails.getMemberCount() + " " + mContext.getString(R.string.groups_member_label));
             ((HeaderViewHolder) holder).groupDescTextView.setText(groupDetails.getDescription());
             if (groupDetails.getAdminMembers().getData() != null && !groupDetails.getAdminMembers().getData().isEmpty()) {
                 modeList = "";
                 for (int i = 0; i < groupDetails.getAdminMembers().getData().size(); i++) {
-
                     if (StringUtils.isNullOrEmpty(modeList)) {
                         if (modeList == null) {
-                            modeList = Strings.nullToEmpty(modeList);
+                            modeList = "";
                         }
                         modeList = groupDetails.getAdminMembers().getData().get(i).getUserInfo().getFirstName() + " "
                                 + groupDetails.getAdminMembers().getData().get(i).getUserInfo().getLastName();
                     } else {
-
                         modeList = modeList + ", " + groupDetails.getAdminMembers().getData().get(i).getUserInfo().getFirstName() + " "
                                 + groupDetails.getAdminMembers().getData().get(i).getUserInfo().getLastName();
                     }
-
                 }
                 ((HeaderViewHolder) holder).groupAdminTextView.setText(modeList);
             }
         } else if (holder instanceof TextPostViewHolder) {
             TextPostViewHolder textPostViewHolder = (TextPostViewHolder) holder;
-//            textPostViewHolder.postDataTextView.setText(postDataList.get(position).getContent().replace(" ","&nbsp;").replace("\n","<br />"));
-
             textPostViewHolder.postDataTextView.setText(postDataList.get(position).getContent());
             Linkify.addLinks(textPostViewHolder.postDataTextView, Linkify.WEB_URLS);
             textPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());

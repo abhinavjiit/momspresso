@@ -258,7 +258,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     });
         }
         root = findViewById(R.id.dash_root);
-        ((BaseApplication) getApplication()).setDashboardActivity(this);
         ((BaseApplication) getApplication()).setActivity(this);
 
         t = ((BaseApplication) getApplication()).getTracker(

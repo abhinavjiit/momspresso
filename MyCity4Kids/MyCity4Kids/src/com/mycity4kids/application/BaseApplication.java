@@ -21,12 +21,9 @@ import com.android.volley.toolbox.Volley;
 import com.comscore.analytics.comScore;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
-import com.facebook.ads.AudienceNetworkAds;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.libraries.places.api.Places;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mycity4kids.BuildConfig;
@@ -34,8 +31,6 @@ import com.mycity4kids.MessageEvent;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.Topics;
-import com.mycity4kids.models.parentingstop.CommonParentingList;
-import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
@@ -69,9 +64,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * This class holds some application-global instances.
  */
 public class BaseApplication extends Application {
-
-
-    private final String LOG_TAG = "BaseApplication";
     public static final String TAG = BaseApplication.class.getName();
 
     private RequestQueue mRequestQueue;
@@ -85,47 +77,19 @@ public class BaseApplication extends Application {
     private static HashMap<Topics, List<Topics>> topicsMap;
     private static HashMap<String, Topics> selectedTopicsMap;
     private String branchData = "";
-    private Activity dashboardActivity;
-    private FirebaseAnalytics mFirebaseAnalytics;
     private Activity activity;
     private int position;
 
     /*
      * Google Analytics configuration values.
      */
-    private static GoogleAnalytics mGa;
     private static Tracker mTracker;
-    public static String base_url;
     public String appVersion;
-    private boolean askPermission = true;
     public static boolean isFirstSwipe = true;
     private View view;
     private static Socket mSocket;
 
-    // Placeholder property ID.this was old which create by own account.
-    //private static final String GA_PROPERTY_ID = "UA-50870780-1";
-
     private static final String GA_PROPERTY_ID = "UA-20533582-2";
-
-    public static ArrayList<CommonParentingList> getBlogResponse() {
-        return blogResponse;
-    }
-
-    public static void setBlogResponse(ArrayList<CommonParentingList> blogResponse) {
-        BaseApplication.blogResponse = blogResponse;
-    }
-
-    private static ArrayList<CommonParentingList> blogResponse;
-
-    public static ArrayList<ArticleListingResult> getBestCityResponse() {
-        return bestCityResponse;
-    }
-
-    public static void setBestCityResponse(ArrayList<ArticleListingResult> bestCityResponse) {
-        BaseApplication.bestCityResponse = bestCityResponse;
-    }
-
-    private static ArrayList<ArticleListingResult> bestCityResponse;
 
     public static ArrayList<Topics> getTopicList() {
         return topicList;
@@ -143,15 +107,6 @@ public class BaseApplication extends Application {
         BaseApplication.shortStoryTopicList = shortStoryTopicList;
     }
 
-    public boolean isAskPermission() {
-        return askPermission;
-    }
-
-    public void setAskPermission(boolean askPermission) {
-        this.askPermission = askPermission;
-    }
-
-
     public static HashMap<Topics, List<Topics>> getTopicsMap() {
         return topicsMap;
     }
@@ -168,16 +123,6 @@ public class BaseApplication extends Application {
         BaseApplication.selectedTopicsMap = selectedTopicsMap;
     }
 
-    private static boolean hasLanguagePreferrenceChanged = false;
-
-    public static boolean isHasLanguagePreferrenceChanged() {
-        return hasLanguagePreferrenceChanged;
-    }
-
-    public static void setHasLanguagePreferrenceChanged(boolean hasLanguagePreferrenceChanged) {
-        BaseApplication.hasLanguagePreferrenceChanged = hasLanguagePreferrenceChanged;
-    }
-
     public static boolean isFirstSwipe() {
         return isFirstSwipe;
     }
@@ -185,7 +130,6 @@ public class BaseApplication extends Application {
     public static void setFirstSwipe(boolean firstSwipe) {
         isFirstSwipe = firstSwipe;
     }
-
 
     public View getView() {
         return view;
@@ -195,21 +139,12 @@ public class BaseApplication extends Application {
         this.view = view;
     }
 
-
     public Activity getActivity() {
         return activity;
     }
 
     public void setActivity(Activity activity) {
         this.activity = activity;
-    }
-
-    public Activity getDashboardActivity() {
-        return dashboardActivity;
-    }
-
-    public void setDashboardActivity(Activity dashboardActivity) {
-        this.dashboardActivity = dashboardActivity;
     }
 
     public enum TrackerName {
@@ -231,20 +166,6 @@ public class BaseApplication extends Application {
             mTrackers.put(trackerId, t);
         }
         return mTrackers.get(trackerId);
-    }
-
-    /*
-     * Returns the Google Analytics tracker.
-     */
-    public static Tracker getGaTracker() {
-        return mTracker;
-    }
-
-    /*
-     * Returns the Google Analytics instance.
-     */
-    public static GoogleAnalytics getGaInstance() {
-        return mGa;
     }
 
     public static Context getAppContext() {
@@ -340,14 +261,13 @@ public class BaseApplication extends Application {
         setInstance(this);
         VolleyLog.setTag("VolleyLogs");
 
-        Fresco.initialize(this);
+//        Fresco.initialize(this);
         createRetrofitInstance(AppConstants.LIVE_URL);
 
         mRequestQueue = Volley.newRequestQueue(getApplicationContext());
         comScore.setAppContext(this.getApplicationContext());
         comScore.setCustomerC2("18705325");
         comScore.setPublisherSecret("6116f207ac5e9f9226f6b98e088a22ea");
-        AudienceNetworkAds.initialize(this);
         Branch.enableLogging();
         Branch.getAutoInstance(this);
         PackageInfo pInfo = null;

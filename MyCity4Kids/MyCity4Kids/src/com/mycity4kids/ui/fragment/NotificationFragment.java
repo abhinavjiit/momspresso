@@ -2,7 +2,9 @@ package com.mycity4kids.ui.fragment;
 
 import android.accounts.NetworkErrorException;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +48,6 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
     private ProgressBar progressBar;
     private TextView noBlogsTextView;
     private ListView notificationListView;
-    private DashboardActivity mContext;
 
     @Nullable
     @Override
@@ -54,7 +55,6 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
         View view = inflater.inflate(R.layout.aa_notification, container, false);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
-        mContext = (DashboardActivity) BaseApplication.getInstance().getDashboardActivity();
         notificationCenterResultArrayList = new ArrayList<>();
         notificationListView = (ListView) view.findViewById(R.id.notificationListView);
         notificationCenterListAdapter = new NotificationCenterListAdapter(getActivity(), notificationCenterResultArrayList);
@@ -160,7 +160,7 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
                     if (notificationCenterResultArrayList != null && !notificationCenterResultArrayList.isEmpty()) {
                         SharedPrefUtils.setLastNotificationIdForUnreadFlag(BaseApplication.getAppContext(), notificationCenterResultArrayList.get(0).getId());
                         if (isAdded()) {
-                            mContext.showHideNotificationCenterMark(false);
+                            ((DashboardActivity) getActivity()).showHideNotificationCenterMark(false);
                         }
                     }
                 } else {

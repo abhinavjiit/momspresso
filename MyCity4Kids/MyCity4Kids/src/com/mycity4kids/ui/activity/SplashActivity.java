@@ -12,7 +12,6 @@ import android.widget.ImageView;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.applinks.AppLinkData;
-import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -91,7 +90,6 @@ public class SplashActivity extends BaseActivity {
         onNewIntent(getIntent());
 //        AppUtils.printHashKey(this);
         extras = getIntent().getExtras();
-        MobileAds.initialize(this, initializationStatus -> Log.d("Admob", "Initialized"));
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         if (getIntent().getBooleanExtra("fromNotification", false)) {
