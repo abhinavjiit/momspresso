@@ -25,6 +25,7 @@ class ChooseShortStoryCategoryActivity : BaseActivity(), ShortStoryChallengeTopi
     }
 
 
+
     override fun onClick(v: View, position: Int) {
 
     }
@@ -33,6 +34,7 @@ class ChooseShortStoryCategoryActivity : BaseActivity(), ShortStoryChallengeTopi
     val adapter: ShortStoryTopicsGridAdapter by lazy { ShortStoryTopicsGridAdapter() }
     private var shortShortTopicsData: ArrayList<ExploreTopicsModel>? = null
     private var shortStoryChallengesData: ArrayList<Topics>? = null
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
