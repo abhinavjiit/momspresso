@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,12 +17,13 @@ import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
 import com.mycity4kids.ui.adapter.ShortStoryChallengeTopicsAdapter
 import com.mycity4kids.ui.adapter.ShortStoryTopicsGridAdapter
 import kotlinx.android.synthetic.main.choose_short_story_category_activity.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class ChooseShortStoryCategoryActivity : BaseActivity(), ShortStoryChallengeTopicsAdapter.RecyclerViewClickListener {
+
+    val handler = CoroutineExceptionHandler { _, exception ->
+        Log.d("Exception", "$exception handled !")
+    }
 
 
     override fun onClick(v: View, position: Int) {
@@ -31,8 +33,8 @@ class ChooseShortStoryCategoryActivity : BaseActivity(), ShortStoryChallengeTopi
 
     private val shortStoryChallengeAdapter: ShortStoryChallengeTopicsAdapter by lazy { ShortStoryChallengeTopicsAdapter(this) }
     val adapter: ShortStoryTopicsGridAdapter by lazy { ShortStoryTopicsGridAdapter() }
-    var shortShortTopicsData: ArrayList<ExploreTopicsModel>? = null
-    var shortStoryChallengesData: ArrayList<Topics>? = null
+    private var shortShortTopicsData: ArrayList<ExploreTopicsModel>? = null
+    private var shortStoryChallengesData: ArrayList<Topics>? = null
 
     override fun updateUi(response: Response?) {
     }
@@ -51,7 +53,7 @@ class ChooseShortStoryCategoryActivity : BaseActivity(), ShortStoryChallengeTopi
         topicsGridView.isExpanded = true
 
 
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(Dispatchers.Main + handler).launch {
             val shortStoryChallengesResponse = async { getAllShortStoryChallengesAsync() }
             val shortStoryTopicsResponse = async { getAllShortStoryTopicsAsync() }
 
