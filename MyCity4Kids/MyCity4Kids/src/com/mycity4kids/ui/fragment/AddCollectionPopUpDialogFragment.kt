@@ -29,6 +29,7 @@ import com.mycity4kids.models.collectionsModels.AddCollectionRequestModel
 import com.mycity4kids.models.collectionsModels.UpdateCollectionRequestModel
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.preference.SharedPrefUtils
+import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
 import com.mycity4kids.ui.activity.collection.AddMultipleCollectionItemActivity
 import io.reactivex.Observer
@@ -82,11 +83,13 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        try {
-            addCollectionInterface = context as AddCollectionInterface
-        } catch (e: ClassCastException) {
-            Crashlytics.logException(e)
-            Log.d("MC4KException", Log.getStackTraceString(e))
+        if (context is UserProfileActivity) {
+            try {
+                addCollectionInterface = context
+            } catch (e: ClassCastException) {
+                Crashlytics.logException(e)
+                Log.d("MC4KException", Log.getStackTraceString(e))
+            }
         }
     }
 
