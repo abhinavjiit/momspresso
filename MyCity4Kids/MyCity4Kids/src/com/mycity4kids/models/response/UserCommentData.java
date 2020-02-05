@@ -1,11 +1,18 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
  * Created by anshul on 8/2/16.
  */
-public class UserCommentData  extends BaseData{
+public class UserCommentData extends BaseData {
+    @SerializedName("result")
+    private ArrayList<UserCommentsResult> result;
+    @SerializedName("pagination")
+    private String pagination;
+
     public ArrayList<UserCommentsResult> getResult() {
         return result;
     }
@@ -14,7 +21,6 @@ public class UserCommentData  extends BaseData{
         this.result = result;
     }
 
-    ArrayList<UserCommentsResult> result;
     public String getPagination() {
         return pagination;
     }
@@ -22,7 +28,4 @@ public class UserCommentData  extends BaseData{
     public void setPagination(String pagination) {
         this.pagination = pagination;
     }
-
-    String pagination;
-
 }

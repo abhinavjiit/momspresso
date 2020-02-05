@@ -3,13 +3,13 @@ package com.mycity4kids.ui.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.newmodels.parentingmodel.ArticleModelNew;
 import com.mycity4kids.ui.fragment.SearchAllArticlesTabFragment;
 import com.mycity4kids.ui.fragment.SearchAllAuthorsTabFragment;
 import com.mycity4kids.ui.fragment.SearchAllTopicsTabFragment;
@@ -20,7 +20,6 @@ import com.mycity4kids.ui.fragment.SearchAllVideosTabFragment;
  */
 public class SearchAllPagerAdapter extends FragmentStatePagerAdapter {
 
-    ArticleModelNew.AllArticles articlelist;
     Activity activity;
     Context context;
     private SearchAllArticlesTabFragment mArticlefragment;
@@ -35,10 +34,9 @@ public class SearchAllPagerAdapter extends FragmentStatePagerAdapter {
         super(fragmentManager);
     }
 
-    public SearchAllPagerAdapter(FragmentManager fragmentManager, Activity activity, ArticleModelNew.AllArticles articlelist, Context context, String searchN) {
+    public SearchAllPagerAdapter(FragmentManager fragmentManager, Activity activity, Context context, String searchN) {
         super(fragmentManager);
         this.activity = activity;
-        this.articlelist = articlelist;
         this.context = context;
         searchName = searchN;
     }
@@ -60,7 +58,7 @@ public class SearchAllPagerAdapter extends FragmentStatePagerAdapter {
             return activity.getString(R.string.search_article_topic_tab_label);
         } else if (position == 1) {
             return activity.getString(R.string.search_author_tab_label);
-        } else if (position == 2){
+        } else if (position == 2) {
             return activity.getString(R.string.search_topic_label);
         } else {
             return activity.getString(R.string.search_video_label);
@@ -106,7 +104,7 @@ public class SearchAllPagerAdapter extends FragmentStatePagerAdapter {
         return null;
     }
 
-    public void refreshArticlesAuthors(String searchText, int pos) {
+    public void refreshArticlesAuthors(String searchText) {
         if (null == mArticlefragment) {
             mArticlefragment = new SearchAllArticlesTabFragment();
         }

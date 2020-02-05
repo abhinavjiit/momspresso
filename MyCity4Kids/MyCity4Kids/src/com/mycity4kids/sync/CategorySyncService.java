@@ -73,10 +73,6 @@ public class CategorySyncService extends IntentService {
                                                  SharedPrefUtils.setNotificationConfig(BaseApplication.getAppContext(), entry.getKey(), entry.getValue());
                                              }
 
-                                             for (int i = 0; i < responseModel.getData().getResult().getNotificationType().size(); i++) {
-                                                 SharedPrefUtils.setNotificationType(BaseApplication.getAppContext(), "" + i, responseModel.getData().getResult().getNotificationType().get(i));
-                                             }
-
                                              AppUtils.writeJsonStringToFile(CategorySyncService.this, new Gson().toJson(responseModel.getData().getResult().getLanguages()), AppConstants.LANGUAGES_JSON_FILE);
                                              version = SharedPrefUtils.getConfigCategoryVersion(BaseApplication.getAppContext());
                                              if (version == 0 || version != responseModel.getData().getResult().getCategory().getVersion()) {

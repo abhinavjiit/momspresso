@@ -101,7 +101,7 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.github.nkzawa:socket.io-client:0.6.0'
     implementation 'com.smartlook.recording:app:1.2.0-native'
-
+    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
     compile('io.socket:socket.io-client:0.8.3') {
         exclude group: 'org.json', module: 'json'
     }

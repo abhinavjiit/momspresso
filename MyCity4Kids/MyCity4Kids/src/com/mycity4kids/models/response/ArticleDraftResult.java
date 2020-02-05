@@ -7,9 +7,9 @@ import com.google.gson.annotations.SerializedName;
  */
 public class ArticleDraftResult {
     @SerializedName("id")
-    String id;
+    private String id;
     @SerializedName("url")
-    String url;
+    private String url;
 
     public String getId() {
         return id;

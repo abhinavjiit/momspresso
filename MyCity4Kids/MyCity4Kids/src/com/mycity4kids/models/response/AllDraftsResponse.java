@@ -1,5 +1,7 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +11,7 @@ import java.util.Map;
  */
 
 public class AllDraftsResponse extends BaseResponse {
-
+    @SerializedName("data")
     private AllDraftsData data;
 
     public AllDraftsData getData() {
@@ -22,6 +24,7 @@ public class AllDraftsResponse extends BaseResponse {
 
     public static class AllDraftsData {
 
+        @SerializedName("result")
         private ArrayList<AllDraftsResult> result;
 
         public ArrayList<AllDraftsResult> getResult() {
@@ -33,17 +36,28 @@ public class AllDraftsResponse extends BaseResponse {
         }
 
         public static class AllDraftsResult {
+            @SerializedName("userId")
             private String userId;
+            @SerializedName("articleType")
             private String articleType;
+            @SerializedName("createdTime")
             private String createdTime;
+            @SerializedName("id")
             private String id;
+            @SerializedName("updatedTime")
             private long updatedTime;
+            @SerializedName("body")
             private String body;
+            @SerializedName("title")
             private String title;
+            @SerializedName("contentType")
             private String contentType;
+            @SerializedName("userAgent")
             private String userAgent;
+            @SerializedName("lang")
             private String lang;
-            private ArrayList<Map<String,String>> tags;
+            @SerializedName("tags")
+            private ArrayList<Map<String, String>> tags;
 
             public ArrayList<Map<String, String>> getTags() {
                 return tags;
@@ -52,29 +66,6 @@ public class AllDraftsResponse extends BaseResponse {
             public void setTags(ArrayList<Map<String, String>> tags) {
                 this.tags = tags;
             }
-
-       /*     public Tags getTags() {
-                return tags;
-
-            }
-
-            public void setTags(Tags tags) {
-                this.tags = tags;
-            }
-
-            public class Tags {
-                private ArrayList<Map<String, String>> tagsArr;
-
-                public ArrayList<Map<String, String>> getTagsArr() {
-                    return tagsArr;
-                }
-
-                public void setTagsArr(ArrayList<Map<String, String>> tagsArr) {
-                    this.tagsArr = tagsArr;
-                }
-
-            }*/
-
 
             public String getUserId() {
                 return userId;

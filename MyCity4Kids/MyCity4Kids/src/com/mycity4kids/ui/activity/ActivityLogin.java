@@ -62,7 +62,6 @@ import com.mycity4kids.ui.fragment.ChooseLoginAccountDialogFragment;
 import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment;
 import com.mycity4kids.ui.fragment.SignInFragment;
 import com.mycity4kids.ui.fragment.SignUpFragment;
-import com.mycity4kids.utils.AppUtils;
 
 import org.json.JSONObject;
 
@@ -355,14 +354,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     userDetailResult.getSocialTokens().getFb().getIsExpired());
         }
 
-        String version = AppUtils.getAppVersion(this);
-        if (version.equals(AppConstants.PHOENIX_RELEASE_VERSION)) {
-            SharedPrefUtils.setPhoenixFirstLaunch(BaseApplication.getAppContext(), false);
-        }
-        if (version.equals(AppConstants.FACEBOOK_CONNECT_RELEASE_VERSION)) {
-            SharedPrefUtils.setFBConnectFirstLaunch(BaseApplication.getAppContext(), false);
-        }
-
         if ("fb".equals(loginMode)) {
             SocialConnectRequest socialConnectRequest = new SocialConnectRequest();
             socialConnectRequest.setToken(accessToken);
@@ -511,13 +502,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     }
 
                     PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-                    String version = pInfo.versionName;
-                    if (version.equals(AppConstants.PHOENIX_RELEASE_VERSION)) {
-                        SharedPrefUtils.setPhoenixFirstLaunch(BaseApplication.getAppContext(), false);
-                    }
-                    if (version.equals(AppConstants.FACEBOOK_CONNECT_RELEASE_VERSION)) {
-                        SharedPrefUtils.setFBConnectFirstLaunch(BaseApplication.getAppContext(), false);
-                    }
 
                     if ("fb".equals(loginMode)) {
                         SocialConnectRequest socialConnectRequest = new SocialConnectRequest();

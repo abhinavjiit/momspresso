@@ -3,31 +3,55 @@ package com.mycity4kids.models.user;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
 import com.mycity4kids.models.basemodel.BaseDataModel;
 
 public class UserInfo extends BaseDataModel implements Parcelable {
+    @SerializedName("id")
     private String id;
+    @SerializedName("dynamoId")
     private String dynamoId;
+    @SerializedName("first_name")
     private String first_name;
+    @SerializedName("last_name")
     private String last_name;
+    @SerializedName("email")
     private String email;
+    @SerializedName("mobile_number")
     private String mobile_number;
+    @SerializedName("name")
     private String name;
+    @SerializedName("sessionId")
     private String sessionId;
+    @SerializedName("profileId")
     private String profileId;
+    @SerializedName("pincode")
     private String pincode;
+    @SerializedName("family_id")
     private int family_id = 0;
+    @SerializedName("color_code")
     private String color_code = "";
+    @SerializedName("mc4kToken")
     private String mc4kToken;
+    @SerializedName("isValidated")
     private String isValidated;
+    @SerializedName("userType")
     private String userType;
+    @SerializedName("profilePicUrl")
     private String profilePicUrl;
+    @SerializedName("loginMode")
     private String loginMode;
+    @SerializedName("cityId")
     private String cityId;
+    @SerializedName("isLangSelection")
     private String isLangSelection;
+    @SerializedName("subscriptionEmail")
     private String subscriptionEmail;
+    @SerializedName("gender")
     private String gender;
+    @SerializedName("blogTitle")
     private String blogTitle = "";
+    @SerializedName("isNewUser")
     private String isNewUser = "";
 
     public UserInfo() {

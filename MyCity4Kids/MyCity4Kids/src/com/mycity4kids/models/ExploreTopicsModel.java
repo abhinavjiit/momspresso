@@ -10,26 +10,39 @@ import java.util.List;
 
 public class ExploreTopicsModel implements Parcelable {
 
+    @SerializedName("id")
     private String id;
+    @SerializedName("title")
     private String title;
+    @SerializedName("display_name")
     private String display_name;
-
     @SerializedName("public")
     private String publicVisibility;
+    @SerializedName("showInMenu")
     private String showInMenu;
+    @SerializedName("child")
     private ArrayList<ExploreTopicsModel> child;
+    @SerializedName("parentId")
     private String parentId;
+    @SerializedName("parentName")
     private String parentName;
+    @SerializedName("isSelected")
     private boolean isSelected;
+    @SerializedName("slug")
     private String slug;
-
+    @SerializedName("extraData")
     private List<ExtraData> extraData;
 
     public class ExtraData  {
+        @SerializedName("challenges")
         private Challenges challenges;
+        @SerializedName("metaTitle")
         private String metaTitle;
+        @SerializedName("metaDescription")
         private String metaDescription;
+        @SerializedName("max_duration")
         private String max_duration = "60";
+        @SerializedName("categoryBackImage")
         private CategoryImage categoryBackImage;
 
         public String getMetaTitle() {
@@ -73,8 +86,11 @@ public class ExploreTopicsModel implements Parcelable {
         }
 
         public class CategoryImage {
+            @SerializedName("web")
             private String web;
+            @SerializedName("app")
             private String app;
+            @SerializedName("mob")
             private String mob;
 
             public String getWeb() {
@@ -103,10 +119,13 @@ public class ExploreTopicsModel implements Parcelable {
         }
 
         private class Challenges {
-
+            @SerializedName("active")
             private String active;
+            @SerializedName("type")
             private String type;
+            @SerializedName("desc")
             private String desc;
+            @SerializedName("imageUrl")
             private String imageUrl;
 
             public String getActive() {

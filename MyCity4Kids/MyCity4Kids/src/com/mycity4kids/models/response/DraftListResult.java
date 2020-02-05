@@ -1,5 +1,7 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
@@ -8,11 +10,26 @@ import java.util.Map;
  * Created by hemant on 25/8/16.
  */
 public class DraftListResult implements Serializable {
-    String id;
-    String articleType;
-    Long updatedTime;
-    String createdTime;
+    @SerializedName("id")
+    private String id;
+    @SerializedName("articleType")
+    private String articleType;
+    @SerializedName("updatedTime")
+    private Long updatedTime;
+    @SerializedName("createdTime")
+    private String createdTime;
+    @SerializedName("contentType")
     private String contentType;
+    @SerializedName("body")
+    private String body;
+    @SerializedName("title")
+    private String title;
+    @SerializedName("itemType")
+    private int itemType = 1;
+    @SerializedName("tags")
+    private ArrayList<Map<String, String>> tags;
+    @SerializedName("userAgent")
+    private String userAgent;
 
     public String getContentType() {
         return contentType;
@@ -21,15 +38,6 @@ public class DraftListResult implements Serializable {
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
-
-
-    String body;
-    String title;
-    //    ImageURL imageUrl;
-    int itemType = 1;
-    //    private Map<String, List<Map<String, String>>> tags;
-    private ArrayList<Map<String, String>> tags;
-    private String userAgent;
 
     public String getId() {
         return id;
@@ -79,14 +87,6 @@ public class DraftListResult implements Serializable {
         this.title = title;
     }
 
-//    public ImageURL getImageUrl() {
-//        return imageUrl;
-//    }
-//
-//    public void setImageUrl(ImageURL imageUrl) {
-//        this.imageUrl = imageUrl;
-//    }
-
     public int getItemType() {
         return itemType;
     }
@@ -94,14 +94,6 @@ public class DraftListResult implements Serializable {
     public void setItemType(int itemType) {
         this.itemType = itemType;
     }
-
-//    public Map<String, List<Map<String, String>>> getTags() {
-//        return tags;
-//    }
-//
-//    public void setTags(Map<String, List<Map<String, String>>> tags) {
-//        this.tags = tags;
-//    }
 
     public ArrayList<Map<String, String>> getTags() {
         return tags;

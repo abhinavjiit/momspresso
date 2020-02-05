@@ -1,12 +1,14 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
  * Created by hemant on 21/7/16.
  */
 public class SearchTrendsAndHistoryResponse extends BaseResponse {
-
+    @SerializedName("data")
     private SearchTrendsAndHistoryData data;
 
     public SearchTrendsAndHistoryData getData() {
@@ -18,6 +20,7 @@ public class SearchTrendsAndHistoryResponse extends BaseResponse {
     }
 
     public class SearchTrendsAndHistoryData {
+        @SerializedName("result")
         private SearchTrendsAndHistoryResult result;
 
         public SearchTrendsAndHistoryResult getResult() {
@@ -29,7 +32,9 @@ public class SearchTrendsAndHistoryResponse extends BaseResponse {
         }
 
         public class SearchTrendsAndHistoryResult {
+            @SerializedName("userResult")
             private ArrayList<String> userResult;
+            @SerializedName("trendingResult")
             private ArrayList<String> trendingResult;
 
             public ArrayList<String> getUserResult() {

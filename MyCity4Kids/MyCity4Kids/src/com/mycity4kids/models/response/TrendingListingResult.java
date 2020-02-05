@@ -3,16 +3,23 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
  * Created by hemant on 26/5/17.
  */
 public class TrendingListingResult implements Parcelable {
+    @SerializedName("articleList")
     private ArrayList<ArticleListingResult> articleList;
+    @SerializedName("id")
     private String id;
+    @SerializedName("slug")
     private String slug;
+    @SerializedName("display_name")
     private String display_name;
+    @SerializedName("title")
     private String title;
 
     protected TrendingListingResult(Parcel in) {

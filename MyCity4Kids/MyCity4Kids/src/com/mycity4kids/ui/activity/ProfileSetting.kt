@@ -8,9 +8,9 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -19,22 +19,21 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.ConnectivityUtils
-import com.kelltontech.utils.StringUtils
 import com.kelltontech.utils.ToastUtils
 import com.mixpanel.android.mpmetrics.MixpanelAPI
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
-import com.mycity4kids.controller.LogoutController
 import com.mycity4kids.facebook.FacebookUtils
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.campaignmodels.TotalPayoutResponse
-import com.mycity4kids.models.logout.LogoutResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
+import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.utils.AppUtils
+import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -179,11 +178,6 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
                 notificationIntent.putExtra("source", "settings")
                 startActivity(notificationIntent)
             }
-            //            case R.id.topic_of_interest:
-            //                Intent subscribeTopicIntent = new Intent(this, SubscribeTopicsActivity.class);
-            //                subscribeTopicIntent.putExtra("source", "settings");
-            //                startActivity(subscribeTopicIntent);
-            //                break;
             R.id.help -> {
                 val intent1 = Intent(this, ProfileWebViewActivity::class.java)
                 intent1.putExtra(Constants.WEB_VIEW_URL, "https://www.momspresso.com/home/faq")
@@ -217,86 +211,77 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
 
     private fun logoutUser() {
         if (ConnectivityUtils.isNetworkEnabled(this)) {
-            val _controller = LogoutController(this, this)
             val dialog = AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
-
             dialog.setMessage(resources.getString(R.string.logout_msg)).setNegativeButton(R.string.new_yes) { dialog, which ->
                 dialog.cancel()
-                showProgressDialog(resources.getString(R.string.please_wait))
-                _controller.getData(AppConstants.LOGOUT_REQUEST, "")
+                val retrofit = BaseApplication.getInstance().retrofit
+                val loginRegistrationAPI = retrofit.create(LoginRegistrationAPI::class.java)
+                val call = loginRegistrationAPI.logout()
+                call.enqueue(logoutUserResponseListener)
             }.setPositiveButton(R.string.new_cancel) { dialog, which ->
-                // do nothing
                 dialog.cancel()
             }.setIcon(android.R.drawable.ic_dialog_alert)
             val alert11 = dialog.create()
             alert11.show()
-            alert11.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(resources.getColor(R.color.app_red))
-            alert11.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.canceltxt_color))
+            alert11.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.app_red))
+            alert11.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.canceltxt_color))
         } else {
             ToastUtils.showToast(this, getString(R.string.error_network))
         }
     }
 
+    private val logoutUserResponseListener = object : Callback<ResponseBody> {
+        override fun onResponse(call: Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {
+            clearUserDataPostLogout()
+        }
+
+        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+            clearUserDataPostLogout()
+        }
+    }
+
     override fun updateUi(response: Response?) {
-        removeProgressDialog()
-        if (response == null) {
-            Toast.makeText(this, resources.getString(R.string.server_error), Toast.LENGTH_SHORT).show()
-            return
+    }
+
+    private fun clearUserDataPostLogout() {
+        val mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN)
+        try {
+            val jsonObject = JSONObject()
+            jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId)
+            mixpanel.track("UserLogout", jsonObject)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        val responseData = response.responseObject as LogoutResponse
-        val message = responseData.result.message
-        if (responseData.responseCode == 200) {
-            val mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN)
-            try {
-                val jsonObject = JSONObject()
-                jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId)
-                mixpanel.track("UserLogout", jsonObject)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
 
-            FacebookUtils.logout()
-            gPlusSignOut()
+        FacebookUtils.logout()
+        gPlusSignOut()
 
-            val pushToken = SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext())
-            val homeCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "home")
-            val topicsCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics")
-            val topicsArticleCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article")
-            val articleCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "article_details")
-            val groupsCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "groups")
-            val appLocale = SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())
+        val pushToken = SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext())
+        val homeCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "home")
+        val topicsCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics")
+        val topicsArticleCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article")
+        val articleCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "article_details")
+        val groupsCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "groups")
+        val appLocale = SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())
 
-            SharedPrefUtils.clearPrefrence(BaseApplication.getAppContext())
-            SharedPrefUtils.setDeviceToken(BaseApplication.getAppContext(), pushToken)
-            SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "home", homeCoach)
-            SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics", topicsCoach)
-            SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article", topicsArticleCoach)
-            SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "article_details", articleCoach)
-            SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "groups", groupsCoach)
-            SharedPrefUtils.setAppLocale(BaseApplication.getAppContext(), appLocale)
+        SharedPrefUtils.clearPrefrence(BaseApplication.getAppContext())
+        SharedPrefUtils.setDeviceToken(BaseApplication.getAppContext(), pushToken)
+        SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "home", homeCoach)
+        SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics", topicsCoach)
+        SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article", topicsArticleCoach)
+        SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "article_details", articleCoach)
+        SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "groups", groupsCoach)
+        SharedPrefUtils.setAppLocale(BaseApplication.getAppContext(), appLocale)
 
-            BaseApplication.getInstance().branchData = null
-            BaseApplication.getInstance().branchLink = null
+        BaseApplication.getInstance().branchData = null
+        BaseApplication.getInstance().branchLink = null
 
-            if (StringUtils.isNullOrEmpty(message)) {
-                Toast.makeText(this, getString(R.string.went_wrong), Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-            }
-
-            // set logout flag
-            SharedPrefUtils.setLogoutFlag(BaseApplication.getAppContext(), true)
-            val intent = Intent(this, ActivityLogin::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-            this.finish()
-        } else if (responseData.responseCode == 400) {
-            if (StringUtils.isNullOrEmpty(message)) {
-                Toast.makeText(this, getString(R.string.went_wrong), Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-            }
-        }
+        // set logout flag
+        SharedPrefUtils.setLogoutFlag(BaseApplication.getAppContext(), true)
+        val intent = Intent(this, ActivityLogin::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        this.finish()
     }
 
     private fun gPlusSignOut() {
@@ -337,3 +322,4 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         return true
     }
 }
+

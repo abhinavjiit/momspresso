@@ -1,22 +1,38 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by anshul on 8/23/16.
  */
 public class DeepLinkingResult {
+    @SerializedName("id")
     private String id = "";
+    @SerializedName("url")
     private String url = "";
+    @SerializedName("category_id")
     private String category_id = "";
+    @SerializedName("subcategory_id")
     private String subcategory_id = "";
+    @SerializedName("zone_id")
     private String zone_id = "";
+    @SerializedName("locality_id")
     private String locality_id = "";
+    @SerializedName("city_id")
     private String city_id = "";
+    @SerializedName("type")
     private String type = "";
+    @SerializedName("article_id")
     private String article_id = "";
+    @SerializedName("detail_id")
     private String detail_id = "";
+    @SerializedName("author_name")
     private String author_name = "";
+    @SerializedName("agegroup")
     private String agegroup = "";
+    @SerializedName("blog_title")
     private String blog_title = "";
+    @SerializedName("author_id")
     private String author_id = "";
 
     public String getId() {

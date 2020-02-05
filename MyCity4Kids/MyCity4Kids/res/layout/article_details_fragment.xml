@@ -108,7 +108,7 @@
 
             <RelativeLayout
                 android:id="@+id/headerImageOrYoutubeViewContainer"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/statsFlowLayout">
 
@@ -121,17 +121,14 @@
                     android:scaleType="fitXY"
                     android:src="@drawable/default_article" />
 
-                <!--<WebView-->
-                <!--android:id="@+id/videoWebView"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="@dimen/article_details_app_bar_height"-->
-                <!--android:visibility="gone" />-->
-
-                <FrameLayout
-                    android:id="@+id/youtube_fragment"
+                <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                    android:id="@+id/youtube_player_view"
                     android:layout_width="match_parent"
-                    android:layout_height="240dp"
-                    android:visibility="gone" />
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:autoPlay="false"
+                    app:showFullScreenButton="false"
+                    app:useWebUi="false" />
             </RelativeLayout>
 
             <RelativeLayout

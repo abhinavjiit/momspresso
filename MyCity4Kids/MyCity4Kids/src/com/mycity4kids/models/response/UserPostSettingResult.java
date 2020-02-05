@@ -1,17 +1,27 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 1/5/18.
  */
 
 public class UserPostSettingResult {
+    @SerializedName("id")
     private int id;
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("postId")
     private String postId;
+    @SerializedName("notificationOff")
     private int notificationOff;
+    @SerializedName("isBookmarked")
     private int isBookmarked;
+    @SerializedName("isAnno")
     private int isAnno;
+    @SerializedName("createdAt")
     private long createdAt;
+    @SerializedName("updatedAt")
     private long updatedAt;
 
     public int getId() {

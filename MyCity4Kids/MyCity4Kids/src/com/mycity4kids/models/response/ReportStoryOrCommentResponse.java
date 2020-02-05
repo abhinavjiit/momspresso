@@ -1,11 +1,13 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 12/6/18.
  */
 
 public class ReportStoryOrCommentResponse extends BaseResponse {
-
+    @SerializedName("data")
     private ReportStoryOrCommentData data;
 
     public ReportStoryOrCommentData getData() {
@@ -17,6 +19,7 @@ public class ReportStoryOrCommentResponse extends BaseResponse {
     }
 
     public class ReportStoryOrCommentData {
+        @SerializedName("result")
         private ReportStoryOrCommentResult result;
 
         public ReportStoryOrCommentResult getResult() {
@@ -28,6 +31,7 @@ public class ReportStoryOrCommentResponse extends BaseResponse {
         }
 
         public class ReportStoryOrCommentResult {
+            @SerializedName("id")
             private String id;
 
             public String getId() {

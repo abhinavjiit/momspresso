@@ -3,14 +3,21 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 23/1/17.
  */
 public class CityInfoItem implements Parcelable {
+    @SerializedName("id")
     private String id;
+    @SerializedName("cityName")
     private String cityName;
+    @SerializedName("lon")
     private double lon;
+    @SerializedName("lat")
     private double lat;
+    @SerializedName("isSelected")
     private boolean isSelected;
 
     protected CityInfoItem(Parcel in) {

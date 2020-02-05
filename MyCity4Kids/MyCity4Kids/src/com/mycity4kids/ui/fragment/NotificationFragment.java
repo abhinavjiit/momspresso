@@ -27,6 +27,7 @@ import com.mycity4kids.models.response.NotificationCenterResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.NotificationActivity;
 import com.mycity4kids.ui.adapter.NotificationCenterListAdapter;
 
 import java.util.ArrayList;
@@ -159,9 +160,6 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
                     notificationCenterResultArrayList.addAll(dataList);
                     if (notificationCenterResultArrayList != null && !notificationCenterResultArrayList.isEmpty()) {
                         SharedPrefUtils.setLastNotificationIdForUnreadFlag(BaseApplication.getAppContext(), notificationCenterResultArrayList.get(0).getId());
-                        if (isAdded()) {
-                            ((DashboardActivity) getActivity()).showHideNotificationCenterMark(false);
-                        }
                     }
                 } else {
                     notificationCenterResultArrayList.addAll(dataList);

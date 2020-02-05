@@ -1,13 +1,18 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 14/10/16.
  */
 public class ViewCountData {
+    @SerializedName("count")
     private String count;
+    @SerializedName("commentCount")
     private String commentCount;
+    @SerializedName("likeCount")
     private String likeCount;
-
+    @SerializedName("result")
     private int result;
 
     public String getCount() {

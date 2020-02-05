@@ -3,14 +3,15 @@ package com.mycity4kids.models.basemodel;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
 import com.kelltontech.model.BaseModel;
 
 
 
 
 public class BaseDataModel extends BaseModel{
+	@SerializedName("categoryId")
 	private int categoryId;
-
 	
 	public int getCategoryId() {
 		return categoryId;
@@ -19,8 +20,6 @@ public class BaseDataModel extends BaseModel{
 	public void setCategoryId(int categoryId) {
 		this.categoryId = categoryId;
 	}
-
-	
 	
 	/**
 	 * no-arg constructor

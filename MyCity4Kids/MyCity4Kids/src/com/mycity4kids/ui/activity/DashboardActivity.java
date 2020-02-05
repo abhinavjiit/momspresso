@@ -109,7 +109,6 @@ import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
 import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
 import com.mycity4kids.ui.fragment.GroupsViewFragment;
-import com.mycity4kids.ui.fragment.NotificationFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.SuggestedTopicsFragment;
 import com.mycity4kids.ui.fragment.UploadVideoInfoFragment;
@@ -2452,14 +2451,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 menu.findItem(R.id.action_profile).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 selectOptToolbarTitle.setText(getString(R.string.home_screen_select_an_option_title));
-            } else if (topFragment instanceof NotificationFragment) {
-                Utils.pushOpenScreenEvent(this, "NotificationsScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                toolbarTitleTextView.setText(getString(R.string.home_screen_notification_title));
-                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
-                searchAllImageView.setVisibility(View.GONE);
-                notificationImg.setVisibility(View.GONE);
-                menu.findItem(R.id.action_momVlog).setChecked(true);
-                toolbarRelativeLayout.setVisibility(View.VISIBLE);
             } else if (topFragment instanceof SuggestedTopicsFragment) {
                 Utils.pushOpenScreenEvent(this, "SuggestedTopicScreen",
                         SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");

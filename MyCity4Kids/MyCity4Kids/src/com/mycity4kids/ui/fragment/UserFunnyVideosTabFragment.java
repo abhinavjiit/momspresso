@@ -327,7 +327,6 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
                 startActivity(searchIntent);
                 break;
             case R.id.getStartedTextView:
-                SharedPrefUtils.setFirstVideoUploadFlag(BaseApplication.getAppContext(), true);
                 ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
                 Bundle _args = new Bundle();

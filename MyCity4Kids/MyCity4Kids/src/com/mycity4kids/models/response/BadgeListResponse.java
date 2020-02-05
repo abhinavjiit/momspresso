@@ -3,6 +3,8 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,7 @@ import java.util.List;
  */
 public class BadgeListResponse extends BaseResponse {
 
+    @SerializedName("data")
     private List<BadgeListData> data;
 
     public List<BadgeListData> getData() {
@@ -22,7 +25,7 @@ public class BadgeListResponse extends BaseResponse {
     }
 
     public static class BadgeListData {
-
+        @SerializedName("result")
         private ArrayList<BadgeListResult> result;
 
         public ArrayList<BadgeListResult> getResult() {
@@ -34,20 +37,35 @@ public class BadgeListResponse extends BaseResponse {
         }
 
         public static class BadgeListResult implements Parcelable {
+            @SerializedName("id")
             private String id;
+            @SerializedName("badge_desc")
             private String badge_desc;
+            @SerializedName("badge_id")
             private String badge_id;
+            @SerializedName("badge_metaclass")
             private String badge_metaclass;
+            @SerializedName("badge_name")
             private String badge_name;
+            @SerializedName("badge_title")
             private String badge_title;
+            @SerializedName("count")
             private int count;
+            @SerializedName("deleted")
             private boolean deleted;
+            @SerializedName("enabled")
             private boolean enabled;
+            @SerializedName("user_id")
             private String user_id;
+            @SerializedName("badge_bg_url")
             private String badge_bg_url = "";
+            @SerializedName("badge_image_url")
             private String badge_image_url = "";
+            @SerializedName("badge_sharing_url")
             private String badge_sharing_url = "";
+            @SerializedName("item_type")
             private String item_type = "";
+            @SerializedName("content_id")
             private String content_id = "";
 
             protected BadgeListResult(Parcel in) {

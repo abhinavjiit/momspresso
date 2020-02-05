@@ -1,6 +1,5 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
-import com.mycity4kids.models.request.AddEditKidsInformationRequest;
 import com.mycity4kids.models.request.ChangePasswordRequest;
 import com.mycity4kids.models.request.LoginRegistrationRequest;
 import com.mycity4kids.models.request.PhoneLoginRequest;
@@ -46,14 +45,8 @@ public interface LoginRegistrationAPI {
     @POST("v1/users/link/email/")
     Call<UserDetailResponse> resendVerificationLink(@Body LoginRegistrationRequest body);
 
-    @PUT("v1/users/kid/")
-    Call<UserDetailResponse> addEditKidsInformation(@Body AddEditKidsInformationRequest body);
-
     @PUT("v1/users/socialTokens/")
     Call<BaseResponse> socialConnect(@Body SocialConnectRequest body);
-
-    @POST("v1/users/loginfbnumber")
-    Call<FBPhoneLoginResponse> loginWithPhone(@Body PhoneLoginRequest phoneLoginRequest);
 
     @POST("v1/smsapi/")
     Call<ResponseBody> triggerSMS(@Body PhoneLoginRequest phoneLoginRequest);
@@ -63,4 +56,7 @@ public interface LoginRegistrationAPI {
 
     @POST("v1/users/loginmobilenumber/")
     Call<FBPhoneLoginResponse> loginWithPhoneToken(@Body PhoneLoginRequest phoneLoginRequest);
+
+    @POST("apiusers/logoutV1/")
+    Call<ResponseBody> logout();
 }

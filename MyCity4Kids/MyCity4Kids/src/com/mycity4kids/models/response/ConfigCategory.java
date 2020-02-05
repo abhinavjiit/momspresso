@@ -9,15 +9,15 @@ import com.google.gson.annotations.SerializedName;
 public class ConfigCategory {
 
     @SerializedName("version")
-    int version;
+    private int version;
     @SerializedName("location")
-    String location;
+    private String location;
     @SerializedName("popularVersion")
-    int popularVersion;
+    private int popularVersion;
     @SerializedName("userTypeVersion")
-    int userTypeVersion;
+    private int userTypeVersion;
     @SerializedName("popularLocation")
-    String popularLocation;
+    private String popularLocation;
 
     public int getVersion() {
         return version;

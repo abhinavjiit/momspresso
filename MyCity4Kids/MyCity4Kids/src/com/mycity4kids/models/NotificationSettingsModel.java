@@ -1,11 +1,16 @@
 package com.mycity4kids.models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 7/12/16.
  */
 public class NotificationSettingsModel {
+    @SerializedName("id")
     private String id;
+    @SerializedName("name")
     private String name;
+    @SerializedName("status")
     private String status;
 
     public NotificationSettingsModel() {

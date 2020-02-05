@@ -12,11 +12,11 @@ import java.util.Map;
 public class ConfigResult {
 
     @SerializedName("userTypeVersion")
-    int userTypeVersion;
+    private int userTypeVersion;
     @SerializedName("articleTypeVersion")
-    int articleTypeVersion;
+    private int articleTypeVersion;
     @SerializedName("category")
-    ConfigCategory category;
+    private ConfigCategory category;
     @SerializedName("notificationSettings")
     private Map<String, String> notificationSettings;
     @SerializedName("notificationType")

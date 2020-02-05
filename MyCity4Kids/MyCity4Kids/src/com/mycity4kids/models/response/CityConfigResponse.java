@@ -1,12 +1,14 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
  * Created by hemant on 23/1/17.
  */
 public class CityConfigResponse extends BaseResponse {
-
+    @SerializedName("data")
     private CityConfigData data;
 
     public CityConfigData getData() {
@@ -18,7 +20,9 @@ public class CityConfigResponse extends BaseResponse {
     }
 
     public class CityConfigData {
+        @SerializedName("msg")
         private String msg;
+        @SerializedName("result")
         private CityConfigResult result;
 
         public String getMsg() {
@@ -38,6 +42,7 @@ public class CityConfigResponse extends BaseResponse {
         }
 
         public class CityConfigResult {
+            @SerializedName("cityData")
             private ArrayList<CityInfoItem> cityData;
 
             public ArrayList<CityInfoItem> getCityData() {

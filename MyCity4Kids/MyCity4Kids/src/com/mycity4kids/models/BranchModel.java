@@ -3,10 +3,15 @@ package com.mycity4kids.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 public class BranchModel implements Parcelable {
 
+    @SerializedName("type")
     private String type;
+    @SerializedName("id")
     private String id;
+    @SerializedName("mapped_category")
     private String mapped_category;
 
     public String getType() {

@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  */
 public class ArticleDraftData extends BaseData {
     @SerializedName("result")
-    ArticleDraftResult result;
+    private ArticleDraftResult result;
 
     public ArticleDraftResult getResult() {
         return result;

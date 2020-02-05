@@ -7,14 +7,14 @@ import com.google.gson.annotations.SerializedName;
  */
 public class ImageUploadResponse extends BaseResponse {
 
-  @SerializedName("data")
-  ImageUploadData data;
+    @SerializedName("data")
+    private ImageUploadData data;
 
-  public ImageUploadData getData() {
-    return data;
-  }
+    public ImageUploadData getData() {
+        return data;
+    }
 
-  public void setData(ImageUploadData data) {
-    data = data;
-  }
+    public void setData(ImageUploadData data) {
+        this.data = data;
+    }
 }

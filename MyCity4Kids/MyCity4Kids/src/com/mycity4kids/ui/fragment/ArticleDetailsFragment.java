@@ -40,16 +40,10 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayerSupportFragment;
-import com.google.android.youtube.player.YouTubePlayerView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -109,7 +103,8 @@ import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.GroupIdCategoryMap;
 import com.mycity4kids.widget.CustomFontTextView;
 import com.mycity4kids.widget.RelatedArticlesView;
-import com.mycity4kids.youtube.DeveloperKey;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerUtils;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -137,14 +132,13 @@ import static com.mycity4kids.ui.activity.ArticleDetailsContainerActivity.NEW_AR
 /**
  * Created by hemant on 6/6/17.
  */
-public class ArticleDetailsFragment extends BaseFragment implements View.OnClickListener, ObservableScrollViewCallbacks, AddEditCommentReplyFragment.IAddCommentReply, GroupIdCategoryMap.GroupCategoryInterface, GroupMembershipStatus.IMembershipStatus, YouTubePlayer.OnInitializedListener {
+public class ArticleDetailsFragment extends BaseFragment implements View.OnClickListener, ObservableScrollViewCallbacks,
+        GroupIdCategoryMap.GroupCategoryInterface,
+        GroupMembershipStatus.IMembershipStatus {
 
     private final static int ADD_BOOKMARK = 1;
     private static final int RECOVERY_REQUEST = 1;
     private SimpleTooltip simpleTooltip, collectionTooltip;
-    private int TOOLTIP_SHOW_TIMES = 0;
-    private final static int REPLY_LEVEL_PARENT = 1;
-    private final static int REPLY_LEVEL_CHILD = 2;
     private MixpanelAPI mixpanel;
     private Handler handler, startCollectionHandler, stopCollectionHandler;
     private ISwipeRelated iSwipeRelated;
@@ -158,14 +152,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private int width;
     private int bookmarkStatus;
     private int recommendStatus;
-    private int estimatedReadTime = 0;
     private float density;
     private boolean isFollowing = false;
     private boolean isLoading = false;
-    private boolean isArticleDetailEndReached = false;
     private boolean isArticleDetailLoaded = false;
     private boolean isSwipeNextAvailable;
-    private boolean isFbCommentHeadingAdded = false;
     private String bookmarkFlag = "0";
     private String recommendationFlag = "0";
     private String commentURL = "";
@@ -176,27 +167,21 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private String parentId;
     private String articleId;
     private String deepLinkURL;
-    private String blogSlug;
-    private String titleSlug;
-    private String commentType = "db";
     private String commentMainUrl;
     private String pagination = "";
     private String isMomspresso;
     private String userDynamoId;
     private String articleLanguageCategoryId;
-    private String from;
     private String gtmLanguage;
     private int followTopicChangeNewUser = 0;
 
     private ObservableScrollView mScrollView;
-    private LinearLayout commentLayout;
     private TextView followClick;
     private TextView recentAuthorArticleHeading;
     private LinearLayout trendingArticles, recentAuthorArticles;
     private WebView mWebView;
     private RelatedArticlesView relatedArticles1, relatedArticles2, relatedArticles3;
     private RelatedArticlesView trendingRelatedArticles1, trendingRelatedArticles2, trendingRelatedArticles3;
-    private FloatingActionButton commentFloatingActionButton;
 
     private MyWebChromeClient mWebChromeClient = null;
     private View mCustomView;
@@ -221,32 +206,24 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private Rect scrollBounds;
     private View fragmentView;
     private LinearLayout bottomToolbarLL;
-    private TextView commentHeading;
     private View relatedTrendingSeparator;
-    //    private AdView mAdView;
     private TextView viewCommentsTextView;
     private LayoutInflater mInflater;
-    private LinearLayout adView;
     private RelativeLayout groupHeaderView;
     private ImageView groupHeaderImageView;
     private TextView groupHeadingTextView, groupSubHeadingTextView;
     private int groupId;
-    private String youTubeId;
-    private YouTubePlayer youTubePlayer;
-    private YouTubePlayerView youTubePlayerView;
-    private YouTubePlayerSupportFragment mYouTubePlayerSupportFragment;
-    private FrameLayout youtubeContainer;
     private ImageView sponsoredImage;
     private TextView sponsoredTextView;
     private RelativeLayout sponsoredViewContainer;
     private ArrayList<Topics> shortStoriesTopicList = new ArrayList<>();
-    private ArrayList<Topics> shortStoriesTopicList1 = new ArrayList<>();
     private ArticleDetailResult responseData;
     private ImageView badge;
     private LinearLayout progressBarContainer;
     private boolean newArticleDetailFlag;
     private String webViewURL;
     private ImageView crownImageView;
+    private YouTubePlayerView youTubePlayerView;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -265,7 +242,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             floatingActionButton = (ImageView) fragmentView.findViewById(R.id.user_image);
             mWebView = (WebView) fragmentView.findViewById(R.id.articleWebView);
-            youtubeContainer = (FrameLayout) fragmentView.findViewById(R.id.youtube_fragment);
             viewAllTagsTextView = (TextView) fragmentView.findViewById(R.id.viewAllTagsTextView);
             bottomToolbarLL = (LinearLayout) fragmentView.findViewById(R.id.bottomToolbarLL);
             facebookShareTextView = (CustomFontTextView) fragmentView.findViewById(R.id.facebookShareTextView);
@@ -307,6 +283,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             mScrollView = (ObservableScrollView) fragmentView.findViewById(R.id.scroll_view);
             mLodingView = (RelativeLayout) fragmentView.findViewById(R.id.relativeLoadingView);
             crownImageView = fragmentView.findViewById(R.id.crownImageView);
+            youTubePlayerView = fragmentView.findViewById(R.id.youtube_player_view);
+            getLifecycle().addObserver(youTubePlayerView);
 
             fragmentView.findViewById(R.id.user_name).setOnClickListener(this);
             floatingActionButton.setOnClickListener(this);
@@ -442,23 +420,18 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 for (int i = 0; i < res.getData().size(); i++) {
                     if (AppConstants.SPONSORED_CATEGORYID.equals(res.getData().get(i).getId())) {
                         shortStoriesTopicList.add(res.getData().get(i));
-                        shortStoriesTopicList1 = shortStoriesTopicList;
                     }
                 }
             } catch (FileNotFoundException e) {
                 Crashlytics.logException(e);
                 Log.d("FileNotFoundException", Log.getStackTraceString(e));
-
-
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
                 Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
                 caller.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
-                        Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
-
+                        AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
                         try {
                             FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                             String fileContent = AppUtils.convertStreamToString(fileInputStream);
@@ -467,7 +440,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             for (int i = 0; i < res.getData().size(); i++) {
                                 if (AppConstants.SPONSORED_CATEGORYID.equals(res.getData().get(i).getId())) {
                                     shortStoriesTopicList.add(res.getData().get(i));
-                                    shortStoriesTopicList1 = shortStoriesTopicList;
                                 }
                             }
 
@@ -485,15 +457,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 });
             }
 
-
-            mYouTubePlayerSupportFragment = YouTubePlayerSupportFragment.newInstance();
-            if (getUserVisibleHint()) {
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.replace(R.id.youtube_fragment, mYouTubePlayerSupportFragment).commit();
-                mYouTubePlayerSupportFragment.initialize(DeveloperKey.DEVELOPER_KEY, this);
-            }
             mLodingView = (RelativeLayout) fragmentView.findViewById(R.id.relativeLoadingView);
-
             mScrollView = (ObservableScrollView) fragmentView.findViewById(R.id.scroll_view);
             mScrollView.setScrollViewCallbacks(this);
             impressionList = new ArrayList<>();
@@ -510,26 +474,15 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     isSwipeNextAvailable = BaseApplication.isFirstSwipe();
                 }
 
-                if (bundle.getBoolean("fromNotification")) {
-                } else {
-                    from = bundle.getString(Constants.ARTICLE_OPENED_FROM);
-                    String index = bundle.getString(Constants.ARTICLE_INDEX);
-                    String screen = bundle.getString(Constants.FROM_SCREEN);
-                }
-
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
                 hitArticleDetailsRedisAPI();
-                //bindSponsored();
-
                 getViewCountAPI();
                 hitRecommendedStatusAPI();
             }
 
             scrollBounds = new Rect();
             mScrollView.getHitRect(scrollBounds);
-//            showNativeAd();
-//            showTopBannerAd();
         } catch (Exception e) {
             removeProgressDialog();
             Crashlytics.logException(e);
@@ -576,44 +529,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
         }, 5000);
 
-    }
-
-    private void bindSponsored() {
-        for (int i = 0; i < shortStoriesTopicList.get(0).getChild().size(); i++) {
-            if (parentId.equals(shortStoriesTopicList.get(0).getChild().get(i).getId())) {
-                if (shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryImage() != null &&
-                        !shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryImage().isEmpty()) {
-                    sponsoredViewContainer.setVisibility(View.VISIBLE);
-                    Picasso.with(getActivity()).load(shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryImage()).placeholder(R.drawable.default_article).into(sponsoredImage);
-                    sponsoredTextView.setText("this story is sponsored by ");
-                } else {
-                    sponsoredViewContainer.setVisibility(View.GONE);
-                }
-                if (shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryBadge() != null && !shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryBadge().isEmpty()) {
-                    badge.setVisibility(View.VISIBLE);
-                    Picasso.with(getActivity()).load(shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryBadge()).placeholder(R.drawable.default_article).into(badge);
-                } else {
-                    badge.setVisibility(View.GONE);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (!isVisibleToUser && youTubePlayer != null) {
-//            Log.v (TAG, "Releasing youtube player, URL : " + getArguments().getString(KeyConstant.KEY_VIDEO_URL));
-            youTubePlayer.release();
-            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            transaction.remove(mYouTubePlayerSupportFragment).commitAllowingStateLoss();
-        }
-        if (isVisibleToUser && mYouTubePlayerSupportFragment != null) {
-//            Log.v (TAG, "Initializing youtube player, URL : " + getArguments().getString(KeyConstant.KEY_VIDEO_URL));
-            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            transaction.replace(R.id.youtube_fragment, mYouTubePlayerSupportFragment).commitAllowingStateLoss();
-            mYouTubePlayerSupportFragment.initialize(DeveloperKey.DEVELOPER_KEY, this);
-        }
     }
 
     @Override
@@ -866,10 +781,16 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 if (null != videoList && !videoList.isEmpty()) {
                     for (VideoData video : videoList) {
                         if ("1".equals(isMomspresso)) {
-                            youtubeContainer.setVisibility(View.VISIBLE);
-                            youTubeId = AppUtils.extractYoutubeIdForMomspresso(video.getVideoUrl());
-                            if (youTubePlayer != null)
-                                youTubePlayer.cueVideo(youTubeId);
+                            youTubePlayerView.setVisibility(View.VISIBLE);
+                            String youTubeId = AppUtils.extractYoutubeIdForMomspresso(video.getVideoUrl());
+                            youTubePlayerView.getYouTubePlayerWhenReady(youTubePlayer -> {
+                                YouTubePlayerUtils.loadOrCueVideo(
+                                        youTubePlayer,
+                                        getLifecycle(),
+                                        youTubeId,
+                                        0
+                                );
+                            });
                             cover_image.setVisibility(View.INVISIBLE);
                             bodyDesc = bodyDesc.replace(video.getKey(), "");
                         } else if (bodyDescription.contains(video.getKey())) {
@@ -903,10 +824,16 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 if (null != videoList && !videoList.isEmpty()) {
                     for (VideoData video : videoList) {
                         if ("1".equals(isMomspresso)) {
-                            youtubeContainer.setVisibility(View.VISIBLE);
-                            youTubeId = AppUtils.extractYoutubeIdForMomspresso(video.getVideoUrl());
-                            if (youTubePlayer != null)
-                                youTubePlayer.cueVideo(youTubeId);
+                            youTubePlayerView.setVisibility(View.VISIBLE);
+                            String youTubeId = AppUtils.extractYoutubeIdForMomspresso(video.getVideoUrl());
+                            youTubePlayerView.getYouTubePlayerWhenReady(youTubePlayer -> {
+                                YouTubePlayerUtils.loadOrCueVideo(
+                                        youTubePlayer,
+                                        getLifecycle(),
+                                        youTubeId,
+                                        0
+                                );
+                            });
                             cover_image.setVisibility(View.INVISIBLE);
                             bodyDesc = bodyDesc.replace(video.getKey(), "");
                         } else if (bodyDescription.contains(video.getKey())) {
@@ -1021,7 +948,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
             if (!"1".equals(isMomspresso))
                 ((ArticleDetailsContainerActivity) getActivity()).showPlayArticleAudioButton();
-            return;
         } catch (Exception e) {
 
         }
@@ -1304,12 +1230,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         mScrollView.getHitRect(scrollBounds);
         int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
         if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http") && !AppConstants.PAGINATION_END_VALUE.equals(pagination)) {
-//            getMoreComments();
         }
 
         int permanentDiff = (tagsView.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
         if (permanentDiff <= 0) {
-            isArticleDetailEndReached = true;
             if (bottomToolbarLL.getVisibility() == View.VISIBLE) {
                 hideBottomToolbar();
             }
@@ -1331,7 +1255,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (isSwipeNextAvailable) {
                 swipeNextTextView.setVisibility(View.GONE);
             }
-            isArticleDetailEndReached = false;
         }
     }
 
@@ -1425,21 +1348,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     @Override
-    public void onCommentAddition(CommentsData cd) {
-
-    }
-
-    @Override
-    public void onCommentReplyEditSuccess(CommentsData cd) {
-
-    }
-
-    @Override
-    public void onReplyAddition(CommentsData cd) {
-
-    }
-
-    @Override
     public void onGroupMappingResult(int groupId, String gpHeading, String gpSubHeading, String gpImageUrl) {
         this.groupId = groupId;
         try {
@@ -1522,30 +1430,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     }
 
-    @Override
-    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-        if (!b) {
-            this.youTubePlayer = youTubePlayer;
-            youTubePlayer.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CONTROL_ORIENTATION);
-            if (null != youTubeId) {
-                youTubePlayer.cueVideo(youTubeId);
-            }
-        }
-    }
-
-    @Override
-    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-        if (youTubeInitializationResult.isUserRecoverableError()) {
-            youTubeInitializationResult.getErrorDialog(getActivity(), RECOVERY_REQUEST).show();
-        }
-    }
-
     private void followAPICall() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         FollowAPI followAPI = retrofit.create(FollowAPI.class);
         FollowUnfollowUserRequest request = new FollowUnfollowUserRequest();
         request.setFollowerId(authorId);
-
         if (isFollowing) {
             isFollowing = false;
             followClick.setText(getString(R.string.ad_follow_author));
@@ -1655,7 +1544,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
     }
 
-    Callback<ArticleDetailResult> articleDetailResponseCallbackRedis = new Callback<ArticleDetailResult>() {
+    private Callback<ArticleDetailResult> articleDetailResponseCallbackRedis = new Callback<ArticleDetailResult>() {
         @Override
         public void onResponse(Call<ArticleDetailResult> call, retrofit2.Response<ArticleDetailResult> response) {
             removeProgressDialog();
@@ -1665,12 +1554,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
             try {
                 removeProgressDialog();
-
-
                 responseData = response.body();
                 getResponseUpdateUi(responseData);
                 checkingForSponsored();
-
                 authorId = detailData.getUserId();
                 isArticleDetailLoaded = true;
                 hitBookmarkFollowingStatusAPI();
@@ -1682,11 +1568,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 commentMainUrl = responseData.getCommentsUri();
 
                 if (!StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
-//                    getMoreComments();
                 } else {
-                    commentType = "fb";
                     commentURL = "http";
-//                    getMoreComments();
                 }
             } catch (Exception e) {
                 removeProgressDialog();
@@ -1794,10 +1677,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     hitBookmarkFollowingStatusAPI();
                     hitRelatedArticleAPI();
                     commentURL = responseData.getData().getCommentsUri();
-
-                    if (!StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
-//                        getMoreComments();
-                    }
                 } else {
 
                 }
@@ -2673,19 +2552,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         void onRelatedSwipe(ArrayList<ArticleListingResult> articleList);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RECOVERY_REQUEST) {
-            // Retry initialization if user performed a recovery action
-            getYouTubePlayerProvider().initialize(DeveloperKey.DEVELOPER_KEY, this);
-        }
-    }
-
-    private YouTubePlayer.Provider getYouTubePlayerProvider() {
-        return youTubePlayerView;
-    }
-
     private void tooltipForShare() {
         simpleTooltip = new SimpleTooltip.Builder(getContext())
                 .anchorView(whatsappShareTextView)
@@ -2708,8 +2574,5 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     simpleTooltip.dismiss();
             }
         }, 3000);
-
     }
-
-
 }

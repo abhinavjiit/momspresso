@@ -1,17 +1,31 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by anshul on 8/7/16.
  */
-public class ContributorListResult  {
-    String firstName;
-    String lastName;
-    String userType;
-    String userBio;
-    String id;
-    Long followersCount;
-    int isFollowed;
-    String colorCode;
+public class ContributorListResult {
+    @SerializedName("firstName")
+    private String firstName;
+    @SerializedName("lastName")
+    private String lastName;
+    @SerializedName("userType")
+    private String userType;
+    @SerializedName("userBio")
+    private String userBio;
+    @SerializedName("id")
+    private String id;
+    @SerializedName("followersCount")
+    private Long followersCount;
+    @SerializedName("isFollowed")
+    private int isFollowed;
+    @SerializedName("colorCode")
+    private String colorCode;
+    @SerializedName("rank")
+    private String rank;
+    @SerializedName("profilePicUrl")
+    private ProfilePic profilePicUrl;
 
     public String getRank() {
         return rank;
@@ -21,8 +35,6 @@ public class ContributorListResult  {
         this.rank = rank;
     }
 
-    String rank;
-
     public ProfilePic getProfilePic() {
         return profilePicUrl;
     }
@@ -31,7 +43,6 @@ public class ContributorListResult  {
         this.profilePicUrl = profilePic;
     }
 
-    ProfilePic profilePicUrl;
     public String getColorCode() {
         return colorCode;
     }
@@ -95,6 +106,4 @@ public class ContributorListResult  {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-
-
 }
