@@ -344,11 +344,6 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
     }
 
     @Override
-    protected void updateUi(com.kelltontech.network.Response response) {
-
-    }
-
-    @Override
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
             case R.id.commentRootView: {

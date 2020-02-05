@@ -43,7 +43,6 @@ import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.snackbar.Snackbar
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.DateTimeUtils
 import com.kelltontech.utils.StringUtils
@@ -125,9 +124,6 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
     }
 
     override fun onItemClick(language: String?) {
-    }
-
-    override fun updateUi(response: Response?) {
     }
 
     private lateinit var containerView: View

@@ -16,7 +16,6 @@ import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.ConnectivityUtils
 import com.kelltontech.utils.ToastUtils
@@ -238,9 +237,6 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
             clearUserDataPostLogout()
         }
-    }
-
-    override fun updateUi(response: Response?) {
     }
 
     private fun clearUserDataPostLogout() {

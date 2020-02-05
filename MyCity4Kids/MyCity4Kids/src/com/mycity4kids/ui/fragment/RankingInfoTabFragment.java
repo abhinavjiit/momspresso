@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -284,11 +283,6 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
 //            rank1FollowersCount.setText(responseModel.getData().getResult().get(0).getFollowersCount() + getString(R.string.ranking_followers_label));
 //            rank2FollowersCount.setText(responseModel.getData().getResult().get(1).getFollowersCount() + getString(R.string.ranking_followers_label));
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

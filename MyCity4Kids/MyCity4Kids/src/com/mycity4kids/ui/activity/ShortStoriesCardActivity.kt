@@ -23,11 +23,9 @@ import androidx.viewpager.widget.ViewPager
 import com.crashlytics.android.Crashlytics
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.StringUtils
 import com.kelltontech.utils.ToastUtils
-import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
@@ -680,10 +678,6 @@ class ShortStoriesCardActivity : BaseActivity() {
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
         return 0
-    }
-
-    override fun updateUi(response: Response?) {
-
     }
 
     fun setBackground(url: String, fontColor: String, imageId: Int) {

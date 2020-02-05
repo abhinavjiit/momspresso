@@ -17,7 +17,6 @@ import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
 import com.crashlytics.android.Crashlytics
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.BuildConfig
@@ -293,10 +292,6 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
             val yes = getString(R.string.lang_sel_yes)
             val no = getString(R.string.cancel)
         }
-    }
-
-    override fun updateUi(response: Response?) {
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

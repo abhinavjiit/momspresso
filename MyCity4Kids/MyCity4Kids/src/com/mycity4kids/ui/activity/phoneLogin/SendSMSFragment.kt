@@ -17,7 +17,6 @@ import com.google.android.gms.auth.api.credentials.Credential
 import com.google.android.gms.auth.api.credentials.Credentials
 import com.google.android.gms.auth.api.credentials.HintRequest
 import com.google.android.gms.auth.api.phone.SmsRetriever
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -135,10 +134,6 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
         bundle.putString("phoneNumber", phoneEditText?.text?.toString())
         verifySMSFragment.arguments = bundle
         (activity as ActivityLogin).addFragment(verifySMSFragment, bundle, true, null)
-    }
-
-    override fun updateUi(response: Response?) {
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

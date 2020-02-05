@@ -31,7 +31,6 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.ConnectivityUtils
 import com.kelltontech.utils.StringUtils
@@ -1379,10 +1378,6 @@ class UserProfileActivity : BaseActivity(),
         userBioDialogFragment.arguments = _args
         userBioDialogFragment.isCancelable = true
         userBioDialogFragment.show(fm, "Choose video option")
-    }
-
-    override fun updateUi(response: Response?) {
-
     }
 
     private fun getSharableViewForPosition(position: Int, medium: String) {

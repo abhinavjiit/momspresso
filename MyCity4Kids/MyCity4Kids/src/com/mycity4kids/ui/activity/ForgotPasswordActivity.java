@@ -11,7 +11,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.JsonSyntaxException;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -130,11 +129,6 @@ public class ForgotPasswordActivity extends BaseActivity {
             showToast(getString(R.string.went_wrong));
         }
     };
-
-    @Override
-    protected void updateUi(Response response) {
-
-    }
 
     private boolean isDataValid() {
         boolean isForgotOk = true;

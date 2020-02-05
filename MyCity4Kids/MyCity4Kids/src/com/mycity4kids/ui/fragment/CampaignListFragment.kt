@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.StringUtils
 import com.mycity4kids.R
@@ -93,9 +92,6 @@ class CampaignListFragment : BaseFragment() {
     private lateinit var dashboardLayout: ConstraintLayout
     private lateinit var campaignNos: TextView
     private lateinit var referText: TextView
-
-    override fun updateUi(response: Response?) {
-    }
 
     companion object {
         @JvmStatic

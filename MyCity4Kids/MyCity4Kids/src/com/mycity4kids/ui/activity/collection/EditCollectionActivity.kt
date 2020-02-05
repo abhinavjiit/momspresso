@@ -15,7 +15,6 @@ import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.StringUtils
 import com.kelltontech.utils.ToastUtils
@@ -70,9 +69,6 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
     private lateinit var itemNotAddedTextView: TextView
     private var deletedItemPosition: Int = -1
     private lateinit var back: TextView
-
-    override fun updateUi(response: Response?) {
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

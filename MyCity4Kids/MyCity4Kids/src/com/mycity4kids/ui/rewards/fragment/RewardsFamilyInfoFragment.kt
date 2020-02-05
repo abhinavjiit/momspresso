@@ -13,7 +13,6 @@ import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.fragment.app.Fragment
 import com.google.gson.Gson
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.DateTimeUtils
 import com.mycity4kids.R
@@ -107,9 +106,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                 floatingLanguage.addView(subsubLL)
             }
         }
-    }
-
-    override fun updateUi(response: Response?) {
     }
 
     private lateinit var containerView: View

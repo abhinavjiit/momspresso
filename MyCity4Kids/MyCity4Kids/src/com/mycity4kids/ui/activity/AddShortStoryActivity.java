@@ -28,7 +28,6 @@ import androidx.recyclerview.widget.SnapHelper;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -541,11 +540,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             et.setFilters(new InputFilter[0]);
             filter = null;
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

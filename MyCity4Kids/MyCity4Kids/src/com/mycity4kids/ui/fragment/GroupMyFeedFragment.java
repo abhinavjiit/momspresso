@@ -25,7 +25,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.internal.LinkedTreeMap;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.BuildConfig;
@@ -418,12 +417,6 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
 
             }
         }
-    }
-
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

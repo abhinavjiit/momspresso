@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.models.Topics;
@@ -151,11 +150,6 @@ public class AddArticleTopicsTabFragment extends BaseFragment implements AddArti
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
-
-    }
-
-    @Override
-    protected void updateUi(Response response) {
 
     }
 

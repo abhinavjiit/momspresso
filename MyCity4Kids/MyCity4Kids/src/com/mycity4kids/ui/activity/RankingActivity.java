@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -62,11 +61,6 @@ public class RankingActivity extends BaseActivity implements FragmentManager.OnB
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

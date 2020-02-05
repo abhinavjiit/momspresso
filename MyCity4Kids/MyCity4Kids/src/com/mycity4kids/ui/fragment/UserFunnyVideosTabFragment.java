@@ -29,7 +29,6 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -195,11 +194,6 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
             }
         });
         return view;
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     private void hitArticleListingApi() {

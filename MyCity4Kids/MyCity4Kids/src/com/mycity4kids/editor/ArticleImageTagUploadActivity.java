@@ -31,7 +31,6 @@ import androidx.core.app.ActivityCompat;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -248,11 +247,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             pageNumber = pageNumber + 1;
             adapter.notifyDataSetChanged();
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

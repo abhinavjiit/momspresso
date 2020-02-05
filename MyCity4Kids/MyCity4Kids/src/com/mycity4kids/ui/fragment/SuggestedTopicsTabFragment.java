@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.editor.EditorPostActivity;
@@ -53,11 +52,6 @@ public class SuggestedTopicsTabFragment extends BaseFragment implements Suggeste
         recyclerView.setAdapter(adapter);
 
         return view;
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

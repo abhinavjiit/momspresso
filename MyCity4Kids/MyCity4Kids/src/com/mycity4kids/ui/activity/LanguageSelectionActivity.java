@@ -9,7 +9,6 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -65,13 +64,6 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
         languageSelectionRecyclerAdapter.setNewListData(langList);
 
         languageRecyclerView.setAdapter(languageSelectionRecyclerAdapter);
-
-
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

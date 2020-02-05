@@ -43,7 +43,6 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
@@ -399,11 +398,6 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

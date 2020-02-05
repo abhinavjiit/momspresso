@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -98,11 +97,6 @@ public class UserDraftsContentActivity extends BaseActivity implements View.OnCl
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

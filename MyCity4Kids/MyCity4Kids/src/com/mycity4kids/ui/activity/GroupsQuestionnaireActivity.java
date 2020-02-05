@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -335,11 +334,6 @@ public class GroupsQuestionnaireActivity extends BaseActivity implements View.On
         }
         Log.d("validate", "Filled");
         return false;
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

@@ -25,7 +25,6 @@ import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
@@ -54,7 +53,6 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import okhttp3.ResponseBody
 import org.json.JSONObject
-import retrofit2.adapter.rxjava2.HttpException
 import java.io.InputStreamReader
 
 class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, CollectionItemsListAdapter.RecyclerViewClick {
@@ -83,10 +81,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
     private lateinit var collectionDescription: TextView
     private lateinit var toolbar: Toolbar
     private var editType = ""
-
-
-    override fun updateUi(response: Response?) {
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

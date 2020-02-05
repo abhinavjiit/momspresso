@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
@@ -336,11 +335,6 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
 //        });
 //
 //        viewPager.setCurrentItem(tabPos);
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

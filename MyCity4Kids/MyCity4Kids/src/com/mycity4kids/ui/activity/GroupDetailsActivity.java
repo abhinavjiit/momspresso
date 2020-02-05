@@ -32,7 +32,6 @@ import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.tabs.TabLayout;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -1371,13 +1370,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         if (groupsGenericPostRecyclerAdapter != null) {
             groupsGenericPostRecyclerAdapter.releasePlayer();
         }
-
-
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     private void setUpTabLayout(String[] sections) {

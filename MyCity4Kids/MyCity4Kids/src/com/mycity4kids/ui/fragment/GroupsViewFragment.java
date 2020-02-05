@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.google.android.material.tabs.TabLayout;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.ui.activity.GroupsListingActivity;
@@ -21,12 +20,6 @@ public class GroupsViewFragment extends BaseFragment {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private com.getbase.floatingactionbutton.FloatingActionButton createFabButton;
-
-
-    @Override
-    protected void updateUi(Response response) {
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -47,7 +47,6 @@ import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
@@ -528,11 +527,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
             }
         }, 5000);
-
-    }
-
-    @Override
-    protected void updateUi(Response response) {
 
     }
 

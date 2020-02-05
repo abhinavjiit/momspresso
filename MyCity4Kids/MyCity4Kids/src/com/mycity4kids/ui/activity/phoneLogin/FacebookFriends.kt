@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.CallbackManager
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.mycity4kids.R
 import com.mycity4kids.facebook.FacebookUtils
@@ -38,10 +37,6 @@ class FacebookFriends : BaseActivity(), FBFriendsAdapter.RecyclerViewClickListen
         llm.orientation = RecyclerView.VERTICAL
         recyclerView?.layoutManager = llm
         recyclerView?.adapter = adapter
-
-    }
-
-    override fun updateUi(response: Response?) {
 
     }
 

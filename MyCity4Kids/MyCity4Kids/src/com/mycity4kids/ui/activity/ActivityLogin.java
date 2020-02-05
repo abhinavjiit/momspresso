@@ -31,7 +31,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -299,10 +298,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onStart() {
         super.onStart();
-    }
-
-    @Override
-    protected void updateUi(Response response) {
     }
 
     @Override

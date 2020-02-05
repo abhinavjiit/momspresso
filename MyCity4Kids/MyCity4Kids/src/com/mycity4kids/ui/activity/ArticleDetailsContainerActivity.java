@@ -20,7 +20,6 @@ import androidx.core.content.ContextCompat;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -252,11 +251,6 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                 return super.onOptionsItemSelected(item);
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

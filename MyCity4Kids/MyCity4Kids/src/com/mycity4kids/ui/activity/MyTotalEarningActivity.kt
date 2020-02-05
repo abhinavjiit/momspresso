@@ -12,7 +12,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.StringUtils
 import com.mycity4kids.R
@@ -143,10 +142,5 @@ class MyTotalEarningActivity : BaseActivity() {
             Crashlytics.logException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
         }
-    }
-
-
-    override fun updateUi(response: Response?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.ConnectivityUtils
 import com.mycity4kids.R
@@ -90,11 +89,6 @@ class AddMultipleUserReadArticleInCollectionFragment : BaseFragment(), AddMultip
     private var pastVisiblesItems: Int = 0
     private var visibleItemCount: Int = 0
     private var totalItemCount: Int = 0
-
-
-    override fun updateUi(response: Response?) {
-
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.add_mutilple_read_articles_fragment, container, false)

@@ -36,7 +36,6 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
@@ -208,12 +207,6 @@ public class ExoplayerVideoChallengePlayViewActivity extends BaseActivity {
         mFullScreenDialog.dismiss();
         mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_fullscreen_expand));*/
     }
-
-    @Override
-    protected void updateUi(Response response) {
-
-    }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.kelltontech.network.Response;
+
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -59,11 +59,6 @@ public class ShortStoryChallengeListingTabFragment extends BaseFragment implemen
 
 
         return view;
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -208,11 +207,6 @@ public class LeafNodeTopicArticlesActivity extends BaseActivity {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

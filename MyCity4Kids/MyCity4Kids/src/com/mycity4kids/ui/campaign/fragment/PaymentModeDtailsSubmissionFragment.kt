@@ -11,7 +11,6 @@ import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
@@ -61,11 +60,6 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
     private var source: String? = null
     private var ID: Int = -1
     private var isComingFromRewards: Boolean = false
-
-
-    override fun updateUi(response: Response?) {
-
-    }
 
     companion object {
         @JvmStatic

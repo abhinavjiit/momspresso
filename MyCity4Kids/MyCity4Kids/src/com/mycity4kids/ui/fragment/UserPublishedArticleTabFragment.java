@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -176,11 +175,6 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
         int from = 15 * nextPageNumber + 1;
         final Call<ArticleListingResponse> call = userpublishedArticlesAPI.getAuthorsPublishedArticles(authorId, 0, from, from + 14);
         call.enqueue(userPublishedArticleResponseListener);
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     private Callback<ArticleListingResponse> userPublishedArticleResponseListener = new Callback<ArticleListingResponse>() {

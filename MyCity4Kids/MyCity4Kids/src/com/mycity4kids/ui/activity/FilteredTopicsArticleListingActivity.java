@@ -31,7 +31,6 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -511,11 +510,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         filterTopicsDialogFragment.setArguments(args);
         FragmentManager fm = getSupportFragmentManager();
         filterTopicsDialogFragment.show(fm, "Filter");
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

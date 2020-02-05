@@ -19,7 +19,6 @@ import com.google.android.gms.common.Scopes
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Scope
 import com.google.gson.Gson
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.ConnectivityUtils
@@ -79,11 +78,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
             (activity as RewardsContainerActivity).showToast(getString(R.string.toast_response_error))
         }
     }
-
-    override fun updateUi(response: Response?) {
-
-    }
-
+    
     private lateinit var containerView: View
     private lateinit var submitListener: SubmitListener
     private lateinit var layoutInstagram: LinearLayout

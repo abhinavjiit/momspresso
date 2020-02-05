@@ -21,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
@@ -121,11 +120,6 @@ public class GroupsSearchActivity extends BaseActivity implements View.OnClickLi
                 }
             }
         });
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

@@ -24,7 +24,6 @@ import androidx.core.app.ActivityCompat;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -100,11 +99,6 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
 
         saveTextView.setOnClickListener(this);
         editImageView.setOnClickListener(this);
-
-    }
-
-    @Override
-    protected void updateUi(Response response) {
 
     }
 

@@ -25,7 +25,6 @@ import androidx.fragment.app.FragmentManager;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.DateTimeUtils;
@@ -258,11 +257,6 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-    }
-
-    @Override
-    protected void updateUi(Response response) {
 
     }
 

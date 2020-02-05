@@ -9,7 +9,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.facebook.CallbackManager
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -62,13 +61,9 @@ class RewardsContainerActivity : BaseActivity(),
         }
     }
 
-    override fun updateUi(response: Response?) {
-    }
-
     override fun socialOnSubmitListener() {
         pageLimit!! + 1
         addPaymentModesFragment()
-//        this@RewardsContainerActivity.finish()
     }
 
     override fun profileOnSaveAndContinue() {

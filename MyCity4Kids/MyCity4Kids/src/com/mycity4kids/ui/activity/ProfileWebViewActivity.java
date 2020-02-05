@@ -6,7 +6,6 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
@@ -74,10 +73,6 @@ public class ProfileWebViewActivity extends BaseActivity {
         }
     }
 
-    @Override
-    protected void updateUi(Response response) {
-
-    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

@@ -13,7 +13,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -313,8 +312,4 @@ public class UsersBookmarkListActivity extends BaseActivity implements UsersBook
         }
     }
 
-    @Override
-    protected void updateUi(Response response) {
-
-    }
 }

@@ -25,7 +25,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.internal.LinkedTreeMap;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
@@ -368,11 +367,6 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                 }
             }
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

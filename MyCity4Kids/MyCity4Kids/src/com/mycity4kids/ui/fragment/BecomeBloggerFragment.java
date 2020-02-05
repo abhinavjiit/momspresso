@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -70,11 +69,6 @@ public class BecomeBloggerFragment extends BaseFragment {
             }
         });
         return view;
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     private class BecomeBloggerPagerAdapter extends FragmentStatePagerAdapter {

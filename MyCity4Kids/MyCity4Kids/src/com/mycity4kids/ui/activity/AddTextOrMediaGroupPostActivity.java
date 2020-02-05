@@ -62,7 +62,6 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -280,11 +279,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                 .transparentOverlay(true)
                 .build()
                 .show();
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

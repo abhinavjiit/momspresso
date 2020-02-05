@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
@@ -129,9 +128,6 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var upperTextHeader: TextView
     private lateinit var lowerTextHeader: TextView
     private var comingFrom: String? = null
-
-    override fun updateUi(response: Response?) {
-    }
 
     companion object {
         @JvmStatic

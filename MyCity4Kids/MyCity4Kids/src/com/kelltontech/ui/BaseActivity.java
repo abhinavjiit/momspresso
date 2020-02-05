@@ -31,9 +31,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.comscore.analytics.comScore;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.material.snackbar.Snackbar;
-import com.kelltontech.network.Response;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.BuildConfig;
@@ -70,29 +68,20 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import io.socket.client.Socket;
-
 /*import com.mycity4kids.utils.AnalyticsHelper;*/
 
 /**
  * This class is used as base-class for application-base-activity.
  */
-public abstract class BaseActivity extends AppCompatActivity implements IScreen, GroupMembershipStatus.IMembershipStatus {
+public abstract class BaseActivity extends AppCompatActivity implements GroupMembershipStatus.IMembershipStatus {
 
-    public static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 5469;
-    //    private int activitiesCount = 0;
     public static boolean isAppInFg = false;
     public static boolean isScrInFg = false;
     public static boolean isChangeScrFg = false;
     BaseApplication baseApplication;
-    Tracker mTracker;
-    private Socket mSocket;
     private Dialog dialog;
     private String userId, title = "", body = "", type = "", id = "", titleSlug = "", blogSlug = "", groupId = "", postId = "", responseId = "", campaignId = "", image_url = "", url = "";
-    private int width, height;
+    private int height;
     private DisplayMetrics displayMetrics;
     private Snackbar snackbar;
 
@@ -101,9 +90,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         displayMetrics = getResources().getDisplayMetrics();
-        width = displayMetrics.widthPixels;
         baseApplication = (BaseApplication) getApplication();
-        //  mTracker=baseApplication.getTracker(BaseApplication.TrackerName.APP_TRACKER);
         String userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
         try {
             if (BaseApplication.getMSocket() != null && !TextUtils.isEmpty(userId)) {
@@ -111,10 +98,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 obj.put("pagename", this.getClass().getName());
                 obj.put("user_id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
                 BaseApplication.getMSocket().emit("pageview", obj);
-//                pageclose, popupopen, popupclose
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -170,7 +154,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 } catch (Exception e) {
 
                 }
-
             }
         });
     }
@@ -227,7 +210,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
 
     private void setPubSub() {
         if (type.equalsIgnoreCase("article_details")) {
-
             Intent intent1 = new Intent(this, ArticleDetailsContainerActivity.class);
             intent1.putExtra("fromNotification", true);
             intent1.putExtra(Constants.ARTICLE_ID, id);
@@ -242,7 +224,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "article_details");
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -254,7 +235,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "momsights_screen");
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -267,7 +247,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "campaign_listing");
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -282,7 +261,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "campaign_detail");
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -296,11 +274,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "campaign_submit_proof");
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         } else if (type.equalsIgnoreCase("mymoney_bankdetails")) {
             Intent campaignIntent = new Intent(this, RewardsContainerActivity.class);
             campaignIntent.putExtra("isComingfromCampaign", true);
@@ -314,11 +290,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "campaign_submit_proof");
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         } else if (type.equalsIgnoreCase("mymoney_pancard")) {
             Intent campaignIntent = new Intent(this, RewardsContainerActivity.class);
             campaignIntent.putExtra("isComingFromRewards", true);
@@ -332,11 +306,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "campaign_submit_proof");
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         } else if (type.equalsIgnoreCase("shortStoryDetails")) {
             Intent ssIntent = new Intent(this, ShortStoryContainerActivity.class);
             ssIntent.putExtra(Constants.AUTHOR_ID, userId);
@@ -353,13 +325,10 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "shortStoryDetails");
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else if (type.equalsIgnoreCase("video_details")) {
-//            String articleId = notificationExtras.getString("id");
-//            String authorId = notificationExtras.getString("userId");
             Intent intent1 = new Intent(this, ParallelFeedActivity.class);
             intent1.putExtra("fromNotification", true);
             intent1.putExtra(Constants.VIDEO_ID, id);
@@ -372,7 +341,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "video_details");
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -387,7 +355,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "" + type);
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -402,7 +369,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "group_new_response");
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -417,7 +383,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "group_new_reply");
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -430,7 +395,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "group_admin_membership");
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -443,12 +407,10 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "group_admin_reported");
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }  else if (type.equalsIgnoreCase("webView")) {
-//            String url = notificationExtras.getString("url");
+        } else if (type.equalsIgnoreCase("webView")) {
             Intent intent1 = new Intent(this, LoadWebViewActivity.class);
             intent1.putExtra("fromNotification", true);
             intent1.putExtra(Constants.WEB_VIEW_URL, url);
@@ -458,59 +420,49 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "webView");
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else if (type.equalsIgnoreCase("write_blog")) {
-//            launchEditor();
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "write_blog");
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else if (type.equalsIgnoreCase("profile")) {
-//            String u_id = notificationExtras.getString("userId");
             if (!SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(userId)) {
                 Intent intent1 = new Intent(this, UserProfileActivity.class);
                 intent1.putExtra("fromNotification", true);
                 intent1.putExtra(Constants.USER_ID, userId);
                 startActivity(intent1);
             } else {
-//                fragmentToLoad = Constants.PROFILE_FRAGMENT;
             }
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "profile");
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else if (type.equalsIgnoreCase("upcoming_event_list")) {
-//            fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "upcoming_event_list");
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else if (type.equalsIgnoreCase("suggested_topics")) {
-//            fragmentToLoad = Constants.SUGGESTED_TOPICS_FRAGMENT;
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "suggested_topics");
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -524,35 +476,29 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", AppConstants.APP_SETTINGS_DEEPLINK);
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else if (type.equalsIgnoreCase("shortStoryListing")) {
-//            fragmentToLoad = Constants.SHORT_STOY_FRAGMENT;
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "shortStoryListing");
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else if (type.equalsIgnoreCase("group_listing")) {
-//            fragmentToLoad = Constants.GROUP_LISTING_FRAGMENT;
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("type", "group_listing");
                 dialog.dismiss();
-//                mMixpanel.track("PushNotification", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-
 
     @Override
     public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {
@@ -611,7 +557,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
     public void onMembershipStatusFetchFail() {
 
     }
-
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -756,14 +701,11 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
         isScrInFg = true;
         registerEventBus();
         super.onStart();
-        /*AnalyticsHelper.onActivityStart(this);
-        AnalyticsHelper.setLogEnabled(Constants.IS_GOOGLE_ANALYTICS_ENABLED);*/
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        //  AnalyticsHelper.onActivityStop(this);
         if (!isScrInFg || !isChangeScrFg) {
             isAppInFg = false;
             onAppPause();
@@ -774,11 +716,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
 
     public void onAppStart() {
         if (ConnectivityUtils.isNetworkEnabled(this)) {
-//            if (SharedPrefUtils.getUserDetailModel(this).getId() > 0) {
-//                startSyncing();
-//                startSyncingUserInfo();
-//            }
-
+            showToast(getString(R.string.connectivity_unavailable));
         }
     }
 
@@ -811,29 +749,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Log.i(getClass().getSimpleName(), "onNewIntent()");
-    }
-
-
-    /**
-     * this method should be called only from UI thread.
-     *
-     * @param response
-     */
-    @Override
-    public final void handleUiUpdate(final Response response) {
-        if (isFinishing()) {
-            return;
-        }
-        if (BuildConfig.DEBUG) {
-            updateUi(response);
-        } else {
-            try {
-                updateUi(response);
-            } catch (Exception e) {
-                Log.i(getClass().getSimpleName(), "updateUi()", e);
-            }
-        }
-
     }
 
     public void showAlertDialog(String title, String message, final OnButtonClicked onButtonClicked) {
@@ -901,15 +816,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 .show();
     }
 
-    /**
-     * Subclass should over-ride this method to update the UI with response
-     *
-     * @param response
-     */
-    protected abstract void updateUi(Response response);
-
-    // ////////////////////////////// show and hide ProgressDialog
-
+    // show and hide ProgressDialog
     private ProgressDialog mProgressDialog;
 
     /**
@@ -941,9 +848,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
         }
     }
 
-    /**
-     *
-     */
     public void removeProgressDialog() {
         try {
             if (mProgressDialog != null && mProgressDialog.isShowing()) {
@@ -951,35 +855,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-
-    }
-
-    // ////////////////////////////// show and hide key-board
-
-    /**
-     *
-     */
-    protected void showVirturalKeyboard() {
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                InputMethodManager m = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (m != null) {
-                    m.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
-                }
-            }
-        }, 100);
-    }
-
-    /**
-     *
-     */
-    protected void hideVirturalKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
-            imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
         }
     }
 
@@ -1021,9 +896,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
     }
 
     public void showSnackbar(View view, String message) {
-        Snackbar
-                .make(view, message, Snackbar.LENGTH_LONG)
-//                .setAction(R.string.snackbar_action, myOnClickListener)
-                .show(); // Don’t forget to show!
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 }

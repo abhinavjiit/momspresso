@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
@@ -96,11 +95,6 @@ public class UserReadArticlesContentActivity extends BaseActivity implements Vie
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

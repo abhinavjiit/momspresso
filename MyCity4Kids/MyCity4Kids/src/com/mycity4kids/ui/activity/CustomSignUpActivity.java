@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.annotations.SerializedName;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -44,11 +43,6 @@ public class CustomSignUpActivity extends BaseActivity implements View.OnClickLi
         continueTextView = findViewById(R.id.continueTextView);
 
         continueTextView.setOnClickListener(this);
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

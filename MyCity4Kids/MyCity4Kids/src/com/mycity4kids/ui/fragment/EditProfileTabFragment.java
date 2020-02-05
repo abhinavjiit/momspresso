@@ -30,7 +30,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
@@ -438,10 +437,6 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
 //            gotToProfile();
         }
     };
-
-    @Override
-    protected void updateUi(Response response) {
-    }
 
     public void showDatePickerDialog() {
         DialogFragment newFragment = new DatePickerFragment();

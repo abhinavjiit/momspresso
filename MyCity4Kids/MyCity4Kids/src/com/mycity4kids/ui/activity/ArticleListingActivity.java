@@ -21,7 +21,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.android.volley.Request;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.DateTimeUtils;
@@ -146,11 +145,6 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
                 }
             }
         });
-
-    }
-
-    @Override
-    protected void updateUi(Response response) {
 
     }
 

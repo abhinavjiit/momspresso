@@ -4,9 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.mycity4kids.models.basemodel.BaseDataModel;
 
-public class KidsInfo extends BaseDataModel implements Parcelable {
+public class KidsInfo implements Parcelable {
 
     @SerializedName("name")
     private String name;

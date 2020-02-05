@@ -9,11 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
-import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.preference.SharedPrefUtils;
 
 /**
  * Created by hemant on 2/8/17.
@@ -30,11 +27,6 @@ public class UploadVideoInfoFragment extends BaseFragment implements View.OnClic
 
         getStartedTextView.setOnClickListener(this);
         return view;
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

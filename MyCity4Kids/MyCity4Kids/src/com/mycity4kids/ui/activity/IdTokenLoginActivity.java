@@ -13,7 +13,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
@@ -202,10 +201,6 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
             clearUserDataPostLogout();
         }
     };
-
-    @Override
-    protected void updateUi(Response response) {
-    }
 
     private void clearUserDataPostLogout() {
         String pushToken = SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext());

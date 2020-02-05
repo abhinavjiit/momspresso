@@ -10,7 +10,6 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -93,12 +92,4 @@ public class UserActivitiesActivity extends BaseActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
-    @Override
-    protected void updateUi(Response response) {
-
-    }
-
-
 }

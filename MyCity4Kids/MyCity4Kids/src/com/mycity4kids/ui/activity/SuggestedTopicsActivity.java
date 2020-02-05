@@ -13,7 +13,6 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.mycity4kids.R;
@@ -248,11 +247,6 @@ public class SuggestedTopicsActivity extends BaseActivity {
             Crashlytics.logException(ffe);
             Log.d("MC4kException", Log.getStackTraceString(ffe));
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

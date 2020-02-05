@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
@@ -82,10 +81,5 @@ public class ImproveRankPageViewsSocialFragment extends BaseFragment {
         }
 
         return rootView;
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 }

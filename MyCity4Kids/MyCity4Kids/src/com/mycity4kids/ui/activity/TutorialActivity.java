@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -50,11 +49,6 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
         mViewPager.setAdapter(mViewPagerAdapter);
 
         dotIndicatorView.setViewPager(mViewPager);
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

@@ -11,7 +11,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.CallbackManager
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -81,7 +80,6 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener, 
 
     data class FBObject(var id: String, var name: String, var followStatus: String)
 
-    override fun updateUi(response: Response) {}
     override fun onClick(v: View) {
         FacebookUtils.facebookLogin(activity, this)
     }

@@ -22,7 +22,6 @@ import androidx.fragment.app.FragmentManager;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.BuildConfig;
@@ -62,11 +61,6 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
     private String userId;
     private TextView shareTextView;
     private View mLayout;
-
-    @Override
-    protected void updateUi(Response response) {
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

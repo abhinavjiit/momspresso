@@ -31,7 +31,6 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -338,10 +337,6 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
-
-    @Override
-    protected void updateUi(Response response) {
-    }
 
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =

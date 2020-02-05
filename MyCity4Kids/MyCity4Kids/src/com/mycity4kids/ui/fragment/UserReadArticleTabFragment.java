@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -169,11 +168,6 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
         BloggerDashboardAPI userpublishedArticlesAPI = retro.create(BloggerDashboardAPI.class);
         final Call<ArticleListingResponse> call = userpublishedArticlesAPI.getAuthorsReadArticles(authorId, 10, chunk, "articles");
         call.enqueue(userPublishedArticleResponseListener);
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     private Callback<ArticleListingResponse> userPublishedArticleResponseListener = new Callback<ArticleListingResponse>() {

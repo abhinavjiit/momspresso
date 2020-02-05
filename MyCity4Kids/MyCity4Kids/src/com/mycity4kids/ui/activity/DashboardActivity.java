@@ -61,7 +61,6 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -1632,16 +1631,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         bundle5.putString("from", "dashboard");
         intent1.putExtras(bundle5);
         startActivity(intent1);
-    }
-
-    protected void updateUi(Response response) {
-
-        switch (response.getDataType()) {
-            case AppConstants.DEEP_LINK_RESOLVER_REQUEST:
-                break;
-
-        }
-
     }
 
     @Override

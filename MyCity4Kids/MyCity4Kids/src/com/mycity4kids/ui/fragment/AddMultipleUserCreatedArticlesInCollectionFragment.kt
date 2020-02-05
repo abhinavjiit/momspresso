@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -28,10 +27,6 @@ import retrofit2.Call
 import retrofit2.Callback
 
 class AddMultipleUserCreatedArticlesInCollectionFragment : BaseFragment(), AddMultipleCollectionAdapter.RecyclerViewClick {
-
-    override fun updateUi(response: Response?) {
-
-    }
 
     override fun onclick(position: Int) {
         userContentList?.get(position)?.isCollectionItemSelected = !userContentList?.get(position)?.isCollectionItemSelected!!

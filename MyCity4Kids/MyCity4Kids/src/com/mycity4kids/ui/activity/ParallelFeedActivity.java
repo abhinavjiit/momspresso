@@ -32,7 +32,6 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -578,10 +577,6 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
         if (mFullScreenDialog != null)
             closeFullscreenDialog();
-    }
-
-    @Override
-    protected void updateUi(Response response) {
     }
 
     @Override

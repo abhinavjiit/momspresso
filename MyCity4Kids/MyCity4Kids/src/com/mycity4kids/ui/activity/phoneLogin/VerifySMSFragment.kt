@@ -17,7 +17,6 @@ import com.crashlytics.android.Crashlytics
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -29,7 +28,6 @@ import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
-import java.util.regex.Pattern
 
 class VerifySMSFragment : BaseFragment(), View.OnClickListener {
 
@@ -374,10 +372,6 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                 countdownTimerTextView?.text = getString(R.string.login_remaining_time, millisUntilFinished / 1000)
             }
         }
-    }
-
-    override fun updateUi(response: Response?) {
-
     }
 
     fun parseAndFillOTP(message: String?) {

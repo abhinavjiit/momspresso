@@ -13,7 +13,6 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
@@ -45,13 +44,8 @@ class UserFollowedCollectionsFragment : BaseFragment() {
     private var isReuqestRunning = false
     private var bottomLoadingView: RelativeLayout? = null
     private var dataList = ArrayList<UserCollectionsModel>()
-    override fun updateUi(response: Response?) {
-
-    }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
         val view = inflater.inflate(R.layout.user_followed_collections_fragment, container, false)
         bottomLoadingView = view.findViewById(R.id.bottomLoadingView)
         collectionGridView = view.findViewById(R.id.collectionGridView)

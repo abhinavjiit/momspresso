@@ -35,7 +35,6 @@ import androidx.core.app.ActivityCompat;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -208,12 +207,6 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
                 mediaContainer.removeView((View) removeIV.getParent());
             }
         });
-    }
-
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

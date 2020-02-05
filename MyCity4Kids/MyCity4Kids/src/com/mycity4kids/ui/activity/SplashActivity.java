@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.applinks.AppLinkData;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -288,11 +287,6 @@ public class SplashActivity extends BaseActivity {
             finish();
 
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

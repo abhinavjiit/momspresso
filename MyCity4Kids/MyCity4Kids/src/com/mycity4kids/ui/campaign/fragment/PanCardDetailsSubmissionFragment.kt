@@ -11,7 +11,6 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
@@ -42,9 +41,6 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
     private lateinit var submitOnClickListener: SubmitListener
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var back: TextView
-    override fun updateUi(response: Response?) {
-
-    }
 
     companion object {
         @JvmStatic

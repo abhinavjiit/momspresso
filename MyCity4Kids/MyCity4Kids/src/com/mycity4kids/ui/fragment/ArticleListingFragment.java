@@ -33,7 +33,6 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.material.snackbar.Snackbar;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.DateTimeUtils;
@@ -948,11 +947,6 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 startActivity(intent1);
                 break;
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     public void onResume() {

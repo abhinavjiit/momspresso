@@ -10,7 +10,6 @@ import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.BuildConfig
@@ -139,10 +138,6 @@ class MilestonesFragment : BaseFragment(), View.OnClickListener, MilestonesListA
     }
 
     override fun onClick(v: View) {
-
-    }
-
-    override fun updateUi(response: Response) {
 
     }
 }

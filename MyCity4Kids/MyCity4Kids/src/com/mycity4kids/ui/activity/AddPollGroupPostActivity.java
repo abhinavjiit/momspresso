@@ -25,7 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -163,11 +162,6 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
         } else {
             anonymousCheckbox.setChecked(false);
         }
-
-    }
-
-    @Override
-    protected void updateUi(Response response) {
 
     }
 

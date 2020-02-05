@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatSpinner;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -114,10 +113,5 @@ public class ReportSpamActivity extends BaseActivity implements View.OnClickList
                 removeProgressDialog();
             }
         });
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 }

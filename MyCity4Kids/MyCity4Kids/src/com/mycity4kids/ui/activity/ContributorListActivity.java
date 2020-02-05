@@ -28,7 +28,6 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -256,10 +255,6 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
     public void onResume() {
         super.onResume();
         blogListing.invalidate();
-    }
-
-    @Override
-    protected void updateUi(Response response) {
     }
 
     public void hitBloggerAPIrequest(int sortType, String type) {

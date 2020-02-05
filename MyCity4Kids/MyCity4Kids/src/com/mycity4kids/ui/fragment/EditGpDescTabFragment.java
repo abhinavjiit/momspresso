@@ -23,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -185,11 +184,6 @@ public class EditGpDescTabFragment extends BaseFragment implements View.OnClickL
                 }
             });
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

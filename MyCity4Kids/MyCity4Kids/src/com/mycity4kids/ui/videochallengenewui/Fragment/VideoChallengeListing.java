@@ -27,7 +27,6 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -41,8 +40,6 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.VideoChallengeDetailListingAdapter;
-import com.mycity4kids.ui.fragment.ChallengeDetailFragment;
-import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.MixPanelUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -339,12 +336,4 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
         }
 
     }
-
-
-    @Override
-    protected void updateUi(Response response) {
-
-    }
-
-
 }
