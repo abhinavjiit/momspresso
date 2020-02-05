@@ -1,10 +1,6 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
-import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.NotificationReadRequest;
-import com.mycity4kids.models.request.NotificationSettingsRequest;
-import com.mycity4kids.models.response.AddCommentResponse;
-import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.NotificationCenterListResponse;
 import com.mycity4kids.models.response.NotificationSettingsResponse;
 

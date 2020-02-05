@@ -1,7 +1,9 @@
 package com.mycity4kids.models.request;
 
-public class UpdateVlogTitleRequest {
+import com.google.gson.annotations.SerializedName;
 
+public class UpdateVlogTitleRequest {
+    @SerializedName("title")
     private String title;
 
     public String getTitle() {

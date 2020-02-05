@@ -1,13 +1,19 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 1/5/18.
  */
 
 public class UpdatePostSettingsRequest {
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("isActive")
     private int isActive;
+    @SerializedName("isPinned")
     private int isPinned;
+    @SerializedName("pinnedBy")
     private String pinnedBy;
 
     public String getUserId() {

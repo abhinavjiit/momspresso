@@ -1,5 +1,7 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Map;
 
 /**
@@ -7,15 +9,25 @@ import java.util.Map;
  */
 
 public class CreateUpdateGroupRequest {
+    @SerializedName("title")
     private String title;
+    @SerializedName("logoImage")
     private String logoImage;
+    @SerializedName("headerImage")
     private String headerImage;
+    @SerializedName("description")
     private String description;
+    @SerializedName("type")
     private String type;
+    @SerializedName("url")
     private String url;
+    @SerializedName("lang")
     private String lang;
+    @SerializedName("createdBy")
     private String createdBy;
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("questionnaire")
     private Map<String, String> questionnaire;
 
     public String getTitle() {

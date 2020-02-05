@@ -1,11 +1,13 @@
 package com.mycity4kids.models.campaignmodels;
 
+import com.google.gson.annotations.SerializedName;
 import com.mycity4kids.models.response.BaseResponse;
 
 import java.util.List;
 
 
 public class PreProofResponse extends BaseResponse {
+    @SerializedName("data")
     private List<ParticipateData> data;
 
     public List<ParticipateData> getData() {
@@ -17,8 +19,9 @@ public class PreProofResponse extends BaseResponse {
     }
 
     public class ParticipateData {
-
+        @SerializedName("msg")
         private String msg;
+        @SerializedName("result")
         private List<ParticipateResult> result;
 
         public String getMsg() {
@@ -39,16 +42,25 @@ public class PreProofResponse extends BaseResponse {
     }
 
     public class ParticipateResult {
-
+        @SerializedName("created_time")
         private String created_time;
+        @SerializedName("deliverable_type")
         private int deliverable_type;
+        @SerializedName("id")
         private int id;
+        @SerializedName("image_name")
         private String image_name;
+        @SerializedName("is_deleted")
         private String is_deleted;
+        @SerializedName("is_image_required")
         private int is_image_required;
+        @SerializedName("is_text_required")
         private int is_text_required;
+        @SerializedName("name")
         private String name;
+        @SerializedName("text_name")
         private String text_name;
+        @SerializedName("updated_time")
         private String updated_time;
 
         public String getCreated_time() {

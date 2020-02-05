@@ -201,11 +201,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ui.activity.YouTubeVideoActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Transparent"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".ui.activity.LoadingActivity"
             android:screenOrientation="unspecified"
             android:theme="@style/Theme.Transparent"

@@ -1,13 +1,17 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 17/7/18.
  */
 
 public class ReportedContentModerationRequest {
-
+    @SerializedName("isModerated")
     private int isModerated;
+    @SerializedName("actionResponse")
     private String actionResponse;
+    @SerializedName("actionBy")
     private String actionBy;
 
     public int getIsModerated() {

@@ -1,5 +1,6 @@
 package com.mycity4kids.models.campaignmodels;
 
+import com.google.gson.annotations.SerializedName;
 import com.mycity4kids.models.response.BaseResponse;
 
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.List;
 
 
 public class ParticipateCampaignResponse extends BaseResponse {
+    @SerializedName("data")
     private List<ParticipateData> data;
 
     public List<ParticipateData> getData() {
@@ -18,8 +20,9 @@ public class ParticipateCampaignResponse extends BaseResponse {
     }
 
     public class ParticipateData {
-
+        @SerializedName("msg")
         private String msg;
+        @SerializedName("result")
         private List<ParticipateResult> result;
 
         public String getMsg() {
@@ -40,7 +43,7 @@ public class ParticipateCampaignResponse extends BaseResponse {
     }
 
     public class ParticipateResult {
-
+        @SerializedName("id")
         private String id;
 
         public String getMsg() {

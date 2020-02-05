@@ -1,12 +1,17 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 1/5/18.
  */
 
 public class UpdateGroupMembershipRequest {
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("status")
     private String status;
+    @SerializedName("reason")
     private String reason;
 
     public String getUserId() {

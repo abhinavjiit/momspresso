@@ -31,17 +31,4 @@ class CampaignDetailBrandDetails {
     @SerializedName("updated_time")
     @Expose
     var updatedTime: Int? = null
-
-    /*@SerializedName("amount")
-    @Expose
-    private val additionalProperties = HashMap<String, Any>()
-
-    fun getAdditionalProperties(): Map<String, Any> {
-        return this.additionalProperties
-    }
-
-    fun setAdditionalProperty(name: String, value: Any) {
-        this.additionalProperties[name] = value
-    }
-*/
 }

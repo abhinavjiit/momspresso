@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.response.ArticleTagsImagesResponse;
 import com.squareup.picasso.Picasso;
 
@@ -24,7 +23,6 @@ public class ArticleTagsImagesGridAdapter extends BaseAdapter {
     private ArrayList<ArticleTagsImagesResponse.ArticleTagsImagesData.ArticleTagsImagesResult> tagsImageUrlList;
     private Context mContext;
     private LayoutInflater mInflator;
-    ArrayList<CommonParentingList> articleDataModelsNew;
     private ITagImageSelect iTagImageSelect;
 
     public ArticleTagsImagesGridAdapter(Context pContext) {

@@ -1,5 +1,7 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.LinkedHashMap;
 
 /**
@@ -7,8 +9,11 @@ import java.util.LinkedHashMap;
  */
 
 public class UpdatePostContentRequest {
+    @SerializedName("content")
     private String content;
+    @SerializedName("mediaUrls")
     private LinkedHashMap<String, String> mediaUrls;
+    @SerializedName("type")
     private String type;
 
     public String getContent() {

@@ -1,11 +1,13 @@
 package com.mycity4kids.models.campaignmodels;
 
+import com.google.gson.annotations.SerializedName;
 import com.mycity4kids.models.response.BaseResponse;
 
 import java.util.List;
 
 
 public class AllCampaignTotalPayoutResponse extends BaseResponse {
+    @SerializedName("data")
     private List<TotalPayoutData> data;
 
     public List<TotalPayoutData> getData() {
@@ -17,8 +19,9 @@ public class AllCampaignTotalPayoutResponse extends BaseResponse {
     }
 
     public class TotalPayoutData {
-
+        @SerializedName("msg")
         private String msg;
+        @SerializedName("result")
         private List<TotalPayoutResult> result;
 
         public String getMsg() {
@@ -39,11 +42,15 @@ public class AllCampaignTotalPayoutResponse extends BaseResponse {
     }
 
     public class TotalPayoutResult {
-
+        @SerializedName("campaign_details")
         private CampaignDetail campaign_details;
+        @SerializedName("final_payout")
         private int final_payout;
+        @SerializedName("reimbursement")
         private int reimbursement;
+        @SerializedName("payment_meta")
         private List<PaymentMeta> payment_meta;
+        @SerializedName("payment_status")
         private int payment_status;
 
         public int getReimbursement() {
@@ -85,11 +92,12 @@ public class AllCampaignTotalPayoutResponse extends BaseResponse {
         public void setPayment_status(int payment_status) {
             this.payment_status = payment_status;
         }
-
     }
 
     public class CampaignDetail {
+        @SerializedName("brand_details")
         private BrandDetails brand_details;
+        @SerializedName("name")
         private String name;
 
         public BrandDetails getBrandDetails() {
@@ -107,18 +115,26 @@ public class AllCampaignTotalPayoutResponse extends BaseResponse {
         public void setName(String name) {
             this.name = name;
         }
-
     }
 
     public class PaymentMeta {
+        @SerializedName("account")
         private Account account;
+        @SerializedName("id")
         private int id;
+        @SerializedName("net_amount")
         private Double net_amount;
+        @SerializedName("source")
         private String source;
+        @SerializedName("status")
         private String status;
+        @SerializedName("tax_amount")
         private Double tax_amount;
+        @SerializedName("tax_percentage")
         private int tax_percentage;
+        @SerializedName("total_amount")
         private Double total_amount;
+        @SerializedName("transaction")
         private Transaction transaction;
 
         public Account getAccount() {
@@ -192,12 +208,12 @@ public class AllCampaignTotalPayoutResponse extends BaseResponse {
         public void setTransaction(Transaction transaction) {
             this.transaction = transaction;
         }
-
-
     }
 
     public class Account {
+        @SerializedName("account_number")
         private String account_number;
+        @SerializedName("id")
         private int id;
 
         public String getAccount_number() {
@@ -215,11 +231,12 @@ public class AllCampaignTotalPayoutResponse extends BaseResponse {
         public void setId(int id) {
             this.id = id;
         }
-
     }
 
     public class Transaction {
+        @SerializedName("code")
         private String code;
+        @SerializedName("status")
         private String status;
 
         public String getCode() {
@@ -237,6 +254,5 @@ public class AllCampaignTotalPayoutResponse extends BaseResponse {
         public void setStatus(String status) {
             this.status = status;
         }
-
     }
 }
