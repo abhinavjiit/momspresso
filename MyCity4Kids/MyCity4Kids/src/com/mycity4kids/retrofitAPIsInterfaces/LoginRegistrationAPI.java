@@ -18,6 +18,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by hemant on 3/5/16.
@@ -59,4 +60,13 @@ public interface LoginRegistrationAPI {
 
     @POST("apiusers/logoutV1/")
     Call<ResponseBody> logout();
+
+    @GET("apiusers/updatePushTokenV1")
+    Call<ResponseBody> updatePushToken(@Query("userId") String userId,
+                                       @Query("dynamoId") String dynamoId,
+                                       @Query("app_version") String app_version,
+                                       @Query("deviceType") String deviceType,
+                                       @Query("cityId") int cityId,
+                                       @Query("pushToken") String pushToken,
+                                       @Query("fcmToken") String fcmToken);
 }

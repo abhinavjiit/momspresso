@@ -716,7 +716,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
 
     public void onAppStart() {
         if (ConnectivityUtils.isNetworkEnabled(this)) {
-            showToast(getString(R.string.connectivity_unavailable));
+//            showToast(getString(R.string.connectivity_unavailable));
         }
     }
 

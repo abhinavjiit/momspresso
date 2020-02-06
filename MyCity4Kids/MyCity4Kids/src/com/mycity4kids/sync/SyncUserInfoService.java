@@ -30,7 +30,7 @@ import retrofit2.Retrofit;
 /**
  * Created by manish.soni on 04-08-2015.
  */
-public class SyncUserInfoService extends IntentService implements UpdateListener {
+public class SyncUserInfoService extends IntentService {
 
     private final static String TAG = SyncUserInfoService.class.getSimpleName();
 
@@ -119,8 +119,4 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
             Crashlytics.logException(t);
         }
     };
-
-    @Override
-    public void updateView(String jsonString, int requestType) {
-    }
 }
