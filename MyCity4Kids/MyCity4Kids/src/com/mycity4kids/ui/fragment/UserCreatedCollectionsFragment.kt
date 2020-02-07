@@ -64,7 +64,6 @@ class UserCreatedCollectionsFragment : BaseFragment() {
         collectionGridView.onItemClickListener = OnItemClickListener { _, _, position, _ ->
             val intent = Intent(activity, UserCollectionItemListActivity::class.java)
             intent.putExtra("id", dataList[position].userCollectionId)
-            BaseApplication.getInstance().position = position
             startActivityForResult(intent, 1000)
         }
         collectionGridView.setOnScrollListener(object : AbsListView.OnScrollListener {
