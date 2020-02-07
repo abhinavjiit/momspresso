@@ -125,7 +125,6 @@ class ShortStoriesCardActivity : BaseActivity() {
         divider = findViewById(R.id.divider)
         publishTextView = findViewById(R.id.publishTextView)
         collectionsViewPager = findViewById(R.id.collectionsViewPager)
-//        storyCoachmark = findViewById(R.id.storyCoachmark)
 
         val params: ViewGroup.LayoutParams = rlLayout.layoutParams
         params.width = resources.displayMetrics.widthPixels
@@ -136,15 +135,9 @@ class ShortStoriesCardActivity : BaseActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "storyCoachmark")) {
-            /* storyCoachmark.visibility = View.VISIBLE
-             publishTextView.isEnabled = false
-             collectionsViewPager.isEnabled = false
-             tabs.isClickable = false*/
             val intent = Intent(this, StoryCoachMarkActivity::class.java)
             startActivity(intent)
         }
-
-
 
         if (!intent.getStringExtra("title").isNullOrEmpty()) {
             title = intent.getStringExtra("title")
