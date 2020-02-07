@@ -452,6 +452,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent" />
         <activity
+            android:name=".ui.activity.StoryCoachMarkActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Transparent" />
+        <activity
             android:name=".ui.activity.ProfileSetting"
             android:screenOrientation="portrait" />
         <activity

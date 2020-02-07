@@ -14,7 +14,10 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.*
-import android.widget.*
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -122,6 +125,7 @@ class ShortStoriesCardActivity : BaseActivity() {
         divider = findViewById(R.id.divider)
         publishTextView = findViewById(R.id.publishTextView)
         collectionsViewPager = findViewById(R.id.collectionsViewPager)
+//        storyCoachmark = findViewById(R.id.storyCoachmark)
 
         val params: ViewGroup.LayoutParams = rlLayout.layoutParams
         params.width = resources.displayMetrics.widthPixels
@@ -130,6 +134,18 @@ class ShortStoriesCardActivity : BaseActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+
+        if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "storyCoachmark")) {
+            /* storyCoachmark.visibility = View.VISIBLE
+             publishTextView.isEnabled = false
+             collectionsViewPager.isEnabled = false
+             tabs.isClickable = false*/
+            val intent = Intent(this, StoryCoachMarkActivity::class.java)
+            startActivity(intent)
+        }
+
+
+
         if (!intent.getStringExtra("title").isNullOrEmpty()) {
             title = intent.getStringExtra("title")
             titleTv.text = title

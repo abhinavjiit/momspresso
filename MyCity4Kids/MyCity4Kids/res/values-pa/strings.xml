@@ -1359,4 +1359,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="all_copy_link">COPY LINK</string>
     <string name="ss_story_link_copied">Story link copied</string>
     <string name="ss_image_loading_msg">Please wait for story background to be loaded</string>
+    <string name="story_coachmark_text">Position or move your story around as per your preference.</string>
+    <string name="story_got_it">Got it</string>
 </resources>

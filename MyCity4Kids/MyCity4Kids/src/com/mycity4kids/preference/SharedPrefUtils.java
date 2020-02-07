@@ -78,6 +78,7 @@ public class SharedPrefUtils {
     private static final String COACHMARK_HOME_SCREEN = "coachmarkHomeScreen";
     private static final String COACHMARK_PROFILE = "coachmarkProfile";
     private static final String COACHMARK_MOMVLOG = "coachmarkMomVlog";
+    private static final String COACHMARK_STORY = "coachmarkStory";
 
     private static final String CHANGE_CITY_FLAG = "changeCityFlag";
 
@@ -338,6 +339,8 @@ public class SharedPrefUtils {
         } else if ("Mom_vlog".equals(screenName)) {
             _editor.putBoolean(COACHMARK_MOMVLOG, flag);
 
+        } else if ("storyCoachmark".equals(screenName)) {
+            _editor.putBoolean(COACHMARK_STORY, flag);
         }
         _editor.commit();
     }
@@ -362,6 +365,8 @@ public class SharedPrefUtils {
             return _sharedPref.getBoolean(COACHMARK_PROFILE, false);
         } else if ("Mom_vlog".equals(screenName)) {
             return _sharedPref.getBoolean(COACHMARK_MOMVLOG, false);
+        } else if ("storyCoachmark".equals(screenName)) {
+            return _sharedPref.getBoolean(COACHMARK_STORY, false);
         }
         return true;
     }

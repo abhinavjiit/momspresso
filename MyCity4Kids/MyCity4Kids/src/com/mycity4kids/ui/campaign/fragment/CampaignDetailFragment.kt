@@ -189,13 +189,18 @@ class CampaignDetailFragment : BaseFragment() {
         }
 
         txtTrackerStatus.setOnClickListener {
-            var intent = Intent(activity, TrackerActivity::class.java)
-            intent.putExtra("campaign_id", id!!)
-            intent.putExtra("brand_name", apiGetResponse!!.brandDetails!!.name)
-            intent.putExtra("campaign_name", apiGetResponse!!.name)
-            intent.putExtra("total_payout", apiGetResponse!!.totalPayout!!.toInt())
-            intent.putExtra("image_url", apiGetResponse!!.brandDetails!!.imageUrl)
-            startActivity(intent)
+            try {
+                val intent = Intent(activity, TrackerActivity::class.java)
+                intent.putExtra("campaign_id", id!!)
+                intent.putExtra("brand_name", apiGetResponse?.brandDetails?.name)
+                intent.putExtra("campaign_name", apiGetResponse?.name)
+                intent.putExtra("total_payout", apiGetResponse?.totalPayout?.toInt())
+                intent.putExtra("image_url", apiGetResponse?.brandDetails?.imageUrl)
+                startActivity(intent)
+            } catch (e: Exception) {
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+            }
         }
 
         referCodeApply.setOnClickListener {
