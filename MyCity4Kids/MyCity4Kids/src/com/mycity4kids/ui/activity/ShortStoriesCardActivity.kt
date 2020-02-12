@@ -67,6 +67,12 @@ class ShortStoriesCardActivity : BaseActivity() {
     private val REQUEST_INIT_PERMISSION = 1
     private val PERMISSIONS_INIT = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
     private lateinit var shortLayout: LinearLayout
+    private lateinit var storyCoachmark: RelativeLayout
+    private lateinit var moveTextCoachmark: RelativeLayout
+    private lateinit var storyBgEditCoachmark: RelativeLayout
+    private lateinit var textStylingCoachmark: RelativeLayout
+    private lateinit var gotItTextView: TextView
+
     private lateinit var tabs: TabLayout
     private lateinit var collectionsViewPager: ViewPager
     private lateinit var adapter: ShortStoriesThumbnailAdapter
@@ -125,6 +131,11 @@ class ShortStoriesCardActivity : BaseActivity() {
         divider = findViewById(R.id.divider)
         publishTextView = findViewById(R.id.publishTextView)
         collectionsViewPager = findViewById(R.id.collectionsViewPager)
+        storyCoachmark = findViewById(R.id.storyCoachmark)
+        moveTextCoachmark = findViewById(R.id.moveTextCoachmark)
+        storyBgEditCoachmark = findViewById(R.id.storyBgEditCoachmark)
+        textStylingCoachmark = findViewById(R.id.textStylingCoachmark)
+        gotItTextView = findViewById(R.id.gotItTextView)
 
         val params: ViewGroup.LayoutParams = rlLayout.layoutParams
         params.width = resources.displayMetrics.widthPixels
@@ -135,8 +146,7 @@ class ShortStoriesCardActivity : BaseActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "storyCoachmark")) {
-            val intent = Intent(this, StoryCoachMarkActivity::class.java)
-            startActivity(intent)
+            storyCoachmark.visibility = View.VISIBLE
         }
 
         if (!intent.getStringExtra("title").isNullOrEmpty()) {
@@ -229,7 +239,7 @@ class ShortStoriesCardActivity : BaseActivity() {
                 publishStory()
         }
 
-        rlLayout.getViewTreeObserver().addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        rlLayout.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 val location = IntArray(2)
                 shortLayout.getLocationOnScreen(location)
@@ -237,6 +247,20 @@ class ShortStoriesCardActivity : BaseActivity() {
                 y = location[1]
             }
         })
+
+        gotItTextView.setOnClickListener {
+            if (moveTextCoachmark.visibility == View.VISIBLE) {
+                moveTextCoachmark.visibility = View.GONE
+                storyBgEditCoachmark.visibility = View.VISIBLE
+            } else if (storyBgEditCoachmark.visibility == View.VISIBLE) {
+                storyBgEditCoachmark.visibility = View.GONE
+                textStylingCoachmark.visibility = View.VISIBLE
+            } else {
+                textStylingCoachmark.visibility = View.GONE
+                moveTextCoachmark.visibility = View.VISIBLE
+                storyCoachmark.visibility = View.GONE
+            }
+        }
     }
 
     fun setCategoryId(id: String) {

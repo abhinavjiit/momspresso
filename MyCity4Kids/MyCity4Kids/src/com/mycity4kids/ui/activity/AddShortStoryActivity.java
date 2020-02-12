@@ -422,7 +422,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     continue;
                 }
                 HashMap<String, String> map = new HashMap<>();
-                String topicId = jsonArray.getJSONObject(i).keys().next();
+                String topicId = jsonArray.getJSONObject(i).keys().next().toString();
                 String topicName = jsonArray.getJSONObject(i).getString(topicId);
                 map.put(topicId, topicName);
                 tagsList.add(map);
@@ -446,7 +446,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 if (AppConstants.IGNORE_TAG.equals(jsonArray.getJSONObject(i).keys().next())) {
                     continue;
                 }
-                String topicId = jsonArray.getJSONObject(i).keys().next();
+                String topicId = jsonArray.getJSONObject(i).keys().next().toString();
                 for (int j = shortStoryChallengeTopic.getChild().size() - 1; j >= 0; j--) {
                     if (populateChallengeHeaderImage(topicId, j)) break;
                 }

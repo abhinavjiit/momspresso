@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.graphics.PorterDuff;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -18,15 +19,18 @@ import android.provider.MediaStore;
 import android.text.Html;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.crashlytics.android.Crashlytics;
@@ -994,7 +998,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 } else if (mEditorFragment.getContent().toString().isEmpty()) {
                     showToast(getString(R.string.editor_body_empty));
                 } else if (mEditorFragment.getContent().toString().replace("&nbsp;", " ").split("\\s+").length < 299 && !BuildConfig.DEBUG) {
-                    showToast(getString(R.string.editor_body_min_words));
+                    showCustomToast(mEditorFragment.getContent().toString().replace("&nbsp;", " ").split("\\s+").length);
                 } else if (EditorFragmentAbstract.imageUploading == 0) {
                     Log.e("imageuploading", EditorFragmentAbstract.imageUploading + "");
                     showToast(getString(R.string.image_upload_wait));
@@ -1007,6 +1011,19 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 }
                 break;
         }
+    }
+
+    private void showCustomToast(int bodyWordCount) {
+        Toast toast = Toast.makeText(this, getString(R.string.editor_body_min_words), Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        LinearLayout toastLayout = (LinearLayout) toast.getView();
+        TextView toastTV = (TextView) toastLayout.getChildAt(0);
+        toastTV.setText(getString(R.string.article_editor_min_words_body, bodyWordCount));
+        toastTV.setGravity(Gravity.CENTER);
+        toastTV.setTextColor(ContextCompat.getColor(this, R.color.white));
+        toastLayout.setPadding(10, 10, 10, 10);
+        toastLayout.getBackground().setColorFilter(ContextCompat.getColor(this, R.color.dark_grey), PorterDuff.Mode.SRC_IN);
+        toast.show();
     }
 
     private void saveDraftBeforePublishRequest(String title, String body, String draftId1) {

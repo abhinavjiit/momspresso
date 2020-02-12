@@ -1361,4 +1361,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="ss_image_loading_msg">Please wait for story background to be loaded</string>
     <string name="story_coachmark_text">Position or move your story around as per your preference.</string>
     <string name="story_got_it">Got it</string>
+    <string name="ss_coachmark_story_bg">Select background of your choice</string>
+    <string name="ss_coachmarks_text_style">Change font size or text alignment</string>
+    <string name="article_editor_min_words_body">You have written %1$d words. Please write at least 300 words to publish.</string>
 </resources>

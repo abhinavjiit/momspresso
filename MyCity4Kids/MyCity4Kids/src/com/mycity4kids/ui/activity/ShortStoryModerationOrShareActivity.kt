@@ -100,6 +100,9 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
             moderationContainer?.visibility = View.GONE
             publishContainer?.visibility = View.VISIBLE
         }
+
+        SharedPrefUtils.setCoachmarksShownFlag(this, "storyCoachmark", true)
+
         showProgressDialog(getString(R.string.please_wait))
         Handler().postDelayed(Runnable { getShortStoryDetails(storyId) }, 4000)
     }
