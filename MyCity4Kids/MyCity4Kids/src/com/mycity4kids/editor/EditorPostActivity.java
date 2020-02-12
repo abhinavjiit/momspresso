@@ -104,15 +104,13 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     Uri imageUri;
     private String articleId;
     private String thumbnailUrl;
-    private String moderation_status, node_id, path;
+    private String moderation_status;
     String mCurrentPhotoPath, absoluteImagePath;
     File photoFile;
 
     DraftListResult draftObject;
-    File file;
     MediaFile mediaFile;
     String mediaId;
-    String response;
     String draftId = "";
 
     public static final String EDITOR_PARAM = "EDITOR_PARAM";
@@ -122,21 +120,16 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     public static final String TITLE_PLACEHOLDER_PARAM = "TITLE_PLACEHOLDER_PARAM";
     public static final String CONTENT_PLACEHOLDER_PARAM = "CONTENT_PLACEHOLDER_PARAM";
     public static final int USE_NEW_EDITOR = 1;
-    public static final int USE_LEGACY_EDITOR = 2;
 
     public static final int ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111;
     public static final int ADD_MEDIA_FAIL_ACTIVITY_REQUEST_CODE = 1112;
     public static final int ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE = 1113;
-    public static final String MEDIA_REMOTE_ID_SAMPLE = "123";
 
     private static final int SELECT_IMAGE_MENU_POSITION = 0;
     private static final int SELECT_IMAGE_FAIL_MENU_POSITION = 1;
     private static final int SELECT_VIDEO_MENU_POSITION = 2;
     private static final int SELECT_VIDEO_FAIL_MENU_POSITION = 3;
     private static final int SELECT_IMAGE_CAMERA_MENU_POSITION = 4;
-    private final int REQ_CODE_SPEECH_INPUT = 100;
-
-    private String speechToText = "";
 
     private EditorFragmentAbstract mEditorFragment;
 
@@ -160,7 +153,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getIntent().getIntExtra(EDITOR_PARAM, USE_NEW_EDITOR) == USE_NEW_EDITOR) {
-            // ToastUtils.showToast(this, R.string.starting_new_editor);
             setContentView(R.layout.activity_new_editor);
             Utils.pushOpenScreenEvent(EditorPostActivity.this, "CreateArticleScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         }
@@ -203,7 +195,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         if (fragment != null && fragment.isVisible()) {
             ((ImageSettingsDialogFragment) fragment).dismissFragment();
         } else {
-            //Toast.makeText(this,"Draft Saved",Toast.LENGTH_LONG).show();
             if ((mEditorFragment.getTitle().toString().isEmpty() && (mEditorFragment.getContent().toString().isEmpty())) || (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList"))) {
                 super.onBackPressed();
                 finish();
@@ -224,13 +215,11 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         menu.add(0, SELECT_IMAGE_MENU_POSITION, 0, getString(R.string.select_image));
         menu.add(0, SELECT_IMAGE_CAMERA_MENU_POSITION, 0, getString(R.string.camera_pick));
-
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         Intent intent = new Intent(Intent.ACTION_PICK);
-
         switch (item.getItemId()) {
             case SELECT_IMAGE_MENU_POSITION:
                 intent.setType("image/*");
@@ -256,26 +245,22 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 intent = Intent.createChooser(intent, getString(R.string.select_image_fail));
-
                 startActivityForResult(intent, ADD_MEDIA_FAIL_ACTIVITY_REQUEST_CODE);
                 return true;
             case SELECT_VIDEO_MENU_POSITION:
                 intent.setType("video/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 intent = Intent.createChooser(intent, getString(R.string.select_video));
-
                 startActivityForResult(intent, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
                 return true;
             case SELECT_VIDEO_FAIL_MENU_POSITION:
                 intent.setType("video/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 intent = Intent.createChooser(intent, getString(R.string.select_video_fail));
-
                 startActivityForResult(intent, ADD_MEDIA_FAIL_ACTIVITY_REQUEST_CODE);
                 return true;
             case SELECT_IMAGE_CAMERA_MENU_POSITION:
                 imageSelectorType = "CAMERA";
-
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (ActivityCompat.checkSelfPermission(EditorPostActivity.this, Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED
@@ -290,7 +275,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 } else {
                     loadImageFromCamera();
                 }
-
                 return true;
             default:
                 return false;
@@ -300,15 +284,12 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     private void loadImageFromCamera() {
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
             photoFile = null;
             try {
                 photoFile = createImageFile();
             } catch (IOException ex) {
-                // Error occurred while creating the File
                 Log.i("TAG", "IOException");
             }
-            // Continue only if the File was successfully created
             if (photoFile != null) {
                 try {
                     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, GenericFileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".my.package.name.provider", createImageFile()));
@@ -321,19 +302,10 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     }
 
     private void requestPermissions() {
-        // BEGIN_INCLUDE(contacts_permission_request)
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example, if the request has been denied previously.
-            Log.i("Permissions",
-                    "Displaying storage permission rationale to provide additional context.");
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
             Snackbar.make(mLayout, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
@@ -345,8 +317,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     .show();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
             Snackbar.make(mLayout, R.string.permission_camera_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
@@ -372,20 +342,11 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         ActivityCompat.requestPermissions(this, requiredPermission, REQUEST_INIT_PERMISSION);
     }
 
-    /**
-     * Callback received when a permissions request has been completed.
-     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-
         if (requestCode == REQUEST_INIT_PERMISSION) {
-            Log.i("Permissions", "Received response for storage permissions request.");
-
-            // We have requested multiple permissions for contacts, so all of them need to be
-            // checked.
             if (PermissionUtil.verifyPermissions(grantResults)) {
-                // All required permissions have been granted, display contacts fragment.
                 Snackbar.make(mLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
                         .show();
@@ -397,7 +358,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     startActivityForResult(intent, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
                 }
             } else {
-                Log.i("Permissions", "storage permissions were NOT granted.");
                 Snackbar.make(mLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
                         .show();
@@ -408,7 +368,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     }
 
     private File createImageFile() throws IOException {
-        // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
@@ -417,8 +376,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 ".jpg",         // suffix
                 dir      // directory
         );
-
-        // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = "file:" + image.getAbsolutePath();
         absoluteImagePath = image.getAbsolutePath();
         return image;
@@ -427,19 +384,15 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         mediaFile = new MediaFile();
         mediaId = String.valueOf(System.currentTimeMillis());
         mediaFile.setMediaId(mediaId);
-
         switch (requestCode) {
             case ADD_MEDIA_ACTIVITY_REQUEST_CODE:
-
                 if (data == null) {
                     return;
                 }
                 imageUri = data.getData();
-
                 if (resultCode == Activity.RESULT_OK) {
                     try {
                         Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(EditorPostActivity.this.getContentResolver(), imageUri);
@@ -453,8 +406,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         float maxWidth = 720;
                         float imgRatio = actualWidth / actualHeight;
                         float maxRatio = maxWidth / maxHeight;
-
-
                         if (actualHeight > maxHeight || actualWidth > maxWidth) {
                             if (imgRatio < maxRatio) {
                                 //adjust width according to maxHeight
@@ -482,20 +433,12 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                     mEditorFragment.appendMediaFile(mediaFile, imageUri.toString(), null);
-
-                    if (mEditorFragment instanceof EditorMediaUploadListener) {
-                        //  simulateFileUpload(mediaId, imageUri.toString());
-                    }
                 }
                 break;
             case ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE:
-
                 if (resultCode == Activity.RESULT_OK) {
                     try {
-//                        imageUri = data.getData();
-//                        Bitmap photo = (Bitmap) data.getExtras().get("data");
                         Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(mCurrentPhotoPath));
                         ExifInterface ei = new ExifInterface(absoluteImagePath);
                         int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
@@ -515,7 +458,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                             default:
                                 break;
                         }
-//                        Bitmap imageBitmap = (Bitmap) data.getExtras().get("data"); //MediaStore.Images.Media.getBitmap(EditorPostActivity.this.getContentResolver(), imageUri);
                         float actualHeight = imageBitmap.getHeight();
                         float actualWidth = imageBitmap.getWidth();
                         float maxHeight = 1300;
@@ -545,12 +487,9 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         }
 
                         Bitmap finalBitmap = Bitmap.createScaledBitmap(imageBitmap, (int) actualWidth, (int) actualHeight, true);
-
                         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                         finalBitmap.compress(Bitmap.CompressFormat.JPEG, 75, bytes);
                         byte[] bitmapData = bytes.toByteArray();
-
-                        //write the bytes in file
                         FileOutputStream fos = new FileOutputStream(photoFile);
                         fos.write(bitmapData);
                         fos.flush();
@@ -559,31 +498,12 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         EditorFragmentAbstract.imageUploading = 0;
                         File file2 = FileUtils.getFile(this, imageUri);
                         sendUploadProfileImageRequest(file2);
-                        // compressImage(filePath);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    //  decodeFile(picturePath);
-
                     mEditorFragment.appendMediaFile(mediaFile, imageUri.toString(), null);
-
-                    if (mEditorFragment instanceof EditorMediaUploadListener) {
-                        //  simulateFileUpload(mediaId, imageUri.toString());
-                    }
                 }
                 break;
-//            case REQ_CODE_SPEECH_INPUT: {
-//                if (resultCode == RESULT_OK && null != data) {
-//                    String text;
-//                    ArrayList<String> result = data
-//                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-//                    text = result.get(0);
-//                    speechToText = speechToText + " " + text;
-//                    mEditorFragment.setContent(speechToText);
-//                    mEditorFragment.setSpeechToText(speechToText);
-//                }
-//                break;
-//            }
         }
     }
 
@@ -771,79 +691,26 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
     @Override
     public void onSettingsClicked() {
-        // TODO
     }
 
     @Override
     public void onAddMediaClicked() {
-        // TODO
     }
 
-//    @Override
-//    public void onAudioClicked() {
-//        promptSpeechInput();
-//    }
-
-
-    /**
-     * Showing google speech input dialog
-     */
-//    private void promptSpeechInput() {
-//        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, SharedPrefUtils.getAppLocale(EditorPostActivity.this));
-//        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.speech_prompt));
-//        try {
-//            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
-//        } catch (ActivityNotFoundException a) {
-//            Toast.makeText(getApplicationContext(), getString(R.string.speech_not_supported), Toast.LENGTH_SHORT).show();
-//        }
-//    }
-
-    /* */
-
-    /**
-     * Receiving speech input
-     *//*
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            case REQ_CODE_SPEECH_INPUT: {
-                if (resultCode == RESULT_OK && null != data) {
-                    String text;
-                    ArrayList<String> result = data
-                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    text = result.get(0);
-                    speechToText = speechToText + " " + text;
-                    mEditorFragment.setContent(speechToText);
-                }
-                break;
-            }
-
-        }
-    }*/
     @Override
     public void onMediaRetryClicked(String mediaId) {
-        if (mFailedUploads.containsKey(mediaId)) {
-            // simulateFileUpload(mediaId, mFailedUploads.get(mediaId));
-        }
     }
 
     @Override
     public void onMediaUploadCancelClicked(String mediaId, boolean delete) {
-
     }
 
     @Override
     public void onFeaturedImageChanged(int mediaId) {
-
     }
 
     @Override
     public void onVideoPressInfoRequested(String videoId) {
-
     }
 
     @Override
@@ -897,19 +764,15 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     }
 
     private void initiatePeriodicDraftSave() {
-        periodicUpdate = new Runnable() {
-            @Override
-            public void run() {
-                mHandler.postDelayed(periodicUpdate, 5000);
-                saveDraftsAsync(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
-            }
+        periodicUpdate = () -> {
+            mHandler.postDelayed(periodicUpdate, 5000);
+            saveDraftsAsync(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
         };
         mHandler.postDelayed(periodicUpdate, 5000);
     }
 
     @Override
     public void saveMediaFile(MediaFile mediaFile) {
-        // TODO
     }
 
     @Override
@@ -924,7 +787,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         String formattedString = newString.replace("\n\n", "</p><p>");
         formattedString = formattedString.concat("</p>");
         return formattedString;
-
     }
 
     public String titleFormatting(String title) {
@@ -942,7 +804,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         // prepare call in Retrofit 2.0
         ImageUploadAPI imageUploadAPI = retro.create(ImageUploadAPI.class);
-
         Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(//userId,
                 imageType,
                 requestBodyFile);
@@ -957,18 +818,15 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                              }
                              ImageUploadResponse responseModel = response.body();
                              Log.e("responseURL", responseModel.getData().getResult().getUrl());
-
                              if (responseModel.getCode() != 200) {
                                  showToast(getString(R.string.toast_response_error));
                                  removeProgressDialog();
                                  return;
                              } else {
                                  if (!StringUtils.isNullOrEmpty(responseModel.getData().getResult().getUrl())) {
-                                     //      SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
                                      Log.i("Uploaded Image URL", responseModel.getData().getResult().getUrl());
                                  }
                                  mediaFile.setFileURL(responseModel.getData().getResult().getUrl());
-
                                  ((EditorMediaUploadListener) mEditorFragment).onMediaUploadSucceeded(mediaId, mediaFile);
                              }
                          }
@@ -1014,21 +872,18 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     }
 
     private void showCustomToast(int bodyWordCount) {
-        Toast toast = Toast.makeText(this, getString(R.string.editor_body_min_words), Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(this, getString(R.string.article_editor_min_words_body, bodyWordCount), Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
         LinearLayout toastLayout = (LinearLayout) toast.getView();
         TextView toastTV = (TextView) toastLayout.getChildAt(0);
-        toastTV.setText(getString(R.string.article_editor_min_words_body, bodyWordCount));
         toastTV.setGravity(Gravity.CENTER);
         toastTV.setTextColor(ContextCompat.getColor(this, R.color.white));
-        toastLayout.setPadding(10, 10, 10, 10);
         toastLayout.getBackground().setColorFilter(ContextCompat.getColor(this, R.color.dark_grey), PorterDuff.Mode.SRC_IN);
         toast.show();
     }
 
     private void saveDraftBeforePublishRequest(String title, String body, String draftId1) {
         showProgressDialog(getResources().getString(R.string.please_wait));
-
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         // prepare call in Retrofit 2.0
         ArticleDraftAPI articleDraftAPI = retrofit.create(ArticleDraftAPI.class);
@@ -1049,7 +904,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             Call<ArticleDraftResponse> call = articleDraftAPI.updateDrafts(AppConstants.LIVE_URL + "v1/articles/" + draftId1, saveDraftRequest);
             call.enqueue(saveDraftBeforePublishResponseListener);
         }
-
     }
 
     private Callback<ArticleDraftResponse> saveDraftBeforePublishResponseListener = new Callback<ArticleDraftResponse>() {
@@ -1110,7 +964,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     public void onContinuePublish() {
         mHandler.removeCallbacksAndMessages(null);
         PublishDraftObject publishObject = new PublishDraftObject();
-
         publishObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
         publishObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString().trim()));
         Log.d("draftId = ", draftId + "");
@@ -1139,7 +992,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     private static class MyHandler extends Handler {
         private final WeakReference<EditorPostActivity> mActivity;
 
-        public MyHandler(EditorPostActivity activity) {
+        MyHandler(EditorPostActivity activity) {
             mActivity = new WeakReference<EditorPostActivity>(activity);
         }
 
