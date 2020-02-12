@@ -118,6 +118,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         internal var bookmarkArticleImageView: ImageView
         internal var shareArticleImageView: ImageView
         internal var watchLaterImageView: ImageView
+        internal var editArticleTextView: TextView
 
         init {
             txvArticleTitle = view.findViewById<View>(R.id.txvArticleTitle) as TextView
@@ -131,8 +132,10 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
             bookmarkArticleImageView = view.findViewById<View>(R.id.bookmarkArticleImageView) as ImageView
             shareArticleImageView = view.findViewById<View>(R.id.shareArticleImageView) as ImageView
             watchLaterImageView = view.findViewById<View>(R.id.watchLaterImageView) as ImageView
+            editArticleTextView = view.findViewById<View>(R.id.editArticleTextView) as TextView
             shareArticleImageView.setOnClickListener(this)
             bookmarkArticleImageView.setOnClickListener(this)
+            editArticleTextView.setOnClickListener(this)
             view.setOnClickListener(this)
         }
 
@@ -161,6 +164,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         internal var shareStoryImageView: ImageView
         internal var storyAuthorTextView: TextView
         internal var logoImageView: ImageView
+        internal var editStoryTextView: TextView
 
         init {
             authorNameTextView = itemView.findViewById<View>(R.id.authorNameTextView) as TextView
@@ -176,6 +180,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
             addToCollectionImageView = itemView.findViewById<View>(R.id.genericShareImageView) as ImageView
             followAuthorTextView = itemView.findViewById<View>(R.id.followAuthorTextView) as TextView
             storyShareCardWidget = itemView.findViewById<View>(R.id.storyShareCardWidget) as StoryShareCardWidget
+            editStoryTextView = itemView.findViewById(R.id.editStoryTextView) as TextView
             shareStoryImageView = storyShareCardWidget.findViewById(R.id.storyImageView) as ImageView
             logoImageView = storyShareCardWidget.findViewById(R.id.logoImageView) as ImageView
             storyAuthorTextView = storyShareCardWidget.findViewById(R.id.storyAuthorTextView) as TextView
@@ -191,6 +196,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
             authorNameTextView.setOnClickListener(this)
             storyImage.setOnClickListener(this)
             followAuthorTextView.setOnClickListener(this)
+            editStoryTextView.setOnClickListener(this)
             menuItem.setOnClickListener(this)
             itemView.setOnClickListener(this)
         }
@@ -294,7 +300,9 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         if (private) {
             holder.shareArticleImageView.visibility = View.VISIBLE
             holder.bookmarkArticleImageView.visibility = View.GONE
+            holder.editArticleTextView.visibility = View.VISIBLE
         } else {
+            holder.editArticleTextView.visibility = View.GONE
             holder.shareArticleImageView.visibility = View.GONE
             holder.bookmarkArticleImageView.visibility = View.VISIBLE
             if (data?.isbookmark == 0) {
@@ -339,7 +347,11 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         } catch (e: Exception) {
             holder.storyImage.setImageResource(R.drawable.default_article)
         }
-
+        if (private) {
+            holder.editStoryTextView.visibility = View.VISIBLE
+        } else {
+            holder.editStoryTextView.visibility = View.GONE
+        }
     }
 
     private fun addVideoItem(winnerLayout: RelativeLayout, txvArticleTitle: TextView, txvAuthorName: TextView, articleImageView: ImageView,

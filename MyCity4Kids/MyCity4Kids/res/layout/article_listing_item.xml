@@ -127,9 +127,9 @@
                     android:layout_below="@id/txvAuthorName"
                     android:layout_alignTop="@+id/viewCountTextView"
                     android:layout_alignBottom="@+id/viewCountTextView"
-                    android:layout_marginLeft="11dp"
-                    android:layout_toRightOf="@+id/commentCountTextView"
-                    android:drawableLeft="@drawable/ic_likes"
+                    android:layout_marginStart="11dp"
+                    android:layout_toEndOf="@+id/commentCountTextView"
+                    android:drawableStart="@drawable/ic_likes"
                     android:drawablePadding="4dp"
                     android:gravity="center"
                     android:text="0"
@@ -137,6 +137,19 @@
                     android:textSize="12sp"
                     card_view:fontName="open_sans.ttf" />
 
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/editArticleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/txvAuthorName"
+                    android:layout_marginTop="8dp"
+                    android:layout_toStartOf="@+id/shareArticleImageView"
+                    android:padding="10dp"
+                    android:text="@string/edit"
+                    android:textColor="@color/app_red"
+                    android:textSize="16sp"
+                    android:visibility="gone"
+                    card_view:fontName="oswald_regular.ttf" />
 
                 <ImageView
                     android:id="@+id/bookmarkArticleImageView"

@@ -40,6 +40,7 @@ import com.mycity4kids.animation.MyCityAnimationsUtil
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.editor.EditorPostActivity
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.collectionsModels.FeaturedOnModel
 import com.mycity4kids.models.request.ArticleDetailRequest
@@ -47,10 +48,7 @@ import com.mycity4kids.models.request.FollowUnfollowUserRequest
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest
 import com.mycity4kids.models.response.*
 import com.mycity4kids.preference.SharedPrefUtils
-import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
-import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI
-import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
-import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
+import com.mycity4kids.retrofitAPIsInterfaces.*
 import com.mycity4kids.ui.activity.*
 import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity
 import com.mycity4kids.ui.fragment.AddCollectionAndCollectionItemDialogFragment
@@ -67,6 +65,7 @@ import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.Response
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -990,7 +989,115 @@ class UserProfileActivity : BaseActivity(),
                     }
                 }
             }
+            view.id == R.id.editArticleTextView -> {
+                editArticle(position)
+            }
+            view.id == R.id.editStoryTextView -> {
+                editStory(view, position)
+            }
+        }
+    }
 
+    private fun editArticle(position: Int) {
+        val retrofit = BaseApplication.getInstance().retrofit
+        val articleDetailsAPI = retrofit.create(ArticleDetailsAPI::class.java)
+        val call = articleDetailsAPI.getArticleDetailsFromRedis(userContentList?.get(position)?.id, "articleId")
+        call.enqueue(articleDetailResponseCallback)
+    }
+
+    private fun editStory(view: View, position: Int) {
+        val retrofit = BaseApplication.getInstance().retrofit
+        val shortStoryAPI = retrofit.create(ShortStoryAPI::class.java)
+        val call = shortStoryAPI.getShortStoryDetails(userContentList?.get(position)?.id, "articleId")
+        call.enqueue(ssDetailResponseCallbackRedis)
+    }
+
+    private var articleDetailResponseCallback: Callback<ArticleDetailResult> = object : Callback<ArticleDetailResult> {
+        override fun onResponse(call: Call<ArticleDetailResult?>, response: Response<ArticleDetailResult>) {
+            removeProgressDialog()
+            if (response.body() == null) { //                showToast("Something went wrong from server");
+                return
+            }
+            try {
+                val responseData = response.body()
+                launchArticleEditor(responseData)
+            } catch (e: java.lang.Exception) {
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+            }
+        }
+
+        override fun onFailure(call: Call<ArticleDetailResult>, t: Throwable) {
+            removeProgressDialog()
+            if (t is UnknownHostException) {
+            } else if (t is SocketTimeoutException) {
+            } else {
+                Crashlytics.logException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
+        }
+    }
+
+    private var ssDetailResponseCallbackRedis: Callback<ShortStoryDetailResult> = object : Callback<ShortStoryDetailResult> {
+        override fun onResponse(call: Call<ShortStoryDetailResult?>, response: Response<ShortStoryDetailResult>) {
+            removeProgressDialog()
+            if (response.body() == null) {
+                return
+            }
+            val responseData = response.body()
+            responseData?.let { launchStoryEditor(it) }
+        }
+
+        override fun onFailure(call: Call<ShortStoryDetailResult>, t: Throwable) {
+            removeProgressDialog()
+            Crashlytics.logException(t)
+            Log.d("MC4kException", Log.getStackTraceString(t))
+        }
+    }
+
+    private fun launchArticleEditor(detailsResponse: ArticleDetailResult?) {
+        val imageList = detailsResponse?.body?.image
+        val bodyDescription = detailsResponse?.body?.text
+        var bodyDesc = bodyDescription
+        val content: String
+        if (imageList?.size!! > 0) {
+            for (images in imageList) {
+                if (bodyDescription?.contains(images.key)!!) {
+                    bodyDesc = bodyDesc?.replace(images.key, "<p style='text-align:center'><img src=" +
+                            images.value + " style=\"width: 100%;\"+></p>")
+                }
+            }
+            val bodyImgTxt = "<html><head></head><body>$bodyDesc</body></html>"
+            content = bodyImgTxt
+        } else {
+            val bodyImgTxt = "<html><head></head><body>$bodyDesc</body></html>"
+            content = bodyImgTxt
+        }
+        val intent = Intent(this, EditorPostActivity::class.java)
+        intent.putExtra("from", "publishedList")
+        intent.putExtra("title", detailsResponse.title)
+        intent.putExtra("content", content)
+        intent.putExtra("thumbnailUrl", detailsResponse.imageUrl?.thumbMax)
+        intent.putExtra("articleId", detailsResponse.id)
+        intent.putExtra("tag", Gson().toJson(detailsResponse.tags))
+        intent.putExtra("cities", Gson().toJson(detailsResponse.cities))
+        startActivity(intent)
+    }
+
+    private fun launchStoryEditor(detailsResponse: ShortStoryDetailResult) {
+        try {
+            val intent = Intent(this, AddShortStoryActivity::class.java)
+            intent.putExtra("from", "publishedList")
+            intent.putExtra("title", detailsResponse.title)
+            intent.putExtra("body", detailsResponse.body)
+            intent.putExtra("articleId", detailsResponse.id)
+            intent.putExtra("tag", Gson().toJson(detailsResponse.tags))
+            intent.putExtra("cities", Gson().toJson(detailsResponse.cities))
+            startActivity(intent)
+        } catch (e: java.lang.Exception) {
+            removeProgressDialog()
+            Crashlytics.logException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
 
