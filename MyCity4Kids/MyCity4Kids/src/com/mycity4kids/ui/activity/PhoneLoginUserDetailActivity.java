@@ -335,8 +335,8 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
                                      Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
                                  }
                                  setProfileImage(responseModel.getData().getResult().getUrl());
-                                 Picasso.with(PhoneLoginUserDetailActivity.this).invalidate(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()));
-                                 Picasso.with(PhoneLoginUserDetailActivity.this).load(responseModel.getData().getResult().getUrl())
+                                 Picasso.get().invalidate(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()));
+                                 Picasso.get().load(responseModel.getData().getResult().getUrl())
                                          .memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.family_xxhdpi)
                                          .error(R.drawable.family_xxhdpi).into(profileImageView);
                                  SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), responseModel.getData().getResult().getUrl());

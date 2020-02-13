@@ -239,7 +239,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                                      Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
                                  }
 
-                                 Picasso.with(AddPollGroupPostActivity.this).load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(currentImageView);
+                                 Picasso.get().load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(currentImageView);
 //                                 currentImageView.setVisibility(View.VISIBLE);
                                  urlList.set(currentImagePosition, responseModel.getData().getResult().getUrl());
                                  imagePollAdapter.notifyDataSetChanged();

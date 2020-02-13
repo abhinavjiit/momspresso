@@ -114,7 +114,7 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
 
 
         }
-        Picasso.with(getActivity()).load(selectedActiveUrl).fit()
+        Picasso.get().load(selectedActiveUrl).fit()
                 .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(thumbNail);
         tabs.addTab(tabs.newTab().setText(getResources().getString(R.string.about_video)));
         tabs.addTab(tabs.newTab().setText(getResources().getString(R.string.all_videos_toolbar_title)));

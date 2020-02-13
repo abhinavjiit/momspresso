@@ -36,7 +36,7 @@ class FeatureOnRecyclerAdapter(private val mListener: RecyclerViewClickListener)
         mHolder = holder
         try {
             if (!featuredList?.get(position)?.imageUrl.isNullOrBlank()) {
-                Picasso.with(holder.itemView.context).load(featuredList?.get(position)?.imageUrl).placeholder(
+                Picasso.get().load(featuredList?.get(position)?.imageUrl).placeholder(
                         R.drawable.default_article).error(R.drawable.default_article).into(holder.contentImageView)
             } else {
                 holder.contentImageView.setImageResource(R.drawable.default_article)

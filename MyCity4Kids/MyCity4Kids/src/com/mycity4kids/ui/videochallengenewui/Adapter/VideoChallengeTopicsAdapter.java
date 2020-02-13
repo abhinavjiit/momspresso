@@ -88,7 +88,7 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
                         info.add(challengeTopics.get(position).getExtraData().get(0).getChallenge().getRules());
                     }
                     try {
-                        Picasso.with(mContext).load(challengeTopics.get(position).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                        Picasso.get().load(challengeTopics.get(position).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                                 .fit().into(holder.cureentChallengesImage);
                         activeImageUrl.add(challengeTopics.get(position).getExtraData().get(0).getChallenge().getImageUrl());
                         activeStreamUrl.add(challengeTopics.get(position).getExtraData().get(0).getChallenge().getVideoUrl());

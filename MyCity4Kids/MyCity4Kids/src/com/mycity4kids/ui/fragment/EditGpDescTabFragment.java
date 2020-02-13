@@ -102,11 +102,11 @@ public class EditGpDescTabFragment extends BaseFragment implements View.OnClickL
 
         groupDescEditText.setText(groupItem.getDescription());
         try {
-            Picasso.with(getActivity()).load(groupItem.getHeaderImage()).placeholder(R.drawable.default_article).into(groupImageView);
+            Picasso.get().load(groupItem.getHeaderImage()).placeholder(R.drawable.default_article).into(groupImageView);
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
-            Picasso.with(getActivity()).load(R.drawable.default_article).into(groupImageView);
+            Picasso.get().load(R.drawable.default_article).into(groupImageView);
         }
 
         getGroupsCategories();
@@ -383,7 +383,7 @@ public class EditGpDescTabFragment extends BaseFragment implements View.OnClickL
                              ImageUploadResponse responseModel = response.body();
                              if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                                  uploadImageURL = (responseModel.getData().getResult().getUrl());
-                                 Picasso.with(getActivity()).load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(groupImageView);
+                                 Picasso.get().load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(groupImageView);
                                  if (isAdded())
                                      ((EditGroupActivity) getActivity()).showToast(getString(R.string.image_upload_success));
                              } else {

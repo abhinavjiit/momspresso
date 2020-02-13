@@ -41,7 +41,7 @@ import java.io.InputStreamReader
 class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerViewClickListener, CollectionThumbnailImageChangeDialogFragmnet.SendImage {
     override fun onsendData(imageUrl: String) {
         try {
-            Picasso.with(this@EditCollectionActivity).load(imageUrl)
+            Picasso.get().load(imageUrl)
                     .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageView)
             userCollectionsListModel.imageUrl = imageUrl
 
@@ -146,7 +146,7 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                             userCollectionsListModel.summary?.let { descriptionEditTextView?.setText(userCollectionsListModel.summary) }
                             try {
 
-                                Picasso.with(this@EditCollectionActivity).load(userCollectionsListModel.imageUrl)
+                                Picasso.get().load(userCollectionsListModel.imageUrl)
                                         .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageView)
                             } catch (e: Exception) {
                                 collectionImageView.setImageResource(R.drawable.default_article)

@@ -730,16 +730,15 @@ class ShortStoriesCardActivity : BaseActivity() {
 //                        return false
 //                    }
 //                }).into(cardBg)
-        Picasso.with(this).load(url).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+        Picasso.get().load(url).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                 .fit().into(cardBg, object : com.squareup.picasso.Callback {
                     override fun onSuccess() {
                         isImageLoaded = true
                     }
 
-                    override fun onError() {
+                    override fun onError(e: java.lang.Exception?) {
                         isImageLoaded = false
                     }
-
                 })
         getHexColor(fontColor)?.let { divider.setBackgroundColor(it) }
         getHexColor(fontColor)?.let { titleTv.setTextColor(it) }

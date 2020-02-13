@@ -483,14 +483,14 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
 
             if (commentList.getProfile_image() != null && !StringUtils.isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
                 try {
-                    Picasso.with(getActivity()).load(commentList.getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img).into(holder.commentorsImage);
+                    Picasso.get().load(commentList.getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img).into(holder.commentorsImage);
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
-                    Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(holder.commentorsImage);
+                    Picasso.get().load(R.drawable.default_commentor_img).into(holder.commentorsImage);
                 }
             } else {
-                Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(holder.commentorsImage);
+                Picasso.get().load(R.drawable.default_commentor_img).into(holder.commentorsImage);
             }
 
             if (isNewComment) {
@@ -575,14 +575,14 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
 
         if (replies.getProfile_image() != null && !StringUtils.isNullOrEmpty(replies.getProfile_image().getClientAppMin())) {
             try {
-                Picasso.with(getActivity()).load(replies.getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img).into(replyViewholder.commentorsImage);
+                Picasso.get().load(replies.getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img).into(replyViewholder.commentorsImage);
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(replyViewholder.commentorsImage);
+                Picasso.get().load(R.drawable.default_commentor_img).into(replyViewholder.commentorsImage);
             }
         } else {
-            Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(replyViewholder.commentorsImage);
+            Picasso.get().load(R.drawable.default_commentor_img).into(replyViewholder.commentorsImage);
         }
         parentView.addView(view);
 
@@ -719,14 +719,14 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
 
             if (commentList.getProfile_image() != null && !StringUtils.isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
                 try {
-                    Picasso.with(getActivity()).load(commentList.getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img).into(holder.commentorsImage);
+                    Picasso.get().load(commentList.getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img).into(holder.commentorsImage);
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
-                    Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(holder.commentorsImage);
+                    Picasso.get().load(R.drawable.default_commentor_img).into(holder.commentorsImage);
                 }
             } else {
-                Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(holder.commentorsImage);
+                Picasso.get().load(R.drawable.default_commentor_img).into(holder.commentorsImage);
             }
 
             commentLayout.removeViewAt(position);

@@ -114,7 +114,7 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
         memberCountTextView.setText("" + groupItem.getMemberCount());
 
         groupNameTextView.setText(groupItem.getTitle());
-        Picasso.with(this).load(groupItem.getHeaderImage())
+        Picasso.get().load(groupItem.getHeaderImage())
                 .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(groupImageView);
     }
 

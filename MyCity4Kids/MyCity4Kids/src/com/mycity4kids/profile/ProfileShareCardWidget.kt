@@ -93,7 +93,7 @@ class ProfileShareCardWidget : RelativeLayout {
     private fun processAuthorPersonalDetails(responseData: UserDetailResult) {
         authorNameTextView.text = responseData.firstName + " " + responseData.lastName
         if (!StringUtils.isNullOrEmpty(responseData.profilePicUrl.clientApp)) {
-            Picasso.with(this.context).load(responseData.profilePicUrl.clientApp)
+            Picasso.get().load(responseData.profilePicUrl.clientApp)
                     .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(RoundedTransformation()).into(profileImageView)
         }
         if (responseData.userBio == null || responseData.userBio.isEmpty()) {
@@ -141,7 +141,7 @@ class ProfileShareCardWidget : RelativeLayout {
         try {
             val jsonObject = Gson().toJsonTree(responseData.crownData).asJsonObject
             crown = Gson().fromJson<Crown>(jsonObject, Crown::class.java)
-            Picasso.with(this.context).load(crown.image_url).error(
+            Picasso.get().load(crown.image_url).error(
                     R.drawable.family_xxhdpi).fit().into(crownImageView)
         } catch (e: Exception) {
             crownImageView.visibility = View.GONE

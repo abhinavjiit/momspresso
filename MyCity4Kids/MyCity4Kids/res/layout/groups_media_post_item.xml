@@ -183,48 +183,18 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="4dp">
 
-            <com.shuhart.bubblepagerindicator.BubblePageIndicator
+            <com.mycity4kids.widget.IndefinitePagerIndicator
                 android:id="@+id/dotIndicatorView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/postDataViewPager"
-                android:layout_centerHorizontal="true"
-                app:bpi_fillColor="@color/app_red"
-                app:bpi_marginBetweenCircles="4dp"
-                app:bpi_onSurfaceCount="5"
-                app:bpi_pageColor="@color/line_separator_color"
-                app:bpi_radius="3dp"
-                app:bpi_risingCount="3" />
+                app:dotColor="@color/line_separator_color"
+                app:dotCount="5"
+                app:dotRadius="3dp"
+                app:dotSeparation="4dp"
+                app:fadingDotCount="3"
+                app:selectedDotColor="@color/app_red" />
         </LinearLayout>
-        <!--<com.mycity4kids.widget.CustomFontTextView-->
-        <!--android:id="@+id/upvoteTextView"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@+id/postDataViewPager"-->
-        <!--android:layout_marginTop="15dp"-->
-        <!--android:drawableLeft="@drawable/fav_icon"-->
-        <!--android:drawablePadding="5dp"-->
-        <!--android:gravity="bottom"-->
-        <!--android:text="20 Helpful"-->
-        <!--android:textColor="@color/ad.comment.date"-->
-        <!--android:textSize="10sp"-->
-        <!--app:fontName="oswald.ttf" />-->
 
-        <!--<com.mycity4kids.widget.CustomFontTextView-->
-        <!--android:id="@+id/downvoteTextView"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@+id/postDataViewPager"-->
-        <!--android:layout_marginLeft="5dp"-->
-        <!--android:layout_marginTop="15dp"-->
-        <!--android:layout_toRightOf="@+id/upvoteTextView"-->
-        <!--android:drawableLeft="@drawable/fav_icon"-->
-        <!--android:drawablePadding="5dp"-->
-        <!--android:gravity="bottom"-->
-        <!--android:text="0 Not Helpful"-->
-        <!--android:textColor="@color/ad.comment.date"-->
-        <!--android:textSize="10sp"-->
-        <!--app:fontName="oswald.ttf" />-->
         <LinearLayout
             android:id="@+id/upvoteContainer"
             android:layout_width="wrap_content"

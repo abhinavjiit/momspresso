@@ -43,7 +43,7 @@ class AddCollectionAdapter(val activity: Context, var recyclerViewClickListner: 
 
         if (holder is ViewHolderCollection) {
             try {
-                Picasso.with(activity).load(collectionList[position].imageUrl).placeholder(R.drawable.default_article).into(holder.collectionImageVIEW)
+                Picasso.get().load(collectionList[position].imageUrl).placeholder(R.drawable.default_article).into(holder.collectionImageVIEW)
             } catch (e: Exception) {
                 holder.collectionImageVIEW.setBackgroundResource(R.drawable.default_article);
             }
@@ -58,14 +58,14 @@ class AddCollectionAdapter(val activity: Context, var recyclerViewClickListner: 
             when (collectionList[position].itemType) {
                 AppConstants.ARTICLE_COLLECTION_TYPE -> {
                     try {
-                        Picasso.with(activity).load(collectionList[position].item_info.imageUrl.thumbMax).into(holder.collectionItemImageVIEW)
+                        Picasso.get().load(collectionList[position].item_info.imageUrl.thumbMax).into(holder.collectionItemImageVIEW)
                     } catch (e: Exception) {
                         holder.collectionItemImageVIEW.setBackgroundResource(R.drawable.default_article);
                     }
                 }
                 AppConstants.SHORT_STORY_COLLECTION_TYPE -> {
                     try {
-                        Picasso.with(activity).load(collectionList[position].item_info.storyImage)
+                        Picasso.get().load(collectionList[position].item_info.storyImage)
                                 .into(holder.collectionItemImageVIEW)
                     } catch (e: Exception) {
                         holder.collectionItemImageVIEW.setImageResource(R.drawable.default_article)
@@ -73,7 +73,7 @@ class AddCollectionAdapter(val activity: Context, var recyclerViewClickListner: 
                 }
                 AppConstants.VIDEO_COLLECTION_TYPE -> {
                     try {
-                        Picasso.with(activity).load(collectionList[position].item_info.thumbnail)
+                        Picasso.get().load(collectionList[position].item_info.thumbnail)
                                 .into(holder.collectionItemImageVIEW)
                     } catch (e: Exception) {
                         holder.collectionItemImageVIEW.setImageResource(R.drawable.default_article)

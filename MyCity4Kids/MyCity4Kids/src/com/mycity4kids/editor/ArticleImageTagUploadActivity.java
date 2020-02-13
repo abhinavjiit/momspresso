@@ -148,7 +148,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             changePictureTextView.setVisibility(View.VISIBLE);
             articleId = getIntent().getStringExtra("articleId");
             if (thumbnailUrl != null) {
-                Picasso.with(this).load(thumbnailUrl).into(articleImage);
+                Picasso.get().load(thumbnailUrl).into(articleImage);
                 url = thumbnailUrl;
             }
         } else {
@@ -547,7 +547,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                                      }
                                  }
                                  adapter.notifyDataSetChanged();
-                                 Picasso.with(ArticleImageTagUploadActivity.this).load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(articleImage);
+                                 Picasso.get().load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(articleImage);
                                  showToast(getString(R.string.image_upload_success));
                              }
                          }

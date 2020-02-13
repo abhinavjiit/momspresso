@@ -136,7 +136,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
         saveTextView.setOnClickListener(this);
         editImageView.setOnClickListener(this);
         try {
-            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(R.drawable.family_xxhdpi)
+            Picasso.get().load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).into(profileImageView);
         } catch (Exception e) {
             profileImageView.setImageResource(R.drawable.family_xxhdpi);
@@ -592,8 +592,8 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                                      Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
                                  }
                                  setProfileImage(responseModel.getData().getResult().getUrl());
-                                 Picasso.with(EditProfileNewActivity.this).invalidate(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()));
-                                 Picasso.with(EditProfileNewActivity.this).load(responseModel.getData().getResult().getUrl())
+                                 Picasso.get().invalidate(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()));
+                                 Picasso.get().load(responseModel.getData().getResult().getUrl())
                                          .memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.family_xxhdpi)
                                          .error(R.drawable.family_xxhdpi).into(profileImageView);
                                  SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), responseModel.getData().getResult().getUrl());

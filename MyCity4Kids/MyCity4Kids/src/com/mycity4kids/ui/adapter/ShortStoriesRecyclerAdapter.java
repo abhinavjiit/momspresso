@@ -61,7 +61,7 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
     @Override
     public void onBindViewHolder(ShortStoriesViewHolder holder, int position) {
         try {
-            Picasso.with(mContext).load(articleDataModelsNew.get(position).getStoryImage()).into(holder.shareStoryImageView);
+            Picasso.get().load(articleDataModelsNew.get(position).getStoryImage()).into(holder.shareStoryImageView);
             holder.storyAuthorTextView.setText(articleDataModelsNew.get(position).getUserName());
             AppUtils.populateLogoImageLanguageWise(holder.itemView.getContext(), holder.logoImageView, articleDataModelsNew.get(position).getLang());
         } catch (Exception e) {
@@ -69,7 +69,7 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         try {
-            Picasso.with(holder.itemView.getContext()).load(articleDataModelsNew.get(position).getStoryImage().trim()).placeholder(R.drawable.default_article).into(holder.storyImage);
+            Picasso.get().load(articleDataModelsNew.get(position).getStoryImage().trim()).placeholder(R.drawable.default_article).into(holder.storyImage);
         } catch (Exception e) {
             holder.storyImage.setImageResource(R.drawable.default_article);
             Crashlytics.logException(e);

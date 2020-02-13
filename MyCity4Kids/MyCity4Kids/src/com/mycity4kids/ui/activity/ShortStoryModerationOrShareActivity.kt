@@ -120,8 +120,8 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
             }
             try {
                 val responseData = response.body()
-                Picasso.with(this@ShortStoryModerationOrShareActivity).load(responseData?.storyImage).into(storyImageView)
-                Picasso.with(this@ShortStoryModerationOrShareActivity).load(responseData?.storyImage).into(shareStoryImageView)
+                Picasso.get().load(responseData?.storyImage).into(storyImageView)
+                Picasso.get().load(responseData?.storyImage).into(shareStoryImageView)
                 storyAuthorTextView?.text = WordUtils.capitalizeFully(responseData?.userName)
                 shareStoryAuthorTextView?.text = WordUtils.capitalizeFully(responseData?.userName)
                 processTags(responseData?.tags)

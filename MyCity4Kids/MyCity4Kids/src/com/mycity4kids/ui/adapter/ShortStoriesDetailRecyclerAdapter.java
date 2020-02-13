@@ -83,12 +83,12 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
             if (holder instanceof ShortStoriesViewHolder) {
                 ShortStoriesViewHolder ssViewHolder = (ShortStoriesViewHolder) holder;
                 try {
-                    Picasso.with(holder.itemView.getContext()).load(datalist.get(position).getSsResult().getStoryImage().trim()).placeholder(R.drawable.default_article).into(ssViewHolder.storyImage);
+                    Picasso.get().load(datalist.get(position).getSsResult().getStoryImage().trim()).placeholder(R.drawable.default_article).into(ssViewHolder.storyImage);
                 } catch (Exception e) {
                     ssViewHolder.storyImage.setImageResource(R.drawable.default_article);
                 }
                 try {
-                    Picasso.with(holder.itemView.getContext()).load(datalist.get(position).getSsResult().getStoryImage()).into(ssViewHolder.shareStoryImageView);
+                    Picasso.get().load(datalist.get(position).getSsResult().getStoryImage()).into(ssViewHolder.shareStoryImageView);
                     ssViewHolder.storyAuthorTextView.setText(datalist.get(position).getSsResult().getUserName());
                     AppUtils.populateLogoImageLanguageWise(holder.itemView.getContext(), ssViewHolder.logoImageView, datalist.get(position).getSsResult().getLang());
                 } catch (Exception e) {
@@ -136,12 +136,12 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
                     ssCommentViewHolder.replyCountTextView.setText(mContext.getString(R.string.short_s_view_replies) + "(" + datalist.get(position).getSsComment().getReplies_count() + ")");
                 }
                 try {
-                    Picasso.with(mContext).load(datalist.get(position).getSsComment().getUserPic().getClientAppMin())
+                    Picasso.get().load(datalist.get(position).getSsComment().getUserPic().getClientAppMin())
                             .placeholder(R.drawable.default_commentor_img).into((ssCommentViewHolder.commentorImageView));
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
-                    Picasso.with(mContext).load(R.drawable.default_commentor_img).into(ssCommentViewHolder.commentorImageView);
+                    Picasso.get().load(R.drawable.default_commentor_img).into(ssCommentViewHolder.commentorImageView);
                 }
             }
         } catch (Exception e) {

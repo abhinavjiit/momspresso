@@ -61,7 +61,7 @@ public class ArticleTagsImagesGridAdapter extends BaseAdapter {
         }
 
         if (!StringUtils.isNullOrEmpty(tagsImageUrlList.get(position).getImageUrl().getClientApp())) {
-            Picasso.with(mContext).load(tagsImageUrlList.get(position).getImageUrl().getClientApp()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+            Picasso.get().load(tagsImageUrlList.get(position).getImageUrl().getClientApp()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                     .fit().into(holder.tagsImageView);
         } else {
             holder.tagsImageView.setBackgroundResource(R.drawable.article_default);

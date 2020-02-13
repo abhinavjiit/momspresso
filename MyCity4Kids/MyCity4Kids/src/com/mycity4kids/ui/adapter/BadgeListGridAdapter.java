@@ -63,7 +63,7 @@ public class BadgeListGridAdapter extends BaseAdapter {
 
         try {
             if (!StringUtils.isNullOrEmpty(badgeList.get(position).getBadge_image_url())) {
-                Picasso.with(mContext).load(badgeList.get(position).getBadge_image_url()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                Picasso.get().load(badgeList.get(position).getBadge_image_url()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                         .fit().into(holder.badgeImageView);
             } else {
                 holder.badgeImageView.setBackgroundResource(R.drawable.article_default);

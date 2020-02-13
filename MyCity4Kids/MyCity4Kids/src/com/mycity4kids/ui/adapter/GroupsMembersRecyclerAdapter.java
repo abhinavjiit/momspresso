@@ -47,7 +47,7 @@ public class GroupsMembersRecyclerAdapter extends RecyclerView.Adapter<GroupsMem
     public void onBindViewHolder(MembersViewHolder holder, int position) {
         holder.memberNameTextView.setText(membersDataList.get(position).getUserInfo().getFirstName());
         try {
-            Picasso.with(mContext).load(membersDataList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+            Picasso.get().load(membersDataList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
                     .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.memberImageView);
         } catch (Exception e) {
             holder.memberImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_commentor_img));

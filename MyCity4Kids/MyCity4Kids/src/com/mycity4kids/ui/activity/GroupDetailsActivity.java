@@ -565,7 +565,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     memberCountTextView.setText(selectedGroup.getMemberCount() + " " + getString(R.string.groups_member_label));
                     groupNameTextView.setText(selectedGroup.getTitle());
 
-                    Picasso.with(GroupDetailsActivity.this).load(selectedGroup.getHeaderImage())
+                    Picasso.get().load(selectedGroup.getHeaderImage())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(groupImageView);
 
                     groupAboutRecyclerAdapter = new GroupAboutRecyclerAdapter(GroupDetailsActivity.this, GroupDetailsActivity.this);

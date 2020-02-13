@@ -60,7 +60,7 @@ class AddMultipleCollectionAdapter(var recyclerViewClickListner: RecyclerViewCli
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ViewHolderCollection) {
             if (null != dataList?.get(position)?.imageUrl) {
-                Picasso.with(holder.itemView.context).load(dataList?.get(position)?.imageUrl?.thumbMin).placeholder(R.drawable.default_article).error(R.drawable.default_article).into((holder).articleImageView)
+                Picasso.get().load(dataList?.get(position)?.imageUrl?.thumbMin).placeholder(R.drawable.default_article).error(R.drawable.default_article).into((holder).articleImageView)
             } else {
                 (holder).articleImageView.setBackgroundResource(R.drawable.article_default)
             }
@@ -82,7 +82,7 @@ class AddMultipleCollectionAdapter(var recyclerViewClickListner: RecyclerViewCli
 
                 AppConstants.CONTENT_TYPE_SHORT_STORY -> {
                     try {
-                        Picasso.with(holder.itemView.context).load(mixFeedList?.get(position)?.storyImage).placeholder(R.drawable.default_article).error(R.drawable.default_article).into((holder).articleImageView)
+                        Picasso.get().load(mixFeedList?.get(position)?.storyImage).placeholder(R.drawable.default_article).error(R.drawable.default_article).into((holder).articleImageView)
                     } catch (e: Exception) {
                         (holder).articleImageView.setBackgroundResource(R.drawable.article_default)
                     }
@@ -99,7 +99,7 @@ class AddMultipleCollectionAdapter(var recyclerViewClickListner: RecyclerViewCli
                 }
                 AppConstants.CONTENT_TYPE_VIDEO -> {
                     try {
-                        Picasso.with(holder.itemView.context).load(mixFeedList?.get(position)?.thumbnail).placeholder(R.drawable.default_article).error(R.drawable.default_article).into((holder).articleImageView)
+                        Picasso.get().load(mixFeedList?.get(position)?.thumbnail).placeholder(R.drawable.default_article).error(R.drawable.default_article).into((holder).articleImageView)
                     } catch (e: Exception) {
                         (holder).articleImageView.setBackgroundResource(R.drawable.article_default)
                     }
@@ -115,7 +115,7 @@ class AddMultipleCollectionAdapter(var recyclerViewClickListner: RecyclerViewCli
                 }
                 else -> {
                     try {
-                        Picasso.with(holder.itemView.context).load(mixFeedList?.get(position)?.imageUrl?.thumbMax).placeholder(R.drawable.default_article).error(R.drawable.default_article).into((holder).articleImageView)
+                        Picasso.get().load(mixFeedList?.get(position)?.imageUrl?.thumbMax).placeholder(R.drawable.default_article).error(R.drawable.default_article).into((holder).articleImageView)
                     } catch (e: Exception) {
                         (holder).articleImageView.setBackgroundResource(R.drawable.article_default)
                     }

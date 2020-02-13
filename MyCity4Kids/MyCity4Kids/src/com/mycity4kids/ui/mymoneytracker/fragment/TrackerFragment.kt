@@ -90,7 +90,7 @@ class TrackerFragment : BaseFragment() {
         (containerView.findViewById<TextView>(R.id.textTotalPayout)).text = totalPayout.toString()
         var imageBrandLogo = containerView.findViewById<ImageView>(R.id.imageBrandLogo)
         if (!imageUrl.isNullOrEmpty() && !imageUrl.trim().isEmpty() ) {
-            Picasso.with(context).load(imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageBrandLogo)
+            Picasso.get().load(imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageBrandLogo)
         }
 
         recyclerView = containerView.findViewById(R.id.trackerListIndex)

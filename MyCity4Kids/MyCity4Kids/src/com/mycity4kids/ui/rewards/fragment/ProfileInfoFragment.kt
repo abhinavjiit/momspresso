@@ -263,7 +263,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
         }
 
         try {
-            Picasso.with(activity).load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(R.drawable.family_xxhdpi)
+            Picasso.get().load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).into(profileImageView)
         } catch (e: Exception) {
             profileImageView.setImageResource(R.drawable.family_xxhdpi)
@@ -782,8 +782,8 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
                         Log.i("IMAGE_UPLOAD_REQUEST", responseModel.data.result.url)
                     }
                     setProfileImage(responseModel.data.result.url)
-                    Picasso.with(activity as RewardsContainerActivity).invalidate(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))
-                    Picasso.with(activity as RewardsContainerActivity).load(responseModel.data.result.url)
+                    Picasso.get().invalidate(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))
+                    Picasso.get().load(responseModel.data.result.url)
                             .memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.family_xxhdpi)
                             .error(R.drawable.family_xxhdpi).into(profileImageView)
                     SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), responseModel.data.result.url)

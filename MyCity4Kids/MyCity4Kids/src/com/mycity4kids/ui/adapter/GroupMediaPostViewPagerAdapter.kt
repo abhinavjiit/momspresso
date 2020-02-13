@@ -35,7 +35,7 @@ class GroupMediaPostViewPagerAdapter(var mContext: Context) : PagerAdapter(), Vi
         val inflater = container.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val v = inflater.inflate(R.layout.group_media_pager_item, container, false)
         val iv = v.findViewById<View>(R.id.mediaImageView) as ImageView
-        if (mediaList!![position] != null && !mediaList!![position]!!.trim { it <= ' ' }.isEmpty()) Picasso.with(mContext).load(mediaList!![position]).error(R.drawable.default_article).into(iv) else {
+        if (mediaList!![position] != null && !mediaList!![position]!!.trim { it <= ' ' }.isEmpty()) Picasso.get().load(mediaList!![position]).error(R.drawable.default_article).into(iv) else {
             iv.setBackgroundResource(R.drawable.default_article)
             iv.visibility = View.GONE
         }
@@ -60,7 +60,7 @@ class GroupMediaPostViewPagerAdapter(var mContext: Context) : PagerAdapter(), Vi
 
     private fun loadImage(imageView: ImageView, url: String?) {
         imageView.apply {
-            Picasso.with(mContext).load(url).into(this)
+            Picasso.get().load(url).into(this)
         }
     }
 }

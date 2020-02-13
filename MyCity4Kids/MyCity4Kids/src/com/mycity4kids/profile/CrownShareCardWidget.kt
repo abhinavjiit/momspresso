@@ -28,9 +28,9 @@ class CrownShareCardWidget : LinearLayout {
     }
 
     fun populateCrownDetails(data: Crown?) {
-        Picasso.with(context).load(data?.image_url).error(R.drawable.default_article)
+        Picasso.get().load(data?.image_url).error(R.drawable.default_article)
                 .fit().into(crownImageViewBitmap)
-        Picasso.with(context).load(data?.bg_url).error(R.drawable.default_article)
+        Picasso.get().load(data?.bg_url).error(R.drawable.default_article)
                 .fit().into(crownBgImageViewBitmap)
     }
 }

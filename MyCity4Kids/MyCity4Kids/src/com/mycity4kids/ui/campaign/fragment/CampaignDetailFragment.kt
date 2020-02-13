@@ -335,8 +335,8 @@ class CampaignDetailFragment : BaseFragment() {
 
     private fun setResponseData(apiGetResponsee: CampaignDetailResult?) {
         apiGetResponse = apiGetResponsee
-        Picasso.with(context).load(apiGetResponse!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(bannerImg)
-        Picasso.with(context).load(apiGetResponse!!.brandDetails!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(brandImg)
+        Picasso.get().load(apiGetResponse!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(bannerImg)
+        Picasso.get().load(apiGetResponse!!.brandDetails!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(brandImg)
         brandName.setText(apiGetResponse!!.brandDetails!!.name)
         campaignName.setText(apiGetResponse!!.name)
         amount.setText("" + (apiGetResponse!!.maxSlots?.minus(apiGetResponse!!.totalUsedSlots!!)))
@@ -576,8 +576,8 @@ class CampaignDetailFragment : BaseFragment() {
     fun setDefaultCampaignValues() {
         upperTextHeader.text = resources.getString(R.string.sorry_not_eligible)
         lowerTextHeader.text = resources.getString(R.string.try_following_campaign)
-        Picasso.with(context).load(defaultapigetResponse!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(default_campaign_header)
-        Picasso.with(context).load(defaultapigetResponse!!.brandDetails!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(default_brand_img)
+        Picasso.get().load(defaultapigetResponse!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(default_campaign_header)
+        Picasso.get().load(defaultapigetResponse!!.brandDetails!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(default_brand_img)
         default_brand_name.setText(defaultapigetResponse!!.brandDetails!!.name)
         default_campaign_name.setText(defaultapigetResponse!!.name)
         default_submission_status.text = resources.getString(R.string.campaign_details_apply_now)

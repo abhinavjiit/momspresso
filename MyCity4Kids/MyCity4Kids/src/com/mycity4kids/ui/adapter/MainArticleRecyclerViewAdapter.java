@@ -220,7 +220,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 ((JoinGroupViewHolder) holder).joinGroupTextView.setVisibility(View.VISIBLE);
             }
             try {
-                Picasso.with(mContext).load(gpImageUrl).placeholder(R.drawable.groups_generic)
+                Picasso.get().load(gpImageUrl).placeholder(R.drawable.groups_generic)
                         .error(R.drawable.groups_generic).into(((JoinGroupViewHolder) holder).groupHeaderImageView);
             } catch (Exception e) {
                 ((JoinGroupViewHolder) holder).groupHeaderImageView.setImageResource(R.drawable.groups_generic);
@@ -323,8 +323,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     }
 
     private void addCampaignCard(ImageView campaignHeader, CircularImageView brandImg, TextView brandName, TextView campaignName, TextView campaignStatus, final CampaignDataListResult data, final int position, final RecyclerView.ViewHolder holder) {
-        Picasso.with(mContext).load(data.getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(campaignHeader);
-        Picasso.with(mContext).load(data.getBrandDetails().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(brandImg);
+        Picasso.get().load(data.getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(campaignHeader);
+        Picasso.get().load(data.getBrandDetails().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(brandImg);
         brandName.setText(data.getBrandDetails().getName());
         campaignName.setText(data.getName());
         setTextAndColor(data.getCampaignStatus(), campaignStatus);
@@ -418,10 +418,10 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         try {
             if (!StringUtils.isNullOrEmpty(data.getVideoUrl())
                     && (data.getImageUrl().getThumbMax() == null || data.getImageUrl().getThumbMax().contains("default.jp"))) {
-                Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURLMomspresso(data.getVideoUrl())).placeholder(R.drawable.default_article).into(articleIV);
+                Picasso.get().load(AppUtils.getYoutubeThumbnailURLMomspresso(data.getVideoUrl())).placeholder(R.drawable.default_article).into(articleIV);
             } else {
                 if (!StringUtils.isNullOrEmpty(data.getImageUrl().getThumbMax())) {
-                    Picasso.with(mContext).load(data.getImageUrl().getThumbMax())
+                    Picasso.get().load(data.getImageUrl().getThumbMax())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(articleIV);
                 } else {
                     articleIV.setBackgroundResource(R.drawable.default_article);
@@ -495,7 +495,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         }
 
         try {
-            Picasso.with(holder.itemView.getContext()).load(data.getStoryImage().trim()).into(storyImage);
+            Picasso.get().load(data.getStoryImage().trim()).into(storyImage);
         } catch (Exception e) {
             storyImage.setImageResource(R.drawable.default_article);
         }
@@ -506,7 +506,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             followAuthorTextView.setText(mContext.getResources().getString(R.string.ad_follow_author));
         }
         try {
-            Picasso.with(mContext).load(data.getStoryImage()).into(shareStoryImageView);
+            Picasso.get().load(data.getStoryImage()).into(shareStoryImageView);
             storyAuthorTextView.setText(data.getUserName());
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -1455,7 +1455,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             authorTextView.setText("NA");
         }
         try {
-            Picasso.with(mContext).load(data.getThumbnail())
+            Picasso.get().load(data.getThumbnail())
                     .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageView);
         } catch (Exception e) {
             imageView.setImageResource(R.drawable.default_article);

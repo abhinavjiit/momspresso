@@ -40,7 +40,7 @@ class EarningRecyclerAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (payoutsList!!.isNotEmpty()) {
             val item = payoutsList!!.get(position)
-            Picasso.with(context).load(item.campaignDetails.brandDetails.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.brandImageView)
+            Picasso.get().load(item.campaignDetails.brandDetails.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.brandImageView)
             holder.settleAmount.text = ("\u20b9" + item.final_payout)
             holder.brandName.text = (item.campaignDetails.brandDetails.name)
             holder.campaignName.text = (item.campaignDetails.name)

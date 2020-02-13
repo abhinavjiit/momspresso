@@ -655,7 +655,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         if (isAdded()) {
             switch (shareMedium) {
                 case AppConstants.MEDIUM_FACEBOOK: {
-                    SharingUtils.shareViaFacebook(this);
+                    SharingUtils.shareViaFacebook(getActivity());
                     Utils.pushShareStoryEvent(getActivity(), "TopicsShortStoriesTabFragment",
                             userDynamoId + "", sharedStoryItem.getId(),
                             sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Facebook");

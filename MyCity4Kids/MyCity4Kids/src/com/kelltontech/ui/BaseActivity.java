@@ -187,7 +187,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
         textTitle.setText(body);
         textAuthor.setText(title);
         if (!image_url.isEmpty()) {
-            Picasso.with(BaseActivity.this).load(image_url).placeholder(R.drawable.article_default)
+            Picasso.get().load(image_url).placeholder(R.drawable.article_default)
                     .error(R.drawable.article_default).into(image);
         } else {
             image.setVisibility(View.GONE);

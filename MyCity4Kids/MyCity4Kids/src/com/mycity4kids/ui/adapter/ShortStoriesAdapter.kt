@@ -46,7 +46,7 @@ class ShortStoriesAdapter(activity: Context, showCategory: Boolean) : BaseAdapte
         } else {
             viewHolder.topicsNameTextView?.visibility = View.GONE
             try {
-                Picasso.with(BaseApplication.getAppContext()).load(userCollectionsTopicList[position - 1].image_url).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                Picasso.get().load(userCollectionsTopicList[position - 1].image_url).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                         .fit().into(viewHolder.tagImageView)
             } catch (e: Exception) {
                 viewHolder.tagImageView?.setImageDrawable(ContextCompat.getDrawable(BaseApplication.getAppContext(), R.drawable.default_article))

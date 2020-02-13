@@ -428,7 +428,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                         }
                         try {
                             userCollectionsListModel.imageUrl = data.getStringExtra("collectionImage")
-                            Picasso.with(this@UserCollectionItemListActivity).load(data.getStringExtra("collectionImage"))
+                            Picasso.get().load(data.getStringExtra("collectionImage"))
                                     .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageVIEW)
                         } catch (e: Exception) {
                             collectionImageVIEW?.setImageResource(R.drawable.default_article)
@@ -512,7 +512,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
             }
             followersCount.text = userCollectionsListModel.totalCollectionFollowers.toString()
             try {
-                Picasso.with(this@UserCollectionItemListActivity).load(userCollectionsListModel.imageUrl)
+                Picasso.get().load(userCollectionsListModel.imageUrl)
                         .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageVIEW)
             } catch (e: Exception) {
                 collectionImageVIEW?.setImageResource(R.drawable.default_article)

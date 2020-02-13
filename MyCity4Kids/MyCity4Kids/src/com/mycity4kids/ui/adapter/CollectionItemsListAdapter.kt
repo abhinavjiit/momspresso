@@ -44,7 +44,7 @@ class CollectionItemsListAdapter(var activity: Context, var recyclerViewClick: R
             else holder.viewCountTextView.visibility = View.GONE
             if (userCollectionsTopicList[position].itemType.equals(AppConstants.CONTENT_TYPE_VIDEO)) {
                 try {
-                    Picasso.with(activity).load(userCollectionsTopicList[position].item_info.thumbnail)
+                    Picasso.get().load(userCollectionsTopicList[position].item_info.thumbnail)
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView)
                 } catch (e: Exception) {
                     holder.articleImageView.setImageResource(R.drawable.default_article)
@@ -56,7 +56,7 @@ class CollectionItemsListAdapter(var activity: Context, var recyclerViewClick: R
 
             } else if (userCollectionsTopicList[position].itemType.equals(AppConstants.CONTENT_TYPE_ARTICLE)) {
                 try {
-                    Picasso.with(activity).load(userCollectionsTopicList[position].item_info.imageUrl.thumbMax)
+                    Picasso.get().load(userCollectionsTopicList[position].item_info.imageUrl.thumbMax)
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView)
                 } catch (e: Exception) {
                     holder.articleImageView.setImageResource(R.drawable.default_article)
@@ -66,7 +66,7 @@ class CollectionItemsListAdapter(var activity: Context, var recyclerViewClick: R
                 holder.articleAuthorName.text = userCollectionsTopicList[position].item_info.userName
             } else {
                 try {
-                    Picasso.with(activity).load(userCollectionsTopicList[position].item_info.storyImage)
+                    Picasso.get().load(userCollectionsTopicList[position].item_info.storyImage)
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView)
                 } catch (e: Exception) {
                     holder.articleImageView.setImageResource(R.drawable.default_article)

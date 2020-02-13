@@ -57,7 +57,7 @@ public class SearchArticlesListingAdapter extends RecyclerView.Adapter<SearchArt
         }
 
         try {
-            Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getThumbMin()).
+            Picasso.get().load(articleDataModelsNew.get(position).getImageUrl().getThumbMin()).
                     placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
         } catch (Exception e) {
             holder.articleImageView.setBackgroundResource(R.drawable.article_default);

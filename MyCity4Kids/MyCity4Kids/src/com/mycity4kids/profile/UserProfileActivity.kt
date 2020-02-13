@@ -456,7 +456,7 @@ class UserProfileActivity : BaseActivity(),
     private fun processAuthorPersonalDetails(responseData: UserDetailResponse) {
         authorNameTextView.text = responseData.data[0].result.firstName + " " + responseData.data[0].result.lastName
         if (!StringUtils.isNullOrEmpty(responseData.data[0].result.profilePicUrl.clientApp)) {
-            Picasso.with(this@UserProfileActivity).load(responseData.data[0].result.profilePicUrl.clientApp)
+            Picasso.get().load(responseData.data[0].result.profilePicUrl.clientApp)
                     .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(RoundedTransformation()).into(profileImageView)
         }
         if (responseData.data[0].result.userBio == null || responseData.data[0].result.userBio.isEmpty()) {
@@ -506,7 +506,7 @@ class UserProfileActivity : BaseActivity(),
         try {
             val jsonObject = Gson().toJsonTree(responseData.data.get(0).result.crownData).asJsonObject
             crown = Gson().fromJson<Crown>(jsonObject, Crown::class.java)
-            Picasso.with(this@UserProfileActivity).load(crown.image_url).error(
+            Picasso.get().load(crown.image_url).error(
                     R.drawable.family_xxhdpi).fit().into(crownImageView)
             if (!profileDetail.isNullOrBlank() && profileDetail == "rank") {
                 showCrownDialog(crown)

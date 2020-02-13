@@ -30,19 +30,19 @@ class BadgeShareCardWidget : LinearLayout {
     }
 
     fun populateBadgesDetails(data: BadgeListResponse.BadgeListData.BadgeListResult?) {
-        Picasso.with(context).load(data?.badge_image_url).error(R.drawable.default_article)
+        Picasso.get().load(data?.badge_image_url).error(R.drawable.default_article)
                 .fit().into(badgeImageViewBitmap)
-        Picasso.with(context).load(data?.badge_bg_url).error(R.drawable.default_article)
+        Picasso.get().load(data?.badge_bg_url).error(R.drawable.default_article)
                 .fit().into(badgeBgImageViewBitmap)
     }
 
     fun populateMilestonesDetails(data: MilestonesResult?) {
-        Picasso.with(context).load(data?.milestone_bg_url).error(R.drawable.default_article)
+        Picasso.get().load(data?.milestone_bg_url).error(R.drawable.default_article)
                 .fit().into(badgeBgImageViewBitmap)
         if (data?.item_type == AppConstants.CONTENT_TYPE_MYMONEY) {
             badgeImageViewBitmap.setImageDrawable(null)
         } else {
-            Picasso.with(context).load(data?.milestone_image_url).error(R.drawable.default_article)
+            Picasso.get().load(data?.milestone_image_url).error(R.drawable.default_article)
                     .fit().into(badgeImageViewBitmap)
         }
     }

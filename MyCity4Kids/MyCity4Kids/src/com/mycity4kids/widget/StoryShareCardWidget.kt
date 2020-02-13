@@ -9,7 +9,6 @@ import android.widget.TextView
 import com.mycity4kids.R
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.preference.SharedPrefUtils
-import com.squareup.picasso.Picasso
 
 class StoryShareCardWidget : LinearLayout {
 
@@ -54,13 +53,5 @@ class StoryShareCardWidget : LinearLayout {
         } else {
             logoImageView.setImageResource(R.drawable.app_logo)
         }
-    }
-
-    fun populateStoryDetails(storyImageUrl: String?, storyAuthor: String?) {
-        storyImageUrl?.let {
-            Picasso.with(context).load(it).error(R.drawable.default_article)
-                    .fit().into(storyImageView)
-        }
-        storyAuthorTextView.text = storyAuthor
     }
 }

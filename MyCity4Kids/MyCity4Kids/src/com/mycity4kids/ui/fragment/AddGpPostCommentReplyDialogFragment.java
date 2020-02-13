@@ -357,7 +357,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) dateContainermedia.getLayoutParams();
                             params.addRule(RelativeLayout.BELOW, R.id.timerLayout);
                             dateContainermedia.setLayoutParams(params);
-//                            Picasso.with(getActivity()).load(mediaList.get(0)).error(R.drawable.default_article).into(media);
                         } else {
                             commentDateTextView.setVisibility(View.VISIBLE);
                             media.setVisibility(View.GONE);
@@ -380,7 +379,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) dateContainermedia.getLayoutParams();
                             params.addRule(RelativeLayout.BELOW, R.id.media);
                             dateContainermedia.setLayoutParams(params);
-                            Picasso.with(getActivity()).load(mediaList.get(0)).error(R.drawable.default_article).into(media);
+                            Picasso.get().load(mediaList.get(0)).error(R.drawable.default_article).into(media);
                         } else {
                             commentDateTextView.setVisibility(View.VISIBLE);
                             media.setVisibility(View.GONE);
@@ -391,13 +390,13 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                     }
                 } else {
                     try {
-                        Picasso.with(getActivity()).load(commentOrReplyData.getUserInfo().getProfilePicUrl().getClientApp())
+                        Picasso.get().load(commentOrReplyData.getUserInfo().getProfilePicUrl().getClientApp())
                                 .placeholder(R.drawable.default_commentor_img).into((commentorImageView));
                     } catch (Exception e) {
                         Crashlytics.logException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                         if (isAdded())
-                            Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(commentorImageView);
+                            Picasso.get().load(R.drawable.default_commentor_img).into(commentorImageView);
                     }
                     commentorUsernameTextView.setText(commentOrReplyData.getUserInfo().getFirstName() + " " + commentOrReplyData.getUserInfo().getLastName());
                     if (commentOrReplyData.getCommentType() == AppConstants.COMMENT_TYPE_AUDIO) {
@@ -435,7 +434,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) dateContainermedia.getLayoutParams();
                             params.addRule(RelativeLayout.BELOW, R.id.media);
                             dateContainermedia.setLayoutParams(params);
-                            Picasso.with(getActivity()).load(mediaList.get(0)).error(R.drawable.default_article).into(media);
+                            Picasso.get().load(mediaList.get(0)).error(R.drawable.default_article).into(media);
                         } else {
                             commentDateTextView.setVisibility(View.VISIBLE);
                             media.setVisibility(View.GONE);
@@ -1300,7 +1299,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) addMediaImageView.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             addMediaImageView.setLayoutParams(params);
-            Picasso.with(getActivity()).load(url).error(R.drawable.default_article).into(uploadedIV);
+            Picasso.get().load(url).error(R.drawable.default_article).into(uploadedIV);
             removeIV.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
                 @Override

@@ -633,7 +633,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         getCrownData();
 
         if (!StringUtils.isNullOrEmpty(detailData.getImageUrl().getThumbMax())) {
-            Picasso.with(getActivity()).load(detailData.getImageUrl().getThumbMax()).placeholder(R.drawable.default_article).resize(width, (int) (220 * density)).centerCrop().into(cover_image);
+            Picasso.get().load(detailData.getImageUrl().getThumbMax()).placeholder(R.drawable.default_article).resize(width, (int) (220 * density)).centerCrop().into(cover_image);
         }
 
         if (!StringUtils.isNullOrEmpty(detailData.getTitle())) {
@@ -873,7 +873,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
 
             @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
             }
 
             @Override
@@ -883,11 +884,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
         floatingActionButton.setTag(target);
         if (!StringUtils.isNullOrEmpty(detailData.getProfilePic().getClientApp())) {
-            Picasso.with(getActivity()).load(detailData.getProfilePic().getClientApp()).into(target);
+            Picasso.get().load(detailData.getProfilePic().getClientApp()).into(target);
         }
 
         if (!StringUtils.isNullOrEmpty(detailData.getImageUrl().getThumbMax())) {
-            Picasso.with(getActivity()).load(detailData.getImageUrl().getThumbMax()).placeholder(R.drawable.default_article).fit().into(cover_image);
+            Picasso.get().load(detailData.getImageUrl().getThumbMax()).placeholder(R.drawable.default_article).fit().into(cover_image);
         }
         if (!userDynamoId.equals(detailData.getUserId())) {
             hitUpdateViewCountAPI(detailData.getUserId(), detailData.getTags(), detailData.getCities());
@@ -1111,7 +1112,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         ShareLinkContent content = new ShareLinkContent.Builder()
                                 .setContentUrl(Uri.parse(shareUrl))
                                 .build();
-                        new ShareDialog(this).show(content);
+                        if (getActivity() != null)
+                            new ShareDialog(getActivity()).show(content);
                     }
                     Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author, "Facebook");
                     break;
@@ -1345,7 +1347,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     public void onGroupMappingResult(int groupId, String gpHeading, String gpSubHeading, String gpImageUrl) {
         this.groupId = groupId;
         try {
-            Picasso.with(getActivity()).load(gpImageUrl).placeholder(R.drawable.groups_generic)
+            Picasso.get().load(gpImageUrl).placeholder(R.drawable.groups_generic)
                     .error(R.drawable.groups_generic).into(groupHeaderImageView);
         } catch (Exception e) {
             groupHeaderImageView.setImageResource(R.drawable.groups_generic);
@@ -1509,7 +1511,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                         if (topic.getExtraData().get(0).getCategoryTag().getCategoryImage() != null &&
                                                 !topic.getExtraData().get(0).getCategoryTag().getCategoryImage().isEmpty()) {
                                             sponsoredViewContainer.setVisibility(View.VISIBLE);
-                                            Picasso.with(getActivity()).load(topic.getExtraData().get(0).getCategoryTag().getCategoryImage()).into(sponsoredImage);
+                                            Picasso.get().load(topic.getExtraData().get(0).getCategoryTag().getCategoryImage()).into(sponsoredImage);
                                             sponsoredTextView.setText("this story is sponsored by ");
                                         } else {
                                             sponsoredViewContainer.setVisibility(View.GONE);
@@ -1517,7 +1519,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
                                         if (topic.getExtraData().get(0).getCategoryTag().getCategoryBadge() != null && !topic.getExtraData().get(0).getCategoryTag().getCategoryBadge().isEmpty()) {
                                             badge.setVisibility(View.VISIBLE);
-                                            Picasso.with(getActivity()).load(topic.getExtraData().get(0).getCategoryTag().getCategoryBadge()).into(badge);
+                                            Picasso.get().load(topic.getExtraData().get(0).getCategoryTag().getCategoryBadge()).into(badge);
                                         } else {
                                             badge.setVisibility(View.GONE);
                                         }
@@ -1644,7 +1646,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private void setCrownData(String image_url) {
         if (!StringUtils.isNullOrEmpty(image_url)) {
             crownImageView.setVisibility(View.VISIBLE);
-            Picasso.with(getActivity()).load(image_url).
+            Picasso.get().load(image_url).
                     placeholder(R.drawable.default_article).fit().into(crownImageView);
         }
     }
@@ -1719,34 +1721,34 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         impressionList.addAll(dataList);
                         Collections.shuffle(dataList);
                         if (dataList.size() >= 3) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
                             trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             trendingRelatedArticles1.setTag(dataList);
 
-                            Picasso.with(getActivity()).load(dataList.get(1).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(1).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
                             trendingRelatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             trendingRelatedArticles2.setTag(dataList);
 
-                            Picasso.with(getActivity()).load(dataList.get(2).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(2).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles3.getArticleImageView());
                             trendingRelatedArticles3.setArticleTitle(dataList.get(2).getTitle());
                             trendingRelatedArticles3.setTag(dataList);
                         } else if (dataList.size() == 2) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
                             trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             trendingRelatedArticles1.setTag(dataList);
 
-                            Picasso.with(getActivity()).load(dataList.get(1).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(1).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
                             trendingRelatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             trendingRelatedArticles2.setTag(dataList);
 
                             trendingRelatedArticles3.setVisibility(View.GONE);
                         } else if (dataList.size() == 1) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
                             trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             trendingRelatedArticles1.setTag(dataList);
@@ -1807,33 +1809,33 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         impressionList.addAll(dataList);
                         iSwipeRelated.onRelatedSwipe(dataList);
                         if (dataList.size() >= 3) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             relatedArticles1.setTag(new ArrayList<ArticleListingResult>(dataList.subList(0, 3)));
 
-                            Picasso.with(getActivity()).load(dataList.get(1).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(1).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
                             relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             relatedArticles2.setTag(new ArrayList<ArticleListingResult>(dataList.subList(0, 3)));
 
-                            Picasso.with(getActivity()).load(dataList.get(2).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(2).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles3.getArticleImageView());
                             relatedArticles3.setArticleTitle(dataList.get(2).getTitle());
                             relatedArticles3.setTag(new ArrayList<ArticleListingResult>(dataList.subList(0, 3)));
                         } else if (dataList.size() == 2) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             relatedArticles1.setTag(dataList);
 
-                            Picasso.with(getActivity()).load(dataList.get(1).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(1).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
                             relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             relatedArticles2.setTag(dataList);
                             relatedArticles3.setVisibility(View.GONE);
                         } else if (dataList.size() == 1) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             relatedArticles1.setTag(dataList);
@@ -1892,33 +1894,33 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         recentAuthorArticles.setVisibility(View.VISIBLE);
 
                         if (dataList.size() >= 3) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             relatedArticles1.setTag(dataList);
 
-                            Picasso.with(getActivity()).load(dataList.get(1).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(1).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
                             relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             relatedArticles2.setTag(dataList);
 
-                            Picasso.with(getActivity()).load(dataList.get(2).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(2).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles3.getArticleImageView());
                             relatedArticles3.setArticleTitle(dataList.get(2).getTitle());
                             relatedArticles3.setTag(dataList);
                         } else if (dataList.size() == 2) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             relatedArticles1.setTag(dataList);
 
-                            Picasso.with(getActivity()).load(dataList.get(1).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(1).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
                             relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             relatedArticles2.setTag(dataList);
                             relatedArticles3.setVisibility(View.GONE);
                         } else if (dataList.size() == 1) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             relatedArticles1.setTag(dataList);

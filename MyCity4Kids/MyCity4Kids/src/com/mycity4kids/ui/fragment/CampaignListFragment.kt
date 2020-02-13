@@ -138,7 +138,7 @@ class CampaignListFragment : BaseFragment() {
         campaignList.clear()
         userName.text = SharedPrefUtils.getUserDetailModel(activity)?.first_name + " " + SharedPrefUtils.getUserDetailModel(activity)?.last_name
         try {
-            Picasso.with(activity).load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(R.drawable.family_xxhdpi)
+            Picasso.get().load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).into(profileImageView)
         } catch (e: Exception) {
             profileImageView.setImageResource(R.drawable.family_xxhdpi)
@@ -321,8 +321,8 @@ class CampaignListFragment : BaseFragment() {
     fun setDefaultCampaignValues() {
         upperTextHeader.text = resources.getString(R.string.campaign_list_sorry_not_eligible)
         lowerTextHeader.text = resources.getString(R.string.campaign_list_try_following_campaign)
-        Picasso.with(context).load(defaultapigetResponse!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(default_campaign_header)
-        Picasso.with(context).load(defaultapigetResponse!!.brandDetails!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(default_brand_img)
+        Picasso.get().load(defaultapigetResponse!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(default_campaign_header)
+        Picasso.get().load(defaultapigetResponse!!.brandDetails!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(default_brand_img)
         default_brand_name.setText(defaultapigetResponse!!.brandDetails!!.name)
         default_campaign_name.setText(defaultapigetResponse!!.name)
         default_submission_status.text = resources.getString(R.string.campaign_details_apply_now)

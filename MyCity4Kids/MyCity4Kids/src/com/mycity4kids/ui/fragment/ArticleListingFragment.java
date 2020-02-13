@@ -1231,7 +1231,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         if (isAdded()) {
             switch (shareMedium) {
                 case AppConstants.MEDIUM_FACEBOOK: {
-                    SharingUtils.shareViaFacebook(this);
+                    SharingUtils.shareViaFacebook(getActivity());
                     Utils.pushShareStoryEvent(getActivity(), "ArticleListingFragment",
                             userDynamoId + "", sharedStoryItem.getId(),
                             sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Facebook");

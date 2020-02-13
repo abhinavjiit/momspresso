@@ -34,7 +34,7 @@ class CollectionsAdapter(activity: Context) : BaseAdapter() {
             viewHolder = view.tag as ViewHolder
         }
         try {
-            Picasso.with(BaseApplication.getAppContext()).load(userCollectionsTopicList[position].imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+            Picasso.get().load(userCollectionsTopicList[position].imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                     .fit().into(viewHolder.tagImageView)
         } catch (e: Exception) {
             viewHolder.tagImageView?.setImageDrawable(ContextCompat.getDrawable(BaseApplication.getAppContext(), R.drawable.default_article))

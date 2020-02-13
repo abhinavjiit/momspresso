@@ -101,10 +101,10 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
 
             try {
                 if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getUrl())) {
-                    Picasso.with(mContext).load(R.drawable.default_article)
+                    Picasso.get().load(R.drawable.default_article)
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
                 } else {
-                    Picasso.with(mContext).load(articleDataModelsNew.get(position).getThumbnail())
+                    Picasso.get().load(articleDataModelsNew.get(position).getThumbnail())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
                 }
             } catch (Exception e) {

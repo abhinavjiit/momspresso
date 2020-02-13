@@ -277,11 +277,11 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         try {
             if (!StringUtils.isNullOrEmpty(data?.videoUrl) && (data?.imageUrl?.thumbMax == null
                             || data.imageUrl.thumbMax.contains("default.jp"))) {
-                Picasso.with(holder.itemView.context).load(AppUtils.getYoutubeThumbnailURLMomspresso(data?.videoUrl))
+                Picasso.get().load(AppUtils.getYoutubeThumbnailURLMomspresso(data?.videoUrl))
                         .placeholder(R.drawable.default_article).into(articleIV)
             } else {
                 if (!StringUtils.isNullOrEmpty(data?.imageUrl?.thumbMax)) {
-                    Picasso.with(holder.itemView.context).load(data?.imageUrl?.thumbMax)
+                    Picasso.get().load(data?.imageUrl?.thumbMax)
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(articleIV)
                 } else {
                     articleIV.setBackgroundResource(R.drawable.default_article)
@@ -336,12 +336,12 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         }
 
         try {
-            Picasso.with(holder.itemView.context).load(data?.storyImage?.trim { it <= ' ' }).placeholder(R.drawable.default_article).into(storyImage)
+            Picasso.get().load(data?.storyImage?.trim { it <= ' ' }).placeholder(R.drawable.default_article).into(storyImage)
         } catch (e: Exception) {
             holder.storyImage.setImageResource(R.drawable.default_article)
         }
         try {
-            Picasso.with(holder.itemView.context).load(data?.storyImage?.trim { it <= ' ' }).into(shareStoryImageView)
+            Picasso.get().load(data?.storyImage?.trim { it <= ' ' }).into(shareStoryImageView)
             storyAuthorTextView.text = data?.userName
             AppUtils.populateLogoImageLanguageWise(holder.itemView.context, logoImageView, data?.lang.toString())
         } catch (e: Exception) {
@@ -374,7 +374,7 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         }
 
         try {
-            Picasso.with(holder.itemView.context).load(data?.thumbnail)
+            Picasso.get().load(data?.thumbnail)
                     .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(articleImageView)
         } catch (e: Exception) {
             articleImageView.setImageResource(R.drawable.default_article)

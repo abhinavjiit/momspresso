@@ -52,7 +52,7 @@ public class GroupsMembershipRequestRecyclerAdapter extends RecyclerView.Adapter
     public void onBindViewHolder(MembersViewHolder holder, int position) {
 
 //        if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getThumbMax())) {
-//            Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getThumbMax())
+//            Picasso.get().load(articleDataModelsNew.get(position).getImageUrl().getThumbMax())
 //                    .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
 //        } else {
 //            holder.articleImageView.setBackgroundResource(R.drawable.default_article);
@@ -60,7 +60,7 @@ public class GroupsMembershipRequestRecyclerAdapter extends RecyclerView.Adapter
         holder.memberNameTextView.setText(membersDataList.get(position).getUserInfo().getFirstName());
         holder.dateTextView.setText(DateTimeUtils.getDateTimeFromTimestamp(membersDataList.get(position).getCreatedAt()));
         try {
-            Picasso.with(mContext).load(membersDataList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+            Picasso.get().load(membersDataList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
                     .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.memberImageView);
         } catch (Exception e) {
             holder.memberImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_commentor_img));

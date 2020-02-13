@@ -116,19 +116,19 @@
         android:textColor="@color/white"
         android:textSize="14sp" />
 
-    <com.shuhart.bubblepagerindicator.BubblePageIndicator
+    <com.mycity4kids.widget.IndefinitePagerIndicator
         android:id="@+id/dotIndicatorView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/reportedSpamTextView"
         android:layout_below="@id/pager"
         android:layout_centerHorizontal="true"
-        app:bpi_fillColor="@color/groups.blue_color"
-        app:bpi_marginBetweenCircles="4dp"
-        app:bpi_onSurfaceCount="5"
-        app:bpi_pageColor="@color/line_separator_color"
-        app:bpi_radius="3dp"
-        app:bpi_risingCount="3" />
+        app:selectedDotColor="@color/app_red"
+        app:dotSeparation="4dp"
+        app:dotCount="5"
+        app:dotColor="@color/line_separator_color"
+        app:dotRadius="3dp"
+        app:fadingDotCount="3" />
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/reportedSpamTextView"

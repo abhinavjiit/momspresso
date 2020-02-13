@@ -782,7 +782,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         if (isAdded()) {
             switch (shareMedium) {
                 case AppConstants.MEDIUM_FACEBOOK: {
-                    SharingUtils.shareViaFacebook(this);
+                    SharingUtils.shareViaFacebook(getActivity());
                     Utils.pushShareStoryEvent(getActivity(), "ShortStoryFragment",
                             userDynamoId + "", sharedStoryItem.getId(),
                             sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Facebook");
@@ -928,7 +928,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                                     .setQuote(responseData.getData().get(0).getMessage())
                                     .setContentUrl(Uri.parse(shareUrl))
                                     .build();
-                            new ShareDialog(ShortStoryFragment.this).show(content);
+                            if (getActivity() != null)
+                                new ShareDialog(getActivity()).show(content);
                         }
                     }
                     if (isAdded())

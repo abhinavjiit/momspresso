@@ -103,27 +103,27 @@ class BadgesProfileWidget : LinearLayout {
                 badgeImageView1.visibility = View.VISIBLE
                 badgeImageView2.visibility = View.VISIBLE
                 badgeImageView3.visibility = View.VISIBLE
-                Picasso.with(context).load(ImageKitUtils(data[0].badge_image_url, 50, 50).getOptimizedImage())
+                Picasso.get().load(ImageKitUtils(data[0].badge_image_url, 50, 50).getOptimizedImage())
                         .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(RoundedTransformation()).into(badgeImageView1)
-                Picasso.with(context).load(ImageKitUtils(data[1].badge_image_url, 50, 50).getOptimizedImage())
+                Picasso.get().load(ImageKitUtils(data[1].badge_image_url, 50, 50).getOptimizedImage())
                         .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(RoundedTransformation()).into(badgeImageView2)
-                Picasso.with(context).load(ImageKitUtils(data[2].badge_image_url, 50, 50).getOptimizedImage())
+                Picasso.get().load(ImageKitUtils(data[2].badge_image_url, 50, 50).getOptimizedImage())
                         .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(RoundedTransformation()).into(badgeImageView3)
             }
             data.size == 2 -> {
                 badgeImageView1.visibility = View.VISIBLE
                 badgeImageView2.visibility = View.VISIBLE
                 badgeImageView3.visibility = View.GONE
-                Picasso.with(context).load(ImageKitUtils(data[0].badge_image_url, 50, 50).getOptimizedImage())
+                Picasso.get().load(ImageKitUtils(data[0].badge_image_url, 50, 50).getOptimizedImage())
                         .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(RoundedTransformation()).into(badgeImageView1)
-                Picasso.with(context).load(ImageKitUtils(data[1].badge_image_url, 50, 50).getOptimizedImage())
+                Picasso.get().load(ImageKitUtils(data[1].badge_image_url, 50, 50).getOptimizedImage())
                         .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(RoundedTransformation()).into(badgeImageView2)
             }
             data.size == 1 -> {
                 badgeImageView1.visibility = View.VISIBLE
                 badgeImageView2.visibility = View.GONE
                 badgeImageView3.visibility = View.GONE
-                Picasso.with(context).load(ImageKitUtils(data[0].badge_image_url, 50, 50).getOptimizedImage())
+                Picasso.get().load(ImageKitUtils(data[0].badge_image_url, 50, 50).getOptimizedImage())
                         .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(RoundedTransformation()).into(badgeImageView1)
             }
             else -> {

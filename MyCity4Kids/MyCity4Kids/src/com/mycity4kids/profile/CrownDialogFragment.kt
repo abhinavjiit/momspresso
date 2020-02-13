@@ -120,9 +120,9 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
 
     private fun populateCrownDetails(userId: String, result: Crown?) {
         activity?.let {
-            Picasso.with(it).load(result?.bg_url).error(R.drawable.default_article)
+            Picasso.get().load(result?.bg_url).error(R.drawable.default_article)
                     .fit().into(crownBgImageView)
-            Picasso.with(it).load(result?.image_url).error(R.drawable.default_article)
+            Picasso.get().load(result?.image_url).error(R.drawable.default_article)
                     .fit().into(crownImageView)
             crownTitleTextView.text = result?.title
             crownDescTextView.text = result?.desc
@@ -198,8 +198,8 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
             val content = ShareLinkContent.Builder()
                     .setContentUrl(Uri.parse(crownData?.sharing_url))
                     .build()
-            ShareDialog(this).show(content)
             activity?.let {
+                ShareDialog(it).show(content)
                 Utils.pushProfileEvents(it, "CTA_FB_Share_Private_Rank_Detail",
                         "CrownDialogFragment", "FB Share", "-")
             }

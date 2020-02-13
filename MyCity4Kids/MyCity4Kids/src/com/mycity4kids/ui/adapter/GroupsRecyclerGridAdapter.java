@@ -74,7 +74,7 @@ public class GroupsRecyclerGridAdapter extends RecyclerView.Adapter<GroupsRecycl
         }
 
         try {
-            Picasso.with(mContext).load(groupsDataList.get(position).getHeaderImage())
+            Picasso.get().load(groupsDataList.get(position).getHeaderImage())
                     .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.groupImageView);
         } catch (Exception e) {
             holder.groupImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_article));

@@ -101,10 +101,10 @@ public class UsersRecommendationsRecycleAdapter extends RecyclerView.Adapter<Rec
             try {
                 if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getVideoUrl())
                         && (articleDataModelsNew.get(position).getImageUrl().getThumbMax() == null || articleDataModelsNew.get(position).getImageUrl().getThumbMax().endsWith("default.jpg"))) {
-                    Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURLMomspresso(articleDataModelsNew.get(position).getVideoUrl())).placeholder(R.drawable.default_article).into(articleViewHolder.articleImageView);
+                    Picasso.get().load(AppUtils.getYoutubeThumbnailURLMomspresso(articleDataModelsNew.get(position).getVideoUrl())).placeholder(R.drawable.default_article).into(articleViewHolder.articleImageView);
                 } else {
                     if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getThumbMax())) {
-                        Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getThumbMax())
+                        Picasso.get().load(articleDataModelsNew.get(position).getImageUrl().getThumbMax())
                                 .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(articleViewHolder.articleImageView);
                     } else {
                         articleViewHolder.articleImageView.setBackgroundResource(R.drawable.default_article);

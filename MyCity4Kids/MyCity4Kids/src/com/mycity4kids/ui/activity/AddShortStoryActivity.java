@@ -345,7 +345,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 challengeHeader.setVisibility(View.VISIBLE);
                 challengeImage.setVisibility(View.VISIBLE);
                 challengeActiveText.setVisibility(View.GONE);
-                Picasso.with(this).load(challengeImageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                Picasso.get().load(challengeImageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                         .fit().into(challengeImage);
             } catch (Exception e) {
                 challengeImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_article));
@@ -467,7 +467,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 challengeHeader.setVisibility(View.VISIBLE);
                 challengeImage.setVisibility(View.VISIBLE);
                 challengeActiveText.setVisibility(View.GONE);
-                Picasso.with(this).load(challengeImageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                Picasso.get().load(challengeImageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                         .fit().into(challengeImage);
             } catch (Exception e) {
                 challengeImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_article));

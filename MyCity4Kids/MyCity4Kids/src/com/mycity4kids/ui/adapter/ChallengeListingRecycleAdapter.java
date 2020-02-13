@@ -91,12 +91,12 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
         else
             holder.followAuthorTextView.setText(mContext.getResources().getString(R.string.ad_follow_author));
         try {
-            Picasso.with(holder.itemView.getContext()).load(articleDataModelsNew.get(position).getStoryImage().trim()).placeholder(R.drawable.default_article).into(holder.storyImage);
+            Picasso.get().load(articleDataModelsNew.get(position).getStoryImage().trim()).placeholder(R.drawable.default_article).into(holder.storyImage);
         } catch (Exception e) {
             holder.storyImage.setImageResource(R.drawable.default_article);
         }
         try {
-            Picasso.with(mContext).load(articleDataModelsNew.get(position).getStoryImage()).into(holder.shareStoryImageView);
+            Picasso.get().load(articleDataModelsNew.get(position).getStoryImage()).into(holder.shareStoryImageView);
             holder.storyAuthorTextView.setText(articleDataModelsNew.get(position).getUserName());
             AppUtils.populateLogoImageLanguageWise(holder.itemView.getContext(), holder.logoImageView, articleDataModelsNew.get(position).getLang());
         } catch (Exception e) {

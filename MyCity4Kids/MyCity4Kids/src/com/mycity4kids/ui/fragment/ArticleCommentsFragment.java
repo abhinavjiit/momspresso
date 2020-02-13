@@ -4,9 +4,11 @@ import android.accounts.NetworkErrorException;
 import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -273,7 +275,8 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                                     .setQuote(responseData.getData().get(0).getMessage())
                                     .setContentUrl(Uri.parse(shareUrl))
                                     .build();
-                            new ShareDialog(ArticleCommentsFragment.this).show(content);
+                            if (isAdded())
+                                new ShareDialog(getActivity()).show(content);
                         }
                     }
                     if (isAdded())

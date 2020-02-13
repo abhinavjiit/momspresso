@@ -119,7 +119,7 @@ public class ArticleChallengesRecyclerAdapter extends RecyclerView.Adapter<Artic
 //                    }
 //                    try {
 //                        Glide.with(context).load(articleChallengesList.get(position).getExtraData().get(0).getChallenge().getImageUrl()).into(holder.imageBody);
-//                                       /* Picasso.with(mcontext).load(articleChallengesList.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+//                                       /* Picasso.get().load(articleChallengesList.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
 //                                                .fit().into(holder.imageBody);*/
 //                        activeImageUrl.add(articleChallengesList.get(position).getExtraData().get(0).getChallenge().getImageUrl());
 //                        activeStreamUrl.add(articleChallengesList.get(position).getExtraData().get(0).getChallenge().getVideoUrl());

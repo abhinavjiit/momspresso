@@ -199,7 +199,7 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
         final ImageView removeIV = (ImageView) rl.findViewById(R.id.removeItemImageView);
         mediaContainer.addView(rl);
         imageUrlHashMap.put(removeIV, url);
-        Picasso.with(GroupsEditPostActivity.this).load(url).error(R.drawable.default_article).into(uploadedIV);
+        Picasso.get().load(url).error(R.drawable.default_article).into(uploadedIV);
         removeIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -617,8 +617,6 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
                                  }
 
                                  addImageToContainer(responseModel.getData().getResult().getUrl());
-//                                 Picasso.with(AddTextOrMediaGroupPostActivity.this).load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(postImageView);
-//                                 postImageView.setVisibility(View.VISIBLE);
                                  showToast(getString(R.string.image_upload_success));
                              }
                          }
