@@ -259,6 +259,7 @@ class ShortStoriesCardActivity : BaseActivity() {
                 textStylingCoachmark.visibility = View.GONE
                 moveTextCoachmark.visibility = View.VISIBLE
                 storyCoachmark.visibility = View.GONE
+                SharedPrefUtils.setCoachmarksShownFlag(this, "storyCoachmark", true)
             }
         }
     }
