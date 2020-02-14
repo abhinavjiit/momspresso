@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white_color">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/commentsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp" />
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addCommentFAB1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="right|bottom"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"
+        app:fab_colorNormal="@color/short_story.blue"
+        app:fab_colorPressed="@color/short_story.blue"
+        app:fab_icon="@drawable/ic_add_comments" />
+
+
+    <RelativeLayout
+        android:id="@+id/rLayout"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:background="#f0f0f0"
+        android:elevation="5dp">
+
+
+        <RelativeLayout
+            android:id="@+id/addCommentFAB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/rectangular_border"
+            android:gravity="center_vertical"
+            android:visibility="visible">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/typeHere"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/space_10"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:text="@string/group_comment_start_type_here_text"
+                android:textColor="#a1a4a8"
+                android:textSize="18sp"
+                android:visibility="visible"
+                app:fontName="oswald.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/beTheFirstOne"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/space_10"
+                android:text="Be the first one"
+                android:textColor="@color/groups.grey"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <!-- <ImageView
+                 android:id="@+id/audio"
+                 android:layout_width="30dp"
+                 android:layout_height="30dp"
+                 android:layout_alignParentRight="true"
+                 android:layout_centerVertical="true"
+                 android:layout_marginRight="10dp"
+                 android:padding="4dp"
+                 app:srcCompat="@drawable/ic_audio_record" />-->
+
+
+            <!-- <ImageView
+                 android:layout_width="30dp"
+                 android:layout_height="30dp"
+                 android:layout_alignParentRight="true"
+                 android:layout_centerVertical="true"
+                 android:layout_marginRight="40dp"
+                 android:paddingTop="5dp"
+                 android:paddingBottom="5dp"
+                 android:src="@drawable/ic_add_image" />-->
+
+
+        </RelativeLayout>
+
+
+        <View
+
+            android:layout_width="match_parent"
+            android:layout_height=".5dp"
+            android:layout_marginBottom="81dp"
+            android:background="#99cecece" />
+    </RelativeLayout>
+
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/noCommentsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/ad.comments.no_comments"
+        android:textColor="@color/empty_list_msg"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:fontName="oswald_regular.ttf" />
+</RelativeLayout>

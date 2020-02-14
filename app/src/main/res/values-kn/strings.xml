@@ -1,0 +1,1345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="app_name">ಮೊಮ್ಸ್ಪ್ರೆಸೊ</string>
+    <string name="groups_sections_polls">ಪೋಲ್‍ಗಳು</string>
+    <string name="groups_sections_myfeed">My Feed</string>
+    <string name="groups_groups_myfeed">গಗುಂಪುಗಳು</string>
+    <string name="groups.other_groups">ಬೇರೆ ಗುಂಪುಗಳು</string>
+
+    <string name="groups_enable_notification">ಅಧಿಸೂಚನೆಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ</string>
+
+    <string name="unknown_person">Unknown</string>
+    <string name="resend_email">Resend Email</string>
+    <string name="view_more_profile">view more</string>
+    <string name="campaign_maybe_later_text">Maybe later</string>
+
+    <string name="facebook_app_id">206155642763202</string>
+    <string name="groups_sections_ask">ತಜ್ಞರನ್ನು ಕೇಳಿ</string>
+
+    <string name="fb_login_protocol_scheme">fb206155642763202</string>
+    <string name="ACCOUNT_KIT_CLIENT_TOKEN">089d77e1898bf3ef59048cc2fe58408b</string>
+    <string name="admob_id">ca-app-pub-9305149859515387~7341831189</string>
+
+    <string name="write_review_prompt">What would you like to review?</string>
+
+    <string name="loading_txt">Loading&#8230;</string>
+
+    <string name="subcategoryName">subCategory</string>
+    <string name="location_info">To get personalized recommendations, Please select your preferred location</string>
+    <string name="hint_text">What are you looking for ?</string>
+    <string name="locality_txt">In which location?</string>
+    <string name="error_network">ಸಾಧನವು ನೆಟ್ವರ್ಕ್ ವ್ಯಾಪ್ತಿಯಿಲ್ಲ.</string>
+    <string name="please_wait">ದಯಮಾಡಿ ನಿರೀಕ್ಷಿಸಿ...</string>
+    <string name="no_result_txt">ಯಾವುದೇ ಫಲಿತಾಂಶ ಸಿಗಲಿಲ್ಲ!!</string>
+    <string name="went_wrong">ಏನೋ ತಪ್ಪಾಗಿದೆ.</string>
+    <string name="server_went_wrong">ಸರ್ವರ್ನಲ್ಲಿ ಏನೋ ತಪ್ಪಾಗಿದೆ.</string>
+    <string name="no_data">Data not found.</string>
+    <string name="toast_network_error">ಸಾಧನವು ನೆಟ್ವರ್ಕ್ ವ್ಯಾಪ್ತಿಯಿಲ್ಲ.</string>
+    <string name="toast_response_error">Some error occurred, please try again later!</string>
+    <string name="toast_server_error">Server error </string>
+    <string name="fetching_data">Fetching data&#8230;</string>
+    <string name="please_select">Please select at least one value</string>
+    <!-- slidingDrawer -->
+    <string name="no_query">Please enter a search query.</string>
+
+    <!-- Filter/sort Screen -->
+    <string name="no_age_group">There is no age group to filter.</string>
+    <string name="no_category_group">There is no category group to filter.</string>
+    <string name="ageGroup">Age Group</string>
+
+    <!-- Add Listing Screen -->
+
+    <!-- Add Listing Screen -->
+
+    <!-- Details Screen -->
+
+    <string name="age_grout_txt">Age Group</string>
+    <string name="event_dates_txt">Event Dates</string>
+    <string name="description_txt">ವಿವರಣೆ</string>
+    <string name="contact_txt">ಸಂಪರ್ಕಿಸಿ</string>
+    <string name="about_txt">ಬಗ್ಗೆ</string>
+    <string name="event_list">There are no listings found.</string>
+    <string name="additional_info">Additional Information</string>
+    <string name="address_txt">ವಿಳಾಸ</string>
+    <string name="sub_address_txt">ವಿಳಾಸ</string>
+    <string name="address_locality_txt">ವಿಳಾಸ</string>
+
+    <!-- Top Picks Screen -->
+    <string name="top_picks">Top Picks</string>
+    <string name="author_img">Author Image</string>
+    <string name="title">- ಲೇಖನ ಶೀರ್ಷಿಕೆ</string>
+    <string name="author_name">Author Name</string>
+    <string name="article_publish_date">Article Publish Date</string>
+    <string name="progress_spinner">Progress Spinner</string>
+
+    <!-- article details -->
+    <string name="submit">ಸಲ್ಲಿಸಿ</string>
+    <string name="add_reply">ಇಲ್ಲಿ ಬರೆಯಿರಿ</string>
+    <string name="article_play_notification_text">You are listening to this blog</string>
+
+    <!-- Top Picks Detail Screen -->
+    <string name="organised_by">Organized By</string>
+
+    <!-- Report An Error Screen -->
+    <string name="please_select_an_error">Please select at least one option</string>
+
+    <!-- View Edit Profile Screen -->
+
+    <!-- alert text for first time if gps off -->
+
+    <string name="gps_enabled_alert">ನಿಮ್ಮ ಫೋನ್ನಲ್ಲಿ ಸ್ಥಳ ಪತ್ತೆ ಮಾಡುವಿಕೆಯನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ. ಸ್ಥಳ ಸೆಟ್ಟಿಂಗ್ಗಳಿಗೆ ಹೋಗಲು ಸರಿ ಕ್ಲಿಕ್ ಮಾಡಿ.</string>
+
+    <string name="netwrok_error">Network error</string>
+    <string name="transit">TRANSIT</string>
+    <string name="write_review">WRITE A REVIEW</string>
+    <string name="direction">DIRECTIONS</string>
+    <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
+
+    <!-- Facebook Comments -->
+    <string name="ok">ಸರಿ</string>
+    <string name="error">ದೋಷ</string>
+    <!-- <string name="app_id">1497460137141503</string> -->
+    <string name="post_title">ಮೊಮ್ಸ್ಪ್ರೆಸೊ</string>
+
+    <!--temp data-->
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <!--// string color codess-->
+
+    <string name="empty_directory">Empty Directory</string>
+    <string name="storage_removed">Storage was removed or unmounted.</string>
+    <string name="choose_file">Select a file</string>
+    <string name="error_selecting_file">Error selecting File</string>
+    <string name="internal_storage">Internal storage</string>
+
+    <string name="saving_image">Saving image</string>
+    <string name="preparing_card">Preparing card</string>
+    <string name="no_storage_card">No storage card</string>
+    <string name="not_enough_space">Not enough space</string>
+    <string name="server_error">Some error occurred, please try again later!</string>
+
+
+    <string name="logout_msg">ನೀವು ಲಾಗ್ಔಟ್ ಮಾಡಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+    <string name="reminder_selected">You cannot select this</string>
+    <string name="activities_txt">ಚಟುವಟಿಕೆಗಳು</string>
+    <string name="duration_txt">duration</string>
+    <string name="cost_txt">Cost</string>
+
+    <string name="event_added">Event has been added</string>
+
+
+    <string name="new_yes">ಹೌದು</string>
+    <string name="new_cancel">ರದ್ದುಮಾಡಿ</string>
+    <string name="load_error">Failed to load container</string>
+    <string name="example_post_title_placeholder">ಲೇಖನ ಶೀರ್ಷಿಕೆ</string>
+    <string name="example_post_content_placeholder">ನಿಮ್ಮ ಕಥೆಯನ್ನು ಇಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಿ…</string>
+
+    <string name="select_image">ಚಿತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="select_image_fail">ಚಿತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ (failure demo)</string>
+    <string name="select_video">Select a video</string>
+    <string name="select_video_fail">Select a video (failure demo)</string>
+    <string name="camera_pick">ಕ್ಯಾಮೆರಾದಿಂದ ಚಿತ್ರವನ್ನು ತೆಗೆದುಕೊಳ್ಳಿ</string>
+
+    <string name="analytics.popup.last30days">Last 30 days</string>
+    <string name="analytics.popup.customdates">Custom</string>
+    <string name="analytics.popup.improve_page_views">ನನ್ನ ಪುಟ ವೀಕ್ಷಣೆಗಳನ್ನು ನಾನು ಹೇಗೆ ಸುಧಾರಿಸಬಹುದು?</string>
+    <string name="analytics.popup.increase_followers">How can I increase my followers?</string>
+    <string name="analytics.popup.rank_calculation">ಇದನ್ನು ಹೇಗೆ ಲೆಕ್ಕ ಹಾಕಲಾಗುತ್ತದೆ?</string>
+    <string name="analytics.popup.improve_rank">How can I improve my rank?</string>
+    <string name="analytics.popup.improve_social">ನನ್ನ ಸಾಮಾಜಿಕ ಪಾಲನ್ನು ನಾನು ಹೇಗೆ ಸುಧಾರಿಸಬಲ್ಲೆ?</string>
+
+    <string name="videos.dialog.title">ಅಪ್ಲೋಡ್ ಮಾಡಲು ವೀಡಿಯೊ ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="videos.upload_option.camera">ವೀಡಿಯೊ ತೆಗೆದುಕೊಳ್ಳಿ</string>
+    <string name="videos.upload_option.gallery">ಗ್ಯಾಲರಿ ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="videos.upload_option.cancel">ರದ್ದುಮಾಡಿ</string>
+
+    <string name="ad.swipe_tootip_text">ಮುಂದಿನ ಲೇಖನವನ್ನು ಓದಲು ಎಡಕ್ಕೆ ಸ್ವೈಪ್ ಮಾಡಿ</string>
+    <string name="ad.view_all_tags.text">ಎಲ್ಲವನ್ನೂ ವೀಕ್ಷಿಸಿ</string>
+    <string name="ad.tags_title.text">ಈ ಲೇಖನವನ್ನು ಕೆಳಗಿನ ವರ್ಗಗಳಲ್ಲಿ ಪೋಸ್ಟ್ ಮಾಡಲಾಗಿದೆ</string>
+    <string name="ad.tags_subtitle.text">ಇದೇ ರೀತಿಯ ಪೋಸ್ಟ್ಗಳನ್ನು ಓದಲು ಅವರನ್ನು ಫಾಲೋ ಮಾಡಿ.</string>
+    <string name="ad.follow_author">ಫಾಲೋ</string>
+    <string name="ad.following_author">ಅನುಸರಿಸಲಾಗುತ್ತಿದೆ</string>
+    <string name="ad.comments.title">ಪ್ರತಿಕ್ರಿಯೆಗಳು</string>
+    <string name="ad.comments.no_comments">ಯಾವುದೇ ಪ್ರತಿಕ್ರಿಯೆಗಳಿಲ್ಲ</string>
+    <string name="ad.comments.view_comment">ಪ್ರತಿಕ್ರಿಯೆಗಳು</string>
+    <string name="ad.comments.fb_comment">ಸಂಬಂಧಿಸಿದ ಲೇಖನಗಳು</string>
+    <string name="ad.comments.edit_label">ಸಂಪಾದಿಸಿ</string>
+    <string name="ad.comments.save">ಉಳಿಸಿ</string>
+    <string name="ad.comments.toast_empty_comment">Please enter some valid text.</string>
+    <string name="ad.comments.toolbar.title">ಪ್ರತಿಕ್ರಿಯೆಗಳು</string>
+    <string name="ad.comments.replying_to">ನೀವು ಪ್ರತ್ಯುತ್ತರಿಸುತ್ತಿರುವಿರಿ %1$s</string>
+    <string name="ad.bottom_bar.facebook">ಸಂಬಂಧಿಸಿದ</string>
+    <string name="ad.bottom_bar.whatsapp">ವಾಟ್ಸಪ್ಪ್</string>
+    <string name="ad.bottom_bar.email">ಇಮೇಲ್</string>
+    <string name="ad.bottom_bar.generic_share">ಹಂಚಿಕೊಳ್ಳಿ</string>
+    <string name="ad.bottom_bar.bookmark">ಬುಕ್ಮಾರ್ಕ್ಗಳು</string>
+    <string name="ad.bottom_bar.like">ಇಷ್ಟಗಳು</string>
+    <string name="ad.recent_logs_from.title">MORE FROM AUTHOR</string>
+    <string name="ad.share.follow_author">ಫಾಲೋ %1$s</string>
+    <string name="ad.trending.title">ಟ್ರೆಂಡಿಂಗ್ ಬ್ಲಾಗ್ಗಳು</string>
+    <string name="ad.write_blog">ಬ್ಲಾಗ್ ಬರೆಯಿರಿ</string>
+    <string name="ad.tts.toast_unplayable_article">Unable to play this article</string>
+
+    <string name="vd.recent_videos_from.title">RECENT VIDEOS FROM</string>
+    <string name="vd.trending.title">TRENDING VIDEOS</string>
+
+    <string name="confirmation_dialog.delete_draft.message">Are you sure you want to delete your draft?</string>
+
+    <string name="confirmation_dialog.no">ಇಲ್ಲ</string>
+
+    <string name="confirmation_dialog.yes">ಹೌದು</string>
+
+    <string name="editor.spell_check.title">ಕಾಗುಣಿತ ಪರೀಕ್ಷಿಸು</string>
+
+    <string name="editor.spell_check.message">ನೀವು ಖಚಿತವಾಗಿ ಕಾಗುಣಿತ ಪರೀಕ್ಷೆಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಿದ್ದೀರಾ?</string>
+
+    <string name="editor.spell_check.no">ಇಲ್ಲ</string>
+    <string name="editor.spell_check.continue">ಮುಂದುವರಿಸಿ</string>
+    <string name="editor.banner.message">Blog in a language of your choice</string>
+
+    <string name="editor.last_saved_at">Last saved at %1$s</string>
+    <string name="editor.last_saved_on">Last saved on %1$s</string>
+    <string name="dob">ಹುಟ್ಟಿದ ದಿನ</string>
+    <string name="label_select_video">Select Video</string>
+    <string name="toast_cannot_retrieve_selected_video">Cannot retrieve selected video</string>
+    <string name="trimming_progress">Trimming your video...</string>
+    <string name="publish_article.upload_image.change_photo">Change Image</string>
+
+    <string name="publish_article.upload_image.please_upload_or_choose_image">Please upload a picture or choose from the images shown below to continue</string>
+
+    <string name="change_city.fetch_available_cities">Please wait while we fetch the list of available cities</string>
+    <string name="permision_available_storage">Storage Permission has been granted.</string>
+    <string name="permision_available_camera">Camera Permission has been granted. Preview can now be opened.</string>
+
+    <string name="permissions_not_granted">Required permissions were not granted.</string>
+    <string name="permission_camera_rationale">Camera permission is needed to show the camera preview.</string>
+
+    <string name="permission_storage_rationale">Storage permission is needed to pick files.</string>
+
+    <string name="permission_location_rationale">Location permission is required to show relevant events and articles.</string>
+    <string name="permission_phone_state_rationale">Phone state permission is required to keep you updated with latest content via notifications.</string>
+    <string name="permision_available_init">All required permissions have been granted.</string>
+    <string name="permission_calendar_rationale">Calendar permission is needed to add a reminder.</string>
+    <string name="permission_storage_story">Storage permission is required for publishing story.</string>
+    <string name="home.toolbar.title">ಟ್ರೆಂಡಿಂಗ್</string>
+    <string name="explore_listing.explore_categories.title">ನೀವು ವರ್ಗಗಳನ್ನು ಎಕ್ಸ್ಪ್ಲೋರ್ ಮಾಡಬಹುದು</string>
+    <string name="explore_listing.explore_categories.meet_contributor">ನಮ್ಮ ಕೊಡುಗೆದಾರರನ್ನು ಭೇಟಿ ಮಾಡಿ</string>
+    <string name="home_screen.trending.title">ಟ್ರೆಂಡಿಂಗ್</string>
+    <string name="home_screen.notification.title">ಅಧಿಸೂಚನೆಗಳು</string>
+
+    <string name="home_screen.group.title">JOIN A GROUP</string>
+    <string name="home_screen.suggested_topic.title">ಸೂಚಿಸಿದ ವಿಷಯಗಳು</string>
+    <string name="home_screen.profile.title">MY ACCOUNT</string>
+
+    <string name="home_screen.select_an_option.title">ಅನ್ವೇಷಿಸಿ</string>
+    <string name="home_screen.trending.become_blogger">ನಿಮ್ಮ ಕಥೆಯನ್ನು ಹಂಚಿಕೊಳ್ಳಿ</string>
+    <string name="home_screen.trending.first_video_upload">ವೀಡಿಯೊಗಳು</string>
+    <string name="home_screen.explore.title">ಅನ್ವೇಷಿಸಿ</string>
+    <string name="home_screen.upcoming_events.title">ಮುಂಬರುವ ಕಾರ್ಯಕ್ರಮಗಳು</string>s
+    <string name="home_screen.kids_res.title">KIDS RESOURCES</string>
+    <string name="home_screen.trending_list_header.title">ನೀವು ಇಷ್ಟಪಡುವ ವಿಷಯಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಿ</string>
+    <string name="home_screen.trending_list_header.topics_label">ಗರ್ಭಿಣಿ,ಪ್ರಸವಾನಂತರದ ಖಿನ್ನತೆ, ಇತ್ಯಾದಿ</string>
+    <string name="home_screen.trending_list_header.take_me_there">ಸರಿ! ಅರ್ಥವಾಯಿತು! ನನ್ನನು ಅಲ್ಲಿಗೆ ಕರೆದುಕೊಂಡು ಹೋಗು</string>
+    <string name="onboarding.desc_1">ಪ್ರತಿ ತಾಯಿಯ ಒಂದು ಕಥೆ ಇದೆ. ನಿಮ್ಮದೇನು? ಇದನ್ನು ಪಠ್ಯ ಅಥವಾ ವೀಡಿಯೊದಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಿ.</string>
+    <string name="onboarding.desc_2">ಇಂಗ್ಲಿಷ್, ಹಿಂದಿ, ಬಾಂಗ್ಲಾ, ಮರಾಠಿ, ತಮಿಳು, ತೆಲುಗು, ಕನ್ನಡ ಮತ್ತು ಮಲಯಾಳಂ ಭಾಷೆಗಳಿಂದ ಆರಿಸಿ.</string>
+    <string name="onboarding.desc_3">ಮೊಮ್ಮೆಸ್ಪ್ರೆಸೊ ಟಿವಿ ನಿಮಗೆ ಸುಂದರ, ಸ್ಪೂರ್ತಿದಾಯಕ, ಉಪಯುಕ್ತ, ಮತ್ತು ಮೋಜಿನ ವೀಡಿಯೊಗಳನ್ನು ತರುತ್ತದೆ. ಒಂದೇ ಸ್ಥಳದಲ್ಲಿ!</string>
+    <string name="onboarding.desc_4">ನಮ್ಮ ತಾಯಿ ಸಮುದಾಯದ ಶಕ್ತಿಯನ್ನು ಸಜ್ಜುಗೊಳಿಸಿ. ನಿಮ್ಮ ಪ್ರಶ್ನೆಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಿ ಮತ್ತು ಇತರರಿಗೆ ಸಹಾಯ ಮಾಡಿ</string>
+    <string name="onboarding_desc_array.tutorial_1.blogs">ಬ್ಲಾಗ್</string>
+
+    <string name="onboarding_desc_array.tutorial_1.videos">ಮಾಮ್ ವ್ಲೋಗ್ಸ್</string>
+
+    <string name="onboarding_desc_array.tutorial_2.english">ENGLISH</string>
+    <string name="onboarding_desc_array.tutorial_2.hindi">HINDI</string>
+    <string name="onboarding_desc_array.tutorial_2.bengali">BENGALI</string>
+    <string name="onboarding_desc_array.tutorial_2.marathi">MARATHI</string>
+
+
+    <string name="onboarding_desc_array.tutorial_2.tamil">TAMIL</string>
+    <string name="onboarding_desc_array.tutorial_2.telugu">TELUGU</string>
+    <string name="onboarding_desc_array.tutorial_3.parenting">ತಾಯಿ ಜೀವನ</string>
+    <string name="onboarding_desc_array.tutorial_3.recipe">ಪಾಕವಿಧಾನಗಳು</string>
+    <string name="onboarding_desc_array.tutorial_3.expert_advice">EXPERT ADVICE</string>
+    <string name="onboarding_desc_array.tutorial_4.editorial">CURATED LISTS</string>
+    <string name="onboarding_desc_array.tutorial_4.events">ಕಾರ್ಯಕ್ರಮಗಳು</string>
+    <string name="onboarding_desc_array.tutorial_4.resources">ಸಂಪನ್ಮೂಲಗಳು</string>
+    <string name="onboarding.signin">ಸೈನ್ ಇನ್ ಮಾಡಿ</string>
+    <string name="onboarding.already_member">ಈಗಾಗಲೇ ಸದಸ್ಯ?</string>
+    <string name="onboarding.get_started">ಪ್ರಾರಂಭಿಸಿ</string>
+    <string name="sign_in.welcome_back">ಮರಳಿ ಸ್ವಾಗತ</string>
+    <string name="sign_in.desc">ಮಾತೃತ್ವದ ಸಂತೋಷವನ್ನು ಕಂಡುಕೊಳ್ಳಿ.  ಸ್ಫೂರ್ತಿ ಮತ್ತು ಪ್ರೇರಣೆಗಾಗಿ ನಮ್ಮ ಮಮ್ ಸಮುದಾಯಕ್ಕೆ ಸೇರಿ.</string>
+    <string name="sign_in.no_account">ಖಾತೆಯನ್ನು ಹೊಂದಿಲ್ಲವೇ?\u0020</string>
+
+    <string name="sign_in.sign_up_btn">ಸೈನ್ ಅಪ್</string>
+    <string name="sign_up.welcome_back">ಸೈನ್ ಅಪ್</string>
+    <string name="sign_up.desc">ಮಾತೃತ್ವದ ಸಂತೋಷವನ್ನು ಕಂಡುಕೊಳ್ಳಿ.  ಸ್ಫೂರ್ತಿ ಮತ್ತು ಪ್ರೇರಣೆಗಾಗಿ ನಮ್ಮ ಮಮ್ ಸಮುದಾಯಕ್ಕೆ ಸೇರಿ.</string>
+    <string name="sign_up.already_account">ಈಗಾಗಲೇ ಖಾತೆ ಹೊಂದಿದ್ದೀರ??\u0020</string>
+    <string name="sign_up.sign_in_btn">ಸೈನ್ ಇನ್ ಮಾಡಿ</string>
+    <string name="login_email.login">ಲಾಗಿನ್ ಮಾಡಿ</string>
+    <string name="login_email.forgot_password">ಪಾಸ್ವರ್ಡ್ ಮರೆತಿರಾ?</string>
+
+    <string name="login_email.username_hint">ಇಮೇಲ್</string>
+    <string name="login_email.password_hint">ಪಾಸ್ವರ್ಡ್</string>
+    <string name="signin.login_via_facebook">ಫೇಸ್ಬುಕ್ ಜೊತೆ ಸೈನ್ ಇನ್ ಮಾಡಿ</string>
+    <string name="signin.login_via_google">ಗೂಗಲ್ ನೊಂದಿಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿ</string>
+
+    <string name="signin.login_via_email">ಇಮೇಲ್ ಜೊತೆ ಲಾಗಿನ್ ಮಾಡಿ</string>
+    <string name="signin.login_via_phone">ಫೋನ್ ಸಂಖ್ಯೆಯೊಂದಿಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿ</string>
+    <string name="signup.connect_via_facebook">ಫೇಸ್ ಬುಕ್ ಮೂಲಕ ಸಂಪರ್ಕಿಸಿ</string>
+    <string name="signup.connect_via_google">ಗೂಗಲ್ ಮೂಲಕ ಸಂಪರ್ಕಿಸಿ</string>
+
+
+    <string name="signup.connect_via_phone">ಫೋನ್ ಮೂಲಕ ಸಂಪರ್ಕಿಸಿ</string>
+    <string name="for_you.reason.why_label">Why am I seeing this?</string>
+    <string name="for_you.reason.dont_want_to_see">Don\'t want to see this</string>
+    <string name="for_you.reason.okay">ಸರಿ</string>
+
+    <string name="lang_specific.toolbar.title">ಭಾಷೆಗಳು</string>
+    <string name="lang_setting.stories_label">ಕಥೆಗಳು</string>
+    <string name="search.article_label">ಲೇಖನಗಳು</string>
+
+    <string name="search.author_label">ಲೇಖಕರು</string>
+    <string name="search.topic_label">ವಿಷಯ</string>
+    <string name="search.show_more">ಇನ್ನು ಹೆಚ್ಚು ತೋರಿಸು</string>
+
+    <string name="search.article_topic_tab_label">ಲೇಖನಗಳು</string>
+
+    <string name="search.author_tab_label">ಲೇಖಕರು</string>
+
+    <string name="search.article_no_result">ಯಾವುದೇ ವಿಷಯ ಲಭ್ಯವಿಲ್ಲ</string>
+    <string name="search.author_no_result">ಯಾವುದೇ ಲೇಖಕರು ಲಭ್ಯವಿಲ್ಲ</string>
+    <string name="search_topics.toolbar_title">SELECT CATEGORIES</string>
+    <string name="search_topics.hint">Search with Topics</string>
+    <string name="search_topics.title">ಗುಂಪುಗಳು</string>
+    <string name="subscribe_topics.toolbar.title">ವರ್ಗಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಿ</string>
+    <string name="subscribe_topics.cancel">ರದ್ದುಮಾಡಿ</string>
+    <string name="subscribe_topics.save">ಉಳಿಸಿ</string>
+
+    <string name="subscribe_topics.toast_topic_updated">Successfully updated the list of followed topics.</string>
+    <string name="myprofile.following_label">ಅನುಸರಿಸಲಾಗುತ್ತಿದೆ</string>
+    <string name="myprofile.followers_label">ಅನುಸರಿಸುವವರು</string>
+
+    <string name="myprofile.section.articles_label">ಲೇಖನಗಳು</string>
+    <string name="myprofile.section.short_story_label">100 ಪದ ಕಥೆ</string>
+    <string name="myprofile.section.videos_label">ಮಾಮ್ ವ್ಲೋಗ್ಸ್</string>
+    <string name="myprofile.section.activity_label">ಚಟುವಟಿಕೆ</string>
+
+    <string name="myprofile.section.myranking_label">ನಿಮ್ಮ ಶ್ರೇಯಾಂಕಗಳು</string>
+    <string name="myprofile.section.settings_label">ಸೆಟ್ಟಿಂಗ್ಗಳು</string>
+    <string name="myprofile.section.signout_label">ಸಿಗ್ನೌಟ್</string>
+    <string name="myprofile.rank_label">ಶ್ರೇಣಿ</string>
+    <string name="blogger_profile.follow_button">ಫಾಲೋ</string>
+    <string name="blogger_profile.rank_in">ಶ್ರೇಣಿ %1$s</string>
+    <string name="blogger_profile.unfollow_button">ಅನುಸರಿಸಲಾಗುತ್ತಿದೆ</string>
+    <string name="blogger_profile.view_count_label">ವೀಕ್ಷಣೆಗಳು</string>
+    <string name="blogger_profile.article_count_label">ಪೋಸ್ಟ್ಗಳು</string>
+    <string name="blogger_profile.section.articles_label">ಲೇಖನಗಳು</string>
+
+    <string name="blogger_profile.section.videos_label">ಮಾಮ್ ವ್ಲೋಗ್ಸ್</string>
+    <string name="blogger_profile.section.activity_label">ಚಟುವಟಿಕೆ</string>
+    <string name="blogger_profile.section.myranking_label">ನಿಮ್ಮ ಶ್ರೇಯಾಂಕಗಳು</string>
+    <string name="blogger_profile.top_3_article">TOP 3 ARTICLES</string>
+    <string name="blogger_profile.rank_label">ಶ್ರೇಣಿ</string>
+    <string name="user_article.toolbar.title">ಲೇಖನಗಳು</string>
+    <string name="user_article.tabbar.published_label">ಪ್ರಕಟಿಸಲಾಗಿದೆ</string>
+    <string name="user_article.tabbar.draft_label">ಡ್ರಾಫ್ಟ್ಗಳು</string>
+    <string name="user_article.draft.saved_on">ಉಳಿಸಲಾಗಿದೆ</string>
+    <string name="user_article.draft.edit">ಕರಡು ಸಂಪಾದಿಸು</string>
+    <string name="user_article.draft.untitled_draft">Untitled Draft</string>
+
+    <string name="user_article.published.edit">ಸಂಪಾದಿಸಿ</string>
+    <string name="user_article.published.no_published_article">ನೀವು ಇನ್ನೂ ಯಾವುದೇ ಲೇಖನವನ್ನು ಪ್ರಕಟಿಸಿಲ್ಲ</string>
+    <string name="user_article.draft.status_pending_approval">PENDING FOR APPROVAL</string>
+    <string name="user_article.draft.status_unapproved">UNAPPROVED</string>
+    <string name="user_article.draft.status_unpublished">UNPUBLISHED</string>
+    <string name="app_settings.toolbar.title">ಸೆಟ್ಟಿಂಗ್ಗಳು</string>
+    <string name="app_settings.tabbar.edit_prefs">ಪ್ರಾಶಸ್ತ್ಯಗಳನ್ನು ಸಂಪಾದಿಸಿ</string>
+    <string name="app_settings.tabbar.lang_prefs">LANGUAGE PREFERENCES</string>
+    <string name="app_settings.tabbar.change_password">ಪಾಸ್ವರ್ಡ್ ಬದಲಿಸಿ</string>
+    <string name="app_settings.tabbar.edit_profile">ಪ್ರೊಫೈಲ್ ಬದಲಿಸು</string>
+    <string name="app_settings.edit_profile.hint_fn">First Name</string>
+
+    <string name="app_settings.edit_profile.hint_ln">Last Name</string>
+    <string name="app_settings.edit_profile.hint_phone">ದೂರವಾಣಿ</string>
+    <string name="app_settings.edit_profile.describe_label">ನಿಮ್ಮ ಬಗ್ಗೆ ವಿವರಿಸಿ</string>
+    <string name="app_settings.edit_profile.blog_title_label">ಬ್ಲಾಗ್ ಶಿರೋನಾಮೆ</string>
+    <string name="app_settings.edit_profile.family_detail_label">ಕುಟುಂಬ ವಿವರಗಳು</string>
+
+    <string name="app_settings.edit_profile.family_detail_desc">ಇದು ನಿಮಗೆ ಉತ್ತಮ ಸೇವೆ ನೀಡಲು ಮತ್ತು ನಿಜವಾಗಿಯೂ ನಿಮಗೆ ಸೂಕ್ತವಾಗಿದೆ ಎಂದು ತಿಳಿಸುತ್ತದೆ. ಈ ಮಾಹಿತಿಯು ನಮ್ಮ ದಾಖಲೆಗಳಲ್ಲಿ ಉಳಿಯುತ್ತದೆ.</string>
+    <string name="app_settings.edit_profile.how_many_child">ನಿಮಗೆ ಎಷ್ಟು ಮಕ್ಕಳು ಇದ್ದಾರೆ?</string>
+    <string name="app_settings.edit_profile.gender">ಲಿಂಗ</string>
+    <string name="app_settings.edit_profile.dob">ಹುಟ್ಟಿದ ದಿನ</string>
+    <string name="app_settings.edit_profile.save">ಉಳಿಸಿ</string>
+    <string name="app_settings.edit_profile.update_success">User profile updated successfully</string>
+    <string name="app_settings.edit_profile.toast_fn_empty">ಮೊದಲ ಹೆಸರು ಅಗತ್ಯವಿದೆ</string>
+    <string name="app_settings.edit_profile.toast_blog_title_empty">ಬ್ಲಾಗ್ ಖಾಲಿಯಾಗಿರಬಾರದು</string>
+    <string name="app_settings.edit_profile.toast_user_bio_empty">ನಿನ್ನ ಬಗ್ಗೆ ನಮಗೆ ತಿಳಿಸಿ </string>
+    <string name="app_settings.edit_profile.toast_user_bio_max">Maximum limit for bio is</string>
+    <string name="app_settings.edit_profile.toast_user_bio_words">ಪದಗಳು</string>
+    <string name="app_settings.edit_profile.toast_incorrect_date">Please enter a valid date for kids birthday</string>
+    <string name="app_settings.edit_profile.toast_empty_name_kid">Please enter a valid name for your kid</string>
+    <string name="app_settings.edit_profile.toast_choose_gender">Please choose your child\'s gender</string>
+    <string name="app_settings.edit_prefs.notifications">ಅಧಿಸೂಚನೆಗಳು</string>
+    <string name="app_settings.edit_prefs.subscriptions">ಚಂದಾದಾರಿಕೆ</string>
+    <string name="app_settings.edit_prefs.add_account">ಖಾತೆಗಳನ್ನು ಸೇರಿಸಿ</string>
+    <string name="app_settings.edit_prefs.facebook">ಸಂಬಂಧಿಸಿದ</string>
+    <string name="app_settings.edit_prefs.twitter">TWITTER</string>
+    <string name="app_settings.edit_prefs.google">GOOGLE</string>
+
+    <string name="app_settings.edit_prefs.add">ಸೇರಿಸಿ</string>
+    <string name="app_settings.edit_prefs.connected">CONNECTED</string>
+    <string name="app_settings.edit_prefs.topics_interested">ಆಸಕ್ತಿಯ ವಿಷಯಗಳು</string>
+    <string name="app_settings.edit_prefs.add_topics">ವಿಷಯಗಳು ಸೇರಿಸಿ</string>
+    <string name="app_settings.edit_prefs.more_topics">ಇನ್ನಷ್ಟು...</string>
+    <string name="app_settings.edit_prefs.pref_lang">ಇಷ್ಟದ ಭಾಷೆಗಳು</string>
+    <string name="app_settings.edit_prefs.subscribe_top_reads">Subscribe to the Top Reads Of The Month</string>
+    <string name="app_settings.edit_prefs.subscribe_trending_blog">Subscribe to the Trending Blog Of The Day</string>
+    <string name="app_settings.edit_prefs.subscribe_momspresso">Subscribe to the Momspresso TV</string>
+    <string name="app_settings.edit_prefs.subscribe_city_best">Subscribe to the Best In Your City</string>
+    <string name="app_settings.change_pass.hint_current_pass">ಪ್ರಸ್ತುತ ಪಾಸ್ವರ್ಡ್</string>
+    <string name="app_settings.change_pass.hint_new_pass">ಹೊಸ ಪಾಸ್ವರ್ಡ್</string>
+    <string name="app_settings.change_pass.hint_confirm_pass">ಪಾಸ್ವರ್ಡ್ ದೃಢೀಕರಿಸಿ</string>
+    <string name="app_settings.change_pass.save">ಉಳಿಸಿ</string>
+    <string name="app_settings.change_pass.toast_current_pass_empty">Current password cannot be empty</string>
+    <string name="app_settings.change_pass.toast_new_pass_empty">New password cannot be empty</string>
+
+    <string name="app_settings.change_pass.toast_confirm_pass_match">New passwords do not match</string>
+    <string name="app_settings.change_pass.pass_update_fail">Current password is incorrect</string>
+    <string name="app_settings.change_pass.pass_update_success">Password updated successfully</string>
+    <string name="blog_setup.toolbar.title">ಬ್ಲಾಗ್ ಅನ್ನು ಸೆಟಪ್ ಮಾಡಿ</string>
+    <string name="blog_setup.get_started_label">ನಿಮ್ಮ ಮೊದಲ  ಬ್ಲಾಗ್  ಪ್ರಾರಂಭಿಸೋಣ</string>
+    <string name="blog_setup.one_time_label">ಬ್ಲಾಗ್ ಅನ್ನು ಸೆಟಪ್ ಮಾಡುವುದು ಒಂದು ಬಾರಿ ಪ್ರಕ್ರಿಯೆ.</string>
+    <string name="blog_setup.okay">ಸರಿ</string>
+    <string name="blog_setup.blog_title_label">ಬ್ಲಾಗ್ ಶೀರ್ಷಿಕೆ</string>
+    <string name="blog_setup.blog_title_desc">ಇದು ನಿಮ್ಮ ಡಿಜಿಟಲ್ ಪುಸ್ತಕದ ಶೀರ್ಷಿಕೆಯಂತೆ ಮತ್ತು ನೀವು ಇಲ್ಲಿ ಪ್ರಕಟಿಸುವ ಎಲ್ಲ ಬ್ಲಾಗ್ ಪೋಸ್ಟ್ಗಳ ವಿವರಣೆಯನ್ನು ಒಳಗೊಳ್ಳುತ್ತದೆ. ಉದಾ: Mums ಡೈರಿ, ನನ್ನ ಸ್ವಗತ.</string>
+
+    <string name="blog_setup.hint_blog_title">ಇಲ್ಲಿ ಬರೆಯಿರಿ </string>
+    <string name="blog_setup.about_yourself_label">ನಿಮ್ಮ ಬಗ್ಗೆ</string>
+    <string name="blog_setup.about_desc">ನಿಮ್ಮ ಬಗ್ಗೆ ಓದುಗರಿಗೆ ಹೇಳಿ.</string>
+    <string name="blog_setup.profile_pic_label">ಪ್ರೊಫೈಲ್ ಚಿತ್ರ</string>
+    <string name="blog_setup.profile_pic_desc">ಇದು ನಿಮ್ಮ ಓದುಗರಿಗೆ ಗೋಚರಿಸುತ್ತದೆ ಮತ್ತು ಅವುಗಳನ್ನು ನಿಮ್ಮ ಬರವಣಿಗೆಯೊಂದಿಗೆ ಸಂಯೋಜಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ.</string>
+    <string name="blog_setup.your_details">ನಿಮ್ಮ ವಿವರಗಳು</string>
+    <string name="blog_setup.hint_phone">ದೂರವಾಣಿ ಸಂಖ್ಯೆ</string>
+    <string name="blog_setup.save_publish">ಉಳಿಸಿ ಮತ್ತು ಪ್ರಕಟಿಸಿ</string>
+    <string name="ranking.toolbar.title">MY RANKING</string>
+    <string name="ranking.improve_view.title">ಬಗ್ಗೆ</string>
+    <string name="ranking.tabs_your_rank_label">ನಿಮ್ಮ ಶ್ರೇಯಾಂಕಗಳು</string>
+    <string name="ranking.tabs_page_views_label">ನಿಮ್ಮ ಪುಟ ವೀಕ್ಷಣೆಗಳು</string>
+    <string name="ranking.views_label">BLOG PAGE VIEWS</string>
+    <string name="ranking.menu_30_days_label">30 DAYS VIEW</string>
+
+    <string name="ranking.menu_custom_label">CUSTOM</string>
+    <string name="ranking.improve_views_label">How can I improve my Page views?</string>
+    <string name="ranking.improve_social_share">How can I improve my Social Share?</string>
+    <string name="ranking.page_views_label">ಪುಟ ವೀಕ್ಷಣೆಗಳು: </string>
+    <string name="ranking.engagement">ಒಪ್ಪಂದಗಳು</string>
+    <string name="ranking.stats_like">ಇಷ್ಟಗಳು</string>
+    <string name="ranking.stats_shares">ಷೇರುಗಳು</string>
+    <string name="ranking.stats_comments">ಪ್ರತಿಕ್ರಿಯೆಗಳು</string>
+    <string name="ranking.how_calculated">ಇದನ್ನು ಹೇಗೆ ಲೆಕ್ಕ ಹಾಕಲಾಗುತ್ತದೆ? </string>
+    <string name="ranking.top_bloggers">ಉತ್ತಮ ಬ್ಲಾಗಿಗರು ಒಳಗಿದ್ದಾರೆ</string>
+    <string name="ranking.followers_label">ಅನುಸರಿಸುವವರು</string>
+    <string name="ranking.in">IN</string>
+    <string name="ranking.toast_start_end_date">Start date must be less than end date</string>
+    <string name="editor.publish">ಪ್ರಕಟಿಸು</string>
+    <string name="add_article_topics.toolbar.title">ವಿಷಯಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="add_article_topics.clear_all">ಎಲ್ಲವನ್ನೂ ತೆಗೆ</string>
+    <string name="add_article_topics.min_topics">ದಯವಿಟ್ಟು ಮುಂದುವರಿಸಲು ಕನಿಷ್ಠ ಒಂದು ವಿಷಯವನ್ನು ಆಯ್ಕೆ ಮಾಡಿ</string>
+    <string name="add_article_topics.max_topics">ನೀವು ಗರಿಷ್ಠ 8 ವಿಷಯಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಬಹುದು</string>
+    <string name="add_article_topics.apply">ಅನ್ವಯಿಸು</string>
+
+    <string name="choose_article_image.toolbar.title">ಚಿತ್ರ ಆಯ್ಕೆಮಾಡಿ</string>
+
+    <string name="choose_article_image.upload_photo">ಅಪ್ಲೋಡ್ ಫೋಟೋ ಕ್ಲಿಕ್ ಮಾಡಿ</string>
+    <string name="choose_article_image.publish">ಪ್ರಕಟಿಸು</string>
+    <string name="add_article_or_video.upload_video">ವೀಡಿಯೊ ಸೇರಿಸಿ</string>
+    <string name="add_article_or_video.write_article">ಲೇಖನವನ್ನು ಬರೆಯಿರಿ</string>
+    <string name="add_article_or_video.suggested_topic">ಸೂಚಿಸಿದ ವಿಷಯಗಳು</string>
+
+    <string name="add_article_or_video.become_blogger">ಬ್ಲಾಗರ್ ಆಗಿ</string>
+    <string name="become_blogger.get_started"> ನಾವೀಗ ಆರಂಭಿಸೋಣ</string>
+    <string name="upload_video.title">SHARE A MomVlog\n THAT CAPTURES #MOMLIFE</string>
+
+    <string name="upload_video.desc">Parenting, Work, Relationships, Fitness, Recipes, Beauty&#8230; basically anything Inspiring from day to day life.</string>
+    <string name="upload_video.desc1">Shoot the video and upload it right away from your Mobile.</string>
+    <string name="upload_video.get_started">LET\'S START</string>
+    <string name="moderation_or_share.way_to_go">ಹೋಗಲು ದಾರಿ</string>
+
+    <string name="moderation_or_share.moderation_message">ನಿಮ್ಮ ಲೇಖನವು ಮಿತಿಗೊಳಿಸುವಿಕೆಯಾಗಿದೆ. ಬ್ಲಾಗ್ನ ಸ್ಥಿತಿಯನ್ನು ಕುರಿತು ನೀವು 24 ಗಂಟೆಗಳ ಒಳಗೆ ಇಮೇಲ್ ಸ್ವೀಕರಿಸುತ್ತೀರಿ</string>
+    <string name="moderation_or_share.publish_message">ಅಭಿನಂದನೆಗಳು! ನಿಮ್ಮ ಬ್ಲಾಗ್ ಅನ್ನು ಪ್ರಕಟಿಸಲಾಗಿದೆ. \ N ಇದನ್ನು ನಿಮ್ಮ ಸ್ನೇಹಿತರು ಮತ್ತು ಕುಟುಂಬದೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಿ.</string>
+    <string name="moderation_or_share.later">ಬಹುಶಃ ನಂತರ</string>
+
+    <string name="moderation_or_share.okay">ಸರಿ</string>
+    <string name="moderation_or_share.gplus_fail">Unable to share with google plus.</string>
+    <string name="moderation_or_share.whatsapp_fail">Unable to share with whatsapp.</string>
+    <string name="moderation_or_share.facebook_fail">Unable to share with facebook.</string>
+
+    <string name="moderation_or_share.insta_fail">Unable to share with instagram.</string>
+    <string name="moderation_or_share.whatsapp_not_installed">Whatsapp has not been installed.</string>
+    <string name="moderation_or_share.insta_not_installed">Instagram has not been installed.</string>
+    <string name="moderation_or_share.twitter_fail">Unable to share with twitter.</string>
+    <string name="complete_blogger_profile.complete_label">ನಿಮ್ಮ ಬ್ಲಾಗಿಗರು ಪ್ರೊಫೈಲ್ ಅನ್ನು ಪೂರ್ಣಗೊಳಿಸಿ</string>
+    <string name="complete_blogger_profile.paid_eligibility">ಪಾವತಿಸಿದ ಬರವಣಿಗೆಯ ಕಾರ್ಯಯೋಜನೆಗಳಿಗಾಗಿ ಅರ್ಹರಾಗಿರಿ</string>
+    <string name="complete_blogger_profile.save">ಉಳಿಸಿ</string>
+    <string name="complete_blogger_profile.incorrect_date">Please choose correct date for date of birth.</string>
+    <string name="add_video_details.title_hint">ವೀಡಿಯೊಗಾಗಿ ಒಂದು ಶೀರ್ಷಿಕೆಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="add_video_details.mute_label">ಸದ್ದಡಗಿಸು</string>
+    <string name="add_video_details.add_music">ADD MUSIC</string>
+    <string name="add_video_details.remove">ತೆಗೆದುಹಾಕಿ</string>
+
+    <string name="add_video_details.error_empty_title">ವೀಡಿಯೊಗಾಗಿ ಒಂದು ಶೀರ್ಷಿಕೆಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="add_video_details.save_upload">ಉಳಿಸಿ ಮತ್ತು ಅಪ್ಲೋಡ್ ಮಾಡಿ</string>
+    <string name="add_video_details.toolbar.title">ಒಂದು ವೀಡಿಯೊವನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಿ</string>
+    <string name="add_video_details.audio_picker.title">ADD MUSIC</string>
+
+    <string name="video_progress.uploading_label">ಅಪ್ಲೋಡ್ ...</string>
+    <string name="audio_post">ಆಡಿಯೋ</string>
+    <string name="video_progress.uploading_msg">ದಯವಿಟ್ಟು ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ನಿರ್ಗಮಿಸಲು ಅಥವಾ ಹೊರಹೋಗಬೇಡ, ಅಪ್ಲೋಡ್ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ರದ್ದುಗೊಳ್ಳುತ್ತದೆ. ಅಪ್ಲೋಡ್ ಮಾಡುವಾಗ ನೀವು ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ಬಳಸಬಹುದು</string>
+    <string name="video_progress.way_to_go">ಹೋಗಲು ದಾರಿ</string>
+    <string name="video_progress.success_msg">ವೀಡಿಯೊವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್ ಮಾಡಲಾಗಿದೆ ಮತ್ತು ಮಿತಗೊಳಿಸಲು ಕಳುಹಿಸಲಾಗಿದೆ. ಒಮ್ಮೆ ಪೂರ್ಣವಾದ ನಂತರ  ನಾವು ನಿಮಗೆ ತಿಳಿಸುತ್ತೇವೆ.</string>
+    <string name="video_progress.okay">ಸರಿ</string>
+    <string name="video_progress.uploading_failed">Uploading Failed.</string>
+    <string name="video_progress.uploading_error">Error occurred while uploading your video. Please try again.</string>
+
+    <string name="video_progress.progress_lost_msg">Your upload progress will be lost. Are you sure you want to exit?</string>
+    <string name="user_activities.toolbar.title">ಚಟುವಟಿಕೆ</string>
+
+    <string name="user_activities.tabs.recommended">ನಿಮ್ಮ ಇಷ್ಟಪಟ್ಟಿರುವ</string>
+    <string name="user_activities.tabs.bookmark">ಬುಕ್ಮಾರ್ಕ್ಗಳು</string>
+    <string name="user_activities.tabs.watch_later">ನಂತರ ವೀಕ್ಷಿಸಿ</string>
+    <string name="user_activities.tabs.comment">ಪ್ರತಿಕ್ರಿಯೆಗಳು</string>
+    <string name="user_activities.bookmarks.remove">ತೆಗೆದುಹಾಕಿ</string>
+    <string name="user_activities.bookmarks.by">By</string>
+    <string name="user_activities.comments.saved_on">ಉಳಿಸಲಾಗಿದೆ:</string>
+
+    <string name="user_activities.comments.edit">ಸಂಪಾದಿಸಿ</string>
+    <string name="user_activities.comments.no_comments">ನೀವು ಇನ್ನೂ ಯಾವುದೇ ಲೇಖನದಲ್ಲಿ ಕಾಮೆಂಟ್ ಮಾಡಿಲ್ಲ</string>
+    <string name="user_activities.recommended.no_recommendations">ನೀವು ಇನ್ನೂ ಯಾವುದೇ ಲೇಖನವನ್ನು ಶಿಫಾರಸು ಮಾಡಿಲ್ಲ</string>
+    <string name="user_activities.bookmarks.no_bookmarks">ಯಾವುದೇ ಲೇಖನ ಇನ್ನೂ ಬುಕ್ಮಾರ್ಕ್ ಆಗಿಲ್ಲ</string>
+    <string name="user_activities.watch_later.no_watch_later">ನೀವು ಇನ್ನೂ ಯಾವುದೇ ವೀಡಿಯೊಗಳನ್ನು ಉಳಿಸಿಲ್ಲ</string>
+    <string name="explore.section.events">ಕಾರ್ಯಕ್ರಮಗಳು</string>
+    <string name="explore.section.resources">ಸಂಪನ್ಮೂಲಗಳು</string>
+    <string name="explore.section.top_things">ಮಾಡಬೇಕಾದ ವಿಷಯಗಳು</string>
+    <string name="explore.section.no_resources">ನಿಮ್ಮ ನಗರಕ್ಕೆ ಪ್ರಸ್ತುತ ಯಾವುದೇ ಘಟನೆಗಳು ಅಥವಾ ಸಂಪನ್ಮೂಲಗಳನ್ನು ನಮಗೆ ಹೊಂದಿಲ್ಲ</string>
+    <string name="explore.events.trending_lbl">TRENDING EVENTS</string>
+    <string name="explore.events.featured_lbl">FEATURED EVENTS</string>
+    <string name="explore.events.upcoming_lbl">ಮುಂಬರುವ ಕಾರ್ಯಕ್ರಮಗಳು</string>
+    <string name="all_videos.toolbar.title">ವೀಡಿಯೊಗಳು</string>
+
+    <string name="all_videos.tabbar.momspresso_label">ಮೊಮ್ಪ್ರೆಸ್ಸೋ ಟಿವಿ </string>
+    <string name="all_videos.tabbar.funny_label">ಮಾಮ್ ವ್ಲೋಗ್ಸ್</string>
+    <string name="all_videos.funny_videos.no_videos">No mom vlogs added.</string>
+    <string name="notification.read_all">Read All</string>
+    <string name="notification.no_notification">ಯಾವುದೇ ಅಧಿಸೂಚನೆ ಕಂಡುಬಂದಿಲ್ಲ</string>
+    <string name="user_funny_video.toolbar.title">ಮಾಮ್ ವ್ಲೋಗ್ಸ್</string>
+    <string name="user_funny_video.published_on">ಪ್ರಕಟಿಸಲಾದ ದಿನ: %1$s</string>
+
+    <string name="article_listing.toolbar.title_recent">ಇತ್ತೀಚಿನದು</string>
+    <string name="article_listing.toolbar.title_popular">ಜನಪ್ರಿಯ</string>
+    <string name="article_listing.toolbar.title_trending">ಟ್ರೆಂಡಿಂಗ್</string>
+    <string name="article_listing.toolbar.title_for_you">ನಿನಗಾಗಿ</string>
+
+    <string name="article_listing.toolbar.title_todays_best">ಇಂದಿನ ಅತ್ಯುತ್ತಮ</string>
+    <string name="article_listing.toolbar.title_editor_picks">ಸಂಪಾದಕರ ಆಯ್ಕೆಗಳು</string>
+
+    <string name="sort.recent">ಇತ್ತೀಚಿನದು</string>
+    <string name="sort.popular">ಜನಪ್ರಿಯ</string>
+
+    <string name="city_picker.toolbar.title">ನಗರವನ್ನು ಆಯ್ಕೆ ಮಾಡಿ</string>
+    <string name="rate_now">ಈಗ ರೇಟ್ ಮಾಡಿ</string>
+    <string name="rate_us.dialog.title">ನಮ್ಮ ಅಪ್ಲಿಕೇಶನ್ ಗೆ ಶ್ರೇಣಿ ನೀಡಿ?</string>
+    <string name="rate_us.dialog.not_now">ಈಗ ಸಾಧ್ಯವಿಲ್ಲ</string>
+    <string name="rate_us.dialog.message1">ನೀವು ಮೊಮ್ಮೆಸ್ಪ್ರೆಸೊ ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ಬಳಸುತ್ತಿದ್ದರೆ, ದಯವಿಟ್ಟು ಅದನ್ನು ಶ್ರೇಣಿ ನೀಡಲು ಸ್ವಲ್ಪ ಸಮಯ ತೆಗೆದುಕೊಳ್ಳಿ.</string>
+    <string name="rate_us.dialog.message2">ನಿಮ್ಮ ಸಹಕಾರಕ್ಕೆ ಧನ್ಯವಾದಗಳು !!!</string>
+
+    <string name="suggested_topic.start_writing">ಬರೆಯಿರಿ</string>
+    <string name="no_articles_found">ಯಾವುದೇ ಲೇಖನ ಲಭ್ಯವಿಲ್ಲ</string>
+
+    <string name="check_out_blog">Momspresso\n\nCheck out this interesting blog post\n</string>
+
+    <string name="check_out_short_story">Momspresso\n\nCheck out this interesting short story\n</string>
+    <string name="contributors">Contributors</string>
+    <string name="contributor_in">Contributors in</string>
+    <string name="recent_article">ಸಂಬಂಧಿಸಿದ ಲೇಖನಗಳು</string>
+    <string name="upload_bigger_image">Please upload bigger image</string>
+
+    <string name="upload_min_width">Please upload image with minimum width of 720 pixels</string>
+
+    <string name="image_upload_wait">Please wait while image is being uploaded</string>
+    <string name="editor_title_empty">ಶೀರ್ಷಿಕೆಯು ಖಾಲಿಯಾಗಿರಬಾರದು</string>
+    <string name="editor_body_empty">ಪಠ್ಯ ಖಾಲಿಯಾಗಿರಬಾರದು</string>
+    <string name="editor_title_char_limit">Unable to publish. Title should smaller than 150 characters</string>
+    <string name="editor_body_min_words">Please write atleast 300 words to publish</string>
+    <string name="draft_oops">Oops!</string>
+    <string name="draft_not_saved">Draft could not be saved, your current changes will be lost if you exit now. Would you like to exit?</string>
+    <string name="draft_save_success">ಯಶಸ್ವಿಯಾಗಿ ಸೇವ್ ಮಾಡಲಾಗಿದೆ</string>
+    <string name="verify_email">Mail sent to email address. Please click and verify</string>
+    <string name="video_upload_fail">Unable to upload the video. Please try again later.</string>
+    <string name="connectivity_unavailable">No connectivity available</string>
+    <string name="unable_to_load_comment">Unable to load comments</string>
+    <string name="connection_timeout">connection timed out</string>
+    <string name="image_upload_success">Image successfully uploaded!</string>
+    <string name="image_upload_fail">unable to upload image, please try again later</string>
+    <string name="android_version_unsupported">This version of android is no more supported.</string>
+    <string name="choose_mp4_file">please choose a .mp4 format file</string>
+    <string name="article_listing.type.trending_label">ಟ್ರೆಂಡಿಂಗ್</string>
+    <string name="article_listing.type.editor_label">ಸಂಪಾದಕರ ಆಯ್ಕೆಗಳು</string>
+    <string name="article_listing.type.todays_best_label">ಇಂದಿನ ಅತ್ಯುತ್ತಮ</string>
+    <string name="article_listing.type.for_you_label">ನಿನಗಾಗಿ</string>
+    <string name="article_listing.type.short_story_label">100 ಪದ ಕಥೆ</string>
+    <string name="article_listing.type.languages_label">ಭಾಷೆಗಳು</string>
+    <string name="article_listing.type.videos_label">ವೀಡಿಯೊಗಳು</string>
+    <string name="article_listing.type.recent_label">ಇತ್ತೀಚಿನದು</string>
+
+    <string name="lang_sel.welcome_msg">ಮೊಮ್ಸ್ಪ್ರೆಸೊಗೆ ಸುಸ್ವಾಗತ!</string>
+    <string name="lang_sel.sel_lang">SELECT A LANGUAGE TO VIEW YOUR APP</string>
+    <string name="lang_sel.curr_lang">Current Language</string>
+    <string name="lang_sel.app_lang_desc">You are using english as current language. Would you like to view this application in the same language?</string>
+    <string name="lang_sel.yes">ಹೌದು</string>
+    <string name="lang_sel.select_more">SELECT MORE</string>
+    <string name="lang_sel.continue">ಮುಂದುವರಿಸಿ</string>
+    <string name="lang_sel.choose_lang_toast">Please choose a language to continue</string>
+
+    <string name="all_categories_label">ಎಲ್ಲ</string>
+    <string name="cancel">Cancel</string>
+    <string name="language_label.english">English</string>
+    <string name="language_label.hindi">हिंदी</string>
+    <string name="language_label.marathi">मराठी</string>
+    <string name="language_label.ben">বাংলা</string>
+    <string name="language_label.tamil">தமிழ்</string>
+    <string name="language_label.telegu">తెలుగు</string>
+
+    <string name="language_label.kannada">ಕನ್ನಡ</string>
+    <string name="language_label.malayalam">മലയാളം</string>
+
+    <string name="language_label.gujarati">ગુજરાતી </string>
+    <string name="language_label.punjabi">ਪੰਜਾਬੀ</string>
+    <string name="choose_pref_lang">ನಿಮ್ಮ ಆದ್ಯತೆಯ ಭಾಷೆಯನ್ನು ಆರಿಸಿಕೊಳ್ಳಿ</string>
+    <string name="choose_pref_lang.cancel">ರದ್ದುಮಾಡಿ</string>
+    <string name="guide.language_tour">ನಿಮ್ಮ ಆಯ್ಕೆಯ ಯಾವುದೇ ಭಾಷೆಯಲ್ಲಿ ಈ ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ನೀವು ವೀಕ್ಷಿಸಬಹುದು</string>
+    <string name="guide.settings_tour">ನೀವು ಲೇಖನಗಳನ್ನು ಓದಲು ಬಯಸುವ ಭಾಷೆಗಳನ್ನು ನಿರ್ವಹಿಸಿ</string>
+    <string name="guide.trending_tour">ಮೆನುವನ್ನು ಪ್ರವೇಶಿಸಲು ಇಲ್ಲಿ ಟ್ಯಾಪ್ ಮಾಡಿ</string>
+    <string name="guide.quick_link_tour">ನಮ್ಮ ಹೊಸ ತ್ವರಿತ ಲಿಂಕ್ಗಳೊಂದಿಗೆ, ನೀವು ವಿಷಯವನ್ನು ಸುಲಭವಾಗಿ ಮತ್ತು ವೇಗವಾಗಿ ಕಂಡುಕೊಳ್ಳಬಹುದು!</string>
+    <string name="guide.topics_tour">ಈ ವಿಷಯಗಳು ನಿಮಗೆ \ n ಓದಲು ಮತ್ತು ಪಾಲನೆಯ ಎಲ್ಲಾ ಅಂಶಗಳನ್ನು ಅನ್ವೇಷಿಸಲು ಅನುಮತಿಸುತ್ತದೆ</string>
+    <string name="guide.sub_topics_list_tour">ಹೆಚ್ಚಿನ ವಿಭಾಗಗಳನ್ನು ನೋಡಲು ಇಲ್ಲಿ ಕ್ಲಿಕ್ ಮಾಡಿ</string>
+
+    <string name="guide.share_like_bookmark_tour">ಹಂಚಿಕೊಳ್ಳಿ, ಬುಕ್ಮಾರ್ಕ್ ಮತ್ತು ಈ ಪೋಸ್ಟ್ ಲವ್ ಮಾಡಿ</string>
+
+    <string name="guide.listen_tour">ಈ ಬ್ಲಾಗ್ ಅನ್ನು ಕೇಳಲು ಇಲ್ಲಿ ಕ್ಲಿಕ್ ಮಾಡಿ</string>
+    <string name="guide.groups_tour">ಬೆಂಬಲ ಗುಂಪುಗಳು ಸೇರಿ. ಪ್ರಶ್ನೆಗಳನ್ನು ಕೇಳಿ (ಅನಾಮಧೇಯವಾಗಿ ಸಹ) ಮತ್ತು ಸಮುದಾಯದಿಂದ ಉತ್ತರಗಳನ್ನು ಪಡೆಯಿರಿ.</string>
+
+    <string name="guide.vlogs_tour">ನಿಮಗೆ ಇಷ್ಟವಾಗುವ ಮಾಮ್ ವ್ಲೋಗ್ಸ ಗಳನ್ನು ವೀಕ್ಷಿಸಿ.\n ಪ್ರತಿ ವಾರದ ವಿಡಿಯೋ ಚಾಲೆಂಜ್ ನಲ್ಲಿ ಭಾಗವಹಿಸಿ. </string>
+    <string name="author_type.blogger">ಬ್ಲಾಗರ್</string>
+    <string name="author_type.editor">ಸಂಪಾದಕ</string>
+    <string name="author_type.editorial">ಸಂಪಾದಕೀಯ ತಂಡ</string>
+    <string name="author_type.expert">ತಜ್ಞ</string>
+    <string name="author_type.featured">ವೈಶಿಷ್ಟ್ಯಪೂರ್ಣ ಲೇಖಕ</string>
+    <string name="author_type.user">ಬಳಕೆದಾರ</string>
+    <string name="no_article.be_first">ಈ ವರ್ಗದಲ್ಲಿ ಲೇಖನಗಳು ಬರೆಯಲು ಮೊದಲನೆಯದು!</string>
+    <string name="groups.join_label">ನೀವು ಸದಸ್ಯರಾಗಿರುವ ಗುಂಪುಗಳು</string>
+    <string name="groups.reported_content">REPORTED CONTENT</string>
+
+    <string name="groups.moderator_invitation">INVITE TO BE A MODERATOR</string>
+    <string name="groups.unblock_member">UNBLOCK MEMBER</string>
+    <string name="groups.block_member">BLOCK MEMBER</string>
+    <string name="groups.remove_post">REMOVE POST</string>
+    <string name="groups.save_post">SAVE POST</string>
+    <string name="groups.delete_post">DELETE POST</string>
+
+    <string name="groups.turn_notification_on">Turn On Notification</string>
+
+    <!--<string name="groups.sections.about">ABOUT</string>-->
+    <!--<string name="groups.sections.discussions">DISCUSSION</string>-->
+    <!--<string name="groups.sections.blogs">BLOGS</string>-->
+    <!--<string name="groups.sections.photos">PHOTOS</string>-->
+    <!--<string name="groups.sections.videos">VIDEOS</string>-->
+    <!--<string name="groups.sections.top_posts">TOP POSTS</string>-->
+    <!--<string name="groups.sections.polls">POLLS</string>-->
+    <!--<string name="groups.created">Created</string>-->
+    <!--<string name="groups.anyone_join">Anyone can join</string>-->
+    <!--<string name="groups.closed_gp">Closed group</string>-->
+    <!--<string name="groups.invitation_only_gp">Invitation only group</string>-->
+    <!--<string name="groups.join_group">JOIN GROUP</string>-->
+    <!--<string name="groups.choose_media">Choose media to upload</string>-->
+    <!--<string name="groups.search_in">Search</string>-->
+    <!--<string name="groups.post_comment">Comments</string>-->
+    <!--<string name="groups.post_helpful">Helpful</string>-->
+    <!--<string name="groups.post_nothelpful">Not Helpful</string>-->
+    <!--<string name="groups.post_label">POST</string>-->
+    <!--<string name="groups.join_form">JOINING FORM</string>-->
+    <!--<string name="groups.member_label">MEMBERS</string>-->
+    <!--<string name="groups.anonymous">ANONYMOUS</string>-->
+    <!--<string name="groups.membership_request_msg">We have received your request for joining this group. Your membership will be confirmed once it is approved by the moderators of this group.</string>-->
+
+    <string name="groups.turn_notification_off">Turn Off Notification</string>
+    <string name="groups.enable_comment">ENABLE COMMENTS</string>
+    <string name="groups.disable_comment">DISABLE COMMENTS</string>
+    <string name="groups.report_post">REPORT THIS POST</string>
+    <string name="groups.block_this_user">BLOCK THIS USER</string>
+    <string name="groups.pin_post">PIN THIS POST TO TOP</string>
+    <string name="groups.unpin_post">UNPIN THIS POST</string>
+    <string name="groups.all_groups">ALL GROUPS</string>
+    <string name="groups.groups">ಗುಂಪುಗಳು</string>
+    <string name="groups.reported_by">Reported By</string>
+    <string name="groups.persons">Persons</string>
+    <string name="groups.no_action">NO ACTION</string>
+    <string name="groups.block_user">BLOCK USER</string>
+    <string name="groups.hide_content">HIDE CONTENT</string>
+    <string name="groups.invite_members">ಸದಸ್ಯರನ್ನು ಆಮಂತ್ರಿಸಿ</string>
+    <string name="groups.invite_family">ನಿಮ್ಮ ಸ್ನೇಹಿತರನ್ನು ಮತ್ತು ಕುಟುಂಬದವರನ್ನು ಈ ಗುಂಪಿಗೆ ಸೇರಲು ಆಮಂತ್ರಿಸಿ</string>
+    <string name="groups.disable_notification">DISABLE NOTIFICATIONS</string>
+    <string name="groups.disable_notification_this_gp">Disable notifications from this group</string>
+    <string name="groups.leave_group">ಗುಂಪನ್ನು ಬಿಡಿ</string>
+    <string name="groups.exit_gp">ನೀವು ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ಗುಂಪನ್ನು ಬಿಡಬಹುದು</string>
+    <string name="groups.sure_leave_gp">Are you sure you want to leave this group</string>
+    <string name="groups.view_all_reported">View all the reported content for this group</string>
+    <string name="groups.leave">LEAVE</string>
+    <string name="groups.membership_req">MEMBERSHIP REQUEST</string>
+    <string name="groups.now_member_gp">You are now member of the group</string>
+    <string name="groups.approval_req_sent">Your request has been sent to group admin for approval</string>
+    <string name="groups.support_groups">ಗುಂಪುಗಳನ್ನು ಬೆಂಬಲಿಸಿ</string>
+    <string name="groups.post_helpful"></string>
+    <string name="groups.post_nothelpful"></string>
+    <string name="groups.summary">SUMMARY</string>
+    <string name="groups.add_image">ADD IMAGE</string>
+    <string name="groups.image_poll">ಫೋಟೋ ಪೋಲ್</string>
+    <string name="groups.text_poll">TEXT POLL</string>
+    <string name="groups.anonymous">ಅನಾಮಿಕ</string>
+    <string name="groups.anyone_join">Anyone can join</string>
+    <string name="groups.closed_gp">Closed group</string>
+    <string name="groups.invitation_only_gp">Invitation only group</string>
+    <string name="groups.created">Created</string>
+    <string name="groups.member_label">MEMBERS</string>
+    <string name="groups.sections.about">ಬಗ್ಗೆ</string>
+    <string name="groups.sections.discussions">ಚರ್ಚೆಗಳು</string>
+    <string name="groups.sections.blogs">ಬ್ಲಾಗ್</string>
+    <string name="groups.sections.photos">PHOTOS</string>
+    <string name="groups.sections.videos">ವೀಡಿಯೊಗಳು</string>
+    <string name="groups.sections.top_posts">TOP POSTS</string>
+    <string name="groups.sections.polls">POLLS</string>
+    <string name="groups.search_in">ಹುಡುಕು</string>
+    <string name="groups.join_form">JOINING FORM</string>
+    <string name="groups.membership_pending">Membership Pending</string>
+    <string name="groups.why_leave">Please let us know why you are leaving.</string>
+    <string name="groups.leave_be_back">This is temporary. I\'ll be back.</string>
+    <string name="groups.spend_time">I spend too much time using Momspresso.</string>
+    <string name="groups.not_useful">I don\'t find Momspresso useful.</string>
+    <string name="groups.how_to_use">I don\'t understand how to use Momspresso</string>
+    <string name="groups.user_blocked_msg">You have been blocked from this group</string>
+    <string name="groups.user_membership_rejected_msg">Your membership has been rejected for this group</string>
+    <string name="groups.join_group">ಗುಂಪು ಸೇರಿ</string>
+    <string name="groups.ask_something">ಏನಾದರೂ ಕೇಳಿ ...</string>
+    <string name="groups.post_label">ಪೋಸ್ಟ್</string>
+    <string name="groups.edit_post">EDIT POST</string>
+    <string name="groups.total_votes">TOTAL VOTES: %1$s</string>
+    <string name="no_story.be_first">Be the first one to write stories in this category!</string>
+    <string name="random_text">Your trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight or through the road. Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
+    <string name="random_100_words">Trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
+    <string name="short_s.add_story">100 ಪದ ಕಥೆ ಬರೆಯಿರಿ</string>
+    <string name="short_s.add_comment">ಕಾಮೆಂಟ್ ಸೇರಿಸಿ</string>
+    <string name="short_s.add.title_hint">ನಿಮ್ಮ ಕಥೆಗೆ ಸೂಕ್ತವಾದ ಶೀರ್ಷಿಕೆಯೊಂದನ್ನು ಬರೆಯಿರಿ. ಅಕ್ಷರ ಮಿತಿ 60 ಆಗಿದೆ.</string>
+    <string name="short_s.add.body_hint">ನಿಮ್ಮ ಅದ್ಭುತ ಕಥೆ ಅಥವಾ ಕವಿತೆಯನ್ನು 100 ಅಥವಾ ಕಡಿಮೆ ಪದಗಳಲ್ಲಿ ಬರೆಯಿರಿ.</string>
+    <string name="short_s.publish_message">Congrats! Your story has been published.\n Share it with your friends and family.</string>
+    <string name="short_s.max_word">Your story can have maximum 100 words.</string>
+
+    <string name="short_s.choose_genre">- ನಿಮ್ಮ ಕಥೆಯ ಪ್ರಕಾರವನ್ನು ಆರಿಸಿ</string>
+
+    <string name="short_s.choose_one_genre">Choose the genre that best describes the content of your story. You can choose only 1 genre.</string>
+    <string name="short_s.no_drafts">ಇನ್ನೂ ಸಣ್ಣ ಕಥೆಯನ್ನು ಇನ್ನೂ ರಚಿಸಲಾಗಿಲ್ಲ</string>
+    <string name="short_s.no_published">No short story published as yet</string>
+    <string name="short_s.view_replies">ಪ್ರತಿಕ್ರಿಯೆಗಳನ್ನು ವೀಕ್ಷಿಸಿ</string>
+    <string name="short_s.choose_topic">Please choose at least one topic to continue</string>
+    <string name="short_s.add_comment_fail">Failed to add comment. Please try again</string>
+    <string name="short_s.edit_comment_fail">Failed to edit comment. Please try again</string>
+    <string name="short_s.delete_comment_fail">Failed to delete comment. Please try again</string>
+    <string name="short_s.add_reply_fail">Failed to add reply. Please try again</string>
+    <string name="short_s.edit_reply_fail">Failed to edit reply. Please try again</string>
+    <string name="short_s.delete_reply_fail">Failed to delete reply. Please try again</string>
+    <string name="report.reason">ವಿಷಯವನ್ನು ವರದಿ ಮಾಡಿ</string>
+    <string name="report.abuse">ಅದು ನಿಂದನೀಯವಾಗಿದೆ</string>
+    <string name="report.religious">ಇದು ಧಾರ್ಮಿಕ ಭಾವನೆಗಳನ್ನು ನೋಯಿಸುತ್ತದೆ</string>
+    <string name="report.inappro">ಇದು ಸೂಕ್ತವಲ್ಲ</string>
+    <string name="report.spam">ಇದು ಸ್ಪ್ಯಾಮ್ ಆಗಿದೆ</string>
+    <string name="report.not_relevant">ಮತ್ತೇನಾದರೂ</string>
+    <string name="reply">ಪ್ರತಿಕ್ರಿಯಿಸು</string>
+    <string name="reported.spam">Reported as Spam</string>
+    <string name="reported.abuse">Reported as Abusive</string>
+
+    <string name="reported.uninteresting">Reported as Inappropriate</string>
+    <string name="reported.religious">Reported as Hurts Religious Sentiment</string>
+    <string name="reported.other">Reported as Other</string>
+    <string name="groups.join_support_gp">ಬೆಂಬಲ ಗುಂಪುಗಳು ಸೇರಿ</string>
+    <string name="groups.not_alone">#നിങ്ങളൊറ്റയ്ക്കല്ല</string>
+    <string name="choose_account">Choose an account to continue</string>
+    <string name="read_more">Read More</string>
+
+    <string name="read_less">Read Less</string>
+    <string name="profile_completion">ಪ್ರೊಫೈಲ್ ಪೂರ್ಣಗೊಂಡಿದೆ</string>
+    <string name="update">ನವೀಕರಿಸಿ</string>
+    <string name="improve_reachability">ಜೈವಿಕವನ್ನು ನವೀಕರಿಸುವ ಮೂಲಕ ಲಭ್ಯತೆಯನ್ನು ಸುಧಾರಿಸಿ.</string>
+    <string name="profile">ಪ್ರೊಫೈಲ್</string>
+
+    <string name="create_content">ಪ್ರತಿ ತಾಯಿಗೆ ಕಥೆ ಇದೆ. ನಿಮ್ಮದೇನು? ಇದನ್ನು ಬ್ಲಾಗ್, 100 ವರ್ಡ್ ಸ್ಟೋರಿ ಅಥವಾ ವೀಡಿಯೊ ಎಂದು ಹಂಚಿಕೊಳ್ಳಿ.</string>
+    <string name="write_about_yourself">Write about yourself</string>
+    <string name="child_details">ಮಕ್ಕಳ ವಿವರಗಳು</string>
+
+    <string name="add_child_details">ಮಕ್ಕಳ ವಿವರಗಳನ್ನು ಸೇರಿಸಿ</string>
+    <string name="contact_details">ಸಂಪರ್ಕ ವಿವರಗಳು</string>
+    <string name="navigation_bar.home">ಮುಖಪುಟ</string>
+    <string name="navigation_bar.discover">ಅನ್ವೇಷಿಸಿ</string>
+    <string name="navigation_bar.create">ರಚಿಸಿ</string>
+    <string name="navigation_bar.notifications">ಅಧಿಸೂಚನೆಗಳು</string>
+    <string name="navigation_bar.groups">ಗುಂಪುಗಳು</string>
+    <string name="coachmark.home">ಮೊಮ್ಸ್ಪ್ರೆಸೊಗೆ ಸುಸ್ವಾಗತ! ನಿಮ್ಮ ಆಯ್ಕೆಯ ಭಾಷೆಯಲ್ಲಿ ನೀವು ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ಅನ್ವೇಷಿಸಬಹುದು.</string>
+    <string name="coachmark.explore">ನೀನು ಇವತ್ತು ಏನನ್ನು ಮಾಡಲು ಇಚ್ಛಿಸುತ್ತೀಯಾ? 100 ವರ್ಡ್ ಸ್ಟೋರಿ ಅಥವಾ ವೀಡಿಯೊಗಳನ್ನು ವೀಕ್ಷಿಸಿ. ನೀವು ವಿವಿಧ ವರ್ಗಗಳನ್ನು ಅನ್ವೇಷಿಸಬಹುದು ಮತ್ತು ಬ್ಲಾಗ್ಗಳನ್ನು ಓದಬಹುದು</string>
+    <string name="coachmark.create">ನಿಮ್ಮ # 100 ಪದಗಳ ಕಥೆ, ಬ್ಲಾಗ್ ಪೋಸ್ಟ್, ಅಥವಾ ನಿಮ್ಮ ವೀಡಿಯೊಗಳನ್ನು ಸೇರಿಸಿ. ನಿಮ್ಮ ಡ್ರಾಫ್ಟ್ಗಳನ್ನು ಸಹ ವೀಕ್ಷಿಸಿ / ಸಂಪಾದಿಸಿ.</string>
+    <string name="coachmark.menu">ಅಪ್ಲಿಕೇಶನ್ನಲ್ಲಿ ನಿಮ್ಮ ಆದ್ಯತೆಯ ವಿಭಾಗಕ್ಕೆ ತಕ್ಷಣವೇ ಹೋಗಿ. ನಿಮ್ಮ ಬುಕ್ಮಾರ್ಕ್ ಮಾಡಿದ ಲೇಖನಗಳನ್ನು ವೀಕ್ಷಿಸಿ ಮತ್ತು ನಿಮ್ಮ ಅಪ್ಲಿಕೇಶನ್ ಸೆಟ್ಟಿಂಗ್ಗಳನ್ನು ನವೀಕರಿಸಿ.</string>
+
+    <string name="coachmark.drawer">ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ಪ್ರೊಫೈಲ್ ಅನ್ನು ವೀಕ್ಷಿಸಿ ಮತ್ತು ನಿಮ್ಮ ಎಲ್ಲ ಬ್ಲಾಗ್ಗಳು, 100 ಪದಗಳ ಕಥೆಗಳು, ಮತ್ತು ಮಾಮ್ ವ್ಲಾಗ್ಗಳನ್ನು ಒಂದೇ ಸ್ಥಳದಲ್ಲಿ ನೋಡಿ.</string>
+    <string name="coachmark.edit_profile">ಬ್ಲಾಗರ್ ಭೇಟಿ ಮತ್ತು ಪ್ರಾಯೋಜಿತ ಲೇಖನಗಳಲ್ಲಿ ನವೀಕರಣಗೊಳ್ಳಲು ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಅನ್ನು ಸಂಪಾದಿಸಿ ಮತ್ತು ನವೀಕರಿಸಿ.</string>
+    <string name="coachmark.app_setting">ನಿಮ್ಮ ಅಪ್ಲಿಕೇಶನ್ನ ಆದ್ಯತೆಗಳು ಮತ್ತು ಭಾಷೆಯ ಆದ್ಯತೆಗಳನ್ನು ನೀವು ಒಂದೇ ಸ್ಥಳದಲ್ಲಿ ಸಂಪಾದಿಸಬಹುದು. ಇಲ್ಲಿ ಅಧಿಸೂಚನೆಗಳು ಮತ್ತು ವರ್ಗಗಳಿಗೆ ಚಂದಾದಾರರಾಗಿ.</string>
+    <string name="coachmark.publish">ನಿಮ್ಮ ಪ್ರಕಟಿತ ಲೇಖನಗಳು, ಕಥೆಗಳು ಮತ್ತು ಮಾಮ್ ವ್ಲಾಗ್ಗಳನ್ನು ಒಂದೇ ಸ್ಥಳದಲ್ಲಿ ವೀಕ್ಷಿಸಿ</string>
+    <string name="mobile">MOBILE NO</string>
+
+    <string name="continue_writing">ಬರವಣಿಗೆಯನ್ನು ಮುಂದುವರಿಸಿ (ಡ್ರಾಫ್ಟ್ಗಳು)</string>
+    <string name="app_settings">ಅಪ್ಲಿಕೇಶನ್ ಸೆಟ್ಟಿಂಗ್ಗಳು</string>
+    <string name="create_new">- ಹೊಸದನ್ನು ರಚಿಸಿ</string>
+    <string name="name_optional">ಹೆಸರು (optional)</string>
+    <string name="name">ಹೆಸರು</string>
+    <string name="updated">ನವೀಕರಿಸಲಾಗಿದೆ :</string>
+    <string name="full_name">ಪೂರ್ಣ ಹೆಸರು</string>
+    <string name="email_and_password">ಇಮೇಲ್ ಮತ್ತು ಪಾಸ್ವರ್ಡ್</string>
+    <string name="location">ಸ್ಥಳ</string>
+    <string name="search">ಯಾವುದೇ ಲೇಖನ ಅಥವಾ ಲೇಖಕರನ್ನು ಹುಡುಕಿ</string>
+    <string name="new_label">ಹೊಸ</string>
+    <string name="view_profile">ಪ್ರೊಫೈಲ್ ವೀಕ್ಷಿಸಿ</string>
+    <string name="enter_valid_email">Please enter valid email id</string>
+    <string name="short_seconds">sec</string>
+    <string name="megabyte">MB</string>
+    <string name="kilobyte">KB</string>
+    <string name="choose_video_category">ವೀಡಿಯೊ ವರ್ಗವನ್ನು ಆರಿಸಿ</string>
+    <string name="time_limit">(ಗರಿಷ್ಠ ಸಮಯ %1$s)</string>
+    <string name="upload_larger_video">ಓಹ್! ನಿಮ್ಮ ವೀಡಿಯೊ ಕನಿಷ್ಠ 5 ಸೆಕೆಂಡ್ಗಳಷ್ಟು ಉದ್ದವಾಗಿರಬೇಕು</string>
+    <string name="seconds_label">seconds</string>
+    <string name="minutes_label">ನಿಮಿಷಗಳು</string>
+    <string name="women_only">ಓಹ್! ಈ ವಿಭಾಗವು ಮಹಿಳೆಯರಿಗೆ ಮಾತ್ರ. ಆದಾಗ್ಯೂ, ನೀವು ನಮ್ಮ ಇತರ ವಿಷಯವನ್ನು ಓದಲು ಮುಂದುವರಿಸಬಹುದು</string>
+
+
+    <!--<string name="application_name">ExoPlayer</string>-->
+    <!--<string name="unexpected_intent_action">Unexpected intent action: <xliff:g id="action">%1$s</xliff:g></string>-->
+    <!--<string name="error_cleartext_not_permitted">Cleartext traffic not permitted</string>-->
+    <!--<string name="error_generic">Playback failed</string>-->
+    <!--<string name="error_unrecognized_abr_algorithm">Unrecognized ABR algorithm</string>-->
+    <!--<string name="error_unrecognized_stereo_mode">Unrecognized stereo mode</string>-->
+    <!--<string name="error_drm_not_supported">Protected content not supported on API levels below 18</string>-->
+    <!--<string name="error_drm_unsupported_scheme">This device does not support the required DRM scheme</string>-->
+    <!--<string name="error_drm_unknown">An unknown DRM error occurred</string>-->
+    <!--<string name="error_no_decoder">This device does not provide a decoder for <xliff:g id="mime_type">%1$s</xliff:g></string>-->
+    <!--<string name="error_no_secure_decoder">This device does not provide a secure decoder for <xliff:g id="mime_type">%1$s</xliff:g></string>-->
+    <!--<string name="error_querying_decoders">Unable to query device decoders</string>-->
+    <!--<string name="error_instantiating_decoder">Unable to instantiate decoder <xliff:g id="decoder_name">%1$s</xliff:g></string>-->
+    <!--<string name="error_unsupported_video">Media includes video tracks, but none are playable by this device</string>-->
+    <!--<string name="error_unsupported_audio">Media includes audio tracks, but none are playable by this device</string>-->
+    <!--<string name="storage_permission_denied">Permission to access storage was denied</string>-->
+    <!--<string name="sample_list_load_error">One or more sample lists failed to load</string>-->
+    <!--<string name="ima_not_loaded">Playing sample without ads, as the IMA extension was not loaded</string>-->
+    <!--<string name="download_start_error">Failed to start download</string>-->
+    <!--<string name="download_playlist_unsupported">This demo app does not support downloading playlists</string>-->
+    <!--<string name="download_drm_unsupported">This demo app does not support downloading protected content</string>-->
+    <!--<string name="download_scheme_unsupported">This demo app only supports downloading http streams</string>-->
+    <!--<string name="download_ads_unsupported">IMA does not support offline ads</string>-->
+    <!--<string name="prefer_extension_decoders">Prefer extension decoders</string>-->
+    <!--<string name="random_abr">Enable random ABR</string>-->
+    <!--<string name="choose_video_category">Choose Video Category</string>-->
+
+    <string name="check_out_momvlog">Momspresso\n\nCheck out this interesting video\n</string>
+    <string name="take_picture_from_camera">ಕ್ಯಾಮೆರಾದಿಂದ ಚಿತ್ರವನ್ನು ತೆಗೆದುಕೊಳ್ಳಿ</string>
+    <string name="select_an_image">ಚಿತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="related_videos">ಸಂಬಂಧಿತ ವೀಡಿಯೊಗಳು</string>
+    <string name="popular_videos">ಜನಪ್ರಿಯ ವೀಡಿಯೊಗಳು</string>
+    <string name="delete_comment">ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು ಅಳಿಸಿಹಾಕು</string>
+    <string name="edit_comment">ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು ಪರಿಷ್ಕರಿಸು</string>
+    <string name="report">ವರದಿ</string>
+    <string name="select_atleast_one_topic">ಪಾಪ್ ಅಪ್: ಕನಿಷ್ಠ ಒಂದು ವರ್ಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="your_article_is_successfully_bookmarked">ನಿಮ್ಮ ಲೇಖನವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಬುಕ್ಮಾರ್ಕ್ ಮಾಡಲಾಗಿದೆ</string>
+    <string name="successfully_updated">ಮಾಹಿತಿಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ!</string>
+    <string name="submit_story_text">ನಿಮ್ಮ ಕಥೆಯನ್ನು ಸಲ್ಲಿಸಿ</string>
+    <string name="this_week_challenge">ಈ ವಾರದ ಚಾಲೆಂಜ್</string>
+    <string name="previous_week_challenge">ಹಿಂದಿನ ವಾರದ ಸವಾಲುಗಳು</string>
+    <string name="what_is_your_story">ನಿಮ್ಮ 100 ಪದಗಳ ಕಥೆ ಯಾವುದು</string>
+    <string name="use_picture_word_to_write_one">ಕೆಳಗೆ ನೀಡಿರುವ ಚಿತ್ರ, ನುಡಿಗಟ್ಟು , ಪ್ರಿ ವೀಡಿಯೊವನ್ನು ಬಳಸಿ ಬರೆಯಿರಿ</string>
+    <string name="challenge_write_story_for_this_picture">ಈ ಚಿತ್ರದ ಸುತ್ತ ನಿಮ್ಮ ಕಥೆಯನ್ನು ಬರೆಯಿರಿ.</string>
+    <string name="choose_challenge_label">ಸವಾಲನ್ನು ತೆಗೆದುಕೊಳ್ಳಿ</string>
+    <string name="start_writing">ಬರವಣಿಗೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿ</string>
+    <string name="male">ಪುರುಷ</string>
+
+    <string name="female">ಸ್ತ್ರೀ</string>
+    <string name="DOB">ಹುಟ್ಟಿದ ದಿನ</string>
+    <string name="add">ಸೇರಿಸಿ</string>
+    <string name="rewards_enter_otp">OTP ಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="rewards_confirm">ದೃಢೀಕರಿಸಿ</string>
+    <string name="rewards_first_name">ಮೊದಲ ಹೆಸರು</string>
+    <string name="rewards_last_name">ಕೊನೆಯ ಹೆಸರು</string>
+    <string name="rewards_verify">ಪರಿಶೀಲಿಸಿ</string>
+
+    <string name="rewards_phone">ದೂರವಾಣಿ</string>
+    <string name="rewards_email">ಇಮೇಲ್</string>
+    <string name="rewards_gender">ಲಿಂಗ</string>
+    <string name="rewards_male">ಪುರುಷ</string>
+
+
+    //Rewards Strings
+
+
+    <string name="rewards_female">ಸ್ತ್ರೀ</string>
+    <string name="rewards_dob">"ಹುಟ್ಟಿದ ದಿನ "</string>
+    <string name="rewards_location">ಸ್ಥಳ</string>
+    <string name="rewards_working_status">ಕೆಲಸದ ಸ್ಥಿತಿ</string>
+    <string name="rewards_working">ಕೆಲಸ ಮಾಡುವುದು</string>
+    <string name="rewards_non_working">ಕೆಲಸ ಮಾಡದಿರುವುದು</string>
+    <string name="rewards_language">ಭಾಷೆ</string>
+    <string name="rewards_save_continue">"ಉಳಿಸಿ ಮತ್ತು ಮುಂದುವರೆಸಿ "</string>
+    <string name="momspresso_rewards">MyMoney</string>
+    <string name="rewards_participate">ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಅನ್ನು ಪೂರ್ಣಗೊಳಿಸುವ ಮೂಲಕ ಭಾಗವಹಿಸಿ ಮತ್ತು ಗಳಿಸಿ!</string>
+    <string name="save_continue">"ಉಳಿಸಿ ಮತ್ತು ಮುಂದುವರೆಸಿ "</string>
+    <string name="rewards_personal_header">ನಾನಾ ಪ್ರಚಾರಾಂದೋಲನಗಳಿಗಾಗಿ ನಿಮ್ಮ ಅರ್ಹತೆಯನ್ನು ನಿರ್ಧರಿಸಲು ಈ ಕೆಳಗೆ ತಿಳಿಸಿರುವ ಮಾಹಿತಿಯನ್ನು ನೀವು ನಮ್ಮೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಬೇಕು.</string>
+    <string name="rewards_welcome">ಮೊಮ್ಸ್‍ ಪ್ರೆಸ್ಸೊ ಬಹುಮಾನಗಳಿಗೆ ಸ್ವಾಗತ!</string>
+    <string name="rewards_description">ಪ್ರಾಯೋಜಿತ ಬ್ಲಾಗ್ ಮತ್ತು ಇತರ ನಿಯಮಗಳ ಆಧಾರದಲ್ಲಿ ಪ್ರಮುಖ ಬ್ರಾಂಡ್‍ ಗಳ ನಿಯಮಿತ ಆತಿಥೇಯ ಪ್ರಚಾರ, ಸಮೀಕ್ಷೆ, ಇ-ವಾಣಿಜ್ಯ ವಿಮರ್ಶೆ ಮಾಡಲಾಗುತ್ತದೆ. ಈ ಪ್ರಚಾರಾಂದೋಲನಕ್ಕಾಗಿ ನಿಮ್ಮ ಅರ್ಹತೆಯನ್ನು ನಿರ್ಧರಿಸಲು ನಮಗೆ ಕೆಲವು ಮಾಹಿತಿಗಳು ಅಗತ್ಯವಾಗಿದೆ. ಈ ಪ್ರಚಾರಾಂದೋಲನದಲ್ಲಿ ಭಾಗವಹಿಸುವುದರಿಂದ ನಿಮಗೆ ಹಣಕಾಸಿನ ಪ್ರಯೋಜನದ ಜೊತೆಗೆ ಮೊಮ್ಸ್ ಪ್ರೆಸ್ಸೊ ವತಿಯಿಂದ ನಿಮಗೆ ಬಹುಮಾನಗಳನ್ನು ನೀಡಲಾಗುತ್ತದೆ.</string>
+    <string name="rewards_start_now">ಈಗಲೇ ಪ್ರಾರಂಭಿಸಿ.</string>
+    <string name="rewards_family_header">ನಾನಾ ಪ್ರಚಾರಾಂದೋಲನಗಳಿಗಾಗಿ ನಿಮ್ಮ ಅರ್ಹತೆಯನ್ನು ನಿರ್ಧರಿಸಲು ಈ ಕೆಳಗೆ ತಿಳಿಸಿರುವ ಮಾಹಿತಿಯನ್ನು ನೀವು ನಮ್ಮೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಬೇಕು.</string>
+    <string name="rewards_social_header">ನಮ್ಮ ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮ ಪ್ರಚಾರಕ್ಕೆ ನಿಮ್ಮನ್ನು ಆಹ್ವಾನಿಸಲು ಈ ಮಾಹಿತಿಗಳನ್ನು ನಾವು ಬಯಸುತ್ತೇವೆ.</string>
+    <string name="rewards_number_of_kids">ಮಕ್ಕಳ ಸಂಖ್ಯೆ</string>
+    <string name="rewards_interest">ಆಸಕ್ತಿಗಳು</string>
+    <string name="rewards_not_working">ಕೆಲಸ ಮಾಡದಿರುವುದು</string>
+    <string name="rewards_are_expecing">ನಿರೀಕ್ಷಿಸು</string>
+    <string name="reply_groups">Reply</string>
+    <string name="view_group">ವೀಕ್ಷಿಸಿ</string>
+    <string name="replies">ಪ್ರತಿಕ್ರಿಯೆಗಳು</string>
+    <string name="cannot_be_left_blank">%1$s ಖಾಲಿ ಬಿಡುವಂತಿಲ್ಲ</string>
+    <string name="please_enter_a_valid">ದಯವಿಟ್ಟು ಮಾನ್ಯವಾದುದನ್ನು ನಮೂದಿಸಿ %1$s</string>
+    <string name="need_to_select_option">ನೀವು ಆಯ್ಕೆಗಾಗಿ ಆರಿಸಿಕೊಳ್ಳಬೇಕಾಗುತ್ತದೆ %1$s</string>
+    <string name="rewards_expected_date">ನಿರೀಕ್ಷಿತ ದಿನಾಂಕ</string>
+    <string name="rewards_mobile_number_verified">ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ಪರಿಶೀಲಿಸಲಾಗಿದೆ</string>
+    <string name="rewards_have_children">ನಿಮಗೆ ಮಕ್ಕಳಿದ್ದಾರಾ?</string>
+    <string name="rewards_tab_detail">MyMoney</string>
+    <string name="rewards_add_child">ಮಕ್ಕಳನ್ನು ಸೇರಿಸಿ</string>
+    <string name="rewards_kid_detail">ಮಗುವಿನ ವಿವರ</string>
+
+
+    <string name="rewards_participating_earn_completing_profile">ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಅನ್ನು ಪೂರ್ಣಗೊಳಿಸುವ ಮೂಲಕ ಭಾಗವಹಿಸಿ ಮತ್ತು ಗಳಿಸಿ!</string>
+    <string name="rewards_momspresso">ಮೊಮ್ಸ್‍ಪ್ರೆಸ್ಸೊ ಬಹುಮಾನಗಳು</string>
+    <string name="reward_welcome">Welcome to Momspresso MyMoney!</string>
+    <string name="video_challenge_live_text">LIVE</string>
+    <string name="video_challenge_text">ಸವಾಲುಗಳು</string>
+    <string name="choose_video_categories_text">CATEGORIES</string>
+    <string name="group_detail_activity_toast_text">ನೀವು ಅನಾಮಿಕ ಆಗಿ ಪೋಸ್ಟ್ ಮಾಡಬಹುದು</string>
+    <string name="group_add_comment_text">ADD COMMENT</string>
+    <string name="group_invite_text">ಆಮಂತ್ರಿಸಿ</string>
+    <string name="group_comment_type_here_text">Type here</string>
+    <string name="group_comment_be_the_first_text">Be the first one to comment</string>
+    <string name="add_text_or_media_group_post_activity_tooltip_text">ಆಡಿಯೋ ಪೋಸ್ಟ್ ಮಾಡಿ</string>
+    //new Video Challenge Ui Strings
+    <string name="dialog_header_choose_sort_type">ವಿಂಗಡಿಸು</string>
+    <string name="rewards_instagram_handler">ಇನ್‍ ಸ್ಟಾಗ್ರಾಂ ಹ್ಯಾಂಡಲ್‍ ಗೆ ಸೇರಿಸಿ</string>
+    <string name="rewards_facebook_handler">ಫೇಸ್ಬುಕ್ ಜೊತೆ ಸಂಪರ್ಕಿಸಿ</string>
+
+
+    //groupdetail Activity toast String
+    <string name="add_youtube">ಯುಟ್ಯೂಬ್‍ ಚಾನಲ್ ಲಿಂಕ್ ಅನ್ನು ಸೇರಿಸಿ</string>
+    <string name="add_twitter">ಟ್ವಿಟರ್‍ ಹ್ಯಾಂಡಲ್‍ ಗೆ ಸೇರಿಸಿ</string>
+    <string name="language">LANGUAGE</string>
+    <string name="group_comment_start_type_here_text">ಬರೆಯಲು ಆರಂಭಿಸಿ</string>
+    <string name="about_video">ಸುಮಾರು</string>
+
+    //tooltip groups
+    <string name="myprofile.section.mom_bottom_label">ಮಾಮ್ ವ್ಲೋಗ್ಸ್</string>
+    <string name="all_videos.toolbar.title.homepage">ವಿಡಿಯೋಗಳು</string>
+    <string name="moderation_message">100WordStory under moderation.\n
+Thank you! We will be reviewing your story. You can expect to hear from us within the next 48 working hours. Meanwhile, you can still share your story with your friends!</string>
+    <string name="drawer_referra_mymoney">Refer MyMoney</string>
+    <string name="referral_screen_text">ನಿಮ್ಮ ರೆಫರಲ್ ಕೋಡ್ ನಿಮ್ಮ ಸ್ನೇಹಿತೆಯರ ಜೊತೆ ಹಂಚಿಕೊಳ್ಳಿ ಮತ್ತು ಮಾಯ್ ಮನಿ ಸೇರಲು ಆಮಂತ್ರಿಸಿ. ಅವರು ಕ್ಯಾಂಪೆನ್ ಪೂರ್ಣಗೊಳಿಸದ ನಂತರ ನಿಮ್ಮಿಬ್ಬರಿಗೂ 25ರೂ. ದೊರೆಯುತ್ತದೆ.</string>
+    <string name="share_referral_screen">ನಿಮ್ಮ ರೆಫರಲ್ ಕೋಡ್ ಅನ್ನು ಹಂಚಿಕೊಳ್ಳಿ ಮತ್ತು ಹಣ ಗಳಿಸಿ</string>
+    <string name="referral_screen_whatsapp">WhatsApp</string>
+
+    <string name="referral_screen_facebook">Facebook</string>
+
+    <string name="rewards_tab_fragment_personalInfo_text">PERSONAL INFO</string>
+    <string name="rewards_tab_fragment_socialLink_text">SOCIAL LINKS</string>
+    <string name="rewards_tab_fragment_paymentMode">PAYMENT MODE</string>
+
+    <string name="rewards_tab_fragment_panCard">PAN CARD DETAILS</string>
+
+    <string name="rewards_pancard_details">Pan details</string>
+    <string name="rewards_tab_fragment_myEarning">MY EARNING</string>
+    <string name="rewards_tab_fragment_referrer_myMoney">refer mymoney</string>
+    <string name="rewards_pancard_toolbar_text">PAN CARD DETAIL</string>
+    <string name="reawrds_pancard_detail_text">Please enter your PAN card details</string>
+    <string name="rewards_pancard_note_detail">In case of Invalid/No Pan card attached, 20% tax will be deducted from the payment.</string>
+    <string name="rewards_pancard_Note_textview">NOTE :</string>
+    <string name="rewards_payment_submission_enter_bank_detail_text">PLEASE ENTER YOUR BANK DETAILS</string>
+    <string name="rewards_bank_detail_holder_nmae_text">Account Holder’s Name</string>
+    <string name="rewards_bank_detail_select_bank_text">Select Bank Name</string>
+    <string name="rewards_bank_detail_account_number">Account Number</string>
+    <string name="rewards_bank_detail_confirm_account_number">Confirm Account Number</string>
+    <string name="rewards_bank_detail_ifsc_text">IFSC Code</string>
+    <string name="rewards_add_detail">ADD DETAILS</string>
+    <string name="rewards_payment_history">Payment History</string>
+    <string name="participate_on_this_campaign">Please participate in ongoing campaigns to start earning</string>
+    <string name="participate_now">Participate now</string>
+    <string name="campaign_details_applied">APPLIED</string>
+    <string name="congratulation_text">CONGRATULATIONS!</string>
+    <string name="thanks_for_submitting">Thanks for submitting the proofs</string>
+    <string name="be_in_touch_text">We will review and be in touch in next <font fgcolor="#D54058">7 working days</font> till then you can take part in other interesting campaigns</string>
+    <string name="share_joy">SHARE THE JOY</string>
+    <string name="continue_browsing_campaign">CONTINUE BROWSING CAMPAIGNS</string>
+    <string name="campaign_proofs_approved">PROOFS APPROVED</string>
+    <string name="campaign_detail_toolbar_text">CAMPAIGN DETAILS</string>
+    <string name="campaign_read_this_first">READ THIS FIRST"</string>
+    <string name="campaign_discription">DESCRIPTION</string>
+
+
+    <string name="deliverable_types">DELIVERABLE TERMS</string>
+    <string name="referral_code_option">REFERRAL CODE(Optional)</string>
+    <string name="campaign_details_apply_now">APPLY NOW</string>
+    <string name="campaign_details_submission_open">SUBMIT PROOF</string>
+    <string name="campaign_details_application_full">APPLICATION FULL</string>
+
+
+    //campaigndetails
+    <string name="campaign_details_approved">APPROVED</string>
+    <string name="campaign_details_expired">EXPIRED</string>
+    <string name="campaign_details_completed">COMPLETED</string>
+    <string name="campaign_details_invite_only">INVITATION ONLY</string>
+    <string name="campaign_details_rejected">REJECTED</string>
+    <string name="campaign_list_proof_moderation">PROOF SUBMITTED</string>
+    <string name="campaign_list_proof_reject">PROOF REJECTED</string>
+    <string name="end_date">End Date</string>
+    <string name="start_date">Start Date</string>
+    <string name="campaign_details_not_eligible">Not Eligible</string>
+    <string name="label_campaign_expired">This campaign is now closed.</string>
+    <string name="label_campaign_not_eligible">Share the campaign with your friends.</string>
+    <string name="label_campaign_checking_eligiblity">We are checking for your eligibility. Please try again after sometime</string>
+    <string name="label_campaign_full">Share Momspresso MyMoney with your friends.</string>
+    <string name="label_campaign_open">By clicking on Apply Now, you agree to the Terms &amp; Conditions.</string>
+    <string name="label_campaign_applied">We will notify you within 7 days on the status of your application.</string>
+    <string name="label_campaign_apply"><![CDATA[By clicking on Apply Now, you agree to the <a href="https://www.momspresso.com/home/terms">Terms &amp; Conditions</a>.]]></string>
+    <string name="label_campaign_completed">Congratulations! Your submission is approved. Your payment will be processed within 14 days.</string>
+    <string name="label_campaign_not_started">Campaign starts on </string>
+
+    <string name="label_campaign_reject">Please explore other campaigns to participate and earn.</string>
+    <string name="label_campaign_proof_moderation">We will check your submitted proofs within 7 days. To add more, you can click below.</string>
+    <string name="label_campaign_proof_reject">Your proofs were rejected. Please check email for details.To resubmit after corrections, click below.</string>
+    <string name="toast_not_elegible">Sorry, you are not eligible for this campaign.</string>
+    <string name="checking_elegiblity">We are checking your eligiblity</string>
+    <string name="toast_campaign_full">Oops! Entries to this campaign are now closed.</string>
+    <string name="toast_campaign_open">Thank you for applying to the campaign.</string>
+    <string name="toast_campaign_applied">Thank you for applying. We will notify you within 7 days on the status of your application.</string>
+
+
+    <string name="toast_campaign_not_started">Congratulations! Your application is approved. Please wait for campaign to start to submit proofs.</string>
+    <string name="toast_campaign_started">Congratulations! Your application is approved.</string>
+    <string name="toast_campaign_reject">Sorry, we have not been able to approve your application.</string>
+    <string name="toast_campaign_invite">Sorry, this campaign is by invitation only.</string>
+
+    <string name="toast_campaign_invite_thankyou">Thank you, we will get in touch with you.</string>
+    <string name="toast_campaign_proof_moderation">We will check your submitted proofs within 7 days. </string>
+
+    <string name="toast_campaign_proof_reject">Your proof was rejected!</string>
+    <string name="detail_bottom_apply_now">APPLY NOW</string>
+    <string name="detail_bottom_applied">APPLIED</string>
+    <string name="application_under_review">APPLICATION UNDER REVIEW</string>
+    <string name="proofs_under_review">PROOFS UNDER REVIEW</string>
+    <string name="detail_bottom_share">SHARE</string>
+    <string name="payment_in_progress">PAYMENT IN PROCESS</string>
+    <string name="detail_bottom_share_momspresso_reward">Share MyMoney</string>
+    <string name="detail_bottom_view_other">VIEW OTHER CAMPAIGNS</string>
+    <string name="payment_done">PAYMENT DONE</string>
+
+    <string name="proof_sublitted">"PROOFS SUBMITTED"</string>
+    <string name="detail_bottom_submit_proof">SUBMIT PROOF</string>
+    <string name="dialog_based_on_profile">Based on your Profile</string>
+    <string name="dialog_you_can_get_reward_of">You can get reward of</string>
+    <string name="campaign_starts_on">Starts On</string>
+    <string name="campaign_ends_on">Ends On</string>
+    <string name="view_mymoney">View MyMoney for this campaign</string>
+    <string name="dialog_thanks_for_interest">Thanks for your interest!</string>
+    <string name="dialog_proof_submitted_congo_text">Congratulations!</string>
+    <string name="dialog_register_for_mymoney">For applying to the campaign, you first need to register for Momspresso MyMoney.</string>
+    <string name="register_now">REGISTER NOW</string>
+
+
+    //campaigndetaildialog
+    <string name="dialog_continue">CONTINUE</string>
+    <string name="dialog_share_your_campaign_detail_text">Please share your payment details so that we can process your payment faster.</string>
+    <string name="dialog_register_proof_submitted_text">Your proofs have been submitted.</string>
+    <string name="apply_refer_code">HAVE A REFERRAL CODE?</string>
+    <string name="get_help">Get Help</string>
+    <string name="refer_code">REFERRAL CODE</string>
+    <string name="apply_code_error">Code already used. Please enter a different one</string>
+    <string name="dialog_congratulations">Congratulations!</string>
+    <string name="dialog_you_can_earn">You can earn upto Rs.</string>
+    <string name="invite_only_header">This campaign is by invite only.</string>
+    <string name="invite_only_interested">I\'M INTERESTED</string>
+    <string name="dialog_invite_only_subtext">Click below to apply for future ‘invite only’ campaigns.</string>
+    <string name="title_activity_tracker">TrackerActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="my_money_dashboard">MY MONEY DASHBOARD</string>
+    <string name="total_earning">Total Earnings</string>
+    <string name="social_page_add_social_accounts">ADD SOCIAL ACCOUNTS</string>
+    <string name="social_page_add_website_hint">www.momvlogger.com/sheetal</string>
+    <string name="social_page_add_website">ADD WEBSITE</string>
+    <string name="campaign_listing_mymoney_campaign_toolbar_text">MYMONEY CAMPAIGNS</string>
+    <string name="brows_participate_earn_text">Browse. Participate. Earn</string>
+    <string name="participate_text">REGISTER</string>
+    <string name="total_payout">Total Payout</string>
+    <string name="add_proof">ADD PROOF</string>
+    <string name="please_add_image_proof">Please add image proofs</string>
+
+
+    <string name="please_submit">Please submit</string>
+    <string name="please_add_link">Please add a link</string>
+    <string name="proof_instructions">Proof Instructions</string>
+
+
+    //campaignListing
+    <string name="faq">FAQS</string>
+    <string name="tracker_Activity_submit_corrected_proof">Please submit corrected proofs again.</string>
+    <string name="tracker_Activity_expected_date">Expected Date</string>
+    <string name="tracker_activity_proof_submitted_rejected">PROOFS SUBMITTED REJECTED</string>
+
+
+    //addProof
+    <string name="reward_campaign_add_proof">ADD PROOF</string>
+    <string name="select_payment_method">PREFERRED METHOD OF PAYMENT</string>
+    <string name="rewards_link_social">Link Account</string>
+    <string name="submit_video_text">SUBMIT YOUR VIDEO </string>
+    <string name="no_video.be_first">Be the first one to upload videos in this category!</string>
+    <string name="your_mom_vlog">WHAT\'S YOUR MOMVLOG</string>
+    //trackerActivity
+    <string name="use_picture_word_to_upload_one">Use The Picture ,Word, Phrase Or Video Given Below To Upload One</string>
+    <string name="last_name">LAST NAME</string>
+    <string name="first_name">FIRST NAME</string>
+
+
+    //rewardsCampaignString
+    <string name="phone">PHONE</string>
+    <string name="not_working">Not Working</string>
+
+
+    <string name="working">Working</string>
+    <string name="voise_post_group">ನಿಮ್ಮ ಧ್ವನಿಯನ್ನು ಬಳಸಿ ನಿಮ್ಮ ವಿಚಾರಗಳನ್ನು ಅಥವಾ ಪ್ರಶ್ನೆಗಳನ್ನು ನಿಮ್ಮ ಧ್ವನಿಯಲ್ಲಿ  ರೆಕಾರ್ಡ್ ಮಾಡಿ</string>
+    <string name="poll_post_group">ಪೋಲ್ ರಚಿಸಿ ನಿಮಗೆ ಮಹತ್ವ ಎನಿಸುವ ವಿಷಯದ ಬಗ್ಗೆ ನಿಮ್ಮ ಸಮುದಾಯದ ಅನಿಸಿಕೆಗಳನ್ನು ಪಡೆಯಿರಿ</string>
+    <string name="blog_post_group">ಏನಾದರೂ ಬರೆಯಿರಿ ಪ್ರಶ್ನೆಗಳನ್ನು ಕೇಳಿ ಅಥವಾ ನಿಮ್ಮ ವಿಚಾರಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಿ</string>
+    <string name="mom_vlog_banner_title">Mom Vlogs challenge</string>
+
+    <string name="mom_vlog_banner_subtitle">Prizes worth Rs 10,000</string>
+    <string name="mom_vlog_banner_button">Upload Video</string>
+    <string name="join_dialog_heading">ನಿಮ್ಮ ಮೊದಲ ಬ್ಲಾಗ್‌ ಬರೆಯಿರಿ</string>
+    <string name="join_dialog_ask_question">ನಿಮ್ಮ ಅನಿಸಿಕೆ ತಿಳಿಸಿ ಅಥವಾ ಸಂದೇಹ ಕೇಳಿ</string>
+    <string name="join_group">ಗುಂಪು ಸೇರಿ</string>
+
+    <string name="user_funny_video.edit_title">ಶೀರ್ಷಿಕೆ ಎಡಿಟ್‌ ಮಾಡಿ</string>
+    <string name="user_funny_video.vlog_title_hint">ನಿಮ್ಮ ವ್ಲೋಗ್‌ ಟೈಟಲ್‌ ಇಲ್ಲಿ ಬರೆಯಿರಿ</string>
+    <string name="editor_saving">ಸೇವ್‌ ಮಾಡಲಾಗುತ್ತಿದೆ &#8230;</string>
+
+    <string name="select_thumbnail">ನಿಮ್ಮ ವ್ಲೋಗ್‌ ಗೆ ಬೇಕಾದ ಸೂಚ್ಯ ಇಮೇಜ್‌ ಆರಿಸಿ</string>
+    <string name="audio_delay_msg">Playing your audio might take afew seconds</string>
+    <string name="write_something">ಏನಾದರೂ ಬರೆಯಿರಿ</string>
+
+    //Join group dialog screen
+    <string name="join_dialog_post">ಪ್ರಕಟಿಸು</string>
+    <string name="spell_check_error">We found a few errors in the article</string>
+
+    <string name="application_end_date">Application End Date</string>
+    <string name="submission_end_date">Submission End Date</string>
+    <string name="submit_article">Submit Your Article</string>
+    <string name="onbording.desc_5">ಬ್ರ್ಯಾಂಡ್ ಕ್ಯಾಂಪೆನ್ಗಳಲ್ಲಿ ಭಾಗವಹಿಸಿ ಮತ್ತು ಹಣ ಗಳಿಸಿ</string>
+    <string name="participate_earn_mymoney">ಮಾಯ್ ಮನಿ ಕ್ಯಾಂಪೆನ್ಗಳಲ್ಲಿ ಭಾಗವಹಿಸಿ ಮತ್ತು ಹಣ ಗಳಿಸಿ</string>
+    <string name="tap_to_create">ಹೊಸದನ್ನು ರಚಿಸಲು ಇಲ್ಲಿ ಒತ್ತಿ</string>
+    <string name="private_profile_read_article">ಬರಹಗಳನ್ನು ಓದಿ</string>
+    <string name="slide_to_cancel">ರದ್ದುಗೊಳಿಸಲು ಸ್ಲೈಡ್ ಮಾಡಿ</string>
+    <string name="choose_from_gallery">ಗ್ಯಾಲರಿಯಿಂದ ಫೋಟೋ ಆಯ್ಕೆ ಮಾಡಿ </string>
+    <string name="capture_from_camera">ಕ್ಯಾಮೆರಾದಿಂದ ಫೋಟೋ ಹಿಡಿಯಿರಿ</string>
+    <string-array name="improve_page_views_array">
+        <item>ಇತರ ಬ್ಲಾಗ್ ಪೋಸ್ಟ್ಗಳಿಗೆ ನಿಮ್ಮ ಲೇಖನವನ್ನು ಇಂಟರ್ಲಿಂಕ್ ಮಾಡಿ</item>
+        <item>ಸ್ಥಿರವಾಗಿ ಮತ್ತು ವಾರಕ್ಕೊಮ್ಮೆ ಬರೆಯಿರಿ</item>
+        <item>ನೀವು ಪ್ರಕಟಿಸುವ ಪ್ರತಿಯೊಂದು ಬ್ಲಾಗ್ ಪೋಸ್ಟ್ನಲ್ಲಿ ಒಂದು ಹಂತವನ್ನು ಮಾಡಿ</item>
+        <item>ಆಕರ್ಷಕ ಶೀರ್ಷಿಕೆಗಳನ್ನು ಬಳಸಿ</item>
+        <item>ಯಾವುದೇ ದೋಷಗಳಿಗಾಗಿ ನಿಮ್ಮ ಬ್ಲಾಗ್ ಪೋಸ್ಟ್ಗಳನ್ನು ಮತ್ತೆ ಮತ್ತೆ   ಪರೀಕ್ಷಿಸಿ </item>
+        <item> ನೀವು ಬಳಸುವ ಪದ ಮತ್ತು ಧ್ವನಿಗಳ ಬಗ್ಗೆ ಗಮನವಿರಲಿ </item>
+        <item>ಬ್ಲಾಗ್ ಕಾಮೆಂಟ್ಗಳಿಗೆ ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿ</item>
+    </string-array>
+
+
+    <string-array name="rank_calculation_array">
+        <item>Your rank is calculated by a state-of-the-art algorithm which takes in the number of views your article has got, the number of times it has been shared on social media, number of comments it has got on different platforms and the number of articles you have written in the past week.</item>
+    </string-array>
+    <string-array name="improve_rank_array">
+        <item>ನಿಮ್ಮ ಬ್ಲಾಗಿಂಗ್ನಲ್ಲಿ ಸ್ಥಿರವಾಗಿರಿ - ವಾರಕ್ಕೊಮ್ಮೆ ಬ್ಲಾಗ್ ಪೋಸ್ಟ್ ಮಾಡಿ</item>
+        <item> ನಿಮ್ಮ ಬ್ಲಾಗ್ ಪೋಸ್ಟ್ ಅನ್ನು ನೀವಿರುವ ಎಲ್ಲಾ ಫೇಸ್ಬುಕ್ ಗುಂಪುಗಳಲ್ಲಿ ಪ್ರಚಾರ ಮಾಡಿ</item>
+        <item>Seek an opinion from peers and edit the blog post accordingly</item>
+    </string-array>
+    <string-array name="improve_social_share_array">
+        <item>ನಿಮ್ಮ ಬ್ಲಾಗ್ ಪೋಸ್ಟ್ನಲ್ಲಿ ಸಾಮಾಜಿಕ ಹಂಚಿಕೆಗಾಗಿ ಬಟನ್ಗಳನ್ನು ಬಳಸಿ ಬ್ಲಾಗ್ ಪೋಸ್ಟ್ಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಿ</item>
+        <item>ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ಗೆ ಸಾಮಾಜಿಕ ಪ್ಲಗ್ಇನ್ಗಳನ್ನು ಸೇರಿಸಿ. www.twitter.com/bloggername</item>
+        <item>ನಿಮ್ಮ ಬ್ಲಾಗ್ ಪೋಸ್ಟ್ ಅನ್ನು ಹಂಚಿಕೊಳ್ಳುವಾಗ ಸಂಪಾದಿಸಲು ಮತ್ತು ವಿಷಯದ ಕಡೆ ಗಮನವಿರಲಿ </item>
+        <item>ಸೂಕ್ತವಾದ ಹ್ಯಾಶ್ಟ್ಯಾಗ್ಗಳನ್ನು ಬಳಸಿ</item>
+    </string-array>
+    <string-array name="increase_followers_array">
+        <item>Add a line urging readers to follow you at the end of every blog, if they enjoyed reading it</item>
+        <item>Ask readers who frequently engage with your blog through comments, to follow you</item>
+        <item>Share your blog across all networks you are a part of, such as Facebook, Whatsapp and so on</item>
+    </string-array>
+    <string-array name="onboarding_title_array">
+        <item>ಬ್ಲಾಗ್ ರಚಿಸಿ</item>
+        <item>ಯಾವುದೇ 9 ಭಾಷೆಗಳಲ್ಲಿ ಬ್ಲಾಗ್ಗಳನ್ನು ಆನಂದಿಸಿ</item>
+        <item>ಪ್ರಯಾಣದಲ್ಲಿರುವಾಗ ವೀಡಿಯೊಗಳನ್ನು ವೀಕ್ಷಿಸಿ</item>
+        <item>ಬೆಂಬಲ ಗುಂಪುಗಳೊಂದಿಗೆ, ನೀವು ಏಕಾಂಗಿ ಅಲ್ಲ</item>
+        <item>ಮಾಯ್ ಮನಿಯ ಜೊತೆ ಹಣ ಗಳಿಸಲು ಆರಂಭಿಸಿ!</item>
+    </string-array>
+
+    <string-array name="become_blogger_title_array">
+        <item>ಬ್ಲಾಗರ್ ಆಗಿ</item>
+        <item>ಹೇಗೆ ಅನುದಾನ ಮಾಡಬಹುದು?</item>
+        <item>ಅನುದಾನ ಮಾಡಿದಕ್ಕೆ ಪಾವತಿಸುತ್ತಾರಾ?</item>
+        <item>ಯಾರು ಅನುದಾನ ಮಾಡಬಹುದು?</item>
+    </string-array>
+
+    <string-array name="become_blogger_desc_array">
+        <item>- ನಿಮ್ಮ ಆಯ್ಕೆಯ ಭಾಷೆಯಲ್ಲಿ, ಭಾರತದ ಅತಿದೊಡ್ಡ ಪೋಷಕರ ಸಮುದಾಯದ ಕುರಿತು ನಿಮ್ಮ ಆಲೋಚನೆಗಳನ್ನು, ಅಭಿಪ್ರಾಯಗಳನ್ನು ಮತ್ತು ಕಥೆಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳುವುದರಿಂದ ನೀವು ಒಂದು ಕ್ಲಿಕ್ ದೂರದಲ್ಲಿರುತ್ತಾರೆ. ತಿಂಗಳಿಗೆ ಸುಮಾರು 8 ದಶಲಕ್ಷಕ್ಕೂ ಅಧಿಕ ಮಾಮ್ಸ್ನೊಂದಿಗೆ, ನಿಮ್ಮ ಧ್ವನಿ ಭರವಸೆ, ಸ್ಫೂರ್ತಿ, ಸೌಕರ್ಯ ಮತ್ತು ಜ್ಞಾನದ ಮೂಲವಾಗಿರಬಹುದು.</item>
+        <item>- ನಿಮ್ಮ ಪೋಷಕ ಕಥೆಗಳನ್ನು ವೆಬ್ಸೈಟ್ ಅಥವಾ ನಮ್ಮ ಐಒಎಸ್ ಮತ್ತು ಆಂಡ್ರಾಯ್ಡ್ ಅಪ್ಲಿಕೇಶನ್ ಮೂಲಕ ಹಂಚಿಕೊಳ್ಳಬಹುದು. ನಿಮ್ಮ ಆಯ್ಕೆಯ ಭಾಷೆಯಲ್ಲಿ ನೀವೇ ವ್ಯಕ್ತಪಡಿಸಿ - ಇಂಗ್ಲಿಷ್, ಹಿಂದಿ, ಬೆಂಗಾಲಿ, ಮರಾಠಿ, ತೆಲುಗು ಅಥವಾ ತಮಿಳು.</item>
+        <item>- ತಮ್ಮ ಪೋಸ್ಟ್ಗಳನ್ನು ಪ್ರಕಟಿಸಲು ಮೊಮ್ಮೆಸ್ಪ್ರೆಸೊ ಪ್ರತಿ ಬ್ಲಾಗರ್ ಅನ್ನು ಪಾವತಿಸುವುದಿಲ್ಲ. ಆದರೆ ನಾವು ಬ್ರ್ಯಾಂಡ್ಗಳು ನಿಯೋಜಿಸಲಾಗಿರುವ ಪಾವತಿಸುವ ಬರವಣಿಗೆಯ ಕಾರ್ಯಯೋಜನೆಗಳನ್ನು ನೀಡುತ್ತೇವೆ. ಅವರು ಉತ್ಪಾದಿಸುವ ವಿಷಯದ ಗುಣಮಟ್ಟವನ್ನು ಆಧರಿಸಿ ಬ್ಲಾಗಿಗರಿಗೆ ಇದನ್ನು ನೀಡಲಾಗುತ್ತದೆ.</item>
+        <item>- ನಿಮ್ಮ ಕಥೆ ಪೇರೆಂಟ್ಹುಡ್, ಹೆಣ್ತನ, ಸಂಬಂಧಗಳು, ಹೋರಾಟಗಳು, ಸಂತೋಷಗಳು ಅಥವಾ ವೈಯಕ್ತಿಕ ಯೋಗಕ್ಷೇಮದ ಬಗ್ಗೆ ಇರಲಿ, ಅದರ ಬಗ್ಗೆ ಬರೆಯಲು ವೇದಿಕೆಯಾಗಿದೆ. ಸಲಹೆ ಮತ್ತು ಹಂಚಿಕೆ ಸಲಹೆ, ಅಭಿಪ್ರಾಯಗಳು ಮತ್ತು ಶಿಫಾರಸುಗಳನ್ನು ಪಡೆಯಲು 5000+ Mums ಅನ್ನು ಸೇರಿ. \ N ಪ್ರಕಾಶನವನ್ನು ನಕಲಿಸಲು ಅಥವಾ ಸ್ವಲ್ಪ ಮಾರ್ಪಡಿಸಿದ ವಿಷಯವನ್ನು ತಡೆಹಿಡಿಯಿರಿ.</item>
+    </string-array>
+    <string-array name="popup_language_list">
+        <item>English</item>
+        <item>हिंदी</item>
+        <item>मराठी</item>
+        <item>বাংলা</item>
+        <item>தமிழ்</item>
+        <item>తెలుగు</item>
+        <item>ಕನ್ನಡ</item>
+        <item>മലയാളം</item>
+        <item>ગુજરાતી</item>
+        <item>ਪੰਜਾਬੀ</item>
+    </string-array>
+    <string name="add_a_choice">Add a choice</string>
+    <string name="please_apply">Please Apply First</string>
+    <string name="referral_code_alert_message">The referral code you entered was incorrect. Click OK to continue without referral code.</string>
+    <string name="alert_message_title">Message</string>
+    <string name="it_is_a_long_established_fact_that_a_reader">It is a long established fact that a reader.</string>
+    <string name="lorem_ipsum">Lorem Ipsum</string>
+    <string name="click_here_to_participate">Click here to participate</string>
+    <string name="check_ypur_eligibility">Check your eligibility now</string>
+    <string name="check_campaigns_available_for_you">Check campaigns available for you</string>
+    <string name="earnings_reimbursement">Reimbursement</string>
+    <string name="sorry_not_eligible">Sorry, you\'re not eligible.</string>
+    <string name="campaign_list_sorry_not_eligible">Give MyMoney a try!</string>
+    <string name="try_following_campaign">Try the following campaign instead!</string>
+    <string name="campaign_list_try_following_campaign">Participate in your first campaign now!</string>
+    <string name="topics">TOPICS</string>
+    <string name="badges">Badges</string>
+    <string name="profile_setting">Profile settings</string>
+    <string name="accounts">Accounts</string>
+    <string name="profile_my_collections">ನನ್ನ  ಸಂಗ್ರಹ </string>
+    <string name="profile_view_all_collections">ಎಲ್ಲವನ್ನೂ ವೀಕ್ಷಿಸಿ </string>
+    <string name="profile_add_new">ಹೊಸತು ಸೇರಿಸಿ </string>
+    <string name="profile_featured_more">+%d More</string>
+    <string name="all_drafts">Drafts</string>
+    <string name="all_story">100 Word Story</string>
+    <string name="all_blogs">Blogs</string>
+    <string name="all_videos">Videos</string>
+    <string name="profile_post_featured">Post featured on the following collections</string>
+    <string name="dialog_fragment_add_collection_select_collection">ಸಂಗ್ರಹವನ್ನು ಆಯ್ದುಕೊಳ್ಳಿ</string>
+    <string name="no_collections_yet">no collections yet</string>
+    <string name="collection_created_tab">ರಚಿಸಲಾಗಿದೆ</string>
+    <string name="collection_followed_tab">ಫಾಲೋಮಾಡಲಾಗಿದೆ</string>
+    <string name="visible_to_all">visible to all</string>
+    <string name="please_add_collection_name">ಸಂಗ್ರಹಕ್ಕೊಂದು ಹೆಸರು ನೀಡಿ</string>
+    <string name="thumbnail">ಪುಟ್ಟ ಚಿತ್ರ</string>
+    <string name="collection_change_image_in_edit_collection">ಬದಲಿಸಿ</string>
+    <string name="no_collection_items">no items</string>
+    <string name="list_of_content">ಪರಿವಿಡಿ</string>
+    <string name="edit_collection">ಸಂಗ್ರಹವನ್ನು  ಎಡಿಟ್ ಮಾಡಿ</string>
+    <string name="delete_collection">ಸಂಗ್ರಹವನ್ನು ಡಿಲೀಟ್ ಮಾಡಿ</string>
+    <string name="are_you_sure_you_want_to_delete_the_collection">ಈ ಸಂಗ್ರವನ್ನು ಡಿಲೀಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?</string>
+    <string name="add_collection_name">Add collection name</string>
+    <string name="profile_share_the_joy">Share the Joy</string>
+    <string name="dialog_confirm_delete">Are you sure you want to delete this collection</string>
+    <string name="all_view">View</string>
+    <string name="all_analytics">Analytics</string>
+    <string name="read_articles">READ ARTICLES</string>
+    <string name="empty_followers_in_profile">The people who follow your profile will show here</string>
+    <string name="empty_followers_in_collection">The people who follow your collection will show here</string>
+    <string name="no_collection_item_text">The articles you add to this collection will show here</string>
+    <string name="badges_winner_share_text">%1$s %2$s is a %3$s badge winner | Momspresso\n%4$s</string>
+    <string name="crown_winner_share_text">%1$s %2$s is a %3$s crown winner | Momspresso\n%4$s</string>
+    <string name="add_thumbnail">ಪುಟ್ಟ ಚಿತ್ರ ಸೇರಿಸಿ</string>
+    <string name="profile_emailid">Email Id</string>
+    <string name="profile_blog_title">Blog Title</string>
+    <string name="child_delete">Delete</string>
+    <string name="profile_name_optional">Name (optional)</string>
+    <string name="profile_expected_date_delivery">Expected date of delivery</string>
+    <string name="mymoney_info">MyMoney Dashboard</string>
+    <string name="profile_empty_created_content">The content you create will show here</string>
+    <string name="profile_empty_bookmarks">The articles you bookmark will show here</string>
+    <string name="profile_empty_featured">Your featured articles will show here</string>
+    <string name="profile_empty_read_article">The articles you have read will show here</string>
+    <string name="profile_empty_read_stories">The stories you have read will show here</string>
+    <string name="profile_empty_seen_videos">The videos you have seen will show here</string>
+    <string name="profile_empty_drafts">All your drafts will show here</string>
+    <string name="profile_empty_following">The people who you follow will show here</string>
+    <string name="login_verify_sms">Verify</string>
+    <string name="login_send_otp">Send OTP</string>
+    <string name="login_enter_mobile_number">Enter your mobile number</string>
+    <string name="login_enter_otp">Please enter OTP below</string>
+    <string name="login_resend_otp">Resend OTP</string>
+    <string name="login_remaining_time">Seconds remaining: %1$d</string>
+    <string name="add_to_collection">Add to Collection</string>
+    <string name="profile_follow_author">Follow %1$s on Momspresso! \n %2$s</string>
+    <string name="analytics_lang_rank">ನಿಮ್ಮ ಶ್ರೇಯಾಂಕಗಳು \nIN %1$s</string>
+    <string name="analytics_milestones">MILESTONES</string>
+    <string name="badges_list_share_text">Checkout %1$s\'s achievements on Momspresso! \n%2$s</string>
+    <string name="milestones_share_text">%1$s\'s %2$s \'%3$s\' got %4$s! | Momspresso \n%5$s</string>
+    <string name="campaigns">Campaigns</string>
+    <string name="refer_text">Refer</string>
+    <string name="mm_dialog_get_started_now">GET STARTED NOW</string>
+    <string name="mm_dialog_description">You can now earn by participating in branded MyMoney campaigns</string>
+    <string name="mm_dialog_title">Welcome to Momspresso!</string>
+    <string name="milestones_dialog_title">You\'ve earned Rs. %1$d</string>
+    <string name="milestones_share_joy">Share the joy with your friends and earn more! %1$s</string>
+    <string name="all_terms_conditions"><![CDATA[T&C]]></string>
+    <string name="milestone_mm_share">I earned Rs.%1$d from Momspresso MyMoney and you can earn too! Simply register using my code %2$s and complete your first campaign. It\'s that simple, so register now! \n%3$s</string>
+    <string name="all_refer_url">https://www.momspresso.com/usersprofile/rewardsform?referrer=%1$s</string>
+    <string name="please_add_item_multicollection_activity">Please Add Items</string>
+    <string name="all_report_content">REPORT CONTENT</string>
+    <string name="background">ಹಿನ್ನೆಲೆ</string>
+    <string name="text">ಟೆಕ್ಸ್ಟ್</string>
+    <string name="size">ಸೈಜ್</string>
+    <string name="align">ವಿನ್ಯಾಸ</string>
+    <string name="short_s_max_title_word">Your title can have maximum 10 words.</string>
+    <string name="editor.next">ಮುಂದೆ</string>
+    <string name="max_limit">ನಿಮ್ಮ ಫಾಂಟ್ ಸೈಜ್  ಗರಿಷ್ಟ ಮಟ್ಟದಲ್ಲಿದೆ</string>
+    <string name="min_limit">ನಿಮ್ಮ ಫಾಂಟ್ ಸೈಜ್ ಕನಿಷ್ಠ ಮಟ್ಟದಲ್ಲಿದೆ</string>
+    <string name="library">ಲೈಬ್ರರಿ</string>
+    <string name="ss_share_with_friends">ಗೆಳೆಯರೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಿ</string>
+    <string name="short_s_add_title_Optional">ಐಚ್ಛಿಕ</string>
+    <string name="story_text_description_hint">ನಿಮ್ಮ ನುಡಿಗಟ್ಟುಗಳನ್ನು ಇಲ್ಲಿ ಬರೆಯಿರಿ</string>
+    <string name="stroy_overflow_layout">ಮುಂದುವರಿಯಲು ಫಾಂಟ್ ಸೈಜ್ ಅಥವಾ ಪದಗಳ ಸಂಖ್ಯೆಯನ್ನು ಕೆಡಿಮೆಗೊಳಿಸಿ</string>
+    <string name="short_s_write">ಬರೆಯಿರಿ</string>
+    <string name="ss_follow_author">Follow %1$s and check out other articles by her on Momspresso.\n %2$s</string>
+    <string name="all_insta_share_clipboard_msg">Caption copied. Please paste before posting on Instagram.</string>
+    <string name="moderation_or_share_story_moderation_message">ನಿಮ್ಮ ಲೇಖನವನ್ನು ಅನುಮೋದನೆಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.  ಮುಂದಿನ 24 ಗಂಟೆಗಳ ಒಳಗೆ ನಿಮ್ಮ ಲೇಖನದ ಅನುಮೋದನೆ ಕುರಿತು ಇಮೇಲ್ ನಿರೀಕ್ಷಿಸಿ.</string>
+    <string name="ad.bottom_bar.instagram">ಇನ್ಸ್ಟಾಗ್ರಾಮ್</string>
+    <string name="editor_minimum_word_limit">Please write at least %1$d words to continue</string>
+    <string name="all_copy_link">COPY LINK</string>
+    <string name="ss_story_link_copied">Story link copied</string>
+    <string name="ss_image_loading_msg">Please wait for story background to be loaded</string>
+    <string name="story_coachmark_text">Position or move your story around as per your preference.</string>
+    <string name="story_got_it">Got it</string>
+    <string name="ss_coachmark_story_bg">Select background of your choice</string>
+    <string name="ss_coachmarks_text_style">Change font size or text alignment</string>
+    <string name="article_editor_min_words_body">You have written %1$d words. Please write at least 300 words to publish.</string>
+</resources>

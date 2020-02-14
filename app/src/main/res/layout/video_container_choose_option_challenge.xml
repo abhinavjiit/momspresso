@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_choose_layout_video"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="visible">
+
+
+    <View
+        android:id="@+id/overlayView_choose_video_challenge"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:alpha="0.75"
+        android:background="#121212"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/choose_option_layout_video"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white_color"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/upload_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="9dp"
+            android:paddingLeft="14dp"
+            android:paddingTop="18dp"
+            android:text="@string/add_article_or_video.upload_video"
+            android:textColor="@color/app_grey"
+            android:textSize="18sp"
+            app:fontName="oswald.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/upload_challenge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="18dp"
+            android:paddingLeft="14dp"
+            android:paddingTop="9dp"
+            android:text="@string/choose_challenge_label"
+            android:textColor="@color/app_grey"
+            android:textSize="18sp"
+            app:fontName="oswald.ttf" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
+

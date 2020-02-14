@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:elevation="0dp"
+    app:cardCornerRadius="3dp"
+    app:cardElevation="0dp">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/groupsGridItemView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+
+        <ImageView
+            android:id="@+id/groupImageView"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/default_article" />
+
+        <com.lid.lib.LabelImageView
+            android:id="@+id/groupNewLabelImageView"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:background="@color/explore_listing.topics.layer"
+            android:scaleType="fitXY"
+            app:label_backgroundColor="@color/app_red"
+            app:label_distance="20dp"
+            app:label_orientation="LEFT_TOP"
+            app:label_strokeColor="@color/app_red"
+            app:label_text="@string/new_label"
+            app:label_textSize="12sp" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/groupNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:shadowColor="#48000000"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="6"
+            android:text="TOPICS"
+            android:textColor="@color/explore_listing.explore_categories.category_name"
+            android:textSize="18sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/groupImageView">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="7dp"
+                android:background="@drawable/group_badge_round"
+                android:elevation="15dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:shadowColor="#48000000"
+                android:shadowDx="-2"
+                android:shadowDy="-2"
+                android:shadowRadius="4"
+                android:text="10"
+                android:textColor="@color/white_color"
+                android:textSize="13sp"
+                android:visibility="visible"
+                app:fontName="oswald_regular.ttf" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

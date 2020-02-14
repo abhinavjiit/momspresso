@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:maxHeight="100dp"
+    android:background="@color/white_color"
+    android:orientation="vertical">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white_color"
+        android:divider="@null"
+        android:listSelector="@color/transparent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    <View
+        android:id="@+id/bottombarUnderline"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/list"
+        android:layout_above="@+id/changeTopicsContainer"
+        android:background="@color/light_underline" />
+
+    <RelativeLayout
+        android:id="@+id/changeTopicsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/cancelTextView"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_toLeftOf="@+id/saveTextView"
+            android:background="@color/grey"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/subscribe_topics.cancel"
+            android:textColor="@color/white_color"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/saveTextView"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/app_red"
+            android:gravity="center"
+            android:padding="10dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="@string/ok"
+            android:textColor="@color/white_color"
+            app:fontName="oswald_regular.ttf" />
+    </RelativeLayout>
+</LinearLayout>

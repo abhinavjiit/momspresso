@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/space_10"
+    android:layout_marginTop="@dimen/space_5"
+    android:layout_marginEnd="@dimen/space_10"
+    android:layout_marginBottom="@dimen/space_5"
+    app:elevation="6dp">
+
+    <RelativeLayout
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/articleImageView"
+            android:layout_width="86dp"
+            android:layout_height="66dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="0dp"
+            android:scaleType="centerCrop" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/articleVideoShortStoryIcon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignEnd="@id/articleImageView"
+            android:layout_alignBottom="@id/articleImageView"
+            android:background="#000000"
+            android:padding="@dimen/space_5"
+            android:src="@drawable/ic_article"
+            android:tint="@color/white_color" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/articleTitleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="@dimen/space_10"
+            android:layout_marginBottom="@dimen/space_10"
+            android:layout_toStartOf="@id/checkBoxImageView"
+            android:layout_toEndOf="@id/articleImageView"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:textColor="#515151"
+            android:textSize="14sp"
+            app:fontName="Helvetica Bold.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/articleAuthorName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/articleImageView"
+            android:layout_marginLeft="14sp"
+            android:layout_toLeftOf="@id/viewCountTextView"
+            android:layout_toRightOf="@id/articleImageView"
+            android:textColor="#9B9B9B"
+            android:textSize="12sp" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/viewCountTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/articleImageView"
+            android:layout_toStartOf="@+id/checkBoxImageView"
+            android:drawableStart="@drawable/ic_views"
+            android:drawablePadding="@dimen/space_5"
+            android:textColor="#979797" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/checkBoxImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_rectangle" />
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

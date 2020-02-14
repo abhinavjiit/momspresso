@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_color"
+    android:orientation="vertical">
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/welcomeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="@string/lang_sel.welcome_msg"
+        android:textColor="@color/app_light_black"
+        android:textSize="24sp"
+        app:fontName="oswald_regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/selectLangtextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/welcomeTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/lang_sel.sel_lang"
+        android:textColor="@color/app_grey"
+        android:textSize="18sp"
+        app:fontName="oswald.ttf" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/languageRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/continueTextView"
+        android:layout_below="@+id/selectLangtextView"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="10dp"
+        android:fadeScrollbars="false"
+        android:scrollIndicators="end"
+        android:scrollbarThumbVertical="@color/app_red"
+        android:scrollbars="vertical" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/continueTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:background="@color/app_red"
+        android:elevation="4dp"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="@string/lang_sel.continue"
+        android:textColor="@color/lang_sel.continue_text"
+        android:textSize="17sp"
+        android:visibility="gone"
+        app:fontName="oswald_regular.ttf" />
+</RelativeLayout>

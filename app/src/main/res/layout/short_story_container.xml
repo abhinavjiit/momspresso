@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/anim_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="?attr/colorPrimary"
+        android:elevation="5dp"
+        android:minHeight="?attr/actionBarSize"
+        android:visibility="visible"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+        <RelativeLayout
+            android:id="@+id/toolbarRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/toolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text=""
+                android:textSize="20sp"
+                app:fontName="oswald_regular.ttf" />
+
+            <ImageView
+                android:id="@+id/playTtsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:padding="12dp"
+                android:src="@drawable/ic_play_tts"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <ImageView
+        android:id="@+id/backNavigationImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/article_details_back_btn_bg"
+        android:elevation="6dp"
+        android:src="@drawable/back_arroow"
+        android:visibility="gone" />
+
+    <!--<FrameLayout-->
+    <!--android:id="@+id/toolbarOverlay"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignBottom="@+id/anim_toolbar"-->
+    <!--android:layout_alignTop="@+id/anim_toolbar"-->
+    <!--android:clickable="true" />-->
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/anim_toolbar" />
+
+    <!--<ImageView-->
+        <!--android:id="@+id/coachmarksImageView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:elevation="5dp"-->
+        <!--android:scaleType="fitXY"-->
+        <!--android:src="@drawable/coachmark_article"-->
+        <!--android:visibility="gone" />-->
+
+    <RelativeLayout
+        android:id="@+id/guideOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/dark_transparent"
+        android:elevation="6dp"
+        android:visibility="gone">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/guidetoolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:minHeight="?attr/actionBarSize"
+            android:visibility="visible"
+            app:theme="@style/ToolbarTheme"
+            app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+            <RelativeLayout
+                android:id="@+id/guideToolbarRelativeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/guidePlayTtsTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_play_tts"
+                    android:tint="@color/white_color"
+                    android:visibility="visible" />
+
+            </RelativeLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+        <View
+            android:layout_width="40dp"
+            android:layout_height="2dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/guidetoolbar"
+            android:layout_marginRight="10dp"
+            android:background="@color/white_color" />
+
+        <View
+            android:id="@+id/verticalLine1"
+            android:layout_width="2dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/guidetoolbar"
+            android:layout_marginRight="28dp"
+            android:background="@color/white_color" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/langGuideTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/verticalLine1"
+            android:layout_marginRight="10dp"
+            android:background="@color/white_color"
+            android:paddingBottom="7dp"
+            android:paddingLeft="9dp"
+            android:paddingRight="9dp"
+            android:paddingTop="7dp"
+            android:text="@string/guide.listen_tour"
+            android:textColor="@color/black_color"
+            app:fontName="oswald.ttf" />
+
+        <View
+            android:layout_width="150dp"
+            android:layout_height="2dp"
+            android:layout_above="@+id/bottombar"
+            android:layout_centerHorizontal="true"
+            android:background="@color/white_color" />
+
+        <View
+            android:id="@+id/verticalLine"
+            android:layout_width="2dp"
+            android:layout_height="50dp"
+            android:layout_above="@+id/bottombar"
+            android:layout_centerHorizontal="true"
+            android:background="@color/white_color" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/shareGuideTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/verticalLine"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/white_color"
+            android:paddingBottom="7dp"
+            android:paddingLeft="9dp"
+            android:paddingRight="9dp"
+            android:paddingTop="7dp"
+            android:text="@string/guide.share_like_bookmark_tour"
+            android:textColor="@color/black_color"
+            app:fontName="oswald.ttf" />
+
+        <LinearLayout
+            android:id="@+id/bottombar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:paddingBottom="6dp"
+            android:paddingTop="6dp">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/facebookShareTextView"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:drawableTint="@color/white_color"
+                android:drawableTop="@drawable/ic_facebook_svg"
+                android:gravity="center" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/whatsappShareTextView"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:drawableTint="@color/white_color"
+                android:drawableTop="@drawable/ic_whats_app"
+                android:gravity="center" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/emailShareTextView"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:drawableTint="@color/white_color"
+                android:drawableTop="@drawable/ic_share_white"
+                android:gravity="center" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/bookmarkTextView"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:drawableTint="@color/white_color"
+                android:drawableTop="@drawable/ic_bookmark"
+                android:gravity="center" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/likeTextView"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:drawableTint="@color/white_color"
+                android:drawableTop="@drawable/ic_recommend"
+                android:gravity="center" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,72 @@
+{
+  "project_info": {
+    "project_number": "3577377239",
+    "firebase_url": "https://api-project-3577377239.firebaseio.com",
+    "project_id": "api-project-3577377239",
+    "storage_bucket": "api-project-3577377239.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:3577377239:android:45762af236931870",
+        "android_client_info": {
+          "package_name": "com.mycity4kids"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "3577377239-jhfcopvfbh1bt9ecbv2krjmu2107krjp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycity4kids",
+            "certificate_hash": "334eb4ee86237e81f24fef835b244e8805ea325d"
+          }
+        },
+        {
+          "client_id": "3577377239-3uf27vve9795n5vfgacosroj9gl9mb5l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycity4kids",
+            "certificate_hash": "81cdba73fda17092647b4bf9ea69aee3f0f265bf"
+          }
+        },
+        {
+          "client_id": "3577377239-egnqum8cofm1beck6ghrh4r2tcu895o0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycity4kids",
+            "certificate_hash": "83ad5d3669e95185ffd30ed96cab528b04936942"
+          }
+        },
+        {
+          "client_id": "3577377239-qra9vc8sm2a80372t2ekcj66h86f0v5q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsg74XiShg0SGJwTu0tkgNSbA5d2ATIZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "3577377239-t9uh5gv6knb3sc8u0fklh9r91sf7c5i9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "3577377239-gn6vqf7ii214pbv0emaq5r3voa59gi39.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mycity4kids.MC4K",
+                "app_store_id": "873173909"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

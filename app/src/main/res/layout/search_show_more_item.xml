@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:paddingBottom="7dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="7dp">
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/showMoreTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/articleImageView"
+        android:maxLines="1"
+        android:text="Pregnancy"
+        android:textColor="@color/search.show_more"
+        android:textSize="15sp"
+        app:fontName="oswald_regular.ttf" />
+</LinearLayout>

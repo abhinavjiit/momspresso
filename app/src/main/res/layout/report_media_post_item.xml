@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    android:background="@color/white_color"
+    android:paddingBottom="4dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="8dp">
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/userImageView"
+        android:layout_width="@dimen/ad_comments_profile_pic_width"
+        android:layout_height="@dimen/ad_comments_profile_pic_width"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@string/author_img"
+        android:src="@drawable/default_commentor_img"
+        app:civ_border="true"
+        app:civ_border_color="@color/line_separator_color"
+        app:civ_border_width="1px"
+        app:civ_shadow="false" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/usernameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="4dp"
+        android:layout_toEndOf="@+id/userImageView"
+        android:layout_toRightOf="@+id/userImageView"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:text=""
+        android:textColor="@color/ad.comment.username"
+        android:textSize="12sp"
+        app:fontName="oswald_regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/postDateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/usernameTextView"
+        android:layout_alignStart="@+id/usernameTextView"
+        android:layout_below="@id/usernameTextView"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:text="16 March 2018"
+        android:textColor="@color/ad.comment.body"
+        android:textSize="10sp"
+        app:fontName="open_sans.ttf" />
+
+    <ImageView
+        android:id="@+id/postSettingImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:src="@drawable/ic_more"
+        android:tint="@color/groups.blue_color" />
+
+    <!--<com.daimajia.slider.library.SliderLayout-->
+    <!--android:id="@+id/postDataViewPager"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="400dp"-->
+    <!--android:layout_below="@+id/userImageView"-->
+    <!--android:layout_marginEnd="2dp"-->
+    <!--android:layout_marginRight="2dp"-->
+    <!--android:layout_marginTop="15dp" />-->
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/postDataTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userImageView"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="left"
+        android:text=""
+        android:textColor="#9c9dac"
+        android:textSize="10sp"
+        app:fontName="open_sans.ttf" />
+
+    <com.mycity4kids.widget.GroupPostMediaViewPager
+        android:id="@+id/postDataViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@+id/postDataTextView"
+        android:layout_marginTop="15dp" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/indexTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/postDataViewPager"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/gp_media_post_index"
+        android:paddingBottom="3dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:paddingTop="3dp"
+        android:text=""
+        android:textColor="@color/white_color"
+        android:textSize="14sp" />
+
+    <com.mycity4kids.widget.IndefinitePagerIndicator
+        android:id="@+id/dotIndicatorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/reportedSpamTextView"
+        android:layout_below="@id/pager"
+        android:layout_centerHorizontal="true"
+        app:selectedDotColor="@color/app_red"
+        app:dotSeparation="4dp"
+        app:dotCount="5"
+        app:dotColor="@color/line_separator_color"
+        app:dotRadius="3dp"
+        app:fadingDotCount="3" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/reportedSpamTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/postDataViewPager"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="Reported as Spam - 100"
+        android:visibility="visible" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/reportedAbuseTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reportedSpamTextView"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="Reported as Abuse - 2000"
+        android:visibility="visible" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/reportedUninterestingTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reportedAbuseTextView"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="Reported as Not Interesting - 2"
+        android:visibility="visible" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/reportedReligiousTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reportedUninterestingTextView"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="Reported as Not Interesting - 2"
+        android:visibility="gone" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/reportedOtherTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reportedReligiousTextView"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="Reported as Other - 0"
+        android:visibility="visible" />
+</RelativeLayout>
+

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/kids_info_bg"
+        android:paddingLeft="2dp"
+        android:paddingTop="16dp"
+        android:paddingRight="2dp"
+        android:paddingBottom="16dp">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/editKidsInfoTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="12dp"
+            android:background="@drawable/edit_kids_info_bg"
+            android:paddingLeft="12dp"
+            android:paddingTop="3dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="3dp"
+            android:text="@string/user_article.published.edit"
+            android:textColor="@color/red_drawer_selected" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/nameLabelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/name"
+            android:textColor="@color/app_grey"
+            app:fontName="oswald.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/nameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nameLabelTextView"
+            android:layout_marginLeft="10dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text=""
+            android:textColor="@color/app_light_black"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/genderLabelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nameTextView"
+            android:layout_alignLeft="@+id/nameTextView"
+            android:layout_marginTop="10dp"
+            android:text="@string/app_settings.edit_profile.gender"
+            android:textColor="@color/app_grey"
+            app:fontName="oswald.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/genderTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/genderLabelTextView"
+            android:layout_alignLeft="@+id/genderLabelTextView"
+            android:layout_alignParentBottom="true"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="@string/app_settings.edit_profile.gender"
+            android:textColor="@color/app_light_black"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/kidsDOBLabelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/genderLabelTextView"
+            android:layout_marginLeft="140dp"
+            android:gravity="left"
+            android:text="@string/app_settings.edit_profile.dob"
+            android:textColor="@color/app_grey"
+            app:fontName="oswald.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/kidsDOBTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/kidsDOBLabelTextView"
+            android:layout_alignLeft="@id/kidsDOBLabelTextView"
+            android:padding="4dp"
+            android:text=""
+            android:textColor="@color/app_light_black"
+            app:fontName="oswald_regular.ttf" />
+    </RelativeLayout>
+</merge>

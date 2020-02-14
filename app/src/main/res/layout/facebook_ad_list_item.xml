@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp">
+
+    <LinearLayout
+        android:id="@+id/adContainerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp">
+
+            <ImageView
+                android:id="@+id/native_ad_icon"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center_vertical" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="5dp">
+
+                <TextView
+                    android:id="@+id/native_ad_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textColor="@android:color/black"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:text="Sponsored"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ad_choices_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:orientation="horizontal" />
+        </LinearLayout>
+
+        <com.facebook.ads.MediaView
+            android:id="@+id/native_ad_media"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:gravity="center" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:orientation="vertical"
+                android:paddingRight="10dp">
+
+                <TextView
+                    android:id="@+id/native_ad_social_context"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:lines="2"
+                    android:paddingRight="5dp"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/native_ad_body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:lines="2"
+                    android:textColor="@android:color/black"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/native_ad_call_to_action"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="#4286F4"
+                android:gravity="center"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:textColor="@android:color/white"
+                android:textSize="11sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/fbAdArticleView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white_color">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="10dp"
+            card_view:cardCornerRadius="0dp"
+            card_view:cardElevation="0dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/topics_border_bg"
+                android:orientation="vertical">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/txvArticleTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/forYouInfoLL"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:padding="10dp"
+                    android:singleLine="false"
+                    android:text="@string/title"
+                    android:textColor="@color/article_listing.title"
+                    android:textSize="16sp"
+                    card_view:fontName="oswald_regular.ttf" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txvArticleTitle"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="10dp">
+
+                    <ImageView
+                        android:id="@+id/articleImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/article_listing.article_image"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerInParent="true"
+                        android:contentDescription="@string/author_img"
+                        android:scaleType="centerCrop" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/article_listing.article_image"
+                        android:layout_alignParentTop="true"
+                        android:background="#80000000"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/videoIndicatorImageView"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="60dp"
+                        android:src="@drawable/ic_videos"
+                        android:visibility="invisible" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/txvAuthorName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/articleImageView"
+                        android:layout_gravity="bottom"
+                        android:clickable="true"
+                        android:gravity="bottom"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="8dp"
+                        android:singleLine="true"
+                        android:text="@string/author_name"
+                        android:textColor="@color/article_listing.author_name"
+                        android:textSize="12sp"
+                        card_view:fontName="open_sans.ttf" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/viewCountTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/txvAuthorName"
+                        android:layout_below="@id/txvAuthorName"
+                        android:layout_marginLeft="9dp"
+                        android:drawableLeft="@drawable/ic_views"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"
+                        android:paddingLeft="2dp"
+                        android:text="0"
+                        android:textColor="@color/article_listing.stats"
+                        android:textSize="12sp"
+                        card_view:fontName="open_sans.ttf" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/commentCountTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/viewCountTextView"
+                        android:layout_alignTop="@+id/viewCountTextView"
+                        android:layout_below="@id/txvAuthorName"
+                        android:layout_marginLeft="11dp"
+                        android:layout_toRightOf="@+id/viewCountTextView"
+                        android:drawableLeft="@drawable/ic_comments"
+                        android:drawablePadding="4dp"
+                        android:gravity="top"
+                        android:text="0"
+                        android:textColor="@color/article_listing.stats"
+                        android:textSize="12sp"
+                        card_view:fontName="open_sans.ttf" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/recommendCountTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/viewCountTextView"
+                        android:layout_alignTop="@+id/viewCountTextView"
+                        android:layout_below="@id/txvAuthorName"
+                        android:layout_marginLeft="11dp"
+                        android:layout_toRightOf="@+id/commentCountTextView"
+                        android:drawableLeft="@drawable/ic_likes"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="@color/article_listing.stats"
+                        android:textSize="12sp"
+                        card_view:fontName="open_sans.ttf" />
+
+
+                    <ImageView
+                        android:id="@+id/bookmarkArticleImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignTop="@+id/txvAuthorName"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="15dp"
+                        android:src="@drawable/ic_bookmark"
+                        android:tint="@color/app_red"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/watchLaterImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/bookmarkArticleImageView"
+                        android:layout_alignLeft="@+id/bookmarkArticleImageView"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignStart="@+id/bookmarkArticleImageView"
+                        android:layout_alignTop="@+id/txvAuthorName"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="15dp"
+                        android:src="@drawable/ic_watch"
+                        android:tint="@color/app_red"
+                        android:visibility="invisible" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/forYouInfoLL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:orientation="horizontal"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="12dp">
+
+                    <ImageView
+                        android:id="@+id/one"
+                        android:layout_width="6dp"
+                        android:layout_height="6dp"
+                        android:src="@drawable/white_filled_bg"
+                        android:tag="1"
+                        android:tint="@color/onboarding.already_member" />
+
+                    <ImageView
+                        android:id="@+id/two"
+                        android:layout_width="6dp"
+                        android:layout_height="6dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:src="@drawable/white_filled_bg"
+                        android:tag="2"
+                        android:tint="@color/onboarding.already_member" />
+
+                    <ImageView
+                        android:id="@+id/three"
+                        android:layout_width="6dp"
+                        android:layout_height="6dp"
+                        android:src="@drawable/white_filled_bg"
+                        android:tag="3"
+                        android:tint="@color/onboarding.already_member" />
+                </LinearLayout>
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+    </FrameLayout>
+
+</LinearLayout>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="@color/white_color">
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/authorImageView"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:src="@drawable/default_commentor_img"
+        app:civ_border="true"
+        app:civ_border_color="@color/light_underline"
+        app:civ_border_width="1px"
+        app:civ_shadow="false" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/authorNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@+id/authorImageView"
+        android:layout_toLeftOf="@+id/followTextView"
+        android:layout_toRightOf="@+id/authorImageView"
+        android:layout_toStartOf="@+id/followTextView"
+        android:text=""
+        android:textColor="@color/search.author_text"
+        android:textSize="15sp"
+        app:fontName="oswald_regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/followTextView"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/follow_topic_author_bg"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:text="@string/blogger_profile.follow_button"
+        android:textColor="@color/app_red"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:fontName="oswald.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/followingTextView"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/follow_topic_author_bg"
+        android:foregroundGravity="center"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:text="@string/blogger_profile.unfollow_button"
+        android:textColor="@color/app_red"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:fontName="oswald.ttf" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLoadingView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/followTextView"
+        android:layout_alignRight="@+id/followTextView"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/authorNameTextView"
+        android:layout_toRightOf="@+id/authorNameTextView"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imgLoader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sepaartorView"
+            android:layout_centerInParent="true"
+            android:src="@drawable/progress_spinner" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/userImageView"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:src="@drawable/default_commentor_img"
+        app:civ_border="true"
+        app:civ_border_color="@color/line_separator_color"
+        app:civ_border_width="1px"
+        app:civ_shadow="false" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/userNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@+id/userImageView"
+        android:layout_toRightOf="@+id/userImageView"
+        android:background="@color/white_color"
+        android:gravity="center_vertical"
+        android:text=""
+        android:textColor="@color/follower_following_list.author_name"
+        android:textSize="14sp"
+        app:fontName="oswald_regular.ttf" />
+
+</RelativeLayout>

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:elevation="5dp"
+        android:minHeight="?attr/actionBarSize"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+        <RelativeLayout
+            android:id="@+id/toolbarRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/toolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/myprofile.section.settings_label"
+                android:textColor="@color/user_activities.toolbar.title"
+                android:textSize="20sp"
+                app:fontName="oswald_regular.ttf" />
+
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <RelativeLayout
+        android:id="@+id/groupHeaderContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/groupImageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/default_article" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/explore_listing.topics.layer" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/memberCountTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/groupImageView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="18dp"
+            android:drawableLeft="@drawable/ic_group_white"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/white_color"
+            android:textSize="14sp"
+            app:fontName="oswald.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/groupNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/memberCountTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/white_color"
+            android:textSize="20sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <ImageView
+            android:id="@+id/editGroupImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/groupImageView"
+            android:layout_alignRight="@+id/groupImageView"
+            android:padding="12dp"
+            android:src="@drawable/ic_edit_new"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/inviteMemberContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/groupHeaderContainer"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/inviteMemberLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/groups.invite_members"
+            android:textColor="@color/app_red"
+            android:textSize="15sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/inviteMemberDescLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/inviteMemberLabel"
+            android:text="@string/groups.invite_family"
+            android:textColor="@color/groups.grey"
+            android:textSize="11sp"
+            app:fontName="oswald.ttf" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/underlineView0"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/inviteMemberContainer"
+        android:background="@color/light_underline" />
+
+    <RelativeLayout
+        android:id="@+id/disableNotificationContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/underlineView0"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/disableNotificationTitleLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/groups_enable_notification"
+            android:textColor="@color/app_red"
+            android:textSize="15sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/disableNotificationDescLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/disableNotificationTitleLabel"
+            android:text="Enable notification for this group"
+            android:textColor="@color/groups.grey"
+            android:textSize="11sp"
+            app:fontName="oswald.ttf" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/disableNotificationSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:theme="@style/SCBSwitch" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/underlineView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/disableNotificationContainer"
+        android:background="@color/light_underline" />
+
+    <RelativeLayout
+        android:id="@+id/leaveGroupContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/underlineView"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/leaveGroupTitleLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/groups.leave_group"
+            android:textColor="@color/app_red"
+            android:textSize="15sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/leaveGroupDescLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/leaveGroupTitleLabel"
+            android:text="@string/groups.exit_gp"
+            android:textColor="@color/groups.grey"
+            android:textSize="11sp"
+            app:fontName="oswald.ttf" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/underlineView1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/leaveGroupContainer"
+        android:background="@color/light_underline" />
+
+    <RelativeLayout
+        android:id="@+id/reportedContentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/underlineView1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:visibility="gone">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/reportedContentTitleLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/groups.reported_content"
+            android:textColor="@color/groups.blue_color"
+            android:textSize="15sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/reportedContentDescLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/reportedContentTitleLabel"
+            android:text="@string/groups.view_all_reported"
+            android:textColor="@color/groups.grey"
+            android:textSize="11sp"
+            app:fontName="oswald.ttf" />
+
+    </RelativeLayout>
+</RelativeLayout>

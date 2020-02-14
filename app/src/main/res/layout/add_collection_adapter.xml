@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/collectionImageViewCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/space_10"
+      >
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/collectionImageVIEW"
+            android:layout_width="100dp"
+            android:layout_height="85dp"
+            android:scaleType="centerCrop"/>
+    </androidx.cardview.widget.CardView>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/space_16"
+        android:layout_toStartOf="@+id/close"
+        android:layout_toEndOf="@id/collectionImageViewCard">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/collectionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_10"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/black_color"
+            android:textSize="16sp" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/collectionDiscription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/collectionTitle"
+            android:layout_marginLeft="@dimen/space_10"
+            android:layout_marginTop="@dimen/space_5"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/black_color"
+            android:textSize="12sp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/close"
+        android:layout_width="@dimen/space_20"
+        android:layout_height="20dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/space_5"
+        android:src="@drawable/ic_close_pop_up"
+        android:visibility="gone" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/collectionImageViewCard"
+        android:layout_marginStart="@dimen/space_10"
+        android:layout_marginTop="@dimen/space_10"
+        android:layout_marginEnd="@dimen/space_10"
+        android:background="#DADADA" />
+
+
+</RelativeLayout>

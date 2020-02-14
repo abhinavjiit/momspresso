@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_color"
+    android:clickable="true">
+
+    <LinearLayout
+        android:id="@+id/otpContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:focusable="false"
+        android:orientation="vertical">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:gravity="center"
+            android:text="@string/login_enter_otp"
+            android:textSize="18sp"
+            app:fontName="oswald.ttf" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="40dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:orientation="horizontal"
+            android:weightSum="6">
+
+            <com.mycity4kids.widget.CustomFontEditText
+                android:id="@+id/otpEditText1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/phone_login_send_otp_bg_disabled"
+                android:cursorVisible="false"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:textColor="@color/app_dark_black"
+                android:textSize="16sp" />
+
+            <com.mycity4kids.widget.CustomFontEditText
+                android:id="@+id/otpEditText2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/phone_login_send_otp_bg_disabled"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:textColor="@color/app_dark_black"
+                android:textSize="16sp" />
+
+            <com.mycity4kids.widget.CustomFontEditText
+                android:id="@+id/otpEditText3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/phone_login_send_otp_bg_disabled"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:textColor="@color/app_dark_black"
+                android:textSize="16sp" />
+
+            <com.mycity4kids.widget.CustomFontEditText
+                android:id="@+id/otpEditText4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/phone_login_send_otp_bg_disabled"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:textColor="@color/app_dark_black"
+                android:textSize="16sp" />
+
+            <com.mycity4kids.widget.CustomFontEditText
+                android:id="@+id/otpEditText5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/phone_login_send_otp_bg_disabled"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:textColor="@color/app_dark_black"
+                android:textSize="16sp" />
+
+            <com.mycity4kids.widget.CustomFontEditText
+                android:id="@+id/otpEditText6"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/phone_login_send_otp_bg_disabled"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:textColor="@color/app_dark_black"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/verifySmsTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="45dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="45dp"
+            android:background="@drawable/phone_login_use_sms_selector"
+            android:gravity="center"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:text="@string/lang_sel.continue"
+            android:textColor="@color/phone_login_use_sms_selector"
+            android:textSize="18sp"
+            app:fontName="oswald_regular.ttf" />
+
+    </LinearLayout>
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/resendSmsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/otpContainer"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="32dp"
+        android:gravity="center"
+        android:paddingStart="10dp"
+        android:paddingTop="14dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="14dp"
+        android:text="@string/login_resend_otp"
+        android:textColor="@color/app_red"
+        android:textSize="18sp"
+        app:fontName="oswald_regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/countdownTimerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/otpContainer"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="32dp"
+        android:gravity="center"
+        android:paddingStart="10dp"
+        android:paddingTop="14dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="14dp"
+        android:text=""
+        android:textColor="@color/app_light_black"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:fontName="oswald.ttf" />
+
+</RelativeLayout>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/groupDescTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="15dp"
+        android:ellipsize="end"
+        android:gravity="left"
+        android:lineSpacingExtra="3dp"
+        android:text=""
+        android:textColor="@color/black_color"
+        android:textSize="16sp"
+        app:fontName="georgia.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/createdTimeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/groupDescTextView"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="14dp"
+        android:gravity="left"
+        android:text="Created - 20 days ago"
+        android:textColor="@color/groups.grey"
+        android:textSize="14sp"
+        app:fontName="open_sans.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/groupTypeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/createdTimeTextView"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="left"
+        android:text="Closed group"
+        android:textColor="@color/black_color"
+        android:textSize="14sp"
+        app:fontName="open_sans.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/groupAdminLabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/groupTypeTextView"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="14dp"
+        android:gravity="left"
+        android:text="Group Admin - "
+        android:textColor="@color/black_color"
+        android:textSize="14sp"
+        app:fontName="open_sans.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/groupAdminTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/groupTypeTextView"
+        android:layout_marginBottom="14dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="14dp"
+        android:layout_toRightOf="@+id/groupAdminLabelTextView"
+        android:gravity="left"
+        android:text=""
+        android:textColor="@color/blue_bg"
+        android:textSize="14sp"
+        app:fontName="open_sans.ttf" />
+
+</RelativeLayout>

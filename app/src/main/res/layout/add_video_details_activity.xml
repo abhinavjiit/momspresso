@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        fab:theme="@style/ToolbarTheme"
+        fab:titleTextAppearance="@style/ToolbarTheme.Title">
+
+        <RelativeLayout
+            android:id="@+id/toolbarRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/toolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/add_video_details.toolbar.title"
+                android:textColor="@color/add_video_details.toolbar.title"
+                android:textSize="20sp"
+                fab:fontName="oswald_regular.ttf" />
+
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/videoTitleEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:backgroundTint="@color/common_underline"
+        android:hint="@string/add_video_details.title_hint"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:textColor="@color/add_video_details.title_text"
+        android:textColorHint="@color/add_video_details.title_hint"
+        android:textSize="16sp"
+        fab:fontName="oswald.ttf" />
+
+    <com.afollestad.easyvideoplayer.EasyVideoPlayer xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/player"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_below="@+id/videoTitleEditText" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/muteVideoSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/player"
+        android:padding="20dp"
+        android:text="@string/add_video_details.mute_label"
+        android:textColor="@color/add_video_details.mute_label"
+        android:textSize="14sp" />
+
+    <View
+        android:id="@+id/underline1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/muteVideoSwitch"
+        android:background="@color/common_underline" />
+
+
+    <View
+        android:id="@+id/underline2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/underline1"
+        android:background="@color/common_underline" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/saveUploadTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:background="#ffffff"
+        android:elevation="20dp"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="@string/add_video_details.save_upload"
+        android:textColor="@color/app_red"
+        android:textSize="17sp"
+        fab:fontName="oswald_regular.ttf" />
+</RelativeLayout>

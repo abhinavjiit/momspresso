@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="app_light_black">#545454</color>
+    <color name="app_dark_black">#333333</color>
+    <color name="app_grey">#9c9dac</color>
+    <color name="app_light_grey">#f9f9f9</color>
+    <color name="app_blue">#507cbe</color>
+    <color name="app_pink">#FF4081</color>
+    <color name="app_red">#D54058</color>
+    <color name="app_light_pink">#E997A8</color>
+
+    <color name="all_facebook_share">#3B5998</color>
+    <color name="all_whatsapp_share">#4CAF50</color>
+    <color name="all_instagram_share">#C837AB</color>
+    <color name="all_generic_share">#38C5A5</color>
+
+    <color name="all_toolbar_title">#545454</color>
+    <color name="short_story_author_name">#465391</color>
+
+    <color name="orange_new">#F5A623</color>
+
+    <color name="app_red_50_opacity">#80D54058</color>
+    <color name="fab_button_bottom_sheet">#FAF6F7</color>
+    <color name="switch_button_green_collection">#90BC5F</color>
+
+    <color name="app_cyan">#39B47E</color>
+    <color name="app_trans_red">#D54058</color>
+    <color name="sign_in_out_text_red_color">#FF9BA8</color>
+    <color name="app_nav_bg">#f4eded</color>
+    <color name="black_15">#26000000</color>
+
+    <color name="a_light_blue">#e3eaff</color>
+    <color name="a_light_pink">#ffedf0</color>
+    <color name="a_bg_blue">#F0F4FF</color>
+    <color name="white_color">#ffffff</color>
+    <color name="black_color">#000000</color>
+    <color name="color_control_activated">#78dcfa</color>
+    <color name="grey_faded">#9b9b9b</color>
+    <color name="grey">#878787</color>
+    <color name="dark_grey">#464646</color>
+    <color name="grey_light">#eeeeee</color>
+    <color name="blue_color">#0000cc</color>
+    <color name="blue_bg">#4c69ba</color>
+    <color name="transparent">#00000000</color>
+    <color name="search_bg">#5997fc</color>
+    <color name="edit_hint_color">#969495</color>
+    <color name="edit_text_bg">#ededed</color>
+    <color name="btn_bg_blue">#306ed5</color>
+    <color name="trans_gray">#95000000</color>
+    <color name="gray2">#8037444d</color>
+    <color name="tab_checked">#7BACFD</color>
+    <color name="tab_unchecked">#5997fc</color>
+    <color name="dark_blue">#316fd6</color>
+    <color name="light_blue">#4a85eb</color>
+    <color name="header_color">#316ed5</color>
+    <color name="input_text_color">#494949</color>
+    <!-- Common colors to be used across screens -->
+    <color name="common_grey_1">#494949</color>
+    <color name="common_grey_2">#555555</color>
+    <color name="transparent_color">#70000000</color>
+    <color name="line_separator_color">#cbcbcb</color>
+    <color name="slider_txt_color">#696969</color>
+    <color name="hint_txt_color">#CFCFCF</color>
+
+    <color name="light_grey1">#E4E8F1</color>
+
+    <color name="home_light_blue">#1c55f1</color>
+
+    <color name="event_divider_color">#d3d3d3</color>
+    <color name="new_background_color">#f0f4ff</color>
+
+    <color name="primary_blue">#4185f2</color>
+    <color name="primary">#FFFFFF</color>
+    <color name="primary_dark">#333333</color>
+    <color name="blue_light">#3366f3</color>
+    <color name="red_drawer_selected">#ec3b55</color>
+    <color name="home_bg">#efefef</color>
+
+    <color name="new_grey">#424242</color>
+    <color name="canceltxt_color">#bdbdbd</color>
+    <color name="greytxt_color">#616161</color>
+    <color name="grey_add_video_topic">#888888</color>
+    <color name="new_blue">#4056DA</color>
+
+    <color name="cool_grey">#9fa6b0</color>
+    <color name="tabsScrollColor">#ec3b55</color>
+    <color name="transparent_black_90">#99000000</color>
+
+    <color name="login_grey">#cccccc</color>
+    <color name="login_line_grey">#e0e0e0</color>
+
+    <color name="ad.title">#333333</color>
+    <color name="ad.tags.text">#507cbe</color>
+    <color name="ad.tags.follow_bg">#efefef</color>
+    <color name="ad.tags.following_bg">#507cbe</color>
+    <color name="ad.tags.bg">#efefef</color>
+    <color name="ad.tags_title.text">#515556</color>
+    <color name="ad.tags_subtitle.text">#9c9dac</color>
+    <color name="ad.stats.text">#9c9dac</color>
+    <color name="ad.author_name.text">#9c9dac</color>
+    <color name="ad.author_type.text">#9c9dac</color>
+    <color name="ad.follow_following_text">#507cbe</color>
+    <color name="ad.comment.username">#515556</color>
+    <color name="ad.comment.title">#515556</color>
+    <color name="ad.comment.body">#9c9dac</color>
+    <color name="ad.comment.edit_label">#507cbe</color>
+    <color name="ad.comment.date">#9c9dac</color>
+    <color name="ad.comment.save">#ffffff</color>
+    <color name="ad.comments.edit_text">#545454</color>
+    <color name="ad.comment.save_bg">#507cbe</color>
+    <color name="ad.comments.toolbar.title">#545454</color>
+    <color name="ad.comments.replying_to">#545454</color>
+    <color name="ad.bottom_bar.items">#507cbe</color>
+    <color name="ad.related_article.title">#333333</color>
+    <color name="ad.trending.title">#333333</color>
+    <color name="background">#d3d3d3</color>
+
+    <color name="related_article.title">#333333</color>
+
+
+    <color name="authortype.colorcode.blogger">#0ea2e8</color>
+    <color name="authortype.colorcode.expert">#7db412</color>
+    <color name="authortype.colorcode.featured">#7f1109</color>
+    <color name="authortype.colorcode.editorial">#e96e01</color>
+    <color name="authortype.colorcode.editor">#5d71ca</color>
+
+    <color name="fab.pink">#ec3b57</color>
+    <color name="fab.white">#ffffff</color>
+
+    <color name="colorControlNormal">#333333</color>
+
+    <color name="splashtopics.search.topic_item_bg">#ec3b57</color>
+    <color name="splashtopics.search.topic_parent_text">#9c9dac</color>
+    <color name="splashtopics.search.topic_item_text">#555555</color>
+
+    <color name="analytics.engagement.graph">#ABC4F8</color>
+
+    <color name="notification_center.title">#515556</color>
+    <color name="notification_center.body">#545454</color>
+    <color name="notification_center.date">#9c9dac</color>
+    <color name="notification_center.read.bg">#FFFFFF</color>
+    <color name="notification_center.unread.bg">#F3F3F3</color>
+
+    <color name="publish_article.tag_images.selected_bg">#80000000</color>
+
+    <color name="toolbar.menu_items">#ec3b57</color>
+
+
+    <color name="article_listing.title">#333333</color>
+    <color name="article_listing.author_name">#9c9dac</color>
+    <color name="article_listing.stats">#9c9dac</color>
+
+
+    <color name="bottom_navigation_bar.textColor">#000000</color>
+    <color name="home.toolbar.titlecolor">#545454</color>
+    <color name="home.trending.tabbar_text">#545454</color>
+    <color name="select_option.toolbar.titlecolor">#545454</color>
+    <color name="home.trending.tabbar_indicator">#507cbe</color>
+
+    <color name="explore_listing.topics.layer">#33000000</color>
+    <color name="explore_listing.explore_categories.title">#515556</color>
+    <color name="explore_listing.explore_categories.category_name">#FFFFFF</color>
+    <color name="explore_listing.tabbar_text">#545454</color>
+    <color name="explore_listing.tabbar_indicator">#507cbe</color>
+
+    <color name="topic_articles.tabbar_text">#545454</color>
+    <color name="topic_articles.tabbar_indicator">#507cbe</color>
+    <color name="topic_articles.sub_sub_topics_text">#507cbe</color>
+    <color name="topic_articles.sub_sub_topics_selected_border">#e1e2e2</color>
+    <color name="topic_articles.sub_sub_topics_selected_text">#515556</color>
+
+    <color name="onboarding.title">#333333</color>
+    <color name="onboarding.desc">#727272</color>
+    <color name="onboarding.sign_in">#507cbe</color>
+    <color name="onboarding.already_member">#507cbe</color>
+    <color name="onboarding.get_started">#FFFFFF</color>
+    <color name="onboarding.get_started_bg">#507cbe</color>
+    <color name="sign_in.welcome_back">#FFFFFF</color>
+    <color name="sign_in.sign_up_btn">#507cbe</color>
+
+    <color name="sign_up.welcome_back">#FFFFFF</color>
+    <color name="sign_up.sign_in_btn">#507cbe</color>
+
+    <color name="login_email.login">#FFFFFF</color>
+    <color name="login_email.email_hint">#FFFFFF</color>
+    <color name="login_email.password_hint">#FFFFFF</color>
+
+    <color name="empty_list_msg">#545454</color>
+    <color name="various_list.toolbar.title">#507cbe</color>
+
+    <color name="for_you.reason.why_label">#545454</color>
+    <color name="for_you.reason.body">#545454</color>
+    <color name="for_you.reason.okay">#507cbe</color>
+    <color name="for_you.reason.dont_want_to_see">#545454</color>
+
+    <color name="lang_setting.stories_label">#9c9dac</color>
+
+    <color name="search.tabs_bg">#e2e3e3</color>
+    <color name="search.tabs_text_label">#545454</color>
+    <color name="search.tabs_indicator">#507cbe</color>
+    <color name="search.article_label">#9c9dac</color>
+    <color name="search.author_label">#9c9dac</color>
+    <color name="search.article_title">#545454</color>
+    <color name="search.article_desc">#9c9dac</color>
+    <color name="search.author_text">#545454</color>
+    <color name="search.show_more">#507cbe</color>
+
+    <color name="search_topics.text">#515556</color>
+    <color name="search_topics.hint">#515556</color>
+    <color name="search_topics.search_bg">#f3f3f3</color>
+
+    <color name="common_underline">#9c9dac</color>
+    <color name="light_underline">#e5e5e5</color>
+
+    <color name="home_screen.trending_list_header.bg">#f3f3f3</color>
+    <color name="home_screen.trending_list_header.title">#9c9dac</color>
+    <color name="home_screen.trending_list_header.topics_label">#9c9dac</color>
+    <color name="home_screen.trending_list_header.take_me_there">#507cbe</color>
+
+    <color name="subscribe_topics.toolbar.title">#545454</color>
+    <color name="subscribe_topics.cancel">#545454</color>
+    <color name="subscribe_topics.save">#507cbe</color>
+
+    <color name="myprofile.toolbar.title">#545454</color>
+    <color name="myprofile.name">#545454</color>
+    <color name="myprofile.author_type">#545454</color>
+    <color name="myprofile.bio">#545454</color>
+    <color name="myprofile.following_bg">#f5f6f8</color>
+    <color name="myprofile.follower_bg">#ebebee</color>
+    <color name="myprofile.rank_bg">#e7e8ea</color>
+    <color name="myprofile.following_label">#507cbe</color>
+    <color name="myprofile.followers_label">#507cbe</color>
+    <color name="myprofile.rank_label">#545454</color>
+    <color name="myprofile.improve_reach">#d79f9f</color>
+
+
+    <color name="blogger_profile.name">#545454</color>
+    <color name="blogger_profile.author_type">#545454</color>
+    <color name="blogger_profile.bio">#545454</color>
+    <color name="blogger_profile.follow_button">#ffffff</color>
+    <color name="blogger_profile.following_bg">#f5f6f8</color>
+    <color name="blogger_profile.follower_bg">#ebebee</color>
+    <color name="blogger_profile.rank_bg">#e7e8ea</color>
+    <color name="blogger_profile.view_count_label">#545454</color>
+    <color name="blogger_profile.article_count_label">#545454</color>
+    <color name="blogger_profile.rank_label">#545454</color>
+
+    <color name="user_articles.toolbar.title">#545454</color>
+    <color name="user_articles.draft.status">#545454</color>
+    <color name="user_articles.draft.edit">#507cbe</color>
+    <color name="user_articles.published.edit">#507cbe</color>
+    <color name="user_articles.published.title">#545454</color>
+    <color name="user_articles.published.date">#9c9dac</color>
+    <color name="user_articles.published.stats">#9c9dac</color>
+
+    <color name="app_settings.toolbar.title">#545454</color>
+    <color name="app_settings.tabbar.text">#545454</color>
+
+    <color name="app_settings.edit_profile.edit_text_underline">#cccccc</color>
+    <color name="app_settings.edit_profile.hint_fn">#9c9dac</color>
+    <color name="app_settings.edit_profile.text_fn">#545454</color>
+    <color name="app_settings.edit_profile.hint_ln">#9c9dac</color>
+    <color name="app_settings.edit_profile.text_ln">#545454</color>
+    <color name="app_settings.edit_profile.email">#9c9dac</color>
+    <color name="app_settings.edit_profile.hint_phone">#9c9dac</color>
+    <color name="app_settings.edit_profile.text_phone">#545454</color>
+    <color name="app_settings.edit_profile.city">#545454</color>
+    <color name="app_settings.edit_profile.describe_label">#9c9dac</color>
+    <color name="app_settings.edit_profile.text_describe">#545454</color>
+    <color name="app_settings.edit_profile.blog_title_label">#9c9dac</color>
+    <color name="app_settings.edit_profile.text_blog_title">#545454</color>
+    <color name="app_settings.edit_profile.family_detail_label">#9c9dac</color>
+    <color name="app_settings.edit_profile.family_detail_desc">#c8c9d1</color>
+    <color name="app_settings.edit_profile.how_many_child">#545454</color>
+    <color name="app_settings.edit_profile.dob">#545454</color>
+    <color name="app_settings.edit_profile.save">#507cbe</color>
+
+    <color name="app_settings.edit_prefs.notifications">#515556</color>
+    <color name="app_settings.edit_prefs.subscriptions">#515556</color>
+    <color name="app_settings.edit_prefs.add_account">#515556</color>
+    <color name="app_settings.edit_prefs.facebook">#545454</color>
+    <color name="app_settings.edit_prefs.twitter">#545454</color>
+    <color name="app_settings.edit_prefs.google">#545454</color>
+    <color name="app_settings.edit_prefs.add">#507cbe</color>
+    <color name="app_settings.edit_prefs.topics_interested">#515556</color>
+    <color name="app_settings.edit_prefs.add_topics">#507cbe</color>
+    <color name="app_settings.edit_prefs.more_topics">#507cbe</color>
+    <color name="app_settings.edit_prefs.pref_lang_label">#515556</color>
+    <color name="app_settings.edit_prefs.pref_lang_name">#545454</color>
+    <color name="app_settings.edit_prefs.subs_notif_name">#545454</color>
+    <color name="app_settings.edit_prefs.email_subs_name">#545454</color>
+    <color name="app_settings.edit_prefs.follow_topic_text">#507cbe</color>
+    <color name="app_settings.edit_prefs.unfollow_topic_text">#ffffff</color>
+
+    <color name="app_settings.change_pass.edit_text_underline">#cccccc</color>
+    <color name="app_settings.change_pass.hint_current_pass">#9c9dac</color>
+    <color name="app_settings.change_pass.hint_new_pass">#9c9dac</color>
+    <color name="app_settings.change_pass.hint_confirm_pass">#9c9dac</color>
+    <color name="app_settings.change_pass.text_current_pass">#545454</color>
+    <color name="app_settings.change_pass.text_new_pass">#545454</color>
+    <color name="app_settings.change_pass.text_confirm_pass">#545454</color>
+    <color name="app_settings.change_pass.save">#507cbe</color>
+
+    <color name="follower_following_list.follow_label">#507cbe</color>
+    <color name="follower_following_list.following_label">#507cbe</color>
+    <color name="follower_following_list.author_name">#545454</color>
+
+    <color name="blog_setup.toolbar.title">#545454</color>
+    <color name="blog_setup.get_started_label">#515556</color>
+    <color name="blog_setup.get_started_label_2">#98b2d9</color>
+    <color name="blog_setup.one_time_label">#9c9dac</color>
+    <color name="blog_setup.okay">#ffffff</color>
+    <color name="blog_setup.blog_title_label">#545454</color>
+    <color name="blog_setup.blog_title_bg">#f6f9fe</color>
+    <color name="blog_setup.blog_title_desc">#9c9dac</color>
+    <color name="blog_setup.hint_blog_title">#9c9dac</color>
+    <color name="blog_setup.about_yourself_label">#545454</color>
+    <color name="blog_setup.about_desc">#9c9dac</color>
+    <color name="blog_setup.hint_about">#9c9dac</color>
+    <color name="blog_setup.profile_pic_label">#545454</color>
+    <color name="blog_setup.profile_pic_desc">#9c9dac</color>
+    <color name="blog_setup.profile_pic_add">#507cbe</color>
+    <color name="blog_setup.text_city">#545454</color>
+    <color name="blog_setup.save_publish">#9c9dac</color>
+
+    <color name="ranking.toolbar.title">#545454</color>
+    <color name="ranking.tabs_label">#545454</color>
+    <color name="ranking.tab_indicator">#507cbe</color>
+    <color name="ranking.views_label">#545454</color>
+    <color name="ranking.time_picker">#545454</color>
+    <color name="ranking.improve_views_label">#507cbe</color>
+    <color name="ranking.improve_social_share">#507cbe</color>
+    <color name="ranking.page_views_label">#545454</color>
+    <color name="ranking.stats_bg">#e0e0e0</color>
+    <color name="ranking.how_calculated">#507cbe</color>
+    <color name="ranking.top_bloggers">#545454</color>
+    <color name="ranking.language_selected">#e12148</color>
+    <color name="ranking.your_rank_label">#545454</color>
+    <color name="ranking.my_rank">#545454</color>
+    <color name="ranking.author_name">#545454</color>
+    <color name="ranking.follower_count">#507cbe</color>
+    <color name="ranking.top_blogger_rank">#e12148</color>
+    <color name="ranking.boxes_bg">#e0e0e0</color>
+    <color name="ranking.improve_view.title">#545454</color>
+    <color name="ranking.improve_view.info_text">#545454</color>
+
+    <color name="editor.last_saved">#9c9dac</color>
+    <color name="editor.publish">#507cbe</color>
+
+    <color name="add_article_topics.clear_all">#9c9dac</color>
+    <color name="add_article_topics.toolbar.title">#545454</color>
+    <color name="add_article_topics.max_topics">#9c9dac</color>
+    <color name="add_article_topics.apply">#507cbe</color>
+
+    <color name="choose_article_image.toolbar.title">#545454</color>
+    <color name="choose_article_image.upload_photo">#545454</color>
+    <color name="choose_article_image.publish">#507cbe</color>
+
+    <color name="become_blogger.get_started">#545454</color>
+    <color name="become_blogger.message">#545454</color>
+
+    <color name="upload_video.title">#515556</color>
+    <color name="upload_video.desc">#9c9dac</color>
+
+    <color name="moderation_or_share.way_to_go">#545454</color>
+    <color name="moderation_or_share.moderation_message">#9c9dac</color>
+    <color name="moderation_or_share.publish_message">#9c9dac</color>
+    <color name="moderation_or_share.later">#9c9dac</color>
+    <color name="moderation_or_share.okay">#ffffff</color>
+
+    <color name="complete_blogger_profile.complete_label">#545454</color>
+    <color name="complete_blogger_profile.paid_eligibility">#9c9dac</color>
+    <color name="complete_blogger_profile.save">#507cbe</color>
+
+    <color name="add_video_details.title_hint">#515556</color>
+    <color name="add_video_details.title_text">#545454</color>
+    <color name="add_video_details.mute_label">#545454</color>
+    <color name="add_video_details.mute_label_50_percent_opacity">#80545454</color>
+    <color name="add_video_details.mute_label_switch">#80545454</color>
+    <color name="add_video_details.add_music">#507cbe</color>
+    <color name="add_video_details.playing_audio_text">#545454</color>
+    <color name="add_video_details.save_upload">#507cbe</color>
+    <color name="add_video_details.audio_title">#507cbe</color>
+    <color name="add_video_details.toolbar.title">#545454</color>
+    <color name="add_video_details.audio_picker.title">#545454</color>
+    <color name="add_video_details.remove">#507cbe</color>
+
+    <color name="video_progress.uploading_label">#545454</color>
+    <color name="video_progress.uploading_msg">#545454</color>
+    <color name="video_progress.way_to_go">#545454</color>
+    <color name="video_progress.success_msg">#545454</color>
+    <color name="video_progress.okay">#507cbe</color>
+    <color name="mute_text_color">#545454</color>
+
+    <color name="user_activities.toolbar.title">#545454</color>
+    <color name="user_activities.tabbar.text">#545454</color>
+    <color name="user_activities.tabbar.indicator">#507cbe</color>
+    <color name="user_activities.bookmarks.remove">#507cbe</color>
+    <color name="user_activities.comments.date">#9c9dac</color>
+    <color name="user_activities.comments.edit">#507cbe</color>
+
+    <color name="explore.city">#507cbe</color>
+    <color name="explore.events.trending_lbl">#545454</color>
+    <color name="explore.events.featured_lbl">#545454</color>
+    <color name="explore.events.upcoming_lbl">#545454</color>
+    <color name="explore.events.selected_subcategory">#9c9dac</color>
+    <color name="explore.events.search_hint">#9c9dac</color>
+    <color name="explore.events.search_text">#9c9dac</color>
+    <color name="explore.events.categories_text">#507cbe</color>
+    <color name="explore.section.no_resources">#545454</color>
+
+    <color name="user_funny_video.toolbar.title">#545454</color>
+
+
+    <color name="spell_check.black">#545454</color>
+
+    <color name="videos.dialog.title">#545454</color>
+    <color name="videos.upload_option.camera">#545454</color>
+    <color name="videos.upload_option.gallery">#545454</color>
+    <color name="videos.upload_option.cancel">#507cbe</color>
+
+    <color name="notification.read_all">#545454</color>
+    <color name="notification.toolbar.title">#545454</color>
+
+    <color name="city_picker.toolbar.title">#545454</color>
+    <color name="city_picker.radio_button">#507cbe</color>
+    <color name="city_picker.city_name">#545454</color>
+
+    <color name="rate_us.dialog.title">#e83c58</color>
+    <color name="rate_us.dialog.message">#545454</color>
+    <color name="rate_us.dialog.not_now">#545454</color>
+    <color name="rate_us.dialog.rate_now">#507cbe</color>
+
+    <color name="suggested_topic.index.bg">#e3e3e8</color>
+    <color name="suggested_topic.index.text">#545454</color>
+    <color name="suggested_topic.topic_text">#9c9dac</color>
+    <color name="suggested_topic.start_writing_label">#507cbe</color>
+
+    <color name="lang_sel.welcome_msg">#545454</color>
+    <color name="lang_sel.sel_lang">#9c9dac</color>
+    <color name="lang_sel.curr_lang">#545454</color>
+    <color name="lang_sel.app_lang_desc">#545454</color>
+    <color name="lang_sel.yes">#545454</color>
+    <color name="lang_sel.select_more">#507cbe</color>
+    <color name="lang_sel.lang_text_selected">#FFFFFF</color>
+    <color name="lang_sel.lang_text_unselected">#9c9dac</color>
+    <color name="lang_sel.lang_item_selected">#507cbe</color>
+    <color name="lang_sel.lang_item_unselected">#e2eaf9</color>
+    <color name="lang_sel.continue_text">#FFFFFF</color>
+    <color name="lang_sel.continue_bg">#507cbe</color>
+
+    <color name="guide.next_btn_bg">#507cbe</color>
+    <color name="guide.message">#FFFFFF</color>
+    <color name="guide.next_btn_text">#FFFFFF</color>
+
+    <color name="dark_transparent">#BB000000</color>
+
+    <color name="groups.light_black_color">#545454</color>
+    <color name="groups.grey">#9c9dac</color>
+    <color name="groups.blue_color">#507cbe</color>
+    <color name="groups.dark_black">#333333</color>
+    <color name="groups.main_background">#f5f5f5</color>
+
+    <color name="short_story.light_black_color">#545454</color>
+    <color name="short_story.blue">#507cbe</color>
+    <color name="short_story.tag_images.selected_bg">#80000000</color>
+    <color name="short_story.add_topics_bg">#e0e0e0</color>
+    <color name="short_story.card_bg_1">#d1eff9</color>
+    <color name="short_story.card_bg_2">#fef6ec</color>
+    <color name="short_story.card_bg_3">#eaeafb</color>
+    <color name="short_story.card_bg_4">#f1fbeb</color>
+    <color name="short_story.card_bg_5">#fdf5f8</color>
+    <color name="short_story.card_bg_6">#fbfbee</color>
+
+    <color name="white_opacity">#80FFFFFF</color>
+    <color name="profile_progress">#f2f2f2</color>
+    <color name="kids_detail">#f9f9f9</color>
+
+    <color name="all_drafts.title">#4a4a4a</color>
+
+    <!-- VIDEO TRIMMER -->
+    <color name="background_video_color">#2f3031</color>
+    <color name="background_progress_color">#6C6D6D</color>
+    <color name="progress_color">#005099</color>
+    <color name="line_color">#FF15FF00</color>
+    <color name="shadow_color">#FF000000</color>
+    <color name="line_button">#565758</color>
+    <color name="black_translucent">#50000000</color>
+    <color name="black_63">#a1000000</color>
+    <color name="gray_group_comment_container_border">#d7d7d7</color>
+    <color name="gold_color_video_listing">#ffcd00</color>
+    <color name="background_color_gold_logo_video_listing">#363636</color>
+
+    <color name="campagin_submission_open">#17AF49</color>
+    <color name="campagin_subscribe_now">#4A90E2</color>
+    <color name="campaign_subscribed">#0EC0A1</color>
+    <color name="campaign_submission_full">#F69C47</color>
+    <color name="campaign_expired">#9B9B9B</color>
+    <color name="campaign_list_buttons">#D03F56</color>
+    <color name="campaign_515151">#515151</color>
+    <color name="campaign_7D7D7D">#7D7D7D</color>
+    <color name="campaign_4A4A4A">#4A4A4A</color>
+    <color name="campaign_9B9B9B_5">#0D9B9B9B</color>
+    <color name="campaign_rejected">#212121</color>
+    <color name="campaign_completed">#40bc68</color>
+    <color name="campaign_FDF8F8">#FDF8F8</color>
+    <color name="campaign_list_buttons_20">#20D03F56</color>
+    <color name="campaign_expired_background">#9B9B9B</color>
+    <color name="campaign_show_mymoney_btn">#56CD6A</color>
+    <color name="color_EEFAF0">#EEFAF0</color>
+    <color name="color_50CF65">#50CF65</color>
+    <color name="campaign_refer_code_error">#D0021B</color>
+    <color name="campaign_approved_rejected">#6FA138</color>
+    <color name="campaign_feed_register">#23C9AC</color>
+    <color name="campaign_feed_register_textview">#23CAAD</color>
+    <color name="campaign_apply_bg">#0EC0A1</color>
+    <color name="campaign_applied_bg">#4A90E2</color>
+    <color name="campaign_completed_bg">#E3334E</color>
+    <color name="campaign_submission_full_bg">#F5A623</color>
+    <color name="campaign_invite_only_bg">#8B572A</color>
+    <color name="campaign_submit_proof_bg">#74B825</color>
+    <color name="campaign_proof_reject_bg">#212121</color>
+    <color name="campaign_proof_submitted">#73B926</color>
+    <color name="campaign_proof_approval">#D3425A</color>
+    <color name="campaign_payment_in_process">#F5B346</color>
+    <color name="campaign_payment_done">#7566E5</color>
+    <color name="my_money_earning_toolbar_bg">#43B6A1</color>
+    <color name="my_money_earning_refer_earn_text">#4BD1B9</color>
+    <color name="my_money_earning_rupee_symbol_bg">#F8BD16</color>
+
+    <color name="color_2BAB56">#2BAB56</color>
+    <color name="color_979797">#979797</color>
+    <color name="color_23CAAD">#23CAAD</color>
+    <color name="color_F8FAFB">#F8FAFB</color>
+    <color name="color_F5A623">#F5A623</color>
+    <color name="color_56CD6A">#56CD6A</color>
+    <color name="light_green">#F5FFFD</color>
+    <color name="color_676767">#676767</color>
+    <color name="black_64">#A6000000</color>
+    <color name="red_light_shade">#FBF8F8</color>
+    <color name="green_dark">#417505</color>
+    <color name="color_E8E6E6">#E8E6E6</color>
+    <color name="color_A0A0A0">#A0A0A0</color>
+    <color name="spell_check_error_highlight">#F9EAEE</color>
+    <color name="campaign_listing_light_green_bottom">#4AC670</color>
+    <color name="color_37C4AC">#37C4AC</color>
+    <color name="color_EFF9F8">#EFF9F8</color>
+    <color name="color_85848A">#85848A</color>
+    <color name="color_DADADA">#DADADA</color>
+    <color name="color_B4536A">#B4536A</color>
+    <color name="color_F1F1F1">#F1F1F1</color>
+    <color name="color_465391">#465391</color>
+    <color name="color_CB9797">#CB9797</color>
+    <color name="color_787E85">#787E85</color>
+    <color name="color_666666">#666666</color>
+    <color name="color_49D6BE">#49D6BE</color>
+    <color name="color_0EA095">#0EA095</color>
+    <color name="color_FFFFFF96">#FFFFFF96</color>
+    <color name="color_FFFFFF80">#FFFFFF80</color>
+    <color name="color_B4ECE4">#B4ECE4</color>
+    <color name="color_E2E2E2">#E2E2E2</color>
+    <color name="default_selected_dot_color">#ffffff</color>
+    <color name="default_dot_color">#e8e8e8</color>
+</resources>

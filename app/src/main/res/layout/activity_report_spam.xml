@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_color">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+        <RelativeLayout
+            android:id="@+id/toolbarRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+
+            <ImageView
+                android:id="@+id/backImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:paddingLeft="20dp"
+                android:paddingTop="20dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="20dp"
+                android:src="@drawable/back_arroow"
+                android:tint="@color/black_color" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/toolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/backImageView"
+                android:text="@string/report_spams"
+                android:textColor="@color/black_color"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <View
+        android:id="@+id/view_1"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/toolbar"
+        android:background="@color/color_DADADA" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/spam_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view_1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/space_20"
+        android:text="@string/spam_header_text"
+        android:textColor="@color/grey_faded"
+        android:textSize="16sp" />
+
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spamSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/spam_header"
+        android:layout_marginLeft="@dimen/space_16"
+        android:layout_marginTop="@dimen/space_20"
+        android:layout_marginRight="@dimen/space_16"
+        android:background="@drawable/mainprofile_thin_border" />
+
+    <ImageView
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_alignTop="@+id/spamSpinner"
+        android:layout_alignRight="@id/spamSpinner"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="12dp"
+        android:src="@drawable/arrowdownnew" />
+
+    <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/repost_spam_text_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/spamSpinner"
+        android:textColor="@color/campaign_4A4A4A"
+        android:layout_margin="14sp"
+        android:gravity="top|left"
+        android:background="@drawable/spam_edttxt_bg" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/sendTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/app_red"
+        android:elevation="20dp"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="@string/spam_send"
+        android:textColor="@color/white_color"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

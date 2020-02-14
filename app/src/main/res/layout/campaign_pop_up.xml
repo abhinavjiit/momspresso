@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CC000000"
+    android:clickable="true"
+    android:padding="1dp">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:id="@+id/mainLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/uprText"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:background="@color/white_color"
+            android:orientation="vertical"
+            android:padding="@dimen/space_5">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/default_campaign_header"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintDimensionRatio="H,16:9"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/default_article" />
+
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/share"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="@dimen/space_10"
+                    android:layout_marginEnd="@dimen/space_10"
+                    android:layout_marginRight="@dimen/space_10"
+                    android:backgroundTint="@color/black_64"
+                    android:src="@drawable/ic_cross"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/default_campaign_header" />
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/default_brand_img"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_marginStart="@dimen/space_10"
+                    android:layout_marginLeft="@dimen/space_10"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="13dp"
+                    android:src="@drawable/family_xxhdpi"
+                    app:civ_border_color="#E0E0E0"
+                    app:civ_border_width="1dp"
+                    app:layout_constraintBottom_toTopOf="@+id/view4"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/default_campaign_header" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/default_brand_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginLeft="7dp"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#515151"
+                    android:textSize="16sp"
+                    app:fontName="oswald_regular.ttf"
+                    app:layout_constraintStart_toEndOf="@+id/default_brand_img"
+                    app:layout_constraintTop_toBottomOf="@+id/default_campaign_header" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/default_campaign_name"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginLeft="7dp"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:textColor="#9B9B9B"
+                    android:textSize="12sp"
+                    app:fontName="open_sans.ttf"
+                    app:layout_constraintStart_toEndOf="@+id/default_brand_img"
+                    app:layout_constraintTop_toBottomOf="@+id/default_brand_name" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/default_submission_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="@dimen/space_15"
+                    android:layout_marginRight="@dimen/space_15"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/campaign_subscription_open"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/space_15"
+                    android:paddingTop="5dp"
+                    android:paddingRight="@dimen/space_15"
+                    android:paddingBottom="5dp"
+                    android:textColor="@color/white_color"
+                    android:textSize="12sp"
+                    app:fontName="oswald_regular.ttf"
+                    app:layout_constraintBottom_toTopOf="@+id/view4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/default_campaign_header" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/default_participateTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_20"
+                android:background="@drawable/campaign_mymoney_btn"
+                android:backgroundTint="#4AC670"
+                android:gravity="center"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:text="@string/click_here_to_participate"
+                android:textAllCaps="true"
+                android:textColor="@color/white_color"
+                android:textSize="18sp"
+                app:fontName="oswald_regular.ttf" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/uprText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/space_25"
+            android:orientation="vertical">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/upperTextHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/space_10"
+                android:text="@string/lorem_ipsum"
+                android:textColor="@color/white_color"
+                android:textSize="20sp"
+                app:fontName="oswald_regular.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/lowerTextHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/it_is_a_long_established_fact_that_a_reader"
+                android:textColor="@color/white_color"
+                android:textSize="20sp"
+                app:fontName="OpenSans-Regular.ttf" />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/space_15"
+        android:padding="@dimen/space_10"
+        android:src="@drawable/cross_icon_back"
+        android:tint="@color/white_color" />
+
+
+</RelativeLayout>

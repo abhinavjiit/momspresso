@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/collectionItemImageVIEW"
+        android:layout_width="100dp"
+        android:layout_height="85dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/space_10"
+        android:scaleType="centerCrop" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/close"
+        android:layout_toRightOf="@id/collectionItemImageVIEW">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/collectionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/space_10"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/black_color"
+            android:textSize="16sp" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/collectionDiscription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/collectionTitle"
+            android:layout_marginLeft="@dimen/space_10"
+            android:layout_marginTop="@dimen/space_5"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/black_color"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/close"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/space_5"
+        android:padding="@dimen/space_10"
+        android:src="@drawable/ic_close_pop_up" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/collectionItemImageVIEW"
+        android:layout_marginStart="@dimen/space_10"
+        android:layout_marginTop="@dimen/space_10"
+        android:layout_marginEnd="@dimen/space_10"
+        android:background="#9B9B9B" />
+
+
+</RelativeLayout>

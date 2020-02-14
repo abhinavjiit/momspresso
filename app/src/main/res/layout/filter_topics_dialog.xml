@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white_color">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:elevation="5dp"
+        android:minHeight="?attr/actionBarSize"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+        <!--<RelativeLayout-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent">-->
+
+        <ImageView
+            android:id="@+id/confirmImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
+            android:padding="20dp"
+            android:src="@drawable/check_xxhdpi" />
+        <!--</RelativeLayout>-->
+    </androidx.appcompat.widget.Toolbar>
+
+    <RelativeLayout
+        android:id="@+id/subTopicsContainer"
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:background="@color/home_bg">
+
+        <ListView
+            android:id="@+id/subTopicsListView"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/underline" />
+
+        <View
+            android:layout_width="150dp"
+            android:layout_height="2dp"
+            android:layout_below="@+id/subTopicsListView"
+            android:background="@drawable/underline" />
+    </RelativeLayout>
+    <!--<EditText-->
+    <!--android:id="@+id/searchSubSubTopicsEditText"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_below="@+id/toolbar"-->
+    <!--android:layout_toRightOf="@+id/subTopicsListView"-->
+    <!--android:background="@null"-->
+    <!--android:drawableLeft="@drawable/search"-->
+    <!--android:drawablePadding="4dp"-->
+    <!--android:paddingBottom="15dp"-->
+    <!--android:paddingLeft="10dp"-->
+    <!--android:paddingRight="10dp"-->
+    <!--android:paddingTop="15dp"-->
+    <!--android:textColor="@color/black_color" />-->
+
+    <!--<View-->
+    <!--android:id="@+id/searchUnderline"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="2dp"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_below="@+id/searchSubSubTopicsEditText"-->
+    <!--android:layout_marginLeft="10dp"-->
+    <!--android:layout_toRightOf="@+id/subTopicsListView"-->
+    <!--android:background="@drawable/underline" />-->
+
+    <ListView
+        android:id="@+id/subSubTopicsListView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/subTopicsContainer"
+        android:divider="@drawable/underline"
+        android:paddingLeft="15dp" />
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="2dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/subSubTopicsListView"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/subTopicsContainer"
+        android:background="@drawable/underline" />
+
+</RelativeLayout>

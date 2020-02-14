@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?><!-- START xml_defaults -->
+<defaultsMap>
+    <entry>
+        <key>latest_app_version</key>
+        <value>0.0.0</value>
+    </entry>
+    <entry>
+        <key>show_spell_check_flag</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>app_update_frequency</key>
+        <value>0</value>
+    </entry>
+    <entry>
+        <key>new_article_detail_flag</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>home_page_feed_order</key>
+        <value>trending,todaysBest,editorPicks,foryou,recent</value>
+    </entry>
+</defaultsMap>

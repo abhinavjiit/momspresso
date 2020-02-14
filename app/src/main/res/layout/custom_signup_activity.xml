@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/emailEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/app_light_black" />
+
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:textColor="@color/app_light_black" />
+
+    <TextView
+        android:id="@+id/continueTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="40dp"
+        android:background="@drawable/facebook_rounded_corners"
+        android:gravity="center"
+        android:padding="20dp"
+        android:text="Continue"
+        android:textColor="@color/white_color"
+        android:textSize="20sp" />
+</LinearLayout>

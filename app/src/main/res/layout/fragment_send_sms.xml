@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:gravity="center"
+        android:text="@string/login_enter_mobile_number"
+        android:textColor="@color/app_dark_black"
+        android:textSize="18sp"
+        app:fontName="oswald.ttf" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/phone_login_phone_input_bg"
+        android:gravity="center_vertical">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="start"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="6dp"
+            android:text="+91"
+            android:textColor="@color/app_dark_black"
+            android:textSize="16sp" />
+
+        <com.mycity4kids.widget.CustomFontEditText
+            android:id="@+id/phoneEditText"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@null"
+            android:inputType="number"
+            android:maxLength="10"
+            android:text=""
+            android:textColor="@color/app_dark_black"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/useSmsTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="40dp"
+        android:background="@drawable/phone_login_use_sms_selector"
+        android:gravity="center"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:text="@string/login_send_otp"
+        android:textColor="@color/phone_login_use_sms_selector"
+        android:textSize="18sp"
+        app:fontName="oswald_regular.ttf" />
+
+</LinearLayout>

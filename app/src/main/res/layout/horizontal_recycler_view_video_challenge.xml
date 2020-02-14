@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/space_20"
+    android:layout_marginRight="12dp"
+    android:layout_marginBottom="10dp"
+    android:elevation="0dp"
+    app:cardCornerRadius="3dp"
+    app:cardElevation="0dp">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white_color">
+
+        <RelativeLayout
+            android:id="@+id/topicContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/tagImageView"
+                android:layout_width="260dp"
+                android:layout_height="160dp"
+                android:foreground="@drawable/gradient_in_video_challenge_image"
+                android:scaleType="centerCrop"
+                android:src="@drawable/default_article" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/liveTextViewVideoChallenge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="7dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/border_live_text_on_image_video_challenge"
+                android:elevation="4dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="3dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="3dp"
+                android:text="@string/video_challenge_live_text"
+                android:textColor="@color/white_color"
+                android:textSize="14sp"
+                android:visibility="gone"
+                app:fontName="oswald.ttf" />
+
+            <ImageView
+                android:id="@+id/info"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_alignRight="@+id/tagImageView"
+                android:layout_margin="10dp"
+                android:background="@drawable/round_circle"
+                android:elevation="7dp"
+                android:padding="3dp"
+                android:tint="@color/app_red"
+                app:srcCompat="@drawable/ic_info" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/challengeNameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/tagImageView"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:elevation="@dimen/space_10"
+                android:shadowColor="@color/black_color"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="2"
+                android:text="#AWW MOMENTS"
+                android:textColor="@color/white_color"
+                android:textSize="22sp"
+                app:fontName="oswald_regular.ttf" />
+        </RelativeLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+        <RelativeLayout
+            android:id="@+id/toolbarRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/toolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/user_article.published.edit"
+                android:textColor="@color/user_activities.toolbar.title"
+                android:textSize="20sp"
+                app:fontName="oswald_regular.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/publishTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:padding="12dp"
+                android:text="@string/editor.publish"
+                android:textColor="@color/app_red"
+                android:textSize="20sp"
+                app:fontName="oswald_regular.ttf" />
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <View
+        android:id="@+id/toolbarUnderline"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/toolbar"
+        android:background="@color/light_underline" />
+
+    <RelativeLayout
+        android:id="@+id/rl_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbarUnderline"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/card_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/default_article" />
+
+        <LinearLayout
+            android:id="@+id/short_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/card_bg"
+            android:focusable="false"
+            android:orientation="vertical">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/short_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textColor="#ffffff"
+                android:textSize="13sp" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="@dimen/space_80"
+                android:layout_height="1dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="@dimen/space_10"
+                android:layout_marginEnd="10dp"
+                android:background="@color/white_color" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/short_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_10"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_layout"
+        android:background="@color/white_color"
+        android:elevation="4dp">
+
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/space_10"
+            android:clickable="false"
+            android:src="@drawable/ic_back_svg" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/collectionTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="3dp"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:tabIndicatorColor="@color/app_red"
+            app:tabSelectedTextColor="@color/all_drafts.title"
+            app:tabTextColor="@color/grey_faded" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/tab_layout"
+        android:background="#0000001E" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/collectionsViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/view"
+        android:background="@color/white_color"
+        android:elevation="4dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
+    <RelativeLayout
+        android:id="@+id/storyCoachmark"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/dark_transparent"
+        android:clickable="true"
+        android:elevation="6dp"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <com.mycity4kids.widget.SquareImageView
+            android:id="@+id/fakeStoryBg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:visibility="invisible" />
+
+        <RelativeLayout
+            android:id="@+id/moveTextCoachmark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/arrowUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="80dp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/story_arrow_bg" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:tint="@color/white_color"
+                    app:srcCompat="@drawable/ic_story_arrow" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/arrowRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/arrowUp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/space_30"
+                android:layout_marginEnd="?attr/actionBarSize"
+                android:rotation="90">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/story_arrow_bg" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:tint="@color/white_color"
+                    app:srcCompat="@drawable/ic_story_arrow" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/arrowLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/arrowUp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="?attr/actionBarSize"
+                android:layout_marginTop="@dimen/space_40"
+                android:rotation="-90">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/story_arrow_bg" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:tint="@color/white_color"
+                    app:srcCompat="@drawable/ic_story_arrow" />
+            </RelativeLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/space_50"
+                android:layout_height="@dimen/space_50"
+                android:layout_below="@+id/arrowUp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/space_56"
+                android:tint="@color/white_color"
+                app:srcCompat="@drawable/ic_story_coachmark_hand" />
+
+            <RelativeLayout
+                android:id="@+id/arrowDown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/arrowLeft"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/space_40"
+                android:rotation="180">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/story_arrow_bg" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:tint="@color/white_color"
+                    app:srcCompat="@drawable/ic_story_arrow" />
+            </RelativeLayout>
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/arrowDown"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="?attr/actionBarSize"
+                android:layout_marginTop="@dimen/space_40"
+                android:layout_marginRight="?attr/actionBarSize"
+                android:gravity="center"
+                android:text="@string/story_coachmark_text"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/faketabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fakeStoryBg">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/space_10"
+                android:clickable="false"
+                android:src="@drawable/ic_back_svg" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/fakeTabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:tabIndicatorColor="@color/app_red"
+                app:tabSelectedTextColor="@color/all_drafts.title"
+                app:tabTextColor="@color/grey_faded" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/storyBgEditCoachmark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/faketabLayout"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="70dp"
+            android:visibility="gone">
+
+            <View
+                android:id="@+id/underlineHorizontal1"
+                android:layout_width="100dp"
+                android:layout_height="2dp"
+                android:background="@color/white_color" />
+
+            <View
+                android:id="@+id/underlineVertical1"
+                android:layout_width="2dp"
+                android:layout_height="40dp"
+                android:layout_below="@+id/underlineHorizontal1"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="50dp"
+                android:background="@color/white_color" />
+
+            <TextView
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/underlineVertical1"
+                android:gravity="center"
+                android:text="@string/ss_coachmark_story_bg"
+                android:textColor="@color/white_color" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/textStylingCoachmark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/faketabLayout"
+            android:layout_alignParentEnd="true"
+            android:visibility="gone">
+
+            <View
+                android:id="@+id/underlineHorizontal2"
+                android:layout_width="100dp"
+                android:layout_height="2dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="30dp"
+                android:background="@color/white_color" />
+
+            <View
+                android:id="@+id/underlineVertical2"
+                android:layout_width="2dp"
+                android:layout_height="40dp"
+                android:layout_below="@+id/underlineHorizontal2"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="80dp"
+                android:background="@color/white_color" />
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/underlineVertical2"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:gravity="center"
+                android:text="@string/ss_coachmarks_text_style"
+                android:textColor="@color/white_color" />
+        </RelativeLayout>
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/gotItTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/campaign_expired"
+            android:gravity="center"
+            android:paddingLeft="@dimen/space_25"
+            android:paddingTop="@dimen/space_10"
+            android:paddingRight="@dimen/space_25"
+            android:paddingBottom="@dimen/space_10"
+            android:text="@string/story_got_it"
+            android:textColor="#FFFFFF"
+            android:textSize="17sp" />
+    </RelativeLayout>
+</RelativeLayout>

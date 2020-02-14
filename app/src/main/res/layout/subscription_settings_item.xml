@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/subscriptionStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="notification"
+        android:textColor="@color/app_settings.edit_prefs.email_subs_name"
+        android:textSize="16sp"
+        android:theme="@style/SwitchStyle" />
+</LinearLayout>

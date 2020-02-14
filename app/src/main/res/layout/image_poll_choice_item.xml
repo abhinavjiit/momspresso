@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/polls_border_bg"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/addImageOptionContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/addImageOptionImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="5dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/default_article"
+            android:visibility="invisible" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/addImageTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/addImageOptionImageView"
+            android:layout_alignLeft="@+id/addImageOptionImageView"
+            android:layout_alignRight="@+id/addImageOptionImageView"
+            android:layout_alignTop="@+id/addImageOptionImageView"
+            android:layout_margin="5dp"
+            android:background="@color/white_color"
+            android:gravity="center"
+            android:text="Add Image"
+            android:textColor="@color/groups.grey"
+            android:textSize="24sp"
+            app:fontName="oswald_regular.ttf" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/removeItemImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/addImageOptionContainer"
+        android:layout_alignTop="@+id/addImageOptionContainer"
+        android:layout_margin="2dp"
+        android:padding="10dp"
+        android:src="@drawable/cross_icon_back" />
+</RelativeLayout>

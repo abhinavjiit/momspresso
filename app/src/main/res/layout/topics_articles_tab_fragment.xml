@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/headerRL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="2dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/flContainerLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true">
+
+            <org.apmem.tools.layouts.FlowLayout
+                android:id="@+id/flowLayout"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:animateLayoutChanges="true">
+
+            </org.apmem.tools.layouts.FlowLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/expandImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_alignBottom="@+id/flContainerLL"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/topic_selector_bg"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:src="@drawable/ic_more"
+            android:tint="@color/app_red"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/headerRL"
+        app:duration="800">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/mainshimmer_layout" />
+
+            <include layout="@layout/mainshimmer_layout" />
+
+
+        </LinearLayout>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/headerRL">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+    <TextView
+        android:id="@+id/noBlogsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="No blogs have been bookmarked yet."
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/writeArticleCell"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/headerRL"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="2dp"
+        android:background="@drawable/topics_border_bg"
+        android:visibility="gone">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/firstLabelTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/no_article.be_first"
+            android:textSize="16sp"
+            app:fontName="oswald.ttf" />
+
+        <ImageView
+            android:id="@+id/firstImageView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/article_listing.article_image"
+            android:layout_below="@+id/firstLabelTextView"
+            android:scaleType="fitXY"
+            android:src="@drawable/be_first" />
+
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/profilePicImageView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/firstImageView"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/ic_launcher"
+            app:civ_border="true"
+            app:civ_border_color="@color/white_color"
+            app:civ_border_width="0dp"
+            app:civ_shadow="true"
+            app:civ_shadow_color="@color/grey"
+            app:civ_shadow_radius="4" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/momspressoLabelTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/firstImageView"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@+id/profilePicImageView"
+            android:text="@string/app_name"
+            app:fontName="oswald.ttf" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLoadingView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#80000000"
+        android:paddingBottom="5dp"
+        android:visibility="gone">
+
+        <View
+            android:id="@+id/sepaartorView"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="1dp"
+            android:background="#DEDEDE" />
+
+        <TextView
+            android:id="@+id/txvLoadMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sepaartorView"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/loading_txt"
+            android:textColor="@color/white_color" />
+
+        <ImageView
+            android:id="@+id/imgLoader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sepaartorView"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="4dp"
+            android:layout_toLeftOf="@id/txvLoadMore"
+            android:src="@drawable/progress_spinner" />
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible" />
+
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#B3000000"
+        android:visibility="gone">
+        <!--  floating action menu with buttons -->
+
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:id="@+id/fab_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/scroll"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right|bottom"
+            android:visibility="gone"
+            app:fab_addButtonColorNormal="@color/fab.white"
+            app:fab_addButtonColorPressed="@color/fab.white"
+            app:fab_addButtonPlusIconColor="@color/white_color"
+            app:fab_addButtonStrokeVisible="false"
+            app:fab_labelStyle="@style/menu_labels_style"
+            app:fab_labelsPosition="left">
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/recentSortFAB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_colorNormal="@color/fab.white"
+                app:fab_colorPressed="@color/fab.white"
+                app:fab_icon="@drawable/ic_recent"
+                app:fab_plusIconColor="@color/white_color"
+                app:fab_size="mini"
+                app:fab_title="@string/sort.recent" />
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/popularSortFAB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_colorNormal="@color/fab.white"
+                app:fab_colorPressed="@color/fab.white"
+                app:fab_icon="@drawable/ic_popular"
+                app:fab_plusIconColor="@color/white_color"
+                app:fab_size="mini"
+                app:fab_title="@string/sort.popular" />
+
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+    </FrameLayout>
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabSort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="right|bottom"
+        android:visibility="gone"
+        app:fab_colorNormal="@color/fab.white"
+        app:fab_colorPressed="@color/fab.white"
+        app:fab_icon="@drawable/ic_flip" />
+
+    <RelativeLayout
+        android:id="@+id/guideOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/dark_transparent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/guideflContainerLL"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="2dp"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/guideExpandImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_alignBottom="@+id/guideflContainerLL"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:src="@drawable/ic_more"
+            android:tint="@color/white_color"
+            android:visibility="visible" />
+
+        <View
+            android:id="@+id/horizontalLine"
+            android:layout_width="30dp"
+            android:layout_height="2dp"
+            android:layout_alignLeft="@+id/guideExpandImageView"
+            android:layout_alignRight="@+id/guideExpandImageView"
+            android:layout_alignBottom="@+id/guideflContainerLL"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="12dp"
+            android:background="@color/white_color" />
+
+        <View
+            android:id="@+id/verticalLine_1"
+            android:layout_width="2dp"
+            android:layout_height="20dp"
+            android:layout_alignLeft="@+id/horizontalLine"
+            android:layout_alignTop="@+id/horizontalLine"
+            android:layout_marginLeft="12dp"
+            android:background="@color/white_color" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/tabGuideTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/verticalLine_1"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@color/white_color"
+            android:paddingLeft="9dp"
+            android:paddingTop="7dp"
+            android:paddingRight="9dp"
+            android:paddingBottom="7dp"
+            android:text="@string/guide.sub_topics_list_tour"
+            android:textColor="@color/black_color"
+            app:fontName="oswald.ttf" />
+
+    </RelativeLayout>
+</RelativeLayout>

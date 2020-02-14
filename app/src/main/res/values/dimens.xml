@@ -1,0 +1,97 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="common_textsize_h1">16sp</dimen>
+    <dimen name="common_textsize_h2">14sp</dimen>
+    <dimen name="common_textsize_h3">12sp</dimen>
+    <dimen name="common_button_txt_size">15sp</dimen>
+
+    <dimen name="list_item_padding">16dp</dimen>
+
+    <!-- Observable scrollview library dimens -->
+    <dimen name="margin_standard">16dp</dimen>
+
+    <dimen name="toolbar_elevation">4dp</dimen>
+
+    <dimen name="flexible_space_image_height">300dp</dimen>
+    <dimen name="flexible_space_relativelayout_height">250dp</dimen>
+
+
+    <dimen name="tab_height">48dp</dimen>
+
+
+    <!--Article Details dimensions-->
+    <dimen name="article_details_app_bar_height">200dp</dimen>
+    <dimen name="article_details_text_size">18px</dimen>
+    <dimen name="ad_recent">13sp</dimen>
+    <dimen name="ad_trending">13sp</dimen>
+    <dimen name="ad_comments_heading">15sp</dimen>
+    <dimen name="ad_comments_username">14sp</dimen>
+    <dimen name="ad_comments_date">14sp</dimen>
+    <dimen name="ad_comments_text">12sp</dimen>
+    <dimen name="ad_comments_edit_btn">14sp</dimen>
+    <dimen name="ad_comments_profile_pic_width">42dp</dimen>
+    <dimen name="ad_related_article_image_height">50dp</dimen>
+    <dimen name="ad_related_article_image_width">70dp</dimen>
+    <dimen name="ad_related_article_title">13sp</dimen>
+
+    <dimen name="article_listing.article_image">180dp</dimen>
+
+    <dimen name="related_article.article_image.width">30dp</dimen>
+    <dimen name="related_article.article_image.height">38dp</dimen>
+
+    <dimen name="groups.column_spacing">10dp</dimen>
+
+    <dimen name="item_margin">8dp</dimen>
+    <dimen name="item_margin_half">8dp</dimen>
+
+    <dimen name="column_width">80dp</dimen>
+
+    <!-- VIDEO TRIMMER-->
+    <dimen name="progress_video_line_height">2dp</dimen>
+    <dimen name="frames_video_height">40dip</dimen>
+    <dimen name="space_20">20dp</dimen>
+    <dimen name="space_10">10dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+    <dimen name="space_5">5dp</dimen>
+    <dimen name="space_15">15dp</dimen>
+    <dimen name="space_7">7dp</dimen>
+    <dimen name="space_30">30dp</dimen>
+    <dimen name="space_6">6dp</dimen>
+    <dimen name="space_25">25dp</dimen>
+    <dimen name="space_18">18dp</dimen>
+    <dimen name="space_28">28dp</dimen>
+    <dimen name="space_40">40dp</dimen>
+    <dimen name="space_4">4dp</dimen>
+    <dimen name="space_2">2dp</dimen>
+    <dimen name="space_50">50dp</dimen>
+    <dimen name="space_80">80dp</dimen>
+    <dimen name="space_65">65dp</dimen>
+    <dimen name="space_46">46dp</dimen>
+    <dimen name="space_100">100dp</dimen>
+    <dimen name="space_88">88dp</dimen>
+    <dimen name="space_103">103dp</dimen>
+    <dimen name="space_35">35dp</dimen>
+    <dimen name="space_13">13dp</dimen>
+    <dimen name="space_140">140dp</dimen>
+    <dimen name="space_145">145dp</dimen>
+    <dimen name="space_155">155dp</dimen>
+    <dimen name="space_8">8dp</dimen>
+    <dimen name="space_32">32dp</dimen>
+    <dimen name="space_48">48dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="space_90">90dp</dimen>
+    <dimen name="space_44">44dp</dimen>
+    <dimen name="space_16">16dp</dimen>
+    <dimen name="space_12">12dp</dimen>
+    <dimen name="space_70">70dp</dimen>
+    <dimen name="space_66">66dp</dimen>
+    <dimen name="space_3">3dp</dimen>
+    <dimen name="space_55">55dp</dimen>
+    <dimen name="space_85">85dp</dimen>
+    <dimen name="space_74">74dp</dimen>
+    <dimen name="space_115">115dp</dimen>
+    <dimen name="space_56">56dp</dimen>
+    <dimen name="space_17">17dp</dimen>
+    <dimen name="space_22">22dp</dimen>
+</resources>

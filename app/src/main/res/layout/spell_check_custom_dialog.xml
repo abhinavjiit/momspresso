@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_dialog_bg"
+    android:minWidth="280dp"
+    android:orientation="vertical">
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/headerLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="23dp"
+        android:paddingLeft="23dp"
+        android:paddingRight="23dp"
+        android:text="@string/editor.spell_check.title"
+        android:textColor="@color/spell_check.black"
+        android:textSize="20sp"
+        app:fontName="oswald_regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:paddingLeft="23dp"
+        android:paddingRight="23dp"
+        android:paddingTop="10dp"
+        android:text="@string/editor.spell_check.message"
+        android:textColor="@color/spell_check.black"
+        android:textSize="17sp"
+        app:fontName="oswald.ttf" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/cancelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/continuePublishTextView"
+            android:layout_toStartOf="@+id/continuePublishTextView"
+            android:paddingBottom="10dp"
+            android:paddingLeft="23dp"
+            android:paddingRight="23dp"
+            android:paddingTop="10dp"
+            android:text="@string/editor.spell_check.no"
+            android:textColor="@color/spell_check.black"
+            android:textSize="18sp"
+            app:fontName="oswald.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/continuePublishTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:paddingBottom="10dp"
+            android:paddingLeft="23dp"
+            android:paddingRight="23dp"
+            android:paddingTop="10dp"
+            android:text="@string/editor.spell_check.continue"
+            android:textColor="@color/spell_check.black"
+            android:textSize="16sp"
+            app:fontName="oswald.ttf" />
+    </RelativeLayout>
+</LinearLayout>

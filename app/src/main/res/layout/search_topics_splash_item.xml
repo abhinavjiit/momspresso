@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="false"
+    android:paddingBottom="14dp">
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/parentCategoryTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="3dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="5dp"
+        android:paddingTop="7dp"
+        android:text="Pregnancy"
+        android:textColor="@color/splashtopics.search.topic_parent_text"
+        android:textSize="18sp"
+        app:fontName="oswald.ttf" />
+
+    <RelativeLayout
+        android:id="@+id/flowLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/parentCategoryTextView"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp">
+
+        <org.apmem.tools.layouts.FlowLayout
+            android:id="@+id/rootView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </org.apmem.tools.layouts.FlowLayout><!--<RelativeLayout--><!--android:layout_width="wrap_content"--><!--android:layout_height="100dp"--><!--android:background="@drawable/default_article">-->
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/underline"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/flowLayout"
+        android:layout_marginTop="20dp"
+        android:background="@color/light_underline" />
+    <!----><!--</RelativeLayout>-->
+</RelativeLayout>

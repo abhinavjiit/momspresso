@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar xmlns:app="http://schemas.android.com/tools"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/white"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="15dp">
+
+            <EditText
+                android:id="@+id/searchEditText"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/searchImageView"
+                android:layout_toStartOf="@+id/searchImageView"
+                android:background="@android:color/transparent"
+                android:ellipsize="end"
+                android:hint="@string/search"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:singleLine="true"
+                android:textColor="@color/black_color" />
+
+            <ImageView
+                android:id="@+id/searchImageView"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingLeft="10dp"
+                android:paddingRight="20dp"
+                android:src="@drawable/ic_search" />
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:id="@+id/searchHistoryAndTrendContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:orientation="vertical">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/userSearchHistory1TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/ic_recent"
+            android:drawableTint="@color/app_red"
+            android:paddingBottom="20dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="20dp"
+            android:text="Grilled house"
+            android:textColor="@color/app_light_black"
+            android:visibility="gone"
+            app:fontName="oswald_regular.ttf" />
+
+        <View
+            android:id="@+id/underline1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_underline"
+            android:visibility="gone" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/userSearchHistory2TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/ic_recent"
+            android:drawableTint="@color/app_red"
+            android:paddingBottom="20dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="20dp"
+            android:text="Grilled house"
+            android:textColor="@color/app_light_black"
+            android:visibility="gone"
+            app:fontName="oswald_regular.ttf" />
+
+        <View
+            android:id="@+id/underline2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_underline"
+            android:visibility="gone" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/trendingSearch1TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/trending_search"
+            android:drawableTint="@color/app_red"
+            android:paddingBottom="20dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="20dp"
+            android:text="Grilled house"
+            android:textColor="@color/app_light_black"
+            android:visibility="gone"
+            app:fontName="oswald_regular.ttf" />
+
+        <View
+            android:id="@+id/underline3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_underline"
+            android:visibility="gone" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/trendingSearch2TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/trending_search"
+            android:drawableTint="@color/app_red"
+            android:paddingBottom="20dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="20dp"
+            android:text="Grilled house"
+            android:textColor="@color/app_light_black"
+            android:visibility="gone"
+            app:fontName="oswald_regular.ttf" />
+
+        <View
+            android:id="@+id/underline4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_underline"
+            android:visibility="gone" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/trendingSearch3TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/trending_search"
+            android:drawableTint="@color/app_blue"
+            android:paddingBottom="20dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="20dp"
+            android:text="Grilled house"
+            android:textColor="@color/app_light_black"
+            android:visibility="gone"
+            app:fontName="oswald_regular.ttf" />
+
+        <View
+            android:id="@+id/underline5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_underline"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/sliding_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/searchHistoryAndTrendContainer"
+        android:background="@color/white_color"
+        android:elevation="3dp"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:visibility="gone"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/app_red"
+        app:tabIndicatorHeight="3dp"
+        app:tabMaxWidth="0dp"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/search.tabs_text_label"
+        app:tabTextAppearance="@style/CustomTabText"
+        app:tabTextColor="@color/home.trending.tabbar_text" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/sliding_tabs"
+        android:background="@android:color/white" />
+
+</RelativeLayout>

@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/profileShareViewBitmap"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/article_listing_item_border_bg"
+    android:visibility="visible">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/profile_header_bg"
+        android:visibility="visible" />
+
+    <RelativeLayout
+        android:id="@+id/mainContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/article_listing_item_border_bg"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/profileImageViewBitmap"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp" />
+
+        <ImageView
+            android:id="@+id/crownImageViewBitmap"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:layout_alignTop="@+id/profileImageViewBitmap"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="58dp"
+            android:background="@drawable/profile_crown_bg"
+            android:elevation="4dp" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/authorNameTextViewBitmap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@+id/profileImageViewBitmap"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text=""
+            android:textColor="@color/app_dark_black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/cityTextViewBitmap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/authorNameTextViewBitmap"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@+id/badgeContainerBitmap"
+            android:layout_toEndOf="@+id/profileImageViewBitmap"
+            android:drawableStart="@drawable/ic_profile_location"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:singleLine="true"
+            android:text="" />
+
+        <com.mycity4kids.widget.BadgesProfileWidget
+            android:id="@+id/badgeContainerBitmap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/authorNameTextViewBitmap"
+            android:layout_alignParentEnd="true" />
+
+        <com.mycity4kids.widget.ResizableTextView
+            android:id="@+id/authorBioTextViewBitmap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/profileImageViewBitmap"
+            android:gravity="start"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text=""
+            android:textColor="@color/app_light_black"
+            app:maxLines="2" />
+
+        <LinearLayout
+            android:id="@+id/contentLangContainerBitmap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/authorBioTextViewBitmap"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_profile_languages_icon"
+                android:tint="@color/app_light_pink" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/contentLangTextViewBitmap"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:drawablePadding="10dp"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/app_light_pink" />
+        </LinearLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/statsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/contentLangContainerBitmap"
+            android:layout_marginTop="4dp"
+            android:clipToPadding="false"
+            android:paddingBottom="10dp">
+
+            <LinearLayout
+                android:id="@+id/postsCountContainerBitmap"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/rankContainerBitmap"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.1">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/postsCountTextViewBitmap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="--"
+                    android:textColor="@color/app_dark_black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:lines="2"
+                    android:text="@string/blogger_profile.article_count_label"
+                    android:textColor="@color/app_grey"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/followerContainerBitmap"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/followingContainerBitmap"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/rankContainerBitmap"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.1">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/followerCountTextViewBitmap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="--"
+                    android:textColor="@color/app_dark_black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:lines="2"
+                    android:text="@string/myprofile.followers_label"
+                    android:textColor="@color/app_grey"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/followingContainerBitmap"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/followerContainerBitmap"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.1">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/followingCountTextViewBitmap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="--"
+                    android:textColor="@color/app_dark_black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:lines="2"
+                    android:text="@string/myprofile.following_label"
+                    android:textColor="@color/app_grey"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/rankContainerBitmap"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/followerContainerBitmap"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/postsCountContainerBitmap"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.1">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/rankCountTextViewBitmap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="--"
+                    android:textColor="@color/app_dark_black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/rankLanguageTextViewBitmap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:lines="2"
+                    android:text=""
+                    android:textColor="@color/app_grey"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mainContainer"
+        android:scaleType="centerCrop"
+        android:src="@drawable/profile_share_footer" />
+</RelativeLayout>

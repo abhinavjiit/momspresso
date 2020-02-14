@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/deliverable_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_15"
+        android:layout_marginLeft="@dimen/space_15"
+        android:layout_marginTop="@dimen/space_15"
+        android:layout_marginEnd="@dimen/space_15"
+        android:layout_marginRight="@dimen/space_15"
+        android:textAllCaps="true"
+        android:textColor="@color/campaign_515151"
+        android:textSize="17sp"
+        app:fontName="oswald_regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/deliverable_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_15"
+        android:layout_marginLeft="@dimen/space_15"
+        android:layout_marginTop="@dimen/space_5"
+        android:layout_marginEnd="@dimen/space_15"
+        android:layout_marginRight="@dimen/space_15"
+        android:autoLink="web"
+        android:textColor="@color/campaign_4A4A4A"
+        android:textColorLink="#0000ee"
+        android:textIsSelectable="true"
+        android:textSize="15sp"
+        app:fontName="open_sans.ttf" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/space_15"
+        android:background="#E5E5E5"
+        android:visibility="gone" />
+
+</LinearLayout>

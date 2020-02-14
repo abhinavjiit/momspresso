@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white_color">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/contentImageView"
+        android:layout_width="@dimen/space_66"
+        android:layout_height="@dimen/space_55"
+        android:layout_margin="@dimen/space_10"
+        android:scaleType="fitXY"
+        android:background="@drawable/round_border" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/featured_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_18"
+        android:layout_toEndOf="@id/contentImageView"
+        android:text="@string/featured_on"
+        android:textColor="@color/campaign_515151"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/author_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/featured_name"
+        android:layout_marginTop="@dimen/space_5"
+        android:layout_toEndOf="@id/contentImageView"
+        android:text="@string/featured_on"
+        android:textColor="@color/grey_faded"
+        android:textSize="12sp" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/follow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/space_10"
+        android:background="@drawable/featured_on_follow_bg"
+        android:paddingLeft="@dimen/space_16"
+        android:paddingTop="@dimen/space_10"
+        android:paddingRight="@dimen/space_16"
+        android:paddingBottom="@dimen/space_10"
+        android:text="@string/ad.follow_author"
+        android:textColor="#E12049"
+        android:textSize="12sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/contentImageView"
+        android:background="@color/color_E8E6E6" />
+
+</RelativeLayout>

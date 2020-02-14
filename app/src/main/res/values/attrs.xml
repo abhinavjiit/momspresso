@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Defines the custom XML attributes supported for a HorizontalListView -->
+
+    <declare-styleable name="CustomFontTextView">
+        <attr name="fontName" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="RelatedArticlesComponent">
+        <attr name="articleTitle" format="string" localization="suggested" />
+        <attr name="articleImage" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="PollChoiceComponents">
+        <attr name="pollChoiceText" format="string" localization="suggested" />
+    </declare-styleable>
+
+    <declare-styleable name="ImagePollChoiceComponents">
+        <attr name="pollOptionImage" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="SearchArticlesComponent">
+        <attr name="searchArticleTitle" format="string" localization="suggested" />
+        <attr name="searchArticleDesc" format="string" localization="suggested" />
+        <attr name="searchArticleImage" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="RangeBar">
+        <attr name="tickStart" format="float" />
+        <attr name="tickEnd" format="float" />
+        <attr name="tickInterval" format="float" />
+        <attr name="tickHeight" format="dimension" />
+        <attr name="tickColor" format="color" />
+        <attr name="barWeight" format="dimension" />
+        <attr name="rangeBarColor" format="reference|color" />
+        <attr name="textColor" format="reference|color" />
+        <attr name="pinColor" format="reference|color" />
+        <attr name="selectorSize" format="dimension" />
+        <attr name="selectorBoundaryColor" format="reference|color" />
+        <attr name="selectorBoundarySize" format="dimension" />
+        <attr name="pinPadding" format="dimension" />
+        <attr name="pinMinFont" format="dimension" />
+        <attr name="pinMaxFont" format="dimension" />
+        <attr name="rangeBarPaddingBottom" format="dimension" />
+        <attr name="selectorColor" format="reference|color" />
+        <attr name="rangeBar" format="boolean" />
+        <attr name="temporaryPins" format="boolean" />
+        <attr name="connectingLineWeight" format="dimension" />
+        <attr name="connectingLineColor" format="reference|color" />
+        <attr name="pinRadius" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="RoundedHorizontalProgress">
+        <attr name="backgroundColor" format="color" />
+        <attr name="progressColor" format="color" />
+        <attr name="isRounded" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="ResizableTextView">
+        <attr name="maxLines" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="ShareButtonWidget">
+        <attr name="shareText" format="string" localization="suggested" />
+        <attr name="shareImage" format="integer"/>
+        <attr name="shareBgColor" format="reference|color" />
+        <attr name="shareBgDrawable" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="IndefinitePagerIndicator">
+        <attr name="dotCount" format="integer" />
+        <attr name="fadingDotCount" format="integer" />
+        <attr name="dotRadius" format="dimension" />
+        <attr name="selectedDotRadius" format="dimension" />
+        <attr name="dotColor" format="color" />
+        <attr name="selectedDotColor" format="color" />
+        <attr name="dotSeparation" format="dimension" />
+        <attr name="supportRTL" format="boolean" />
+        <attr name="verticalSupport" format="boolean" />
+    </declare-styleable>
+    <!--<declare-styleable name="KidsInfoComponent">--><!--<attr name="searchArticleTitle" format="string" localization="suggested" />--><!--<attr name="searchArticleDesc" format="string" localization="suggested" />--><!--<attr name="searchArticleImage" format="integer" />--><!--</declare-styleable>-->
+</resources>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:layout_marginLeft="10dp"
+    android:weightSum="10">
+
+    <ImageView
+        android:id="@+id/imageTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/imageStatus"
+        app:layout_constraintStart_toStartOf="@+id/imageStatus"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_circle_svg" />
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="@color/black_15"
+        app:layout_constraintBottom_toTopOf="@+id/imageStatus"
+        app:layout_constraintEnd_toEndOf="@+id/imageStatus"
+        app:layout_constraintStart_toStartOf="@+id/imageStatus"
+        app:layout_constraintTop_toBottomOf="@+id/imageTop" />
+
+    <ImageView
+        android:id="@+id/imageStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_bullet_svg" />
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:background="@color/black_15"
+        app:layout_constraintEnd_toEndOf="@+id/imageStatus"
+        app:layout_constraintStart_toStartOf="@+id/imageStatus"
+        app:layout_constraintTop_toBottomOf="@+id/imageStatus" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/textStatusName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:textColor="@color/black_color"
+        android:textSize="16sp"
+        android:layout_marginLeft="10dp"
+        app:fontName="oswald_regular.ttf"
+        app:layout_constraintBottom_toBottomOf="@+id/imageStatus"
+        app:layout_constraintStart_toEndOf="@+id/imageStatus"
+        app:layout_constraintTop_toTopOf="@+id/imageStatus" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/textstatusError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFF4444"
+        android:textSize="12sp"
+        app:fontName="oswald.ttf"
+        app:layout_constraintStart_toStartOf="@+id/textStatusName"
+        app:layout_constraintTop_toBottomOf="@+id/textStatusName" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/textDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textStatusName"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/shape_rectangle_grey"
+        android:textColor="@color/black_color"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:textSize="10sp"
+        android:visibility="gone"
+        app:fontName="oswald.ttf"
+        app:layout_constraintTop_toTopOf="@+id/textStatusName" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/textDateError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black_color"
+        android:textSize="10sp"
+        android:visibility="visible"
+        app:fontName="oswald.ttf"
+        app:layout_constraintBottom_toTopOf="@+id/textDate"
+        app:layout_constraintEnd_toEndOf="@+id/textDate"
+        app:layout_constraintStart_toStartOf="@+id/textDate" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

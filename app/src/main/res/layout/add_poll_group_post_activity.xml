@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="?attr/colorPrimary"
+        android:contentInsetEnd="0dp"
+        android:contentInsetLeft="0dp"
+        android:contentInsetRight="0dp"
+        android:contentInsetStart="0dp"
+        android:elevation="5dp"
+        android:minHeight="?attr/actionBarSize"
+        app:contentInsetEnd="0dp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetRight="0dp"
+        app:contentInsetStart="0dp"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextAppearance="@style/Toolbar.TitleText">
+
+        <RelativeLayout
+            android:id="@+id/toolbarRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/closeEditorImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="20dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="20dp"
+                android:src="@drawable/cross_icon_back" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/publishTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:padding="12dp"
+                android:text="POST"
+                android:textColor="@color/app_red"
+                android:textSize="20sp"
+                app:fontName="oswald_regular.ttf" />
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <View
+        android:id="@+id/toolbarUnderline"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/toolbar"
+        android:background="@color/light_underline" />
+
+    <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/pollQuestionEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbarUnderline"
+        android:background="@null"
+        android:gravity="left|top"
+        android:hint="@string/groups.ask_something"
+        android:maxLines="4"
+        android:minLines="3"
+        android:paddingBottom="20dp"
+        android:paddingLeft="18dp"
+        android:paddingRight="18dp"
+        android:paddingTop="20dp"
+        android:textColor="@color/groups.light_black_color"
+        app:fontName="oswald.ttf" />
+
+    <View
+        android:id="@+id/questionUnderline"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/pollQuestionEditText"
+        android:background="@color/light_underline" />
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/textChoicesContainer"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/questionUnderline"-->
+    <!--android:orientation="vertical">-->
+
+    <!--<com.mycity4kids.widget.PollChoiceItemView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--app:pollChoiceText="Choice 1" />-->
+
+    <!--<com.mycity4kids.widget.PollChoiceItemView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--app:pollChoiceText="Choice 2" />-->
+    <!--</LinearLayout>-->
+
+    <LinearLayout
+        android:id="@+id/imageChoicesContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/questionUnderline"
+        android:orientation="horizontal">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerGridView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:horizontalSpacing="15dp"
+            android:numColumns="2"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="15dp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/addChoiceTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageChoicesContainer"
+        android:layout_marginBottom="50dp"
+        android:drawableLeft="@drawable/follow_plus"
+        android:drawablePadding="15dp"
+        android:drawableTint="@color/app_red"
+        android:padding="20dp"
+        android:text="@string/add_a_choice"
+        android:textSize="16sp"
+        app:fontName="open_sans.ttf" />
+
+    <View
+        android:id="@+id/bottombarTopline"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/bottombar"
+        android:background="@color/light_underline" />
+
+    <RelativeLayout
+        android:id="@+id/bottombar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white_color">
+
+        <ImageView
+            android:id="@+id/togglePollOptionImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:padding="10dp"
+            android:src="@drawable/ic_add_image" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/togglePollOptionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/togglePollOptionImageView"
+            android:layout_alignTop="@+id/togglePollOptionImageView"
+            android:layout_toEndOf="@+id/togglePollOptionImageView"
+            android:layout_toRightOf="@+id/togglePollOptionImageView"
+            android:gravity="center_vertical"
+            android:paddingRight="10dp"
+            android:text="@string/groups.image_poll" />
+
+        <ImageView
+            android:id="@+id/anonymousImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/anonymousTextView"
+            android:padding="10dp"
+            android:src="@drawable/ic_incognito" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/anonymousTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/anonymousImageView"
+            android:layout_alignTop="@+id/anonymousImageView"
+            android:layout_toLeftOf="@+id/anonymousCheckbox"
+            android:gravity="center_vertical"
+            android:paddingRight="10dp"
+            android:text="@string/groups.anonymous" />
+
+        <CheckBox
+            android:id="@+id/anonymousCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:button="@drawable/language_selector_checkbox"
+            android:buttonTint="@color/app_red"
+            android:checked="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:gravity="center_vertical"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="2dp"
+            android:paddingTop="10dp"
+            android:textColor="@color/app_red"
+            android:textSize="16sp" />
+    </RelativeLayout>
+</RelativeLayout>
