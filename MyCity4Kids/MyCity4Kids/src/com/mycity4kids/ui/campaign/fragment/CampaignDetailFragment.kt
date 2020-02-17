@@ -27,6 +27,7 @@ import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.BaseResponseModel
@@ -52,7 +53,9 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import java.text.SimpleDateFormat
@@ -134,6 +137,7 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var instaHandlePopUpView: View
     private var socialAccountsDetail: RewardsDetailsResultResonse = RewardsDetailsResultResonse()
     private var showInstPopUpFlag: Boolean = false
+    private var instaHandlePostFlag: Boolean = false
 
 
     companion object {
@@ -467,11 +471,6 @@ class CampaignDetailFragment : BaseFragment() {
             Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "applyNow", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
             if ("defaultCampaign".equals(comingFrom))
                 SharedPrefUtils.setDefaultCampaignShownFlag(BaseApplication.getAppContext(), true)
-            CoroutineScope(Dispatchers.Main).launch {
-                if (checkInstagramHandle()) {
-                    showInstaHandlePopUp()
-                }
-            }
             Log.d("Taggggggg", "ho gya")
             val participateRequest = CampaignParticipate()
             participateRequest.user_id = userId
@@ -530,11 +529,9 @@ class CampaignDetailFragment : BaseFragment() {
             try {
                 val responseData = response.body()
                 if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-                    txtTrackerStatus.visibility = View.VISIBLE
-                    submitBtn.setText(resources.getString(R.string.detail_bottom_applied))
-                    Toast.makeText(context, resources.getString(R.string.toast_campaign_applied), Toast.LENGTH_SHORT).show()
-                    labelText.setText(resources.getString(R.string.label_campaign_applied))
-                    unapplyCampaign.visibility = View.VISIBLE
+                    CoroutineScope(Dispatchers.Main).launch {
+                        checkInstaHandle()
+                    }
                 } else {
                     if (!SharedPrefUtils.isDefaultCampaignShown(BaseApplication.getAppContext()))
                         fetchDefaultCampaign()
@@ -551,6 +548,14 @@ class CampaignDetailFragment : BaseFragment() {
             removeProgressDialog()
             Crashlytics.logException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
+        }
+    }
+
+    suspend fun checkInstaHandle() {
+        CoroutineScope(Dispatchers.Main).launch {
+            if (checkInstagramHandle()) {
+                showInstaHandlePopUp()
+            }
         }
     }
 
@@ -934,7 +939,7 @@ class CampaignDetailFragment : BaseFragment() {
         // showProgressDialog(resources.getString(R.string.please_wait))
         BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getForYouStatus(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BasicResponse> {
             override fun onNext(response: BasicResponse) {
-                if (response.code == 200 && response.data != null && response.status == "success") {
+                if (response.code == 200 && response.data != null && response.status == Constants.SUCCESS) {
                     if (response.data.result != null && response.data.result.recm_status != null) {
                         forYouStatus = response.data.result.recm_status
                     }
@@ -959,27 +964,31 @@ class CampaignDetailFragment : BaseFragment() {
 
 
     private suspend fun checkInstagramHandle(): Boolean {
-        userId?.let {
-            CoroutineScope(Dispatchers.IO).launch {
-
+        val job = CoroutineScope(Dispatchers.Main).launch {
+            userId?.let {
                 val socialAccountsDetailData = BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getInstagramHandle(it, 3)
                 socialAccountsDetailData.data?.result?.let { it1 ->
                     socialAccountsDetail = it1
-
-
-                    MainScope().launch {
-                        if (socialAccountsDetailData.code == 200 && socialAccountsDetailData.status == "success") {
-                            socialAccountsDetailData.data?.result?.socialAccounts?.forEach {
-                                if (it.platform_name == "instagram" && it.acc_link.isNullOrBlank()) {
-                                    showInstPopUpFlag = true
-                                }
+                    if (socialAccountsDetailData.code == 200 && socialAccountsDetailData.status == Constants.SUCCESS) {
+                        socialAccountsDetailData.data?.result?.socialAccounts?.forEach {
+                            if (it.platform_name == AppConstants.MEDIUM_INSTAGRAM && it.acc_link.isNullOrBlank()) {
+                                showInstPopUpFlag = true
+                            } else if (it.platform_name == AppConstants.MEDIUM_INSTAGRAM && !it.acc_link.isNullOrBlank()) {
+                                txtTrackerStatus.visibility = View.VISIBLE
+                                submitBtn.setText(resources.getString(R.string.detail_bottom_applied))
+                                Toast.makeText(context, resources.getString(R.string.toast_campaign_applied), Toast.LENGTH_SHORT).show()
+                                labelText.setText(resources.getString(R.string.label_campaign_applied))
+                                unapplyCampaign.visibility = View.VISIBLE
+                                showInstPopUpFlag = false
+                            } else {
+                                return@forEach
                             }
                         }
                     }
                 }
             }
-            ToastUtils.showToast(activity, "jshvysdvjdhsjdscvsdjcbjsdcbdscbydscbyusdcbduycbs")
         }
+        job.join()
         return showInstPopUpFlag
     }
 
@@ -991,25 +1000,29 @@ class CampaignDetailFragment : BaseFragment() {
         confimTextView.setOnClickListener {
             if (isValid().isNotBlank()) {
                 socialAccountsDetail.socialAccounts?.forEach {
-                    if (it.platform_name == "instagram") {
+                    if (it.platform_name == AppConstants.MEDIUM_INSTAGRAM) {
                         it.acc_link = containerView.findViewById<EditText>(R.id.instaHandleEditTextView).text.toString()
                     }
                 }
+                instaHandlePopUpView.visibility = View.GONE
                 CoroutineScope(Dispatchers.Main).launch {
                     userId?.let {
-                        val instaHandlePostResponseData = async { BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendInstageamHandle(it, socialAccountsDetail, 3) }
-                        val response = instaHandlePostResponseData.await()
+                        val response = BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendInstageamHandle(it, socialAccountsDetail, 3)
                         if (response.code == 200 && response.status == Constants.SUCCESS) {
-                            ToastUtils.showToast(activity, response.reason)
+                            txtTrackerStatus.visibility = View.VISIBLE
+                            submitBtn.setText(resources.getString(R.string.detail_bottom_applied))
+                            Toast.makeText(context, resources.getString(R.string.toast_campaign_applied), Toast.LENGTH_SHORT).show()
+                            labelText.setText(resources.getString(R.string.label_campaign_applied))
+                            unapplyCampaign.visibility = View.VISIBLE
                         } else {
                             ToastUtils.showToast(activity, response.reason)
+                            instaHandlePopUpView.visibility = View.GONE
+
                         }
                     }
                 }
             }
         }
-
-
     }
 
     private fun isValid(): String {
@@ -1020,6 +1033,8 @@ class CampaignDetailFragment : BaseFragment() {
             val matcher = pattern.matcher(instaHandle)
             if (matcher.matches()) {
                 return instaHandle
+            } else {
+                ToastUtils.showToast(activity, "Your instagram handle is not valid")
             }
         }
         return ""

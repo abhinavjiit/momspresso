@@ -73,11 +73,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/space_16"
                     android:hint="e.g. ritu_19.."
+                    android:textColor="@color/ad.author_name.text"
                     app:layout_constraintEnd_toEndOf="@id/instaHandleContainer"
                     app:layout_constraintLeft_toRightOf="@id/divider"
                     app:layout_constraintStart_toStartOf="@id/divider"
                     app:layout_constraintTop_toTopOf="@id/instaHandleContainer" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
