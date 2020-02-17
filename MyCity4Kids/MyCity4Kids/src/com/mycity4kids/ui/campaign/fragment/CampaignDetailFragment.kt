@@ -36,8 +36,10 @@ import com.mycity4kids.models.campaignmodels.ParticipateCampaignResponse
 import com.mycity4kids.models.request.CampaignParticipate
 import com.mycity4kids.models.request.CampaignReferral
 import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
+import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
 import com.mycity4kids.ui.adapter.CampaignDetailAdapter
 import com.mycity4kids.ui.campaign.BasicResponse
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
@@ -50,6 +52,7 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import java.text.SimpleDateFormat
@@ -128,6 +131,10 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var upperTextHeader: TextView
     private lateinit var lowerTextHeader: TextView
     private var comingFrom: String? = null
+    private lateinit var instaHandlePopUpView: View
+    private var socialAccountsDetail: RewardsDetailsResultResonse = RewardsDetailsResultResonse()
+    private var showInstPopUpFlag: Boolean = false
+
 
     companion object {
         @JvmStatic
@@ -148,6 +155,7 @@ class CampaignDetailFragment : BaseFragment() {
         userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         isRewardAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
         defaultCampaignPopUp = containerView.findViewById(R.id.include)
+        instaHandlePopUpView = containerView.findViewById(R.id.includeInstaPopUp)
 
         if (isRewardAdded.equals("1", true)) {
             fetchForYou()
@@ -459,14 +467,20 @@ class CampaignDetailFragment : BaseFragment() {
             Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "applyNow", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
             if ("defaultCampaign".equals(comingFrom))
                 SharedPrefUtils.setDefaultCampaignShownFlag(BaseApplication.getAppContext(), true)
-
-            var participateRequest = CampaignParticipate()
-            participateRequest!!.user_id = userId
-            participateRequest.campaign_id = this!!.id!!
+            CoroutineScope(Dispatchers.Main).launch {
+                if (checkInstagramHandle()) {
+                    showInstaHandlePopUp()
+                }
+            }
+            Log.d("Taggggggg", "ho gya")
+            val participateRequest = CampaignParticipate()
+            participateRequest.user_id = userId
+            participateRequest.campaign_id = this.id!!
             val retro = BaseApplication.getInstance().retrofit
             val campaignAPI = retro.create(CampaignAPI::class.java)
             val call = campaignAPI.postRegisterCampaign(participateRequest)
             call.enqueue(participateCampaign)
+
         } else if (submitBtn.text == resources.getString(R.string.detail_bottom_share)) {
             Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "Share", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
             val shareIntent = ShareCompat.IntentBuilder
@@ -698,6 +712,7 @@ class CampaignDetailFragment : BaseFragment() {
                 Toast.makeText(it, it.resources.getString(R.string.toast_campaign_started), Toast.LENGTH_SHORT).show()
             }
             labelText.visibility = View.GONE
+            unapplyCampaign.visibility = View.VISIBLE
         } else if (status == 3) {
             hideShowReferral(status)
             applicationStatus.setBackgroundResource(R.drawable.campaign_subscribed)
@@ -940,6 +955,74 @@ class CampaignDetailFragment : BaseFragment() {
 
 
         })
+    }
+
+
+    private suspend fun checkInstagramHandle(): Boolean {
+        userId?.let {
+            CoroutineScope(Dispatchers.IO).launch {
+
+                val socialAccountsDetailData = BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getInstagramHandle(it, 3)
+                socialAccountsDetailData.data?.result?.let { it1 ->
+                    socialAccountsDetail = it1
+
+
+                    MainScope().launch {
+                        if (socialAccountsDetailData.code == 200 && socialAccountsDetailData.status == "success") {
+                            socialAccountsDetailData.data?.result?.socialAccounts?.forEach {
+                                if (it.platform_name == "instagram" && it.acc_link.isNullOrBlank()) {
+                                    showInstPopUpFlag = true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            ToastUtils.showToast(activity, "jshvysdvjdhsjdscvsdjcbjsdcbdscbydscbyusdcbduycbs")
+        }
+        return showInstPopUpFlag
+    }
+
+
+    private suspend fun showInstaHandlePopUp() {
+        instaHandlePopUpView.visibility = View.VISIBLE
+
+        val confimTextView = containerView.findViewById<TextView>(R.id.confirmTextView)
+        confimTextView.setOnClickListener {
+            if (isValid().isNotBlank()) {
+                socialAccountsDetail.socialAccounts?.forEach {
+                    if (it.platform_name == "instagram") {
+                        it.acc_link = containerView.findViewById<EditText>(R.id.instaHandleEditTextView).text.toString()
+                    }
+                }
+                CoroutineScope(Dispatchers.Main).launch {
+                    userId?.let {
+                        val instaHandlePostResponseData = async { BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendInstageamHandle(it, socialAccountsDetail, 3) }
+                        val response = instaHandlePostResponseData.await()
+                        if (response.code == 200 && response.status == Constants.SUCCESS) {
+                            ToastUtils.showToast(activity, response.reason)
+                        } else {
+                            ToastUtils.showToast(activity, response.reason)
+                        }
+                    }
+                }
+            }
+        }
+
+
+    }
+
+    private fun isValid(): String {
+        val instaHandleEditTextView = containerView.findViewById<EditText>(R.id.instaHandleEditTextView)//^([A-Za-z0-9._](?:(?:[A-Za-z0-9._]|(?:\.(?!\.))){2,28}(?:[A-Za-z0-9._]))?)$
+        if (instaHandleEditTextView.text.toString().isNotBlank()) {
+            val instaHandle = instaHandleEditTextView.text.toString()
+            val pattern = Pattern.compile("^([A-Za-z0-9._](?:(?:[A-Za-z0-9._]|(?:\\.(?!\\.))){2,28}(?:[A-Za-z0-9._]))?)\$")
+            val matcher = pattern.matcher(instaHandle)
+            if (matcher.matches()) {
+                return instaHandle
+            }
+        }
+        return ""
     }
 
     override fun onStart() {

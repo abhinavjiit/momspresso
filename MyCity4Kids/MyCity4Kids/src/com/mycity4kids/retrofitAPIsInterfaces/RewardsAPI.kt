@@ -52,4 +52,15 @@ interface RewardsAPI {
     fun getBackgroundThumbnail(@Path("categoryId") categoryId: String,
                                @Query("page") pageValue: Int)
             : Call<ShortStoryImageData>
+
+
+    //coroutine
+    @GET("/rewards/v1/users/{userId}")
+    suspend fun getInstagramHandle(@Path("userId") userId: String, @Query("fn") pageValue: Int)
+            : BaseResponseGeneric<RewardsDetailsResultResonse>
+
+    @PUT("/rewards/v1/users/{userId}")
+    suspend fun sendInstageamHandle(@Path("userId") userId: String, @Body rewardsDetailsResultResonse: RewardsDetailsResultResonse,
+                                    @Query("fn") pageValue: Int)
+            : RewardsPersonalResponse
 }

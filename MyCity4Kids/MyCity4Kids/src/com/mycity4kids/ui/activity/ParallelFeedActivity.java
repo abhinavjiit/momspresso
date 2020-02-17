@@ -15,13 +15,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -71,6 +64,12 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -86,6 +85,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private String likeStatus, bookmarkStatus;
     private int updateLikePos, updateBookmarkPos;
     private int updateFollowPos;
+    private int lastPosition;
     private VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI;
     private String userDynamoId;
 
@@ -338,19 +338,19 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         FollowUnfollowUserRequest request = new FollowUnfollowUserRequest();
         request.setFollowerId(authorId);
 
-        if (isFollowing) {
-            isFollowing = false;
+        if (finalList.get(updateFollowPos).isFollowed()) {
             finalList.get(updateFollowPos).setFollowed(false);
             Utils.pushGenericEvent(this, "CTA_Unfollow_Vlog", userDynamoId, "ParallelFeedActivity");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
+            mAdapter.setListUpdate(updateFollowPos, finalList);
         } else {
-            isFollowing = true;
             finalList.get(updateFollowPos).setFollowed(true);
             Utils.pushGenericEvent(this, "CTA_Follow_Vlog", userDynamoId, "ParallelFeedActivity");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
-        }
+            mAdapter.setListUpdate(updateFollowPos, finalList);
+         }
     }
 
     Callback<FollowUnfollowUserResponse> followUserResponseCallback = new Callback<FollowUnfollowUserResponse>() {
@@ -368,9 +368,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                     finalList.get(updateFollowPos).setFollowed(false);
                     isFollowing = false;
                 }
-                mAdapter.setListUpdate(updateFollowPos, finalList);
             } catch (Exception e) {
-                showToast(getString(R.string.server_went_wrong));
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
@@ -399,9 +397,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                     finalList.get(updateFollowPos).setFollowed(true);
                     isFollowing = true;
                 }
-                mAdapter.setListUpdate(updateFollowPos, finalList);
             } catch (Exception e) {
-                showToast(getString(R.string.server_went_wrong));
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
