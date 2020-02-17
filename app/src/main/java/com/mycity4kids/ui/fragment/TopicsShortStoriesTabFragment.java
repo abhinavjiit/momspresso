@@ -46,6 +46,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.mycity4kids.base.BaseFragment;
+import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
@@ -1108,7 +1109,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 .anchorView(shareImageView)
                 .backgroundColor(getResources().getColor(R.color.app_blue))
                 .text(getResources().getString(R.string.ad_bottom_bar_generic_share))
-                .textColor(getResources().getColor(R.color.white))
+                .textColor(getResources().getColor(R.color.white_color))
                 .arrowColor(getResources().getColor(R.color.app_blue))
                 .gravity(Gravity.TOP)
                 .arrowWidth(60)

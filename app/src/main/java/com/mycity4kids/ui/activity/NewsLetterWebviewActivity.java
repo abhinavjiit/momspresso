@@ -37,7 +37,7 @@ public class NewsLetterWebviewActivity extends BaseActivity {
 
         Utils.pushOpenScreenEvent(NewsLetterWebviewActivity.this, "WebViewScreen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        webview = (WebView) findViewById(R.id.webview);
+        webview = (WebView) findViewById(R.id.webview1);
 
         webview.getSettings().setJavaScriptEnabled(true);
 

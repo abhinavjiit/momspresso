@@ -7,6 +7,7 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;

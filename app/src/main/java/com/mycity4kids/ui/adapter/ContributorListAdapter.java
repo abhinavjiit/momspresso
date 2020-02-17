@@ -95,15 +95,15 @@ public class ContributorListAdapter extends BaseAdapter {
             switch (datalist.get(position).getUserType()) {
                 case AppConstants.USER_TYPE_USER:
                     holder.authorType.setText("User");
-                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.black));
+                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.black_color));
                     break;
                 case AppConstants.USER_TYPE_ADMIN:
                     holder.authorType.setText("Admin");
-                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.black));
+                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.black_color));
                     break;
                 case AppConstants.USER_TYPE_CITY_ADMIN:
                     holder.authorType.setText("City Admin");
-                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.black));
+                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.black_color));
                     break;
                 case AppConstants.USER_TYPE_BLOGGER:
                     holder.authorType.setText("Blogger");
@@ -111,7 +111,7 @@ public class ContributorListAdapter extends BaseAdapter {
                     break;
                 case AppConstants.USER_TYPE_BUSINESS:
                     holder.authorType.setText("Business");
-                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.black));
+                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.black_color));
                     break;
                 case AppConstants.USER_TYPE_EDITOR:
                     holder.authorType.setText("Editor");
@@ -127,7 +127,7 @@ public class ContributorListAdapter extends BaseAdapter {
                     break;
                 case AppConstants.USER_TYPE_REPORT_MANAGER:
                     holder.authorType.setText("Report Manager");
-                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.black));
+                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.black_color));
                     break;
                 case AppConstants.USER_TYPE_FEATURED:
                     holder.authorType.setText(AppConstants.AUTHOR_TYPE_FEATURED);

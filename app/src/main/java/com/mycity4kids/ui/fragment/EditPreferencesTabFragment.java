@@ -50,6 +50,7 @@ import com.mycity4kids.ui.adapter.EmailSubscriptionAdapter;
 import com.mycity4kids.ui.adapter.NotificationSubscriptionAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
+import com.mycity4kids.utils.ConnectivityUtils;
 
 import org.apmem.tools.layouts.FlowLayout;
 import org.json.JSONObject;

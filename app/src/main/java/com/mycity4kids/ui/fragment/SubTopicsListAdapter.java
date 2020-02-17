@@ -56,7 +56,7 @@ public class SubTopicsListAdapter extends ArrayAdapter<Topics> {
             holder.itemNameTextView.setTextColor(ContextCompat.getColor(mContext, R.color.white_color));
         } else {
             holder.itemNameTextView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.home_bg));
-            holder.itemNameTextView.setTextColor(ContextCompat.getColor(mContext, R.color.black));
+            holder.itemNameTextView.setTextColor(ContextCompat.getColor(mContext, R.color.black_color));
         }
         return view;
     }

@@ -25,6 +25,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.adapter.ChallengeVideoRecycleAdapter;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
+import com.mycity4kids.utils.ConnectivityUtils;
 
 import java.util.ArrayList;
 

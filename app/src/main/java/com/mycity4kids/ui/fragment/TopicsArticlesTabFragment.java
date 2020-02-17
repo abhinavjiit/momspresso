@@ -31,6 +31,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.gson.Gson;
 import com.mycity4kids.base.BaseFragment;
+import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.ToastUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.BuildConfig;

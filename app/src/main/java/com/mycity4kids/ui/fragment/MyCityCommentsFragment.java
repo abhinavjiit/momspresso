@@ -26,6 +26,7 @@ import androidx.fragment.app.FragmentManager;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.mycity4kids.base.BaseFragment;
+import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.DateTimeUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;

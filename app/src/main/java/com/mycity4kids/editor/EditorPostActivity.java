@@ -36,12 +36,10 @@ import androidx.fragment.app.FragmentManager;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.DateTimeUtils;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
@@ -58,12 +56,12 @@ import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.ui.activity.AddArticleTopicsActivityNew;
 import com.mycity4kids.ui.activity.SpellCheckActivity;
 import com.mycity4kids.ui.fragment.SpellCheckDialogFragment;
+import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.utils.DateTimeUtils;
 import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.PermissionUtil;
+import com.mycity4kids.utils.StringUtils;
 
-import org.wordpress.android.editor.EditorFragmentAbstract;
-import org.wordpress.android.editor.EditorMediaUploadListener;
-import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.helpers.MediaFile;
 
@@ -876,7 +874,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         LinearLayout toastLayout = (LinearLayout) toast.getView();
         TextView toastTV = (TextView) toastLayout.getChildAt(0);
         toastTV.setGravity(Gravity.CENTER);
-        toastTV.setTextColor(ContextCompat.getColor(this, R.color.white));
+        toastTV.setTextColor(ContextCompat.getColor(this, R.color.white_color));
         toastLayout.getBackground().setColorFilter(ContextCompat.getColor(this, R.color.dark_grey), PorterDuff.Mode.SRC_IN);
         toast.show();
     }

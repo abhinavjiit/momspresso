@@ -28,6 +28,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.adapter.UsersCommentsRecycleAdapter;
+import com.mycity4kids.utils.ConnectivityUtils;
 
 import java.util.ArrayList;
 

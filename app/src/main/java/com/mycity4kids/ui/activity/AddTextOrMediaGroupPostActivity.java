@@ -271,7 +271,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                 .anchorView(audioRecordView)
                 .backgroundColor(getResources().getColor(R.color.app_red))
                 .text(getResources().getString(R.string.add_text_or_media_group_post_activity_tooltip_text))
-                .textColor(getResources().getColor(R.color.white))
+                .textColor(getResources().getColor(R.color.white_color))
                 .arrowColor(getResources().getColor(R.color.app_red))
                 .gravity(Gravity.TOP)
                 .arrowWidth(40)

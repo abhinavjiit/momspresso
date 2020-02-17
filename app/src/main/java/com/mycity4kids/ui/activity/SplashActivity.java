@@ -14,6 +14,7 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.applinks.AppLinkData;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mycity4kids.base.BaseActivity;
+import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;

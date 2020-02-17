@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.JsonSyntaxException;
 import com.mycity4kids.base.BaseActivity;
+import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.R;

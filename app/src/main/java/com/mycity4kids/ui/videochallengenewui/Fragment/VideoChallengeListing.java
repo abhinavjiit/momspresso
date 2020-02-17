@@ -39,6 +39,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.VideoChallengeDetailListingAdapter;
+import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.MixPanelUtils;
 
 import org.greenrobot.eventbus.EventBus;

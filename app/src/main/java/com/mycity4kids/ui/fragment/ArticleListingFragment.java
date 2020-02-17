@@ -34,6 +34,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.material.snackbar.Snackbar;
 import com.mycity4kids.base.BaseFragment;
+import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.DateTimeUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.utils.ToastUtils;

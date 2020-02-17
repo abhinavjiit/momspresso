@@ -2,8 +2,6 @@ package com.mycity4kids.ui.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -15,25 +13,26 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+
 import com.crashlytics.android.Crashlytics;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
-import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.BloggerAnalyticsResponse;
@@ -41,6 +40,7 @@ import com.mycity4kids.models.response.BloggerAnalyticsViews;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.ui.activity.RankingActivity;
+import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.widget.MyMarkerView;
 import com.mycity4kids.widget.PageViewsDatePickerFragment;
 
@@ -354,15 +354,14 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
         }
         pageViewCountTextView.setText(pageViewLabel + " " + totalViews);
 
-        xAxis.setValueFormatter(new IAxisValueFormatter() {
+        xAxis.setValueFormatter(new ValueFormatter() {
             @Override
-            public String getFormattedValue(float value, AxisBase axis) {
+            public String getFormattedValue(float value) {
                 try {
                     return dList.get((int) value);
                 } catch (Exception e) {
                     return "";
                 }
-
             }
         });
         setData(list);
@@ -519,7 +518,7 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
                 break;
             case R.id.fromDateTextView: {
                 PageViewsDatePickerFragment fromFragment = new PageViewsDatePickerFragment();
-     //          fromFragment.setTargetFragment(this, 0);
+                //          fromFragment.setTargetFragment(this, 0);
                 Bundle b1 = new Bundle();
                 b1.putString("type", "from");
                 fromFragment.setArguments(b1);
@@ -528,7 +527,7 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
             break;
             case R.id.toDateTextView: {
                 PageViewsDatePickerFragment toFragment = new PageViewsDatePickerFragment();
-    //           toFragment.setTargetFragment(this, 0);
+                //           toFragment.setTargetFragment(this, 0);
                 Bundle b1 = new Bundle();
                 b1.putString("type", "to");
                 toFragment.setArguments(b1);

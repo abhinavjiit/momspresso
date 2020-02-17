@@ -36,9 +36,9 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-import com.mycity4kids.base.BaseActivity;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.observablescrollview.ObservableScrollView;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
@@ -152,7 +152,7 @@ public class ExoplayerVideoChallengePlayViewActivity extends BaseActivity {
         TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
         TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
         LoadControl loadControl = new DefaultLoadControl();
-        SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(this), trackSelector, loadControl);
+        SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(this, new DefaultRenderersFactory(this), trackSelector, loadControl);
         mExoPlayerView.setPlayer(player);
 
         boolean haveResumePosition = mResumeWindow != C.INDEX_UNSET;

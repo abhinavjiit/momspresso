@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.crashlytics.android.Crashlytics;
 import com.mycity4kids.base.BaseActivity;
+import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;

@@ -25,8 +25,8 @@ android {
         applicationId "com.mycity4kids"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode 187
+        versionName "13.0.23"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -35,6 +35,14 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt'
+        }
+    }
+    configurations {
+        all*.exclude group: 'com.android.volley'
     }
 }
 
@@ -92,6 +100,7 @@ dependencies {
     implementation 'com.github.douglasjunior:android-simple-tooltip:0.2.3'
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
     implementation 'commons-io:commons-io:2.4'
+    implementation 'org.wordpress:utils:1.9.0'
 
     implementation 'com.google.android.exoplayer:exoplayer-core:2.9.3'
     implementation 'com.google.android.exoplayer:exoplayer-dash:2.8.2'

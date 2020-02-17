@@ -32,6 +32,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.SuggestedTopicsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.ConnectivityUtils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

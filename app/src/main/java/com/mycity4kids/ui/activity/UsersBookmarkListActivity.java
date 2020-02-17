@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.mycity4kids.base.BaseActivity;
+import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;

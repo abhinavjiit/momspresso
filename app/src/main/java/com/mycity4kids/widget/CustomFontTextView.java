@@ -3,15 +3,17 @@ package com.mycity4kids.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import androidx.appcompat.app.AppCompatDelegate;
 import android.util.AttributeSet;
+
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.mycity4kids.R;
 
 /**
  * Created by hemant on 17/3/16.
  */
-public class CustomFontTextView extends androidx.appcompat.widget.AppCompatTextView {
+public class CustomFontTextView extends AppCompatTextView {
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);

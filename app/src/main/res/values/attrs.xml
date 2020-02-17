@@ -79,5 +79,9 @@
         <attr name="supportRTL" format="boolean" />
         <attr name="verticalSupport" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="SourceViewEditText">
+        <attr name="fontFile" format="string" />
+    </declare-styleable>
     <!--<declare-styleable name="KidsInfoComponent">--><!--<attr name="searchArticleTitle" format="string" localization="suggested" />--><!--<attr name="searchArticleDesc" format="string" localization="suggested" />--><!--<attr name="searchArticleImage" format="integer" />--><!--</declare-styleable>-->
 </resources>
