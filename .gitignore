@@ -42,6 +42,7 @@ local.properties
 *.iml
 .gradle
 /local.properties
+/.idea/gradle.xml
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
@@ -50,6 +51,7 @@ local.properties
 /.idea/assetWizardSettings.xml
 .DS_Store
 /build
+/WordPressEditor/build/
 /captures
 .externalNativeBuild
 .cxx

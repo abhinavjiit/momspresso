@@ -62,6 +62,9 @@ import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.StringUtils;
 
+import org.wordpress.android.editor.EditorFragmentAbstract;
+import org.wordpress.android.editor.EditorMediaUploadListener;
+import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.helpers.MediaFile;
 
