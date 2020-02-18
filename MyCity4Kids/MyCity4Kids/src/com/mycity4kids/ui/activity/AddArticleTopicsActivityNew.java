@@ -121,8 +121,6 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
             }
         }
         progressBar.setVisibility(View.VISIBLE);
-//        nextButton.setVisibility(View.GONE);
-
         try {
             FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
             String fileContent = AppUtils.convertStreamToString(fileInputStream);
@@ -134,9 +132,6 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-
-//            Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
-//            call.enqueue(downloadCategoriesJSONCallback);
             Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
 
             caller.enqueue(new Callback<ResponseBody>() {
@@ -247,17 +242,14 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
     private void createTopicsData(TopicsResponse responseData) {
         try {
             progressBar.setVisibility(View.GONE);
-            topicsMap = new HashMap<Topics, List<Topics>>();
+            topicsMap = new HashMap<>();
             topicList = new ArrayList<>();
 
             for (int i = 0; i < responseData.getData().size(); i++) {
                 ArrayList<Topics> secondLevelLeafNodeList = new ArrayList<>();
-
                 for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
                     ArrayList<Topics> thirdLevelLeafNodeList = new ArrayList<>();
-
                     for (int k = 0; k < responseData.getData().get(i).getChild().get(j).getChild().size(); k++) {
-
                         if ("1".equals(responseData.getData().get(i).getChild().get(j).getChild().get(k).getPublicVisibility())) {
                             //Adding All sub-subcategories
                             responseData.getData().get(i).getChild().get(j).getChild().get(k)
@@ -267,7 +259,6 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                             thirdLevelLeafNodeList.add(responseData.getData().get(i).getChild().get(j).getChild().get(k));
                         }
                     }
-
                     responseData.getData().get(i).getChild().get(j).setChild(thirdLevelLeafNodeList);
                 }
 
@@ -289,7 +280,6 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                         topicsMap.put(responseData.getData().get(i), secondLevelLeafNodeList);
                     }
                 }
-
             }
 
             if (null != selectedTopicsIdList && !selectedTopicsIdList.isEmpty()) {
@@ -311,6 +301,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
         }
         AppUtils.changeTabsFont(tabLayout);
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setOffscreenPageLimit(topicList.size());
         adapter = new AddArticleTopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), topicList);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));

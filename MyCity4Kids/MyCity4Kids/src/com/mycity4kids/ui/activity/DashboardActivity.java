@@ -1127,7 +1127,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     startActivity(challengeIntent);
                 } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_PERSONALINFO)) {
                     Intent intent1 = new Intent(DashboardActivity.this, RewardsContainerActivity.class);
-                    intent1.putExtra("pageNumber", 1);
+                    intent1.putExtra("showProfileInfo", true);
                     startActivity(intent1);
                 } else {
                 }

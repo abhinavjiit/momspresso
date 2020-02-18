@@ -390,7 +390,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                     allPaymentData = response.data!!.result
                     allPaymantModes.clear()
                     availableList.clear()
-                    if (response.data!!.result.default != null && response.data!!.result!!.default!!.account_type != null) {
+                    if (response.data!!.result.default != null && null != response.data!!.result!!.default!!.account_type) {
                         allPaymantModes.add(0, response.data!!.result!!.default!!.account_type!!)
                         allPaymantModes[0].isDefault = true
                         allPaymantModes[0].isChecked = true
