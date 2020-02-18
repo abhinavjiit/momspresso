@@ -53,6 +53,7 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -139,6 +140,11 @@ class CampaignDetailFragment : BaseFragment() {
     private var showInstPopUpFlag: Boolean = false
     private var instaHandlePostFlag: Boolean = false
 
+    val handler = CoroutineExceptionHandler { _, exception ->
+        Crashlytics.logException(exception)
+        Log.d("MC4kException", Log.getStackTraceString(exception))
+
+    }
 
     companion object {
         @JvmStatic
@@ -964,7 +970,7 @@ class CampaignDetailFragment : BaseFragment() {
 
 
     private suspend fun checkInstagramHandle(): Boolean {
-        val job = CoroutineScope(Dispatchers.Main).launch {
+        val job = CoroutineScope(Dispatchers.Main + handler).launch {
             userId?.let {
                 val socialAccountsDetailData = BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getInstagramHandle(it, 3)
                 socialAccountsDetailData.data?.result?.let { it1 ->
@@ -999,7 +1005,6 @@ class CampaignDetailFragment : BaseFragment() {
                 apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity),
                 SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
                 System.currentTimeMillis().toString(), "Show_IG_popup")
-
         val confimTextView = containerView.findViewById<TextView>(R.id.confirmTextView)
         confimTextView.setOnClickListener {
             Utils.campaignEvent(activity, "Campaign_Detail_Fragment", "Campaign Detail", "Instagram_popup_confirm_text",
@@ -1013,7 +1018,7 @@ class CampaignDetailFragment : BaseFragment() {
                     }
                 }
                 instaHandlePopUpView.visibility = View.GONE
-                CoroutineScope(Dispatchers.Main).launch {
+                CoroutineScope(Dispatchers.Main + handler).launch {
                     userId?.let {
                         val response = BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendInstageamHandle(it, socialAccountsDetail, 3)
                         if (response.code == 200 && response.status == Constants.SUCCESS) {
@@ -1025,7 +1030,6 @@ class CampaignDetailFragment : BaseFragment() {
                         } else {
                             ToastUtils.showToast(activity, response.reason)
                             instaHandlePopUpView.visibility = View.GONE
-
                         }
                     }
                 }
