@@ -1027,15 +1027,13 @@ class CampaignDetailFragment : BaseFragment() {
 
     private fun isValid(): String {
         val instaHandleEditTextView = containerView.findViewById<EditText>(R.id.instaHandleEditTextView)//^([A-Za-z0-9._](?:(?:[A-Za-z0-9._]|(?:\.(?!\.))){2,28}(?:[A-Za-z0-9._]))?)$
-        if (instaHandleEditTextView.text.toString().isNotBlank()) {
-            val instaHandle = instaHandleEditTextView.text.toString()
-            val pattern = Pattern.compile("^([A-Za-z0-9._](?:(?:[A-Za-z0-9._]|(?:\\.(?!\\.))){2,28}(?:[A-Za-z0-9._]))?)\$")
-            val matcher = pattern.matcher(instaHandle)
-            if (matcher.matches()) {
-                return instaHandle
-            } else {
-                ToastUtils.showToast(activity, "Your instagram handle is not valid")
-            }
+        val instaHandle = instaHandleEditTextView.text.toString()
+        val pattern = Pattern.compile("^([A-Za-z0-9._](?:(?:[A-Za-z0-9._]|(?:\\.(?!\\.))){2,28}(?:[A-Za-z0-9._]))?)\$")
+        val matcher = pattern.matcher(instaHandle)
+        if (matcher.matches()) {
+            return instaHandle
+        } else {
+            ToastUtils.showToast(activity, "Your instagram handle is not valid")
         }
         return ""
     }
