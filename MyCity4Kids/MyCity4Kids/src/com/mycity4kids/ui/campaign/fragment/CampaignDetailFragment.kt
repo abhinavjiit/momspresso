@@ -995,9 +995,17 @@ class CampaignDetailFragment : BaseFragment() {
 
     private suspend fun showInstaHandlePopUp() {
         instaHandlePopUpView.visibility = View.VISIBLE
+        Utils.campaignEvent(activity, "Campaign_Detail_Fragment", "Campaign Detail", "Instagram_popup",
+                apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                System.currentTimeMillis().toString(), "Show_IG_popup")
 
         val confimTextView = containerView.findViewById<TextView>(R.id.confirmTextView)
         confimTextView.setOnClickListener {
+            Utils.campaignEvent(activity, "Campaign_Detail_Fragment", "Campaign Detail", "Instagram_popup_confirm_text",
+                    apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity),
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                    System.currentTimeMillis().toString(), "CTA_IG_popup")
             if (isValid().isNotBlank()) {
                 socialAccountsDetail.socialAccounts?.forEach {
                     if (it.platform_name == AppConstants.MEDIUM_INSTAGRAM) {
@@ -1033,7 +1041,7 @@ class CampaignDetailFragment : BaseFragment() {
         if (matcher.matches()) {
             return instaHandle
         } else {
-            ToastUtils.showToast(activity, "Your instagram handle is not valid")
+            ToastUtils.showToast(activity, getString(R.string.enter_valid_instagram_campaign_detail_fragment_popup))
         }
         return ""
     }
