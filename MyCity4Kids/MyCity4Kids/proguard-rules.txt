@@ -42,3 +42,8 @@
 -dontwarn org.reactivestreams.FlowAdapters
 -dontwarn org.reactivestreams.**
 -dontwarn java.util.concurrent.flow.**
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+-keepclassmembernames class kotlinx.** {
+    volatile <fields>;
+}

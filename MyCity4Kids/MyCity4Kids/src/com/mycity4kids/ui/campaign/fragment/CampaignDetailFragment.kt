@@ -27,6 +27,7 @@ import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.BaseResponseModel
@@ -36,8 +37,10 @@ import com.mycity4kids.models.campaignmodels.ParticipateCampaignResponse
 import com.mycity4kids.models.request.CampaignParticipate
 import com.mycity4kids.models.request.CampaignReferral
 import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
+import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
 import com.mycity4kids.ui.adapter.CampaignDetailAdapter
 import com.mycity4kids.ui.campaign.BasicResponse
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
@@ -50,6 +53,9 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import java.text.SimpleDateFormat
@@ -128,6 +134,11 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var upperTextHeader: TextView
     private lateinit var lowerTextHeader: TextView
     private var comingFrom: String? = null
+    private lateinit var instaHandlePopUpView: View
+    private var socialAccountsDetail: RewardsDetailsResultResonse = RewardsDetailsResultResonse()
+    private var showInstPopUpFlag: Boolean = false
+    private var instaHandlePostFlag: Boolean = false
+
 
     companion object {
         @JvmStatic
@@ -148,6 +159,7 @@ class CampaignDetailFragment : BaseFragment() {
         userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         isRewardAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
         defaultCampaignPopUp = containerView.findViewById(R.id.include)
+        instaHandlePopUpView = containerView.findViewById(R.id.includeInstaPopUp)
 
         if (isRewardAdded.equals("1", true)) {
             fetchForYou()
@@ -459,14 +471,15 @@ class CampaignDetailFragment : BaseFragment() {
             Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "applyNow", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
             if ("defaultCampaign".equals(comingFrom))
                 SharedPrefUtils.setDefaultCampaignShownFlag(BaseApplication.getAppContext(), true)
-
-            var participateRequest = CampaignParticipate()
-            participateRequest!!.user_id = userId
-            participateRequest.campaign_id = this!!.id!!
+            Log.d("Taggggggg", "ho gya")
+            val participateRequest = CampaignParticipate()
+            participateRequest.user_id = userId
+            participateRequest.campaign_id = this.id!!
             val retro = BaseApplication.getInstance().retrofit
             val campaignAPI = retro.create(CampaignAPI::class.java)
             val call = campaignAPI.postRegisterCampaign(participateRequest)
             call.enqueue(participateCampaign)
+
         } else if (submitBtn.text == resources.getString(R.string.detail_bottom_share)) {
             Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "Share", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
             val shareIntent = ShareCompat.IntentBuilder
@@ -516,11 +529,9 @@ class CampaignDetailFragment : BaseFragment() {
             try {
                 val responseData = response.body()
                 if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-                    txtTrackerStatus.visibility = View.VISIBLE
-                    submitBtn.setText(resources.getString(R.string.detail_bottom_applied))
-                    Toast.makeText(context, resources.getString(R.string.toast_campaign_applied), Toast.LENGTH_SHORT).show()
-                    labelText.setText(resources.getString(R.string.label_campaign_applied))
-                    unapplyCampaign.visibility = View.VISIBLE
+                    CoroutineScope(Dispatchers.Main).launch {
+                        checkInstaHandle()
+                    }
                 } else {
                     if (!SharedPrefUtils.isDefaultCampaignShown(BaseApplication.getAppContext()))
                         fetchDefaultCampaign()
@@ -537,6 +548,14 @@ class CampaignDetailFragment : BaseFragment() {
             removeProgressDialog()
             Crashlytics.logException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
+        }
+    }
+
+    suspend fun checkInstaHandle() {
+        CoroutineScope(Dispatchers.Main).launch {
+            if (checkInstagramHandle()) {
+                showInstaHandlePopUp()
+            }
         }
     }
 
@@ -698,6 +717,7 @@ class CampaignDetailFragment : BaseFragment() {
                 Toast.makeText(it, it.resources.getString(R.string.toast_campaign_started), Toast.LENGTH_SHORT).show()
             }
             labelText.visibility = View.GONE
+            unapplyCampaign.visibility = View.VISIBLE
         } else if (status == 3) {
             hideShowReferral(status)
             applicationStatus.setBackgroundResource(R.drawable.campaign_subscribed)
@@ -919,7 +939,7 @@ class CampaignDetailFragment : BaseFragment() {
         // showProgressDialog(resources.getString(R.string.please_wait))
         BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getForYouStatus(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BasicResponse> {
             override fun onNext(response: BasicResponse) {
-                if (response.code == 200 && response.data != null && response.status == "success") {
+                if (response.code == 200 && response.data != null && response.status == Constants.SUCCESS) {
                     if (response.data.result != null && response.data.result.recm_status != null) {
                         forYouStatus = response.data.result.recm_status
                     }
@@ -940,6 +960,90 @@ class CampaignDetailFragment : BaseFragment() {
 
 
         })
+    }
+
+
+    private suspend fun checkInstagramHandle(): Boolean {
+        val job = CoroutineScope(Dispatchers.Main).launch {
+            userId?.let {
+                val socialAccountsDetailData = BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getInstagramHandle(it, 3)
+                socialAccountsDetailData.data?.result?.let { it1 ->
+                    socialAccountsDetail = it1
+                    if (socialAccountsDetailData.code == 200 && socialAccountsDetailData.status == Constants.SUCCESS) {
+                        socialAccountsDetailData.data?.result?.socialAccounts?.forEach {
+                            if (it.platform_name == AppConstants.MEDIUM_INSTAGRAM && it.acc_link.isNullOrBlank()) {
+                                showInstPopUpFlag = true
+                            } else if (it.platform_name == AppConstants.MEDIUM_INSTAGRAM && !it.acc_link.isNullOrBlank()) {
+                                txtTrackerStatus.visibility = View.VISIBLE
+                                submitBtn.setText(resources.getString(R.string.detail_bottom_applied))
+                                Toast.makeText(context, resources.getString(R.string.toast_campaign_applied), Toast.LENGTH_SHORT).show()
+                                labelText.setText(resources.getString(R.string.label_campaign_applied))
+                                unapplyCampaign.visibility = View.VISIBLE
+                                showInstPopUpFlag = false
+                            } else {
+                                return@forEach
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        job.join()
+        return showInstPopUpFlag
+    }
+
+
+    private suspend fun showInstaHandlePopUp() {
+        instaHandlePopUpView.visibility = View.VISIBLE
+        Utils.campaignEvent(activity, "Campaign_Detail_Fragment", "Campaign Detail", "Instagram_popup",
+                apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                System.currentTimeMillis().toString(), "Show_IG_popup")
+
+        val confimTextView = containerView.findViewById<TextView>(R.id.confirmTextView)
+        confimTextView.setOnClickListener {
+            Utils.campaignEvent(activity, "Campaign_Detail_Fragment", "Campaign Detail", "Instagram_popup_confirm_text",
+                    apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity),
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                    System.currentTimeMillis().toString(), "CTA_IG_popup")
+            if (isValid().isNotBlank()) {
+                socialAccountsDetail.socialAccounts?.forEach {
+                    if (it.platform_name == AppConstants.MEDIUM_INSTAGRAM) {
+                        it.acc_link = containerView.findViewById<EditText>(R.id.instaHandleEditTextView).text.toString()
+                    }
+                }
+                instaHandlePopUpView.visibility = View.GONE
+                CoroutineScope(Dispatchers.Main).launch {
+                    userId?.let {
+                        val response = BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendInstageamHandle(it, socialAccountsDetail, 3)
+                        if (response.code == 200 && response.status == Constants.SUCCESS) {
+                            txtTrackerStatus.visibility = View.VISIBLE
+                            submitBtn.setText(resources.getString(R.string.detail_bottom_applied))
+                            Toast.makeText(context, resources.getString(R.string.toast_campaign_applied), Toast.LENGTH_SHORT).show()
+                            labelText.setText(resources.getString(R.string.label_campaign_applied))
+                            unapplyCampaign.visibility = View.VISIBLE
+                        } else {
+                            ToastUtils.showToast(activity, response.reason)
+                            instaHandlePopUpView.visibility = View.GONE
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun isValid(): String {
+        val instaHandleEditTextView = containerView.findViewById<EditText>(R.id.instaHandleEditTextView)//^([A-Za-z0-9._](?:(?:[A-Za-z0-9._]|(?:\.(?!\.))){2,28}(?:[A-Za-z0-9._]))?)$
+        val instaHandle = instaHandleEditTextView.text.toString()
+        val pattern = Pattern.compile("^([A-Za-z0-9._](?:(?:[A-Za-z0-9._]|(?:\\.(?!\\.))){2,28}(?:[A-Za-z0-9._]))?)\$")
+        val matcher = pattern.matcher(instaHandle)
+        if (matcher.matches()) {
+            return instaHandle
+        } else {
+            ToastUtils.showToast(activity, getString(R.string.enter_valid_instagram_campaign_detail_fragment_popup))
+        }
+        return ""
     }
 
     override fun onStart() {
