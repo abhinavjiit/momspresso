@@ -159,6 +159,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     Crashlytics.logException(t);
+                    apiExceptions(t);
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
             });

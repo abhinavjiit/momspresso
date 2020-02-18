@@ -45,6 +45,13 @@ class CampaignHowToVideoActivity : BaseActivity() {
         playVideo()
     }
 
+    override fun onPause() {
+        super.onPause()
+        videoView.stopPlayback()
+        videoView.setMediaController(null)
+        mediaController = null
+    }
+
     private fun setController() {
         if (mediaController == null) {
             mediaController = object : MediaController(this) {

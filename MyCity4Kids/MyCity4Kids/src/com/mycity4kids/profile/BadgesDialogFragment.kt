@@ -28,6 +28,7 @@ import com.facebook.share.model.ShareLinkContent
 import com.facebook.share.widget.ShareDialog
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.snackbar.Snackbar
+import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
@@ -159,6 +160,7 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
             override fun onFailure(call: Call<BadgeListResponse>, t: Throwable) {
                 badgesShimmerContainer.visibility = View.GONE
                 Crashlytics.logException(t)
+                (activity as BaseActivity).apiExceptions(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         })

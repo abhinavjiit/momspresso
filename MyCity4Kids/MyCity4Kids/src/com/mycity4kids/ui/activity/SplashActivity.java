@@ -261,6 +261,7 @@ public class SplashActivity extends BaseActivity {
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
             gotoDashboard();
+            apiExceptions(t);
         }
     };
 
@@ -342,6 +343,7 @@ public class SplashActivity extends BaseActivity {
         @Override
         public void onFailure(Call<ForceUpdateModel> call, Throwable t) {
             showToast(getString(R.string.went_wrong));
+            apiExceptions(t);
         }
     };
 

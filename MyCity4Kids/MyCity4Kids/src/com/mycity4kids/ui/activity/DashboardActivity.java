@@ -752,6 +752,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         @Override
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
             Crashlytics.logException(t);
+            apiExceptions(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -846,6 +847,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         public void onFailure(Call<ResponseBody> call, Throwable t) {
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
+            apiExceptions(t);
             draftsShimmerLayout.setVisibility(View.GONE);
             createLabelTextView.setVisibility(View.VISIBLE);
             createTextImageVIew.setVisibility(View.VISIBLE);
@@ -1434,6 +1436,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     Crashlytics.logException(t);
+                    apiExceptions(t);
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
             });
@@ -1469,6 +1472,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         public void onFailure(Call<ShortStoryDetailResult> call, Throwable t) {
             removeProgressDialog();
             Crashlytics.logException(t);
+            apiExceptions(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -1511,6 +1515,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         @Override
         public void onFailure(Call<BlogPageResponse> call, Throwable t) {
             removeProgressDialog();
+            apiExceptions(t);
         }
     };
 
@@ -1892,7 +1897,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                apiExceptions(t);
             }
         });
     }
@@ -2025,6 +2030,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     Crashlytics.logException(t);
+                    apiExceptions(t);
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
             });
@@ -2184,6 +2190,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 removeProgressDialog();
                 showToast(getString(R.string.server_went_wrong));
                 Crashlytics.logException(t);
+                apiExceptions(t);
                 Log.d("MC4kException", Log.getStackTraceString(t));
             }
         });

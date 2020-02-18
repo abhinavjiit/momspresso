@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.kelltontech.ui.BaseActivity
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -132,6 +133,7 @@ class AddMultipleUserCreatedArticlesInCollectionFragment : BaseFragment(), AddMu
             override fun onFailure(call: Call<MixFeedResponse>, e: Throwable) {
                 bottomLoadingView.visibility = View.GONE
                 Crashlytics.logException(e)
+                (activity as BaseActivity).apiExceptions(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         })

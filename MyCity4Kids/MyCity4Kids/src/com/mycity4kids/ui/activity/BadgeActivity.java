@@ -15,11 +15,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import com.kelltontech.ui.BaseActivity;
@@ -40,6 +35,10 @@ import com.mycity4kids.utils.PermissionUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -138,6 +137,7 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
             mLodingView.setVisibility(View.GONE);
             removeProgressDialog();
             Crashlytics.logException(t);
+            apiExceptions(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -169,7 +169,8 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.shareTextView:
-                checkPermissionAndShareBadgeList();
+                if (badgeList.size() > 0)
+                    checkPermissionAndShareBadgeList();
                 break;
         }
     }

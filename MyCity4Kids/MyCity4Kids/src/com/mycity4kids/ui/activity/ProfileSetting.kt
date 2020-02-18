@@ -81,6 +81,7 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         override fun onFailure(call: Call<TotalPayoutResponse>, t: Throwable) {
             showToast(getString(R.string.server_went_wrong))
             Crashlytics.logException(t)
+            apiExceptions(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
         }
     }
@@ -236,6 +237,7 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
 
         override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
             clearUserDataPostLogout()
+            apiExceptions(t)
         }
     }
 

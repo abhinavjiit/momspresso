@@ -68,6 +68,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+
 /*import com.mycity4kids.utils.AnalyticsHelper;*/
 
 /**
@@ -897,5 +900,18 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
 
     public void showSnackbar(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+    }
+
+
+    public void apiExceptions(Throwable t) {
+        if (t instanceof UnknownHostException) {
+            showToast(getString(R.string.error_network));
+        } else if (t instanceof SocketTimeoutException) {
+            showToast(getString(R.string.connection_timeout));
+        } else {
+            showToast(getString(R.string.server_went_wrong));
+        }
+        Crashlytics.logException(t);
+        Log.d("MC4kException", Log.getStackTraceString(t));
     }
 }
