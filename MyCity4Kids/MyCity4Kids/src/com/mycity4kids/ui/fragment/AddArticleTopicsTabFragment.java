@@ -87,9 +87,6 @@ public class AddArticleTopicsTabFragment extends BaseFragment implements AddArti
 
     private void createTopicsData() {
         try {
-//            searchTopicsSplashAdapter = new AddArticleTopicsTabAdapter(getActivity(), selectTopic, selectedTopicsMap, this);
-//            popularTopicsRecyclerView.setAdapter(searchTopicsSplashAdapter);
-
             mInflator = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             for (int j = 0; j < selectTopic.size(); j++) {
                 for (int i = 0; i < selectTopic.get(j).getChild().size(); i++) {

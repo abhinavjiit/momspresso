@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:padding="14dp"
-                android:text="@string/edit"
+                android:text="@string/user_article.published.edit"
                 android:textColor="@color/app_red"
                 android:textSize="14sp"
                 android:textStyle="bold"
