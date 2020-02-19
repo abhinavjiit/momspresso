@@ -1082,7 +1082,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 findValues(notificationExtras.getString("categoryId"));
                 Intent intent1 = new Intent(this, ShortStoryChallengeDetailActivity.class);
                 intent1.putExtra("Display_Name", deepLinkDisplayName);
-                intent1.putExtra("challenge", shortStoryChallengesList);
                 intent1.putExtra("position", 0);
                 intent1.putExtra("topics", shortStoriesTopicList.get(0).getDisplay_name());
                 intent1.putExtra("parentId", shortStoriesTopicList.get(0).getId());

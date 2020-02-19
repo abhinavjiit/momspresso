@@ -1,14 +1,10 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
-
 apply plugin: 'com.android.application'
-
 apply plugin: 'com.google.gms.google-services'
-
 apply plugin: 'io.fabric'
+apply plugin: 'io.gitlab.arturbosch.detekt'
 
 repositories {
     maven { url 'https://dl.bintray.com/drummer-aidan/maven' }
@@ -133,4 +129,20 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation project(path: ':WordPressEditor')
 
+    detekt "io.gitlab.arturbosch.detekt:detekt-formatting:$detekt_version"
+    detekt("io.gitlab.arturbosch.detekt:detekt-cli:$detekt_version")
+}
+
+detekt {
+    toolVersion = "$detekt_version"
+    input = files("src/main/java")
+    config = files("../config/detekt/detekt.yml")
+    reports {
+        xml {
+            enabled = true
+        }
+        html {
+            enabled = true
+        }
+    }
 }
