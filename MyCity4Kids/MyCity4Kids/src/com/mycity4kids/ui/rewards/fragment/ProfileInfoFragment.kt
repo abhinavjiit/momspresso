@@ -821,10 +821,10 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
         })
     }
 
-
     fun prepareDataForPosting(): Boolean {
         if (editFirstName.text.trim().isEmpty()) {
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_first_name)), Toast.LENGTH_SHORT).show()
+            editFirstName.requestFocus()
             return false
         } else {
             apiGetResponse.firstName = editFirstName.text.toString()
@@ -832,21 +832,27 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
 
         if (editLastName.text.trim().isEmpty()) {
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_last_name)), Toast.LENGTH_SHORT).show()
+            editLastName.requestFocus()
             return false
         } else {
             apiGetResponse.lastName = editLastName.text.toString()
         }
+
+        if (editLocation.text.trim().isEmpty()) {
+            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_location)), Toast.LENGTH_SHORT).show()
+            return false
+        } else {
+            apiGetResponse.cityName = editLocation.text.toString()
+            address = editLocation.text.toString()
+        }
+
         if (aboutEditText.text.trim().isEmpty()) {
             Toast.makeText(activity, getString(R.string.app_settings_edit_profile_toast_user_bio_empty), Toast.LENGTH_SHORT).show()
+            aboutEditText.requestFocus()
             return false
         } else {
             apiGetResponse.userBio = aboutEditText.text.toString()
         }
-
-//        if (BuildConfig.DEBUG) {
-//            accountKitAuthCode = "123"
-//            apiGetResponse.contact = "9999999999"
-//        }
 
         if (accountKitAuthCode.trim().isEmpty() && apiGetResponse.mobile != null && apiGetResponse.mobile.trim().isEmpty()) {
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_phone)), Toast.LENGTH_SHORT).show()
@@ -861,26 +867,14 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
             }
         }
 
-
-
         if (isvalid()) {
             apiGetResponse.email = editEmail.text.toString().trim()
         } else {
             return false
         }
 
-        if (editLocation.text.trim().isEmpty()) {
-            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_location)), Toast.LENGTH_SHORT).show()
-            return false
-        } else {
-            apiGetResponse.cityName = editLocation.text.toString()
-            address = editLocation.text.toString()
-        }
-
-
         apiGetResponse.latitude = lat
         apiGetResponse.longitude = lng
-
 
         if (radioGroupWorkingStatus.checkedRadioButtonId == R.id.radiokWorking) {
             apiGetResponse.workStatus = "1"

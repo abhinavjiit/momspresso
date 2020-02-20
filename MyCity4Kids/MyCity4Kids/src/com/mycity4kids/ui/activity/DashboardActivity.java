@@ -694,6 +694,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         findActiveChallenge();
         getUsersData();
+        String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext());
+        if (getIntent().getBooleanExtra("isFromShare", false) && !isRewardsAdded.isEmpty()
+                && isRewardsAdded.equals("0")) {
+            showMyMoneyRegistrationPrompt(getIntent());
+        }
     }
 
     private void showMyMoneyRegistrationPrompt(Intent _intent) {
