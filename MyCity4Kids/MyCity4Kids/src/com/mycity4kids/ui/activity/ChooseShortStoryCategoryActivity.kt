@@ -35,7 +35,6 @@ class ChooseShortStoryCategoryActivity : BaseActivity(), ShortStoryChallengeTopi
         Log.d("Exception", "$exception handled !")
     }
 
-
     override fun onClick(v: View, position: Int) {
         val intent = Intent(this@ChooseShortStoryCategoryActivity, ShortStoryChallengeDetailActivity::class.java)
         intent.putExtra("Display_Name", publicShortStoryChallenges?.get(position)?.display_name)
@@ -57,8 +56,6 @@ class ChooseShortStoryCategoryActivity : BaseActivity(), ShortStoryChallengeTopi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.choose_short_story_category_activity)
-        shortShortTopicsData = ArrayList()
-        shortStoryChallengesData = ArrayList()
         val source = intent.getStringExtra("source")
         if ("dashboard" == source) {
             challengesTextView.visibility = View.VISIBLE
@@ -83,7 +80,6 @@ class ChooseShortStoryCategoryActivity : BaseActivity(), ShortStoryChallengeTopi
 
     }
 
-
     override fun onStart() {
         super.onStart()
         shortStoryShimmer.startShimmerAnimation()
@@ -93,7 +89,6 @@ class ChooseShortStoryCategoryActivity : BaseActivity(), ShortStoryChallengeTopi
         super.onStop()
         shortStoryShimmer.stopShimmerAnimation()
     }
-
 
     private fun fetchShortStoryTopicsAndChallenges() {
         try {

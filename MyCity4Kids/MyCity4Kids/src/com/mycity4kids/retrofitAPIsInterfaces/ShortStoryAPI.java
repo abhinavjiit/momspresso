@@ -1,6 +1,5 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
-
 import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
@@ -104,5 +103,4 @@ public interface ShortStoryAPI {
 
     @PUT("/article-category-images/article-config/{ss_id}/")
     Call<ResponseBody> updateConfig(@Path("ss_id") String shortStoryId, @Body ShortStoryConfigRequest body);
-
 }

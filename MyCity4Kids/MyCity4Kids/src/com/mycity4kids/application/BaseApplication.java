@@ -20,7 +20,6 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.libraries.places.api.Places;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.MessageEvent;
 import com.mycity4kids.R;

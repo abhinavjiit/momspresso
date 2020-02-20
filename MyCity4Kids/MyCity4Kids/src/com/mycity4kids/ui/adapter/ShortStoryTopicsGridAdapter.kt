@@ -54,6 +54,5 @@ class ShortStoryTopicsGridAdapter : BaseAdapter() {
     internal inner class ViewHolder {
         var tagsImageView: ImageView? = null
         var topicsNameTextView: TextView? = null
-
     }
 }
