@@ -17,14 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.widget.AppCompatRadioButton;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SnapHelper;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -60,6 +52,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.AppCompatRadioButton;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -299,7 +298,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             //taggedChallenge should only contains tagged Challenge, tagged category is not to be saved in drafts
             if (taggedChallenge == null || taggedChallenge.isEmpty()) {
                 //No tagged challenge, normal draft
-                showCategorySelectionRecyclerForNormalStory();
+                showCategorySelectionRecyclerForNormalStory(true);
             } else {
                 processChallengeDataForDraftedStory();
             }
@@ -324,7 +323,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 processChallengeDataForNewStory();
             } else {
                 //New story - normal flow(no challenges involved)
-                showCategorySelectionRecyclerForNormalStory();
+                showCategorySelectionRecyclerForNormalStory(false);
             }
         }
     }
@@ -357,15 +356,51 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         }
     }
 
-    private void showCategorySelectionRecyclerForNormalStory() {
-        adapter.setListData(ssTopicsList);
-        adapter.notifyDataSetChanged();
-        recyclerView.setVisibility(View.VISIBLE);
-        shortstoryheadertext.setVisibility(View.VISIBLE);
+    private void showCategorySelectionRecyclerForNormalStory(Boolean showPopUp) {
+        recyclerView.setVisibility(View.GONE);
+        shortstoryheadertext.setVisibility(View.GONE);
         challengeHeaderText.setVisibility(View.GONE);
         challengeImage.setVisibility(View.GONE);
         challengeActiveText.setVisibility(View.GONE);
-        chooseShortStoryTopicPopUp.setVisibility(View.GONE);
+        if (showPopUp) {
+            RadioGroup chooseOptionRadioButton = findViewById(R.id.reportReasonRadioGroup);
+            RadioGroup.LayoutParams radioGroupLayoutParams;
+            chooseOptionRadioButton.setOnCheckedChangeListener((radioGroup, i) -> {
+                taggedCategoryName = ssTopicsList.get(i).getDisplay_name();
+                taggedCategoryId = ssTopicsList.get(i).getId();
+                regulatePublishButtonState();
+            });
+            for (int i = 0; i < ssTopicsList.size(); i++) {
+                AppCompatRadioButton rbn = new AppCompatRadioButton(this);
+                rbn.setId(i);
+                rbn.setTextColor(getResources().getColor(R.color.short_story_light_black_color));
+                rbn.setText(ssTopicsList.get(i).getDisplay_name());
+                radioGroupLayoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,
+                        RadioGroup.LayoutParams.WRAP_CONTENT);
+                chooseOptionRadioButton.addView(rbn, radioGroupLayoutParams);
+                rbn.setPadding(10, 0, 0, 0);
+                if (Build.VERSION.SDK_INT >= 21) {
+                    ColorStateList colorStateList = new ColorStateList(
+                            new int[][]{
+                                    new int[]{-android.R.attr.state_enabled},
+                                    new int[]{android.R.attr.state_enabled}
+                            },
+                            new int[]{
+                                    getResources().getColor(R.color.app_red),
+                                    getResources().getColor(R.color.app_red)
+                            }
+                    );
+                    rbn.setButtonTintList(colorStateList);
+                }
+            }
+            chooseShortStoryTopicPopUp.setVisibility(View.VISIBLE);
+        } else {
+            if (getIntent().hasExtra("categoryId") && getIntent().hasExtra("categoryName")) {
+                taggedCategoryId = getIntent().getStringExtra("categoryId");
+                taggedCategoryName = getIntent().getStringExtra("categoryName");
+            }
+            chooseShortStoryTopicPopUp.setVisibility(View.GONE);
+        }
     }
 
     private void processChallengeDataForDraftedStory() {

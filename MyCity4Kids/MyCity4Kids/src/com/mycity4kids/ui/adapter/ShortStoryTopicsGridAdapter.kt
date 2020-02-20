@@ -27,11 +27,9 @@ class ShortStoryTopicsGridAdapter : BaseAdapter() {
             viewHolder = view.tag as ViewHolder
         }
         viewHolder.topicsNameTextView?.text = topicsData[position].display_name.toUpperCase()
-
         try {
             Picasso.get().load(topicsData[position].extraData[0].categoryBackImage.app).placeholder(R.drawable.default_article).error(R.drawable.default_article).fit().into(viewHolder.tagsImageView)
         } catch (e: Exception) {
-
             viewHolder.tagsImageView?.setImageResource(R.drawable.default_article)
         }
         return view!!
@@ -48,7 +46,6 @@ class ShortStoryTopicsGridAdapter : BaseAdapter() {
     override fun getCount(): Int {
         return topicsData.size
     }
-
 
     fun setTopicsData(topicsData: ArrayList<ExploreTopicsModel>) {
         this.topicsData = topicsData

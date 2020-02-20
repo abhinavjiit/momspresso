@@ -45,7 +45,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.kelltontech.ui.BaseActivity;
@@ -206,15 +205,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private ImageView createTextImageVIew, langImageRightArrow;
     private ArrayList<AllDraftsResponse.AllDraftsData.AllDraftsResult> allDraftsList = new ArrayList<>();
     private UserAllDraftsRecyclerAdapter userAllDraftsRecyclerAdapter;
-    private RelativeLayout rootChooseLayout;
-    private View overLayViewChooseStory;
-    private LinearLayout chooseOptionLayout;
-    private TextView writeStoryText, TakeChallengetext, uploadVideo, uploadChallenge, selectedLangTextView;
+
+    private TextView selectedLangTextView;
     private TopicsResponse res;
     private int num_of_categorys;
-    private RelativeLayout chooseLayout;
-    private RelativeLayout chooseLayoutVideo;
-    private View overLayChooseVideo;
     private String branchVideoChallengeId, currentVersion, onlineVersionCode;
     private FrameLayout root;
     private Boolean rateNowDialog = false;
@@ -289,19 +283,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
         final FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.addOnBackStackChangedListener(this);
-        chooseLayoutVideo = (RelativeLayout) findViewById(R.id.choose_layout_video);
-        overLayChooseVideo = (View) findViewById(R.id.overlayView_choose_video_challenge);
-        uploadChallenge = (TextView) findViewById(R.id.upload_challenge);
-        uploadVideo = (TextView) findViewById(R.id.upload_video);
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
         langTextView = (TextView) findViewById(R.id.langTextView);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar1 = (Toolbar) findViewById(R.id.toolbar1);
         toolbar2 = (Toolbar) findViewById(R.id.toolbar2);
-        chooseLayout = (RelativeLayout) findViewById(R.id.choose_layout);
-        rootChooseLayout = (RelativeLayout) findViewById(R.id.root_choose_layout);
-        overLayViewChooseStory = (View) findViewById(R.id.overlayView_choose_story_challenge);
-        chooseOptionLayout = (LinearLayout) findViewById(R.id.choose_option_layout);
         downArrowImageView = (ImageView) findViewById(R.id.downArrowImageView);
         toolbarUnderline = findViewById(R.id.toolbarUnderline);
         bottomNavigationView = (BottomNavigationViewEx) findViewById(R.id.navigation);
@@ -356,8 +342,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         createLabelTextView = (TextView) findViewById(R.id.createLabelTextView);
         continueWritingLabelTV = (TextView) findViewById(R.id.continueWritingLabelTV);
         createTextImageVIew = (ImageView) findViewById(R.id.createTextImageVIew);
-        writeStoryText = (TextView) findViewById(R.id.write_story);
-        TakeChallengetext = (TextView) findViewById(R.id.write_challenge);
         languageLayout = (RelativeLayout) findViewById(R.id.languageLayout);
         referral = findViewById(R.id.referral);
         langView = (View) findViewById(R.id.langView);
@@ -371,10 +355,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         drawerProfileCoachmark.setOnClickListener(this);
         drawerSettingsCoachmark.setOnClickListener(this);
         drawerMyMoneyCoachmark.setOnClickListener(this);
-        chooseLayout.setOnClickListener(this);
-        overLayViewChooseStory.setOnClickListener(this);
-        writeStoryText.setOnClickListener(this);
-        TakeChallengetext.setOnClickListener(this);
+
         referral.setOnClickListener(this);
         settingTextView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_app_settings), null, null, null);
         videosTextView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_mom_vlogs), null, null, null);
@@ -423,9 +404,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         viewBookmarkedArticleTextView.setOnClickListener(this);
         profileImageView.setOnClickListener(this);
         drawerTopContainer.setOnClickListener(this);
-        uploadVideo.setOnClickListener(this);
-        uploadChallenge.setOnClickListener(this);
-        overLayChooseVideo.setOnClickListener(this);
         slideAnim = AnimationUtils.loadAnimation(this, R.anim.appear_from_bottom);
         fadeAnim = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
         slideDownAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_slide_down_from_top);
@@ -1562,10 +1540,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onStop() {
         super.onStop();
-        chooseLayout.setVisibility(View.GONE);
-        chooseOptionLayout.setVisibility(View.GONE);
-        overLayViewChooseStory.setVisibility(View.GONE);
-        rootChooseLayout.setVisibility(View.GONE);
     }
 
     public void refreshMenu() {
@@ -1698,6 +1672,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.storyContainer:
                 hideCreateContentView();
                 Intent chooseShortStory = new Intent(this, ChooseShortStoryCategoryActivity.class);
+                chooseShortStory.putExtra("source", "dashboard");
                 startActivity(chooseShortStory);
                 break;
             case R.id.videoContainer: {
@@ -1890,13 +1865,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
         try {
             switch (requestCode) {
-                case 1234:
-                    chooseLayout.setVisibility(View.VISIBLE);
-                    overLayViewChooseStory.setVisibility(View.VISIBLE);
-                    chooseOptionLayout.setVisibility(View.VISIBLE);
-                    rootChooseLayout.setVisibility(View.VISIBLE);
-                    break;
-
                 case Constants.OPEN_GALLERY:
                     break;
                 case Constants.TAKE_PICTURE:
@@ -1909,8 +1877,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         isGooglePlayServicesAvailable();
                     }
                     break;
-
-
                 case AppConstants.REQUEST_ACCOUNT_PICKER:
                     if (resultCode == RESULT_OK && data != null &&
                             data.getExtras() != null) {
@@ -2462,13 +2428,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    public void showChooseLayoutForShortStory() {
-        chooseLayout.setVisibility(View.VISIBLE);
-        overLayViewChooseStory.setVisibility(View.VISIBLE);
-        chooseOptionLayout.setVisibility(View.VISIBLE);
-        rootChooseLayout.setVisibility(View.VISIBLE);
-    }
-
     public void appUpdatePopUp() {
         if (!StringUtils.isNullOrEmpty(onlineVersionCode) && !StringUtils.isNullOrEmpty(currentVersion)) {
             String[] v1 = currentVersion.split("\\.");
@@ -2544,10 +2503,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Intent intent = new Intent(this, BadgeActivity.class);
                 intent.putExtra(Constants.USER_ID, separated[separated.length - 2]);
                 startActivity(intent);
-
                 return true;
-
             }
+
             Pattern pattern3 = Pattern.compile(AppConstants.BADGES_DETAIL_REGEX);
             Matcher matcher3 = pattern3.matcher(urlWithNoParams);
             if (matcher3.matches()) {
@@ -2579,6 +2537,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(intent);
                 return true;
             }
+
             Pattern pattern6 = Pattern.compile(AppConstants.USER_ANALYTICS_REGEX);
             Matcher matcher6 = pattern6.matcher(urlWithNoParams);
             if (matcher6.matches()) {
