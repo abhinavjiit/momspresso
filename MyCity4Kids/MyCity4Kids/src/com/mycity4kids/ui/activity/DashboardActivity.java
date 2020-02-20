@@ -1755,7 +1755,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 mDrawerLayout.closeDrawers();
                 Intent intent = new Intent(this, ShortStoriesListingContainerActivity.class);
                 intent.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
-                startActivityForResult(intent, 1234);
+                startActivity(intent);
             }
             break;
             case R.id.groupsTextView: {
