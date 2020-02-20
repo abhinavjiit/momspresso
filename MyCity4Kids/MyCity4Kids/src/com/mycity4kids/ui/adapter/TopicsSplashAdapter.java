@@ -130,7 +130,7 @@ public class TopicsSplashAdapter extends BaseAdapter {
 
         final List<Topics> top3Cat = getDisplayedItem(filteredSelectTopicArrayList.get(position).getChildTopics());
         if (null != filteredSelectTopicArrayList.get(position).getBackgroundImageUrl()) {
-            Picasso.with(mContext).load(filteredSelectTopicArrayList.get(position).getBackgroundImageUrl()).
+            Picasso.get().load(filteredSelectTopicArrayList.get(position).getBackgroundImageUrl()).
                     placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.topicsBackgroundImageView);
         } else {
             holder.topicsBackgroundImageView.setBackgroundResource(R.drawable.article_default);

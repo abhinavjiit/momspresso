@@ -3,14 +3,19 @@ package com.mycity4kids.newmodels;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
 import com.mycity4kids.models.Topics;
 
 import java.util.ArrayList;
 
 public class SelectTopic implements Parcelable {
+    @SerializedName("id")
     private String id;
+    @SerializedName("displayName")
     private String displayName;
+    @SerializedName("backgroundImageUrl")
     private String backgroundImageUrl;
+    @SerializedName("childTopics")
     private ArrayList<Topics> childTopics;
 
     public SelectTopic() {

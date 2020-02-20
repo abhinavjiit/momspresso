@@ -17,7 +17,6 @@ import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
 import com.crashlytics.android.Crashlytics
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.BuildConfig
@@ -101,6 +100,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
             moderationContainer?.visibility = View.GONE
             publishContainer?.visibility = View.VISIBLE
         }
+
         showProgressDialog(getString(R.string.please_wait))
         Handler().postDelayed(Runnable { getShortStoryDetails(storyId) }, 4000)
     }
@@ -120,8 +120,8 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
             }
             try {
                 val responseData = response.body()
-                Picasso.with(this@ShortStoryModerationOrShareActivity).load(responseData?.storyImage).into(storyImageView)
-                Picasso.with(this@ShortStoryModerationOrShareActivity).load(responseData?.storyImage).into(shareStoryImageView)
+                Picasso.get().load(responseData?.storyImage).into(storyImageView)
+                Picasso.get().load(responseData?.storyImage).into(shareStoryImageView)
                 storyAuthorTextView?.text = WordUtils.capitalizeFully(responseData?.userName)
                 shareStoryAuthorTextView?.text = WordUtils.capitalizeFully(responseData?.userName)
                 processTags(responseData?.tags)
@@ -293,10 +293,6 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
             val yes = getString(R.string.lang_sel_yes)
             val no = getString(R.string.cancel)
         }
-    }
-
-    override fun updateUi(response: Response?) {
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

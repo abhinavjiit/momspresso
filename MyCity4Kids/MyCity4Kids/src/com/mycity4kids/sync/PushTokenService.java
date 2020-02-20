@@ -14,22 +14,24 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.crashlytics.android.Crashlytics;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.utils.AppUtils;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * Created by kapil.vij on 17-07-2015.
  */
-public class PushTokenService extends IntentService implements UpdateListener {
+public class PushTokenService extends IntentService {
 
     private final static String TAG = PushTokenService.class.getSimpleName();
 
@@ -69,50 +71,32 @@ public class PushTokenService extends IntentService implements UpdateListener {
             if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext()))) {
                 // hit api
                 if (!SharedPrefUtils.getUserDetailModel(this).getId().equals("0")) {
-                    hitApiRequest(AppConstants.PUSH_TOKEN_REQUEST);
+                    hitApiRequest();
                 }
             }
         }
     }
 
-    private void hitApiRequest(int requestType) {
-        ApiHandler handler = new ApiHandler(this, this, requestType);
-        handler.execute(getApiUrl(requestType));
-    }
+    private void hitApiRequest() {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
+        Call<ResponseBody> call = loginRegistrationAPI.updatePushToken(
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getId(),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                AppUtils.getAppVersion(BaseApplication.getAppContext()), "android",
+                SharedPrefUtils.getCurrentCityModel(BaseApplication.getAppContext()).getId(),
+                SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext()),
+                SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext()));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.e("push", "token updated");
+            }
 
-    @Override
-    public void updateView(String jsonString, int requestType) {
-        switch (requestType) {
-            case AppConstants.PUSH_TOKEN_REQUEST:
-                try {
-                    CommonResponse responseData = new Gson().fromJson(jsonString, CommonResponse.class);
-                    if (null != responseData && responseData.getResponseCode() == 200) {
-                        Log.e("push", "token updated");
-                    } else {
-                        Log.e("push", "token failed");
-                    }
-                } catch (JsonSyntaxException jse) {
-                    Crashlytics.logException(jse);
-                    Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
-                }
-                break;
-        }
-    }
-
-    private String getApiUrl(int requestType) {
-        StringBuilder builder = new StringBuilder();
-        switch (requestType) {
-            case AppConstants.PUSH_TOKEN_REQUEST:
-                builder.append(AppConstants.UPDATE_PUSH_TOKEN_URL);
-                builder.append("userId=").append(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getId());
-                builder.append("&dynamoId=").append(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                builder.append("&app_version=").append(AppUtils.getAppVersion(BaseApplication.getAppContext()));
-                builder.append("&deviceType=").append("android");
-                builder.append("&cityId=").append(SharedPrefUtils.getCurrentCityModel(BaseApplication.getAppContext()).getId());
-                builder.append("&pushToken=").append(SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext()));
-                builder.append("&fcmToken=").append(SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext()));
-                return builder.toString().replace(" ", "%20");
-        }
-        return builder.toString();
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("push", "token failed");
+            }
+        });
     }
 }

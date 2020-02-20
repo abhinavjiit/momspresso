@@ -4,9 +4,11 @@ import android.accounts.NetworkErrorException;
 import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +21,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
-import com.kelltontech.network.Response;
+import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -40,6 +42,9 @@ import com.mycity4kids.utils.AppUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -169,6 +174,13 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         @Override
         public void onFailure(Call<CommentListResponse> call, Throwable t) {
             isReuqestRunning = false;
+            if (isAdded()) {
+                if (currentActivity.equals("ParallelFeedActivity")) {
+                    ((ParallelFeedActivity) getActivity()).apiExceptions(t);
+                } else {
+                    ((ArticleDetailsContainerActivity) getActivity()).apiExceptions(t);
+                }
+            }
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
@@ -274,7 +286,8 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                                     .setQuote(responseData.getData().get(0).getMessage())
                                     .setContentUrl(Uri.parse(shareUrl))
                                     .build();
-                            new ShareDialog(ArticleCommentsFragment.this).show(content);
+                            if (isAdded())
+                                new ShareDialog(getActivity()).show(content);
                         }
                     }
                     if (isAdded())
@@ -776,11 +789,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-    }
-
-    @Override
-    protected void updateUi(Response response) {
 
     }
 

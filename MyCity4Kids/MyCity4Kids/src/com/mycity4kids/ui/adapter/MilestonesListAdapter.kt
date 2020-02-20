@@ -40,7 +40,7 @@ class MilestonesListAdapter(
     override fun onBindViewHolder(holder: MilestonesViewHolder, position: Int) {
         try {
             if (!milestonesList?.get(position)?.milestone_bg_url.isNullOrBlank()) {
-                Picasso.with(holder.itemView.context).load(milestonesList?.get(position)?.milestone_bg_url).into(holder.milestoneBgImageView)
+                Picasso.get().load(milestonesList?.get(position)?.milestone_bg_url).into(holder.milestoneBgImageView)
             } else {
                 holder.milestoneBgImageView?.setBackgroundResource(R.drawable.default_article)
             }
@@ -52,7 +52,7 @@ class MilestonesListAdapter(
 
         try {
             if (!milestonesList?.get(position)?.milestone_image_url.isNullOrBlank()) {
-                Picasso.with(holder.itemView.context).load(milestonesList?.get(position)?.milestone_image_url).into(holder.milestoneImageView)
+                Picasso.get().load(milestonesList?.get(position)?.milestone_image_url).into(holder.milestoneImageView)
             } else {
                 holder.milestoneImageView?.setImageResource(R.drawable.default_article)
             }
@@ -69,7 +69,7 @@ class MilestonesListAdapter(
                 try {
                     val jsonObject = Gson().toJsonTree(milestonesList?.get(position)?.meta_data?.content_info?.imageUrl).asJsonObject
                     val imageUrl = Gson().fromJson<ImageURL>(jsonObject, ImageURL::class.java)
-                    Picasso.with(holder.itemView.context).load(imageUrl?.thumbMin).into(holder.contentImageView)
+                    Picasso.get().load(imageUrl?.thumbMin).into(holder.contentImageView)
                 } catch (e: Exception) {
                     holder.contentImageView?.setImageResource(R.drawable.default_article)
                     Crashlytics.logException(e)
@@ -81,7 +81,7 @@ class MilestonesListAdapter(
                 holder.contentTypeImageView?.setImageResource(R.drawable.shortstory_red)
                 try {
                     val imageUrl: String? = milestonesList?.get(position)?.meta_data?.content_info?.imageUrl as String
-                    Picasso.with(holder.itemView.context).load(imageUrl).into(holder.contentImageView)
+                    Picasso.get().load(imageUrl).into(holder.contentImageView)
                 } catch (e: Exception) {
                     holder.contentImageView?.setImageResource(R.drawable.default_article)
                     Crashlytics.logException(e)
@@ -92,7 +92,7 @@ class MilestonesListAdapter(
                 holder.contentTypeImageView?.visibility = View.VISIBLE
                 holder.contentTypeImageView?.setImageResource(R.drawable.ic_video)
                 try {
-                    Picasso.with(holder.itemView.context).load(
+                    Picasso.get().load(
                             milestonesList?.get(position)?.meta_data?.content_info?.thumbnail).into(holder.contentImageView)
                 } catch (e: Exception) {
                     holder.contentImageView?.setImageResource(R.drawable.default_article)
@@ -106,7 +106,7 @@ class MilestonesListAdapter(
                 holder.milestoneImageView?.setImageDrawable(null)
                 try {
                     val imageUrl: String? = milestonesList?.get(position)?.meta_data?.content_info?.imageUrl as String
-                    Picasso.with(holder.itemView.context).load(imageUrl).into(holder.contentImageView)
+                    Picasso.get().load(imageUrl).into(holder.contentImageView)
                 } catch (e: Exception) {
                     holder.contentImageView?.setImageResource(R.drawable.default_article)
                     Crashlytics.logException(e)

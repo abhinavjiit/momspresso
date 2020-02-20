@@ -16,7 +16,6 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.plus.PlusShare;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -111,11 +110,6 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
     protected void onResume() {
         super.onResume();
         ((BaseApplication) getApplication()).setView(root);
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

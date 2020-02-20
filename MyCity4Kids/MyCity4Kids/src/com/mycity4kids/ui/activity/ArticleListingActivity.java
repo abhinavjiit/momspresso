@@ -18,10 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.android.volley.Request;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.DateTimeUtils;
@@ -146,11 +144,6 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
                 }
             }
         });
-
-    }
-
-    @Override
-    protected void updateUi(Response response) {
 
     }
 
@@ -279,7 +272,6 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
             }
         } catch (Exception ex) {
             mLodingView.setVisibility(View.GONE);
-            removeVolleyCache(sortType);
             Crashlytics.logException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));
         }
@@ -364,28 +356,8 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
         }
         isLastPageReached = false;
         chunks = "";
-        removeVolleyCache(sortType);
         nextPageNumber = 1;
         hitArticleListingApi(nextPageNumber, sortType, false);
-    }
-
-    private void removeVolleyCache(String sortType) {
-        if (AppConstants.SORT_TYPE_BOOKMARK.equals(sortType))
-            return;
-
-        int cacheFrom = 1;
-        int cacheTo = 15;
-
-        String baseCacheKey = Request.Method.GET + ":" + AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_ARTICLE + sortType +
-                AppConstants.SEPARATOR_BACKSLASH;
-        String cachedPage = cacheFrom + AppConstants.SEPARATOR_BACKSLASH + cacheTo;
-        while (null != BaseApplication.getInstance().getRequestQueue().getCache().get(baseCacheKey + cachedPage)) {
-            BaseApplication.getInstance().getRequestQueue().getCache().remove(baseCacheKey + cachedPage);
-            cacheFrom = cacheFrom + 15;
-            cacheTo = cacheTo + 15;
-            cachedPage = cacheFrom + AppConstants.SEPARATOR_BACKSLASH + cacheTo;
-        }
-
     }
 
     @Override

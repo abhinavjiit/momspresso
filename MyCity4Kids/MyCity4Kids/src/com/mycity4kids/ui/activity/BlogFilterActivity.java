@@ -8,7 +8,6 @@ import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -55,11 +54,6 @@ public class BlogFilterActivity extends BaseActivity implements View.OnClickList
 
         aTOz.setOnClickListener(this);
         editorialTeam.setOnClickListener(this);
-
-    }
-
-    @Override
-    protected void updateUi(Response response) {
 
     }
 

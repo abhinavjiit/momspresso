@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.response.ArticleTagsImagesResponse;
 import com.squareup.picasso.Picasso;
 
@@ -24,13 +23,10 @@ public class ArticleTagsImagesGridAdapter extends BaseAdapter {
     private ArrayList<ArticleTagsImagesResponse.ArticleTagsImagesData.ArticleTagsImagesResult> tagsImageUrlList;
     private Context mContext;
     private LayoutInflater mInflator;
-    ArrayList<CommonParentingList> articleDataModelsNew;
-    private final float density;
     private ITagImageSelect iTagImageSelect;
 
     public ArticleTagsImagesGridAdapter(Context pContext) {
         mContext = pContext;
-        density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         iTagImageSelect = (ITagImageSelect) pContext;
     }
@@ -65,7 +61,7 @@ public class ArticleTagsImagesGridAdapter extends BaseAdapter {
         }
 
         if (!StringUtils.isNullOrEmpty(tagsImageUrlList.get(position).getImageUrl().getClientApp())) {
-            Picasso.with(mContext).load(tagsImageUrlList.get(position).getImageUrl().getClientApp()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+            Picasso.get().load(tagsImageUrlList.get(position).getImageUrl().getClientApp()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                     .fit().into(holder.tagsImageView);
         } else {
             holder.tagsImageView.setBackgroundResource(R.drawable.article_default);

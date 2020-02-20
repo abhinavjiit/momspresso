@@ -30,7 +30,6 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -461,11 +460,6 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
-
-    @Override
-    protected void updateUi(Response response) {
-
-    }
 
     @Override
     public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {

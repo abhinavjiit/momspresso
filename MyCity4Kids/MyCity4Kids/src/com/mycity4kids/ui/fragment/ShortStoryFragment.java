@@ -40,7 +40,6 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -155,7 +154,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private String editReplyId;
     private int deleteCommentPos;
     private int deleteReplyPos;
-    private View shareSSView;
     private TextView titleTextView, bodyTextView, authorTextView;
     private int colorPosition = 0;
     private RelativeLayout rootLayout;
@@ -174,7 +172,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         shortStoryRecyclerView = (RecyclerView) fragmentView.findViewById(R.id.shortStoryRecyclerView);
         openAddCommentDialog = (FloatingActionButton) fragmentView.findViewById(R.id.openAddCommentDialog);
         mLodingView = (RelativeLayout) fragmentView.findViewById(R.id.relativeLoadingView);
-        shareSSView = fragmentView.findViewById(R.id.shareSSView);
         titleTextView = (TextView) fragmentView.findViewById(R.id.titleTextView);
         bodyTextView = (TextView) fragmentView.findViewById(R.id.bodyTextView);
         authorTextView = (TextView) fragmentView.findViewById(R.id.authorTextView);
@@ -785,7 +782,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         if (isAdded()) {
             switch (shareMedium) {
                 case AppConstants.MEDIUM_FACEBOOK: {
-                    SharingUtils.shareViaFacebook(this);
+                    SharingUtils.shareViaFacebook(getActivity());
                     Utils.pushShareStoryEvent(getActivity(), "ShortStoryFragment",
                             userDynamoId + "", sharedStoryItem.getId(),
                             sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Facebook");
@@ -931,7 +928,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                                     .setQuote(responseData.getData().get(0).getMessage())
                                     .setContentUrl(Uri.parse(shareUrl))
                                     .build();
-                            new ShareDialog(ShortStoryFragment.this).show(content);
+                            if (getActivity() != null)
+                                new ShareDialog(getActivity()).show(content);
                         }
                     }
                     if (isAdded())
@@ -1211,11 +1209,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
-
-    @Override
-    protected void updateUi(Response response) {
-
-    }
 
     @Override
     public void onResponseDelete(int position, String responseType) {

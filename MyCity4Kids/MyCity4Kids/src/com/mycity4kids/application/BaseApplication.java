@@ -6,45 +6,29 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.StrictMode;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
-
-import androidx.multidex.MultiDex;
-
-import com.android.volley.RequestQueue;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.Volley;
 import com.comscore.analytics.comScore;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
-import com.facebook.ads.AudienceNetworkAds;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.libraries.places.api.Places;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.MessageEvent;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.database.BaseDbHelper;
 import com.mycity4kids.models.Topics;
-import com.mycity4kids.models.businesslist.BusinessDataListing;
-import com.mycity4kids.models.parentingstop.CommonParentingList;
-import com.mycity4kids.models.response.ArticleListingResult;
-import com.mycity4kids.newmodels.parentingmodel.ArticleFilterListModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.LocaleManager;
-import com.smartlook.sdk.smartlook.Smartlook;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -56,6 +40,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import androidx.multidex.MultiDex;
 import io.branch.referral.Branch;
 import io.fabric.sdk.android.Fabric;
 import io.socket.client.IO;
@@ -74,17 +59,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * This class holds some application-global instances.
  */
 public class BaseApplication extends Application {
-
-
-    private final String LOG_TAG = "BaseApplication";
     public static final String TAG = BaseApplication.class.getName();
-    private ArticleFilterListModel filterList;
 
-    private SQLiteDatabase mWritableDatabase;
-    private RequestQueue mRequestQueue;
     String data = "";
     private static BaseApplication mInstance;
-    private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit, campaignRewards, azureRetrofit, testRetrofit;
+
+    private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit, campaignRewards, azureRetrofit, testRetrofit, coroutineRetrofit;
     private static OkHttpClient client, customTimeoutOkHttpClient;
 
     private static ArrayList<Topics> topicList;
@@ -92,61 +72,16 @@ public class BaseApplication extends Application {
     private static HashMap<Topics, List<Topics>> topicsMap;
     private static HashMap<String, Topics> selectedTopicsMap;
     private String branchData = "";
-    private Activity dashboardActivity;
-    private FirebaseAnalytics mFirebaseAnalytics;
     private Activity activity;
-    private int position;
-
     /*
      * Google Analytics configuration values.
      */
-    private static GoogleAnalytics mGa;
-    private static Tracker mTracker;
-    public static String base_url;
     public String appVersion;
-    private boolean askPermission = true;
     public static boolean isFirstSwipe = true;
     private View view;
     private static Socket mSocket;
 
-    // Placeholder property ID.this was old which create by own account.
-    //private static final String GA_PROPERTY_ID = "UA-50870780-1";
-
     private static final String GA_PROPERTY_ID = "UA-20533582-2";
-
-    // Dispatch period in seconds.
-    private static final int GA_DISPATCH_PERIOD = 30;
-
-    // Prevent hits from being sent to reports, i.e. during testing.
-    //private static final boolean GA_IS_DRY_RUN = false;
-
-    // GA Logger.
-    /*    private static final LogLevel GA_LOG_VERBOSITY = LogLevel.ERROR;*/
-
-    // Key used to store a user's tracking preferences in SharedPreferences.
-    private static final String TRACKING_PREF_KEY = "trackingPreference";
-
-    private static ArrayList<BusinessDataListing> businessREsponse;
-
-    public static ArrayList<CommonParentingList> getBlogResponse() {
-        return blogResponse;
-    }
-
-    public static void setBlogResponse(ArrayList<CommonParentingList> blogResponse) {
-        BaseApplication.blogResponse = blogResponse;
-    }
-
-    private static ArrayList<CommonParentingList> blogResponse;
-
-    public static ArrayList<ArticleListingResult> getBestCityResponse() {
-        return bestCityResponse;
-    }
-
-    public static void setBestCityResponse(ArrayList<ArticleListingResult> bestCityResponse) {
-        BaseApplication.bestCityResponse = bestCityResponse;
-    }
-
-    private static ArrayList<ArticleListingResult> bestCityResponse;
 
     public static ArrayList<Topics> getTopicList() {
         return topicList;
@@ -164,15 +99,6 @@ public class BaseApplication extends Application {
         BaseApplication.shortStoryTopicList = shortStoryTopicList;
     }
 
-    public boolean isAskPermission() {
-        return askPermission;
-    }
-
-    public void setAskPermission(boolean askPermission) {
-        this.askPermission = askPermission;
-    }
-
-
     public static HashMap<Topics, List<Topics>> getTopicsMap() {
         return topicsMap;
     }
@@ -189,16 +115,6 @@ public class BaseApplication extends Application {
         BaseApplication.selectedTopicsMap = selectedTopicsMap;
     }
 
-    private static boolean hasLanguagePreferrenceChanged = false;
-
-    public static boolean isHasLanguagePreferrenceChanged() {
-        return hasLanguagePreferrenceChanged;
-    }
-
-    public static void setHasLanguagePreferrenceChanged(boolean hasLanguagePreferrenceChanged) {
-        BaseApplication.hasLanguagePreferrenceChanged = hasLanguagePreferrenceChanged;
-    }
-
     public static boolean isFirstSwipe() {
         return isFirstSwipe;
     }
@@ -206,7 +122,6 @@ public class BaseApplication extends Application {
     public static void setFirstSwipe(boolean firstSwipe) {
         isFirstSwipe = firstSwipe;
     }
-
 
     public View getView() {
         return view;
@@ -216,21 +131,12 @@ public class BaseApplication extends Application {
         this.view = view;
     }
 
-
     public Activity getActivity() {
         return activity;
     }
 
     public void setActivity(Activity activity) {
         this.activity = activity;
-    }
-
-    public Activity getDashboardActivity() {
-        return dashboardActivity;
-    }
-
-    public void setDashboardActivity(Activity dashboardActivity) {
-        this.dashboardActivity = dashboardActivity;
     }
 
     public enum TrackerName {
@@ -240,14 +146,6 @@ public class BaseApplication extends Application {
     }
 
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
-
-    public static ArrayList<BusinessDataListing> getBusinessREsponse() {
-        return businessREsponse;
-    }
-
-    public static void setBusinessREsponse(ArrayList<BusinessDataListing> businessREsponse) {
-        BaseApplication.businessREsponse = businessREsponse;
-    }
 
     public synchronized Tracker getTracker(TrackerName trackerId) {
         if (!mTrackers.containsKey(trackerId)) {
@@ -260,20 +158,6 @@ public class BaseApplication extends Application {
             mTrackers.put(trackerId, t);
         }
         return mTrackers.get(trackerId);
-    }
-
-    /*
-     * Returns the Google Analytics tracker.
-     */
-    public static Tracker getGaTracker() {
-        return mTracker;
-    }
-
-    /*
-     * Returns the Google Analytics instance.
-     */
-    public static GoogleAnalytics getGaInstance() {
-        return mGa;
     }
 
     public static Context getAppContext() {
@@ -290,9 +174,16 @@ public class BaseApplication extends Application {
 
     public Retrofit getCampaignRetrofit() {
         if (null == campaignRewards) {
-            createRetrofitInstanceForCampaign("https://testingapi.momspresso.com/");
+            createRetrofitInstanceForCampaign(AppConstants.LIVE_URL);
         }
         return campaignRewards;
+    }
+
+    public Retrofit getCoroutineRetrofit() {
+        if (null == coroutineRetrofit) {
+            createRetrofitInstanceForCampaign(AppConstants.LIVE_URL);
+        }
+        return coroutineRetrofit;
     }
 
     public Retrofit createRetrofitInstanceForCampaign(String base_url) {
@@ -344,7 +235,6 @@ public class BaseApplication extends Application {
         campaignRewards = new Retrofit.Builder()
                 .baseUrl(base_url)
                 .addConverterFactory(buildGsonConverter())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(client)
                 .build();
 
@@ -367,16 +257,12 @@ public class BaseApplication extends Application {
         Crashlytics.setUserEmail("" + SharedPrefUtils.getUserDetailModel(this).getEmail());
 
         setInstance(this);
-        VolleyLog.setTag("VolleyLogs");
 
-        Fresco.initialize(this);
         createRetrofitInstance(AppConstants.LIVE_URL);
 
-        mRequestQueue = Volley.newRequestQueue(getApplicationContext());
         comScore.setAppContext(this.getApplicationContext());
         comScore.setCustomerC2("18705325");
         comScore.setPublisherSecret("6116f207ac5e9f9226f6b98e088a22ea");
-        AudienceNetworkAds.initialize(this);
         Branch.enableLogging();
         Branch.getAutoInstance(this);
         PackageInfo pInfo = null;
@@ -417,49 +303,6 @@ public class BaseApplication extends Application {
         }
     };
 
-    /**
-     * Get the database instance.
-     *
-     * @return mWritableDatabase
-     */
-    public SQLiteDatabase getWritableDbInstance() {
-        if (mWritableDatabase == null) {
-            BaseDbHelper dbHelper = new BaseDbHelper(this);
-            mWritableDatabase = dbHelper.getWritableDatabase();
-        }
-        return mWritableDatabase;
-    }
-
-    @Override
-    public void onTerminate() {
-        Log.i(LOG_TAG, "onTerminate()");
-        if (mWritableDatabase != null) {
-            mWritableDatabase.close();
-        }
-        super.onTerminate();
-    }
-
-    public void setFilterList(ArticleFilterListModel list) {
-        filterList = list;
-    }
-
-    public RequestQueue getRequestQueue() {
-        return mRequestQueue;
-    }
-
-    public void add(com.android.volley.Request req) {
-        req.setTag(TAG);
-        getRequestQueue().add(req);
-    }
-
-    public void cancel() {
-        mRequestQueue.cancelAll(TAG);
-    }
-
-    public ArticleFilterListModel getFilterList() {
-        return filterList;
-    }
-
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(LocaleManager.setLocale(base));
@@ -496,17 +339,12 @@ public class BaseApplication extends Application {
                 requestBuilder.addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
                 requestBuilder.addHeader("userPrint", "" + AppUtils.getDeviceId(getApplicationContext()));
                 Request request = requestBuilder.build();
-
-//                Response response = chain.proceed(request);
-//                Log.w("Retrofit@Response", response.body().string());
                 return chain.proceed(request);
             }
         };
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-// set your desired log level
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
         if (BuildConfig.DEBUG) {
             client = new OkHttpClient
                     .Builder()
@@ -532,25 +370,16 @@ public class BaseApplication extends Application {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(client)
                 .build();
-
-//        retrofit = new Retrofit.Builder()
-//                .baseUrl("http://35.200.209.192:5000/")
-//                .addConverterFactory(buildGsonConverter())
-//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-//                .client(client)
-//                .build();
         return retrofit;
     }
 
     public Retrofit createGroupRetrofitInstance(String base_url) {
-
         Interceptor mainInterceptor = new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 Request original = chain.request();
                 HttpUrl originalHttpUrl = original.url();
                 Request.Builder requestBuilder = original.newBuilder();
-
                 requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
                 requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
                 requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
@@ -562,17 +391,12 @@ public class BaseApplication extends Application {
                 requestBuilder.addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
                 requestBuilder.addHeader("userPrint", "" + AppUtils.getDeviceId(getApplicationContext()));
                 Request request = requestBuilder.build();
-
-//                Response response = chain.proceed(request);
-//                Log.w("Retrofit@Response", response.body().string());
                 return chain.proceed(request);
             }
         };
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-// set your desired log level
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
         if (BuildConfig.DEBUG) {
             client = new OkHttpClient
                     .Builder()
@@ -601,26 +425,21 @@ public class BaseApplication extends Application {
     }
 
     public Retrofit createAzureRetrofitInstance(String base_url) {
-
         Interceptor mainInterceptor = new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 Request original = chain.request();
                 Request.Builder requestBuilder = original.newBuilder();
-
                 requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
                 requestBuilder.addHeader("Content-Type", "application/x-www-form-urlencoded");
                 requestBuilder.addHeader("Ocp-Apim-Subscription-Key", "987918a65c924d0fb5da048e1fbf5dd9");
                 Request request = requestBuilder.build();
-
                 return chain.proceed(request);
             }
         };
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-// set your desired log level
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
         if (BuildConfig.DEBUG) {
             client = new OkHttpClient
                     .Builder()
@@ -648,72 +467,11 @@ public class BaseApplication extends Application {
         return azureRetrofit;
     }
 
-
-    public Retrofit createRetrofitTestInstance(String base_url) {
-
-        Interceptor mainInterceptor = new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request original = chain.request();
-                HttpUrl originalHttpUrl = original.url();
-                Request.Builder requestBuilder = original.newBuilder();
-
-                requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
-                requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
-                requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
-                requestBuilder.addHeader("agent", "android");
-                requestBuilder.addHeader("manufacturer", Build.MANUFACTURER);
-                requestBuilder.addHeader("model", Build.MODEL);
-                requestBuilder.addHeader("appVersion", appVersion);
-                requestBuilder.addHeader("latitude", SharedPrefUtils.getUserLocationLatitude(getApplicationContext()));
-                requestBuilder.addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
-                requestBuilder.addHeader("userPrint", "" + AppUtils.getDeviceId(getApplicationContext()));
-                Request request = requestBuilder.build();
-
-//                Response response = chain.proceed(request);
-//                Log.w("Retrofit@Response", response.body().string());
-                return chain.proceed(request);
-            }
-        };
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-// set your desired log level
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        if (BuildConfig.DEBUG) {
-            client = new OkHttpClient
-                    .Builder()
-                    .addInterceptor(mainInterceptor)
-                    .addInterceptor(logging)
-                    .connectTimeout(60, TimeUnit.SECONDS)
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .writeTimeout(60, TimeUnit.SECONDS)
-                    .build();
-        } else {
-            client = new OkHttpClient
-                    .Builder()
-                    .addInterceptor(mainInterceptor)
-                    .connectTimeout(60, TimeUnit.SECONDS)
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .writeTimeout(60, TimeUnit.SECONDS)
-                    .build();
-        }
-
-        testRetrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .addConverterFactory(buildGsonConverter())
-                .client(client)
-                .build();
-        return testRetrofit;
-    }
-
     private static GsonConverterFactory buildGsonConverter() {
         GsonBuilder gsonBuilder = new GsonBuilder();
-
         // Adding custom deserializers
         gsonBuilder.registerTypeAdapterFactory(new ArrayAdapterFactory());
         Gson myGson = gsonBuilder.create();
-
         return GsonConverterFactory.create(myGson);
     }
 
@@ -726,20 +484,6 @@ public class BaseApplication extends Application {
             createRetrofitInstance(SharedPrefUtils.getBaseURL(this));
         }
         return retrofit;
-    }
-
-    public Retrofit getArticleRetrofit() {
-        if (null == retrofit) {
-            createRetrofitInstance(SharedPrefUtils.getRewardsBaseURL(this));
-        }
-        return retrofit;
-    }
-
-    public Retrofit getRetrofitTest() {
-        if (null == testRetrofit) {
-            createRetrofitTestInstance(SharedPrefUtils.getRewardsBaseURL(this));
-        }
-        return testRetrofit;
     }
 
     public Retrofit getAzureRetrofit() {
@@ -756,39 +500,6 @@ public class BaseApplication extends Application {
         return groupsRetrofit;
     }
 
-    public void toggleGroupBaseURL() {
-
-        if (HttpUrl.parse(AppConstants.GROUPS_TEST_LIVE_URL).equals(groupsRetrofit.baseUrl())) {
-            groupsRetrofit = null;
-            createGroupRetrofitInstance(AppConstants.GROUPS_TEST_STAGING_URL);
-            Toast.makeText(this, "switch to staging", Toast.LENGTH_SHORT).show();
-        } else {
-            groupsRetrofit = null;
-            createGroupRetrofitInstance(AppConstants.GROUPS_TEST_LIVE_URL);
-            Toast.makeText(this, "switch to live", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    public static void changeApiBaseUrl() {
-
-        if (AppConstants.LIVE_URL.equals(retrofit.baseUrl().toString())) {
-            SharedPrefUtils.setBaseURL(getAppContext(), AppConstants.DEV_URL);
-            retrofit = new Retrofit.Builder()
-                    .baseUrl(AppConstants.STAGING_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(client)
-                    .build();
-        } else {
-            SharedPrefUtils.setBaseURL(getAppContext(), AppConstants.LIVE_URL);
-            retrofit = new Retrofit.Builder()
-                    .baseUrl(AppConstants.LIVE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(client)
-                    .build();
-        }
-    }
-
     public Retrofit getConfigurableTimeoutRetrofit(int timeout) {
         if (null == customTimeoutRetrofit) {
             createCustomTimeoutRetrofitInstance(SharedPrefUtils.getBaseURL(this), timeout);
@@ -797,7 +508,6 @@ public class BaseApplication extends Application {
     }
 
     public Retrofit createCustomTimeoutRetrofitInstance(String base_url, int timeout) {
-
         Interceptor mainInterceptor = new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -816,18 +526,13 @@ public class BaseApplication extends Application {
                 requestBuilder.addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
                 requestBuilder.addHeader("userPrint", "" + AppUtils.getDeviceId(getApplicationContext()));
                 Request request = requestBuilder.build();
-
-//                Response response = chain.proceed(request);
-//                Log.w("Retrofit@Response", response.body().string());
                 return chain.proceed(request);
             }
 
         };
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-// set your desired log level
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
         if (BuildConfig.DEBUG) {
             customTimeoutOkHttpClient = new OkHttpClient
                     .Builder()
@@ -864,20 +569,11 @@ public class BaseApplication extends Application {
         return branchData;
     }
 
-
     public void setBranchLink(String data) {
         this.data = data;
     }
 
     public String getBranchLink() {
         return data;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
-    public int getPosition() {
-        return position;
     }
 }

@@ -5,15 +5,21 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 public class FollowTopics {
-
+    @SerializedName("id")
     private String id;
+    @SerializedName("display_name")
     private String display_name;
+    @SerializedName("showInMenu")
     private String showInMenu;
+    @SerializedName("title")
     private String title;
+    @SerializedName("slug")
     private String slug;
+    @SerializedName("child")
     private ArrayList<Topics> child;
     @SerializedName("public")
     private String publicVisibility;
+    @SerializedName("extraData")
     private Extra extraData;
 
     public String getId() {
@@ -81,7 +87,8 @@ public class FollowTopics {
     }
 
     public class Extra {
-        public CategoryBackgroundImage categoryBackImage;
+        @SerializedName("categoryBackImage")
+        CategoryBackgroundImage categoryBackImage;
 
         public CategoryBackgroundImage getCategoryBackImage() {
             return categoryBackImage;
@@ -92,8 +99,11 @@ public class FollowTopics {
         }
 
         public class CategoryBackgroundImage {
+            @SerializedName("web")
             String web;
+            @SerializedName("app")
             String app;
+            @SerializedName("mob")
             String mob;
 
             public String getWeb() {

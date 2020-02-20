@@ -1,13 +1,16 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
  * Created by hemant on 4/1/17.
  */
 public class VlogsListingData {
+    @SerializedName("chunks")
     private int chunks;
-
+    @SerializedName("result")
     private ArrayList<VlogsListingAndDetailResult> result;
 
     public ArrayList<VlogsListingAndDetailResult> getResult() {

@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -86,11 +85,6 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
         }
 
         return view;
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     private void newSearchTopicArticleListingApi(String searchName, String type) {

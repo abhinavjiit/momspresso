@@ -1294,4 +1294,12 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="editor_minimum_word_limit">Please write at least %1$d words to continue</string>
     <string name="all_copy_link">COPY LINK</string>
     <string name="ss_story_link_copied">Story link copied</string>
+    <string name="ss_image_loading_msg">Please wait for story background to be loaded</string>
+    <string name="story_coachmark_text">Position or move your story around as per your preference.</string>
+    <string name="story_got_it">Got it</string>
+    <string name="ss_coachmark_story_bg">Select background of your choice</string>
+    <string name="ss_coachmarks_text_style">Change font size or text alignment</string>
+    <string name="article_editor_min_words_body">You have written %1$d words. Please write at least 300 words to publish.</string>
+    <string name="enter_valid_instagram_campaign_detail_fragment_popup">Please enter a valid Instagram handle</string>
+    <string name="select_category">Select Category</string>
 </resources>

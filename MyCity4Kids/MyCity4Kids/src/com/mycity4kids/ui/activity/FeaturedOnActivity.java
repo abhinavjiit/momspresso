@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
@@ -19,12 +18,10 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.models.collectionsModels.FeaturedOnModel;
 import com.mycity4kids.models.collectionsModels.FollowCollectionRequestModel;
 import com.mycity4kids.models.collectionsModels.UserCollectionsModel;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.MixFeedResponse;
-import com.mycity4kids.models.response.MixFeedResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI;
 import com.mycity4kids.ui.adapter.FeatureOnRecyclerAdapter;
@@ -168,11 +165,6 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
                 onBackPressed();
                 break;
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

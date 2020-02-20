@@ -26,7 +26,6 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -342,11 +341,6 @@ public class TopicsListingActivity extends BaseActivity {
                 return;
             }
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

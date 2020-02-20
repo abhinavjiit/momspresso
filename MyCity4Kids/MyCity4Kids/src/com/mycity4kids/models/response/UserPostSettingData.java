@@ -1,5 +1,7 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import java.util.List;
 
 public class UserPostSettingData extends BaseData {
 
+    @SerializedName("result")
     private List<UserPostSettingResult> result;
 
     public List<UserPostSettingResult> getResult() {

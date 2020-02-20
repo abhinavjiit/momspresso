@@ -14,37 +14,31 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.viewpager.widget.ViewPager;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
-import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.asynctask.HeavyDbTask;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
-import com.mycity4kids.interfaces.OnUIView;
-import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.MetroCity;
-import com.mycity4kids.models.configuration.ConfigurationApiModel;
 import com.mycity4kids.models.request.UpdateUserDetailsRequest;
 import com.mycity4kids.models.response.CityConfigResponse;
 import com.mycity4kids.models.response.CityInfoItem;
@@ -73,10 +67,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.viewpager.widget.ViewPager;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -146,7 +136,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
         saveTextView.setOnClickListener(this);
         editImageView.setOnClickListener(this);
         try {
-            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(R.drawable.family_xxhdpi)
+            Picasso.get().load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).into(profileImageView);
         } catch (Exception e) {
             profileImageView.setImageResource(R.drawable.family_xxhdpi);
@@ -336,9 +326,6 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                     model.setLast_name(nameArr[1]);
                 }
                 SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), model);
-                if (viewPagerAdapter.getAbout().getSelectedCityId() != 0) {
-                    updateEventsResourcesConfigForCity();
-                }
             } else {
 //                showToast(responseData.getReason());
             }
@@ -350,95 +337,6 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
-
-    private void updateEventsResourcesConfigForCity() {
-        final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(BaseApplication.getAppContext());
-        final ConfigurationController _controller = new ConfigurationController(this, this);
-
-        MetroCity model = new MetroCity();
-
-        model.setId(viewPagerAdapter.getAbout().getSelectedCityId());
-        model.setName(viewPagerAdapter.getAbout().getCurrentCityName());
-        model.setNewCityId(viewPagerAdapter.getAbout().getCurrentCityName());
-
-        SharedPrefUtils.setCurrentCityModel(BaseApplication.getAppContext(), model);
-        SharedPrefUtils.setChangeCityFlag(BaseApplication.getAppContext(), true);
-
-        if (viewPagerAdapter.getAbout().getSelectedCityId() > 0) {
-            versionApiModel.setCityId(viewPagerAdapter.getAbout().getSelectedCityId());
-//            mFirebaseAnalytics.setUserProperty("CityId", cityModel.getCityId() + "");
-
-            String version = AppUtils.getAppVersion(this);
-            if (!StringUtils.isNullOrEmpty(version)) {
-                versionApiModel.setAppUpdateVersion(version);
-            }
-
-            if (!ConnectivityUtils.isNetworkEnabled(this)) {
-                ToastUtils.showToast(this, getString(R.string.error_network));
-                return;
-
-            }
-//            if (null != cityFragment) {
-//                cityFragment.dismiss();
-//            }
-            _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        setupUI(mainprofileparentlayout);
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-        if (response == null) {
-//            progressBar.setVisibility(View.GONE);
-            Toast.makeText(this, getResources().getString(R.string.server_error), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        switch (response.getDataType()) {
-            case AppConstants.CONFIGURATION_REQUEST:
-                Object responseObject = response.getResponseObject();
-                if (responseObject instanceof ConfigurationApiModel) {
-                    ConfigurationApiModel _configurationResponse = (ConfigurationApiModel) responseObject;
-                    BaseApplication.setBusinessREsponse(null);
-                    HeavyDbTask _heavyDbTask = new HeavyDbTask(this,
-                            _configurationResponse, new OnUIView() {
-                        @Override
-                        public void comeBackOnUI() {
-//                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
-                    _heavyDbTask.execute();
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void setupUI(View view) {
-
-        // Set up touch listener for non-text box views to hide keyboard.
-        if (!(view instanceof EditText)) {
-            view.setOnTouchListener(new View.OnTouchListener() {
-                public boolean onTouch(View v, MotionEvent event) {
-                    hideSoftKeyboard(EditProfileNewActivity.this);
-                    return false;
-                }
-            });
-        }
-
-        //If a layout container, iterate over children and seed recursion.
-        if (view instanceof ViewGroup) {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-                View innerView = ((ViewGroup) view).getChildAt(i);
-                setupUI(innerView);
-            }
-        }
-    }
 
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =
@@ -694,8 +592,8 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                                      Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
                                  }
                                  setProfileImage(responseModel.getData().getResult().getUrl());
-                                 Picasso.with(EditProfileNewActivity.this).invalidate(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()));
-                                 Picasso.with(EditProfileNewActivity.this).load(responseModel.getData().getResult().getUrl())
+                                 Picasso.get().invalidate(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()));
+                                 Picasso.get().load(responseModel.getData().getResult().getUrl())
                                          .memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.family_xxhdpi)
                                          .error(R.drawable.family_xxhdpi).into(profileImageView);
                                  SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), responseModel.getData().getResult().getUrl());

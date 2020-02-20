@@ -13,7 +13,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -104,11 +103,6 @@ public class UserSeenFunnyVideosTabFragment extends BaseFragment implements View
             }
         });
         return view;
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     private void hitArticleListingApi() {

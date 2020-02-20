@@ -2,9 +2,16 @@ package com.mycity4kids.ui.campaign
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
-data class Exists(var account_number: String,
-                  var id: Int) : Parcelable {
+data class Exists(
+        @SerializedName("account_number")
+        @Expose
+        var account_number: String,
+        @SerializedName("id")
+        @Expose
+        var id: Int) : Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readString(),
             parcel.readInt())

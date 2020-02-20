@@ -1,10 +1,17 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by anshul on 7/11/16.
  */
 public class BlogPageResult {
-    int isSetup;
+    @SerializedName("isSetup")
+    private int isSetup;
+    @SerializedName("blogTitle")
+    private String blogTitle;
+    @SerializedName("userBio")
+    private String userBio;
 
     public String getBlogTitle() {
         return blogTitle;
@@ -14,8 +21,6 @@ public class BlogPageResult {
         this.blogTitle = blogTitle;
     }
 
-    String blogTitle;
-
     public String getUserBio() {
         return userBio;
     }
@@ -23,9 +28,6 @@ public class BlogPageResult {
     public void setUserBio(String userBio) {
         this.userBio = userBio;
     }
-
-    String userBio;
-
 
     public int getIsSetup() {
         return isSetup;

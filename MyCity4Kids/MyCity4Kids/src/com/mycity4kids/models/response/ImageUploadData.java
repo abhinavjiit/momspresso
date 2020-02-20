@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 public class ImageUploadData extends BaseData {
 
   @SerializedName("result")
-  ImageResult result;
+  private ImageResult result;
 
   public ImageResult getResult() {
     return result;

@@ -1,5 +1,7 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
@@ -7,7 +9,7 @@ import java.util.ArrayList;
  */
 
 public class AddGpPostCommentReplyResponse extends BaseResponse {
-
+    @SerializedName("data")
     private AddGpPostCommentReplyData data;
 
     public AddGpPostCommentReplyData getData() {
@@ -19,6 +21,7 @@ public class AddGpPostCommentReplyResponse extends BaseResponse {
     }
 
     public class AddGpPostCommentReplyData {
+        @SerializedName("result")
         public AddGpPostCommentReplyResult result;
 
         public AddGpPostCommentReplyResult getResult() {
@@ -30,24 +33,43 @@ public class AddGpPostCommentReplyResponse extends BaseResponse {
         }
 
         public class AddGpPostCommentReplyResult {
+            @SerializedName("id")
             private int id;
+            @SerializedName("content")
             private String content;
+            @SerializedName("sentiment")
             private String sentiment;
+            @SerializedName("mediaUrls")
             private Object mediaUrls;
+            @SerializedName("parentId")
             private int parentId;
+            @SerializedName("groupId")
             private int groupId;
+            @SerializedName("postId")
             private int postId;
+            @SerializedName("userId")
             private String userId;
+            @SerializedName("isActive")
             private int isActive;
+            @SerializedName("isAnnon")
             private int isAnnon;
+            @SerializedName("moderationStatus")
             private String moderationStatus;
+            @SerializedName("moderatedBy")
             private String moderatedBy;
+            @SerializedName("moderatedon")
             private String moderatedon;
+            @SerializedName("lang")
             private String lang;
+            @SerializedName("createdAt")
             private long createdAt;
+            @SerializedName("updatedAt")
             private long updatedAt;
+            @SerializedName("childData")
             private ArrayList<GroupPostCommentResult> childData;
+            @SerializedName("isLastConversation")
             private int isLastConversation = 0;
+            @SerializedName("childCount")
             private int childCount;
 
             public AddGpPostCommentReplyResult() {

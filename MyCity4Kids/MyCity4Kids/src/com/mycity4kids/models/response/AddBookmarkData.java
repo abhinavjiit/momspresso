@@ -1,13 +1,16 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 29/7/16.
  */
 public class AddBookmarkData {
+    @SerializedName("msg")
     private String msg;
-    private String userId;
-    private String articleId;
+    @SerializedName("result")
     private AddBookmarkResult result;
+    @SerializedName("id")
     private String id;
 
     public String getArticleId() {

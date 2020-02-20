@@ -30,7 +30,6 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -353,11 +352,6 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         isLastPageReached = false;
         nextPageNumber = 1;
         hitArticleListingApi();
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.ui.adapter.ChallengeListingRecycleAdapter;
@@ -31,11 +30,6 @@ public class ChallengeListingTabFragment extends BaseFragment implements View.On
         //challengeListingRecycleAdapter = new ChallengeListingRecycleAdapter(this, getActivity());
         // recyclerView.setAdapter(challengeListingRecycleAdapter);
         return view;
-
-    }
-
-    @Override
-    protected void updateUi(Response response) {
 
     }
 

@@ -2,7 +2,6 @@ package com.mycity4kids.ui.mymoneytracker.activity
 
 import android.os.Bundle
 import android.widget.ImageView
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.mycity4kids.R
 import com.mycity4kids.ui.mymoneytracker.fragment.TrackerFragment
@@ -15,8 +14,6 @@ class TrackerActivity : BaseActivity() {
     private lateinit var brandName: String
     private lateinit var campaignName: String
     private lateinit var imageUrl: String
-    override fun updateUi(response: Response?) {
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

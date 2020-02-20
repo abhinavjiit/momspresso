@@ -69,11 +69,11 @@ class UsersBookmarksAdapter(private val mListener: RecyclerViewClickListener) : 
                 if (!StringUtils.isNullOrEmpty(mixFeedResult?.get(position)?.imageUrl?.clientApp) &&
                         (mixFeedResult?.get(position)?.imageUrl?.thumbMax == null ||
                                 mixFeedResult?.get(position)?.imageUrl?.thumbMax?.endsWith("default.jpg")!!)) {
-                    Picasso.with(holder.itemView.context).load(mixFeedResult?.get(position)?.imageUrl?.clientApp).placeholder(
+                    Picasso.get().load(mixFeedResult?.get(position)?.imageUrl?.clientApp).placeholder(
                             R.drawable.default_article).into(holder.contentImageView)
                 } else {
                     if (!StringUtils.isNullOrEmpty(mixFeedResult?.get(position)?.imageUrl?.thumbMax)) {
-                        Picasso.with(holder.itemView.context).load(mixFeedResult?.get(position)?.imageUrl?.thumbMax).placeholder(
+                        Picasso.get().load(mixFeedResult?.get(position)?.imageUrl?.thumbMax).placeholder(
                                 R.drawable.default_article).error(R.drawable.default_article).into(holder.contentImageView)
                     } else {
                         holder.contentImageView.setBackgroundResource(R.drawable.default_article)
@@ -109,7 +109,7 @@ class UsersBookmarksAdapter(private val mListener: RecyclerViewClickListener) : 
             }
             try {
                 if (!StringUtils.isNullOrEmpty(mixFeedResult?.get(position)?.thumbnail)) {
-                    Picasso.with(holder.itemView.context).load(mixFeedResult?.get(position)?.thumbnail).placeholder(
+                    Picasso.get().load(mixFeedResult?.get(position)?.thumbnail).placeholder(
                             R.drawable.default_article).into(holder.contentImageView)
                 } else {
                     holder.contentImageView.setBackgroundResource(R.drawable.default_article)

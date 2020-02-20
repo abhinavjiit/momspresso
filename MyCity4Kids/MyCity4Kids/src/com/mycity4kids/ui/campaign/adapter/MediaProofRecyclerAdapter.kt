@@ -40,13 +40,10 @@ class MediaProofRecyclerAdapter(
                     }
 
                     holder.imageScreenshot.setImageDrawable(context.resources.getDrawable(R.drawable.ic_add_proof))
-//                    Picasso.with(context.context).load(item.url)
-//                            .placeholder(R.drawable.ic_add_proof).error(R.drawable.ic_add_proof).into(holder.imageScreenshot)
-
                     holder.imageEdit.visibility = View.GONE
 
                 }else{
-                    Picasso.with(context.context).load(item.url)
+                    Picasso.get().load(item.url)
                             .placeholder(R.drawable.ic_add_proof).error(R.drawable.ic_add_proof).into(holder.imageScreenshot)
                     if (item.proofStatus == 1 || item.proofStatus == 0) {
                         holder.imageEdit.visibility = View.VISIBLE

@@ -39,17 +39,13 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
-
 import com.crashlytics.android.Crashlytics;
-import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.widget.ShareDialog;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
-import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -60,6 +56,7 @@ import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.widget.Hashids;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -92,6 +89,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import androidx.core.content.ContextCompat;
 import okhttp3.ResponseBody;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
@@ -435,8 +433,6 @@ public class AppUtils {
                 outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
                 outputStream.write(jsonString.getBytes(Charset.forName("UTF-8")));
                 outputStream.flush();
-//            output.close();
-//            Toast.makeText(getApplicationContext(), "Composition saved", Toast.LENGTH_LONG).show();
                 return true;
             } catch (IOException e) {
                 return false;
@@ -458,22 +454,15 @@ public class AppUtils {
                 OutputStream outputStream = null;
                 try {
                     byte[] fileReader = new byte[4096];
-                    long fileSize = body.contentLength();
-                    long fileSizeDownloaded = 0;
-
                     inputStream = body.byteStream();
                     outputStream = mContext.openFileOutput(fileName, Context.MODE_PRIVATE);
-
                     while (true) {
                         int read = inputStream.read(fileReader);
                         if (read == -1) {
                             break;
                         }
                         outputStream.write(fileReader, 0, read);
-                        fileSizeDownloaded += read;
-                        Log.d("AppUtils", "file download: " + fileSizeDownloaded + " of " + fileSize);
                     }
-
                     outputStream.flush();
                     return true;
                 } catch (IOException e) {
@@ -484,7 +473,6 @@ public class AppUtils {
                     if (inputStream != null) {
                         inputStream.close();
                     }
-
                     if (outputStream != null) {
                         outputStream.close();
                     }
@@ -1272,50 +1260,6 @@ public class AppUtils {
         return true;
     }
 
-    public static void shareStoryWithFBC(BaseFragment topicsChallengeTabFragment, String userType,
-                                         String blogSlug, String titleSlug,
-                                         String screenName, String userDynamoId, String articleId, String authorId,
-                                         String authorName) {
-        String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
-
-        if (ShareDialog.canShow(ShareLinkContent.class)) {
-            ShareLinkContent content = new ShareLinkContent.Builder()
-                    .setContentUrl(Uri.parse(shareUrl))
-                    .build();
-            new ShareDialog(topicsChallengeTabFragment).show(content);
-        }
-        Utils
-                .pushShareStoryEvent(topicsChallengeTabFragment.getContext(), screenName, userDynamoId + "",
-                        articleId, authorId + "~" + authorName, "Facebook");
-    }
-
-    public static void shareStoryWithFB(Activity ChallnegeDetailListingActivity, Context mContext,
-                                        String userType, String blogSlug, String titleSlug,
-                                        String screenName, String userDynamoId, String articleId, String authorId,
-                                        String authorName) {
-        String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
-
-        if (ShareDialog.canShow(ShareLinkContent.class)) {
-            ShareLinkContent content = new ShareLinkContent.Builder()
-                    .setContentUrl(Uri.parse(shareUrl))
-                    .build();
-            new ShareDialog(ChallnegeDetailListingActivity).show(content);
-        }
-        Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId,
-                authorId + "~" + authorName, "Facebook");
-    }
-
-    public static void shareStoryGeneric(Context mContext, String userType, String blogSlug,
-                                         String titleSlug,
-                                         String screenName, String userDynamoId, String articleId, String authorId,
-                                         String authorName) {
-        String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
-        if (shareGenericLinkWithSuccessStatus(mContext, shareUrl)) {
-            Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId,
-                    authorId + "~" + authorName, "Generic");
-        }
-    }
-
     public static boolean shareGenericLinkWithSuccessStatus(Context context, String shareUrl) {
         Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
@@ -1488,5 +1432,30 @@ public class AppUtils {
         ClipboardManager clipboard = (ClipboardManager) BaseApplication.getAppContext().getSystemService(CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("label", hashtags);
         clipboard.setPrimaryClip(clip);
+    }
+
+    public static void populateLogoImageLanguageWise(Context context, ImageView logoImageView, String lang) {
+        if (StringUtils.isNullOrEmpty(lang) || "0".equals(lang) || "en".equals(lang)) {
+            Picasso.get().load(R.drawable.app_logo).into(logoImageView);
+        } else if ("1".equals(lang) || "hi".equals(lang)) {
+            Picasso.get().load(R.drawable.app_logo_hi).into(logoImageView);
+        } else if ("2".equals(lang) || "mr".equals(lang)) {
+            Picasso.get().load(R.drawable.app_logo_mr).into(logoImageView);
+        } else if ("3".equals(lang) || "bn".equals(lang)) {
+            Picasso.get().load(R.drawable.app_logo_bn).into(logoImageView);
+        } else if ("4".equals(lang) || "ta".equals(lang)) {
+            Picasso.get().load(R.drawable.app_logo_ta).into(logoImageView);
+        } else if ("5".equals(lang) || "te".equals(lang)) {
+            Picasso.get().load(R.drawable.app_logo_te).into(logoImageView);
+        } else if ("6".equals(lang) || "kn".equals(lang)) {
+            Picasso.get().load(R.drawable.app_logo_kn).into(logoImageView);
+        } else if ("7".equals(lang) || "ml".equals(lang)) {
+            Picasso.get().load(R.drawable.app_logo_ml).into(logoImageView);
+        } else if ("8".equals(lang) || "gu".equals(lang)) {
+            Picasso.get().load(R.drawable.app_logo_gu).into(logoImageView);
+        } else if ("9".equals(lang) || "pa".equals(lang)) {
+            Picasso.get().load(R.drawable.app_logo_pa).into(logoImageView);
+        }
+
     }
 }

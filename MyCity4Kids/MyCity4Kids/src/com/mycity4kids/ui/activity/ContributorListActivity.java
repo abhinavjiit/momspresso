@@ -28,7 +28,6 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -41,7 +40,6 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ContributorListResponse;
 import com.mycity4kids.models.response.ContributorListResult;
 import com.mycity4kids.models.response.LanguageConfigModel;
-import com.mycity4kids.newmodels.bloggermodel.BlogItemModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI;
@@ -69,8 +67,6 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
     private int totalPageCount = 2;
     private int nextPageNumber = 0;
     Boolean isSortEnable = false;
-    ArrayList<BlogItemModel> listingData;
-    ArrayList<BlogItemModel> orignalListingData;
     Boolean isReuqestRunning = false;
     private Boolean isLastPageReached = false;
     private int limit = 10;
@@ -88,21 +84,18 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
     ArrayList<String> list;
     ArrayList<LanguageConfigModel> languageConfigModelArrayList;
     private String langKey = "0";
-    private String dynamoUserId;
-    private RelativeLayout root;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.parenting_blog_home);
-        root = findViewById(R.id.root);
+        RelativeLayout root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         Utils.pushOpenScreenEvent(ContributorListActivity.this, "Contributor List", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
         mToolBar.setVisibility(View.VISIBLE);
-        dynamoUserId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
 
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -123,10 +116,8 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
         frameLayout.getBackground().setAlpha(0);
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
         contributorArrayList = new ArrayList<>();
-        orignalListingData = new ArrayList<>();
         rankFab.setOnClickListener(ContributorListActivity.this);
         nameFab.setOnClickListener(this);
-        listingData = new ArrayList<>();
 
         showProgressDialog(getString(R.string.please_wait));
         hitBloggerAPIrequest(sortType, type);
@@ -264,10 +255,6 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
     public void onResume() {
         super.onResume();
         blogListing.invalidate();
-    }
-
-    @Override
-    protected void updateUi(Response response) {
     }
 
     public void hitBloggerAPIrequest(int sortType, String type) {

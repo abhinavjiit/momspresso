@@ -15,7 +15,6 @@ import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.StringUtils
 import com.kelltontech.utils.ToastUtils
@@ -36,12 +35,13 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import retrofit2.HttpException
 import java.io.InputStreamReader
 
 class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerViewClickListener, CollectionThumbnailImageChangeDialogFragmnet.SendImage {
     override fun onsendData(imageUrl: String) {
         try {
-            Picasso.with(this@EditCollectionActivity).load(imageUrl)
+            Picasso.get().load(imageUrl)
                     .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageView)
             userCollectionsListModel.imageUrl = imageUrl
 
@@ -69,9 +69,6 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
     private lateinit var itemNotAddedTextView: TextView
     private var deletedItemPosition: Int = -1
     private lateinit var back: TextView
-
-    override fun updateUi(response: Response?) {
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -149,7 +146,7 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                             userCollectionsListModel.summary?.let { descriptionEditTextView?.setText(userCollectionsListModel.summary) }
                             try {
 
-                                Picasso.with(this@EditCollectionActivity).load(userCollectionsListModel.imageUrl)
+                                Picasso.get().load(userCollectionsListModel.imageUrl)
                                         .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageView)
                             } catch (e: Exception) {
                                 collectionImageView.setImageResource(R.drawable.default_article)
@@ -223,7 +220,7 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                 Crashlytics.logException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
                 try {
-                    var data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
+                    var data = (e as HttpException).response()?.errorBody()!!.byteStream()
                     var jsonParser = JsonParser()
                     var jsonObject = jsonParser.parse(
                             InputStreamReader(data, "UTF-8")) as JsonObject
@@ -279,9 +276,9 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                 Crashlytics.logException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
                 try {
-                    val data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
-                    val jsonParser = JsonParser()
-                    val jsonObject = jsonParser.parse(
+                    var data = (e as HttpException).response()?.errorBody()!!.byteStream()
+                    var jsonParser = JsonParser()
+                    var jsonObject = jsonParser.parse(
                             InputStreamReader(data, "UTF-8")) as JsonObject
                     val reason = jsonObject.get("reason")
                     Toast.makeText(this@EditCollectionActivity, reason.asString, Toast.LENGTH_SHORT).show()

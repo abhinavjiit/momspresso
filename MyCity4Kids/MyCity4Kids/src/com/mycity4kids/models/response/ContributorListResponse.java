@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  */
 public class ContributorListResponse extends BaseResponse {
     @SerializedName("data")
-    ContributorListData data;
+    private ContributorListData data;
 
     public ContributorListData getData() {
         return data;

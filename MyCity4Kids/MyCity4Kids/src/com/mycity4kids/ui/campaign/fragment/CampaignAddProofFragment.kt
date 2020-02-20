@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -143,9 +142,6 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         }.setIcon(android.R.drawable.ic_dialog_alert)
         val alert11 = dialog.create()
         alert11.show()
-    }
-
-    override fun updateUi(response: Response?) {
     }
 
     private var columnCount = 1

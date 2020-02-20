@@ -11,7 +11,6 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.crashlytics.android.Crashlytics
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -27,10 +26,6 @@ import retrofit2.Call
 import retrofit2.Callback
 
 class RewardsTabFragment : BaseFragment() {
-    override fun updateUi(response: Response?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     private lateinit var textStartReward: TextView
     private lateinit var containerView: View
     private lateinit var textPersonalInfo: View

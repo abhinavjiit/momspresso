@@ -2,7 +2,6 @@ package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,9 +12,7 @@ import android.widget.ImageView;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.applinks.AppLinkData;
-import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -24,7 +21,6 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.dbtable.TableAdult;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
@@ -93,7 +89,6 @@ public class SplashActivity extends BaseActivity {
         onNewIntent(getIntent());
 //        AppUtils.printHashKey(this);
         extras = getIntent().getExtras();
-        MobileAds.initialize(this, initializationStatus -> Log.d("Admob", "Initialized"));
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         if (getIntent().getBooleanExtra("fromNotification", false)) {
@@ -107,11 +102,6 @@ public class SplashActivity extends BaseActivity {
             View mLayout = findViewById(R.id.rootLayout);
             ((BaseApplication) getApplication()).setView(mLayout);
             ((BaseApplication) getApplication()).setActivity(this);
-
-            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            String version = pInfo.versionName;
-            Log.e("version number ", version);
-
             ImageView _spin = (ImageView) findViewById(R.id.spin);
             _spin.startAnimation(AnimationUtils.loadAnimation(this,
                     R.anim.rotate_indefinitely));
@@ -191,7 +181,6 @@ public class SplashActivity extends BaseActivity {
 
     private void navigateToNextScreen() {
         UserInfo userInfo = SharedPrefUtils.getUserDetailModel(this);
-        TableAdult _table = new TableAdult(BaseApplication.getInstance());
         if (null != userInfo && !StringUtils.isNullOrEmpty(userInfo.getMc4kToken()) &&
                 AppConstants.VALIDATED_USER.equals(userInfo.getIsValidated())) { // if he signup
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -272,6 +261,7 @@ public class SplashActivity extends BaseActivity {
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
             gotoDashboard();
+            apiExceptions(t);
         }
     };
 
@@ -298,11 +288,6 @@ public class SplashActivity extends BaseActivity {
             finish();
 
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override
@@ -358,6 +343,7 @@ public class SplashActivity extends BaseActivity {
         @Override
         public void onFailure(Call<ForceUpdateModel> call, Throwable t) {
             showToast(getString(R.string.went_wrong));
+            apiExceptions(t);
         }
     };
 

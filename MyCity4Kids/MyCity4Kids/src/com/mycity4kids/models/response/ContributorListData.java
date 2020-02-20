@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class ContributorListData extends BaseData {
     @SerializedName("result")
-    ArrayList<ContributorListResult> result;
+    private ArrayList<ContributorListResult> result;
 
     @SerializedName("pagination")
     private String pagination;

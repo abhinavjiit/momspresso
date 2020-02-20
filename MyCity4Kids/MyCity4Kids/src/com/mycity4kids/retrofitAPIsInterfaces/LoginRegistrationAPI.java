@@ -1,6 +1,5 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
-import com.mycity4kids.models.request.AddEditKidsInformationRequest;
 import com.mycity4kids.models.request.ChangePasswordRequest;
 import com.mycity4kids.models.request.LoginRegistrationRequest;
 import com.mycity4kids.models.request.PhoneLoginRequest;
@@ -19,6 +18,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by hemant on 3/5/16.
@@ -46,14 +46,8 @@ public interface LoginRegistrationAPI {
     @POST("v1/users/link/email/")
     Call<UserDetailResponse> resendVerificationLink(@Body LoginRegistrationRequest body);
 
-    @PUT("v1/users/kid/")
-    Call<UserDetailResponse> addEditKidsInformation(@Body AddEditKidsInformationRequest body);
-
     @PUT("v1/users/socialTokens/")
     Call<BaseResponse> socialConnect(@Body SocialConnectRequest body);
-
-    @POST("v1/users/loginfbnumber")
-    Call<FBPhoneLoginResponse> loginWithPhone(@Body PhoneLoginRequest phoneLoginRequest);
 
     @POST("v1/smsapi/")
     Call<ResponseBody> triggerSMS(@Body PhoneLoginRequest phoneLoginRequest);
@@ -63,4 +57,16 @@ public interface LoginRegistrationAPI {
 
     @POST("v1/users/loginmobilenumber/")
     Call<FBPhoneLoginResponse> loginWithPhoneToken(@Body PhoneLoginRequest phoneLoginRequest);
+
+    @POST("apiusers/logoutV1/")
+    Call<ResponseBody> logout();
+
+    @GET("apiusers/updatePushTokenV1")
+    Call<ResponseBody> updatePushToken(@Query("userId") String userId,
+                                       @Query("dynamoId") String dynamoId,
+                                       @Query("app_version") String app_version,
+                                       @Query("deviceType") String deviceType,
+                                       @Query("cityId") int cityId,
+                                       @Query("pushToken") String pushToken,
+                                       @Query("fcmToken") String fcmToken);
 }

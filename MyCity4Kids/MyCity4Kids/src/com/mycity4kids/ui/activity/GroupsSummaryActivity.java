@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.internal.LinkedTreeMap;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -315,11 +314,6 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                 startActivity(intent);
             }
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

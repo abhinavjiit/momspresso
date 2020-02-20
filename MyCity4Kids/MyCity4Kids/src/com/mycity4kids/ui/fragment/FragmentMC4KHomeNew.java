@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -26,8 +25,6 @@ import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.GroupIdCategoryMap;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
@@ -174,11 +171,6 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
                 viewPager.setCurrentItem(tab.getPosition());
             }
         });
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

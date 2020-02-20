@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.google.gson.internal.LinkedTreeMap;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -37,11 +36,6 @@ public class EditGpJoiningFormTabFragment extends BaseFragment {
             groupQAMap = new LinkedTreeMap<>();
         }
         return view;
-
-    }
-
-    @Override
-    protected void updateUi(Response response) {
 
     }
 

@@ -3,33 +3,21 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RelativeLayout;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.asynctask.HeavyDbTask;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.interfaces.OnUIView;
-import com.mycity4kids.models.VersionApiModel;
-import com.mycity4kids.models.city.MetroCity;
-import com.mycity4kids.models.configuration.ConfigurationApiModel;
-import com.mycity4kids.models.response.CityConfigResponse;
-import com.mycity4kids.models.response.CityInfoItem;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 
 import java.util.ArrayList;
@@ -43,7 +31,6 @@ import retrofit2.Retrofit;
  */
 public class LoadingActivity extends BaseActivity {
 
-    private int cityIdFromLocation;
     private RelativeLayout root;
     String type = "";
 
@@ -64,118 +51,6 @@ public class LoadingActivity extends BaseActivity {
         navigateToDashboard();
     }
 
-    private void fetchingLocation() {
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        ConfigAPIs cityConfigAPI = retrofit.create(ConfigAPIs.class);
-        Call<CityConfigResponse> call = cityConfigAPI.getCityConfig();
-        call.enqueue(cityConfigResponseCallback);
-    }
-
-    private Callback<CityConfigResponse> cityConfigResponseCallback = new Callback<CityConfigResponse>() {
-        @Override
-        public void onResponse(Call<CityConfigResponse> call, retrofit2.Response<CityConfigResponse> response) {
-            if (response == null || null == response.body()) {
-                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
-                return;
-            }
-            try {
-                CityConfigResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    ArrayList<CityInfoItem> mDatalist = responseData.getData().getResult().getCityData();
-                    for (int i = 0; i < mDatalist.size(); i++) {
-                        CityInfoItem cii = mDatalist.get(i);
-                        int cId = Integer.parseInt(cii.getId().replace("city-", ""));
-                        if (cId == cityIdFromLocation) {
-                            MetroCity model = new MetroCity();
-                            model.setId(cId);
-                            model.setName(cii.getCityName());
-                            model.setNewCityId(cii.getId());
-
-                            SharedPrefUtils.setCurrentCityModel(BaseApplication.getAppContext(), model);
-                            sendConfigurationRequest();
-                        }
-                    }
-                } else {
-                    navigateToDashboard();
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-                navigateToDashboard();
-            }
-        }
-
-        @Override
-        public void onFailure(Call<CityConfigResponse> call, Throwable t) {
-            navigateToDashboard();
-        }
-    };
-
-    @Override
-    protected void updateUi(Response response) {
-        if (response == null) {
-            return;
-        }
-        switch (response.getDataType()) {
-            case AppConstants.CONFIGURATION_REQUEST:
-                Object responseObject = response.getResponseObject();
-                if (responseObject instanceof ConfigurationApiModel) {
-                    ConfigurationApiModel _configurationResponse = (ConfigurationApiModel) responseObject;
-
-                    /**
-                     * Save data into tables :-
-                     */
-                    HeavyDbTask _heavyDbTask = new HeavyDbTask(this,
-                            _configurationResponse, new OnUIView() {
-
-                        @Override
-                        public void comeBackOnUI() {
-                            navigateToDashboard();
-                            Log.i("Dashboard", "Configuration MixFeedData Updated");
-                        }
-                    });
-                    _heavyDbTask.execute();
-
-                }
-
-            default:
-                break;
-        }
-    }
-
-    private void sendConfigurationRequest() {
-        VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(BaseApplication.getAppContext());
-        versionApiModel.setCategoryVersion(0.0f);
-        versionApiModel.setCityVersion(0.0f);
-        versionApiModel.setLocalityVersion(0.0f);
-        versionApiModel.setCityId(SharedPrefUtils.getCurrentCityModel(this).getId());
-
-        /**
-         * get current version code ::
-         */
-        PackageInfo pInfo = null;
-        try {
-            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        String version = pInfo.versionName;
-        if (!StringUtils.isNullOrEmpty(version)) {
-            versionApiModel.setAppUpdateVersion(version);
-        }
-
-        if (!ConnectivityUtils.isNetworkEnabled(this)) {
-            ToastUtils.showToast(this, getString(R.string.error_network));
-            return;
-
-        }
-        ConfigurationController _controller = new ConfigurationController(this, this);
-        _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
-    }
-
     public void navigateToDashboard() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsCategoryAPI = retrofit.create(TopicsCategoryAPI.class);
@@ -187,7 +62,7 @@ public class LoadingActivity extends BaseActivity {
         @Override
         public void onResponse(Call<FollowUnfollowCategoriesResponse> call, retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
             removeProgressDialog();
-            if (response == null || null == response.body()) {
+            if (null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
                 showToast(getString(R.string.server_went_wrong));

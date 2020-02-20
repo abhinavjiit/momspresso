@@ -7,9 +7,6 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -28,24 +25,19 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
-import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.asynctask.HeavyDbTask;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.ConfigurationController;
-import com.mycity4kids.interfaces.OnUIView;
-import com.mycity4kids.models.VersionApiModel;
-import com.mycity4kids.models.city.City;
 import com.mycity4kids.models.city.MetroCity;
-import com.mycity4kids.models.configuration.ConfigurationApiModel;
 import com.mycity4kids.models.request.AddRemoveKidsRequest;
 import com.mycity4kids.models.request.UpdateUserDetailsRequest;
 import com.mycity4kids.models.response.CityConfigResponse;
@@ -58,7 +50,6 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
-import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.KidsInfoNewCustomView;
 
 import java.text.DateFormat;
@@ -97,7 +88,6 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
 
     public ArrayList<CityInfoItem> mDatalist;
     private int selectedCityId;
-    private City cityModel;
     private ArrayList<AddRemoveKidsRequest> kidsModelArrayList;
     private String currentCityName;
     private String newSelectedCityId;
@@ -343,7 +333,7 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
                     Bundle _args = new Bundle();
                     _args.putParcelable("editKidInfo", km);
                     editKidInfoDialogFragment.setArguments(_args);
-                   // editKidInfoDialogFragment.setTargetFragment(EditProfileTabFragment.this, 1111);
+                    // editKidInfoDialogFragment.setTargetFragment(EditProfileTabFragment.this, 1111);
                     editKidInfoDialogFragment.setCancelable(true);
                     editKidInfoDialogFragment.show(fm, "Choose video option");
                 }
@@ -426,9 +416,6 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
             try {
                 UserDetailResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    if (selectedCityId != 0) {
-                        updateEventsResourcesConfigForCity();
-                    }
                 } else {
                     Toast.makeText(getActivity(), responseData.getReason(), Toast.LENGTH_SHORT).show();
                 }
@@ -450,68 +437,6 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
 //            gotToProfile();
         }
     };
-
-    private void updateEventsResourcesConfigForCity() {
-        final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(BaseApplication.getAppContext());
-        final ConfigurationController _controller = new ConfigurationController(getActivity(), this);
-
-        MetroCity model = new MetroCity();
-
-        model.setId(selectedCityId);
-        model.setName(currentCityName);
-        model.setNewCityId(newSelectedCityId);
-
-        SharedPrefUtils.setCurrentCityModel(BaseApplication.getAppContext(), model);
-        SharedPrefUtils.setChangeCityFlag(BaseApplication.getAppContext(), true);
-
-        if (selectedCityId > 0) {
-            versionApiModel.setCityId(selectedCityId);
-//            mFirebaseAnalytics.setUserProperty("CityId", cityModel.getCityId() + "");
-
-            String version = AppUtils.getAppVersion(getActivity());
-            if (!StringUtils.isNullOrEmpty(version)) {
-                versionApiModel.setAppUpdateVersion(version);
-            }
-
-            if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-                ToastUtils.showToast(getActivity(), getString(R.string.error_network));
-                return;
-
-            }
-            if (null != cityFragment) {
-                cityFragment.dismiss();
-            }
-            _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
-        }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-        if (response == null) {
-            progressBar.setVisibility(View.GONE);
-            Toast.makeText(getActivity(), getResources().getString(R.string.server_error), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        switch (response.getDataType()) {
-            case AppConstants.CONFIGURATION_REQUEST:
-                Object responseObject = response.getResponseObject();
-                if (responseObject instanceof ConfigurationApiModel) {
-                    ConfigurationApiModel _configurationResponse = (ConfigurationApiModel) responseObject;
-                    BaseApplication.setBusinessREsponse(null);
-                    HeavyDbTask _heavyDbTask = new HeavyDbTask(getActivity(),
-                            _configurationResponse, new OnUIView() {
-                        @Override
-                        public void comeBackOnUI() {
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
-                    _heavyDbTask.execute();
-                }
-                break;
-            default:
-                break;
-        }
-    }
 
     public void showDatePickerDialog() {
         DialogFragment newFragment = new DatePickerFragment();

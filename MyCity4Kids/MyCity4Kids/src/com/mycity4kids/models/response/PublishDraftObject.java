@@ -1,5 +1,7 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -8,15 +10,24 @@ import java.util.Map;
  * Created by anshul on 7/5/16.
  */
 public class PublishDraftObject implements Serializable {
-    String id;
-    String articleType;
-    Long updatedTime;
-    String createdTime;
-    String body;
-    String title;
-    ImageURL imageUrl;
+    @SerializedName("id")
+    private String id;
+    @SerializedName("articleType")
+    private String articleType;
+    @SerializedName("updatedTime")
+    private Long updatedTime;
+    @SerializedName("createdTime")
+    private String createdTime;
+    @SerializedName("body")
+    private String body;
+    @SerializedName("title")
+    private String title;
+    @SerializedName("imageUrl")
+    private ImageURL imageUrl;
+    @SerializedName("tags")
     private List<Map<String, String>> tags;
-    int itemType = 1;
+    @SerializedName("itemType")
+    private int itemType = 1;
 
     public int getItemType() {
         return itemType;

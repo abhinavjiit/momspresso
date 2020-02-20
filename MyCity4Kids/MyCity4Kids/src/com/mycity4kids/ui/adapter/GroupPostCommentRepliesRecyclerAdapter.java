@@ -142,7 +142,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                     }
                     commentsViewHolder.commentDateTextView.setVisibility(View.GONE);
                     commentsViewHolder.media.setVisibility(View.VISIBLE);
-                    Picasso.with(mContext).load(mediaList.get(0)).error(R.drawable.default_article).into(commentsViewHolder.media);
+                    Picasso.get().load(mediaList.get(0)).error(R.drawable.default_article).into(commentsViewHolder.media);
                 } else {
                     commentsViewHolder.commentDateTextView.setVisibility(View.VISIBLE);
                     commentsViewHolder.media.setVisibility(View.GONE);
@@ -151,7 +151,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                 commentsViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserInfo().getFirstName()
                         + " " + repliesList.get(position).getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(repliesList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(repliesList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(commentsViewHolder.commentorImageView);
                 } catch (Exception e) {
                     commentsViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
@@ -164,7 +164,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                     }
                     commentsViewHolder.commentDateTextView.setVisibility(View.GONE);
                     commentsViewHolder.media.setVisibility(View.VISIBLE);
-                    Picasso.with(mContext).load(mediaList.get(0)).error(R.drawable.default_article).into(commentsViewHolder.media);
+                    Picasso.get().load(mediaList.get(0)).error(R.drawable.default_article).into(commentsViewHolder.media);
                 } else {
                     commentsViewHolder.commentDateTextView.setVisibility(View.VISIBLE);
                     commentsViewHolder.media.setVisibility(View.GONE);
@@ -259,7 +259,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                 audioCommentViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserInfo().getFirstName()
                         + " " + repliesList.get(position).getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(repliesList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(repliesList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(audioCommentViewHolder.commentorImageView);
                 } catch (Exception e) {
                     audioCommentViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
@@ -370,7 +370,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                     }
                     repliesViewHolder.commentDateTextView.setVisibility(View.GONE);
                     repliesViewHolder.mediaview.setVisibility(View.VISIBLE);
-                    Picasso.with(mContext).load(mediaList.get(0)).error(R.drawable.default_article).into(repliesViewHolder.mediaview);
+                    Picasso.get().load(mediaList.get(0)).error(R.drawable.default_article).into(repliesViewHolder.mediaview);
                 } else {
                     repliesViewHolder.commentDateTextView.setVisibility(View.VISIBLE);
                     repliesViewHolder.mediaview.setVisibility(View.GONE);
@@ -379,7 +379,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                 repliesViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserInfo().getFirstName()
                         + " " + repliesList.get(position).getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(repliesList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(repliesList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(repliesViewHolder.commentorImageView);
                 } catch (Exception e) {
                     repliesViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
@@ -392,7 +392,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                     }
                     repliesViewHolder.commentDateTextView.setVisibility(View.GONE);
                     repliesViewHolder.mediaview.setVisibility(View.VISIBLE);
-                    Picasso.with(mContext).load(mediaList.get(0)).error(R.drawable.default_article).into(repliesViewHolder.mediaview);
+                    Picasso.get().load(mediaList.get(0)).error(R.drawable.default_article).into(repliesViewHolder.mediaview);
                 } else {
                     repliesViewHolder.commentDateTextView.setVisibility(View.VISIBLE);
                     repliesViewHolder.mediaview.setVisibility(View.GONE);

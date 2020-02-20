@@ -55,6 +55,7 @@ class MyMoneyRegistrationDialogFragment : DialogFragment(), View.OnClickListener
                             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
                             System.currentTimeMillis().toString(), "CTA_MyMoney_GetStarted")
                     val intent = Intent(it, RewardsContainerActivity::class.java)
+                    intent.putExtra("isComingfromCampaign", true)
                     intent.putExtra("pageLimit", 2)
                     startActivity(intent)
                     dismiss()

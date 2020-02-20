@@ -24,26 +24,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.view.menu.MenuBuilder;
-import androidx.appcompat.view.menu.MenuPopupHelper;
-import androidx.appcompat.widget.AppCompatRadioButton;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
@@ -81,6 +67,18 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.appcompat.widget.AppCompatRadioButton;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -98,9 +96,6 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
     private Toolbar mToolbar;
     private ArrayList<ExploreTopicsModel> ssTopicsList;
     private int pos;
-    private ArrayList<String> challengeId = new ArrayList<>();
-    private ArrayList<String> activeUrl = new ArrayList<>();
-    private ArrayList<String> Display_Name = new ArrayList<>();
     private String challenge = "challenge";
     private String parentName, parentId;
     private int nextPageNumber = 1;
@@ -124,8 +119,8 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
     private RelativeLayout writeArticleCell;
     private boolean showGuide = false;
     private String userDynamoId;
-    private View shareSSView;
     private TextView titleTextView, bodyTextView, authorTextView;
+    private View shareSSView;
     private ShortStoryAPI shortStoryAPI;
     private boolean isRecommendRequestRunning;
     private String likeStatus;
@@ -142,7 +137,6 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
     private RelativeLayout root;
     private SwipeRefreshLayout pullToRefresh;
     private String shareMedium;
-    private int sharedStoryPosition;
     int position;
     private StoryShareCardWidget storyShareCardWidget;
     private ImageView shareStoryImageView;
@@ -170,7 +164,6 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
         guideOverlay = (RelativeLayout) findViewById(R.id.guideOverlay);
         writeArticleCell = (RelativeLayout) findViewById(R.id.writeArticleCell);
         frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
-        shareSSView = findViewById(R.id.shareSSView);
         titleTextView = (TextView) findViewById(R.id.titleTextView);
         bodyTextView = (TextView) findViewById(R.id.bodyTextView);
         authorTextView = (TextView) findViewById(R.id.authorTextView);
@@ -227,24 +220,23 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
         mDatalist = new ArrayList<>();
         Intent intent = getIntent();
         pos = intent.getIntExtra("position", 0);
-        challengeId = intent.getStringArrayListExtra("challenge");
-        Display_Name = intent.getStringArrayListExtra("Display_Name");
-        activeUrl = intent.getStringArrayListExtra("StringUrl");
-        parentId = intent.getStringExtra("parentId");
+        selectedId = intent.getStringExtra("challenge");
+        selected_Name = intent.getStringExtra("Display_Name");
+        selectedActiveUrl = intent.getStringExtra("StringUrl");
         parentName = intent.getStringExtra("topics");
         challengeComingFrom = intent.getStringExtra("selectedrequest");
         if (challengeComingFrom == null) {
             challengeComingFrom = "challenge";
         }
         if ("FromDeepLink".equals(challengeComingFrom)) {
-            challengeId = intent.getStringArrayListExtra("challenge");
-            Display_Name = intent.getStringArrayListExtra("Display_Name");
-            activeUrl = intent.getStringArrayListExtra("StringUrl");
+            selectedId = intent.getStringExtra("challenge");
+            selected_Name = intent.getStringExtra("Display_Name");
+            selectedActiveUrl = intent.getStringExtra("StringUrl");
             chooseLayout.setVisibility(View.VISIBLE);
         } else {
             chooseLayout.setVisibility(View.INVISIBLE);
         }
-        if (challengeId != null && challengeId.size() != 0) {
+      /*  if (challengeId != null && challengeId.size() != 0) {
             selectedId = challengeId.get(pos);
         } else {
             ToastUtils.showToast(this, "server problem,please refresh your app");
@@ -258,7 +250,9 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
             selected_Name = Display_Name.get(pos);
         } else {
             ToastUtils.showToast(this, "server problem,please refresh your app");
-        }
+        }*/
+
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         llm = new LinearLayoutManager(this);
         llm.setOrientation(RecyclerView.VERTICAL);
@@ -401,11 +395,6 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

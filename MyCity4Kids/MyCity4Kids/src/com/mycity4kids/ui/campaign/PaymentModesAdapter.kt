@@ -33,7 +33,7 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
         } else {
             holder.selectOptionPaymentTextView.visibility = View.GONE
         }
-        Picasso.with(context.context).load(paymentMode[position].icon).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+        Picasso.get().load(paymentMode[position].icon).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                 .fit().into(holder.nonDefaultModeImageView)
 
         var item = paymentMode.get(holder.adapterPosition)

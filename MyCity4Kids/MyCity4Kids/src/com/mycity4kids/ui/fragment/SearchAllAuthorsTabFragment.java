@@ -18,7 +18,6 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -119,11 +118,6 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
         });
 
         return view;
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     private void updateBloggerResponse(SearchResponse responseData) {

@@ -1,12 +1,16 @@
 package com.mycity4kids.models.response;
 
-import java.util.List;
+import com.google.gson.annotations.SerializedName;
 
 public class GroupsActionResponse extends BaseResponse {
 
+    @SerializedName("total")
     private int total;
+    @SerializedName("skip")
     private int skip;
+    @SerializedName("limit")
     private int limit;
+    @SerializedName("data")
     private GroupsActionData data;
 
     public int getTotal() {

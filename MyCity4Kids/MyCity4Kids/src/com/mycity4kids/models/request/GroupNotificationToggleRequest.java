@@ -1,5 +1,7 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Map;
 
 /**
@@ -7,6 +9,7 @@ import java.util.Map;
  */
 
 public class GroupNotificationToggleRequest {
+    @SerializedName("notificationOn")
     private int notificationOn;
 
     public int getNotificationOn() {

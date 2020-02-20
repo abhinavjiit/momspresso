@@ -1,7 +1,6 @@
 package com.mycity4kids.sync;
 
 import android.app.IntentService;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -17,9 +16,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.utils.AppUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
@@ -41,7 +37,6 @@ public class CategorySyncService extends IntentService {
 
     public int popularVersion;
     public String popularLocation;
-    public int userTypeVersion;
 
     public CategorySyncService(String name) {
         super(name);
@@ -66,79 +61,71 @@ public class CategorySyncService extends IntentService {
         call.enqueue(new Callback<ConfigResponse>() {
                          @Override
                          public void onResponse(Call<ConfigResponse> call, retrofit2.Response<ConfigResponse> response) {
-                             int statusCode = response.code();
                              final ConfigResponse responseModel = response.body();
                              try {
-                                 if (responseModel.getCode() != 200) {
-                                     return;
-                                 } else {
-                                     if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
-                                         SharedPrefUtils.setHomeAdSlotUrl(BaseApplication.getAppContext(), responseModel.getData().getResult().getHomeCarouselUrl());
+                                 if (responseModel != null) {
+                                     if (responseModel.getCode() != 200) {
+                                     } else {
+                                         if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
+                                             SharedPrefUtils.setHomeAdSlotUrl(BaseApplication.getAppContext(), responseModel.getData().getResult().getHomeCarouselUrl());
 
-                                         for (Map.Entry<String, String> entry : responseModel.getData().getResult().getNotificationSettings().entrySet()) {
-                                             SharedPrefUtils.setNotificationConfig(BaseApplication.getAppContext(), entry.getKey(), entry.getValue());
-                                         }
-
-                                         for (int i = 0; i < responseModel.getData().getResult().getNotificationType().size(); i++) {
-                                             SharedPrefUtils.setNotificationType(BaseApplication.getAppContext(), "" + i, responseModel.getData().getResult().getNotificationType().get(i));
-                                         }
-
-                                         boolean status = AppUtils.writeJsonStringToFile(CategorySyncService.this, new Gson().toJson(responseModel.getData().getResult().getLanguages()), AppConstants.LANGUAGES_JSON_FILE);
-
-                                         version = SharedPrefUtils.getConfigCategoryVersion(BaseApplication.getAppContext());
-                                         if (version == 0 || version != responseModel.getData().getResult().getCategory().getVersion()) {
-                                             location = responseModel.getData().getResult().getCategory().getLocation();
-                                             TopicsCategoryAPI categoryAPI = retrofit.create(TopicsCategoryAPI.class);
-                                             if (!ConnectivityUtils.isNetworkEnabled(CategorySyncService.this)) {
-                                                 return;
+                                             for (Map.Entry<String, String> entry : responseModel.getData().getResult().getNotificationSettings().entrySet()) {
+                                                 SharedPrefUtils.setNotificationConfig(BaseApplication.getAppContext(), entry.getKey(), entry.getValue());
                                              }
 
-                                             Call<ResponseBody> caller = categoryAPI.downloadTopicsJSON();
-
-                                             caller.enqueue(new Callback<ResponseBody>() {
-                                                 @Override
-                                                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                                                     boolean writtenToDisk = writeResponseBodyToDisk(response.body(), AppConstants.CATEGORIES_JSON_FILE);
-                                                     SharedPrefUtils.setConfigCategoryVersion(BaseApplication.getAppContext(), responseModel.getData().getResult().getCategory().getVersion());
-                                                     Log.d("TAGA", "file download was a success? " + writtenToDisk);
+                                             AppUtils.writeJsonStringToFile(CategorySyncService.this, new Gson().toJson(responseModel.getData().getResult().getLanguages()), AppConstants.LANGUAGES_JSON_FILE);
+                                             version = SharedPrefUtils.getConfigCategoryVersion(BaseApplication.getAppContext());
+                                             if (version == 0 || version != responseModel.getData().getResult().getCategory().getVersion()) {
+                                                 location = responseModel.getData().getResult().getCategory().getLocation();
+                                                 TopicsCategoryAPI categoryAPI = retrofit.create(TopicsCategoryAPI.class);
+                                                 if (!ConnectivityUtils.isNetworkEnabled(CategorySyncService.this)) {
+                                                     return;
                                                  }
 
-                                                 @Override
-                                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                                     Crashlytics.logException(t);
-                                                     Log.d("MC4kException", Log.getStackTraceString(t));
-                                                 }
-                                             });
-                                         }
+                                                 Call<ResponseBody> caller = categoryAPI.downloadTopicsJSON();
+                                                 caller.enqueue(new Callback<ResponseBody>() {
+                                                     @Override
+                                                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                                                         AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
+                                                         SharedPrefUtils.setConfigCategoryVersion(BaseApplication.getAppContext(), responseModel.getData().getResult().getCategory().getVersion());
+                                                     }
 
-                                         popularVersion = SharedPrefUtils.getConfigPopularCategoryVersion(BaseApplication.getAppContext());
-                                         if (popularVersion == 0 || popularVersion != responseModel.getData().getResult().getCategory().getPopularVersion()) {
-                                             popularLocation = responseModel.getData().getResult().getCategory().getPopularLocation();
-                                             TopicsCategoryAPI categoryAPI = retrofit.create(TopicsCategoryAPI.class);
-                                             if (!ConnectivityUtils.isNetworkEnabled(CategorySyncService.this)) {
-                                                 return;
+                                                     @Override
+                                                     public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                         Crashlytics.logException(t);
+                                                         Log.d("MC4kException", Log.getStackTraceString(t));
+                                                     }
+                                                 });
                                              }
 
-                                             Call<ResponseBody> caller = categoryAPI.downloadTopicsListForFollowUnfollow(popularLocation);
-
-                                             caller.enqueue(new Callback<ResponseBody>() {
-                                                 @Override
-                                                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                                                     boolean writtenToDisk = writeResponseBodyToDisk(response.body(), AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
-                                                     SharedPrefUtils.setConfigPopularCategoryVersion(BaseApplication.getAppContext(),
-                                                             responseModel.getData().getResult().getCategory().getPopularVersion());
-                                                     Log.d("TAGA", "file download was a success? " + writtenToDisk);
+                                             popularVersion = SharedPrefUtils.getConfigPopularCategoryVersion(BaseApplication.getAppContext());
+                                             if (popularVersion == 0 || popularVersion != responseModel.getData().getResult().getCategory().getPopularVersion()) {
+                                                 popularLocation = responseModel.getData().getResult().getCategory().getPopularLocation();
+                                                 TopicsCategoryAPI categoryAPI = retrofit.create(TopicsCategoryAPI.class);
+                                                 if (!ConnectivityUtils.isNetworkEnabled(CategorySyncService.this)) {
+                                                     return;
                                                  }
 
-                                                 @Override
-                                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                                     Log.e("TAGA", "error");
-                                                     Crashlytics.logException(t);
-                                                     Log.d("MC4kException", Log.getStackTraceString(t));
-                                                 }
-                                             });
+                                                 Call<ResponseBody> caller = categoryAPI.downloadTopicsListForFollowUnfollow(popularLocation);
+
+                                                 caller.enqueue(new Callback<ResponseBody>() {
+                                                     @Override
+                                                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                                                         AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE, response.body());
+                                                         SharedPrefUtils.setConfigPopularCategoryVersion(BaseApplication.getAppContext(),
+                                                                 responseModel.getData().getResult().getCategory().getPopularVersion());
+                                                     }
+
+                                                     @Override
+                                                     public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                         Log.e("TAGA", "error");
+                                                         Crashlytics.logException(t);
+                                                         Log.d("MC4kException", Log.getStackTraceString(t));
+                                                     }
+                                                 });
+                                             }
+
                                          }
-
                                      }
                                  }
                              } catch (Exception e) {
@@ -154,49 +141,5 @@ public class CategorySyncService extends IntentService {
                          }
                      }
         );
-    }
-
-    private boolean writeResponseBodyToDisk(ResponseBody body, String filename) {
-        if (body != null) {
-            try {
-                InputStream inputStream = null;
-                OutputStream outputStream = null;
-                try {
-                    byte[] fileReader = new byte[4096];
-
-                    long fileSize = body.contentLength();
-                    long fileSizeDownloaded = 0;
-
-                    inputStream = body.byteStream();
-                    outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-
-                    while (true) {
-                        int read = inputStream.read(fileReader);
-                        if (read == -1) {
-                            break;
-                        }
-                        outputStream.write(fileReader, 0, read);
-                        fileSizeDownloaded += read;
-                        Log.d("dAWDdawwdawd", "file download: " + fileSizeDownloaded + " of " + fileSize);
-                    }
-
-                    outputStream.flush();
-                    return true;
-                } catch (IOException e) {
-                    return false;
-                } finally {
-                    if (inputStream != null) {
-                        inputStream.close();
-                    }
-
-                    if (outputStream != null) {
-                        outputStream.close();
-                    }
-                }
-            } catch (IOException e) {
-                return false;
-            }
-        }
-        return false;
     }
 }

@@ -115,10 +115,10 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
         holder.notificationDateTextView.setText("" + DateTimeUtils.getMMMDDFormatDate(notificationList.get(position).getCreatedTime()));
 
         if (!StringUtils.isNullOrEmpty(notificationList.get(position).getThumbNail())) {
-            Picasso.with(mContext).load(notificationList.get(position).getThumbNail())
+            Picasso.get().load(notificationList.get(position).getThumbNail())
                     .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.notificationImageView);
         } else {
-            Picasso.with(mContext).load(R.drawable.default_article).into(holder.notificationImageView);
+            Picasso.get().load(R.drawable.default_article).into(holder.notificationImageView);
         }
 
         if (AppConstants.NOTIFICATION_STATUS_UNREAD.equals(notificationList.get(position).getIsRead())) {

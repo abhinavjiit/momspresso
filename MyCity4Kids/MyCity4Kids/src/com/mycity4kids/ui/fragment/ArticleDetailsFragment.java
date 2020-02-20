@@ -28,7 +28,6 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,28 +35,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+
 import com.crashlytics.android.Crashlytics;
-import com.facebook.ads.Ad;
-import com.facebook.ads.AdError;
-import com.facebook.ads.AdIconView;
-import com.facebook.ads.AdOptionsView;
-import com.facebook.ads.MediaView;
-import com.facebook.ads.NativeAd;
-import com.facebook.ads.NativeAdLayout;
-import com.facebook.ads.NativeAdListener;
-import com.facebook.ads.NativeBannerAd;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayerSupportFragment;
-import com.google.android.youtube.player.YouTubePlayerView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
@@ -68,7 +57,6 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.parentingdetails.CommentsData;
@@ -94,7 +82,6 @@ import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ViewCountResponse;
 import com.mycity4kids.newmodels.FollowUnfollowCategoriesRequest;
-import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.observablescrollview.ObservableScrollView;
 import com.mycity4kids.observablescrollview.ObservableScrollViewCallbacks;
 import com.mycity4kids.observablescrollview.ScrollState;
@@ -115,7 +102,8 @@ import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.GroupIdCategoryMap;
 import com.mycity4kids.widget.CustomFontTextView;
 import com.mycity4kids.widget.RelatedArticlesView;
-import com.mycity4kids.youtube.DeveloperKey;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerUtils;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -129,15 +117,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.QBadgeView;
@@ -150,14 +131,13 @@ import static com.mycity4kids.ui.activity.ArticleDetailsContainerActivity.NEW_AR
 /**
  * Created by hemant on 6/6/17.
  */
-public class ArticleDetailsFragment extends BaseFragment implements View.OnClickListener, ObservableScrollViewCallbacks, AddEditCommentReplyFragment.IAddCommentReply, GroupIdCategoryMap.GroupCategoryInterface, GroupMembershipStatus.IMembershipStatus, YouTubePlayer.OnInitializedListener {
+public class ArticleDetailsFragment extends BaseFragment implements View.OnClickListener, ObservableScrollViewCallbacks,
+        GroupIdCategoryMap.GroupCategoryInterface,
+        GroupMembershipStatus.IMembershipStatus {
 
     private final static int ADD_BOOKMARK = 1;
     private static final int RECOVERY_REQUEST = 1;
     private SimpleTooltip simpleTooltip, collectionTooltip;
-    private int TOOLTIP_SHOW_TIMES = 0;
-    private final static int REPLY_LEVEL_PARENT = 1;
-    private final static int REPLY_LEVEL_CHILD = 2;
     private MixpanelAPI mixpanel;
     private Handler handler, startCollectionHandler, stopCollectionHandler;
     private ISwipeRelated iSwipeRelated;
@@ -171,14 +151,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private int width;
     private int bookmarkStatus;
     private int recommendStatus;
-    private int estimatedReadTime = 0;
     private float density;
     private boolean isFollowing = false;
     private boolean isLoading = false;
-    private boolean isArticleDetailEndReached = false;
     private boolean isArticleDetailLoaded = false;
     private boolean isSwipeNextAvailable;
-    private boolean isFbCommentHeadingAdded = false;
     private String bookmarkFlag = "0";
     private String recommendationFlag = "0";
     private String commentURL = "";
@@ -189,27 +166,21 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private String parentId;
     private String articleId;
     private String deepLinkURL;
-    private String blogSlug;
-    private String titleSlug;
-    private String commentType = "db";
     private String commentMainUrl;
     private String pagination = "";
     private String isMomspresso;
     private String userDynamoId;
     private String articleLanguageCategoryId;
-    private String from;
     private String gtmLanguage;
     private int followTopicChangeNewUser = 0;
 
     private ObservableScrollView mScrollView;
-    private LinearLayout commentLayout;
     private TextView followClick;
     private TextView recentAuthorArticleHeading;
     private LinearLayout trendingArticles, recentAuthorArticles;
     private WebView mWebView;
     private RelatedArticlesView relatedArticles1, relatedArticles2, relatedArticles3;
     private RelatedArticlesView trendingRelatedArticles1, trendingRelatedArticles2, trendingRelatedArticles3;
-    private FloatingActionButton commentFloatingActionButton;
 
     private MyWebChromeClient mWebChromeClient = null;
     private View mCustomView;
@@ -234,37 +205,24 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private Rect scrollBounds;
     private View fragmentView;
     private LinearLayout bottomToolbarLL;
-    private TextView commentHeading;
     private View relatedTrendingSeparator;
-    //    private AdView mAdView;
     private TextView viewCommentsTextView;
     private LayoutInflater mInflater;
-    //    private NativeAd nativeAd;
-    private NativeAdLayout nativeAdContainer;
-    private LinearLayout adView;
     private RelativeLayout groupHeaderView;
     private ImageView groupHeaderImageView;
     private TextView groupHeadingTextView, groupSubHeadingTextView;
     private int groupId;
-    private String youTubeId;
-    private YouTubePlayer youTubePlayer;
-    private YouTubePlayerView youTubePlayerView;
-    private YouTubePlayerSupportFragment mYouTubePlayerSupportFragment;
-    private FrameLayout youtubeContainer;
-    private NativeAd nativeAd;
-    private NativeBannerAd nativeBannerAd;
-    private NativeAdLayout nativeAdLayout;
     private ImageView sponsoredImage;
     private TextView sponsoredTextView;
     private RelativeLayout sponsoredViewContainer;
     private ArrayList<Topics> shortStoriesTopicList = new ArrayList<>();
-    private ArrayList<Topics> shortStoriesTopicList1 = new ArrayList<>();
     private ArticleDetailResult responseData;
     private ImageView badge;
     private LinearLayout progressBarContainer;
     private boolean newArticleDetailFlag;
     private String webViewURL;
     private ImageView crownImageView;
+    private YouTubePlayerView youTubePlayerView;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -283,7 +241,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             floatingActionButton = (ImageView) fragmentView.findViewById(R.id.user_image);
             mWebView = (WebView) fragmentView.findViewById(R.id.articleWebView);
-            youtubeContainer = (FrameLayout) fragmentView.findViewById(R.id.youtube_fragment);
             viewAllTagsTextView = (TextView) fragmentView.findViewById(R.id.viewAllTagsTextView);
             bottomToolbarLL = (LinearLayout) fragmentView.findViewById(R.id.bottomToolbarLL);
             facebookShareTextView = (CustomFontTextView) fragmentView.findViewById(R.id.facebookShareTextView);
@@ -325,6 +282,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             mScrollView = (ObservableScrollView) fragmentView.findViewById(R.id.scroll_view);
             mLodingView = (RelativeLayout) fragmentView.findViewById(R.id.relativeLoadingView);
             crownImageView = fragmentView.findViewById(R.id.crownImageView);
+            youTubePlayerView = fragmentView.findViewById(R.id.youtube_player_view);
+            getLifecycle().addObserver(youTubePlayerView);
 
             fragmentView.findViewById(R.id.user_name).setOnClickListener(this);
             floatingActionButton.setOnClickListener(this);
@@ -460,23 +419,18 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 for (int i = 0; i < res.getData().size(); i++) {
                     if (AppConstants.SPONSORED_CATEGORYID.equals(res.getData().get(i).getId())) {
                         shortStoriesTopicList.add(res.getData().get(i));
-                        shortStoriesTopicList1 = shortStoriesTopicList;
                     }
                 }
             } catch (FileNotFoundException e) {
                 Crashlytics.logException(e);
                 Log.d("FileNotFoundException", Log.getStackTraceString(e));
-
-
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
                 Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
                 caller.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
-                        Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
-
+                        AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
                         try {
                             FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                             String fileContent = AppUtils.convertStreamToString(fileInputStream);
@@ -485,7 +439,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             for (int i = 0; i < res.getData().size(); i++) {
                                 if (AppConstants.SPONSORED_CATEGORYID.equals(res.getData().get(i).getId())) {
                                     shortStoriesTopicList.add(res.getData().get(i));
-                                    shortStoriesTopicList1 = shortStoriesTopicList;
                                 }
                             }
 
@@ -503,15 +456,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 });
             }
 
-
-            mYouTubePlayerSupportFragment = YouTubePlayerSupportFragment.newInstance();
-            if (getUserVisibleHint()) {
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.replace(R.id.youtube_fragment, mYouTubePlayerSupportFragment).commit();
-                mYouTubePlayerSupportFragment.initialize(DeveloperKey.DEVELOPER_KEY, this);
-            }
             mLodingView = (RelativeLayout) fragmentView.findViewById(R.id.relativeLoadingView);
-
             mScrollView = (ObservableScrollView) fragmentView.findViewById(R.id.scroll_view);
             mScrollView.setScrollViewCallbacks(this);
             impressionList = new ArrayList<>();
@@ -528,26 +473,15 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     isSwipeNextAvailable = BaseApplication.isFirstSwipe();
                 }
 
-                if (bundle.getBoolean("fromNotification")) {
-                } else {
-                    from = bundle.getString(Constants.ARTICLE_OPENED_FROM);
-                    String index = bundle.getString(Constants.ARTICLE_INDEX);
-                    String screen = bundle.getString(Constants.FROM_SCREEN);
-                }
-
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
                 hitArticleDetailsRedisAPI();
-                //bindSponsored();
-
                 getViewCountAPI();
                 hitRecommendedStatusAPI();
             }
 
             scrollBounds = new Rect();
             mScrollView.getHitRect(scrollBounds);
-            showNativeAd();
-            showTopBannerAd();
         } catch (Exception e) {
             removeProgressDialog();
             Crashlytics.logException(e);
@@ -593,127 +527,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
             }
         }, 5000);
-
-    }
-
-    private void bindSponsored() {
-        for (int i = 0; i < shortStoriesTopicList.get(0).getChild().size(); i++) {
-            if (parentId.equals(shortStoriesTopicList.get(0).getChild().get(i).getId())) {
-                if (shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryImage() != null &&
-                        !shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryImage().isEmpty()) {
-                    sponsoredViewContainer.setVisibility(View.VISIBLE);
-                    Picasso.with(getActivity()).load(shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryImage()).placeholder(R.drawable.default_article).into(sponsoredImage);
-                    sponsoredTextView.setText("this story is sponsored by ");
-                } else {
-                    sponsoredViewContainer.setVisibility(View.GONE);
-                }
-                if (shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryBadge() != null && !shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryBadge().isEmpty()) {
-                    badge.setVisibility(View.VISIBLE);
-                    Picasso.with(getActivity()).load(shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryBadge()).placeholder(R.drawable.default_article).into(badge);
-                } else {
-                    badge.setVisibility(View.GONE);
-                }
-            }
-        }
-    }
-
-
-    private void showTopBannerAd() {
-        nativeBannerAd = new NativeBannerAd(getActivity(), AppConstants.FB_AD_PLACEMENT_ARTICLE_DETAILS_TOP);
-        nativeBannerAd.setAdListener(new NativeAdListener() {
-            @Override
-            public void onMediaDownloaded(Ad ad) {
-
-            }
-
-            @Override
-            public void onError(Ad ad, AdError adError) {
-
-            }
-
-            @Override
-            public void onAdLoaded(Ad ad) {
-                // Race condition, load() called again before last ad was displayed
-                if (nativeBannerAd == null || nativeBannerAd != ad) {
-                    return;
-                }
-                // Inflate Native Banner Ad into Container
-                if (isAdded())
-                    inflateAd(nativeBannerAd);
-            }
-
-            @Override
-            public void onAdClicked(Ad ad) {
-
-            }
-
-            @Override
-            public void onLoggingImpression(Ad ad) {
-
-            }
-        });
-        // load the ad
-        nativeBannerAd.loadAd();
-    }
-
-    private void inflateAd(NativeBannerAd nativeBannerAd) {
-        // Unregister last ad
-        nativeBannerAd.unregisterView();
-
-        // Add the Ad view into the ad container.
-        nativeAdLayout = (NativeAdLayout) fragmentView.findViewById(R.id.native_banner_ad_container);
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        // Inflate the Ad view.  The layout referenced is the one you created in the last step.
-        adView = (LinearLayout) inflater.inflate(R.layout.native_banner_ad_layout, nativeAdLayout, false);
-        nativeAdLayout.addView(adView);
-
-        // Add the AdChoices icon
-        RelativeLayout adChoicesContainer = adView.findViewById(R.id.ad_choices_container);
-        AdOptionsView adOptionsView = new AdOptionsView(getActivity(), nativeBannerAd, nativeAdLayout);
-        adChoicesContainer.removeAllViews();
-        adChoicesContainer.addView(adOptionsView, 0);
-
-        // Create native UI using the ad metadata.
-        TextView nativeAdTitle = adView.findViewById(R.id.native_ad_title);
-        TextView nativeAdSocialContext = adView.findViewById(R.id.native_ad_social_context);
-        TextView sponsoredLabel = adView.findViewById(R.id.native_ad_sponsored_label);
-        AdIconView nativeAdIconView = adView.findViewById(R.id.native_icon_view);
-        Button nativeAdCallToAction = adView.findViewById(R.id.native_ad_call_to_action);
-
-        // Set the Text.
-        nativeAdCallToAction.setText(nativeBannerAd.getAdCallToAction());
-        nativeAdCallToAction.setVisibility(
-                nativeBannerAd.hasCallToAction() ? View.VISIBLE : View.INVISIBLE);
-        nativeAdTitle.setText(nativeBannerAd.getAdvertiserName());
-        nativeAdSocialContext.setText(nativeBannerAd.getAdSocialContext());
-        sponsoredLabel.setText(nativeBannerAd.getSponsoredTranslation());
-
-        // Register the Title and CTA button to listen for clicks.
-        List<View> clickableViews = new ArrayList<>();
-        clickableViews.add(nativeAdTitle);
-        clickableViews.add(nativeAdCallToAction);
-        nativeBannerAd.registerViewForInteraction(adView, nativeAdIconView, clickableViews);
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (!isVisibleToUser && youTubePlayer != null) {
-//            Log.v (TAG, "Releasing youtube player, URL : " + getArguments().getString(KeyConstant.KEY_VIDEO_URL));
-            youTubePlayer.release();
-            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            transaction.remove(mYouTubePlayerSupportFragment).commitAllowingStateLoss();
-        }
-        if (isVisibleToUser && mYouTubePlayerSupportFragment != null) {
-//            Log.v (TAG, "Initializing youtube player, URL : " + getArguments().getString(KeyConstant.KEY_VIDEO_URL));
-            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            transaction.replace(R.id.youtube_fragment, mYouTubePlayerSupportFragment).commitAllowingStateLoss();
-            mYouTubePlayerSupportFragment.initialize(DeveloperKey.DEVELOPER_KEY, this);
-        }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
 
     }
 
@@ -807,85 +620,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         recommendUnrecommendArticle.enqueue(recommendUnrecommendArticleResponseCallback);
     }
 
-    private void showNativeAd() {
-        nativeAd = new NativeAd(getActivity(), AppConstants.FB_AD_PLACEMENT_ARTICLE_DETAILS);
-        nativeAd.setAdListener(new NativeAdListener() {
-
-            @Override
-            public void onMediaDownloaded(Ad ad) {
-
-            }
-
-            @Override
-            public void onError(Ad ad, AdError error) {
-                // Ad error callback
-                Log.e("FacebookAd", "onError_" + error.getErrorCode() + "----" + error.getErrorMessage());
-            }
-
-            @Override
-            public void onAdLoaded(Ad ad) {
-                if (nativeAd != null) {
-                    nativeAd.unregisterView();
-                }
-
-                if (isAdded()) {
-                    // Add the Ad view into the ad container.
-                    nativeAdContainer = (NativeAdLayout) fragmentView.findViewById(R.id.native_ad_container);
-                    // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
-                    adView = (LinearLayout) mInflater.inflate(R.layout.facebook_ad_unit, nativeAdContainer, false);
-                    nativeAdContainer.addView(adView);
-
-                    // Add the AdOptionsView
-                    LinearLayout adChoicesContainer = adView.findViewById(R.id.ad_choices_container);
-                    AdOptionsView adOptionsView = new AdOptionsView(getActivity(), nativeAd, nativeAdContainer);
-                    adChoicesContainer.removeAllViews();
-                    adChoicesContainer.addView(adOptionsView, 0);
-
-                    // Create native UI using the ad metadata.
-                    AdIconView nativeAdIcon = adView.findViewById(R.id.native_ad_icon);
-                    TextView nativeAdTitle = adView.findViewById(R.id.native_ad_title);
-                    MediaView nativeAdMedia = adView.findViewById(R.id.native_ad_media);
-                    TextView nativeAdSocialContext = adView.findViewById(R.id.native_ad_social_context);
-                    TextView nativeAdBody = adView.findViewById(R.id.native_ad_body);
-                    Button nativeAdCallToAction = adView.findViewById(R.id.native_ad_call_to_action);
-
-                    // Set the Text.
-                    nativeAdTitle.setText(nativeAd.getAdvertiserName());
-                    nativeAdBody.setText(nativeAd.getAdBodyText());
-                    nativeAdSocialContext.setText(nativeAd.getAdSocialContext());
-                    nativeAdCallToAction.setVisibility(nativeAd.hasCallToAction() ? View.VISIBLE : View.INVISIBLE);
-                    nativeAdCallToAction.setText(nativeAd.getAdCallToAction());
-
-                    // Create a list of clickable views
-                    List<View> clickableViews = new ArrayList<>();
-                    clickableViews.add(nativeAdTitle);
-                    clickableViews.add(nativeAdCallToAction);
-
-                    // Register the Title and CTA button to listen for clicks.
-                    nativeAd.registerViewForInteraction(
-                            adView,
-                            nativeAdMedia,
-                            nativeAdIcon,
-                            clickableViews);
-
-                }
-            }
-
-            @Override
-            public void onAdClicked(Ad ad) {
-                // Ad clicked callback
-                Log.d("FacebookAd", "onAdClicked");
-            }
-
-            @Override
-            public void onLoggingImpression(Ad ad) {
-                // Ad impression logged callback
-                Log.d("FacebookAd", "onLoggingImpression");
-            }
-        });
-        nativeAd.loadAd();
-    }
-
     private void getResponseUpdateUi(ArticleDetailResult detailsResponse) {
         if (SharedPrefUtils.getFollowTopicApproachChangeFlag(BaseApplication.getAppContext())) {
             followTopicChangeNewUser = 1;
@@ -899,7 +633,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         getCrownData();
 
         if (!StringUtils.isNullOrEmpty(detailData.getImageUrl().getThumbMax())) {
-            Picasso.with(getActivity()).load(detailData.getImageUrl().getThumbMax()).placeholder(R.drawable.default_article).resize(width, (int) (220 * density)).centerCrop().into(cover_image);
+            Picasso.get().load(detailData.getImageUrl().getThumbMax()).placeholder(R.drawable.default_article).resize(width, (int) (220 * density)).centerCrop().into(cover_image);
         }
 
         if (!StringUtils.isNullOrEmpty(detailData.getTitle())) {
@@ -1041,10 +775,16 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 if (null != videoList && !videoList.isEmpty()) {
                     for (VideoData video : videoList) {
                         if ("1".equals(isMomspresso)) {
-                            youtubeContainer.setVisibility(View.VISIBLE);
-                            youTubeId = AppUtils.extractYoutubeIdForMomspresso(video.getVideoUrl());
-                            if (youTubePlayer != null)
-                                youTubePlayer.cueVideo(youTubeId);
+                            youTubePlayerView.setVisibility(View.VISIBLE);
+                            String youTubeId = AppUtils.extractYoutubeIdForMomspresso(video.getVideoUrl());
+                            youTubePlayerView.getYouTubePlayerWhenReady(youTubePlayer -> {
+                                YouTubePlayerUtils.loadOrCueVideo(
+                                        youTubePlayer,
+                                        getLifecycle(),
+                                        youTubeId,
+                                        0
+                                );
+                            });
                             cover_image.setVisibility(View.INVISIBLE);
                             bodyDesc = bodyDesc.replace(video.getKey(), "");
                         } else if (bodyDescription.contains(video.getKey())) {
@@ -1078,10 +818,16 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 if (null != videoList && !videoList.isEmpty()) {
                     for (VideoData video : videoList) {
                         if ("1".equals(isMomspresso)) {
-                            youtubeContainer.setVisibility(View.VISIBLE);
-                            youTubeId = AppUtils.extractYoutubeIdForMomspresso(video.getVideoUrl());
-                            if (youTubePlayer != null)
-                                youTubePlayer.cueVideo(youTubeId);
+                            youTubePlayerView.setVisibility(View.VISIBLE);
+                            String youTubeId = AppUtils.extractYoutubeIdForMomspresso(video.getVideoUrl());
+                            youTubePlayerView.getYouTubePlayerWhenReady(youTubePlayer -> {
+                                YouTubePlayerUtils.loadOrCueVideo(
+                                        youTubePlayer,
+                                        getLifecycle(),
+                                        youTubeId,
+                                        0
+                                );
+                            });
                             cover_image.setVisibility(View.INVISIBLE);
                             bodyDesc = bodyDesc.replace(video.getKey(), "");
                         } else if (bodyDescription.contains(video.getKey())) {
@@ -1127,7 +873,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
 
             @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
             }
 
             @Override
@@ -1137,11 +884,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
         floatingActionButton.setTag(target);
         if (!StringUtils.isNullOrEmpty(detailData.getProfilePic().getClientApp())) {
-            Picasso.with(getActivity()).load(detailData.getProfilePic().getClientApp()).into(target);
+            Picasso.get().load(detailData.getProfilePic().getClientApp()).into(target);
         }
 
         if (!StringUtils.isNullOrEmpty(detailData.getImageUrl().getThumbMax())) {
-            Picasso.with(getActivity()).load(detailData.getImageUrl().getThumbMax()).placeholder(R.drawable.default_article).fit().into(cover_image);
+            Picasso.get().load(detailData.getImageUrl().getThumbMax()).placeholder(R.drawable.default_article).fit().into(cover_image);
         }
         if (!userDynamoId.equals(detailData.getUserId())) {
             hitUpdateViewCountAPI(detailData.getUserId(), detailData.getTags(), detailData.getCities());
@@ -1196,7 +943,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
             if (!"1".equals(isMomspresso))
                 ((ArticleDetailsContainerActivity) getActivity()).showPlayArticleAudioButton();
-            return;
         } catch (Exception e) {
 
         }
@@ -1366,7 +1112,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         ShareLinkContent content = new ShareLinkContent.Builder()
                                 .setContentUrl(Uri.parse(shareUrl))
                                 .build();
-                        new ShareDialog(this).show(content);
+                        if (getActivity() != null)
+                            new ShareDialog(getActivity()).show(content);
                     }
                     Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author, "Facebook");
                     break;
@@ -1479,12 +1226,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         mScrollView.getHitRect(scrollBounds);
         int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
         if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http") && !AppConstants.PAGINATION_END_VALUE.equals(pagination)) {
-//            getMoreComments();
         }
 
         int permanentDiff = (tagsView.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
         if (permanentDiff <= 0) {
-            isArticleDetailEndReached = true;
             if (bottomToolbarLL.getVisibility() == View.VISIBLE) {
                 hideBottomToolbar();
             }
@@ -1506,7 +1251,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (isSwipeNextAvailable) {
                 swipeNextTextView.setVisibility(View.GONE);
             }
-            isArticleDetailEndReached = false;
         }
     }
 
@@ -1600,25 +1344,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     @Override
-    public void onCommentAddition(CommentsData cd) {
-
-    }
-
-    @Override
-    public void onCommentReplyEditSuccess(CommentsData cd) {
-
-    }
-
-    @Override
-    public void onReplyAddition(CommentsData cd) {
-
-    }
-
-    @Override
     public void onGroupMappingResult(int groupId, String gpHeading, String gpSubHeading, String gpImageUrl) {
         this.groupId = groupId;
         try {
-            Picasso.with(getActivity()).load(gpImageUrl).placeholder(R.drawable.groups_generic)
+            Picasso.get().load(gpImageUrl).placeholder(R.drawable.groups_generic)
                     .error(R.drawable.groups_generic).into(groupHeaderImageView);
         } catch (Exception e) {
             groupHeaderImageView.setImageResource(R.drawable.groups_generic);
@@ -1697,30 +1426,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     }
 
-    @Override
-    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-        if (!b) {
-            this.youTubePlayer = youTubePlayer;
-            youTubePlayer.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CONTROL_ORIENTATION);
-            if (null != youTubeId) {
-                youTubePlayer.cueVideo(youTubeId);
-            }
-        }
-    }
-
-    @Override
-    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-        if (youTubeInitializationResult.isUserRecoverableError()) {
-            youTubeInitializationResult.getErrorDialog(getActivity(), RECOVERY_REQUEST).show();
-        }
-    }
-
     private void followAPICall() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         FollowAPI followAPI = retrofit.create(FollowAPI.class);
         FollowUnfollowUserRequest request = new FollowUnfollowUserRequest();
         request.setFollowerId(authorId);
-
         if (isFollowing) {
             isFollowing = false;
             followClick.setText(getString(R.string.ad_follow_author));
@@ -1801,7 +1511,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                         if (topic.getExtraData().get(0).getCategoryTag().getCategoryImage() != null &&
                                                 !topic.getExtraData().get(0).getCategoryTag().getCategoryImage().isEmpty()) {
                                             sponsoredViewContainer.setVisibility(View.VISIBLE);
-                                            Picasso.with(getActivity()).load(topic.getExtraData().get(0).getCategoryTag().getCategoryImage()).into(sponsoredImage);
+                                            Picasso.get().load(topic.getExtraData().get(0).getCategoryTag().getCategoryImage()).into(sponsoredImage);
                                             sponsoredTextView.setText("this story is sponsored by ");
                                         } else {
                                             sponsoredViewContainer.setVisibility(View.GONE);
@@ -1809,7 +1519,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
                                         if (topic.getExtraData().get(0).getCategoryTag().getCategoryBadge() != null && !topic.getExtraData().get(0).getCategoryTag().getCategoryBadge().isEmpty()) {
                                             badge.setVisibility(View.VISIBLE);
-                                            Picasso.with(getActivity()).load(topic.getExtraData().get(0).getCategoryTag().getCategoryBadge()).into(badge);
+                                            Picasso.get().load(topic.getExtraData().get(0).getCategoryTag().getCategoryBadge()).into(badge);
                                         } else {
                                             badge.setVisibility(View.GONE);
                                         }
@@ -1830,7 +1540,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
     }
 
-    Callback<ArticleDetailResult> articleDetailResponseCallbackRedis = new Callback<ArticleDetailResult>() {
+    private Callback<ArticleDetailResult> articleDetailResponseCallbackRedis = new Callback<ArticleDetailResult>() {
         @Override
         public void onResponse(Call<ArticleDetailResult> call, retrofit2.Response<ArticleDetailResult> response) {
             removeProgressDialog();
@@ -1840,12 +1550,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
             try {
                 removeProgressDialog();
-
-
                 responseData = response.body();
                 getResponseUpdateUi(responseData);
                 checkingForSponsored();
-
                 authorId = detailData.getUserId();
                 isArticleDetailLoaded = true;
                 hitBookmarkFollowingStatusAPI();
@@ -1857,11 +1564,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 commentMainUrl = responseData.getCommentsUri();
 
                 if (!StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
-//                    getMoreComments();
                 } else {
-                    commentType = "fb";
                     commentURL = "http";
-//                    getMoreComments();
                 }
             } catch (Exception e) {
                 removeProgressDialog();
@@ -1942,7 +1646,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private void setCrownData(String image_url) {
         if (!StringUtils.isNullOrEmpty(image_url)) {
             crownImageView.setVisibility(View.VISIBLE);
-            Picasso.with(getActivity()).load(image_url).
+            Picasso.get().load(image_url).
                     placeholder(R.drawable.default_article).fit().into(crownImageView);
         }
     }
@@ -1969,10 +1673,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     hitBookmarkFollowingStatusAPI();
                     hitRelatedArticleAPI();
                     commentURL = responseData.getData().getCommentsUri();
-
-                    if (!StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
-//                        getMoreComments();
-                    }
                 } else {
 
                 }
@@ -1987,84 +1687,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         public void onFailure(Call<ArticleDetailWebserviceResponse> call, Throwable t) {
             removeProgressDialog();
             handleExceptions(t);
-        }
-    };
-
-    private OnWebServiceCompleteListener mGetArticleListingListener = new OnWebServiceCompleteListener() {
-        @Override
-        public void onWebServiceComplete(VolleyBaseResponse response, boolean isError) {
-            if (!isAdded()) {
-                return;
-            }
-            if (isError) {
-                if (null != response && response.getResponseCode() != 999)
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-            } else {
-                if (response == null) {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-                    removeProgressDialog();
-                    return;
-                }
-
-                ArticleListingResponse responseBlogData;
-                try {
-                    Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-                    responseBlogData = gson.fromJson(response.getResponseBody(), ArticleListingResponse.class);
-                } catch (JsonSyntaxException jse) {
-                    Crashlytics.logException(jse);
-                    Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
-                    if (isAdded())
-                        ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-                    removeProgressDialog();
-                    return;
-                }
-
-                if (responseBlogData.getCode() == 200 && Constants.SUCCESS.equals(responseBlogData.getStatus())) {
-                    ArrayList<ArticleListingResult> dataList = responseBlogData.getData().get(0).getResult();
-                    if (dataList == null || dataList.size() == 0) {
-
-                    } else {
-                        trendingArticles.setVisibility(View.VISIBLE);
-                        impressionList.addAll(dataList);
-                        Collections.shuffle(dataList);
-                        if (dataList.size() >= 3) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
-                            trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            trendingRelatedArticles1.setTag(dataList);
-
-                            Picasso.with(getActivity()).load(dataList.get(1).getImageUrl().getThumbMin()).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
-                            trendingRelatedArticles2.setArticleTitle(dataList.get(1).getTitle());
-                            trendingRelatedArticles2.setTag(dataList);
-
-                            Picasso.with(getActivity()).load(dataList.get(2).getImageUrl().getThumbMin()).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles3.getArticleImageView());
-                            trendingRelatedArticles3.setArticleTitle(dataList.get(2).getTitle());
-                            trendingRelatedArticles3.setTag(dataList);
-                        } else if (dataList.size() == 2) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
-                            trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            trendingRelatedArticles1.setTag(dataList);
-
-                            Picasso.with(getActivity()).load(dataList.get(1).getImageUrl().getThumbMin()).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
-                            trendingRelatedArticles2.setArticleTitle(dataList.get(1).getTitle());
-                            trendingRelatedArticles2.setTag(dataList);
-
-                            trendingRelatedArticles3.setVisibility(View.GONE);
-                        } else if (dataList.size() == 1) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
-                            trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            trendingRelatedArticles1.setTag(dataList);
-                            trendingRelatedArticles2.setVisibility(View.GONE);
-                            trendingRelatedArticles3.setVisibility(View.GONE);
-                        }
-                    }
-                }
-            }
         }
     };
 
@@ -2099,34 +1721,34 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         impressionList.addAll(dataList);
                         Collections.shuffle(dataList);
                         if (dataList.size() >= 3) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
                             trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             trendingRelatedArticles1.setTag(dataList);
 
-                            Picasso.with(getActivity()).load(dataList.get(1).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(1).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
                             trendingRelatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             trendingRelatedArticles2.setTag(dataList);
 
-                            Picasso.with(getActivity()).load(dataList.get(2).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(2).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles3.getArticleImageView());
                             trendingRelatedArticles3.setArticleTitle(dataList.get(2).getTitle());
                             trendingRelatedArticles3.setTag(dataList);
                         } else if (dataList.size() == 2) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
                             trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             trendingRelatedArticles1.setTag(dataList);
 
-                            Picasso.with(getActivity()).load(dataList.get(1).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(1).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
                             trendingRelatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             trendingRelatedArticles2.setTag(dataList);
 
                             trendingRelatedArticles3.setVisibility(View.GONE);
                         } else if (dataList.size() == 1) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
                             trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             trendingRelatedArticles1.setTag(dataList);
@@ -2187,33 +1809,33 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         impressionList.addAll(dataList);
                         iSwipeRelated.onRelatedSwipe(dataList);
                         if (dataList.size() >= 3) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             relatedArticles1.setTag(new ArrayList<ArticleListingResult>(dataList.subList(0, 3)));
 
-                            Picasso.with(getActivity()).load(dataList.get(1).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(1).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
                             relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             relatedArticles2.setTag(new ArrayList<ArticleListingResult>(dataList.subList(0, 3)));
 
-                            Picasso.with(getActivity()).load(dataList.get(2).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(2).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles3.getArticleImageView());
                             relatedArticles3.setArticleTitle(dataList.get(2).getTitle());
                             relatedArticles3.setTag(new ArrayList<ArticleListingResult>(dataList.subList(0, 3)));
                         } else if (dataList.size() == 2) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             relatedArticles1.setTag(dataList);
 
-                            Picasso.with(getActivity()).load(dataList.get(1).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(1).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
                             relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             relatedArticles2.setTag(dataList);
                             relatedArticles3.setVisibility(View.GONE);
                         } else if (dataList.size() == 1) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             relatedArticles1.setTag(dataList);
@@ -2272,33 +1894,33 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         recentAuthorArticles.setVisibility(View.VISIBLE);
 
                         if (dataList.size() >= 3) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             relatedArticles1.setTag(dataList);
 
-                            Picasso.with(getActivity()).load(dataList.get(1).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(1).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
                             relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             relatedArticles2.setTag(dataList);
 
-                            Picasso.with(getActivity()).load(dataList.get(2).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(2).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles3.getArticleImageView());
                             relatedArticles3.setArticleTitle(dataList.get(2).getTitle());
                             relatedArticles3.setTag(dataList);
                         } else if (dataList.size() == 2) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             relatedArticles1.setTag(dataList);
 
-                            Picasso.with(getActivity()).load(dataList.get(1).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(1).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
                             relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             relatedArticles2.setTag(dataList);
                             relatedArticles3.setVisibility(View.GONE);
                         } else if (dataList.size() == 1) {
-                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                            Picasso.get().load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             relatedArticles1.setTag(dataList);
@@ -2926,19 +2548,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         void onRelatedSwipe(ArrayList<ArticleListingResult> articleList);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RECOVERY_REQUEST) {
-            // Retry initialization if user performed a recovery action
-            getYouTubePlayerProvider().initialize(DeveloperKey.DEVELOPER_KEY, this);
-        }
-    }
-
-    private YouTubePlayer.Provider getYouTubePlayerProvider() {
-        return youTubePlayerView;
-    }
-
     private void tooltipForShare() {
         simpleTooltip = new SimpleTooltip.Builder(getContext())
                 .anchorView(whatsappShareTextView)
@@ -2961,8 +2570,5 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     simpleTooltip.dismiss();
             }
         }, 3000);
-
     }
-
-
 }

@@ -2,7 +2,9 @@ package com.mycity4kids.ui.fragment;
 
 import android.accounts.NetworkErrorException;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +16,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -24,7 +25,6 @@ import com.mycity4kids.models.response.NotificationCenterListResponse;
 import com.mycity4kids.models.response.NotificationCenterResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
-import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.NotificationCenterListAdapter;
 
 import java.util.ArrayList;
@@ -46,7 +46,6 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
     private ProgressBar progressBar;
     private TextView noBlogsTextView;
     private ListView notificationListView;
-    private DashboardActivity mContext;
 
     @Nullable
     @Override
@@ -54,7 +53,6 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
         View view = inflater.inflate(R.layout.aa_notification, container, false);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
-        mContext = (DashboardActivity) BaseApplication.getInstance().getDashboardActivity();
         notificationCenterResultArrayList = new ArrayList<>();
         notificationListView = (ListView) view.findViewById(R.id.notificationListView);
         notificationCenterListAdapter = new NotificationCenterListAdapter(getActivity(), notificationCenterResultArrayList);
@@ -159,9 +157,6 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
                     notificationCenterResultArrayList.addAll(dataList);
                     if (notificationCenterResultArrayList != null && !notificationCenterResultArrayList.isEmpty()) {
                         SharedPrefUtils.setLastNotificationIdForUnreadFlag(BaseApplication.getAppContext(), notificationCenterResultArrayList.get(0).getId());
-                        if (isAdded()) {
-                            mContext.showHideNotificationCenterMark(false);
-                        }
                     }
                 } else {
                     notificationCenterResultArrayList.addAll(dataList);
@@ -221,12 +216,6 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
-
-
-    @Override
-    protected void updateUi(Response response) {
-
-    }
 
     @Override
     public void onClick(View view) {

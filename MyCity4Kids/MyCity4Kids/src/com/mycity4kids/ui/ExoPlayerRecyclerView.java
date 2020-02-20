@@ -237,27 +237,6 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                     }
                 });
 
-//        ImageView profile = new ImageView(appContext);
-//        Picasso.with(appContext).load(videoInfoList.get(targetPosition).getThumbnail()).into(holder.mCover, new Callback() {
-//            @Override
-//            public void onSuccess() {
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {//You will get your bitmap here
-//                        Bitmap innerBitmap = ((BitmapDrawable) holder.mCover.getDrawable()).getBitmap();
-//                        frameLayout.getLayoutParams().height = innerBitmap.getHeight();
-//                        frameLayout.getLayoutParams().width = innerBitmap.getWidth();
-//                        Log.e("width and height", innerBitmap.getWidth() + " * " + innerBitmap.getHeight());
-//                    }
-//                }, 100);
-//            }
-//
-//            @Override
-//            public void onError() {
-//                Log.e("on error", "on error");
-//            }
-//        });
-
         frameLayout.addView(videoSurfaceView);
 
 

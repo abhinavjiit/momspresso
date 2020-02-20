@@ -12,13 +12,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.UserPublishedContentPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
 
@@ -105,11 +103,6 @@ public class UserPublishedContentActivity extends BaseActivity implements View.O
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

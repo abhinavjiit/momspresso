@@ -1,10 +1,14 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by anshul on 7/12/16.
  */
 public class SetupBlogData {
+    @SerializedName("msg")
     private String msg;
+    @SerializedName("result")
     private SetupBlogResult result;
 
     public String getMsg() {

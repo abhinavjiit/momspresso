@@ -12,25 +12,16 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -60,6 +51,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -91,11 +88,6 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
     private String jasonMyObject;
     VideoChallengeTopicsAdapter videoChallengeTopicsAdapter;
     private LinearLayoutManager linearLayoutManager;
-    private ArrayList<String> challenge_Id = new ArrayList<String>();
-    private ArrayList<String> Display_Name = new ArrayList<String>();
-    private ArrayList<String> activeImageUrl = new ArrayList<String>();
-    private ArrayList<String> activeStreamUrl = new ArrayList<String>();
-    private ArrayList<String> info = new ArrayList<String>();
     private String challengeRulesInDialogBox;
     private ShimmerFrameLayout draftsShimmerLayout;
 
@@ -134,7 +126,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
             horizontalRecyclerViewForVideoChallenge.setVisibility(View.VISIBLE);
             linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             horizontalRecyclerViewForVideoChallenge.setLayoutManager(linearLayoutManager);
-            videoChallengeTopicsAdapter = new VideoChallengeTopicsAdapter(this, this, challenge_Id, Display_Name, activeImageUrl, activeStreamUrl, info);
+            videoChallengeTopicsAdapter = new VideoChallengeTopicsAdapter(this, this);
             horizontalRecyclerViewForVideoChallenge.setAdapter(videoChallengeTopicsAdapter);
         } else {
             comingFrom = "notFromChallenge";
@@ -323,11 +315,6 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
     }
 
     @Override
-    protected void updateUi(Response response) {
-
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -378,35 +365,31 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
     }
 
     @Override
-    public void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew
-            , ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> info, ArrayList<String> mappedCategory, int max_Duration) {
+    public void onClick(View view, int position, String challengeId, String Display_Name, Topics articledatamodelsnew
+            , String imageUrl, String activeStreamUrl, String info, String mappedCategory, int max_Duration) {
         switch (view.getId()) {
             case R.id.tagImageView:
             case R.id.topicContainer:
                 Intent intent = new Intent(this, NewVideoChallengeActivity.class);
-                intent.putExtra("challenge", challengeId.get(position));
+                intent.putExtra("challenge", challengeId);
                 intent.putExtra("comingFrom", "chooseVideoCategory");
-                intent.putExtra("mappedId", mappedCategory.get(position));
+                intent.putExtra("mappedId", mappedCategory);
                 startActivity(intent);
                 Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Listing_challenge_container", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_challenge_detail", "", challengeId.toString());
                 break;
             case R.id.info:
-                if (info != null) {
-                    if (info.size() > position) {
-                        if (!StringUtils.isNullOrEmpty(info.get(position))) {
-                            challengeRulesInDialogBox = info.get(position);
-                            //  ToastUtils.showToast(this, String.valueOf(position) + " clicked");
-                            final Dialog dialog = new Dialog(this);
-                            dialog.setContentView(R.layout.challenge_rules_dialog);
-                            dialog.setTitle("Title...");
-                            ImageView imageView = (ImageView) dialog.findViewById(R.id.closeEditorImageView);
-                            WebView webView = (WebView) dialog.findViewById(R.id.videoChallengeRulesWebView);
-                            webView.loadData(challengeRulesInDialogBox, "text/html", "UTF-8");
-                            imageView.setOnClickListener(view2 -> dialog.dismiss());
-                            dialog.show();
-                            Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Challenge_info", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_challenge_detail", "", challengeId.toString());
-                        }
-                    }
+                if (!StringUtils.isNullOrEmpty(info)) {
+                    challengeRulesInDialogBox = info;
+                    //  ToastUtils.showToast(this, String.valueOf(position) + " clicked");
+                    final Dialog dialog = new Dialog(this);
+                    dialog.setContentView(R.layout.challenge_rules_dialog);
+                    dialog.setTitle("Title...");
+                    ImageView imageView = (ImageView) dialog.findViewById(R.id.closeEditorImageView);
+                    WebView webView = (WebView) dialog.findViewById(R.id.videoChallengeRulesWebView);
+                    webView.loadData(challengeRulesInDialogBox, "text/html", "UTF-8");
+                    imageView.setOnClickListener(view2 -> dialog.dismiss());
+                    dialog.show();
+                    Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Challenge_info", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_challenge_detail", "", challengeId.toString());
                 }
                 break;
         }

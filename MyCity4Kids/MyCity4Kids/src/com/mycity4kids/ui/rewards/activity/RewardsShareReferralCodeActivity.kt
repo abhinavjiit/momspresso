@@ -6,15 +6,11 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.Intent.ACTION_SEND
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.Log
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -27,9 +23,7 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.aa_rate_app.*
-import kotlinx.android.synthetic.main.share_referral_code.*
-import java.util.*
+import kotlinx.android.synthetic.main.referral_code.*
 
 class RewardsShareReferralCodeActivity : BaseActivity() {
     private lateinit var backText: TextView
@@ -37,11 +31,7 @@ class RewardsShareReferralCodeActivity : BaseActivity() {
     private lateinit var layoutWhatsApp: RelativeLayout
     private var myClipboard: ClipboardManager? = null
     private var myClip: ClipData? = null
-    private lateinit var root:RelativeLayout
-
-
-    override fun updateUi(response: Response?) {
-    }
+    private lateinit var root: RelativeLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.referral_code)

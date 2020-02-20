@@ -65,7 +65,7 @@ public class AddImagePollRecyclerGridAdapter extends RecyclerView.Adapter<AddIma
             holder.addImageOptionImageView.setVisibility(View.INVISIBLE);
             holder.addImageTextView.setVisibility(View.VISIBLE);
         } else {
-            Picasso.with(mContext).load(urlList.get(position))
+            Picasso.get().load(urlList.get(position))
                     .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.addImageOptionImageView);
             holder.addImageOptionImageView.setVisibility(View.VISIBLE);
             holder.addImageTextView.setVisibility(View.INVISIBLE);

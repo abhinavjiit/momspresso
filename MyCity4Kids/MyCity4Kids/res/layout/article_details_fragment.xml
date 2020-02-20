@@ -18,18 +18,11 @@
             android:layout_height="match_parent"
             android:descendantFocusability="blocksDescendants">
 
-            <com.facebook.ads.NativeAdLayout
-                android:id="@+id/native_banner_ad_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:visibility="gone" />
-
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/article_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/native_banner_ad_container"
+                android:layout_alignParentTop="true"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:gravity="center_vertical"
@@ -46,7 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/article_title"
-                android:layout_marginLeft="10dp">
+                android:layout_marginStart="10dp">
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/article_date"
@@ -115,7 +108,7 @@
 
             <RelativeLayout
                 android:id="@+id/headerImageOrYoutubeViewContainer"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/statsFlowLayout">
 
@@ -128,17 +121,14 @@
                     android:scaleType="fitXY"
                     android:src="@drawable/default_article" />
 
-                <!--<WebView-->
-                <!--android:id="@+id/videoWebView"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="@dimen/article_details_app_bar_height"-->
-                <!--android:visibility="gone" />-->
-
-                <FrameLayout
-                    android:id="@+id/youtube_fragment"
+                <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                    android:id="@+id/youtube_player_view"
                     android:layout_width="match_parent"
-                    android:layout_height="240dp"
-                    android:visibility="gone" />
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:autoPlay="false"
+                    app:showFullScreenButton="false"
+                    app:useWebUi="false" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -195,8 +185,8 @@
                     android:id="@+id/crownImageView"
                     android:layout_width="30dp"
                     android:layout_height="23dp"
-                    android:layout_marginTop="48dp"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginTop="48dp"
                     android:background="@drawable/profile_crown_bg"
                     android:elevation="4dp"
                     android:visibility="gone" />
@@ -403,19 +393,11 @@
                 android:layout_below="@+id/tagsLayoutContainer"
                 android:background="@color/light_underline" />
 
-            <com.facebook.ads.NativeAdLayout
-                android:id="@+id/native_ad_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/adViewSeparator"
-                android:orientation="vertical"
-                android:visibility="gone" />
-
             <RelativeLayout
                 android:id="@+id/groupHeaderView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/native_ad_container"
+                android:layout_below="@+id/adViewSeparator"
                 android:background="@color/white"
                 android:visibility="gone">
 

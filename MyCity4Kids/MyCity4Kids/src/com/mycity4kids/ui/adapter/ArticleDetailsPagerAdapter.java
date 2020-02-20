@@ -28,7 +28,7 @@ public class ArticleDetailsPagerAdapter extends FragmentStatePagerAdapter {
     private boolean newArticleDetailFlag;
 
     public ArticleDetailsPagerAdapter(FragmentManager fm, int NumOfTabs, ArrayList<ArticleListingResult> articleList, String fromScreen, String parentId, boolean newArticleDetailFlag) {
-        super(fm);
+        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.mNumOfTabs = NumOfTabs;
         this.articleList = articleList;
         this.fromScreen = fromScreen;

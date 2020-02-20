@@ -69,12 +69,12 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
             commentsViewHolder.commentDataTextView.setText(repliesList.get(position).getMessage());
             commentsViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(repliesList.get(position).getCreatedTime())));
             try {
-                Picasso.with(mContext).load(repliesList.get(position).getUserPic().getClientAppMin())
+                Picasso.get().load(repliesList.get(position).getUserPic().getClientAppMin())
                         .placeholder(R.drawable.default_commentor_img).into((commentsViewHolder.commentorImageView));
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                Picasso.with(mContext).load(R.drawable.default_commentor_img).into(commentsViewHolder.commentorImageView);
+                Picasso.get().load(R.drawable.default_commentor_img).into(commentsViewHolder.commentorImageView);
             }
         } else {
             RepliesViewHolder repliesViewHolder = (RepliesViewHolder) holder;
@@ -82,12 +82,12 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
             repliesViewHolder.commentDataTextView.setText(repliesList.get(position).getMessage());
             repliesViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(repliesList.get(position).getCreatedTime())));
             try {
-                Picasso.with(mContext).load(repliesList.get(position).getUserPic().getClientAppMin())
+                Picasso.get().load(repliesList.get(position).getUserPic().getClientAppMin())
                         .placeholder(R.drawable.default_commentor_img).into((repliesViewHolder.commentorImageView));
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                Picasso.with(mContext).load(R.drawable.default_commentor_img).into(repliesViewHolder.commentorImageView);
+                Picasso.get().load(R.drawable.default_commentor_img).into(repliesViewHolder.commentorImageView);
             }
         }
     }

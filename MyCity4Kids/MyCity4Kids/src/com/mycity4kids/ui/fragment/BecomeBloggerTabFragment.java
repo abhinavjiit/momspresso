@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 
@@ -56,10 +55,5 @@ public class BecomeBloggerTabFragment extends BaseFragment {
         titleTextView.setText("" + title);
         descTextView.setText("" + desc);
         return view;
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 }

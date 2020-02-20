@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
@@ -115,7 +114,7 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
         memberCountTextView.setText("" + groupItem.getMemberCount());
 
         groupNameTextView.setText(groupItem.getTitle());
-        Picasso.with(this).load(groupItem.getHeaderImage())
+        Picasso.get().load(groupItem.getHeaderImage())
                 .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(groupImageView);
     }
 
@@ -166,11 +165,6 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
-
-    @Override
-    protected void updateUi(Response response) {
-
-    }
 
     @Override
     public void onClick(View v) {

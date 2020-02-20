@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.ui.adapter.RankingPagerAdapter;
@@ -66,10 +65,5 @@ public class RankingHomeFragment extends BaseFragment {
         });
 
         return view;
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 }

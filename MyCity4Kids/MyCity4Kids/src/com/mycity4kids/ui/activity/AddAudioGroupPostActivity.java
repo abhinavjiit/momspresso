@@ -41,7 +41,6 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -170,11 +169,6 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
     protected void onResume() {
         super.onResume();
         ((BaseApplication) getApplication()).setView(mLayout);
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

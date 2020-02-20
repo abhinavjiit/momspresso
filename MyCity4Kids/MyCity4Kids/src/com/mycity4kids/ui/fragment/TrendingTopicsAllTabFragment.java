@@ -17,7 +17,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
@@ -271,11 +270,6 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
             recyclerAdapter.notifyDataSetChanged();
             nextPageNumber = nextPageNumber + 1;
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

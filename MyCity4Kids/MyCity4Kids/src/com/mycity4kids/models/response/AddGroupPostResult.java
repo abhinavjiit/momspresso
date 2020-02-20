@@ -3,6 +3,8 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Map;
 
 /**
@@ -10,27 +12,46 @@ import java.util.Map;
  */
 
 public class AddGroupPostResult implements Parcelable {
+    @SerializedName("id")
     private String id;
+    @SerializedName("content")
     private String content;
+    @SerializedName("url")
     private String url;
+    @SerializedName("type")
     private String type;
+    @SerializedName("lang")
     private String lang;
+    @SerializedName("isActive")
     private int isActive;
+    @SerializedName("mediaUrls")
     private Object mediaUrls;
+    @SerializedName("disableComments")
     private int disableComments;
+    @SerializedName("isAnnon")
     private int isAnnon;
+    @SerializedName("isPinned")
     private int isPinned;
+    @SerializedName("moderatedBy")
     private String moderatedBy;
+    @SerializedName("moderationStatus")
     private String moderationStatus;
+    @SerializedName("moderationOn")
     private String moderationOn;
+    @SerializedName("createdOn")
     private String createdOn;
+    @SerializedName("groupId")
     private String groupId;
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("pollType")
     private String pollType;
+    @SerializedName("pollOptions")
     private Object pollOptions;
+    @SerializedName("createdAt")
     private long createdAt;
+    @SerializedName("updatedAt")
     private long updatedAt;
-
 
     protected AddGroupPostResult(Parcel in) {
         id = in.readString();

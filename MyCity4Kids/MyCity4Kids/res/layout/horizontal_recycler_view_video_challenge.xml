@@ -3,31 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/space_20"
     android:layout_marginRight="12dp"
     android:layout_marginBottom="10dp"
     android:elevation="0dp"
-    app:cardCornerRadius="3dp"
+    app:cardCornerRadius="4dp"
     app:cardElevation="0dp">
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
 
         <RelativeLayout
             android:id="@+id/topicContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical">
+            android:background="@color/white">
 
             <ImageView
                 android:id="@+id/tagImageView"
-                android:layout_width="260dp"
-                android:layout_height="160dp"
+                android:layout_width="246dp"
+                android:layout_height="180dp"
                 android:foreground="@drawable/gradient_in_video_challenge_image"
-                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
                 android:src="@drawable/default_article" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -40,14 +33,14 @@
                 android:background="@drawable/border_live_text_on_image_video_challenge"
                 android:elevation="4dp"
                 android:paddingLeft="10dp"
-                android:paddingTop="3dp"
+                android:paddingTop="4dp"
                 android:paddingRight="10dp"
-                android:paddingBottom="3dp"
+                android:paddingBottom="4dp"
                 android:text="@string/video_challenge_live_text"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:visibility="gone"
-                app:fontName="oswald.ttf" />
+                app:fontName="Oswald-Medium.ttf" />
 
             <ImageView
                 android:id="@+id/info"
@@ -78,5 +71,4 @@
                 android:textSize="22sp"
                 app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
-    </RelativeLayout>
 </androidx.cardview.widget.CardView>

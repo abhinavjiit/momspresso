@@ -36,7 +36,6 @@ import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.DateTimeUtils
@@ -117,9 +116,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     }
 
     override fun onItemClick(language: String?) {
-    }
-
-    override fun updateUi(response: Response?) {
     }
 
     private lateinit var containerView: View

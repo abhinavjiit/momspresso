@@ -21,7 +21,6 @@ public class FollowersFollowingResult {
     @SerializedName("isFollowed")
     private int isFollowed;
 
-
     public String getUserId() {
         return userId;
     }

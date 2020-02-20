@@ -15,7 +15,6 @@ import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
-import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 
 import java.util.ArrayList;
@@ -56,19 +55,5 @@ public class SharingUtils {
                 .setPhotos(photoList)
                 .build();
         new ShareDialog(activity).show(shareLinkContent);
-    }
-
-    public static void shareViaFacebook(BaseFragment fragment) {
-        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() +
-                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg");
-        ShareHashtag shareHashTag = new ShareHashtag.Builder().setHashtag("#Momspressoshortstories").build();
-        SharePhoto sharePhoto = new SharePhoto.Builder().setImageUrl(uri).build();
-        ArrayList<SharePhoto> photoList = new ArrayList<>();
-        photoList.add(sharePhoto);
-        SharePhotoContent shareLinkContent = new SharePhotoContent.Builder()
-                .setShareHashtag(shareHashTag)
-                .setPhotos(photoList)
-                .build();
-        new ShareDialog(fragment).show(shareLinkContent);
     }
 }

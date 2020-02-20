@@ -1,15 +1,34 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by anshul on 8/2/16.
  */
 public class UserCommentsResult {
+    @SerializedName("id")
     private String id;
-    private String articleId, parentId, userComment, createdTime, userId, userName;
+    @SerializedName("articleId")
+    private String articleId;
+    @SerializedName("parentId")
+    private String parentId;
+    @SerializedName("userComment")
+    private String userComment;
+    @SerializedName("createdTime")
+    private String createdTime;
+    @SerializedName("userId")
+    private String userId;
+    @SerializedName("userName")
+    private String userName;
+    @SerializedName("updatedTime")
     private Long updatedTime;
-    String articleTitle;
-    String authorName;
+    @SerializedName("articleTitle")
+    private String articleTitle;
+    @SerializedName("authorName")
+    private String authorName;
+    @SerializedName("blogTitleSlug")
     private String blogTitleSlug;
+    @SerializedName("titleSlug")
     private String titleSlug;
 
     public String getArticleTitle() {

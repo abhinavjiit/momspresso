@@ -12,8 +12,7 @@
         android:id="@+id/imageViewEmpty"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_rabbit" />
+        android:layout_gravity="center" />
 
     <TextView
         android:id="@+id/tv_message"

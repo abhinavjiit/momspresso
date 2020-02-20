@@ -15,7 +15,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -211,11 +210,6 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
                 }
             }
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

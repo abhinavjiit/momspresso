@@ -85,13 +85,13 @@ public class AddShortStoryCommentReplyDialogFragment extends DialogFragment impl
                 headingTextView.setText(BaseApplication.getAppContext().getString(R.string.reply));
                 relativeMainContainer.setVisibility(View.VISIBLE);
                 try {
-                    Picasso.with(getActivity()).load(commentOrReplyData.getUserPic().getClientAppMin())
+                    Picasso.get().load(commentOrReplyData.getUserPic().getClientAppMin())
                             .placeholder(R.drawable.default_commentor_img).into((commentorImageView));
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                     if (isAdded())
-                        Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(commentorImageView);
+                        Picasso.get().load(R.drawable.default_commentor_img).into(commentorImageView);
                 }
                 commentorUsernameTextView.setText(commentOrReplyData.getUserName());
                 commentDataTextView.setText(commentOrReplyData.getMessage());

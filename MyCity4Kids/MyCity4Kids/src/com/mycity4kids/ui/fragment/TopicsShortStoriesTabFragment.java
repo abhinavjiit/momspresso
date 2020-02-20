@@ -45,7 +45,6 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
@@ -140,8 +139,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private Handler handler;
     private String isFollowing;
     private int position;
-    private Bitmap bitmap;
-    int uploadCounter = 0;
     private StoryShareCardWidget storyShareCardWidget;
     private ImageView shareStoryImageView;
     private ArticleListingResult sharedStoryItem;
@@ -346,11 +343,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     }
 
     @Override
-    protected void updateUi(Response response) {
-
-    }
-
-    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.writeArticleCell:
@@ -434,14 +426,14 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                     if (mDatalist.get(position).isLiked()) {
                         likeStatus = "0";
                         currentShortStoryPosition = position;
-                        recommendUnrecommentArticleAPI("0", mDatalist.get(position).getId(),
+                        recommendUnrecommentArticleAPI(mDatalist.get(position).getId(),
                                 mDatalist.get(position).getUserId(),
                                 mDatalist.get(position).getUserName());
                     } else {
                         tooltipForShare(shareImageView);
                         likeStatus = "1";
                         currentShortStoryPosition = position;
-                        recommendUnrecommentArticleAPI("1", mDatalist.get(position).getId(),
+                        recommendUnrecommentArticleAPI(mDatalist.get(position).getId(),
                                 mDatalist.get(position).getUserId(),
                                 mDatalist.get(position).getUserName());
                     }
@@ -663,7 +655,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         if (isAdded()) {
             switch (shareMedium) {
                 case AppConstants.MEDIUM_FACEBOOK: {
-                    SharingUtils.shareViaFacebook(this);
+                    SharingUtils.shareViaFacebook(getActivity());
                     Utils.pushShareStoryEvent(getActivity(), "TopicsShortStoriesTabFragment",
                             userDynamoId + "", sharedStoryItem.getId(),
                             sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Facebook");
@@ -699,7 +691,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         }
     }
 
-    private void recommendUnrecommentArticleAPI(String status, String articleId, String authorId,
+    private void recommendUnrecommentArticleAPI(String articleId, String authorId,
                                                 String author) {
         Utils.pushLikeStoryEvent(getActivity(), "ShortStoryListingScreen", userDynamoId + "",
                 articleId,
@@ -721,7 +713,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         public void onResponse(Call<RecommendUnrecommendArticleResponse> call,
                                retrofit2.Response<RecommendUnrecommendArticleResponse> response) {
             isRecommendRequestRunning = false;
-            if (response == null || null == response.body()) {
+            if (null == response.body()) {
                 if (!isAdded()) {
                     return;
                 }
@@ -752,10 +744,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                         mDatalist.get(currentShortStoryPosition).setLiked(false);
                     }
                     recyclerAdapter.notifyDataSetChanged();
-                    if (isAdded()) {
-                        //  ((ShortStoriesListingContainerActivity) getActivity()).showToast("" + responseData.getReason());
-                    }
-
+                    if (isAdded())
+                        Toast.makeText(getActivity(), "" + responseData.getReason(), Toast.LENGTH_SHORT).show();
                 } else {
                     if (isAdded()) {
                         ((ShortStoriesListingContainerActivity) getActivity())

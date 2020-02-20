@@ -25,7 +25,6 @@ import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
@@ -54,7 +53,6 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import okhttp3.ResponseBody
 import org.json.JSONObject
-import retrofit2.adapter.rxjava2.HttpException
 import java.io.InputStreamReader
 
 class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, CollectionItemsListAdapter.RecyclerViewClick {
@@ -83,10 +81,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
     private lateinit var collectionDescription: TextView
     private lateinit var toolbar: Toolbar
     private var editType = ""
-
-
-    override fun updateUi(response: Response?) {
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -327,11 +321,11 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                 Log.d("MC4KException", Log.getStackTraceString(e))
                 val code = (e as retrofit2.HttpException).code()
                 if (code == 402) {
-                    var data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
-                    var jsonParser = JsonParser()
-                    var jsonObject = jsonParser.parse(
+                    val data = e.response()?.errorBody()!!.byteStream()
+                    val jsonParser = JsonParser()
+                    val jsonObject = jsonParser.parse(
                             InputStreamReader(data, "UTF-8")) as JsonObject
-                    var reason = jsonObject.get("reason")
+                    val reason = jsonObject.get("reason")
                     Toast.makeText(this@UserCollectionItemListActivity, reason.asString, Toast.LENGTH_SHORT).show()
                 }
                 Log.e("exception in error", e.message.toString())
@@ -434,7 +428,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                         }
                         try {
                             userCollectionsListModel.imageUrl = data.getStringExtra("collectionImage")
-                            Picasso.with(this@UserCollectionItemListActivity).load(data.getStringExtra("collectionImage"))
+                            Picasso.get().load(data.getStringExtra("collectionImage"))
                                     .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageVIEW)
                         } catch (e: Exception) {
                             collectionImageVIEW?.setImageResource(R.drawable.default_article)
@@ -518,7 +512,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
             }
             followersCount.text = userCollectionsListModel.totalCollectionFollowers.toString()
             try {
-                Picasso.with(this@UserCollectionItemListActivity).load(userCollectionsListModel.imageUrl)
+                Picasso.get().load(userCollectionsListModel.imageUrl)
                         .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageVIEW)
             } catch (e: Exception) {
                 collectionImageVIEW?.setImageResource(R.drawable.default_article)

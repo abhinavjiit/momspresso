@@ -7,6 +7,9 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class ConfigResponse extends BaseResponse {
+    @SerializedName("data")
+    private ConfigData data;
+
     public ConfigData getData() {
         return data;
     }
@@ -14,8 +17,4 @@ public class ConfigResponse extends BaseResponse {
     public void setData(ConfigData data) {
         this.data = data;
     }
-
-    @SerializedName("data")
-    ConfigData data;
-
 }

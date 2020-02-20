@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.crashlytics.android.Crashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.models.Topics;
 
@@ -32,9 +34,6 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
     private ArrayList<String> activeImageUrl;
 
     public ChallengeRecyclerAdapter(RecyclerViewClickListener recyclerViewClickListener, Context mcontext, ArrayList<String> challengeId, ArrayList<String> Display_Name, ArrayList<String> activeImageUrl) {
-        this.challengeId = challengeId;
-        this.Display_Name = Display_Name;
-        this.activeImageUrl = activeImageUrl;
         density = mcontext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) mcontext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.recyclerViewClickListener = recyclerViewClickListener;
@@ -79,8 +78,6 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
         switch (position) {
             case 0:
                 holder.previousAndThisWeekTextView.setText(R.string.this_week_challenge);
-                challengeId.add(articleDataModels.get(position).getId());
-                Display_Name.add(articleDataModels.get(position).getDisplay_name());
                 holder.imageBody.setVisibility(View.VISIBLE);
                 holder.rootView.setVisibility(View.VISIBLE);
                 holder.useThePictureTextView.setVisibility(View.VISIBLE);
@@ -89,7 +86,6 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
                 holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
                 try {
                     Glide.with(mcontext).load(articleDataModels.get(position).getExtraData().get(0).getChallenge().getImageUrl()).into(holder.imageBody);
-                    activeImageUrl.add(articleDataModels.get(position).getExtraData().get(0).getChallenge().getImageUrl());
                 } catch (Exception e) {
                     holder.imageBody.setImageDrawable(ContextCompat.getDrawable(mcontext, R.drawable.default_article));
                 }
@@ -102,14 +98,11 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
                 } else {
                     holder.previousAndThisWeekTextView.setVisibility(View.GONE);
                 }
-                challengeId.add(articleDataModels.get(position).getId());
-                Display_Name.add(articleDataModels.get(position).getDisplay_name());
                 holder.storyTitleTextView.setVisibility(View.GONE);
                 holder.titleTextUnderLine.setVisibility(View.GONE);
                 try {
                     holder.imageBody.setVisibility(View.VISIBLE);
                     Glide.with(mcontext).load(articleDataModels.get(position).getExtraData().get(0).getChallenge().getImageUrl()).into(holder.imageBody);
-                    activeImageUrl.add(articleDataModels.get(position).getExtraData().get(0).getChallenge().getImageUrl());
                 } catch (Exception e) {
                     holder.imageBody.setVisibility(View.GONE);
                     holder.imageBody.setImageDrawable(ContextCompat.getDrawable(mcontext, R.drawable.default_article));
@@ -161,12 +154,17 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
 
         @Override
         public void onClick(View view) {
-            recyclerViewClickListener.onClick(view, getAdapterPosition(), challengeId, Display_Name, articleDataModelsNew, activeImageUrl);
-
+            try {
+                recyclerViewClickListener.onClick(view, getAdapterPosition(), articleDataModels.get(getAdapterPosition()).getId(), articleDataModels.get(getAdapterPosition()).getDisplay_name(), articleDataModelsNew, articleDataModels.get(getAdapterPosition()).getExtraData().get(0).getChallenge().getImageUrl());
+            } catch
+            (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+            }
         }
     }
 
     public interface RecyclerViewClickListener {
-        void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> activeImageUrl);
+        void onClick(View view, int position, String challengeId, String Display_Name, Topics articledatamodelsnew, String activeImageUrl);
     }
 }

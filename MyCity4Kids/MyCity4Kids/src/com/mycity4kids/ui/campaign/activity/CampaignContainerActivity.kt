@@ -5,12 +5,10 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.view.Window
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -35,15 +33,10 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     }
 
     override fun onPaymentModeDone(paymentModeId: Int) {
-
-    }
-
-    override fun updateUi(response: Response?) {
     }
 
     override fun congratulateScreenDone() {
         onBackPressed()
-
     }
 
     override fun proofSubmitDone() {

@@ -12,7 +12,6 @@ import android.widget.RelativeLayout
 import androidx.fragment.app.FragmentTransaction
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -165,9 +164,5 @@ class ShortStoryThumbnailListFragment : BaseFragment() {
             dataList.let { shortShortiesAdapter.getUserColletions(it) }
             shortShortiesAdapter.notifyDataSetChanged()
         }
-    }
-
-    override fun updateUi(response: Response?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

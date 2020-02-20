@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.View
 import com.crashlytics.android.Crashlytics
 import com.google.android.material.tabs.TabLayout
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
@@ -34,10 +33,6 @@ class AddMultipleCollectionItemActivity : BaseActivity(), View.OnClickListener {
     private var multipleCollectionList: ArrayList<UpdateCollectionRequestModel>? = null
     private var multipleUserCreatedCollectionList: ArrayList<UpdateCollectionRequestModel>? = null
     private var mixedReadAndCreatedSelectedList: HashSet<UpdateCollectionRequestModel>? = null
-
-
-    override fun updateUi(response: Response?) {
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

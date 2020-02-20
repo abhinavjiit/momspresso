@@ -58,20 +58,6 @@ public class UsersCommentsRecycleAdapter extends RecyclerView.Adapter<UsersComme
         } else {
             holder.editCommentTextView.setVisibility(View.INVISIBLE);
         }
-//        if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getVideoUrl())
-//                && (articleDataModelsNew.get(position).getImageUrl().getWebThumbnail() == null || articleDataModelsNew.get(position).getImageUrl().getWebThumbnail().endsWith("default.jpg"))) {
-//            Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURLMomspresso(articleDataModelsNew.get(position).getVideoUrl())).placeholder(R.drawable.default_article).into(holder.articleImageView);
-//        } else {
-//            if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getWebThumbnail())) {
-//                Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getWebThumbnail())
-//                        .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
-//            } else if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getMobileWebThumbnail())) {
-//                Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getMobileWebThumbnail())
-//                        .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
-//            } else {
-//                holder.articleImageView.setBackgroundResource(R.drawable.default_article);
-//            }
-//        }
     }
 
     @Override

@@ -35,7 +35,6 @@ import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
 import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
 import com.googlecode.mp4parser.authoring.tracks.AACTrackImpl;
 import com.googlecode.mp4parser.authoring.tracks.CroppedTrack;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -173,11 +172,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         super.onPause();
         // Make sure the player stops playing if the user presses the home button.
         player.pause();
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

@@ -166,7 +166,7 @@ public class UserReadShortStoriesAdapter extends RecyclerView.Adapter<RecyclerVi
 
     private void addArticleItem(AdViewHolder holder, int position) {
         if (null != articleDataModelsNew.get(position).getImageUrl()) {
-            Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getThumbMin()).
+            Picasso.get().load(articleDataModelsNew.get(position).getImageUrl().getThumbMin()).
                     placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
         } else {
             holder.articleImageView.setBackgroundResource(R.drawable.article_default);

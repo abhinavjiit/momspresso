@@ -4,13 +4,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -23,8 +16,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
+
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
+import com.google.android.material.tabs.TabLayout;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -98,7 +95,7 @@ public class SearchAllActivity extends BaseActivity implements View.OnClickListe
         trendingSearch2TextView.setOnClickListener(this);
         trendingSearch3TextView.setOnClickListener(this);
 
-        tabsPagerAdapter = new SearchAllPagerAdapter(getSupportFragmentManager(), this, null, this, searchParam);
+        tabsPagerAdapter = new SearchAllPagerAdapter(getSupportFragmentManager(), this, this, searchParam);
 
         setSupportActionBar(mToolbar);
         final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.back_arroow);
@@ -223,11 +220,6 @@ public class SearchAllActivity extends BaseActivity implements View.OnClickListe
     };
 
     @Override
-    protected void updateUi(Response response) {
-
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.searchImageView:
@@ -297,17 +289,8 @@ public class SearchAllActivity extends BaseActivity implements View.OnClickListe
         if (StringUtils.isNullOrEmpty(searchEditText.getText().toString())) {
 //            showToast("Please enter a valid search parameter");
         } else {
-            tabsPagerAdapter.refreshArticlesAuthors(searchEditText.getText().toString(), mViewPager.getCurrentItem());
+            tabsPagerAdapter.refreshArticlesAuthors(searchEditText.getText().toString());
             storeSearchQuery(searchEditText.getText().toString());
-        }
-    }
-
-    private void requestSearchWithParam(String param) {
-        if (StringUtils.isNullOrEmpty(param)) {
-//            showToast("Please enter a valid search parameter");
-        } else {
-            tabsPagerAdapter.refreshArticlesAuthors(param, mViewPager.getCurrentItem());
-            storeSearchQuery(param);
         }
     }
 

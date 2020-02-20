@@ -7,5 +7,4 @@ class Data {
     @SerializedName("result")
     @Expose
     var result: ArrayList<CampaignDataListResult>? = null
-
 }

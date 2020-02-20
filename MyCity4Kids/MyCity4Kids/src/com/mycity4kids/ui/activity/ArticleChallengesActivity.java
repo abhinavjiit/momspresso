@@ -13,19 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
-import com.kelltontech.utils.ConnectivityUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.ExploreTopicsResponse;
 import com.mycity4kids.models.Topics;
-import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticlePublishAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ArticleChallengesRecyclerAdapter;
 import com.mycity4kids.ui.adapter.ChallengeListingRecycleAdapter;
 import com.mycity4kids.utils.ArrayAdapterFactory;
@@ -137,11 +131,6 @@ public class ArticleChallengesActivity extends BaseActivity implements Challenge
             Log.d("FileNotFoundException", Log.getStackTraceString(t));
         }
     };
-
-    @Override
-    protected void updateUi(Response response) {
-
-    }
 
     @Override
     public void onClick(View view, int position, String activeUrl) {

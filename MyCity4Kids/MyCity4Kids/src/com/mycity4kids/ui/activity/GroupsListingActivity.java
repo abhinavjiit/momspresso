@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.internal.LinkedTreeMap;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.BuildConfig;
@@ -352,11 +351,6 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
             }
             adapter.notifyDataSetChanged();
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

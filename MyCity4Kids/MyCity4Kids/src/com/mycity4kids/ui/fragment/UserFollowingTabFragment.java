@@ -11,7 +11,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
@@ -69,11 +68,6 @@ public class UserFollowingTabFragment extends BaseFragment {
             startActivity(intent);
         });
         return view;
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

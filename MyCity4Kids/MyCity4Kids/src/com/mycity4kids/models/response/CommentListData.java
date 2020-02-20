@@ -3,6 +3,8 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
@@ -10,15 +12,25 @@ import java.util.ArrayList;
  */
 
 public class CommentListData implements Parcelable {
+    @SerializedName("_id")
     private String _id;
+    @SerializedName("userName")
     private String userName;
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("userPic")
     private ProfilePic userPic;
+    @SerializedName("postId")
     private String postId;
+    @SerializedName("parentCommentId")
     private String parentCommentId;
+    @SerializedName("createdTime")
     private String createdTime;
+    @SerializedName("message")
     private String message;
+    @SerializedName("replies")
     private ArrayList<CommentListData> replies;
+    @SerializedName("replies_count")
     private int replies_count;
 
     public CommentListData() {

@@ -1519,7 +1519,6 @@
         android:id="@+id/drawerProfileCoachmark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
         android:background="@color/dark_transparent"
         android:elevation="8dp"
         android:visibility="invisible">
@@ -1562,7 +1561,7 @@
             android:layout_width="2dp"
             android:layout_height="30dp"
             android:layout_below="@+id/drawerProfileContainer"
-            android:layout_marginLeft="35dp"
+            android:layout_marginStart="35dp"
             android:background="@color/white" />
 
         <com.mycity4kids.widget.CustomFontTextView
@@ -1570,7 +1569,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/verticalLineDrawer1"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:background="@color/white"
@@ -1588,7 +1587,6 @@
         android:id="@+id/drawerSettingsCoachmark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
         android:background="@color/dark_transparent"
         android:elevation="8dp"
         android:visibility="invisible">
@@ -2183,25 +2181,4 @@
                 app:fontName="oswald.ttf" />
         </RelativeLayout>
     </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/choose_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible">
-
-        <include layout="@layout/choose_challenge_story_layout" />
-
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/choose_layout_video"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible">
-
-        <include layout="@layout/video_container_choose_option_challenge" />
-    </RelativeLayout>
-
 </FrameLayout>

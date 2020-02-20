@@ -560,4 +560,6 @@
     <color name="color_FFFFFF80">#FFFFFF80</color>
     <color name="color_B4ECE4">#B4ECE4</color>
     <color name="color_E2E2E2">#E2E2E2</color>
+    <color name="default_selected_dot_color">#ffffff</color>
+    <color name="default_dot_color">#e8e8e8</color>
 </resources>

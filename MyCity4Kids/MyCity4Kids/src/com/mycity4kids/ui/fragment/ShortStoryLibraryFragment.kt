@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView.OnItemClickListener
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.models.response.Categories
@@ -42,10 +41,4 @@ class ShortStoryLibraryFragment : BaseFragment() {
 
         return view
     }
-
-    override fun updateUi(response: Response?) {
-
-    }
-
-
 }

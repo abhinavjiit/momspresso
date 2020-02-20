@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -61,10 +60,5 @@ public class SubscribeTopicsTabFragment extends BaseFragment {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 }

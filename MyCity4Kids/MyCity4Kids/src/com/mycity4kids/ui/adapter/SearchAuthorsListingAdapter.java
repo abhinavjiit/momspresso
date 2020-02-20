@@ -99,14 +99,14 @@ public class SearchAuthorsListingAdapter extends BaseAdapter {
 
         if (null != mDatalist.get(position).getProfile_image() && !StringUtils.isNullOrEmpty(mDatalist.get(position).getProfile_image().getClientApp())) {
             try {
-                Picasso.with(mContext).load(mDatalist.get(position).getProfile_image().getClientApp()).placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img)
+                Picasso.get().load(mDatalist.get(position).getProfile_image().getClientApp()).placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img)
                         .into(viewholder.authorImageView);
             } catch (Exception e) {
                 e.printStackTrace();
-                Picasso.with(mContext).load(R.drawable.default_commentor_img).into(viewholder.authorImageView);
+                Picasso.get().load(R.drawable.default_commentor_img).into(viewholder.authorImageView);
             }
         } else {
-            Picasso.with(mContext).load(R.drawable.default_commentor_img).into(viewholder.authorImageView);
+            Picasso.get().load(R.drawable.default_commentor_img).into(viewholder.authorImageView);
         }
 
         viewholder.followTextView.setOnClickListener(new View.OnClickListener() {

@@ -9,7 +9,6 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -41,16 +40,6 @@ public class NotificationActivity extends BaseActivity {
         fragment.setArguments(mBundle);
         addFragment(fragment, mBundle, true);
     }
-
-    @Override
-    protected void updateUi(Response response) {
-        switch (response.getDataType()) {
-            case AppConstants.DEEP_LINK_RESOLVER_REQUEST:
-                break;
-
-        }
-    }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

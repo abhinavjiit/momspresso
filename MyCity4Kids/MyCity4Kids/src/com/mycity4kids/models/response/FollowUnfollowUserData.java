@@ -1,11 +1,14 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 2/8/16.
  */
 public class FollowUnfollowUserData {
-
+    @SerializedName("msg")
     private String msg;
+    @SerializedName("result")
     private FollowUnfollowUserResult result;
 
     public String getMsg() {

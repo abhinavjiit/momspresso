@@ -22,7 +22,6 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
@@ -211,11 +210,6 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
             }
             getSupportActionBar().setTitle("Best of " + SharedPrefUtils.getCurrentCityModel(this).getName());
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     private void hitBestofCityArticleListingApi(int sortType) {

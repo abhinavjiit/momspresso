@@ -19,7 +19,6 @@ import com.google.android.gms.common.Scopes
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Scope
 import com.google.gson.Gson
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.ConnectivityUtils
@@ -79,11 +78,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
             (activity as RewardsContainerActivity).showToast(getString(R.string.toast_response_error))
         }
     }
-
-    override fun updateUi(response: Response?) {
-
-    }
-
+    
     private lateinit var containerView: View
     private lateinit var submitListener: SubmitListener
     private lateinit var layoutInstagram: LinearLayout
@@ -472,12 +467,12 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
 
     /*fetch data from server*/
     private fun postDataofRewardsToServer() {
-        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+        val userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
 //        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
         if (!userId.isNullOrEmpty()) {
             Log.e("body to api ", Gson().toJson(apiGetResponse))
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiDataForAny(userId!!, apiGetResponse, 3).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<RewardsPersonalResponse> {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiDataForAny(userId, apiGetResponse, 3).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<RewardsPersonalResponse> {
                 override fun onComplete() {
                     editTwitter
                     removeProgressDialog()
@@ -492,7 +487,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
                         if (Constants.SUCCESS == response.status) {
                             submitListener.socialOnSubmitListener()
                         } else if (Constants.FAILURE == response.status) {
-                            Toast.makeText(activity, response?.reason, Toast.LENGTH_LONG).show()
+                            Toast.makeText(activity, response.reason, Toast.LENGTH_LONG).show()
                         }
                     }
                 }

@@ -1,6 +1,5 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
-import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
 import com.mycity4kids.newmodels.ForceUpdateModel;
 
 import retrofit2.Call;

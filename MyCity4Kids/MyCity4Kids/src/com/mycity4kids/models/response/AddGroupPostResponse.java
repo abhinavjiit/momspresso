@@ -1,5 +1,7 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -7,7 +9,7 @@ import java.util.List;
  */
 
 public class AddGroupPostResponse extends BaseResponse {
-
+    @SerializedName("data")
     private List<AddGroupPostData> data;
 
     public List<AddGroupPostData> getData() {

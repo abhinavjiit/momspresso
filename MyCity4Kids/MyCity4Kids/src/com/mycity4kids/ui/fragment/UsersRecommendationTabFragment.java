@@ -14,7 +14,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -133,11 +132,6 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
             adapter.setListData(recommendationsList);
             adapter.notifyDataSetChanged();
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

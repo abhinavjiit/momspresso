@@ -1,9 +1,6 @@
 package com.mycity4kids.ui.fragment;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +8,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -226,9 +226,6 @@ public class EditLangPrefsTabFragment extends BaseFragment implements View.OnCli
                             }
                         }
                         SharedPrefUtils.setLanguageFilters(BaseApplication.getAppContext(), filter);
-                        BaseApplication.setHasLanguagePreferrenceChanged(true);
-//                        FragmentManager fm = getActivity().getSupportFragmentManager();
-//                        fm.popBackStack();
                         Toast.makeText(getActivity(), "Preferred languages updated", Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -302,11 +299,6 @@ public class EditLangPrefsTabFragment extends BaseFragment implements View.OnCli
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
-
-    @Override
-    protected void updateUi(Response response) {
-
-    }
 
     @Override
     public void onClick(View v) {

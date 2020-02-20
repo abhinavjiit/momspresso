@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
@@ -38,7 +37,7 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.adapter.rxjava2.HttpException
+import retrofit2.HttpException
 import java.io.InputStreamReader
 import java.util.regex.Pattern
 
@@ -144,7 +143,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                         }
 
                         override fun onNext(response: BaseResponseGeneric<ProofPostModel>) {
-                            if (response != null && response.code == 200 && response.data != null && response.data!!.result != null) {
+                            if (response.code == 200 && response.data != null && response.data!!.result != null) {
                                 if (isComingFromRewards) {
                                     ToastUtils.showToast(context, "panCard Updated Successfully")
                                     submitOnClickListener.onPanCardDone()
@@ -162,11 +161,11 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                             removeProgressDialog()
                             val code = (e as HttpException).code()
                             if (code == 400) {
-                                var data = (e as HttpException).response().errorBody()!!.byteStream()
-                                var jsonParser = JsonParser()
-                                var jsonObject = jsonParser.parse(
+                                val data = e.response()?.errorBody()!!.byteStream()
+                                val jsonParser = JsonParser()
+                                val jsonObject = jsonParser.parse(
                                         InputStreamReader(data, "UTF-8")) as JsonObject
-                                var reason = jsonObject.get("reason")
+                                val reason = jsonObject.get("reason")
                                 Toast.makeText(context, reason.asString, Toast.LENGTH_SHORT).show()
                             }
 
@@ -190,7 +189,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                         }
 
                         override fun onNext(response: BaseResponseGeneric<ProofPostModel>) {
-                            if (response != null && response.code == 200 && response.data != null && response.data!!.result != null) {
+                            if (response.code == 200 && response.data != null) {
                                 if (isComingFromRewards) {
                                     submitOnClickListener.onPanCardDone()
                                 } else {
@@ -209,7 +208,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                             removeProgressDialog()
                             val code = (e as HttpException).code()
                             if (code == 400) {
-                                var data = (e as HttpException).response().errorBody()!!.byteStream()
+                                var data = e.response()?.errorBody()!!.byteStream()
                                 var jsonParser = JsonParser()
                                 var jsonObject = jsonParser.parse(
                                         InputStreamReader(data, "UTF-8")) as JsonObject
@@ -267,11 +266,6 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                 PanCardDetailsSubmissionFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
                 .commit()
     }
-
-
-    override fun updateUi(response: Response?) {
-    }
-
 
     companion object {
         @JvmStatic
@@ -396,7 +390,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                     allPaymentData = response.data!!.result
                     allPaymantModes.clear()
                     availableList.clear()
-                    if (response.data!!.result.default != null && response.data!!.result!!.default!!.account_type != null) {
+                    if (response.data!!.result.default != null && null != response.data!!.result!!.default!!.account_type) {
                         allPaymantModes.add(0, response.data!!.result!!.default!!.account_type!!)
                         allPaymantModes[0].isDefault = true
                         allPaymantModes[0].isChecked = true

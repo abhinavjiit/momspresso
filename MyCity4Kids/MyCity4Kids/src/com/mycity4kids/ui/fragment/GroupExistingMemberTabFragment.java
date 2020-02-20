@@ -13,7 +13,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -175,11 +174,6 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
             }
             adapter.notifyDataSetChanged();
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

@@ -6,8 +6,6 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,6 +34,8 @@ import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -217,6 +217,7 @@ public class AddEditCommentReplyDialogFragment extends DialogFragment implements
         @Override
         public void onFailure(Call<AddCommentResponse> call, Throwable t) {
             removeProgressDialog();
+            ((BaseActivity) getActivity()).apiExceptions(t);
 //            handleExceptions(t);
         }
     };
@@ -268,6 +269,7 @@ public class AddEditCommentReplyDialogFragment extends DialogFragment implements
         @Override
         public void onFailure(Call<AddCommentResponse> call, Throwable t) {
             removeProgressDialog();
+            ((BaseActivity) getActivity()).apiExceptions(t);
 //            if ("article".equals(type)) {
 //                ((ArticlesAndBlogsDetailsActivity) getActivity()).handleExceptions(t);
 //            } else {

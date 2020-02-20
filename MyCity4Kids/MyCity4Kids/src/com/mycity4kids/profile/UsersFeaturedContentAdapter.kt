@@ -197,7 +197,7 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
     private fun setVideoContentImage(position: Int, holder: UserFeaturedContentViewHolder) {
         try {
             if (!StringUtils.isNullOrEmpty(userFeaturedOnList?.get(position)?.thumbnail)) {
-                Picasso.with(holder.itemView.context).load(userFeaturedOnList?.get(position)?.thumbnail).placeholder(
+                Picasso.get().load(userFeaturedOnList?.get(position)?.thumbnail).placeholder(
                         R.drawable.default_article).into(holder.contentImageView)
             } else {
                 holder.contentImageView.setBackgroundResource(R.drawable.default_article)
@@ -214,11 +214,11 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
             if (!StringUtils.isNullOrEmpty(userFeaturedOnList?.get(position)?.imageUrl?.clientApp) &&
                     (userFeaturedOnList?.get(position)?.imageUrl?.thumbMax == null ||
                             userFeaturedOnList?.get(position)?.imageUrl?.thumbMax?.endsWith("default.jpg")!!)) {
-                Picasso.with(holder.itemView.context).load(userFeaturedOnList?.get(position)?.imageUrl?.clientApp).placeholder(
+                Picasso.get().load(userFeaturedOnList?.get(position)?.imageUrl?.clientApp).placeholder(
                         R.drawable.default_article).into(holder.contentImageView)
             } else {
                 if (!StringUtils.isNullOrEmpty(userFeaturedOnList?.get(position)?.imageUrl?.thumbMax)) {
-                    Picasso.with(holder.itemView.context).load(userFeaturedOnList?.get(position)?.imageUrl?.thumbMax).placeholder(
+                    Picasso.get().load(userFeaturedOnList?.get(position)?.imageUrl?.thumbMax).placeholder(
                             R.drawable.default_article).error(R.drawable.default_article).into(holder.contentImageView)
                 } else {
                     holder.contentImageView.setBackgroundResource(R.drawable.default_article)

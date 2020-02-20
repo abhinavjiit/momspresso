@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -94,12 +93,6 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
 
             }
         });
-
-    }
-
-
-    @Override
-    protected void updateUi(Response response) {
 
     }
 

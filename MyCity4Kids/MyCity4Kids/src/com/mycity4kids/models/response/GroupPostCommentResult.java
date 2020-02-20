@@ -3,6 +3,8 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
@@ -10,32 +12,57 @@ import java.util.ArrayList;
  */
 
 public class GroupPostCommentResult implements Parcelable {
+    @SerializedName("id")
     private int id;
+    @SerializedName("content")
     private String content;
+    @SerializedName("sentiment")
     private String sentiment;
+    @SerializedName("parentId")
     private int parentId;
+    @SerializedName("groupId")
     private int groupId;
+    @SerializedName("markedHelpful")
     private int markedHelpful;
-
+    @SerializedName("postId")
     private int postId;
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("isActive")
     private int isActive;
+    @SerializedName("mediaUrls")
     private Object mediaUrls;
+    @SerializedName("isAnnon")
     private int isAnnon;
+    @SerializedName("moderationStatus")
     private String moderationStatus;
+    @SerializedName("moderatedBy")
     private String moderatedBy;
+    @SerializedName("moderatedOn")
     private String moderatedOn;
+    @SerializedName("lang")
     private String lang;
+    @SerializedName("createdAt")
     private long createdAt;
+    @SerializedName("updatedAt")
     private long updatedAt;
+    @SerializedName("childData")
     private ArrayList<GroupPostCommentResult> childData;
+    @SerializedName("isLastConversation")
     private int isLastConversation = 0;
+    @SerializedName("childCount")
     private int childCount;
+    @SerializedName("userInfo")
     private UserDetailResult userInfo;
+    @SerializedName("notHelpfullCount")
     private int notHelpfullCount;
+    @SerializedName("helpfullCount")
     private int helpfullCount;
+    @SerializedName("counts")
     private ArrayList<GroupPostCounts> counts;
+    @SerializedName("commentType")
     private int commentType;
+    @SerializedName("tag")
     private String tag;
 
     public GroupPostCommentResult() {

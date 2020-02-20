@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -224,11 +223,6 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
             Crashlytics.logException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

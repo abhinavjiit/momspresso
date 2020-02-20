@@ -22,6 +22,8 @@ import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import androidx.appcompat.app.AlertDialog;
+
 import com.android.volley.toolbox.ImageLoader;
 
 import org.json.JSONException;
@@ -47,8 +49,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-
-import androidx.appcompat.app.AlertDialog;
 
 public class EditorFragment extends EditorFragmentAbstract implements View.OnClickListener, View.OnTouchListener,
         OnJsEditorStateChangedListener, OnImeBackListener, EditorWebViewAbstract.AuthHeaderRequestListener,
@@ -644,17 +644,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             WebView.setWebContentsDebuggingEnabled(enable);
         }
     }
-
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//       /* menu.add(0, BUTTON_ID_LOG_HTML, 0, "Log HTML")
-//                .setIcon(R.drawable.ic_log_html)
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);*/
-//        inflater.inflate(R.menu.menu_editor, menu);
-//        getActionBar().setTitle("Write an Article");
-//        getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.primary)));
-//        super.onCreateOptionsMenu(menu, inflater);
-//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

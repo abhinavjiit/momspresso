@@ -31,7 +31,6 @@ import androidx.core.app.ActivityCompat;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -149,7 +148,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             changePictureTextView.setVisibility(View.VISIBLE);
             articleId = getIntent().getStringExtra("articleId");
             if (thumbnailUrl != null) {
-                Picasso.with(this).load(thumbnailUrl).into(articleImage);
+                Picasso.get().load(thumbnailUrl).into(articleImage);
                 url = thumbnailUrl;
             }
         } else {
@@ -248,11 +247,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             pageNumber = pageNumber + 1;
             adapter.notifyDataSetChanged();
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override
@@ -486,6 +480,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
 
             UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+//                launchBlogSetup(responseData);
                 if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
                     launchBlogSetup(responseData);
                 } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
@@ -552,7 +547,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                                      }
                                  }
                                  adapter.notifyDataSetChanged();
-                                 Picasso.with(ArticleImageTagUploadActivity.this).load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(articleImage);
+                                 Picasso.get().load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(articleImage);
                                  showToast(getString(R.string.image_upload_success));
                              }
                          }

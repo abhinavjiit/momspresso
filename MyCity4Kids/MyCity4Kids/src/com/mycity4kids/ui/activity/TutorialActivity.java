@@ -2,14 +2,12 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.viewpager.widget.ViewPager;
-
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.kelltontech.network.Response;
+import androidx.viewpager.widget.ViewPager;
+
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -17,14 +15,14 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.TutorialAdapter;
-import com.shuhart.bubblepagerindicator.BubblePageIndicator;
+import com.mycity4kids.widget.IndefinitePagerIndicator;
 
 
 public class TutorialActivity extends BaseActivity implements View.OnClickListener {
 
     private ViewPager mViewPager;
     private TutorialAdapter mViewPagerAdapter;
-    private BubblePageIndicator dotIndicatorView;
+    private IndefinitePagerIndicator dotIndicatorView;
     private TextView signinTextView;
     private TextView getStartedTextView;
     private RelativeLayout root;
@@ -39,7 +37,7 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
 
         Utils.pushOpenScreenEvent(TutorialActivity.this, "OnboardingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        dotIndicatorView = (BubblePageIndicator) findViewById(R.id.dotIndicatorView);
+        dotIndicatorView = (IndefinitePagerIndicator) findViewById(R.id.dotIndicatorView);
         signinTextView = (TextView) findViewById(R.id.signinTextView);
         getStartedTextView = (TextView) findViewById(R.id.getStartedTextView);
 
@@ -49,12 +47,7 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
         mViewPagerAdapter = new TutorialAdapter(getSupportFragmentManager(), this);
         mViewPager.setAdapter(mViewPagerAdapter);
 
-        dotIndicatorView.setViewPager(mViewPager);
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
+        dotIndicatorView.attachToViewPager(mViewPager);
     }
 
     @Override

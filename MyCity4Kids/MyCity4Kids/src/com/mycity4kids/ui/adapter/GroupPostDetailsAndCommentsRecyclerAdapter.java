@@ -52,7 +52,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.GroupPostMediaViewPager;
-import com.shuhart.bubblepagerindicator.BubblePageIndicator;
+import com.mycity4kids.widget.IndefinitePagerIndicator;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -197,7 +197,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             } else {
                 textPostViewHolder.usernameTextView.setText(groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(textPostViewHolder.userImageView);
                 } catch (Exception e) {
                     textPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
@@ -278,7 +278,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     }
                 });
                 try {
-                    Picasso.with(mContext).load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(audioCommentViewHolder.profileImageView);
                 } catch (Exception e) {
                     audioCommentViewHolder.profileImageView.setBackgroundResource(R.drawable.default_commentor_img);
@@ -297,7 +297,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 audioCommentViewHolder.commentorUsernameTextView.setText(groupPostResult.getUserInfo().getFirstName()
                         + " " + groupPostResult.getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(audioCommentViewHolder.commentorImageView);
                 } catch (Exception e) {
                     audioCommentViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
@@ -385,7 +385,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             } else {
                 mediaPostViewHolder.usernameTextView.setText(groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(mediaPostViewHolder.userImageView);
                 } catch (Exception e) {
                     mediaPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
@@ -453,7 +453,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             } else {
                 textPollPostViewHolder.usernameTextView.setText(groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(textPollPostViewHolder.userImageView);
                 } catch (Exception e) {
                     textPollPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
@@ -559,7 +559,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             } else {
                 imageHolder.usernameTextView.setText(groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.userImageView);
                 } catch (Exception e) {
                     imageHolder.userImageView.setBackgroundResource(R.drawable.default_article);
@@ -594,23 +594,23 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             for (Map.Entry<String, String> entry : imageMap.entrySet()) {
                 switch (entry.getKey()) {
                     case "option1":
-                        Picasso.with(mContext).load(entry.getValue())
+                        Picasso.get().load(entry.getValue())
                                 .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.option1ImageView);
                         break;
                     case "option2":
-                        Picasso.with(mContext).load(entry.getValue())
+                        Picasso.get().load(entry.getValue())
                                 .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.option2ImageView);
                         break;
                     case "option3":
                         imageHolder.lastOptionsContainer.setVisibility(View.VISIBLE);
                         imageHolder.option3Container.setVisibility(View.VISIBLE);
-                        Picasso.with(mContext).load(entry.getValue())
+                        Picasso.get().load(entry.getValue())
                                 .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.option3ImageView);
                         break;
                     case "option4":
                         imageHolder.lastOptionsContainer.setVisibility(View.VISIBLE);
                         imageHolder.option4Container.setVisibility(View.VISIBLE);
-                        Picasso.with(mContext).load(entry.getValue())
+                        Picasso.get().load(entry.getValue())
                                 .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.option4ImageView);
                         break;
                 }
@@ -674,7 +674,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 audioCommentViewHolder.commentorUsernameTextView.setText(postCommentsList.get(position).getUserInfo().getFirstName()
                         + " " + postCommentsList.get(position).getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(postCommentsList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(postCommentsList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(audioCommentViewHolder.commentorImageView);
                 } catch (Exception e) {
                     audioCommentViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
@@ -749,7 +749,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     rootCommentViewHolder.replyCommentTextView.setVisibility(View.GONE);
                     rootCommentViewHolder.commentDateTextView.setVisibility(View.GONE);
                     rootCommentViewHolder.media.setVisibility(View.VISIBLE);
-                    Picasso.with(mContext).load(mediaList.get(0)).error(R.drawable.default_article).into(rootCommentViewHolder.media);
+                    Picasso.get().load(mediaList.get(0)).error(R.drawable.default_article).into(rootCommentViewHolder.media);
                 } else {
                     rootCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
                     rootCommentViewHolder.replyCommentTextView.setVisibility(View.VISIBLE);
@@ -776,7 +776,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 rootCommentViewHolder.commentorUsernameTextView.setText(postCommentsList.get(position).getUserInfo().getFirstName()
                         + " " + postCommentsList.get(position).getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(postCommentsList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(postCommentsList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(rootCommentViewHolder.commentorImageView);
                 } catch (Exception e) {
                     rootCommentViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
@@ -791,7 +791,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     rootCommentViewHolder.replyCommentTextView.setVisibility(View.GONE);
                     rootCommentViewHolder.commentDateTextView.setVisibility(View.GONE);
                     rootCommentViewHolder.media.setVisibility(View.VISIBLE);
-                    Picasso.with(mContext).load(mediaList.get(0)).error(R.drawable.default_article).into(rootCommentViewHolder.media);
+                    Picasso.get().load(mediaList.get(0)).error(R.drawable.default_article).into(rootCommentViewHolder.media);
                 } else {
                     rootCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
                     rootCommentViewHolder.replyCommentTextView.setVisibility(View.VISIBLE);
@@ -1094,7 +1094,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         }
         holder.mViewPagerAdapter.setDataList(mediaList);
         holder.postDataViewPager.setAdapter(holder.mViewPagerAdapter);
-        holder.dotIndicatorView.setViewPager(holder.postDataViewPager);
+        holder.dotIndicatorView.attachToViewPager(holder.postDataViewPager);
         if (mediaList.size() == 1) {
             holder.indexTextView.setVisibility(View.GONE);
             holder.dotIndicatorView.setVisibility(View.GONE);
@@ -1158,7 +1158,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView;
         ImageView postSettingImageView, shareTextView;
-        private BubblePageIndicator dotIndicatorView;
+        private IndefinitePagerIndicator dotIndicatorView;
         private GroupPostMediaViewPager postDataViewPager;
         private TextView indexTextView, userTag;
         private GroupMediaPostViewPagerAdapter mViewPagerAdapter;
@@ -1178,7 +1178,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             downvoteContainer = (LinearLayout) view.findViewById(R.id.downvoteContainer);
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
-            dotIndicatorView = (BubblePageIndicator) view.findViewById(R.id.dotIndicatorView);
+            dotIndicatorView = (IndefinitePagerIndicator) view.findViewById(R.id.dotIndicatorView);
             postDataViewPager = (GroupPostMediaViewPager) view.findViewById(R.id.postDataViewPager);
             indexTextView = (TextView) view.findViewById(R.id.indexTextView);
             shareTextView = (ImageView) view.findViewById(R.id.shareTextView);

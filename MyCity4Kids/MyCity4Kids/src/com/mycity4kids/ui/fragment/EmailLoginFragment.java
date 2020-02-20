@@ -2,7 +2,6 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.BuildConfig;
@@ -69,11 +67,6 @@ public class EmailLoginFragment extends BaseFragment implements View.OnClickList
         forgotPasswordTextView.setOnClickListener(this);
         signupTextView.setOnClickListener(this);
         return view;
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

@@ -7,35 +7,41 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class Topics implements Parcelable {
-
+    @SerializedName("id")
     private String id;
+    @SerializedName("title")
     private String title;
+    @SerializedName("display_name")
     private String display_name;
-
     @SerializedName("public")
     private String publicVisibility;
-
+    @SerializedName("showInMenu")
     private String showInMenu;
+    @SerializedName("child")
     private ArrayList<Topics> child = new ArrayList<>();
+    @SerializedName("parentId")
     private String parentId;
+    @SerializedName("parentName")
     private String parentName;
+    @SerializedName("isSelected")
     private boolean isSelected;
+    @SerializedName("slug")
     private String slug;
+    @SerializedName("prevKey")
     private boolean prevKey = false;
+    @SerializedName("extraData")
     private List<ExtraData> extraData = new ArrayList<>();
-    private String sponsoredCategoryImage;
-
-
-    private String sponsoredCategoryBadge;
+    @SerializedName("is_live")
     private String is_live;
+    @SerializedName("mapped_category")
     private String mapped_category;
 
-
     public static class ExtraData implements Parcelable {
+        @SerializedName("challenge")
         private Challenges challenge;
+        @SerializedName("categoryTag")
         private CategoryTag categoryTag;
 
         public CategoryTag getCategoryTag() {
@@ -62,15 +68,15 @@ public class Topics implements Parcelable {
 
 
         public static class CategoryTag implements Parcelable {
+            @SerializedName("categoryImage")
             private String categoryImage;
+            @SerializedName("categoryBadge")
             private String categoryBadge;
-
 
             public CategoryTag(String categoryImage, String categoryBadge) {
                 this.categoryImage = categoryImage;
                 this.categoryBadge = categoryBadge;
             }
-
 
             public String getCategoryImage() {
                 return categoryImage;
@@ -91,15 +97,12 @@ public class Topics implements Parcelable {
             protected CategoryTag(Parcel in) {
                 categoryImage = in.readString();
                 categoryBadge = in.readString();
-
-
             }
 
             @Override
             public void writeToParcel(Parcel dest, int flags) {
                 dest.writeString(categoryImage);
                 dest.writeString(categoryBadge);
-
             }
 
             @Override
@@ -120,15 +123,22 @@ public class Topics implements Parcelable {
             };
         }
 
-
         public static class Challenges implements Parcelable {
+            @SerializedName("active")
             private String active;
+            @SerializedName("videoUrl")
             private String videoUrl;
+            @SerializedName("imageUrl")
             private String imageUrl;
+            @SerializedName("type")
             private int type;
+            @SerializedName("desc")
             private String desc;
+            @SerializedName("is_live")
             private String is_live;
+            @SerializedName("mapped_category")
             private String mapped_category;
+            @SerializedName("max_duration")
             private int max_duration = 5000;
 
             public int getMax_duration() {
@@ -183,10 +193,8 @@ public class Topics implements Parcelable {
                 this.videoUrl = videoUrl;
             }
 
-
             public String getImageUrl() {
                 return imageUrl;
-
             }
 
             public void setImageUrl(String imageUrl) {
@@ -227,8 +235,6 @@ public class Topics implements Parcelable {
                 is_live = in.readString();
                 mapped_category = in.readString();
                 max_duration = in.readInt();
-
-
             }
 
             @Override
@@ -242,7 +248,6 @@ public class Topics implements Parcelable {
                 dest.writeString(is_live);
                 dest.writeString(mapped_category);
                 dest.writeInt(max_duration);
-
             }
 
             @Override
@@ -263,10 +268,8 @@ public class Topics implements Parcelable {
             };
         }
 
-
         public ExtraData(Parcel in) {
             challenge = in.readParcelable(Challenges.class.getClassLoader());
-
         }
 
         @Override
@@ -293,7 +296,6 @@ public class Topics implements Parcelable {
         };
     }
 
-
     public Topics() {
 
     }
@@ -305,8 +307,6 @@ public class Topics implements Parcelable {
         this.child = child;
         this.parentId = parentId;
         this.parentName = parentName;
-        // this.extraData=extraData;
-        //this.extraData = extraData;
     }
 
     protected Topics(Parcel in) {
@@ -320,29 +320,11 @@ public class Topics implements Parcelable {
         showInMenu = in.readString();
         isSelected = in.readByte() != 0;
         slug = in.readString();
-        //   extraData = in.readParcelable(ExtraData.class.getClassLoader());
-
         in.readTypedList(this.extraData, ExtraData.CREATOR);
         is_live = in.readString();
         prevKey = in.readByte() != 0;
         mapped_category = in.readString();
-
-
-        //extraData = in.readParcelable(ExtraData.class.getClassLoader());
-
-        //  extraData = in.createTypedArrayList(ExploreTopicsModel.CREATOR);
-
-
     }
-
-
- /*   public ExtraData getExtraData() {
-        return extraData;
-    }
-
-    public void setExtraData(ExtraData extraData) {
-        this.extraData = extraData;
-    }*/
 
     public List<ExtraData> getExtraData() {
         return extraData;
@@ -399,14 +381,6 @@ public class Topics implements Parcelable {
     public ArrayList<Topics> getChild() {
         return child;
     }
-/*
-    public ArrayList<ExploreTopicsModel> getExtraData() {
-        return extraData;
-    }
-
-    public void setExtraData(ArrayList<ExploreTopicsModel> extraData) {
-        this.extraData = extraData;
-    }*/
 
     public void setChild(ArrayList<Topics> child) {
         this.child = child;
@@ -496,12 +470,9 @@ public class Topics implements Parcelable {
         dest.writeString(showInMenu);
         dest.writeByte((byte) (isSelected ? 1 : 0));
         dest.writeString(slug);
-        //  dest.writeParcelable(extraData, flags);
-
         dest.writeTypedList(extraData);
         dest.writeString(is_live);
         dest.writeByte((byte) (prevKey ? 1 : 0));
         dest.writeString(mapped_category);
-        //  dest.writeTypedList(extraData);
     }
 }

@@ -1,10 +1,14 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 25/7/17.
  */
 public class ChangePasswordRequest {
+    @SerializedName("oldPassword")
     private String oldPassword;
+    @SerializedName("newPassword")
     private String newPassword;
 
     public String getOldPassword() {

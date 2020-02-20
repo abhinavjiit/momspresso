@@ -3,6 +3,8 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
@@ -10,7 +12,9 @@ import java.util.ArrayList;
  */
 
 public class GroupInfoResult implements Parcelable {
+    @SerializedName("title")
     private String title;
+    @SerializedName("color")
     private String color;
 
     public String getName() {

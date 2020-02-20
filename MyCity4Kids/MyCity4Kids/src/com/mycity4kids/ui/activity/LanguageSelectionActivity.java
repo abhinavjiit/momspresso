@@ -2,15 +2,13 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.kelltontech.network.Response;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -30,12 +28,8 @@ import java.util.Arrays;
 
 public class LanguageSelectionActivity extends BaseActivity implements View.OnClickListener, LanguageSelectionRecyclerAdapter.RecyclerViewClickListener {
 
-    private RelativeLayout langListOverlay;
-    private TextView selectMoreTextView, okayTextView;
-    private TextView englishTextView, hindiTextView, marathiTextView, bengaliTextView, tamilTextView, teluguTextView;
     private TextView continueTextView;
     private String selectedLang = "";
-    private TextView currentLangTextView;
     private RecyclerView languageRecyclerView;
 
     private LanguageSelectionRecyclerAdapter languageSelectionRecyclerAdapter;
@@ -70,13 +64,6 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
         languageSelectionRecyclerAdapter.setNewListData(langList);
 
         languageRecyclerView.setAdapter(languageSelectionRecyclerAdapter);
-
-
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

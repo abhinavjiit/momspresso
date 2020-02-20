@@ -57,7 +57,7 @@ public class UserReadArticleAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (null != articleDataModelsNew.get(position).getImageUrl()) {
-            Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getThumbMin()).
+            Picasso.get().load(articleDataModelsNew.get(position).getImageUrl().getThumbMin()).
                     placeholder(R.drawable.default_article).error(R.drawable.default_article).into(((UserPublishedArticleViewHolder) holder).articleImageView);
         } else {
             ((UserPublishedArticleViewHolder) holder).articleImageView.setBackgroundResource(R.drawable.article_default);

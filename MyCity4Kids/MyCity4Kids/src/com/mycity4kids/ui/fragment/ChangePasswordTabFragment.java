@@ -11,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -48,11 +47,6 @@ public class ChangePasswordTabFragment extends BaseFragment implements View.OnCl
         saveTextView.setOnClickListener(this);
 
         return view;
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

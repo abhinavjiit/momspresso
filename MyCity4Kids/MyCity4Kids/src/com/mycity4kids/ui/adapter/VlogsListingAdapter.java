@@ -167,7 +167,7 @@ public class VlogsListingAdapter extends BaseAdapter {
             }
             try {
                 imageUrl = articleDataModelsNew.get(position).getThumbnail() + "/tr:w-" + screenWidth + ",h-" + screenWidth / 2 + ",fo-auto";
-                Picasso.with(mContext).load(imageUrl)
+                Picasso.get().load(imageUrl)
                         .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(addVlogViewHolder.articleImageView);
             } catch (Exception e) {
                 addVlogViewHolder.articleImageView.setImageResource(R.drawable.default_article);
@@ -247,7 +247,7 @@ public class VlogsListingAdapter extends BaseAdapter {
             }
             try {
                 imageUrl = articleDataModelsNew.get(position).getThumbnail() + "/tr:w-" + screenWidth + ",h-" + screenWidth / 2 + ",fo-auto";
-                Picasso.with(mContext).load(imageUrl)
+                Picasso.get().load(imageUrl)
                         .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
             } catch (Exception e) {
                 holder.articleImageView.setImageResource(R.drawable.default_article);

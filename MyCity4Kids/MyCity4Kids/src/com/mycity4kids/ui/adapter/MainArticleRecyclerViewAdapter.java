@@ -18,6 +18,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -63,10 +67,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Locale;
-
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by hemant on 4/12/17.
@@ -220,7 +220,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 ((JoinGroupViewHolder) holder).joinGroupTextView.setVisibility(View.VISIBLE);
             }
             try {
-                Picasso.with(mContext).load(gpImageUrl).placeholder(R.drawable.groups_generic)
+                Picasso.get().load(gpImageUrl).placeholder(R.drawable.groups_generic)
                         .error(R.drawable.groups_generic).into(((JoinGroupViewHolder) holder).groupHeaderImageView);
             } catch (Exception e) {
                 ((JoinGroupViewHolder) holder).groupHeaderImageView.setImageResource(R.drawable.groups_generic);
@@ -237,7 +237,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 viewHolder.storyHeaderView.setVisibility(View.VISIBLE);
                 addShortStoryItem(viewHolder, viewHolder.storyImage, viewHolder.authorNameTextView,
                         viewHolder.storyCommentCountTextView, viewHolder.storyRecommendationCountTextView, viewHolder.likeImageView,
-                        articleDataModelsNew.get(position), viewHolder.followAuthorTextView, viewHolder.storyAuthorTextView, viewHolder.shareStoryImageView);
+                        articleDataModelsNew.get(position), viewHolder.followAuthorTextView, viewHolder.storyAuthorTextView,
+                        viewHolder.shareStoryImageView, viewHolder.logoImageView);
             }
         } else if (holder instanceof VideoCarouselViewHolder) {
             if (!articleDataModelsNew.get(position).isCarouselRequestRunning() && !articleDataModelsNew.get(position).isResponseReceived()) {
@@ -263,7 +264,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 viewHolder.storyHeaderView.setVisibility(View.VISIBLE);
                 addShortStoryItem(viewHolder, viewHolder.storyImage, viewHolder.authorNameTextView,
                         viewHolder.storyCommentCountTextView, viewHolder.storyRecommendationCountTextView, viewHolder.likeImageView,
-                        articleDataModelsNew.get(position), viewHolder.followAuthorTextView, viewHolder.storyAuthorTextView, viewHolder.shareStoryImageView);
+                        articleDataModelsNew.get(position), viewHolder.followAuthorTextView, viewHolder.storyAuthorTextView,
+                        viewHolder.shareStoryImageView, viewHolder.logoImageView);
             }
         } else if (holder instanceof CampaignCarouselViewHolder) {
             CampaignCarouselViewHolder viewHolder = (CampaignCarouselViewHolder) holder;
@@ -279,12 +281,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 viewHolder.relativeLayoutContainer.setVisibility(View.VISIBLE);
                 viewHolder.videoCarouselContainer.setVisibility(View.VISIBLE);
                 try {
-                    if (campaignListDataModels != null && campaignListDataModels.size() > 4) {
+                    if (campaignListDataModels != null && campaignListDataModels.size() > 0) {
                         addCampaignCard(viewHolder.campaignHeader, viewHolder.brandImg, viewHolder.brandName, viewHolder.campaignName, viewHolder.campaignStatus, campaignListDataModels.get(0), position, viewHolder);
-                        addCampaignCard(viewHolder.campaignHeader2, viewHolder.brandImg2, viewHolder.brandName2, viewHolder.campaignName2, viewHolder.campaignStatus2, campaignListDataModels.get(1), position, viewHolder);
-                        addCampaignCard(viewHolder.campaignHeader3, viewHolder.brandImg3, viewHolder.brandName3, viewHolder.campaignName3, viewHolder.campaignStatus3, campaignListDataModels.get(2), position, viewHolder);
-                        addCampaignCard(viewHolder.campaignHeader4, viewHolder.brandImg4, viewHolder.brandName4, viewHolder.campaignName4, viewHolder.campaignStatus4, campaignListDataModels.get(3), position, viewHolder);
-                        addCampaignCard(viewHolder.campaignHeader5, viewHolder.brandImg5, viewHolder.brandName5, viewHolder.campaignName5, viewHolder.campaignStatus5, campaignListDataModels.get(4), position, viewHolder);
                     }
                 } catch (Exception e) {
                     Crashlytics.logException(e);
@@ -308,19 +306,21 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 viewHolder.storyHeaderView.setVisibility(View.VISIBLE);
                 addShortStoryItem(viewHolder, viewHolder.storyImage, viewHolder.authorNameTextView,
                         viewHolder.storyCommentCountTextView, viewHolder.storyRecommendationCountTextView, viewHolder.likeImageView,
-                        articleDataModelsNew.get(position), viewHolder.followAuthorTextView, viewHolder.storyAuthorTextView, viewHolder.shareStoryImageView);
+                        articleDataModelsNew.get(position), viewHolder.followAuthorTextView, viewHolder.storyAuthorTextView,
+                        viewHolder.shareStoryImageView, viewHolder.logoImageView);
             }
         } else {
             ShortStoriesViewHolder viewHolder = (ShortStoriesViewHolder) holder;
             addShortStoryItem(viewHolder, viewHolder.storyImage, viewHolder.authorNameTextView,
                     viewHolder.storyCommentCountTextView, viewHolder.storyRecommendationCountTextView, viewHolder.likeImageView,
-                    articleDataModelsNew.get(position), viewHolder.followAuthorTextView, viewHolder.storyAuthorTextView, viewHolder.shareStoryImageView);
+                    articleDataModelsNew.get(position), viewHolder.followAuthorTextView, viewHolder.storyAuthorTextView,
+                    viewHolder.shareStoryImageView, viewHolder.logoImageView);
         }
     }
 
     private void addCampaignCard(ImageView campaignHeader, CircularImageView brandImg, TextView brandName, TextView campaignName, TextView campaignStatus, final CampaignDataListResult data, final int position, final RecyclerView.ViewHolder holder) {
-        Picasso.with(mContext).load(data.getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(campaignHeader);
-        Picasso.with(mContext).load(data.getBrandDetails().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(brandImg);
+        Picasso.get().load(data.getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(campaignHeader);
+        Picasso.get().load(data.getBrandDetails().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(brandImg);
         brandName.setText(data.getBrandDetails().getName());
         campaignName.setText(data.getName());
         setTextAndColor(data.getCampaignStatus(), campaignStatus);
@@ -414,10 +414,10 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         try {
             if (!StringUtils.isNullOrEmpty(data.getVideoUrl())
                     && (data.getImageUrl().getThumbMax() == null || data.getImageUrl().getThumbMax().contains("default.jp"))) {
-                Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURLMomspresso(data.getVideoUrl())).placeholder(R.drawable.default_article).into(articleIV);
+                Picasso.get().load(AppUtils.getYoutubeThumbnailURLMomspresso(data.getVideoUrl())).placeholder(R.drawable.default_article).into(articleIV);
             } else {
                 if (!StringUtils.isNullOrEmpty(data.getImageUrl().getThumbMax())) {
-                    Picasso.with(mContext).load(data.getImageUrl().getThumbMax())
+                    Picasso.get().load(data.getImageUrl().getThumbMax())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(articleIV);
                 } else {
                     articleIV.setBackgroundResource(R.drawable.default_article);
@@ -469,7 +469,9 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     }
 
     private void addShortStoryItem(final RecyclerView.ViewHolder holder, ImageView storyImage, TextView authorNameTV,
-                                   TextView storyCommentCountTV, TextView storyRecommendationCountTV, ImageView likeIV, ArticleListingResult data, TextView followAuthorTextView, TextView storyAuthorTextView, ImageView shareStoryImageView) {
+                                   TextView storyCommentCountTV, TextView storyRecommendationCountTV, ImageView likeIV,
+                                   ArticleListingResult data, TextView followAuthorTextView, TextView storyAuthorTextView,
+                                   ImageView shareStoryImageView, ImageView logoImageView) {
 
         authorNameTV.setText(data.getUserName());
         if (null == data.getCommentsCount()) {
@@ -489,7 +491,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         }
 
         try {
-            Picasso.with(holder.itemView.getContext()).load(data.getStoryImage().trim()).into(storyImage);
+            Picasso.get().load(data.getStoryImage().trim()).into(storyImage);
         } catch (Exception e) {
             storyImage.setImageResource(R.drawable.default_article);
         }
@@ -500,7 +502,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             followAuthorTextView.setText(mContext.getResources().getString(R.string.ad_follow_author));
         }
         try {
-            Picasso.with(mContext).load(data.getStoryImage()).into(shareStoryImageView);
+            Picasso.get().load(data.getStoryImage()).into(shareStoryImageView);
             storyAuthorTextView.setText(data.getUserName());
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -587,7 +589,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
-        TextView authorTypeTextView;
         ImageView bookmarkArticleImageView;
         ImageView watchLaterImageView;
 
@@ -601,7 +602,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
             commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
             recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
-            authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
             bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
             watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
             view.setOnClickListener(this);
@@ -623,7 +623,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         ImageView storyImage, likeImageView, menuItem;
         ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView;
         StoryShareCardWidget storyShareCardWidget;
-        ImageView shareStoryImageView;
+        ImageView shareStoryImageView, logoImageView;
         TextView storyAuthorTextView;
 
         private ShortStoriesViewHolder(View itemView) {
@@ -643,6 +643,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             followAuthorTextView = itemView.findViewById(R.id.followAuthorTextView);
             storyShareCardWidget = (StoryShareCardWidget) itemView.findViewById(R.id.storyShareCardWidget);
             shareStoryImageView = (ImageView) storyShareCardWidget.findViewById(R.id.storyImageView);
+            logoImageView = (ImageView) storyShareCardWidget.findViewById(R.id.logoImageView);
             storyAuthorTextView = (TextView) storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
 
             whatsappShareImageView.setTag(itemView);
@@ -678,7 +679,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
-        TextView authorTypeTextView;
         ImageView bookmarkArticleImageView;
         ImageView watchLaterImageView;
 
@@ -696,7 +696,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
             commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
             recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
-            authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
             bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
             watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
 
@@ -725,11 +724,11 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         RelativeLayout adSlotContainer;
         WebView adSlotWebView;
         RelativeLayout relativeLayoutContainer;
-        HorizontalScrollView videoCarouselContainer;
-        ImageView campaignHeader, campaignHeader2, campaignHeader3, campaignHeader4, campaignHeader5;
-        CircularImageView brandImg, brandImg2, brandImg3, brandImg4, brandImg5;
-        TextView brandName, campaignName, campaignStatus, brandName2, campaignName2, campaignStatus2, brandName3, campaignName3, campaignStatus3, brandName4, campaignName4, campaignStatus4, brandName5, campaignName5, campaignStatus5;
-        CardView cardView1, cardView2, cardView3, cardView4, cardView5;
+        LinearLayout videoCarouselContainer;
+        ImageView campaignHeader;
+        CircularImageView brandImg;
+        TextView brandName, campaignName, campaignStatus;
+        CardView cardView1;
 
         FrameLayout headerArticleView;
         TextView txvArticleTitle;
@@ -740,7 +739,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
-        TextView authorTypeTextView;
         ImageView bookmarkArticleImageView;
         ImageView watchLaterImageView;
         TextView viewCountTextView1;
@@ -755,7 +753,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         ImageView storyImage, likeImageView, menuItem;
         ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView;
         StoryShareCardWidget storyShareCardWidget;
-        ImageView shareStoryImageView;
+        ImageView shareStoryImageView, logoImageView;
         TextView storyAuthorTextView;
 
         CampaignCarouselViewHolder(View view) {
@@ -763,44 +761,16 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             adSlotContainer = view.findViewById(R.id.adSlotContainer);
             adSlotWebView = view.findViewById(R.id.adSlotWebView);
             relativeLayoutContainer = view.findViewById(R.id.relativeLayoutContainer);
-            videoCarouselContainer = view.findViewById(R.id.videoCarouselContainer);
+            videoCarouselContainer = view.findViewById(R.id.linearLayoutVideoCrousalConatiner);
             campaignHeader = view.findViewById(R.id.campaign_header);
-            campaignHeader2 = view.findViewById(R.id.campaign_header2);
-            campaignHeader3 = view.findViewById(R.id.campaign_header3);
-            campaignHeader4 = view.findViewById(R.id.campaign_header4);
-            campaignHeader5 = view.findViewById(R.id.campaign_header5);
             brandImg = view.findViewById(R.id.brand_img);
-            brandImg2 = view.findViewById(R.id.brand_img2);
-            brandImg3 = view.findViewById(R.id.brand_img3);
-            brandImg4 = view.findViewById(R.id.brand_img4);
-            brandImg5 = view.findViewById(R.id.brand_img5);
             brandName = view.findViewById(R.id.brand_name);
-            brandName2 = view.findViewById(R.id.brand_name2);
-            brandName3 = view.findViewById(R.id.brand_name3);
-            brandName4 = view.findViewById(R.id.brand_name4);
-            brandName5 = view.findViewById(R.id.brand_name5);
             campaignName = view.findViewById(R.id.campaign_name);
-            campaignName2 = view.findViewById(R.id.campaign_name2);
-            campaignName3 = view.findViewById(R.id.campaign_name3);
-            campaignName4 = view.findViewById(R.id.campaign_name4);
-            campaignName5 = view.findViewById(R.id.campaign_name5);
             campaignStatus = view.findViewById(R.id.submission_status);
-            campaignStatus2 = view.findViewById(R.id.submission_status2);
-            campaignStatus3 = view.findViewById(R.id.submission_status3);
-            campaignStatus4 = view.findViewById(R.id.submission_status4);
-            campaignStatus5 = view.findViewById(R.id.submission_status5);
             menuItem = view.findViewById(R.id.menuItem);
             followAuthorTextView = view.findViewById(R.id.followAuthorTextView);
             cardView1 = view.findViewById(R.id.cardView1);
-            cardView2 = view.findViewById(R.id.cardView2);
-            cardView3 = view.findViewById(R.id.cardView3);
-            cardView4 = view.findViewById(R.id.cardView4);
-            cardView5 = view.findViewById(R.id.cardView5);
             cardView1.setOnClickListener(this);
-            cardView2.setOnClickListener(this);
-            cardView3.setOnClickListener(this);
-            cardView4.setOnClickListener(this);
-            cardView5.setOnClickListener(this);
             menuItem.setOnClickListener(this);
             followAuthorTextView.setOnClickListener(this);
 
@@ -818,7 +788,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
             commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
             recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
-            authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
             bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
             watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
 
@@ -837,6 +806,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             adSlotWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             storyShareCardWidget = (StoryShareCardWidget) itemView.findViewById(R.id.storyShareCardWidget);
             shareStoryImageView = (ImageView) storyShareCardWidget.findViewById(R.id.storyImageView);
+            logoImageView = (ImageView) storyShareCardWidget.findViewById(R.id.logoImageView);
             storyAuthorTextView = (TextView) storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
 
             view.setOnClickListener(this);
@@ -875,7 +845,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
-        TextView authorTypeTextView;
         ImageView bookmarkArticleImageView;
         ImageView watchLaterImageView;
         TextView viewCountTextView1;
@@ -890,7 +859,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         ImageView storyImage, likeImageView, menuItem;
         ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView;
         StoryShareCardWidget storyShareCardWidget;
-        ImageView shareStoryImageView;
+        ImageView shareStoryImageView, logoImageView;
         TextView storyAuthorTextView;
 
         VideoCarouselViewHolder(View view) {
@@ -912,7 +881,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
             commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
             recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
-            authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
             bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
             watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
 
@@ -932,6 +900,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             followAuthorTextView = view.findViewById(R.id.followAuthorTextView);
             storyShareCardWidget = (StoryShareCardWidget) itemView.findViewById(R.id.storyShareCardWidget);
             shareStoryImageView = (ImageView) storyShareCardWidget.findViewById(R.id.storyImageView);
+            logoImageView = (ImageView) storyShareCardWidget.findViewById(R.id.logoImageView);
             storyAuthorTextView = (TextView) storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
 
             whatsappShareImageView.setTag(view);
@@ -974,7 +943,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
-        TextView authorTypeTextView;
         ImageView bookmarkArticleImageView;
         ImageView watchLaterImageView, menuItem;
 
@@ -988,7 +956,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView;
         RelativeLayout mainView;
         StoryShareCardWidget storyShareCardWidget;
-        ImageView shareStoryImageView;
+        ImageView shareStoryImageView, logoImageView;
         TextView storyAuthorTextView;
 
         JoinGroupViewHolder(View view) {
@@ -1008,7 +976,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
             commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
             recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
-            authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
             bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
             watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
 
@@ -1029,6 +996,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             followAuthorTextView = (TextView) view.findViewById(R.id.followAuthorTextView);
             storyShareCardWidget = (StoryShareCardWidget) itemView.findViewById(R.id.storyShareCardWidget);
             shareStoryImageView = (ImageView) storyShareCardWidget.findViewById(R.id.storyImageView);
+            logoImageView = (ImageView) storyShareCardWidget.findViewById(R.id.logoImageView);
             storyAuthorTextView = (TextView) storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
             whatsappShareImageView.setTag(view);
 
@@ -1216,8 +1184,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                     ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                                 } else if (viewHolder instanceof JoinGroupViewHolder) {
                                     ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
-                                } else {
-//                                    ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                                 }
                                 if (mContext instanceof DashboardActivity) {
                                     ((DashboardActivity) mContext).showBookmarkConfirmationTooltip();
@@ -1233,8 +1199,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                     ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                                 } else if (viewHolder instanceof JoinGroupViewHolder) {
                                     ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
-                                } else {
-//                                    ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                                 }
                             } else if ("bookmarkVideo".equals(type)) {
                                 articleDataModelsNew.get(i).setListingWatchLaterStatus(1);
@@ -1245,7 +1209,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                     ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
                                 } else if (viewHolder instanceof JoinGroupViewHolder) {
                                     ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
-                                } else {
                                 }
                             } else if ("unbookmarkVideo".equals(type)) {
                                 articleDataModelsNew.get(i).setListingWatchLaterStatus(0);
@@ -1256,7 +1219,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                     ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
                                 } else if (viewHolder instanceof JoinGroupViewHolder) {
                                     ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
-                                } else {
                                 }
                             }
                         }
@@ -1271,50 +1233,51 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         }
 
         void resetFollowUnfollowStatus() {
-            if (type.equals("bookmark")) {
-                if (viewHolder instanceof FeedViewHolder) {
-                    ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else if (viewHolder instanceof HeaderViewHolder) {
-                    ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else if (viewHolder instanceof JoinGroupViewHolder) {
-                    ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else if (viewHolder instanceof VideoCarouselViewHolder) {
-                    ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else {
-                }
-            } else if ("unbookmarkArticle".equals(type)) {
-                if (viewHolder instanceof FeedViewHolder) {
-                    ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
-                } else if (viewHolder instanceof HeaderViewHolder) {
-                    ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
-                } else if (viewHolder instanceof JoinGroupViewHolder) {
-                    ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else if (viewHolder instanceof VideoCarouselViewHolder) {
-                    ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else {
-                }
-            } else if ("bookmarkVideo".equals(type)) {
-                if (viewHolder instanceof FeedViewHolder) {
-                    ((FeedViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
-                } else if (viewHolder instanceof HeaderViewHolder) {
-                    ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
-                } else if (viewHolder instanceof JoinGroupViewHolder) {
-                    ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else if (viewHolder instanceof VideoCarouselViewHolder) {
-                    ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else {
-                }
-            } else if ("unbookmarkVideo".equals(type)) {
-                if (viewHolder instanceof FeedViewHolder) {
-                    ((FeedViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
-                } else if (viewHolder instanceof HeaderViewHolder) {
-                    ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
-                } else if (viewHolder instanceof JoinGroupViewHolder) {
-                    ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else if (viewHolder instanceof VideoCarouselViewHolder) {
-                    ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else {
-                }
+            switch (type) {
+                case "bookmark":
+                    if (viewHolder instanceof FeedViewHolder) {
+                        ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    } else if (viewHolder instanceof HeaderViewHolder) {
+                        ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    } else if (viewHolder instanceof JoinGroupViewHolder) {
+                        ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    } else if (viewHolder instanceof VideoCarouselViewHolder) {
+                        ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    }
+                    break;
+                case "unbookmarkArticle":
+                    if (viewHolder instanceof FeedViewHolder) {
+                        ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
+                    } else if (viewHolder instanceof HeaderViewHolder) {
+                        ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
+                    } else if (viewHolder instanceof JoinGroupViewHolder) {
+                        ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    } else if (viewHolder instanceof VideoCarouselViewHolder) {
+                        ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    }
+                    break;
+                case "bookmarkVideo":
+                    if (viewHolder instanceof FeedViewHolder) {
+                        ((FeedViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
+                    } else if (viewHolder instanceof HeaderViewHolder) {
+                        ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
+                    } else if (viewHolder instanceof JoinGroupViewHolder) {
+                        ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    } else if (viewHolder instanceof VideoCarouselViewHolder) {
+                        ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    }
+                    break;
+                case "unbookmarkVideo":
+                    if (viewHolder instanceof FeedViewHolder) {
+                        ((FeedViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
+                    } else if (viewHolder instanceof HeaderViewHolder) {
+                        ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
+                    } else if (viewHolder instanceof JoinGroupViewHolder) {
+                        ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    } else if (viewHolder instanceof VideoCarouselViewHolder) {
+                        ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    }
+                    break;
             }
         }
     }
@@ -1460,7 +1423,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             authorTextView.setText("NA");
         }
         try {
-            Picasso.with(mContext).load(data.getThumbnail())
+            Picasso.get().load(data.getThumbnail())
                     .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageView);
         } catch (Exception e) {
             imageView.setImageResource(R.drawable.default_article);

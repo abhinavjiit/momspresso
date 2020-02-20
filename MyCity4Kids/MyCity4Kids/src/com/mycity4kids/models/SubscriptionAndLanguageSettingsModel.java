@@ -1,14 +1,22 @@
 package com.mycity4kids.models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 7/12/16.
  */
 public class SubscriptionAndLanguageSettingsModel {
+    @SerializedName("id")
     private String id;
+    @SerializedName("name")
     private String name;
+    @SerializedName("displayName")
     private String displayName;
+    @SerializedName("status")
     private String status;
+    @SerializedName("originalStatus")
     private String originalStatus;
+    @SerializedName("stories")
     private int stories;
 
     public SubscriptionAndLanguageSettingsModel() {

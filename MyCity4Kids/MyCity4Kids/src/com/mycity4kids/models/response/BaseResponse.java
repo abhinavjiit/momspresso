@@ -1,11 +1,16 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 22/6/16.
  */
 public class BaseResponse {
+    @SerializedName("code")
     private int code;
+    @SerializedName("status")
     private String status;
+    @SerializedName("reason")
     private String reason;
 
     public int getCode() {

@@ -5,14 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
-import androidx.fragment.app.FragmentTransaction
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
-import com.mycity4kids.models.response.ShortShortiesBackgroundThumbnail
 import com.mycity4kids.ui.activity.ShortStoriesCardActivity
-import com.mycity4kids.ui.adapter.ShortStoriesAdapter
 
 class ShortStoryTextFormatFragment : BaseFragment() {
 
@@ -21,10 +16,6 @@ class ShortStoryTextFormatFragment : BaseFragment() {
     private lateinit var textAlignLeft: ImageView
     private lateinit var textAlignCenter: ImageView
     private lateinit var textAlignRight: ImageView
-
-    override fun updateUi(response: Response?) {
-
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.short_story_text_format_fragment, container, false)

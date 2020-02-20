@@ -66,10 +66,10 @@ public class ChooseLoginAccountAdapter extends BaseAdapter {
                 holder = (ViewHolder) view.getTag();
             }
             try {
-                Picasso.with(mContext).load(userDetailList.get(position).getProfilePicUrl().getClientApp())
+                Picasso.get().load(userDetailList.get(position).getProfilePicUrl().getClientApp())
                         .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(holder.userImageView);
             } catch (Exception e) {
-                Picasso.with(mContext).load(R.drawable.default_commentor_img).into(holder.userImageView);
+                Picasso.get().load(R.drawable.default_commentor_img).into(holder.userImageView);
             }
 
             holder.userNameTextView.setText(userDetailList.get(position).getFirstName());

@@ -11,36 +11,34 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.StoryShareCardWidget;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import q.rorbin.badgeview.QBadgeView;
 
 public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<ChallengeListingRecycleAdapter.ChallengeListingViewHolder> {
     private Context mContext;
     private LayoutInflater mInflator;
-    private final float density;
     ArrayList<ArticleListingResult> articleDataModelsNew;
     private RecyclerViewClickListener recyclerViewClickListener;
-    private int pos;
     private String selected_Name;
     private String ActiveUrl;
 
     public ChallengeListingRecycleAdapter(RecyclerViewClickListener recyclerViewClickListener, Context mContext, int pos, String selected_Name, String ActiveUrl) {
-        density = mContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.selected_Name = selected_Name;
         this.mContext = mContext;
         this.recyclerViewClickListener = recyclerViewClickListener;
-        this.pos = pos;
         this.ActiveUrl = ActiveUrl;
     }
 
@@ -93,13 +91,14 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
         else
             holder.followAuthorTextView.setText(mContext.getResources().getString(R.string.ad_follow_author));
         try {
-            Picasso.with(holder.itemView.getContext()).load(articleDataModelsNew.get(position).getStoryImage().trim()).placeholder(R.drawable.default_article).into(holder.storyImage);
+            Picasso.get().load(articleDataModelsNew.get(position).getStoryImage().trim()).placeholder(R.drawable.default_article).into(holder.storyImage);
         } catch (Exception e) {
             holder.storyImage.setImageResource(R.drawable.default_article);
         }
         try {
-            Picasso.with(mContext).load(articleDataModelsNew.get(position).getStoryImage()).into(holder.shareStoryImageView);
+            Picasso.get().load(articleDataModelsNew.get(position).getStoryImage()).into(holder.shareStoryImageView);
             holder.storyAuthorTextView.setText(articleDataModelsNew.get(position).getUserName());
+            AppUtils.populateLogoImageLanguageWise(holder.itemView.getContext(), holder.logoImageView, articleDataModelsNew.get(position).getLang());
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
@@ -131,8 +130,6 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
         private RelativeLayout rootview;
         private RelativeLayout challengeHeaderText;
         private TextView ChallengeNameText;
-        TextView storyTitleTextView;
-        TextView storyBodyTextView;
         TextView authorNameTextView;
         TextView storyCommentCountTextView;
         LinearLayout storyRecommendationContainer, storyCommentContainer;
@@ -144,6 +141,7 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
         StoryShareCardWidget storyShareCardWidget;
         ImageView shareStoryImageView;
         TextView storyAuthorTextView;
+        ImageView logoImageView;
 
 
         public ChallengeListingViewHolder(View itemView, RecyclerViewClickListener recyclerViewClickListener) {
@@ -169,6 +167,7 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
             storyShareCardWidget = (StoryShareCardWidget) itemView.findViewById(R.id.storyShareCardWidget);
             shareStoryImageView = (ImageView) storyShareCardWidget.findViewById(R.id.storyImageView);
             storyAuthorTextView = (TextView) storyShareCardWidget.findViewById(R.id.storyAuthorTextView);
+            logoImageView = storyShareCardWidget.findViewById(R.id.logoImageView);
             whatsappShareImageView.setTag(itemView);
             submitChallenegLayout.setOnClickListener(this);
             storyRecommendationContainer.setOnClickListener(this);

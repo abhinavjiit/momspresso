@@ -3,7 +3,7 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.mycity4kids.profile.StickyMainData;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,43 +12,79 @@ import java.util.Map;
 /**
  * Created by hemant on 5/7/16.
  */
-public class ArticleListingResult implements Parcelable, StickyMainData {
+public class ArticleListingResult implements Parcelable {
 
+    @SerializedName("id")
     private String id;
+    @SerializedName("title")
     private String title;
+    @SerializedName("body")
     private String body;
+    @SerializedName("excerpt")
     private String excerpt;
+    @SerializedName("titleSlug")
     private String titleSlug;
+    @SerializedName("imageUrl")
     private ImageURL imageUrl;
+    @SerializedName("userName")
     private String userName;
+    @SerializedName("profilePic")
     private List<ProfilePic> profilePic;
+    @SerializedName("userId")
     private String userId;
+    @SerializedName("userType")
     private String userType;
+    @SerializedName("commentCount")
     private String commentCount;
+    @SerializedName("commentsCount")
     private String commentsCount;
+    @SerializedName("trendingCount")
     private String trendingCount;
+    @SerializedName("blogTitleSlug")
     private String blogTitleSlug;
+    @SerializedName("createdTime")
     private Long createdTime = 0l;
+    @SerializedName("articleCount")
     private String articleCount;
+    @SerializedName("videoUrl")
     private String videoUrl;
+    @SerializedName("tags")
     private ArrayList<Map<String, String>> tags;
+    @SerializedName("likesCount")
     private String likesCount;
+    @SerializedName("reason")
     private String reason;
+    @SerializedName("bookmarkId")
     private String bookmarkId;
+    @SerializedName("listingBookmarkStatus")
     private int listingBookmarkStatus = 0;
+    @SerializedName("isMomspresso")
     private String isMomspresso;
+    @SerializedName("listingWatchLaterStatus")
     private int listingWatchLaterStatus = 0;
+    @SerializedName("lang")
     private String lang;
+    @SerializedName("contentType")
     private String contentType = "0";
+    @SerializedName("isLiked")
     private boolean isLiked;
+    @SerializedName("url")
     private String url;
+    @SerializedName("is_bookmark")
     private String is_bookmark = "0";
+    @SerializedName("isCarouselRequestRunning")
     private boolean isCarouselRequestRunning = false;
+    @SerializedName("responseReceived")
     private boolean responseReceived = false;
+    @SerializedName("disableComment")
     private String disableComment = "";
+    @SerializedName("storyImage")
     private String storyImage = "";
+    @SerializedName("isCollectionItemSelected")
     private boolean isCollectionItemSelected = false;
+    @SerializedName("carouselVideoList")
     private ArrayList<VlogsListingAndDetailResult> carouselVideoList;
+    @SerializedName("isfollowing")
     private String isfollowing = "0";
 
     public ArticleListingResult() {
@@ -159,15 +195,6 @@ public class ArticleListingResult implements Parcelable, StickyMainData {
     public void setUserName(String userName) {
         this.userName = userName;
     }
-
-//    public ProfilePic getProfilePic()  {
-//        return profilePic;
-//    }
-//
-//    public void setProfilePic(ProfilePic profilePic) {
-//        this.profilePic = profilePic;
-//    }
-
 
     public List<ProfilePic> getProfilePic() {
         return profilePic;

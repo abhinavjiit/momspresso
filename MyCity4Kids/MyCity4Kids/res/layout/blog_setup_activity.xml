@@ -167,8 +167,8 @@
                     android:id="@+id/handleAndBlogTitleTextMainLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:layout_below="@+id/emailEditText">
+                    android:layout_below="@+id/emailEditText"
+                    android:visibility="gone">
 
                     <com.mycity4kids.widget.CustomFontTextView
                         android:id="@+id/blogTitlesLabelTextView"
@@ -236,7 +236,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/blogTitleEditText"
-                    android:layout_alignRight="@+id/blogTitleEditText"
+                    android:layout_alignEnd="@+id/blogTitleEditText"
                     android:text=""
                     android:textColor="@color/blog_setup.blog_title_desc"
                     android:textSize="15sp"
@@ -247,10 +247,10 @@
                     android:id="@+id/underline3"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:visibility="gone"
                     android:layout_below="@+id/blogTitleCharCountTV"
                     android:layout_marginTop="38dp"
-                    android:background="@color/light_underline" />
+                    android:background="@color/light_underline"
+                    android:visibility="gone" />
 
 
                 <com.mycity4kids.widget.CustomFontTextView
@@ -301,7 +301,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/aboutSelfEditText"
-                    android:layout_alignRight="@+id/aboutSelfEditText"
+                    android:layout_alignEnd="@+id/aboutSelfEditText"
                     android:text=""
                     android:textColor="@color/blog_setup.blog_title_desc"
                     android:textSize="15sp"
@@ -348,7 +348,7 @@
                     android:layout_width="110dp"
                     android:layout_height="110dp"
                     android:layout_below="@+id/profilePicDescTV"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginStart="30dp"
                     android:src="@drawable/ic_profile_img" />
 
                 <ImageView
@@ -357,7 +357,6 @@
                     android:layout_height="35dp"
                     android:layout_alignTop="@+id/profilePicImageView"
                     android:layout_alignEnd="@+id/profilePicImageView"
-                    android:layout_alignRight="@+id/profilePicImageView"
                     android:background="@drawable/circular_textview"
                     android:padding="10dp"
                     android:src="@drawable/ic_plus"
@@ -404,13 +403,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/detailsDescLabelTextView"
-                    android:drawableRight="@drawable/ic_down_arrow"
+                    android:drawableEnd="@drawable/ic_down_arrow"
                     android:drawablePadding="10dp"
                     android:paddingLeft="30dp"
                     android:paddingTop="10dp"
                     android:paddingRight="30dp"
                     android:paddingBottom="10dp"
-                    android:text="New Delhi"
+                    android:text=""
                     android:textColor="@color/blog_setup.text_city"
                     android:textSize="15sp"
                     app:fontName="oswald.ttf" />

@@ -3,15 +3,21 @@ package com.mycity4kids.models.user;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.mycity4kids.models.basemodel.BaseDataModel;
+import com.google.gson.annotations.SerializedName;
 
-public class KidsInfo extends BaseDataModel implements Parcelable {
+public class KidsInfo implements Parcelable {
 
+    @SerializedName("name")
     private String name;
+    @SerializedName("date_of_birth")
     private String date_of_birth;
+    @SerializedName("color_code")
     private String color_code;
+    @SerializedName("id")
     private String id;
+    @SerializedName("age")
     private int age;
+    @SerializedName("gender")
     private String gender;
 
     public KidsInfo() {

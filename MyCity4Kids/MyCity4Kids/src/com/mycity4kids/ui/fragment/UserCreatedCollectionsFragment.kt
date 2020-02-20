@@ -14,7 +14,6 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
@@ -47,11 +46,7 @@ class UserCreatedCollectionsFragment : BaseFragment() {
     private var dataList = ArrayList<UserCollectionsModel>()
     private var bottomLoadingView: RelativeLayout? = null
 
-    override fun updateUi(response: Response?) {
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
         val view = inflater.inflate(R.layout.user_created_collections_fragment, container, false)
         bottomLoadingView = view.findViewById(R.id.bottomLoadingView)
         collectionGridView = view.findViewById(R.id.collectionGridView)
@@ -63,13 +58,12 @@ class UserCreatedCollectionsFragment : BaseFragment() {
         userId = bundle?.getString("userId")
         getUserCreatedCollections()
         context?.run {
-            userCreatedFollowedCollectionAdapter = CollectionsAdapter(context!!)
+            userCreatedFollowedCollectionAdapter = CollectionsAdapter(this)
             collectionGridView.adapter = userCreatedFollowedCollectionAdapter
         }
         collectionGridView.onItemClickListener = OnItemClickListener { _, _, position, _ ->
             val intent = Intent(activity, UserCollectionItemListActivity::class.java)
             intent.putExtra("id", dataList[position].userCollectionId)
-            BaseApplication.getInstance().position = position
             startActivityForResult(intent, 1000)
         }
         collectionGridView.setOnScrollListener(object : AbsListView.OnScrollListener {

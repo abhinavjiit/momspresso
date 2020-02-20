@@ -130,10 +130,10 @@ public class GroupBlogsRecyclerAdapter extends RecyclerView.Adapter<GroupBlogsRe
         try {
             if (!StringUtils.isNullOrEmpty(articleDataList.get(position).getVideoUrl())
                     && (articleDataList.get(position).getImageUrl().getThumbMax() == null || articleDataList.get(position).getImageUrl().getThumbMax().contains("default.jp"))) {
-                Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURLMomspresso(articleDataList.get(position).getVideoUrl())).placeholder(R.drawable.default_article).into(holder.articleImageView);
+                Picasso.get().load(AppUtils.getYoutubeThumbnailURLMomspresso(articleDataList.get(position).getVideoUrl())).placeholder(R.drawable.default_article).into(holder.articleImageView);
             } else {
                 if (!StringUtils.isNullOrEmpty(articleDataList.get(position).getImageUrl().getThumbMax())) {
-                    Picasso.with(mContext).load(articleDataList.get(position).getImageUrl().getThumbMax())
+                    Picasso.get().load(articleDataList.get(position).getImageUrl().getThumbMax())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
                 } else {
                     holder.articleImageView.setBackgroundResource(R.drawable.default_article);
@@ -196,7 +196,6 @@ public class GroupBlogsRecyclerAdapter extends RecyclerView.Adapter<GroupBlogsRe
         TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
-        TextView authorTypeTextView;
         ImageView bookmarkArticleImageView;
         ImageView watchLaterImageView;
 
@@ -210,7 +209,6 @@ public class GroupBlogsRecyclerAdapter extends RecyclerView.Adapter<GroupBlogsRe
             viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
             commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
             recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
-            authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
             bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
             watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
 

@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.mycity4kids.R;
@@ -215,10 +214,5 @@ public class SuggestedTopicsFragment extends BaseFragment {
             Crashlytics.logException(ffe);
             Log.d("MC4kException", Log.getStackTraceString(ffe));
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 }

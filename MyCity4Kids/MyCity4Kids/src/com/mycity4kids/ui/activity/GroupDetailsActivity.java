@@ -32,7 +32,6 @@ import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.tabs.TabLayout;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -77,7 +76,7 @@ import com.mycity4kids.ui.adapter.GroupsGenericPostRecyclerAdapter;
 import com.mycity4kids.ui.fragment.AddGpPostCommentReplyDialogFragment;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
 import com.mycity4kids.ui.fragment.ShareBlogInDiscussionDialogFragment;
-import com.mycity4kids.ui.fragment.TaskFragment;
+import com.mycity4kids.ui.fragment.ProcessBitmapTaskFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 
@@ -110,7 +109,7 @@ import retrofit2.Retrofit;
  */
 
 public class GroupDetailsActivity extends BaseActivity implements View.OnClickListener, GroupAboutRecyclerAdapter.RecyclerViewClickListener, GroupBlogsRecyclerAdapter.RecyclerViewClickListener,
-        GroupsGenericPostRecyclerAdapter.RecyclerViewClickListener, ShareBlogInDiscussionDialogFragment.IForYourArticleRemove, TaskFragment.TaskCallbacks {
+        GroupsGenericPostRecyclerAdapter.RecyclerViewClickListener, ShareBlogInDiscussionDialogFragment.IForYourArticleRemove, ProcessBitmapTaskFragment.TaskCallbacks {
 
     private static final int EDIT_POST_REQUEST_CODE = 1010;
     private ArrayList<GroupsCategoryMappingResult> groupMappedCategories;
@@ -120,7 +119,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     String type;
     private int totalPostCount;
     private static final String TAG_TASK_FRAGMENT = "task_fragment";
-    private TaskFragment mTaskFragment;
+    private ProcessBitmapTaskFragment mProcessBitmapTaskFragment;
     private int skip = 0;
     private ArrayList<GroupPostCommentResult> completeResponseList;
     private int postId;
@@ -566,7 +565,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     memberCountTextView.setText(selectedGroup.getMemberCount() + " " + getString(R.string.groups_member_label));
                     groupNameTextView.setText(selectedGroup.getTitle());
 
-                    Picasso.with(GroupDetailsActivity.this).load(selectedGroup.getHeaderImage())
+                    Picasso.get().load(selectedGroup.getHeaderImage())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(groupImageView);
 
                     groupAboutRecyclerAdapter = new GroupAboutRecyclerAdapter(GroupDetailsActivity.this, GroupDetailsActivity.this);
@@ -1371,13 +1370,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         if (groupsGenericPostRecyclerAdapter != null) {
             groupsGenericPostRecyclerAdapter.releasePlayer();
         }
-
-
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     private void setUpTabLayout(String[] sections) {
@@ -2174,14 +2166,14 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
     public void processImage(Uri imageUri) {
         android.app.FragmentManager fm = getFragmentManager();
-        mTaskFragment = null;
-        mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
-        if (mTaskFragment == null) {
-            mTaskFragment = new TaskFragment();
+        mProcessBitmapTaskFragment = null;
+        mProcessBitmapTaskFragment = (ProcessBitmapTaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+        if (mProcessBitmapTaskFragment == null) {
+            mProcessBitmapTaskFragment = new ProcessBitmapTaskFragment();
             Bundle bundle = new Bundle();
             bundle.putParcelable("uri", imageUri);
-            mTaskFragment.setArguments(bundle);
-            fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
+            mProcessBitmapTaskFragment.setArguments(bundle);
+            fm.beginTransaction().add(mProcessBitmapTaskFragment, TAG_TASK_FRAGMENT).commit();
         } else {
             showToast("You can add only 1 image in comments");
         }

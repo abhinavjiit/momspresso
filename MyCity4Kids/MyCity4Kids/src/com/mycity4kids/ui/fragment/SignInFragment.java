@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.gtmutils.Utils;
@@ -105,10 +104,5 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
                 break;
 
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 }

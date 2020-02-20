@@ -53,10 +53,10 @@ class CollectionFollowFollowersListAdapter(val mContext: Context, val listType: 
         holder.authorNameTextView.text = mDataList?.get(position)?.firstName + " " + mDataList?.get(position)?.lastName
 
         if (!StringUtils.isNullOrEmpty(mDataList?.get(position)?.profilePicUrl?.clientApp)) {
-            Picasso.with(mContext).load(mDataList?.get(position)?.profilePicUrl?.clientApp)
+            Picasso.get().load(mDataList?.get(position)?.profilePicUrl?.clientApp)
                     .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(holder.authorImageView)
         } else {
-            Picasso.with(mContext).load(R.drawable.default_commentor_img).into(holder.authorImageView)
+            Picasso.get().load(R.drawable.default_commentor_img).into(holder.authorImageView)
         }
 
 

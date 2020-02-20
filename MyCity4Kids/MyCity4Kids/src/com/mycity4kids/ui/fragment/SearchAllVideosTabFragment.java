@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -99,11 +98,6 @@ public class SearchAllVideosTabFragment extends BaseFragment implements SearchVi
 
 
         return view;
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     private void updateTopicsListing(SearchResponse responseData) {

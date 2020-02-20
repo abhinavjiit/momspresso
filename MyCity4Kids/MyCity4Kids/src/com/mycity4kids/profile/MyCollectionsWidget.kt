@@ -95,7 +95,7 @@ class MyCollectionsWidget : RelativeLayout, OnClickListener {
                                     for (i in 0 until userCollectionsListModel.collectionsList.size) {
                                         val itemView = inflater.inflate(R.layout.profile_collections_item, null)
                                         try {
-                                            Picasso.with(BaseApplication.getAppContext()).load(userCollectionsListModel.collectionsList[i].imageUrl)
+                                            Picasso.get().load(userCollectionsListModel.collectionsList[i].imageUrl)
                                                     .placeholder(R.drawable.default_article).error(R.drawable.default_article)
                                                     .fit().into(itemView.findViewById<ImageView>(R.id.collectionImageView))
                                         } catch (e: Exception) {

@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -83,12 +82,6 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
             challengeId = intent.getStringExtra("challenge");
         }
         fetchChallengeDetail(challengeId);
-    }
-
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

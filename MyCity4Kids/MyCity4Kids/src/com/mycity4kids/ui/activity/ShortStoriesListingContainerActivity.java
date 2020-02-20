@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -16,7 +17,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -87,50 +87,6 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
         fabAddShortStory = findViewById(R.id.fabAddShortStory);
         bottom_sheet.setVisibility(View.GONE);
         fabAddShortStory.setVisibility(View.VISIBLE);
-
-
-        String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext());
-       /* if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
-            bottom_sheet.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    } else {
-                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    }
-                }
-            });
-
-            textUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.campaignEvent(ShortStoriesListingContainerActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
-                    startActivity(new Intent(ShortStoriesListingContainerActivity.this, RewardsContainerActivity.class));
-                }
-            });
-
-            textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.campaignEvent(ShortStoriesListingContainerActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()
-                    ), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
-                    startActivity(new Intent(ShortStoriesListingContainerActivity.this, RewardsContainerActivity.class));
-                }
-            });
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    bottom_sheet.setVisibility(View.GONE);
-                    fabAddShortStory.setVisibility(View.VISIBLE);
-                }
-            }, 10000);
-        } else {
-            bottom_sheet.setVisibility(View.GONE);
-            fabAddShortStory.setVisibility(View.VISIBLE);
-        }*/
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tablayoutLayer = (FrameLayout) findViewById(R.id.topLayerGuideLayout);
@@ -157,8 +113,9 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
         fabAddShortStory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setResult(Activity.RESULT_OK);
-                finish();
+                Intent intent = new Intent(ShortStoriesListingContainerActivity.this, ChooseShortStoryCategoryActivity.class);
+                intent.putExtra("source", "storyListingCard");
+                startActivity(intent);
             }
         });
 
@@ -352,11 +309,6 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
                 return;
             }
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

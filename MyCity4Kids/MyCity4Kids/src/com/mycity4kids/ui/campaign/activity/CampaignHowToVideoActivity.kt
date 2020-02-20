@@ -9,7 +9,6 @@ import android.widget.ImageView
 import android.widget.MediaController
 import android.widget.VideoView
 import com.crashlytics.android.Crashlytics
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -46,6 +45,13 @@ class CampaignHowToVideoActivity : BaseActivity() {
         playVideo()
     }
 
+    override fun onPause() {
+        super.onPause()
+        videoView.stopPlayback()
+        videoView.setMediaController(null)
+        mediaController = null
+    }
+
     private fun setController() {
         if (mediaController == null) {
             mediaController = object : MediaController(this) {
@@ -80,9 +86,5 @@ class CampaignHowToVideoActivity : BaseActivity() {
             mp.isLooping = false
             finish()
         }
-    }
-
-    override fun updateUi(response: Response?) {
-
     }
 }

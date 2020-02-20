@@ -57,12 +57,12 @@ public class ArticleCommentsRecyclerAdapter extends RecyclerView.Adapter<Article
             commentsViewHolder.replyCountTextView.setText(mContext.getString(R.string.short_s_view_replies) + "(" + commentList.get(position).getReplies_count() + ")");
         }
         try {
-            Picasso.with(mContext).load(commentList.get(position).getUserPic().getClientAppMin())
+            Picasso.get().load(commentList.get(position).getUserPic().getClientAppMin())
                     .placeholder(R.drawable.default_commentor_img).into((commentsViewHolder.commentorImageView));
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
-            Picasso.with(mContext).load(R.drawable.default_commentor_img).into(commentsViewHolder.commentorImageView);
+            Picasso.get().load(R.drawable.default_commentor_img).into(commentsViewHolder.commentorImageView);
         }
     }
 

@@ -149,14 +149,14 @@ public class ContributorListAdapter extends BaseAdapter {
         }
 
         if ((datalist.get(position).getProfilePic() == null)) {
-            Picasso.with(context).load(R.drawable.default_commentor_img).fit().placeholder(R.drawable.default_commentor_img).transform(new RoundedTransformation()).into(holder.bloggerCover);
+            Picasso.get().load(R.drawable.default_commentor_img).fit().placeholder(R.drawable.default_commentor_img).transform(new RoundedTransformation()).into(holder.bloggerCover);
         } else {
             try {
-                Picasso.with(context).load(datalist.get(position).getProfilePic().getClientApp()).fit().placeholder(R.drawable.default_commentor_img).transform(new RoundedTransformation()).into(holder.bloggerCover);
+                Picasso.get().load(datalist.get(position).getProfilePic().getClientApp()).fit().placeholder(R.drawable.default_commentor_img).transform(new RoundedTransformation()).into(holder.bloggerCover);
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                Picasso.with(context).load(R.drawable.blog_bgnew).fit().placeholder(R.drawable.blog_bgnew).transform(new RoundedTransformation()).into(holder.bloggerCover);
+                Picasso.get().load(R.drawable.blog_bgnew).fit().placeholder(R.drawable.blog_bgnew).transform(new RoundedTransformation()).into(holder.bloggerCover);
             }
 
         }

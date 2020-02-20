@@ -28,7 +28,6 @@ import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -60,6 +59,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -99,7 +99,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
-import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -112,7 +111,7 @@ import static com.facebook.accountkit.internal.AccountKitController.getApplicati
 /**
  * Created by user on 08-06-2015.
  */
-public class AddGpPostCommentReplyDialogFragment extends DialogFragment implements OnClickListener, TaskFragment.TaskCallbacks,
+public class AddGpPostCommentReplyDialogFragment extends DialogFragment implements OnClickListener, ProcessBitmapTaskFragment.TaskCallbacks,
         AudioRecordView.RecordingListener, SeekBar.OnSeekBarChangeListener {
 
     private static final String TAG_TASK_FRAGMENT = "task_fragment";
@@ -165,7 +164,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     private int groupId, postId;
     private TextView addMediaTextView, audioTimeElapsed, audioTimeElapsedComment;
     private View mLayout;
-    private TaskFragment mTaskFragment;
+    private ProcessBitmapTaskFragment mProcessBitmapTaskFragment;
     private MediaRecorder mRecorder;
     private String mFileName;
     private Boolean myFeed = false;
@@ -359,7 +358,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) dateContainermedia.getLayoutParams();
                             params.addRule(RelativeLayout.BELOW, R.id.timerLayout);
                             dateContainermedia.setLayoutParams(params);
-//                            Picasso.with(getActivity()).load(mediaList.get(0)).error(R.drawable.default_article).into(media);
                         } else {
                             commentDateTextView.setVisibility(View.VISIBLE);
                             media.setVisibility(View.GONE);
@@ -382,7 +380,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) dateContainermedia.getLayoutParams();
                             params.addRule(RelativeLayout.BELOW, R.id.media);
                             dateContainermedia.setLayoutParams(params);
-                            Picasso.with(getActivity()).load(mediaList.get(0)).error(R.drawable.default_article).into(media);
+                            Picasso.get().load(mediaList.get(0)).error(R.drawable.default_article).into(media);
                         } else {
                             commentDateTextView.setVisibility(View.VISIBLE);
                             media.setVisibility(View.GONE);
@@ -393,13 +391,13 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                     }
                 } else {
                     try {
-                        Picasso.with(getActivity()).load(commentOrReplyData.getUserInfo().getProfilePicUrl().getClientApp())
+                        Picasso.get().load(commentOrReplyData.getUserInfo().getProfilePicUrl().getClientApp())
                                 .placeholder(R.drawable.default_commentor_img).into((commentorImageView));
                     } catch (Exception e) {
                         Crashlytics.logException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                         if (isAdded())
-                            Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(commentorImageView);
+                            Picasso.get().load(R.drawable.default_commentor_img).into(commentorImageView);
                     }
                     commentorUsernameTextView.setText(commentOrReplyData.getUserInfo().getFirstName() + " " + commentOrReplyData.getUserInfo().getLastName());
                     if (commentOrReplyData.getCommentType() == AppConstants.COMMENT_TYPE_AUDIO) {
@@ -437,7 +435,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) dateContainermedia.getLayoutParams();
                             params.addRule(RelativeLayout.BELOW, R.id.media);
                             dateContainermedia.setLayoutParams(params);
-                            Picasso.with(getActivity()).load(mediaList.get(0)).error(R.drawable.default_article).into(media);
+                            Picasso.get().load(mediaList.get(0)).error(R.drawable.default_article).into(media);
                         } else {
                             commentDateTextView.setVisibility(View.VISIBLE);
                             media.setVisibility(View.GONE);
@@ -1099,13 +1097,13 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         } else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
                         } else {
                             android.app.FragmentManager fm = getActivity().getFragmentManager();
-                            mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
-                            if (mTaskFragment == null) {
-                                mTaskFragment = new TaskFragment();
+                            mProcessBitmapTaskFragment = (ProcessBitmapTaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+                            if (mProcessBitmapTaskFragment == null) {
+                                mProcessBitmapTaskFragment = new ProcessBitmapTaskFragment();
                                 Bundle bundle = new Bundle();
                                 bundle.putParcelable("uri", imageUri);
-                                mTaskFragment.setArguments(bundle);
-                                fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
+                                mProcessBitmapTaskFragment.setArguments(bundle);
+                                fm.beginTransaction().add(mProcessBitmapTaskFragment, TAG_TASK_FRAGMENT).commit();
                             }
                         }
                     } catch (Exception e) {
@@ -1276,6 +1274,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                          public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
                              Crashlytics.logException(t);
                              Log.d("MC4KException", Log.getStackTraceString(t));
+                             ((BaseActivity) getActivity()).apiExceptions(t);
                              Toast.makeText(getActivity(), "went_wrong", Toast.LENGTH_SHORT).show();
                              //showToast(getString(R.string.went_wrong));
                          }
@@ -1302,7 +1301,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) addMediaImageView.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             addMediaImageView.setLayoutParams(params);
-            Picasso.with(getActivity()).load(url).error(R.drawable.default_article).into(uploadedIV);
+            Picasso.get().load(url).error(R.drawable.default_article).into(uploadedIV);
             removeIV.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
                 @Override
@@ -1315,10 +1314,10 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                     params.addRule(RelativeLayout.LEFT_OF, R.id.recordingView);
                     addMediaImageView.setLayoutParams(params);
                     android.app.FragmentManager fm = getActivity().getFragmentManager();
-                    mTaskFragment = null;
-                    mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
-                    if (mTaskFragment != null)
-                        fm.beginTransaction().remove(mTaskFragment).commit();
+                    mProcessBitmapTaskFragment = null;
+                    mProcessBitmapTaskFragment = (ProcessBitmapTaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+                    if (mProcessBitmapTaskFragment != null)
+                        fm.beginTransaction().remove(mProcessBitmapTaskFragment).commit();
                 }
             });
         } catch (Exception e) {

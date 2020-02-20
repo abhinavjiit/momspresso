@@ -1,14 +1,18 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
  * Created by hemant on 26/5/17.
  */
 public class TrendingListingData extends BaseData {
-
+    @SerializedName("result")
     private ArrayList<TrendingListingResult> result;
+    @SerializedName("chunks")
     private String chunks;
+    @SerializedName("pagination")
     private String pagination;
 
     public ArrayList<TrendingListingResult> getResult() {

@@ -171,7 +171,7 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
     private fun populateMilestoneDetails(userId: String, result: List<MilestonesResult>?) {
         activity?.let {
             milestoneData = result?.get(0)
-            Picasso.with(it).load(milestoneData?.milestone_bg_url).error(R.drawable.default_article)
+            Picasso.get().load(milestoneData?.milestone_bg_url).error(R.drawable.default_article)
                     .fit().into(milestoneBgImageView)
             if (milestoneData?.item_type == AppConstants.CONTENT_TYPE_MYMONEY) {
                 milestoneTitleTextView.text = getString(R.string.milestones_dialog_title,
@@ -185,7 +185,7 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
                 milestoneDescTextView.text = spannableStringBuilder
                 milestoneDescTextView.movementMethod = LinkMovementMethod.getInstance()
             } else {
-                Picasso.with(it).load(milestoneData?.milestone_image_url).error(R.drawable.default_article)
+                Picasso.get().load(milestoneData?.milestone_image_url).error(R.drawable.default_article)
                         .fit().into(milestoneImageView)
                 milestoneTitleTextView.text = milestoneData?.milestone_title
                 milestoneDescTextView.text = milestoneData?.milestone_desc
@@ -315,8 +315,8 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
                 val content = ShareLinkContent.Builder()
                         .setContentUrl(Uri.parse(getString(R.string.all_refer_url, milestoneData?.meta_data?.content_info?.referral_code)))
                         .build()
-                ShareDialog(this).show(content)
                 activity?.let {
+                    ShareDialog(it).show(content)
                     Utils.pushProfileEvents(it, "CTA_FB_Share_Private_Milestone_Detail",
                             "MilestonesDialogFragment", "FB Share", milestoneData?.milestone_name)
                 }
@@ -326,8 +326,8 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
                 val content = ShareLinkContent.Builder()
                         .setContentUrl(Uri.parse(milestoneData?.milestone_sharing_url))
                         .build()
-                ShareDialog(this).show(content)
                 activity?.let {
+                    ShareDialog(it).show(content)
                     Utils.pushProfileEvents(it, "CTA_FB_Share_Private_Milestone_Detail",
                             "MilestonesDialogFragment", "FB Share", milestoneData?.milestone_name)
                 }

@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -139,11 +138,6 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
         ArticleDraftAPI userDraftArticleAPI = retro.create(ArticleDraftAPI.class);
         final Call<ResponseBody> call = userDraftArticleAPI.getDraftsList("0,1,2,4");
         call.enqueue(userDraftArticleResponseListener);
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     private Callback<ResponseBody> userDraftArticleResponseListener = new Callback<ResponseBody>() {

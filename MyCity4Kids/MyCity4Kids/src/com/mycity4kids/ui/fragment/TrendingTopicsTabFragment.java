@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
@@ -228,11 +227,6 @@ public class TrendingTopicsTabFragment extends BaseFragment implements GroupIdCa
             nextPageNumber = nextPageNumber + 1;
             recyclerAdapter.notifyDataSetChanged();
         }
-
-    }
-
-    @Override
-    protected void updateUi(Response response) {
 
     }
 

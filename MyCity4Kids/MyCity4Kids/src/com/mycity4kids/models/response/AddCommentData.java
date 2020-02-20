@@ -1,10 +1,13 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 21/7/16.
  */
 public class AddCommentData {
 
+    @SerializedName("id")
     private String id;
 
     public String getId() {
@@ -14,13 +17,4 @@ public class AddCommentData {
     public void setId(String id) {
         this.id = id;
     }
-    //    private AddCommentResult result;
-//
-//    public AddCommentResult getResult() {
-//        return result;
-//    }
-//
-//    public void setResult(AddCommentResult result) {
-//        this.result = result;
-//    }
 }

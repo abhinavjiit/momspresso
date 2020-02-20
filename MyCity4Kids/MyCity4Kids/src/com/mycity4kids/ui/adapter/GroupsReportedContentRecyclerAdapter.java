@@ -1,9 +1,6 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +9,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.kelltontech.utils.DateTimeUtils;
 import com.mycity4kids.R;
@@ -19,7 +20,7 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.response.GroupReportedContentResult;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.mycity4kids.widget.GroupPostMediaViewPager;
-import com.shuhart.bubblepagerindicator.BubblePageIndicator;
+import com.mycity4kids.widget.IndefinitePagerIndicator;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -141,7 +142,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             } else {
                 textPostViewHolder.usernameTextView.setText(postCommentsList.get(position).getContent().getUserInfo().getFirstName() + " " + postCommentsList.get(position).getContent().getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(postCommentsList.get(position).getContent().getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(postCommentsList.get(position).getContent().getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(textPostViewHolder.userImageView);
                 } catch (Exception e) {
                     textPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
@@ -187,7 +188,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             } else {
                 mediaPostViewHolder.usernameTextView.setText(postCommentsList.get(position).getContent().getUserInfo().getFirstName() + " " + postCommentsList.get(position).getContent().getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(postCommentsList.get(position).getContent().getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(postCommentsList.get(position).getContent().getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(mediaPostViewHolder.userImageView);
                 } catch (Exception e) {
                     mediaPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
@@ -234,7 +235,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             } else {
                 textPollPostViewHolder.usernameTextView.setText(postCommentsList.get(position).getContent().getUserInfo().getFirstName() + " " + postCommentsList.get(position).getContent().getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(postCommentsList.get(position).getContent().getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(postCommentsList.get(position).getContent().getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(textPollPostViewHolder.userImageView);
                 } catch (Exception e) {
                     textPollPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
@@ -306,7 +307,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             } else {
                 imageHolder.usernameTextView.setText(postCommentsList.get(position).getContent().getUserInfo().getFirstName() + " " + postCommentsList.get(position).getContent().getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(postCommentsList.get(position).getContent().getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(postCommentsList.get(position).getContent().getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.userImageView);
                 } catch (Exception e) {
                     imageHolder.userImageView.setBackgroundResource(R.drawable.default_article);
@@ -319,23 +320,23 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             for (Map.Entry<String, String> entry : imageMap.entrySet()) {
                 switch (entry.getKey()) {
                     case "option1":
-                        Picasso.with(mContext).load(entry.getValue())
+                        Picasso.get().load(entry.getValue())
                                 .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.option1ImageView);
                         break;
                     case "option2":
-                        Picasso.with(mContext).load(entry.getValue())
+                        Picasso.get().load(entry.getValue())
                                 .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.option2ImageView);
                         break;
                     case "option3":
                         imageHolder.lastOptionsContainer.setVisibility(View.VISIBLE);
                         imageHolder.option3Container.setVisibility(View.VISIBLE);
-                        Picasso.with(mContext).load(entry.getValue())
+                        Picasso.get().load(entry.getValue())
                                 .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.option3ImageView);
                         break;
                     case "option4":
                         imageHolder.lastOptionsContainer.setVisibility(View.VISIBLE);
                         imageHolder.option4Container.setVisibility(View.VISIBLE);
-                        Picasso.with(mContext).load(entry.getValue())
+                        Picasso.get().load(entry.getValue())
                                 .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.option4ImageView);
                         break;
                 }
@@ -377,7 +378,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
                 rootCommentViewHolder.reportedOtherTextView.setVisibility(View.GONE);
             }
             try {
-                Picasso.with(mContext).load(postCommentsList.get(position).getContent().getUserInfo().getProfilePicUrl().getClientApp())
+                Picasso.get().load(postCommentsList.get(position).getContent().getUserInfo().getProfilePicUrl().getClientApp())
                         .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).transform(new RoundedTransformation()).into(rootCommentViewHolder.commentorImageView);
             } catch (Exception e) {
                 rootCommentViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
@@ -399,7 +400,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
         }
         holder.mViewPagerAdapter.setDataList(mediaList);
         holder.postDataViewPager.setAdapter(holder.mViewPagerAdapter);
-        holder.dotIndicatorView.setViewPager(holder.postDataViewPager);
+        holder.dotIndicatorView.attachToViewPager(holder.postDataViewPager);
         if (mediaList.size() == 1) {
             holder.indexTextView.setVisibility(View.GONE);
             holder.dotIndicatorView.setVisibility(View.GONE);
@@ -451,7 +452,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
         TextView postDataTextView;
         TextView reportedSpamTextView, reportedAbuseTextView, reportedUninterestingTextView, reportedReligiousTextView, reportedOtherTextView;
         ImageView postSettingImageView;
-        private BubblePageIndicator dotIndicatorView;
+        private IndefinitePagerIndicator dotIndicatorView;
         private GroupPostMediaViewPager postDataViewPager;
         private TextView indexTextView;
         private GroupMediaPostViewPagerAdapter mViewPagerAdapter;
@@ -463,7 +464,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
             postDataTextView = (TextView) view.findViewById(R.id.postDataTextView);
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
-            dotIndicatorView = (BubblePageIndicator) view.findViewById(R.id.dotIndicatorView);
+            dotIndicatorView = (IndefinitePagerIndicator) view.findViewById(R.id.dotIndicatorView);
             postDataViewPager = (GroupPostMediaViewPager) view.findViewById(R.id.postDataViewPager);
             indexTextView = (TextView) view.findViewById(R.id.indexTextView);
             reportedSpamTextView = (TextView) view.findViewById(R.id.reportedSpamTextView);

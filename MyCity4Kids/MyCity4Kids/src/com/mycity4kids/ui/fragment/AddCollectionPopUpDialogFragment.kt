@@ -29,12 +29,14 @@ import com.mycity4kids.models.collectionsModels.AddCollectionRequestModel
 import com.mycity4kids.models.collectionsModels.UpdateCollectionRequestModel
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.preference.SharedPrefUtils
+import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
 import com.mycity4kids.ui.activity.collection.AddMultipleCollectionItemActivity
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import retrofit2.HttpException
 import java.io.InputStreamReader
 
 class AddCollectionPopUpDialogFragment : DialogFragment() {
@@ -81,11 +83,13 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        try {
-            addCollectionInterface = context as AddCollectionInterface
-        } catch (e: ClassCastException) {
-            Crashlytics.logException(e)
-            Log.d("MC4KException", Log.getStackTraceString(e))
+        if (context is UserProfileActivity) {
+            try {
+                addCollectionInterface = context
+            } catch (e: ClassCastException) {
+                Crashlytics.logException(e)
+                Log.d("MC4KException", Log.getStackTraceString(e))
+            }
         }
     }
 
@@ -142,7 +146,7 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
                 Log.d("MC4KException", Log.getStackTraceString(e))
                 try {
                     //    Log.d("CODE", code.toString())
-                    var data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
+                    var data = (e as HttpException).response()?.errorBody()!!.byteStream()
                     var jsonParser = JsonParser()
                     var jsonObject = jsonParser.parse(
                             InputStreamReader(data, "UTF-8")) as JsonObject
@@ -190,8 +194,7 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
                 Crashlytics.logException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
                 try {
-                    //    Log.d("CODE", code.toString())
-                    val data = (e as retrofit2.HttpException).response().errorBody()!!.byteStream()
+                    val data = (e as HttpException).response()?.errorBody()!!.byteStream()
                     val jsonParser = JsonParser()
                     val jsonObject = jsonParser.parse(
                             InputStreamReader(data, "UTF-8")) as JsonObject

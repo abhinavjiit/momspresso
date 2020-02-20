@@ -3,19 +3,30 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hemant on 21/5/18.
  */
 
 public class GroupsCategoryMappingResult implements Parcelable {
+    @SerializedName("id")
     private int id;
+    @SerializedName("groupId")
     private int groupId;
+    @SerializedName("categoryId")
     private String categoryId;
+    @SerializedName("categoryName")
     private String categoryName;
+    @SerializedName("createdBy")
     private String createdBy;
+    @SerializedName("isActive")
     private int isActive;
+    @SerializedName("createdAt")
     private long createdAt;
+    @SerializedName("updatedAt")
     private long updatedAt;
+    @SerializedName("isSelected")
     private boolean isSelected;
 
     public GroupsCategoryMappingResult() {

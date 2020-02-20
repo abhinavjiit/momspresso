@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -23,9 +22,6 @@ class CollectionsActivity : BaseActivity() {
     private var isPrivate: Boolean = true
     private lateinit var back: TextView
     private var userId: String? = null
-
-    override fun updateUi(response: Response?) {
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -242,7 +242,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             makeTextViewResizable(textViewTitle, 2, " ..See More", true, responseData.getTitle());
             userHandle.setText(responseData.getAuthor().getFirstName() + " " + responseData.getAuthor().getLastName());
             try {
-                Picasso.with(mContext).load(responseData.getAuthor().getProfilePic().getClientApp()).into(userImage);
+                Picasso.get().load(responseData.getAuthor().getProfilePic().getClientApp()).into(userImage);
             } catch (Exception e) {
                 userImage.setImageResource(R.drawable.default_blogger_profile_img);
             }

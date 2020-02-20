@@ -125,9 +125,6 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
         } else if ("rewards".equalsIgnoreCase(fromScreen)) {
             IChangeCity changeCity = (IChangeCity) getParentFragment();
             changeCity.onCitySelect(data.get(position));
-            //((RewardsContainerActivity) getActivity()).changeCityText(data.get(position));
-        } else {
-            ((BlogSetupActivity) getActivity()).changeCityText(data.get(position));
         }
 
     }
@@ -147,28 +144,16 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
         } else if ("rewards".equalsIgnoreCase(fromScreen)) {
             IChangeCity changeCity = (IChangeCity) getParentFragment();
             changeCity.onOtherCitySelect(position, otherCityName);
-            //((BlogSetupActivity) getActivity()).setOtherCityName(position, otherCityName);
-        } else {
-            ((BlogSetupActivity) getActivity()).setOtherCityName(position, otherCityName);
         }
     }
 
     private void showAddNewCityNameDialog(final int position) {
-//            AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-//                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
-//                    .build();
-//            Intent intent = new PlaceAutocomplete.IntentBuilder
-//                    (PlaceAutocomplete.MODE_FULLSCREEN)
-//                    .setFilter(typeFilter)
-//                    .build(getActivity());
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
         Intent intent = new Autocomplete.IntentBuilder(
                 AutocompleteActivityMode.FULLSCREEN, fields)
                 .setTypeFilter(TypeFilter.CITIES)
                 .build(getActivity());
         startActivityForResult(intent, REQUEST_SELECT_PLACE);
-
-
     }
 
     @Override
@@ -211,7 +196,6 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
         Dialog dialog = getDialog();
         if (dialog != null) {
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//            dialog.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.blue_bg_rounded_corners));
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
     }
@@ -238,7 +222,6 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override

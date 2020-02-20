@@ -10,7 +10,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -74,11 +73,6 @@ public class NewsLetterWebviewActivity extends BaseActivity {
                 });
             }
         }
-
-    }
-
-    @Override
-    protected void updateUi(Response response) {
 
     }
 

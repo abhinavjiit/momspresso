@@ -54,7 +54,7 @@ public class ShortStoryTopicsRecyclerAdapter extends RecyclerView.Adapter<ShortS
         holder.topicsNameTextView.setText(topicsList.get(position).getDisplay_name().toUpperCase());
 
         try {
-            Picasso.with(mContext).load(topicsList.get(position).getExtraData().get(0).getCategoryBackImage().getApp()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+            Picasso.get().load(topicsList.get(position).getExtraData().get(0).getCategoryBackImage().getApp()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                     .fit().into(holder.tagsImageView);
         } catch (Exception e) {
             holder.tagsImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_article));

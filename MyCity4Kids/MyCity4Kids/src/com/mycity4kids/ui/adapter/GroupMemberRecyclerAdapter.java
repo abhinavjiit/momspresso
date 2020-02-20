@@ -1,12 +1,13 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.ArticleListingResult;
@@ -47,25 +48,7 @@ public class GroupMemberRecyclerAdapter extends RecyclerView.Adapter<GroupMember
 
     @Override
     public void onBindViewHolder(GroupMembersHolder holder, int position) {
-
         holder.memberNameTextView.setText(articleDataModelsNew.get(position).getTitle());
-
-//        try {
-//            if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getVideoUrl())
-//                    && (articleDataModelsNew.get(position).getImageUrl().getThumbMax() == null || articleDataModelsNew.get(position).getImageUrl().getThumbMax().endsWith("default.jpg"))) {
-//                Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURLMomspresso(articleDataModelsNew.get(position).getVideoUrl())).placeholder(R.drawable.default_article).into(holder.articleImageView);
-//            } else {
-//                if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getThumbMax())) {
-//                    Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getThumbMax())
-//                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
-//                } else {
-//                    holder.articleImageView.setBackgroundResource(R.drawable.default_article);
-//                }
-//            }
-//        } catch (Exception e) {
-//            holder.articleImageView.setBackgroundResource(R.drawable.default_article);
-//        }
-
     }
 
     @Override

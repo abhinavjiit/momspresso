@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.ConnectivityUtils
 import com.mycity4kids.R
@@ -29,53 +28,7 @@ import retrofit2.Call
 import retrofit2.Callback
 
 class AddMultipleUserReadArticleInCollectionFragment : BaseFragment(), AddMultipleCollectionAdapter.RecyclerViewClick, View.OnClickListener {
-    override fun onClick(v: View?) {
-        /*    when (v?.id) {
-                R.id.back -> {
-                    dismiss()
-                }
-                R.id.add -> {
-                    multipleCollectionList.clear()
-                    collectionId?.let {
-                        for (i in 0 until articleDataModelsNew.size) {
-                            if (articleDataModelsNew[i].isCollectionItemSelected) {
-                                val updateCollectionRequestModel = UpdateCollectionRequestModel()
-                                val list = ArrayList<String>()
-                                list.add(it)
-                                updateCollectionRequestModel.userCollectionId = list
-                                updateCollectionRequestModel.userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
-                                updateCollectionRequestModel.item = articleDataModelsNew[i].id
-                                updateCollectionRequestModel.itemType = AppConstants.ARTICLE_COLLECTION_TYPE
-                                val dataList = ArrayList<UpdateCollectionRequestModel>()
-                                dataList.add(updateCollectionRequestModel)
-                                multipleCollectionList.addAll(dataList)
-                            }
-                        }
-                        postDataToServer()
-                    }
-                }
-                R.id.skipTextView -> {
-                    dismiss()
-                }
-            }*/
-    }
 
-
-    override fun onclick(position: Int) {
-        articleDataModelsNew[position].isCollectionItemSelected = !articleDataModelsNew[position].isCollectionItemSelected
-        addMultipleCollectionAdapter.notifyDataSetChanged()
-        multipleCollectionList.clear()
-        for (i in 0 until articleDataModelsNew.size) {
-            if (articleDataModelsNew[i].isCollectionItemSelected) {
-                val dataList = ArrayList<ArticleListingResult>()
-                dataList.add(articleDataModelsNew[i])
-                multipleCollectionList.addAll(dataList)
-            }
-        }
-        (activity as AddMultipleCollectionItemActivity).getUserReadList(multipleCollectionList)
-    }
-
-    // private var collectionId: String? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var bottomLoadingView: RelativeLayout
     private lateinit var noBlogsTextView: TextView
@@ -90,11 +43,6 @@ class AddMultipleUserReadArticleInCollectionFragment : BaseFragment(), AddMultip
     private var pastVisiblesItems: Int = 0
     private var visibleItemCount: Int = 0
     private var totalItemCount: Int = 0
-
-
-    override fun updateUi(response: Response?) {
-
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.add_mutilple_read_articles_fragment, container, false)
@@ -129,7 +77,24 @@ class AddMultipleUserReadArticleInCollectionFragment : BaseFragment(), AddMultip
             }
         })
         return rootView
+    }
 
+    override fun onClick(v: View?) {
+
+    }
+
+    override fun onclick(position: Int) {
+        articleDataModelsNew[position].isCollectionItemSelected = !articleDataModelsNew[position].isCollectionItemSelected
+        addMultipleCollectionAdapter.notifyDataSetChanged()
+        multipleCollectionList.clear()
+        for (i in 0 until articleDataModelsNew.size) {
+            if (articleDataModelsNew[i].isCollectionItemSelected) {
+                val dataList = ArrayList<ArticleListingResult>()
+                dataList.add(articleDataModelsNew[i])
+                multipleCollectionList.addAll(dataList)
+            }
+        }
+        (activity as AddMultipleCollectionItemActivity).getUserReadList(multipleCollectionList)
     }
 
     private fun getReadArticles() {
@@ -170,19 +135,13 @@ class AddMultipleUserReadArticleInCollectionFragment : BaseFragment(), AddMultip
                     Crashlytics.logException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
-
             }
-
         })
-
     }
-
 
     private fun processPublisedArticlesResponse(responseData: ArticleListingResponse) {
         val dataList = responseData.data[0].result
-
         if (dataList.size == 0) {
-
             isLastPageReached = false
             if (!articleDataModelsNew.isNullOrEmpty()) {
                 //No more next results for search from pagination
@@ -202,9 +161,18 @@ class AddMultipleUserReadArticleInCollectionFragment : BaseFragment(), AddMultip
                 articleDataModelsNew.addAll(dataList)
             }
             addMultipleCollectionAdapter.setUserReadListData(articleDataModelsNew)
-            nextPageNumber = nextPageNumber + 1
+            nextPageNumber += 1
             addMultipleCollectionAdapter.notifyDataSetChanged()
         }
+    }
 
+    override fun onStart() {
+        super.onStart()
+        shimmer1.startShimmerAnimation()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        shimmer1.stopShimmerAnimation()
     }
 }

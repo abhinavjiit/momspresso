@@ -9,10 +9,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
@@ -29,6 +25,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.crashlytics.android.Crashlytics;
@@ -51,7 +52,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.GroupPostMediaViewPager;
-import com.shuhart.bubblepagerindicator.BubblePageIndicator;
+import com.mycity4kids.widget.IndefinitePagerIndicator;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -192,7 +193,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             textPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             textPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
             addLinkHandler(textPostViewHolder.postDataTextView);
-            if(postList.get(position).getHelpfullCount() < 1) {
+            if (postList.get(position).getHelpfullCount() < 1) {
                 textPostViewHolder.upvoteCountTextView.setText("");
             } else {
                 textPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
@@ -214,7 +215,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             } else {
                 textPostViewHolder.usernameTextView.setText(postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(textPostViewHolder.userImageView);
                 } catch (Exception e) {
                     textPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
@@ -275,13 +276,13 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 audioCommentViewHolder.commentorUsernameTextView.setText(postList.get(position).getUserInfo().getFirstName()
                         + " " + postList.get(position).getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(audioCommentViewHolder.commentorImageView);
                 } catch (Exception e) {
                     audioCommentViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
                 }
                 try {
-                    Picasso.with(mContext).load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(audioCommentViewHolder.profileImageView);
                 } catch (Exception e) {
                     audioCommentViewHolder.profileImageView.setBackgroundResource(R.drawable.default_commentor_img);
@@ -329,7 +330,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 audioCommentViewHolder.postCommentsTextView.setText(mContext.getResources().getString(R.string.group_add_comment_text));
             }
 
-            if(postList.get(position).getHelpfullCount() < 1) {
+            if (postList.get(position).getHelpfullCount() < 1) {
                 audioCommentViewHolder.upvoteCommentCountTextView.setText("");
             } else {
                 audioCommentViewHolder.upvoteCommentCountTextView.setText(postList.get(position).getHelpfullCount() + "");
@@ -378,7 +379,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             mediaPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             mediaPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
             addLinkHandler(mediaPostViewHolder.postDataTextView);
-            if(postList.get(position).getHelpfullCount() < 1) {
+            if (postList.get(position).getHelpfullCount() < 1) {
                 mediaPostViewHolder.upvoteCountTextView.setText("");
             } else {
                 mediaPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
@@ -401,7 +402,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             } else {
                 mediaPostViewHolder.usernameTextView.setText(postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(mediaPostViewHolder.userImageView);
                 } catch (Exception e) {
                     mediaPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
@@ -456,7 +457,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             addLinkHandler(textPollPostViewHolder.pollQuestionTextView);
 
             textPollPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
-            if(postList.get(position).getHelpfullCount() < 1) {
+            if (postList.get(position).getHelpfullCount() < 1) {
                 textPollPostViewHolder.upvoteCountTextView.setText("");
             } else {
                 textPollPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
@@ -477,7 +478,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             } else {
                 textPollPostViewHolder.usernameTextView.setText(postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(textPollPostViewHolder.userImageView);
                 } catch (Exception e) {
                     textPollPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
@@ -567,13 +568,13 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             } else {
                 imageHolder.usernameTextView.setText(postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.get().load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.userImageView);
                 } catch (Exception e) {
                     imageHolder.userImageView.setBackgroundResource(R.drawable.default_article);
                 }
             }
-            if(postList.get(position).getHelpfullCount() < 1) {
+            if (postList.get(position).getHelpfullCount() < 1) {
                 imageHolder.upvoteCountTextView.setText("");
             } else {
                 imageHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
@@ -595,23 +596,23 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             for (Map.Entry<String, String> entry : imageMap.entrySet()) {
                 switch (entry.getKey()) {
                     case "option1":
-                        Picasso.with(mContext).load(entry.getValue())
+                        Picasso.get().load(entry.getValue())
                                 .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.option1ImageView);
                         break;
                     case "option2":
-                        Picasso.with(mContext).load(entry.getValue())
+                        Picasso.get().load(entry.getValue())
                                 .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.option2ImageView);
                         break;
                     case "option3":
                         imageHolder.lastOptionsContainer.setVisibility(View.VISIBLE);
                         imageHolder.option3Container.setVisibility(View.VISIBLE);
-                        Picasso.with(mContext).load(entry.getValue())
+                        Picasso.get().load(entry.getValue())
                                 .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.option3ImageView);
                         break;
                     case "option4":
                         imageHolder.lastOptionsContainer.setVisibility(View.VISIBLE);
                         imageHolder.option4Container.setVisibility(View.VISIBLE);
-                        Picasso.with(mContext).load(entry.getValue())
+                        Picasso.get().load(entry.getValue())
                                 .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.option4ImageView);
                         break;
                 }
@@ -739,7 +740,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
         }
         holder.mViewPagerAdapter.setDataList(mediaList);
         holder.postDataViewPager.setAdapter(holder.mViewPagerAdapter);
-        holder.dotIndicatorView.setViewPager(holder.postDataViewPager);
+        holder.dotIndicatorView.attachToViewPager(holder.postDataViewPager);
         if (mediaList.size() == 1) {
             holder.indexTextView.setVisibility(View.GONE);
             holder.dotIndicatorView.setVisibility(View.GONE);
@@ -873,7 +874,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
         LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView, beTheFirstOne;
         ImageView postSettingImageView, upvoteImageVIew;
-        private BubblePageIndicator dotIndicatorView;
+        private IndefinitePagerIndicator dotIndicatorView;
         private GroupPostMediaViewPager postDataViewPager;
         private TextView indexTextView;
         private GroupMediaPostViewPagerAdapter mViewPagerAdapter;
@@ -896,7 +897,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             downvoteContainer = (LinearLayout) view.findViewById(R.id.downvoteContainer);
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
-            dotIndicatorView = (BubblePageIndicator) view.findViewById(R.id.dotIndicatorView);
+            dotIndicatorView = (IndefinitePagerIndicator) view.findViewById(R.id.dotIndicatorView);
             postDataViewPager = (GroupPostMediaViewPager) view.findViewById(R.id.postDataViewPager);
             indexTextView = (TextView) view.findViewById(R.id.indexTextView);
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);

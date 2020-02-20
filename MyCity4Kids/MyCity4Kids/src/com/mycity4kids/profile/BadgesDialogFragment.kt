@@ -28,6 +28,7 @@ import com.facebook.share.model.ShareLinkContent
 import com.facebook.share.widget.ShareDialog
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.snackbar.Snackbar
+import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
@@ -159,6 +160,7 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
             override fun onFailure(call: Call<BadgeListResponse>, t: Throwable) {
                 badgesShimmerContainer.visibility = View.GONE
                 Crashlytics.logException(t)
+                (activity as BaseActivity).apiExceptions(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         })
@@ -167,9 +169,9 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
     private fun populateBadgeDetails(userId: String, result: ArrayList<BadgeListResponse.BadgeListData.BadgeListResult>?) {
         activity?.let {
             badgeData = result?.get(0)
-            Picasso.with(it).load(result?.get(0)?.badge_image_url).error(R.drawable.default_article)
+            Picasso.get().load(result?.get(0)?.badge_image_url).error(R.drawable.default_article)
                     .fit().into(badgeImageView)
-            Picasso.with(it).load(result?.get(0)?.badge_bg_url).error(R.drawable.default_article)
+            Picasso.get().load(result?.get(0)?.badge_bg_url).error(R.drawable.default_article)
                     .fit().into(badgeBgImageView)
             badgeTitleTextView.text = result?.get(0)?.badge_title
             badgeDescTextView.text = result?.get(0)?.badge_desc
@@ -287,8 +289,8 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
             val content = ShareLinkContent.Builder()
                     .setContentUrl(Uri.parse(badgeData?.badge_sharing_url))
                     .build()
-            ShareDialog(this).show(content)
             activity?.let {
+                ShareDialog(it).show(content)
                 Utils.pushProfileEvents(it, "CTA_FB_Share_Private_Badge_Detail",
                         "BadgesDialogFragment", "FB Share", badgeData?.badge_name)
             }

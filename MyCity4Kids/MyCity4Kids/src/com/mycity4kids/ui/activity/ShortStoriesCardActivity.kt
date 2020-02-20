@@ -14,7 +14,10 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.*
-import android.widget.*
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -23,7 +26,6 @@ import androidx.viewpager.widget.ViewPager
 import com.crashlytics.android.Crashlytics
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.utils.StringUtils
 import com.kelltontech.utils.ToastUtils
@@ -33,10 +35,12 @@ import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils
 import com.mycity4kids.gtmutils.Utils
-import com.mycity4kids.models.ExploreTopicsModel
 import com.mycity4kids.models.request.ShortStoryConfigRequest
 import com.mycity4kids.models.request.ShortStoryDraftOrPublishRequest
-import com.mycity4kids.models.response.*
+import com.mycity4kids.models.response.ArticleDraftResponse
+import com.mycity4kids.models.response.ImageUploadResponse
+import com.mycity4kids.models.response.ShortStoryConfigData
+import com.mycity4kids.models.response.UserDetailResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI
@@ -47,7 +51,10 @@ import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.OnDragTouchListener
 import com.squareup.picasso.Picasso
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -60,6 +67,12 @@ class ShortStoriesCardActivity : BaseActivity() {
     private val REQUEST_INIT_PERMISSION = 1
     private val PERMISSIONS_INIT = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
     private lateinit var shortLayout: LinearLayout
+    private lateinit var storyCoachmark: RelativeLayout
+    private lateinit var moveTextCoachmark: RelativeLayout
+    private lateinit var storyBgEditCoachmark: RelativeLayout
+    private lateinit var textStylingCoachmark: RelativeLayout
+    private lateinit var gotItTextView: TextView
+
     private lateinit var tabs: TabLayout
     private lateinit var collectionsViewPager: ViewPager
     private lateinit var adapter: ShortStoriesThumbnailAdapter
@@ -70,12 +83,10 @@ class ShortStoriesCardActivity : BaseActivity() {
     private lateinit var storyTv: TextView
     private lateinit var toolbar: Toolbar
     private lateinit var back: ImageView
-    private lateinit var backButton: ImageButton
     private var fragment: Fragment? = null
     private var isTextFragment: Boolean = false
-    private lateinit var parent: RelativeLayout
     private lateinit var divider: View
-    private var ssTopicsText: String? = null
+    private lateinit var taggedCategoryName: String
     private lateinit var publishTextView: TextView
     private var source: String? = null
     private lateinit var mLayout: View
@@ -83,21 +94,13 @@ class ShortStoriesCardActivity : BaseActivity() {
     private lateinit var imageUriTemp: Uri
     private lateinit var MEDIA_TYPE_PNG: MediaType
     private lateinit var file: File
-    private lateinit var challengeName: String
-    private lateinit var challengeId: String
-    private lateinit var runningrequest: String
+    private var taggedChallengeName: String? = null
+    private var taggedChallengeId: String? = null
     private lateinit var requestBodyFile: RequestBody
     private lateinit var imageType: RequestBody
     private var draftId: String = ""
     private var articleId: String = ""
     private lateinit var tagsList: ArrayList<Map<String, String>>
-    private lateinit var listDraft: ArrayList<Map<String, String>>
-    private lateinit var draftChallengeId: String
-    private lateinit var draftChallengeName: String
-    private lateinit var currentActiveChallenge: String
-    private lateinit var currentActiveChallengeId: String
-    private var isDraftTaggedInActiveChallenge: Boolean = false
-    private var ssTopicsList: ArrayList<ExploreTopicsModel>? = null
     private lateinit var shortStoryDraftOrPublishRequest: ShortStoryDraftOrPublishRequest
     private var titleTvSize: Float = 0.0f
     private var storyTvSize: Float = 0.0f
@@ -106,17 +109,12 @@ class ShortStoriesCardActivity : BaseActivity() {
     private var categoryImageId: Int = 0
     private lateinit var shareUrl: String
     private var shortStoryId: String? = ""
-    private var count: Int = 0
     private lateinit var rlLayout: RelativeLayout
-    private var categoryId: String = "category-743892a865774baf9c20cbcc5c01d35f"
+    private var imagesCategoryId: String = ""
+    private var taggedCategoryId: String = ""
     private var x: Int = 0
     private var y: Int = 0
-
-
-    private var pageNumber = 0
-    private var isLastPageReached = false
-    private var isReuqestRunning = false
-    private var dataList = ArrayList<Images>()
+    private var isImageLoaded: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,7 +130,12 @@ class ShortStoriesCardActivity : BaseActivity() {
         storyTv = findViewById(R.id.short_text)
         divider = findViewById(R.id.divider)
         publishTextView = findViewById(R.id.publishTextView)
-        collectionsViewPager = findViewById<ViewPager>(R.id.collectionsViewPager)
+        collectionsViewPager = findViewById(R.id.collectionsViewPager)
+        storyCoachmark = findViewById(R.id.storyCoachmark)
+        moveTextCoachmark = findViewById(R.id.moveTextCoachmark)
+        storyBgEditCoachmark = findViewById(R.id.storyBgEditCoachmark)
+        textStylingCoachmark = findViewById(R.id.textStylingCoachmark)
+        gotItTextView = findViewById(R.id.gotItTextView)
 
         val params: ViewGroup.LayoutParams = rlLayout.layoutParams
         params.width = resources.displayMetrics.widthPixels
@@ -141,6 +144,11 @@ class ShortStoriesCardActivity : BaseActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+
+        if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "storyCoachmark")) {
+            storyCoachmark.visibility = View.VISIBLE
+        }
+
         if (!intent.getStringExtra("title").isNullOrEmpty()) {
             title = intent.getStringExtra("title")
             titleTv.text = title
@@ -150,13 +158,11 @@ class ShortStoriesCardActivity : BaseActivity() {
         }
         story = intent.getStringExtra("story")
         if (intent.getStringExtra("ssTopicsText") != null)
-            ssTopicsText = intent.getStringExtra("ssTopicsText")
+            taggedCategoryName = intent.getStringExtra("ssTopicsText")
         if (intent.getStringExtra("challengeName") != null)
-            challengeName = intent.getStringExtra("challengeName")
+            taggedChallengeName = intent.getStringExtra("challengeName")
         if (intent.getStringExtra("challengeId") != null)
-            challengeId = intent.getStringExtra("challengeId")
-        if (intent.getStringExtra("runningrequest") != null)
-            runningrequest = intent.getStringExtra("runningrequest")
+            taggedChallengeId = intent.getStringExtra("challengeId")
         if (intent.getStringExtra("draftId") != null)
             draftId = intent.getStringExtra("draftId")
         if (intent.getStringExtra("articleId") != null) {
@@ -165,20 +171,12 @@ class ShortStoriesCardActivity : BaseActivity() {
         }
         if (intent.getStringExtra("source") != null)
             source = intent.getStringExtra("source")
-        if (intent.getStringExtra("categoryId") != null)
-            categoryId = intent.getStringExtra("categoryId")
-
-        isDraftTaggedInActiveChallenge = intent.getBooleanExtra("isDraftTaggedInActiveChallenge", false)
-        if (intent.getSerializableExtra("listDraft") != null)
-            listDraft = intent.getSerializableExtra("listDraft") as ArrayList<Map<String, String>>
+        if (intent.getStringExtra("categoryId") != null) {
+            imagesCategoryId = intent.getStringExtra("categoryId")
+            taggedCategoryId = intent.getStringExtra("categoryId")
+        }
         if (intent.getSerializableExtra("tagsList") != null)
             tagsList = intent.getSerializableExtra("tagsList") as ArrayList<Map<String, String>>
-        if (intent.getStringExtra("currentActiveChallengeId") != null)
-            currentActiveChallengeId = intent.getStringExtra("currentActiveChallengeId")
-        if (intent.getStringExtra("currentActiveChallenge") != null)
-            currentActiveChallenge = intent.getStringExtra("currentActiveChallenge")
-        if (intent.getParcelableArrayListExtra<ExploreTopicsModel>("ssTopicsList") != null)
-            ssTopicsList = intent.getParcelableArrayListExtra<ExploreTopicsModel>("ssTopicsList")
 
         storyTv.text = story
         titleTvSize = (titleTv.textSize) / resources.displayMetrics.scaledDensity
@@ -187,9 +185,6 @@ class ShortStoriesCardActivity : BaseActivity() {
         tabs.apply {
             addTab(tabs.newTab().setText(resources.getString(R.string.background)))
             addTab(tabs.newTab().setText(resources.getString(R.string.text)))
-        }
-        if ("publishedList".equals(source)) {
-            setPublishedCategoryId()
         }
 
         setEnabledDisabled(false)
@@ -244,40 +239,37 @@ class ShortStoriesCardActivity : BaseActivity() {
                 publishStory()
         }
 
-        rlLayout.getViewTreeObserver().addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        rlLayout.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 val location = IntArray(2)
                 shortLayout.getLocationOnScreen(location)
                 x = location[0]
                 y = location[1]
-//                checkViewAndUpdate();
             }
-        });
+        })
 
-//        checkViewAndUpdate()
-
-    }
-
-    private fun setPublishedCategoryId() {
-        for (i in 0 until tagsList.size) {
-            val myMap = tagsList.get(i)
-            for (entrySet in myMap.entries) {
-                for (j in 0 until ssTopicsList!!.size) {
-                    if (ssTopicsList?.get(j)?.getDisplay_name().equals(entrySet.value)) {
-                        setCategoryId(entrySet.key)
-                    }
-                }
+        gotItTextView.setOnClickListener {
+            if (moveTextCoachmark.visibility == View.VISIBLE) {
+                moveTextCoachmark.visibility = View.GONE
+                storyBgEditCoachmark.visibility = View.VISIBLE
+            } else if (storyBgEditCoachmark.visibility == View.VISIBLE) {
+                storyBgEditCoachmark.visibility = View.GONE
+                textStylingCoachmark.visibility = View.VISIBLE
+            } else {
+                textStylingCoachmark.visibility = View.GONE
+                moveTextCoachmark.visibility = View.VISIBLE
+                storyCoachmark.visibility = View.GONE
+                SharedPrefUtils.setCoachmarksShownFlag(this, "storyCoachmark", true)
             }
         }
     }
 
-
     fun setCategoryId(id: String) {
-        categoryId = id
+        imagesCategoryId = id
     }
 
     fun getCategoryId(): String {
-        return categoryId
+        return imagesCategoryId
     }
 
     private fun publishStory() {
@@ -495,25 +487,15 @@ class ShortStoriesCardActivity : BaseActivity() {
         val retro = BaseApplication.getInstance().retrofit
         val imageUploadAPI = retro.create(ImageUploadAPI::class.java)
         path = MediaStore.Images.Media.insertImage(contentResolver, finalBitmap, "Title" + System.currentTimeMillis(), null)
-        Log.d("ShortStory", "Path = $path")
+        imageUriTemp = Uri.parse(path)
+        file = FileUtils.getFile(this, imageUriTemp)
 
-        if (path != null) {
-            imageUriTemp = Uri.parse(path)
-        }
-        if (imageUriTemp != null) {
-            file = FileUtils.getFile(this, imageUriTemp)
-        }
-
-        MEDIA_TYPE_PNG = MediaType.parse("image/png")!!
-        if (file != null && MEDIA_TYPE_PNG != null) {
-            requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file)
-        }
-        imageType = RequestBody.create(MediaType.parse("text/plain"), "4")
-        if (requestBodyFile != null) {
-            showProgressDialog(resources.getString(R.string.please_wait))
-            val call = imageUploadAPI.uploadImage(imageType, requestBodyFile)
-            call.enqueue(ssImageUploadCallback)
-        }
+        MEDIA_TYPE_PNG = "image/png".toMediaTypeOrNull()!!
+        requestBodyFile = file.asRequestBody(MEDIA_TYPE_PNG)
+        imageType = "4".toRequestBody("text/plain".toMediaTypeOrNull())
+        showProgressDialog(resources.getString(R.string.please_wait))
+        val call = imageUploadAPI.uploadImage(imageType, requestBodyFile)
+        call.enqueue(ssImageUploadCallback)
     }
 
     private val ssImageUploadCallback = object : Callback<ImageUploadResponse> {
@@ -580,44 +562,19 @@ class ShortStoriesCardActivity : BaseActivity() {
             draftId = articleId
             shortStoryDraftOrPublishRequest.tags = tagsList
         } else {
-            if (ssTopicsText != null) {
-                for (i in ssTopicsList?.indices!!) {
-                    if (ssTopicsList?.get(i)?.getDisplay_name() == ssTopicsText) {
-                        ssTopicsList?.get(i)?.setIsSelected(true)
-                    }
+            val taggedList = ArrayList<Map<String, String>>()
+            val categoryMap = HashMap<String, String>()
+            val challengeMap = HashMap<String, String>()
+            categoryMap[taggedCategoryId] = taggedCategoryName
+            taggedChallengeId?.let { tagChallengeId ->
+                taggedChallengeName?.let {
+                    challengeMap[tagChallengeId] = it
                 }
             }
-            for (i in ssTopicsList!!.indices) {
-                if (ssTopicsList!!.get(i).isSelected) {
-                    val map1 = HashMap<String, String>()
-                    val list = ArrayList<Map<String, String>>()
-                    val list1 = ArrayList<Map<String, String>>()
-                    val list2 = ArrayList<Map<String, String>>()
-                    val map = HashMap<String, String>()
-                    ssTopicsList?.get(i)?.id?.let { ssTopicsList?.get(i)?.display_name?.let { it1 -> map.put(it, it1) } }
-                    list.add(map)
-                    if (runningrequest == "challenge") {
-                        map1.put(challengeId, challengeName)
-                        map1[challengeId] = challengeName
-                        list1.add(map1)
-                    } else if ("draftList" == source) {
-                        if (!isDraftTaggedInActiveChallenge) {
-                            if (listDraft.isNotEmpty()) {
-                                map1[draftChallengeId] = draftChallengeName
-                                list1.add(map1)
-                            } else {
-                            }
-                        } else {
-                            map1[currentActiveChallengeId] = currentActiveChallenge
-                            list1.add(map1)
-                        }
-                    }
-                    list2.addAll(list1)
-                    list2.addAll(list)
-                    shortStoryDraftOrPublishRequest.tags = list2
-                    break
-                }
-            }
+
+            taggedList.add(categoryMap)
+            taggedList.add(challengeMap)
+            shortStoryDraftOrPublishRequest.tags = taggedList
         }
 
         val call = shortStoryAPI.updateOrPublishShortStory(draftId, shortStoryDraftOrPublishRequest)
@@ -737,7 +694,7 @@ class ShortStoriesCardActivity : BaseActivity() {
         }
     }
 
-    fun getHexColor(color: String): Int? {
+    private fun getHexColor(color: String): Int? {
         val colors = color.substring(5, color.length - 1).split(",")
         try {
             val red = colors.get(0).trim().toInt()
@@ -757,13 +714,32 @@ class ShortStoriesCardActivity : BaseActivity() {
         return 0
     }
 
-    override fun updateUi(response: Response?) {
-
-    }
-
     fun setBackground(url: String, fontColor: String, imageId: Int) {
-        Picasso.with(BaseApplication.getAppContext()).load(url).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                .fit().into(cardBg)
+        //        Glide.with(this).load("https://media.giphy.com/media/3o6ozrsVQF6Fv1ljNe/giphy.gif").listener(
+//                object : RequestListener<Drawable> {
+//                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?,
+//                                              isFirstResource: Boolean): Boolean {
+//                        isImageLoaded = false
+//                        return false
+//                    }
+//
+//                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?,
+//                                                 dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+//                        //do something when picture already loaded
+//                        isImageLoaded = true
+//                        return false
+//                    }
+//                }).into(cardBg)
+        Picasso.get().load(url).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                .fit().into(cardBg, object : com.squareup.picasso.Callback {
+                    override fun onSuccess() {
+                        isImageLoaded = true
+                    }
+
+                    override fun onError(e: java.lang.Exception?) {
+                        isImageLoaded = false
+                    }
+                })
         getHexColor(fontColor)?.let { divider.setBackgroundColor(it) }
         getHexColor(fontColor)?.let { titleTv.setTextColor(it) }
         getHexColor(fontColor)?.let { storyTv.setTextColor(it) }
@@ -796,12 +772,13 @@ class ShortStoriesCardActivity : BaseActivity() {
         } else {
             showToast(getString(R.string.max_limit))
         }
-
-//        checkViewAndUpdate()
     }
 
     fun checkViewAndUpdate(): Boolean {
-        var check = true
+        if (!isImageLoaded) {
+            showToast(getString(R.string.ss_image_loading_msg))
+            return false
+        }
         val location = IntArray(2)
         shortLayout.getLocationOnScreen(location)
         x = location[0]
@@ -817,8 +794,8 @@ class ShortStoriesCardActivity : BaseActivity() {
         titleTvSize = titleTv.textSize / resources.displayMetrics.scaledDensity
         storyTvSize = storyTv.textSize / resources.displayMetrics.scaledDensity
         if (titleTvSize > 10) {
-            titleTvSize = titleTvSize - 2
-            storyTvSize = storyTvSize - 2
+            titleTvSize -= 2
+            storyTvSize -= 2
             titleTv.textSize = titleTvSize
             storyTv.textSize = storyTvSize
         } else {
@@ -827,12 +804,12 @@ class ShortStoriesCardActivity : BaseActivity() {
     }
 
     fun textAlign(align: String) {
-        if (align.equals("LEFT")) {
+        if (align == "LEFT") {
             fontAlignment = align
             shortLayout.gravity = Gravity.LEFT
             titleTv.gravity = Gravity.LEFT
             storyTv.gravity = Gravity.LEFT
-        } else if (align.equals("CENTER")) {
+        } else if (align == "CENTER") {
             fontAlignment = align
             shortLayout.gravity = Gravity.CENTER
             titleTv.gravity = Gravity.CENTER

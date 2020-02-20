@@ -7,7 +7,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -52,11 +51,6 @@ public class LoadWebViewActivity extends BaseActivity {
     }
 
     @Override
-    protected void updateUi(Response response) {
-
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -64,6 +58,4 @@ public class LoadWebViewActivity extends BaseActivity {
         }
         return true;
     }
-
-
 }

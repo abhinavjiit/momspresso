@@ -1,5 +1,7 @@
 package com.mycity4kids.models.request;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 import java.util.Map;
 
@@ -7,12 +9,14 @@ import java.util.Map;
  * Created by hemant on 28/7/16.
  */
 public class UpdateViewCountRequest {
+    @SerializedName("userId")
     private String userId;
-
     //For Short Stories only
+    @SerializedName("contentType")
     private String contentType;
-
+    @SerializedName("tags")
     private List<Map<String, String>> tags;
+    @SerializedName("cities")
     private List<Map<String, String>> cities;
 
     public String getUserId() {

@@ -6,11 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -86,11 +84,6 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

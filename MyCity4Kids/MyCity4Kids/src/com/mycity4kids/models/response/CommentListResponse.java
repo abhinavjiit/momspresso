@@ -1,5 +1,7 @@
 package com.mycity4kids.models.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -7,8 +9,9 @@ import java.util.List;
  */
 
 public class CommentListResponse extends BaseResponse {
-
+    @SerializedName("data")
     private List<CommentListData> data;
+    @SerializedName("count")
     private int count;
 
     public List<CommentListData> getData() {

@@ -30,7 +30,6 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.gson.Gson;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
@@ -466,11 +465,6 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             nextPageNumber = nextPageNumber + 1;
             recyclerAdapter.notifyDataSetChanged();
         }
-
-    }
-
-    @Override
-    protected void updateUi(Response response) {
 
     }
 

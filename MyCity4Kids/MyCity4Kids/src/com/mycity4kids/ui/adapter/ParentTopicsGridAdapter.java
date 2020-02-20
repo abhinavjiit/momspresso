@@ -71,7 +71,7 @@ public class ParentTopicsGridAdapter extends BaseAdapter {
         } else {
             //useless backend can't do shit. tired of checking null, empty, json object or json array.
             try {
-                Picasso.with(BaseApplication.getAppContext()).load(topicsList.get(position).getExtraData().get(0).getCategoryBackImage().getApp()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                Picasso.get().load(topicsList.get(position).getExtraData().get(0).getCategoryBackImage().getApp()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                         .fit().into(holder.tagsImageView);
             } catch (Exception e) {
                 holder.tagsImageView.setImageDrawable(ContextCompat.getDrawable(BaseApplication.getAppContext(), R.drawable.default_article));

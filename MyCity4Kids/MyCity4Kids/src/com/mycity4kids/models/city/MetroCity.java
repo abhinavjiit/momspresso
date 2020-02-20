@@ -1,8 +1,6 @@
 package com.mycity4kids.models.city;
 
-import com.kelltontech.model.BaseModel;
-
-public class MetroCity extends BaseModel {
+public class MetroCity {
     private int id;
     private String name;
     private String cityId;

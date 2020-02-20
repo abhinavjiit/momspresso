@@ -57,7 +57,7 @@ public class SearchVideosListingAdapter extends RecyclerView.Adapter<SearchVideo
         }
 
         try {
-            Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl()).
+            Picasso.get().load(articleDataModelsNew.get(position).getImageUrl()).
                     placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
         } catch (Exception e) {
             holder.articleImageView.setBackgroundResource(R.drawable.article_default);

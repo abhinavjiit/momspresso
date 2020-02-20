@@ -25,7 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -167,11 +166,6 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
     }
 
     @Override
-    protected void updateUi(Response response) {
-
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data == null) {
@@ -245,7 +239,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                                      Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
                                  }
 
-                                 Picasso.with(AddPollGroupPostActivity.this).load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(currentImageView);
+                                 Picasso.get().load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(currentImageView);
 //                                 currentImageView.setVisibility(View.VISIBLE);
                                  urlList.set(currentImagePosition, responseModel.getData().getResult().getUrl());
                                  imagePollAdapter.notifyDataSetChanged();
@@ -257,7 +251,8 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                          public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
                              Crashlytics.logException(t);
                              Log.d("MC4KException", Log.getStackTraceString(t));
-                             showToast(getString(R.string.went_wrong));
+                             apiExceptions(t);
+//                             showToast(getString(R.string.went_wrong));
                          }
                      }
         );

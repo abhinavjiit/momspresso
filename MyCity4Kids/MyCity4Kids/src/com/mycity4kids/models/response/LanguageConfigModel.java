@@ -3,17 +3,24 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
 import com.kelltontech.utils.StringUtils;
 
 /**
  * Created by hemant on 19/4/17.
  */
 public class LanguageConfigModel implements Parcelable {
+    @SerializedName("langKey")
     private String langKey;
+    @SerializedName("name")
     private String name;
+    @SerializedName("id")
     private String id;
+    @SerializedName("tag")
     private String tag;
+    @SerializedName("display_name")
     private String display_name;
+    @SerializedName("isSelected")
     private boolean isSelected;
 
     public LanguageConfigModel() {

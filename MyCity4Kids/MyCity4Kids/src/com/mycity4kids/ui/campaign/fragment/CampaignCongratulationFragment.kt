@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.app.ShareCompat
-import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -29,9 +28,6 @@ class CampaignCongratulationFragment : BaseFragment() {
     private lateinit var submitListener: SubmitListener
     private lateinit var pendingTextView: TextView
     private lateinit var spannable: SpannableStringBuilder
-    override fun updateUi(response: Response?) {
-    }
-
 
     companion object {
         @JvmStatic

@@ -32,7 +32,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -230,11 +229,6 @@ public class SpellCheckActivity extends BaseActivity implements View.OnClickList
 
         }
         sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
     }
 
     @Override

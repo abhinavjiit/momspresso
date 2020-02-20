@@ -1,17 +1,11 @@
 package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +15,9 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,25 +30,16 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.gson.Gson;
-import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
-import com.kelltontech.utils.StringUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.request.UploadVideoRequest;
-import com.mycity4kids.models.response.UpdateVideoDetailsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.retrofitAPIsInterfaces.UploadVideosAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
-import com.mycity4kids.ui.TusClient;
-import com.mycity4kids.ui.TusUpload;
-import com.mycity4kids.ui.TusUploader;
 import com.mycity4kids.utils.MixPanelUtils;
 
 import java.text.DecimalFormat;
@@ -69,7 +57,6 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
 
     private Toolbar mToolbar;
     RelativeLayout uploadFinishContainer, uploadingContainer;
-    private TusClient client;
     private TextView status, okayTextView, mTxtPercentage, mTxtVideoSize, mTxtVideoName, mTxtVideoExtension;
     private FirebaseAuth mAuth;
     //    private UploadTask uploadTask;
@@ -160,10 +147,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                             Log.w("VideoUpload", "signInAnonymously:failure", task.getException());
                             Toast.makeText(VideoUploadProgressActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-//                            updateUI(null);
                         }
-
-                        // ...
                     }
                 });
 
@@ -303,184 +287,6 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         public void onFailure(Call<ResponseBody> call, Throwable t) {
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
-
-    private void setStatus(String text) {
-        status.setText(text);
-    }
-
-    private void setUploadProgress(int progress) {
-//        mCircleView.setProgress(progress);
-//        mCircleView.setText("" + progress + "%", Color.DKGRAY);
-    }
-
-    private class UploadTask extends AsyncTask<Void, Long, String> {
-        private VideoUploadProgressActivity activity;
-        private TusClient client;
-        private TusUpload upload;
-        private Exception exception;
-
-        public UploadTask(VideoUploadProgressActivity activity, TusClient client, TusUpload upload) {
-            this.activity = activity;
-            this.client = client;
-            this.upload = upload;
-        }
-
-        @Override
-        protected void onPreExecute() {
-//            activity.setStatus("Upload selected...");
-            activity.setPauseButtonEnabled(true);
-        }
-
-        @Override
-        protected void onPostExecute(String videoId) {
-            if (!StringUtils.isNullOrEmpty(videoId)) {
-//                cancelTextView.setVisibility(View.GONE);
-
-                UploadVideoRequest uploadVideoRequest = new UploadVideoRequest();
-                uploadVideoRequest.setVideo_id(videoId);
-                uploadVideoRequest.setTitle(title);
-
-                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                UploadVideosAPI updateVideoUrlAPI = retrofit.create(UploadVideosAPI.class);
-                Call<UpdateVideoDetailsResponse> updateVideoUrlCall = updateVideoUrlAPI.updateUploadedVideoURL(uploadVideoRequest);
-                updateVideoUrlCall.enqueue(updateVideoUrlResponseCallback);
-            } else {
-                showToast(getString(R.string.video_progress_uploading_error));
-                finish();
-            }
-//            activity.setStatus("Upload finished!\n");
-//            activity.setPauseButtonEnabled(false);
-        }
-
-        @Override
-        protected void onCancelled() {
-            if (exception != null) {
-//                activity.showError(exception);
-            }
-
-            activity.setPauseButtonEnabled(false);
-        }
-
-        @Override
-        protected void onProgressUpdate(Long... updates) {
-            long uploadedBytes = updates[0];
-            long totalBytes = updates[1];
-//            activity.setStatus("Upload in progress");
-//            activity.setUploadProgress((int) ((double) uploadedBytes / totalBytes * 100));
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            try {
-                TusUploader uploader = client.resumeOrCreateUpload(upload);
-                long totalBytes = upload.getSize();
-                long uploadedBytes = uploader.getOffset();
-
-                // Upload file in 10KB chunks
-                uploader.setChunkSize(10 * 1024);
-
-                while (!isCancelled() && uploader.uploadChunk() > 0) {
-                    uploadedBytes = uploader.getOffset();
-                    publishProgress(uploadedBytes, totalBytes);
-                }
-                uploader.finish();
-                String videoId = uploader.getVideoId();
-                Log.d("VIDEOID=", "VVV " + videoId);
-                return videoId;
-
-            } catch (Exception e) {
-                exception = e;
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-                cancel(true);
-            }
-            return null;
-        }
-    }
-
-    private void showError(Exception e) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Internal error");
-        builder.setMessage(e.getMessage());
-        AlertDialog dialog = builder.create();
-        dialog.show();
-        e.printStackTrace();
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
-    }
-
-    public void setPauseButtonEnabled(boolean enabled) {
-//        pauseButton.setEnabled(enabled);
-//        resumeButton.setEnabled(!enabled);
-    }
-
-    public void cancelUpload() {
-        showAlertDialog("Momspresso", "Your upload progress will be lost. Are you sure you want to exit?", new OnButtonClicked() {
-            @Override
-            public void onButtonCLick(int buttonId) {
-                if (uploadTask != null) {
-//                    uploadTask.cancel(true);
-                    uploadTask.cancel();
-                }
-                finish();
-            }
-        });
-    }
-
-    private Callback<UpdateVideoDetailsResponse> updateVideoUrlResponseCallback = new Callback<UpdateVideoDetailsResponse>() {
-        @Override
-        public void onResponse(Call<UpdateVideoDetailsResponse> call, retrofit2.Response<UpdateVideoDetailsResponse> response) {
-            if (response == null || response.body() == null) {
-                showToast(getString(R.string.server_went_wrong));
-                return;
-            }
-            try {
-                UpdateVideoDetailsResponse responseData = response.body();
-                Log.d("Response Body = ", "" + new Gson().toJson(responseData));
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-//                    setStatus("Upload finished!");
-                    setPauseButtonEnabled(false);
-//                    showToast("Your video has been succesfully uploaded and sent for moderation. We will notify you once it is published.");
-                    uploadingContainer.setVisibility(View.GONE);
-                    uploadFinishContainer.setVisibility(View.VISIBLE);
-//                    showOkDialog("Video Uploaded Successfully", "Video has been successfully uploaded and send for moderation. We will notifiy you once moderated",
-//                            new OnButtonClicked() {
-//                                @Override
-//                                public void onButtonCLick(int buttonId) {
-//                                    Intent intent = new Intent(VideoUploadProgressActivity.this, DashboardActivity.class);
-//                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                                    startActivity(intent);
-//                                    finish();
-//                                }
-//                            });
-
-//                    Intent intent = new Intent(VideoUploadProgressActivity.this, DashboardActivity.class);
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                    startActivity(intent);
-//                    finish();
-                } else {
-                    setStatus(getString(R.string.video_progress_uploading_failed));
-                    showToast(responseData.getReason());
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                setStatus(getString(R.string.video_progress_uploading_failed));
-                Log.d("MC4KException", Log.getStackTraceString(e));
-                showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<UpdateVideoDetailsResponse> call, Throwable t) {
-            Crashlytics.logException(t);
-            Log.d("MC4KException", Log.getStackTraceString(t));
-            setStatus(getString(R.string.video_progress_uploading_failed));
-            showToast(getString(R.string.went_wrong));
         }
     };
 

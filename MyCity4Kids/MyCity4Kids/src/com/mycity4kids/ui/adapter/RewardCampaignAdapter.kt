@@ -61,8 +61,8 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
 
         fun bindPhoto(campaignList: CampaignDataListResult) {
             this.campaignList = campaignList
-            Picasso.with(view.context).load(campaignList.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(view.campaign_header)
-            Picasso.with(view.context).load(campaignList.brandDetails.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(view.brand_img)
+            Picasso.get().load(campaignList.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(view.campaign_header)
+            Picasso.get().load(campaignList.brandDetails.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(view.brand_img)
             (view.brand_name).setText(campaignList.brandDetails.name)
             (view.campaign_name).setText(campaignList.name)
             (view.amount).setText("" + (campaignList.maxSlots - campaignList.totalUsedSlots))
