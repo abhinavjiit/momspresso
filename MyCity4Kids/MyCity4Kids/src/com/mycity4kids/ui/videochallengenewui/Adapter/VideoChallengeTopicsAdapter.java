@@ -50,7 +50,7 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
             holder.liveTextViewVideoChallenge.setVisibility(View.GONE);
         }
         try {
-            Picasso.with(mContext).load(challengeTopics.get(position).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+            Picasso.get().load(challengeTopics.get(position).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                     .fit().into(holder.cureentChallengesImage);
         } catch (Exception e) {
             holder.cureentChallengesImage.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_article));

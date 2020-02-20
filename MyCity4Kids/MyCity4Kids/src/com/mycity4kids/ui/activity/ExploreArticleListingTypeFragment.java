@@ -19,7 +19,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kelltontech.ui.BaseFragment;
-import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -45,8 +44,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by hemant on 25/5/17.
@@ -294,7 +291,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             case R.id.storyContainer: {
                 Intent intent = new Intent(getActivity(), ShortStoriesListingContainerActivity.class);
                 intent.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
-                startActivityForResult(intent, 1234);
+                startActivity(intent);
             }
             break;
             case R.id.forYouTextView: {
@@ -356,18 +353,5 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == 1234) {
-                try {
-                    ((DashboardActivity) getActivity()).showChooseLayoutForShortStory();
-                } catch (Exception e) {
-                    ToastUtils.showToast(getActivity(), "error occurred");
-                    Log.d("ERROR", e.getMessage());
-                }
-
-            }
-
-        }
-
     }
 }

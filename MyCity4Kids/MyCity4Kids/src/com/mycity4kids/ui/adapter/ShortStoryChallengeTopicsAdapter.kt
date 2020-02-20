@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.horizontal_recycler_view_video_challenge.view.*
 
 class ShortStoryChallengeTopicsAdapter(private val clickListener: RecyclerViewClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    var shortStoryChallengesList = ArrayList<Topics>()
+    private var shortStoryChallengesList = ArrayList<Topics>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.horizontal_recycler_view_video_challenge, parent, false)
@@ -25,9 +25,10 @@ class ShortStoryChallengeTopicsAdapter(private val clickListener: RecyclerViewCl
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ViewHolder) {
+            holder.info.visibility = View.GONE
             holder.challengeNameText.text = shortStoryChallengesList[position].display_name.toUpperCase()
             try {
-                Picasso.with(holder.itemView.context).load(shortStoryChallengesList[position].extraData[0].challenge.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).fit().into(holder.challengesImageView)
+                Picasso.get().load(shortStoryChallengesList[position].extraData[0].challenge.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).fit().into(holder.challengesImageView)
             } catch (e: Exception) {
                 holder.challengesImageView.setImageResource(R.drawable.default_article)
             }
@@ -41,6 +42,7 @@ class ShortStoryChallengeTopicsAdapter(private val clickListener: RecyclerViewCl
 
     fun setShortStoryChallengesData(data: ArrayList<Topics>) {
         shortStoryChallengesList = data
+
     }
 
 
@@ -52,7 +54,11 @@ class ShortStoryChallengeTopicsAdapter(private val clickListener: RecyclerViewCl
         val challengesImageView: ImageView = itemView.tagImageView
         val liveTextView: TextView = itemView.liveTextViewVideoChallenge
         val challengeNameText: TextView = itemView.challengeNameText
+        val info: ImageView = itemView.info
 
+        init {
+            itemView.setOnClickListener(this)
+        }
     }
 
     interface RecyclerViewClickListener {
