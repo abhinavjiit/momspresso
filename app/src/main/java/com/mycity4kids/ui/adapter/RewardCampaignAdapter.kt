@@ -73,18 +73,20 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
         //4
         override fun onClick(v: View) {
             if (v == (view.share)) {
-                var userId = SharedPrefUtils.getUserDetailModel(context)?.dynamoId
+                val userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
                 Utils.campaignEvent(context, "Campaign Detail", "Campaign Listing", "share", campaignList!!.name, "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
 
-                val shareIntent = ShareCompat.IntentBuilder
-                        .from(context)
-                        .setType("text/plain")
-                        .setChooserTitle("Share URL")
-                        .setText("https://www.momspresso.com/mymoney/" + campaignList!!.nameSlug + "/" + campaignList!!.id + "?referrer=" + userId)
-                        .intent
+                context?.let {
+                    val shareIntent = ShareCompat.IntentBuilder
+                            .from(it)
+                            .setType("text/plain")
+                            .setChooserTitle("Share URL")
+                            .setText("https://www.momspresso.com/mymoney/" + campaignList!!.nameSlug + "/" + campaignList!!.id + "?referrer=" + userId)
+                            .intent
 
-                if (shareIntent.resolveActivity(context!!.packageManager) != null) {
-                    context!!.startActivity(shareIntent)
+                    if (shareIntent.resolveActivity(context!!.packageManager) != null) {
+                        it.startActivity(shareIntent)
+                    }
                 }
             } else {
                 Utils.campaignEvent(context, "Campaign Detail", "Campaign Listing", "Click_listing_card", campaignList!!.name, "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")

@@ -102,7 +102,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
         if (arguments != null && arguments!!.containsKey("id")) {
             paymantModeId = arguments!!.getInt("id")
-            comingFrom = arguments!!.getString("comingFrom")
+            comingFrom = arguments!!.getString("comingFrom").toString()
             ID = arguments!!.getInt("Id")
 
             isComingFromRewards = if (arguments!!.containsKey("isComingFromRewards")) {
@@ -174,7 +174,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                             bankNames.add(it.name!!)
                         }
                         if (selectBankAccountspinner != null) {
-                            val arrayAdapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item, bankNames)
+                            val arrayAdapter = context?.let { ArrayAdapter(it, android.R.layout.simple_spinner_dropdown_item, bankNames) }
                             selectBankAccountspinner.adapter = arrayAdapter
 
                             selectBankAccountspinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {

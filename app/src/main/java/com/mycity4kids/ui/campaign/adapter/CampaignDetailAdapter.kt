@@ -87,7 +87,7 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
             }
             spannable = SpannableString(instruction)
             val clickableSpan = object : ClickableSpan() {
-                override fun onClick(p0: View?) {
+                override fun onClick(p0: View) {
                     var url: String
                     url = instruction.substring(matchStart!!, matchEnd!!)
                     if (!url.startsWith("http") || !url.startsWith("https")) {

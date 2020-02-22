@@ -400,7 +400,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                         availableList.addAll(response.data!!.result.available as List<PaymentModesModal>)
                         for (i in 0..availableList!!.size - 1) {
                             var paymentMOdesModal: PaymentModesModal? = null
-                            if (availableList!!.get(i).exists != null && availableList!!.get(i).exists!!.account_number.isNotEmpty()) {
+                            if (availableList!!.get(i).exists != null && availableList!!.get(i).exists!!.account_number!!.isNotEmpty()) {
                                 paymentMOdesModal = PaymentModesModal(icon = availableList[i].icon, type_id = availableList!!.get(i).type_id, isDefault = false, accountNumber = availableList!!.get(i).exists!!.account_number, id = availableList[i].exists!!.id)
                             } else {
                                 paymentMOdesModal = PaymentModesModal(icon = availableList[i].icon, type_id = availableList!!.get(i).type_id, isDefault = false, accountNumber = null, id = -1)
@@ -411,7 +411,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                         availableList.addAll(response.data!!.result.available as List<PaymentModesModal>)
                         for (i in 0..availableList!!.size - 1) {
                             var paymentMOdesModal: PaymentModesModal? = null
-                            if (availableList!!.get(i).exists != null && availableList!!.get(i).exists!!.account_number.isNotEmpty()) {
+                            if (availableList!!.get(i).exists != null && availableList!!.get(i).exists!!.account_number!!.isNotEmpty()) {
                                 paymentMOdesModal = PaymentModesModal(icon = availableList[i].icon, type_id = availableList!!.get(i).type_id, isDefault = false, accountNumber = availableList!!.get(i).exists!!.account_number, id = availableList[i].exists!!.id)
                             } else {
                                 paymentMOdesModal = PaymentModesModal(icon = availableList[i].icon, type_id = availableList!!.get(i).type_id, isDefault = false, accountNumber = null, id = -1)

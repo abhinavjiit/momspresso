@@ -71,13 +71,15 @@ class CampaignCongratulationFragment : BaseFragment() {
             AppUtils.shareFacebook(activity as CampaignContainerActivity, "", contentStr)
         }
         genricShareImageView.setOnClickListener {
-            val contentStr = String.format("Participate in this campaign and earn Momspresso MyMoney now! \n https://www.momspresso.com/mymoney/%s/%d?referrer=" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                    (activity as CampaignContainerActivity).getNameSlug(), (activity as CampaignContainerActivity).getIdCamp())
-            val shareIntent = ShareCompat.IntentBuilder.from(activity)
-                    .setType("text/plain")
-                    .setText(contentStr)
-                    .intent
-            startActivity(shareIntent)
+            activity?.let {
+                val contentStr = String.format("Participate in this campaign and earn Momspresso MyMoney now! \n https://www.momspresso.com/mymoney/%s/%d?referrer=" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                        (it as CampaignContainerActivity).getNameSlug(), (activity as CampaignContainerActivity).getIdCamp())
+                val shareIntent = ShareCompat.IntentBuilder.from(it)
+                        .setType("text/plain")
+                        .setText(contentStr)
+                        .intent
+                startActivity(shareIntent)
+            }
         }
 
         /*spannable = SpannableStringBuilder()

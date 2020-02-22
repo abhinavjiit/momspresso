@@ -30,7 +30,6 @@ class RewardsShareReferralCodeActivity : BaseActivity() {
     private lateinit var layoutFacebook: RelativeLayout
     private lateinit var layoutWhatsApp: RelativeLayout
     private var myClipboard: ClipboardManager? = null
-    private var myClip: ClipData? = null
     private lateinit var root: RelativeLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +61,7 @@ class RewardsShareReferralCodeActivity : BaseActivity() {
         }
         textCode.setOnClickListener {
 
-            myClip = ClipData.newPlainText("text", textCode.text.toString())
+            val myClip = ClipData.newPlainText("text", textCode.text.toString())
             myClipboard?.setPrimaryClip(myClip);
 
             Toast.makeText(this, "ReferralCode Copied", Toast.LENGTH_SHORT).show()

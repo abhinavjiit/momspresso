@@ -256,7 +256,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
             }
 
             referralCode = if (arguments!!.containsKey("referralCode")) {
-                arguments!!.getString("referralCode")
+                arguments!!.getString("referralCode").toString()
             } else {
                 ""
             }
@@ -1043,7 +1043,7 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
                 if (data == null) {
                     return
                 }
-                imageUri = data.getData()
+                imageUri = data.getData()!!
                 if (resultCode == Activity.RESULT_OK) {
                     try {
                         startCropActivity(imageUri)
@@ -1240,14 +1240,14 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
         @SuppressLint("NewApi")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             // Use the current date as the default date in the picker
-            val dlg = DatePickerDialog(activity, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, this, curent_year, current_month, current_day)
+            val dlg = context?.let { DatePickerDialog(it, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, this, curent_year, current_month, current_day) }
 
             if (arguments != null) {
                 isShowTillCurrent = arguments!!.getBoolean("is_show_current_only", false)
                 isShowFutureOnly = arguments!!.getBoolean("is_show_future_only", false)
                 isForParent = arguments!!.getBoolean("is_for_parent", false)
             }
-            dlg.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dlg?.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             if (isShowTillCurrent) {
                 dlg.datePicker.maxDate = c.timeInMillis
             }

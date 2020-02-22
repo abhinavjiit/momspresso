@@ -184,15 +184,17 @@ class CampaignDetailFragment : BaseFragment() {
             activity!!.onBackPressed()
         }
         shareText.setOnClickListener {
-            val shareIntent = ShareCompat.IntentBuilder
-                    .from(activity)
-                    .setType("text/plain")
-                    .setChooserTitle("Share URL")
-                    .setText("https://www.momspresso.com/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
-                    .intent
+            activity?.let {
+                val shareIntent = ShareCompat.IntentBuilder
+                        .from(it)
+                        .setType("text/plain")
+                        .setChooserTitle("Share URL")
+                        .setText("https://www.momspresso.com/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
+                        .intent
 
-            if (shareIntent.resolveActivity(activity!!.packageManager) != null) {
-                context!!.startActivity(shareIntent)
+                if (shareIntent.resolveActivity(activity!!.packageManager) != null) {
+                    it.startActivity(shareIntent)
+                }
             }
         }
 
@@ -445,7 +447,7 @@ class CampaignDetailFragment : BaseFragment() {
         }
         spannable = SpannableString(instruction)
         val clickableSpan = object : ClickableSpan() {
-            override fun onClick(p0: View?) {
+            override fun onClick(p0: View) {
                 var url: String
                 url = instruction.substring(matchStart!!, matchEnd!!)
                 if (!url.startsWith("http") || !url.startsWith("https")) {
@@ -487,29 +489,31 @@ class CampaignDetailFragment : BaseFragment() {
             call.enqueue(participateCampaign)
 
         } else if (submitBtn.text == resources.getString(R.string.detail_bottom_share)) {
-            Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "Share", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
-            val shareIntent = ShareCompat.IntentBuilder
-                    .from(activity)
-                    .setType("text/plain")
-                    .setChooserTitle("Share URL")
-                    .setText("https://www.momspresso.com/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
-                    .intent
-
-            if (shareIntent.resolveActivity(activity!!.packageManager) != null) {
-                context!!.startActivity(shareIntent)
+            activity?.let {
+                Utils.campaignEvent(it, "Campaign Listing", "Campaign Detail", "Share", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+                val shareIntent = ShareCompat.IntentBuilder
+                        .from(it)
+                        .setType("text/plain")
+                        .setChooserTitle("Share URL")
+                        .setText("https://www.momspresso.com/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
+                        .intent
+                if (shareIntent.resolveActivity(it.packageManager) != null) {
+                    it.startActivity(shareIntent)
+                }
             }
         } else if (submitBtn.text == resources.getString(R.string.detail_bottom_share_momspresso_reward)) {
-            Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "Share_Rewards_Sticky_Bottom", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "CTA_Momspresso_Rewards_Share")
-            val shareIntent = ShareCompat.IntentBuilder
-                    .from(activity)
-                    .setType("text/plain")
-                    .setChooserTitle("Share URL")
-                    .setText("https://www.momspresso.com/mymoney?referrer=" + userId)
-                    .intent
-            if (shareIntent.resolveActivity(activity!!.packageManager) != null) {
-                context!!.startActivity(shareIntent)
+            activity?.let {
+                Utils.campaignEvent(it, "Campaign Listing", "Campaign Detail", "Share_Rewards_Sticky_Bottom", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "CTA_Momspresso_Rewards_Share")
+                val shareIntent = ShareCompat.IntentBuilder
+                        .from(it)
+                        .setType("text/plain")
+                        .setChooserTitle("Share URL")
+                        .setText("https://www.momspresso.com/mymoney?referrer=" + userId)
+                        .intent
+                if (shareIntent.resolveActivity(it.packageManager) != null) {
+                    it.startActivity(shareIntent)
+                }
             }
-
         } else if (submitBtn.text == resources.getString(R.string.detail_bottom_view_other)) {
             (context as CampaignContainerActivity).onBackPressed()
             Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "View other campaigns", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
@@ -846,31 +850,11 @@ class CampaignDetailFragment : BaseFragment() {
         }
     }
 
-    fun showDialog() {
-        Utils.campaignEvent(activity, "Campaign Detail", "Campaign Detail", "Show_Earnings", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "CTA_Show_Earnings")
-        if (activity != null) {
-            val dialog = Dialog(activity)
-            dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
-            dialog.setContentView(R.layout.dialog_show_rewards)
-            dialog.setCancelable(true)
-            val showAmount = dialog.findViewById<TextView>(R.id.show_amount)
-            if (apiGetResponse!!.isFixedAmount == 1) {
-                var amount: Double? = (apiGetResponse!!.amount)
-                showAmount.setText("Rs." + amount?.toInt())
-            } else {
-                showAmount.setText("Rs." + (apiGetResponse!!.minAmount) + "-" + "Rs." + (apiGetResponse!!.maxAmount))
-            }
-
-            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog.show()
-        }
-    }
-
     fun unapplyCampaignDialog() {
-        Utils.campaignEvent(activity, "Campaign Detail", "Campaign Detail", "Show_Earnings", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "CTA_Show_Earnings")
-        if (activity != null) {
-            val dialog = Dialog(activity)
-            dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+        activity.let {
+            Utils.campaignEvent(it, "Campaign Detail", "Campaign Detail", "Show_Earnings", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "CTA_Show_Earnings")
+            val dialog = it?.let { it1 -> Dialog(it1) }
+            dialog?.window!!.requestFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.dialog_unapply_campaign)
             dialog.setCancelable(true)
             val noBtn = dialog.findViewById<TextView>(R.id.btn_no)
