@@ -170,7 +170,8 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
         @Override
         public void onFailure(Call<FBPhoneLoginResponse> call, Throwable t) {
             Log.d("MC4kException", Log.getStackTraceString(t));
-            showToast(getString(R.string.went_wrong));
+            apiExceptions(t);
+//            showToast(getString(R.string.went_wrong));
         }
     };
 
@@ -456,7 +457,8 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
             removeProgressDialog();
             Log.d("MC4kException", Log.getStackTraceString(t));
             Crashlytics.logException(t);
-            showToast(getString(R.string.went_wrong));
+            apiExceptions(t);
+//            showToast(getString(R.string.went_wrong));
         }
     };
 
@@ -469,6 +471,7 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
         @Override
         public void onFailure(Call<BaseResponse> call, Throwable t) {
             Log.d("FacebookConnect", "FAILURE");
+            apiExceptions(t);
         }
     };
 
@@ -517,7 +520,8 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
             Log.d("MC4kException", Log.getStackTraceString(t));
             Crashlytics.logException(t);
-            showToast(getString(R.string.went_wrong));
+            apiExceptions(t);
+//            showToast(getString(R.string.went_wrong));
         }
     };
 
@@ -571,7 +575,8 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
             Log.d("MC4kException", Log.getStackTraceString(t));
             Crashlytics.logException(t);
-            showToast(getString(R.string.went_wrong));
+            apiExceptions(t);
+//            showToast(getString(R.string.went_wrong));
         }
     };
 

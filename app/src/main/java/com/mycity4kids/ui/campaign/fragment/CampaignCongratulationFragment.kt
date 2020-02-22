@@ -73,7 +73,7 @@ class CampaignCongratulationFragment : BaseFragment() {
         genricShareImageView.setOnClickListener {
             val contentStr = String.format("Participate in this campaign and earn Momspresso MyMoney now! \n https://www.momspresso.com/mymoney/%s/%d?referrer=" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
                     (activity as CampaignContainerActivity).getNameSlug(), (activity as CampaignContainerActivity).getIdCamp())
-            val shareIntent = ShareCompat.IntentBuilder.from(activity as CampaignContainerActivity)
+            val shareIntent = ShareCompat.IntentBuilder.from(activity)
                     .setType("text/plain")
                     .setText(contentStr)
                     .intent

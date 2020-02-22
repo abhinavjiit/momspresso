@@ -43,8 +43,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
@@ -91,6 +89,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import androidx.core.content.ContextCompat;
 import okhttp3.ResponseBody;
 
 import static android.content.Context.CLIPBOARD_SERVICE;

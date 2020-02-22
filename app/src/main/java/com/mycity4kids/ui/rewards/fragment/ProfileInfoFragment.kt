@@ -91,9 +91,7 @@ import java.util.*
 const val ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111
 const val ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE = 1113
 
-class ProfileInfoFragment : BaseFragment(),
-    ChangePreferredLanguageDialogFragment.OnClickDoneListener,
-    CityListingDialogFragment.IChangeCity, PickerDialogFragment.OnClickDoneListener {
+class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragment.OnClickDoneListener, CityListingDialogFragment.IChangeCity, PickerDialogFragment.OnClickDoneListener {
 
     private var isNewRegistration: Boolean = false
     var address: String? = null
@@ -199,11 +197,7 @@ class ProfileInfoFragment : BaseFragment(),
 
     private val REQUEST_CAMERA = 0
     private val REQUEST_EDIT_PICTURE = 1
-    private val PERMISSIONS_EDIT_PICTURE = arrayOf(
-        Manifest.permission.CAMERA,
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
-    )
+    private val PERMISSIONS_EDIT_PICTURE = arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
     private val SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage"
     private lateinit var rootView: View
     private lateinit var photoFile: File
@@ -229,19 +223,15 @@ class ProfileInfoFragment : BaseFragment(),
                 }*/
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
 
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.user_personal_info_fragment, container, false)
 
         activity?.let {
-            Utils.pushGenericEvent(
-                activity, "Show_MyMoney_RegistrationForm_Registered",
-                SharedPrefUtils.getUserDetailModel(it).dynamoId, "ProfileInfoFragment"
-            )
+            Utils.pushGenericEvent(activity, "Show_MyMoney_RegistrationForm_Registered",
+                    SharedPrefUtils.getUserDetailModel(it).dynamoId, "ProfileInfoFragment")
         }
 
         textReferCodeError = containerView.findViewById(R.id.textReferCodeError)
@@ -266,16 +256,15 @@ class ProfileInfoFragment : BaseFragment(),
             }
 
             referralCode = if (arguments!!.containsKey("referralCode")) {
-                arguments!!.getString("referralCode").toString()
+                arguments!!.getString("referralCode")
             } else {
                 ""
             }
         }
 
         try {
-            Picasso.get().load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))
-                .placeholder(R.drawable.family_xxhdpi)
-                .error(R.drawable.family_xxhdpi).into(profileImageView)
+            Picasso.get().load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(R.drawable.family_xxhdpi)
+                    .error(R.drawable.family_xxhdpi).into(profileImageView)
         } catch (e: Exception) {
             profileImageView.setImageResource(R.drawable.family_xxhdpi)
         }
@@ -329,10 +318,7 @@ class ProfileInfoFragment : BaseFragment(),
                 var interestName = Constants.TypeOfLanguages.findById(it)
                 preSelectedLanguage.add(it)
                 context?.let {
-                    val subsubLL = LayoutInflater.from(context).inflate(
-                        R.layout.shape_rewards_border_rectangular,
-                        null
-                    ) as LinearLayout
+                    val subsubLL = LayoutInflater.from(context).inflate(R.layout.shape_rewards_border_rectangular, null) as LinearLayout
                     val catTextView = subsubLL.getChildAt(0) as TextView
                     catTextView.setText(interestName)
                     catTextView.isSelected = true
@@ -356,10 +342,7 @@ class ProfileInfoFragment : BaseFragment(),
                 var interestName = Constants.TypeOfInterest.findById(it.toInt())
                 preSelectedInterest.add(it.toString())
                 context?.let {
-                    val subsubLL = LayoutInflater.from(context).inflate(
-                        R.layout.shape_rewards_border_rectangular,
-                        null
-                    ) as LinearLayout
+                    val subsubLL = LayoutInflater.from(context).inflate(R.layout.shape_rewards_border_rectangular, null) as LinearLayout
                     val catTextView = subsubLL.getChildAt(0) as TextView
                     catTextView.setText(interestName)
                     catTextView.isSelected = true
@@ -389,8 +372,7 @@ class ProfileInfoFragment : BaseFragment(),
         }
 
         if (apiGetResponse.gender != null) {
-            val selectionPosition =
-                spinAdapter.getPosition(StringUtils.firstLetterToUpperCase(apiGetResponse.gender));
+            val selectionPosition = spinAdapter.getPosition(StringUtils.firstLetterToUpperCase(apiGetResponse.gender));
             genderSpinner.setSelection(selectionPosition)
         }
         if (apiGetResponse.dob != null) {
@@ -408,18 +390,9 @@ class ProfileInfoFragment : BaseFragment(),
         if (apiGetResponse.kids != null && apiGetResponse.kids!!.isNotEmpty()) {
             for (i in 0..apiGetResponse.kids!!.size - 1) {
                 if (i == 0 && apiGetResponse.kids!!.size == 1) {
-                    createKidsDetailDynamicView(
-                        apiGetResponse.kids!!.get(i).gender,
-                        DateTimeUtils.getDOBMilliTimestamp(apiGetResponse.kids!!.get(i).getBirthDay()),
-                        apiGetResponse.kids!!.get(i).name,
-                        false
-                    )
+                    createKidsDetailDynamicView(apiGetResponse.kids!!.get(i).gender, DateTimeUtils.getDOBMilliTimestamp(apiGetResponse.kids!!.get(i).getBirthDay()), apiGetResponse.kids!!.get(i).name, false)
                 } else {
-                    createKidsDetailDynamicView(
-                        apiGetResponse.kids!!.get(i).gender,
-                        DateTimeUtils.getDOBMilliTimestamp(apiGetResponse.kids!!.get(i).getBirthDay()),
-                        apiGetResponse.kids!!.get(i).name
-                    )
+                    createKidsDetailDynamicView(apiGetResponse.kids!!.get(i).gender, DateTimeUtils.getDOBMilliTimestamp(apiGetResponse.kids!!.get(i).getBirthDay()), apiGetResponse.kids!!.get(i).name)
                 }
             }
             linearKidsEmptyView.visibility = View.GONE
@@ -456,41 +429,15 @@ class ProfileInfoFragment : BaseFragment(),
 
         editImageView.setOnClickListener {
             if (Build.VERSION.SDK_INT >= 23) {
-                if (ActivityCompat.checkSelfPermission(
-                        it.context,
-                        Manifest.permission.CAMERA
-                    ) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(
-                        it.context,
-                        Manifest.permission.READ_EXTERNAL_STORAGE
-                    ) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(
-                        it.context,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    Log.i(
-                        "PERMISSIONS",
-                        "storage permissions has NOT been granted. Requesting permissions."
-                    )
+                if (ActivityCompat.checkSelfPermission(it.context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(it.context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(it.context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    Log.i("PERMISSIONS", "storage permissions has NOT been granted. Requesting permissions.")
                     requestCameraAndStoragePermissions()
-                } else if (ActivityCompat.checkSelfPermission(
-                        it.context,
-                        Manifest.permission.CAMERA
-                    ) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(
-                        it.context,
-                        Manifest.permission.READ_EXTERNAL_STORAGE
-                    ) == PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(
-                        it.context,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ) == PackageManager.PERMISSION_GRANTED
-                ) {
-                    Log.i(
-                        "PERMISSIONS",
-                        "storage permissions has NOT been granted. Requesting permissions."
-                    )
+                } else if (ActivityCompat.checkSelfPermission(it.context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(it.context, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(it.context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    Log.i("PERMISSIONS", "storage permissions has NOT been granted. Requesting permissions.")
                     requestCameraPermission()
                 } else {
                     chooseImageOptionPopUp()
@@ -508,8 +455,8 @@ class ProfileInfoFragment : BaseFragment(),
         editLocation.setOnClickListener {
             val fieldsArr = arrayOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG).asList()
             val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fieldsArr)
-                .setTypeFilter(TypeFilter.CITIES)
-                .build(it.context)
+                    .setTypeFilter(TypeFilter.CITIES)
+                    .build(it.context)
 
             startActivityForResult(intent, REQUEST_SELECT_PLACE)
 
@@ -560,8 +507,7 @@ class ProfileInfoFragment : BaseFragment(),
         textDeleteChild.setOnClickListener {
             if (linearKidsDetail.childCount > 0) {
                 if (linearKidsDetail.childCount == 1) {
-                    linearKidsDetail.getChildAt(0).findViewById<TextView>(R.id.textDeleteChild)
-                        .visibility = View.GONE
+                    linearKidsDetail.getChildAt(0).findViewById<TextView>(R.id.textDeleteChild).visibility = View.GONE
                     linearKidsEmptyView.visibility = View.GONE
                 } else {
                     linearKidsEmptyView.visibility = View.GONE
@@ -570,17 +516,16 @@ class ProfileInfoFragment : BaseFragment(),
             }
         }
 
-        (containerView.findViewById<CheckBox>(R.id.checkAreYouExpecting)).setOnCheckedChangeListener(
-            object : CompoundButton.OnCheckedChangeListener {
-                override fun onCheckedChanged(p0: CompoundButton?, isChecked: Boolean) {
-                    if (isChecked) {
-                        layoutMotherExptectedDate.visibility = View.VISIBLE
-                    } else {
-                        layoutMotherExptectedDate.visibility = View.GONE
-                        editExpectedDate.setText("")
-                    }
+        (containerView.findViewById<CheckBox>(R.id.checkAreYouExpecting)).setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
+            override fun onCheckedChanged(p0: CompoundButton?, isChecked: Boolean) {
+                if (isChecked) {
+                    layoutMotherExptectedDate.visibility = View.VISIBLE
+                } else {
+                    layoutMotherExptectedDate.visibility = View.GONE
+                    editExpectedDate.setText("")
                 }
-            })
+            }
+        })
 
         textAddChild.setOnClickListener {
             if (validateChildData()) {
@@ -591,35 +536,15 @@ class ProfileInfoFragment : BaseFragment(),
         }
 
         textEditInterest.setOnClickListener {
-            var fragment = PickerDialogFragment.newInstance(
-                columnCount = 1,
-                popType = Constants.PopListRequestType.INTEREST.name,
-                isSingleSelection = true,
-                preSelectedItemIds = preSelectedInterest,
-                context = this@ProfileInfoFragment
-            )
-            fragmentManager?.let { it1 ->
-                fragment.show(
-                    it1,
-                    RewardsSocialInfoFragment::class.java.simpleName
-                )
-            }
+            var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.INTEREST.name,
+                    isSingleSelection = true, preSelectedItemIds = preSelectedInterest, context = this@ProfileInfoFragment)
+            fragmentManager?.let { it1 -> fragment.show(it1, RewardsSocialInfoFragment::class.java.simpleName) }
         }
 
         editInterest.setOnClickListener {
-            var fragment = PickerDialogFragment.newInstance(
-                columnCount = 1,
-                popType = Constants.PopListRequestType.INTEREST.name,
-                isSingleSelection = true,
-                preSelectedItemIds = preSelectedInterest,
-                context = this@ProfileInfoFragment
-            )
-            fragmentManager?.let { it1 ->
-                fragment.show(
-                    it1,
-                    RewardsSocialInfoFragment::class.java.simpleName
-                )
-            }
+            var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.INTEREST.name,
+                    isSingleSelection = true, preSelectedItemIds = preSelectedInterest, context = this@ProfileInfoFragment)
+            fragmentManager?.let { it1 -> fragment.show(it1, RewardsSocialInfoFragment::class.java.simpleName) }
         }
 
         textDOB.setOnClickListener {
@@ -633,35 +558,15 @@ class ProfileInfoFragment : BaseFragment(),
         }
 
         textEditLanguage.setOnClickListener {
-            var fragment = PickerDialogFragment.newInstance(
-                columnCount = 1,
-                popType = Constants.PopListRequestType.LANGUAGE.name,
-                isSingleSelection = true,
-                preSelectedItemIds = preSelectedLanguage,
-                context = this@ProfileInfoFragment
-            )
-            fragmentManager?.let { it1 ->
-                fragment.show(
-                    it1,
-                    RewardsSocialInfoFragment::class.java.simpleName
-                )
-            }
+            var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.LANGUAGE.name,
+                    isSingleSelection = true, preSelectedItemIds = preSelectedLanguage, context = this@ProfileInfoFragment)
+            fragmentManager?.let { it1 -> fragment.show(it1, RewardsSocialInfoFragment::class.java.simpleName) }
         }
 
         editLanguage.setOnClickListener {
-            var fragment = PickerDialogFragment.newInstance(
-                columnCount = 1,
-                popType = Constants.PopListRequestType.LANGUAGE.name,
-                isSingleSelection = true,
-                preSelectedItemIds = preSelectedLanguage,
-                context = this@ProfileInfoFragment
-            )
-            fragmentManager?.let { it1 ->
-                fragment.show(
-                    it1,
-                    RewardsSocialInfoFragment::class.java.simpleName
-                )
-            }
+            var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.LANGUAGE.name,
+                    isSingleSelection = true, preSelectedItemIds = preSelectedLanguage, context = this@ProfileInfoFragment)
+            fragmentManager?.let { it1 -> fragment.show(it1, RewardsSocialInfoFragment::class.java.simpleName) }
         }
 
         val genderList = ArrayList<String>()
@@ -671,10 +576,8 @@ class ProfileInfoFragment : BaseFragment(),
         spinAdapter = CustomSpinnerAdapter(activity, genderList)
         spinnerGender.adapter = spinAdapter
         spinnerGender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                adapter: AdapterView<*>, v: View,
-                position: Int, id: Long
-            ) {
+            override fun onItemSelected(adapter: AdapterView<*>, v: View,
+                                        position: Int, id: Long) {
                 spinnerGender.setSelection(position)
             }
 
@@ -685,10 +588,8 @@ class ProfileInfoFragment : BaseFragment(),
         genderSpinner.adapter = spinAdapter
         genderSpinner.setSelection(1)
         genderSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                adapter: AdapterView<*>, v: View,
-                position: Int, id: Long
-            ) {
+            override fun onItemSelected(adapter: AdapterView<*>, v: View,
+                                        position: Int, id: Long) {
                 genderSpinner.setSelection(position)
             }
 
@@ -709,41 +610,41 @@ class ProfileInfoFragment : BaseFragment(),
         }
 
         containerView.findViewById<RadioGroup>(R.id.radioGroupFamilyType)
-            .setOnCheckedChangeListener { radioGroup, i ->
-                when (i) {
-                    0 -> {
+                .setOnCheckedChangeListener { radioGroup, i ->
+                    when (i) {
+                        0 -> {
 
-                    }
+                        }
 
-                    1 -> {
+                        1 -> {
 
+                        }
                     }
                 }
-            }
 
         containerView.findViewById<RadioGroup>(R.id.radioGroupAreMother)
-            .setOnCheckedChangeListener { radioGroup, i ->
-                when (i) {
-                    R.id.radioNo -> {
-                        linearKidsDetail.removeAllViews()
-                        layoutNumberOfKids.visibility = View.GONE
-                        linearKidsDetail.visibility = View.GONE
-                        linearKidsEmptyView.visibility = View.GONE
-                        textAddChild.visibility = View.GONE
-                        layoutDynamicNumberOfKids.visibility = View.GONE
-                    }
+                .setOnCheckedChangeListener { radioGroup, i ->
+                    when (i) {
+                        R.id.radioNo -> {
+                            linearKidsDetail.removeAllViews()
+                            layoutNumberOfKids.visibility = View.GONE
+                            linearKidsDetail.visibility = View.GONE
+                            linearKidsEmptyView.visibility = View.GONE
+                            textAddChild.visibility = View.GONE
+                            layoutDynamicNumberOfKids.visibility = View.GONE
+                        }
 
-                    R.id.radioYes -> {
-                        textAddChild.visibility = View.VISIBLE
-                        spinnernumberOfKids.setSelection(0)
-                        layoutNumberOfKids.visibility = View.VISIBLE
-                        linearKidsDetail.visibility = View.VISIBLE
-                        linearKidsEmptyView.visibility = View.VISIBLE
-                        layoutDynamicNumberOfKids.visibility = View.VISIBLE
-                    }
+                        R.id.radioYes -> {
+                            textAddChild.visibility = View.VISIBLE
+                            spinnernumberOfKids.setSelection(0)
+                            layoutNumberOfKids.visibility = View.VISIBLE
+                            linearKidsDetail.visibility = View.VISIBLE
+                            linearKidsEmptyView.visibility = View.VISIBLE
+                            layoutDynamicNumberOfKids.visibility = View.VISIBLE
+                        }
 
+                    }
                 }
-            }
 
         changePasswordTextView.setOnClickListener {
             val intent = Intent(activity, ChangePasswordActivity::class.java)
@@ -752,63 +653,39 @@ class ProfileInfoFragment : BaseFragment(),
     }
 
     private fun requestCameraAndStoragePermissions() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(
-                activity as RewardsContainerActivity,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            )
-            || ActivityCompat.shouldShowRequestPermissionRationale(
-                activity as RewardsContainerActivity,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) || ActivityCompat.shouldShowRequestPermissionRationale(
-                activity as RewardsContainerActivity,
-                Manifest.permission.CAMERA
-            )
-        ) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(activity as RewardsContainerActivity,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                || ActivityCompat.shouldShowRequestPermissionRationale(activity as RewardsContainerActivity,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(activity as RewardsContainerActivity,
+                        Manifest.permission.CAMERA)) {
 
-            Snackbar.make(
-                rootView, R.string.permission_storage_rationale,
-                Snackbar.LENGTH_INDEFINITE
-            )
-                .setAction(R.string.ok) {
-                    ActivityCompat
-                        .requestPermissions(
-                            activity as RewardsContainerActivity, PERMISSIONS_EDIT_PICTURE,
-                            REQUEST_EDIT_PICTURE
-                        )
-                }
-                .show()
+            Snackbar.make(rootView, R.string.permission_storage_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok) {
+                        ActivityCompat
+                                .requestPermissions(activity as RewardsContainerActivity, PERMISSIONS_EDIT_PICTURE,
+                                        REQUEST_EDIT_PICTURE)
+                    }
+                    .show()
         } else {
-            ActivityCompat.requestPermissions(
-                activity as RewardsContainerActivity,
-                PERMISSIONS_EDIT_PICTURE,
-                REQUEST_EDIT_PICTURE
-            )
+            ActivityCompat.requestPermissions(activity as RewardsContainerActivity, PERMISSIONS_EDIT_PICTURE, REQUEST_EDIT_PICTURE)
         }
     }
 
     private fun requestCameraPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(
-                activity as RewardsContainerActivity,
-                Manifest.permission.CAMERA
-            )
-        ) {
-            Snackbar.make(
-                rootView, R.string.permission_camera_rationale,
-                Snackbar.LENGTH_INDEFINITE
-            )
-                .setAction(R.string.ok) {
-                    ActivityCompat.requestPermissions(
-                        activity as RewardsContainerActivity,
-                        arrayOf(Manifest.permission.CAMERA),
-                        REQUEST_CAMERA
-                    )
-                }
-                .show()
+        if (ActivityCompat.shouldShowRequestPermissionRationale(activity as RewardsContainerActivity,
+                        Manifest.permission.CAMERA)) {
+            Snackbar.make(rootView, R.string.permission_camera_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok) {
+                        ActivityCompat.requestPermissions(activity as RewardsContainerActivity,
+                                arrayOf(Manifest.permission.CAMERA),
+                                REQUEST_CAMERA)
+                    }
+                    .show()
         } else {
-            ActivityCompat.requestPermissions(
-                activity as RewardsContainerActivity, arrayOf(Manifest.permission.CAMERA),
-                REQUEST_CAMERA
-            )
+            ActivityCompat.requestPermissions(activity as RewardsContainerActivity, arrayOf(Manifest.permission.CAMERA),
+                    REQUEST_CAMERA)
         }
     }
 
@@ -831,14 +708,7 @@ class ProfileInfoFragment : BaseFragment(),
                     // Continue only if the File was successfully created
                     if (photoFile != null) {
                         try {
-                            cameraIntent.putExtra(
-                                MediaStore.EXTRA_OUTPUT,
-                                GenericFileProvider.getUriForFile(
-                                    activity as RewardsContainerActivity,
-                                    BaseApplication.getAppContext().applicationContext.packageName + ".my.package.name.provider",
-                                    createImageFile()
-                                )
-                            )
+                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, GenericFileProvider.getUriForFile(activity as RewardsContainerActivity, BaseApplication.getAppContext().applicationContext.packageName + ".my.package.name.provider", createImageFile()))
                         } catch (e: IOException) {
                             e.printStackTrace()
                         }
@@ -864,9 +734,9 @@ class ProfileInfoFragment : BaseFragment(),
         val imageFileName = "JPEG_" + timeStamp + "_"
         val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
         val image = File.createTempFile(
-            imageFileName, // prefix
-            ".jpg", // suffix
-            dir      // directory
+                imageFileName, // prefix
+                ".jpg", // suffix
+                dir      // directory
         )
 
         mCurrentPhotoPath = "file:" + image.absolutePath
@@ -878,8 +748,7 @@ class ProfileInfoFragment : BaseFragment(),
         val destinationFileName = "$SAMPLE_CROPPED_IMAGE_NAME.jpg"
         Log.e("instartCropActivity", "test")
 
-        val uCrop =
-            UCrop.of(uri, Uri.fromFile(File(FacebookSdk.getCacheDir(), destinationFileName)))
+        val uCrop = UCrop.of(uri, Uri.fromFile(File(FacebookSdk.getCacheDir(), destinationFileName)))
         uCrop.withAspectRatio(1f, 1f)
         uCrop.withMaxResultSize(300, 300)
         uCrop.start(activity as RewardsContainerActivity, this)
@@ -896,15 +765,11 @@ class ProfileInfoFragment : BaseFragment(),
         val imageUploadAPI = retro.create(ImageUploadAPI::class.java)
 
         val call = imageUploadAPI.uploadImage(//userId,
-            imageType,
-            requestBodyFile
-        )
+                imageType,
+                requestBodyFile)
         //asynchronous call
         call.enqueue(object : Callback<ImageUploadResponse> {
-            override fun onResponse(
-                call: Call<ImageUploadResponse>,
-                response: retrofit2.Response<ImageUploadResponse>
-            ) {
+            override fun onResponse(call: Call<ImageUploadResponse>, response: retrofit2.Response<ImageUploadResponse>) {
                 val statusCode = response.code()
                 val responseModel = response.body()
 
@@ -917,16 +782,11 @@ class ProfileInfoFragment : BaseFragment(),
                         Log.i("IMAGE_UPLOAD_REQUEST", responseModel.data.result.url)
                     }
                     setProfileImage(responseModel.data.result.url)
-                    Picasso.get()
-                        .invalidate(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))
+                    Picasso.get().invalidate(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))
                     Picasso.get().load(responseModel.data.result.url)
-                        .memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE)
-                        .placeholder(R.drawable.family_xxhdpi)
-                        .error(R.drawable.family_xxhdpi).into(profileImageView)
-                    SharedPrefUtils.setProfileImgUrl(
-                        BaseApplication.getAppContext(),
-                        responseModel.data.result.url
-                    )
+                            .memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.family_xxhdpi)
+                            .error(R.drawable.family_xxhdpi).into(profileImageView)
+                    SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), responseModel.data.result.url)
                 }
             }
 
@@ -948,10 +808,7 @@ class ProfileInfoFragment : BaseFragment(),
         val userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI::class.java)
         val call = userAttributeUpdateAPI.updateProfilePic(updateUserDetail)
         call.enqueue(object : Callback<UserDetailResponse> {
-            override fun onResponse(
-                call: Call<UserDetailResponse>,
-                response: retrofit2.Response<UserDetailResponse>
-            ) {
+            override fun onResponse(call: Call<UserDetailResponse>, response: retrofit2.Response<UserDetailResponse>) {
                 if (response.body()!!.status != "success") {
                     //                    showToast(getString(R.string.toast_response_error));
                 }
@@ -967,38 +824,20 @@ class ProfileInfoFragment : BaseFragment(),
 
     fun prepareDataForPosting(): Boolean {
         if (editFirstName.text.trim().isEmpty()) {
-            Toast.makeText(
-                activity,
-                resources.getString(
-                    R.string.cannot_be_left_blank,
-                    resources.getString(R.string.rewards_first_name)
-                ),
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_first_name)), Toast.LENGTH_SHORT).show()
             return false
         } else {
             apiGetResponse.firstName = editFirstName.text.toString()
         }
 
         if (editLastName.text.trim().isEmpty()) {
-            Toast.makeText(
-                activity,
-                resources.getString(
-                    R.string.cannot_be_left_blank,
-                    resources.getString(R.string.rewards_last_name)
-                ),
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_last_name)), Toast.LENGTH_SHORT).show()
             return false
         } else {
             apiGetResponse.lastName = editLastName.text.toString()
         }
         if (aboutEditText.text.trim().isEmpty()) {
-            Toast.makeText(
-                activity,
-                getString(R.string.app_settings_edit_profile_toast_user_bio_empty),
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(activity, getString(R.string.app_settings_edit_profile_toast_user_bio_empty), Toast.LENGTH_SHORT).show()
             return false
         } else {
             apiGetResponse.userBio = aboutEditText.text.toString()
@@ -1010,14 +849,7 @@ class ProfileInfoFragment : BaseFragment(),
 //        }
 
         if (accountKitAuthCode.trim().isEmpty() && apiGetResponse.mobile != null && apiGetResponse.mobile.trim().isEmpty()) {
-            Toast.makeText(
-                activity,
-                resources.getString(
-                    R.string.cannot_be_left_blank,
-                    resources.getString(R.string.rewards_phone)
-                ),
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_phone)), Toast.LENGTH_SHORT).show()
             return false
         } else {
             if (apiGetResponse.mobile != null && !apiGetResponse.mobile.trim().isEmpty()) {
@@ -1038,14 +870,7 @@ class ProfileInfoFragment : BaseFragment(),
         }
 
         if (editLocation.text.trim().isEmpty()) {
-            Toast.makeText(
-                activity,
-                resources.getString(
-                    R.string.cannot_be_left_blank,
-                    resources.getString(R.string.rewards_location)
-                ),
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_location)), Toast.LENGTH_SHORT).show()
             return false
         } else {
             apiGetResponse.cityName = editLocation.text.toString()
@@ -1070,18 +895,10 @@ class ProfileInfoFragment : BaseFragment(),
         }
 
         if (textDOB.text.trim().isEmpty()) {
-            Toast.makeText(
-                activity,
-                resources.getString(
-                    R.string.cannot_be_left_blank,
-                    resources.getString(R.string.rewards_dob)
-                ),
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_dob)), Toast.LENGTH_SHORT).show()
             return false
         } else {
-            apiGetResponse.dob =
-                DateTimeUtils.convertStringToMilliTimestamp(textDOB.text.toString()).toString()
+            apiGetResponse.dob = DateTimeUtils.convertStringToMilliTimestamp(textDOB.text.toString()).toString()
         }
 
 
@@ -1089,14 +906,7 @@ class ProfileInfoFragment : BaseFragment(),
 
 
         if (preSelectedLanguage.isEmpty()) {
-            Toast.makeText(
-                activity,
-                resources.getString(
-                    R.string.cannot_be_left_blank,
-                    resources.getString(R.string.rewards_language)
-                ),
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_language)), Toast.LENGTH_SHORT).show()
             return false
         } else {
             apiGetResponse.preferredLanguages = preSelectedLanguage
@@ -1122,20 +932,11 @@ class ProfileInfoFragment : BaseFragment(),
 
         if (checkAreYouExpecting.isChecked) {
             if (editExpectedDate.text.trim().isEmpty()) {
-                Toast.makeText(
-                    activity,
-                    resources.getString(
-                        R.string.cannot_be_left_blank,
-                        resources.getString(R.string.rewards_expected_date)
-                    ),
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_expected_date)), Toast.LENGTH_SHORT).show()
                 return false
             } else {
                 apiGetResponse.isExpected = "1"
-                apiGetResponse.expectedDate =
-                    DateTimeUtils.convertStringToMilliTimestamp(editExpectedDate.text.toString())
-                        .toString()
+                apiGetResponse.expectedDate = DateTimeUtils.convertStringToMilliTimestamp(editExpectedDate.text.toString()).toString()
             }
         } else {
             apiGetResponse.isExpected = "0"
@@ -1148,18 +949,13 @@ class ProfileInfoFragment : BaseFragment(),
                 for (i in 0..linearKidsDetail.childCount) {
                     var kidsInfoResponse = KidsModel()
                     if (linearKidsDetail.getChildAt(i) != null) {
-                        kidsInfoResponse.gender =
-                            if (linearKidsDetail.getChildAt(i).findViewById<Spinner>(R.id.spinnerGender).selectedItemPosition == 0) {
-                                "Male"
-                            } else {
-                                "Female"
-                            }
-                        kidsInfoResponse.birthDay = DateTimeUtils.convertStringToMilliTimestamp(
-                            linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textKidsDOB).text.toString()
-                        ).toString()
-                        kidsInfoResponse.name =
-                            linearKidsDetail.getChildAt(i).findViewById<EditText>(R.id.editKidsName)
-                                .text.toString()
+                        kidsInfoResponse.gender = if (linearKidsDetail.getChildAt(i).findViewById<Spinner>(R.id.spinnerGender).selectedItemPosition == 0) {
+                            "Male"
+                        } else {
+                            "Female"
+                        }
+                        kidsInfoResponse.birthDay = DateTimeUtils.convertStringToMilliTimestamp(linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textKidsDOB).text.toString()).toString()
+                        kidsInfoResponse.name = linearKidsDetail.getChildAt(i).findViewById<EditText>(R.id.editKidsName).text.toString()
                         kidsList.add(kidsInfoResponse)
                     }
                 }
@@ -1173,20 +969,11 @@ class ProfileInfoFragment : BaseFragment(),
                         } else {
                             "Female"
                         }
-                        kidsInfoResponse.birthDay =
-                            DateTimeUtils.convertStringToMilliTimestamp(textKidsDOB.text.toString())
-                                .toString()
+                        kidsInfoResponse.birthDay = DateTimeUtils.convertStringToMilliTimestamp(textKidsDOB.text.toString()).toString()
                         kidsInfoResponse.name = editKidsName.text.toString()
                         apiGetResponse.kids!!.add(kidsInfoResponse)
                     } else {
-                        Toast.makeText(
-                            activity,
-                            resources.getString(
-                                R.string.cannot_be_left_blank,
-                                resources.getString(R.string.rewards_dob)
-                            ),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_dob)), Toast.LENGTH_SHORT).show()
                         return false
                     }
                 }
@@ -1199,21 +986,12 @@ class ProfileInfoFragment : BaseFragment(),
                     } else {
                         "Female"
                     }
-                    kidsInfoResponse.birthDay =
-                        DateTimeUtils.convertStringToMilliTimestamp(textKidsDOB.text.toString())
-                            .toString()
+                    kidsInfoResponse.birthDay = DateTimeUtils.convertStringToMilliTimestamp(textKidsDOB.text.toString()).toString()
                     kidsInfoResponse.name = editKidsName.text.toString()
                     kidsInfoLocal.add(kidsInfoResponse)
                     apiGetResponse.kids = kidsInfoLocal
                 } else {
-                    Toast.makeText(
-                        activity,
-                        resources.getString(
-                            R.string.cannot_be_left_blank,
-                            resources.getString(R.string.rewards_dob)
-                        ),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_dob)), Toast.LENGTH_SHORT).show()
                     return false
                 }
             }
@@ -1228,15 +1006,11 @@ class ProfileInfoFragment : BaseFragment(),
     private fun varifyNumberWithFacebookAccountKit() {
         val intent = Intent(activity, AccountKitActivity::class.java)
         val configurationBuilder = AccountKitConfiguration.AccountKitConfigurationBuilder(
-            LoginType.PHONE, AccountKitActivity.ResponseType.CODE
-        )
+                LoginType.PHONE, AccountKitActivity.ResponseType.CODE)
         val themeId = R.style.AppLoginTheme
         val themeManager = ThemeUIManager(themeId)
         configurationBuilder.setUIManager(themeManager)
-        intent.putExtra(
-            AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
-            configurationBuilder.build()
-        )
+        intent.putExtra(AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION, configurationBuilder.build())
         startActivityForResult(intent, VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE)
     }
 
@@ -1257,8 +1031,7 @@ class ProfileInfoFragment : BaseFragment(),
             }
             VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE -> {
                 if (data != null && resultCode == Activity.RESULT_OK) {
-                    accountKitAuthCode =
-                        (data!!.getParcelableExtra(AccountKitLoginResult.RESULT_KEY) as AccountKitLoginResult).authorizationCode!!
+                    accountKitAuthCode = (data!!.getParcelableExtra(AccountKitLoginResult.RESULT_KEY) as AccountKitLoginResult).authorizationCode!!
                     Log.d("account code ", accountKitAuthCode)
 //                        apiGetResponse.contact = null
                     editPhone.visibility = View.VISIBLE
@@ -1270,7 +1043,7 @@ class ProfileInfoFragment : BaseFragment(),
                 if (data == null) {
                     return
                 }
-                imageUri = data.getData()!!
+                imageUri = data.getData()
                 if (resultCode == Activity.RESULT_OK) {
                     try {
                         startCropActivity(imageUri)
@@ -1322,46 +1095,41 @@ class ProfileInfoFragment : BaseFragment(),
     /*post data to server*/
     private fun postDataofRewardsToServer() {
         val userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
-        Utils.pushGenericEvent(
-            activity, "CTA_Submit_MyMoney_RegistrationForm_Registered",
-            userId, "ProfileInfoFragment"
-        )
+        Utils.pushGenericEvent(activity, "CTA_Submit_MyMoney_RegistrationForm_Registered",
+                userId, "ProfileInfoFragment")
         if (!userId.isNullOrEmpty()) {
             showProgressDialog(resources.getString(R.string.please_wait))
 
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java)
-                .sendProfileDataForAny(userId, apiGetResponse, pageValue = 4)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Observer<RewardsPersonalResponse> {
-                    override fun onComplete() {
-                        removeProgressDialog()
-                    }
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendProfileDataForAny(userId, apiGetResponse, pageValue = 4).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<RewardsPersonalResponse> {
+                override fun onComplete() {
+                    removeProgressDialog()
+                }
 
-                    override fun onSubscribe(d: Disposable) {
-                    }
+                override fun onSubscribe(d: Disposable) {
+                }
 
-                    override fun onNext(response: RewardsPersonalResponse) {
-                        if (response.code == 200) {
-                            if (Constants.SUCCESS == response.status) {
-                                (activity as RewardsContainerActivity).finish()
-                                /*if (isComingFromCampaign) {
-                                    SharedPrefUtils.setIsRewardsAdded(BaseApplication.getAppContext(), "1")
-                                }
-    //                            saveAndContinueListener.profileOnSaveAndContinue()
-                                if (isNewRegistration) {
-                                    facebookEventForRegistration()
-                                }*/
-                            } else if (Constants.FAILURE == response.status) {
-                                Toast.makeText(context, response.reason, Toast.LENGTH_LONG).show()
+                override fun onNext(response: RewardsPersonalResponse) {
+                    if (response.code == 200) {
+                        if (Constants.SUCCESS == response.status) {
+                            (activity as RewardsContainerActivity).finish()
+                            /*if (isComingFromCampaign) {
+                                SharedPrefUtils.setIsRewardsAdded(BaseApplication.getAppContext(), "1")
                             }
+//                            saveAndContinueListener.profileOnSaveAndContinue()
+                            if (isNewRegistration) {
+                                facebookEventForRegistration()
+                            }*/
+                        } else if (Constants.FAILURE == response.status) {
+                            Toast.makeText(context, response.reason, Toast.LENGTH_LONG).show()
                         }
                     }
+                }
 
-                    override fun onError(e: Throwable) {
-                        removeProgressDialog()
-                        Log.e("exception in error", e.message.toString())
-                    }
-                })
+                override fun onError(e: Throwable) {
+                    removeProgressDialog()
+                    Log.e("exception in error", e.message.toString())
+                }
+            })
         }
     }
 
@@ -1384,83 +1152,72 @@ class ProfileInfoFragment : BaseFragment(),
         val userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         if (userId != null) {
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java)
-                .getUserDetails(userId, "yes").subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Observer<BaseResponseGeneric<UserDetailResult>> {
-                    override fun onComplete() {
-                    }
-
-                    override fun onSubscribe(d: Disposable) {
-                    }
-
-                    override fun onNext(response: BaseResponseGeneric<UserDetailResult>) {
-                        if (response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
-                            apiGetResponse = response.data!!.result
-                            fetchCityData()
-                            setValuesToComponents()
-                        } else {
-                        }
-                    }
-
-                    override fun onError(e: Throwable) {
-                        removeProgressDialog()
-                        Log.d("exception in error", e.message.toString())
-                    }
-                })
-        }
-    }
-
-
-    private fun fetchCityData() {
-        BaseApplication.getInstance().retrofit.create(ConfigAPIs::class.java).getCityConfigRx()
-            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<BaseResponseGeneric<CityConfigResultResponse>> {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getUserDetails(userId, "yes").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserDetailResult>> {
                 override fun onComplete() {
-                    removeProgressDialog()
                 }
 
                 override fun onSubscribe(d: Disposable) {
                 }
 
-                override fun onNext(response: BaseResponseGeneric<CityConfigResultResponse>) {
+                override fun onNext(response: BaseResponseGeneric<UserDetailResult>) {
                     if (response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
-                        if (response.data!!.result != null && response!!.data!!.result != null && response!!.data!!.result.cityData.isNotEmpty()) {
-                            val currentCity =
-                                SharedPrefUtils.getCurrentCityModel(saveAndContinueListener as RewardsContainerActivity)
-                            (response!!.data!!.result.cityData).forEach {
-                                if (AppConstants.ALL_CITY_NEW_ID != it.id) {
-                                    cityList.add(it)
-                                }
-                                if (AppConstants.OTHERS_NEW_CITY_ID == it.id) {
-                                    if (currentCity.name != null && "Others" != currentCity.name && currentCity.id == AppConstants.OTHERS_CITY_ID) {
-                                        cityList.get(cityList.size - 1).cityName =
-                                            ("Others(" + currentCity.name + ")")
-                                    }
-                                }
-                            }
-
-                            (cityList).forEach {
-                                val cId = Integer.parseInt(it.id!!.replace("city-", ""))
-                                it.isSelected = currentCity.id == cId
-                            }
-                        }
+                        apiGetResponse = response.data!!.result
+                        fetchCityData()
+                        setValuesToComponents()
                     } else {
-
                     }
                 }
 
                 override fun onError(e: Throwable) {
                     removeProgressDialog()
+                    Log.d("exception in error", e.message.toString())
                 }
             })
+        }
     }
 
-    fun showDatePickerDialog(
-        isShowTillCurrent: Boolean,
-        isShowFutureDate: Boolean = false,
-        isForParent: Boolean = false
-    ) {
+
+    private fun fetchCityData() {
+        BaseApplication.getInstance().retrofit.create(ConfigAPIs::class.java).getCityConfigRx().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CityConfigResultResponse>> {
+            override fun onComplete() {
+                removeProgressDialog()
+            }
+
+            override fun onSubscribe(d: Disposable) {
+            }
+
+            override fun onNext(response: BaseResponseGeneric<CityConfigResultResponse>) {
+                if (response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
+                    if (response.data!!.result != null && response!!.data!!.result != null && response!!.data!!.result.cityData.isNotEmpty()) {
+                        val currentCity = SharedPrefUtils.getCurrentCityModel(saveAndContinueListener as RewardsContainerActivity)
+                        (response!!.data!!.result.cityData).forEach {
+                            if (AppConstants.ALL_CITY_NEW_ID != it.id) {
+                                cityList.add(it)
+                            }
+                            if (AppConstants.OTHERS_NEW_CITY_ID == it.id) {
+                                if (currentCity.name != null && "Others" != currentCity.name && currentCity.id == AppConstants.OTHERS_CITY_ID) {
+                                    cityList.get(cityList.size - 1).cityName = ("Others(" + currentCity.name + ")")
+                                }
+                            }
+                        }
+
+                        (cityList).forEach {
+                            val cId = Integer.parseInt(it.id!!.replace("city-", ""))
+                            it.isSelected = currentCity.id == cId
+                        }
+                    }
+                } else {
+
+                }
+            }
+
+            override fun onError(e: Throwable) {
+                removeProgressDialog()
+            }
+        })
+    }
+
+    fun showDatePickerDialog(isShowTillCurrent: Boolean, isShowFutureDate: Boolean = false, isForParent: Boolean = false) {
         val newFragment = ProfileInfoFragment.DatePickerFragment()
         var bundle = Bundle()
         bundle.putBoolean("is_show_current_only", isShowTillCurrent)
@@ -1479,21 +1236,11 @@ class ProfileInfoFragment : BaseFragment(),
         var isShowTillCurrent: Boolean = false
         var isShowFutureOnly: Boolean = false
         var isForParent: Boolean = false
-        lateinit var dlg: DatePickerDialog
 
         @SuppressLint("NewApi")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             // Use the current date as the default date in the picker
-            activity?.let {
-                dlg = DatePickerDialog(
-                    it,
-                    android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
-                    this,
-                    curent_year,
-                    current_month,
-                    current_day
-                )
-            }
+            val dlg = DatePickerDialog(activity, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, this, curent_year, current_month, current_day)
 
             if (arguments != null) {
                 isShowTillCurrent = arguments!!.getBoolean("is_show_current_only", false)
@@ -1528,22 +1275,14 @@ class ProfileInfoFragment : BaseFragment(),
     private fun validateChildData(): Boolean {
         Log.d("text value", " " + textKidsDOB.text + " " + linearKidsEmptyView.visibility)
         if (linearKidsEmptyView.visibility == View.VISIBLE && textKidsDOB.text.isBlank()) {
-            Toast.makeText(
-                activity,
-                resources.getString(
-                    R.string.cannot_be_left_blank,
-                    resources.getString(R.string.rewards_dob)
-                ),
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_dob)), Toast.LENGTH_SHORT).show()
             return false
         } else if (linearKidsEmptyView.visibility == View.GONE) {
             linearKidsEmptyView.visibility = View.VISIBLE
             textDeleteChild.visibility = View.VISIBLE
             if (linearKidsDetail.childCount > 0) {
                 for (i in 0..linearKidsDetail.childCount - 1) {
-                    linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textDeleteChild)
-                        .visibility = View.VISIBLE
+                    linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textDeleteChild).visibility = View.VISIBLE
                 }
             }
             return false
@@ -1554,17 +1293,10 @@ class ProfileInfoFragment : BaseFragment(),
         return true
     }
 
-    fun createKidsDetailDynamicView(
-        gender: String? = null,
-        date: String = "",
-        name: String? = "",
-        shouldDelteShow: Boolean = true
-    ) {
+    fun createKidsDetailDynamicView(gender: String? = null, date: String = "", name: String? = "", shouldDelteShow: Boolean = true) {
         val params = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        val inflater =
-            activity!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        val inflater = activity!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val indexView = inflater.inflate(R.layout.dynamic_child_view, null)
         var textHeader = indexView.findViewById<TextView>(R.id.textHeader)
         var textDelete = indexView.findViewById<TextView>(R.id.textDeleteChild)
@@ -1598,8 +1330,7 @@ class ProfileInfoFragment : BaseFragment(),
                 }
             }
             if (linearKidsEmptyView.visibility == View.GONE && linearKidsDetail.childCount == 1) {
-                linearKidsDetail.getChildAt(0).findViewById<TextView>(R.id.textDeleteChild)
-                    .visibility = View.GONE
+                linearKidsDetail.getChildAt(0).findViewById<TextView>(R.id.textDeleteChild).visibility = View.GONE
             } else if (linearKidsEmptyView.visibility == View.VISIBLE && linearKidsDetail.childCount == 0) {
                 textDeleteChild.visibility = View.GONE
             }
@@ -1615,10 +1346,8 @@ class ProfileInfoFragment : BaseFragment(),
         val spinAdapter = CustomSpinnerAdapter(activity, genderList)
         spinnerGender.adapter = spinAdapter
         spinnerGender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                adapter: AdapterView<*>, v: View,
-                position: Int, id: Long
-            ) {
+            override fun onItemSelected(adapter: AdapterView<*>, v: View,
+                                        position: Int, id: Long) {
                 spinnerGender.setSelection(position)
             }
 
@@ -1674,10 +1403,7 @@ class ProfileInfoFragment : BaseFragment(),
                     preSelectedInterest.add(name)
                 }
                 context?.let { mContext ->
-                    val subsubLL = LayoutInflater.from(activity).inflate(
-                        R.layout.shape_rewards_border_rectangular,
-                        null
-                    ) as LinearLayout
+                    val subsubLL = LayoutInflater.from(activity).inflate(R.layout.shape_rewards_border_rectangular, null) as LinearLayout
                     val catTextView = subsubLL.getChildAt(0) as TextView
                     catTextView.setText(it)
                     catTextView.isSelected = true
@@ -1707,10 +1433,7 @@ class ProfileInfoFragment : BaseFragment(),
                     preSelectedLanguage.add(name)
                 }
                 context?.let { mContext ->
-                    val subsubLL = LayoutInflater.from(context).inflate(
-                        R.layout.shape_rewards_border_rectangular,
-                        null
-                    ) as LinearLayout
+                    val subsubLL = LayoutInflater.from(context).inflate(R.layout.shape_rewards_border_rectangular, null) as LinearLayout
                     val catTextView = subsubLL.getChildAt(0) as TextView
                     catTextView.setText(it)
                     catTextView.isSelected = true

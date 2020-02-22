@@ -61,13 +61,13 @@ class TrackerFragment : BaseFragment() {
                 0
             }
             brandName = if (arguments!!.containsKey("brand_name")) {
-                arguments!!.getString("brand_name").toString()
+                arguments!!.getString("brand_name")
             } else {
                 ""
             }
 
             campaignName = if (arguments!!.containsKey("campaign_name")) {
-                arguments!!.getString("campaign_name").toString()
+                arguments!!.getString("campaign_name")
             } else {
                 ""
             }
@@ -79,7 +79,7 @@ class TrackerFragment : BaseFragment() {
             }
 
             imageUrl = if (arguments!!.containsKey("image_url")) {
-                arguments!!.getString("image_url").toString()
+                arguments!!.getString("image_url")
             } else {
                 ""
             }

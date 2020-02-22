@@ -251,7 +251,8 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                          public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
                              Crashlytics.logException(t);
                              Log.d("MC4KException", Log.getStackTraceString(t));
-                             showToast(getString(R.string.went_wrong));
+                             apiExceptions(t);
+//                             showToast(getString(R.string.went_wrong));
                          }
                      }
         );

@@ -357,8 +357,10 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 Call<ResponseBody> adSlotCall = campaignAPI.getAdSlotData(SharedPrefUtils.getHomeAdSlotUrl(BaseApplication.getAppContext()));
                 adSlotCall.enqueue(adSlotResponseCallback);
             } else {
-                Call<AllCampaignDataResponse> campaignListCall = campaignAPI.getCampaignList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), 0, 5, 3.0);
-                campaignListCall.enqueue(getCampaignList);
+                if (SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext()).equals("1")) {
+                    Call<AllCampaignDataResponse> campaignListCall = campaignAPI.getCampaignList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), 0, 1, 3.0);
+                    campaignListCall.enqueue(getCampaignList);
+                }
             }
         } else if (Constants.KEY_TRENDING.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
@@ -661,58 +663,6 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                     campaignIntent.putExtra("campaign_id", campaignListDataModels.get(0).getId() + "");
                     campaignIntent.putExtra("campaign_detail", "campaign_detail");
                     startActivity(campaignIntent);
-                    break;
-                case R.id.cardView2:
-                    try {
-                        Utils.campaignEvent(getActivity(), "HomeScreen", "HomeScreenCarousel", "CTA_Campaign_Carousel",
-                                "" + campaignListDataModels.get(1).getName(), "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "CTA_Campaign_Carousel");
-                    } catch (Exception e) {
-
-                    }
-                    Intent campaignIntent2 = new Intent(getActivity(), CampaignContainerActivity.class);
-                    campaignIntent2.putExtra("campaign_id", campaignListDataModels.get(1).getId() + "");
-                    campaignIntent2.putExtra("campaign_detail", "campaign_detail");
-                    startActivity(campaignIntent2);
-                    break;
-                case R.id.cardView3:
-                    try {
-                        Utils.campaignEvent(getActivity(), "HomeScreen", "HomeScreenCarousel", "CTA_Campaign_Carousel",
-                                "" + campaignListDataModels.get(2).getName(), "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "CTA_Campaign_Carousel");
-                    } catch (Exception e) {
-
-                    }
-                    Intent campaignIntent3 = new Intent(getActivity(), CampaignContainerActivity.class);
-                    campaignIntent3.putExtra("campaign_id", campaignListDataModels.get(2).getId() + "");
-                    campaignIntent3.putExtra("campaign_detail", "campaign_detail");
-                    startActivity(campaignIntent3);
-                    break;
-                case R.id.cardView4:
-                    try {
-                        Utils.campaignEvent(getActivity(), "HomeScreen", "HomeScreenCarousel", "CTA_Campaign_Carousel",
-                                "" + campaignListDataModels.get(3).getName(), "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "CTA_Campaign_Carousel");
-                    } catch (Exception e) {
-
-                    }
-                    Intent campaignIntent4 = new Intent(getActivity(), CampaignContainerActivity.class);
-                    campaignIntent4.putExtra("campaign_id", campaignListDataModels.get(3).getId() + "");
-                    campaignIntent4.putExtra("campaign_detail", "campaign_detail");
-                    startActivity(campaignIntent4);
-                    break;
-                case R.id.cardView5:
-                    try {
-                        Utils.campaignEvent(getActivity(), "HomeScreen", "HomeScreenCarousel", "CTA_Campaign_Carousel",
-                                "" + campaignListDataModels.get(4).getName(), "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "CTA_Campaign_Carousel");
-                    } catch (Exception e) {
-
-                    }
-                    Intent campaignIntent5 = new Intent(getActivity(), CampaignContainerActivity.class);
-                    campaignIntent5.putExtra("campaign_id", campaignListDataModels.get(4).getId() + "");
-                    campaignIntent5.putExtra("campaign_detail", "campaign_detail");
-                    startActivity(campaignIntent5);
                     break;
                 case R.id.authorNameTextView:
                     int limitShortStory;

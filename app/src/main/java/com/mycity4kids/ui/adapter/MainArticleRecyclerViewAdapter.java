@@ -281,12 +281,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 viewHolder.relativeLayoutContainer.setVisibility(View.VISIBLE);
                 viewHolder.videoCarouselContainer.setVisibility(View.VISIBLE);
                 try {
-                    if (campaignListDataModels != null && campaignListDataModels.size() > 4) {
+                    if (campaignListDataModels != null && campaignListDataModels.size() > 0) {
                         addCampaignCard(viewHolder.campaignHeader, viewHolder.brandImg, viewHolder.brandName, viewHolder.campaignName, viewHolder.campaignStatus, campaignListDataModels.get(0), position, viewHolder);
-                        addCampaignCard(viewHolder.campaignHeader2, viewHolder.brandImg2, viewHolder.brandName2, viewHolder.campaignName2, viewHolder.campaignStatus2, campaignListDataModels.get(1), position, viewHolder);
-                        addCampaignCard(viewHolder.campaignHeader3, viewHolder.brandImg3, viewHolder.brandName3, viewHolder.campaignName3, viewHolder.campaignStatus3, campaignListDataModels.get(2), position, viewHolder);
-                        addCampaignCard(viewHolder.campaignHeader4, viewHolder.brandImg4, viewHolder.brandName4, viewHolder.campaignName4, viewHolder.campaignStatus4, campaignListDataModels.get(3), position, viewHolder);
-                        addCampaignCard(viewHolder.campaignHeader5, viewHolder.brandImg5, viewHolder.brandName5, viewHolder.campaignName5, viewHolder.campaignStatus5, campaignListDataModels.get(4), position, viewHolder);
                     }
                 } catch (Exception e) {
                     Crashlytics.logException(e);
@@ -728,11 +724,11 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         RelativeLayout adSlotContainer;
         WebView adSlotWebView;
         RelativeLayout relativeLayoutContainer;
-        HorizontalScrollView videoCarouselContainer;
-        ImageView campaignHeader, campaignHeader2, campaignHeader3, campaignHeader4, campaignHeader5;
-        CircularImageView brandImg, brandImg2, brandImg3, brandImg4, brandImg5;
-        TextView brandName, campaignName, campaignStatus, brandName2, campaignName2, campaignStatus2, brandName3, campaignName3, campaignStatus3, brandName4, campaignName4, campaignStatus4, brandName5, campaignName5, campaignStatus5;
-        CardView cardView1, cardView2, cardView3, cardView4, cardView5;
+        LinearLayout videoCarouselContainer;
+        ImageView campaignHeader;
+        CircularImageView brandImg;
+        TextView brandName, campaignName, campaignStatus;
+        CardView cardView1;
 
         FrameLayout headerArticleView;
         TextView txvArticleTitle;
@@ -765,44 +761,16 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             adSlotContainer = view.findViewById(R.id.adSlotContainer);
             adSlotWebView = view.findViewById(R.id.adSlotWebView);
             relativeLayoutContainer = view.findViewById(R.id.relativeLayoutContainer);
-            videoCarouselContainer = view.findViewById(R.id.videoCarouselContainer);
+            videoCarouselContainer = view.findViewById(R.id.linearLayoutVideoCrousalConatiner);
             campaignHeader = view.findViewById(R.id.campaign_header);
-            campaignHeader2 = view.findViewById(R.id.campaign_header2);
-            campaignHeader3 = view.findViewById(R.id.campaign_header3);
-            campaignHeader4 = view.findViewById(R.id.campaign_header4);
-            campaignHeader5 = view.findViewById(R.id.campaign_header5);
             brandImg = view.findViewById(R.id.brand_img);
-            brandImg2 = view.findViewById(R.id.brand_img2);
-            brandImg3 = view.findViewById(R.id.brand_img3);
-            brandImg4 = view.findViewById(R.id.brand_img4);
-            brandImg5 = view.findViewById(R.id.brand_img5);
             brandName = view.findViewById(R.id.brand_name);
-            brandName2 = view.findViewById(R.id.brand_name2);
-            brandName3 = view.findViewById(R.id.brand_name3);
-            brandName4 = view.findViewById(R.id.brand_name4);
-            brandName5 = view.findViewById(R.id.brand_name5);
             campaignName = view.findViewById(R.id.campaign_name);
-            campaignName2 = view.findViewById(R.id.campaign_name2);
-            campaignName3 = view.findViewById(R.id.campaign_name3);
-            campaignName4 = view.findViewById(R.id.campaign_name4);
-            campaignName5 = view.findViewById(R.id.campaign_name5);
             campaignStatus = view.findViewById(R.id.submission_status);
-            campaignStatus2 = view.findViewById(R.id.submission_status2);
-            campaignStatus3 = view.findViewById(R.id.submission_status3);
-            campaignStatus4 = view.findViewById(R.id.submission_status4);
-            campaignStatus5 = view.findViewById(R.id.submission_status5);
             menuItem = view.findViewById(R.id.menuItem);
             followAuthorTextView = view.findViewById(R.id.followAuthorTextView);
             cardView1 = view.findViewById(R.id.cardView1);
-            cardView2 = view.findViewById(R.id.cardView2);
-            cardView3 = view.findViewById(R.id.cardView3);
-            cardView4 = view.findViewById(R.id.cardView4);
-            cardView5 = view.findViewById(R.id.cardView5);
             cardView1.setOnClickListener(this);
-            cardView2.setOnClickListener(this);
-            cardView3.setOnClickListener(this);
-            cardView4.setOnClickListener(this);
-            cardView5.setOnClickListener(this);
             menuItem.setOnClickListener(this);
             followAuthorTextView.setOnClickListener(this);
 

@@ -34,7 +34,7 @@ data class Crown(
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
-        parcel.readParcelable(CrownX::class.java.classLoader)!!,
+        parcel.readParcelable(CrownX::class.java.classLoader),
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),

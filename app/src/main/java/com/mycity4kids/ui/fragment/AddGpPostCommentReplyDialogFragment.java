@@ -59,6 +59,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.utils.DateTimeUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
@@ -1273,7 +1274,11 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                          public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
                              Crashlytics.logException(t);
                              Log.d("MC4KException", Log.getStackTraceString(t));
-                             Toast.makeText(getActivity(), "went_wrong", Toast.LENGTH_SHORT).show();
+                             if(isAdded()) {
+                                 ((BaseActivity) getActivity()).apiExceptions(t);
+                                 Toast.makeText(getActivity(), "went_wrong", Toast.LENGTH_SHORT)
+                                         .show();
+                             }
                              //showToast(getString(R.string.went_wrong));
                          }
                      }

@@ -29,19 +29,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
@@ -58,7 +45,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.mycity4kids.base.BaseActivity;
@@ -134,6 +120,18 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
@@ -155,12 +153,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private String challenge = "ChallengeTake";
     private String FromDeepLink = "FromDeepLink";
     public static final String COMMON_PREF_FILE = "my_city_prefs";
-    ArrayList<String> Display_Name;
-    private ArrayList<String> challengeId;
-    private ArrayList<String> ImageUrl;
-    private ArrayList<String> shortStoryChallengesList;
-    private ArrayList<String> deepLinkDisplayName;
-    private ArrayList<String> deepLinkImageUrl;
+    String Display_Name;
+    private String challengeId;
+    private String ImageUrl;
+    private String shortStoryChallengesList;
+    private String deepLinkDisplayName;
+    private String deepLinkImageUrl;
     private ArrayList<Topics> shortStoriesTopicList;
     int groupId;
     Map<String, String> image;
@@ -207,15 +205,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private ImageView createTextImageVIew, langImageRightArrow;
     private ArrayList<AllDraftsResponse.AllDraftsData.AllDraftsResult> allDraftsList = new ArrayList<>();
     private UserAllDraftsRecyclerAdapter userAllDraftsRecyclerAdapter;
-    private RelativeLayout rootChooseLayout;
-    private View overLayViewChooseStory;
-    private LinearLayout chooseOptionLayout;
-    private TextView writeStoryText, TakeChallengetext, uploadVideo, uploadChallenge, selectedLangTextView;
+
+    private TextView selectedLangTextView;
     private TopicsResponse res;
     private int num_of_categorys;
-    private RelativeLayout chooseLayout;
-    private RelativeLayout chooseLayoutVideo;
-    private View overLayChooseVideo;
     private String branchVideoChallengeId, currentVersion, onlineVersionCode;
     private FrameLayout root;
     private Boolean rateNowDialog = false;
@@ -290,19 +283,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
         final FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.addOnBackStackChangedListener(this);
-        chooseLayoutVideo = (RelativeLayout) findViewById(R.id.choose_layout_video);
-        overLayChooseVideo = (View) findViewById(R.id.overlayView_choose_video_challenge);
-        uploadChallenge = (TextView) findViewById(R.id.upload_challenge);
-        uploadVideo = (TextView) findViewById(R.id.upload_video);
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
         langTextView = (TextView) findViewById(R.id.langTextView);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar1 = (Toolbar) findViewById(R.id.toolbar1);
         toolbar2 = (Toolbar) findViewById(R.id.toolbar2);
-        chooseLayout = (RelativeLayout) findViewById(R.id.choose_layout);
-        rootChooseLayout = (RelativeLayout) findViewById(R.id.root_choose_layout);
-        overLayViewChooseStory = (View) findViewById(R.id.overlayView_choose_story_challenge);
-        chooseOptionLayout = (LinearLayout) findViewById(R.id.choose_option_layout);
         downArrowImageView = (ImageView) findViewById(R.id.downArrowImageView);
         toolbarUnderline = findViewById(R.id.toolbarUnderline);
         bottomNavigationView = (BottomNavigationViewEx) findViewById(R.id.navigation);
@@ -357,8 +342,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         createLabelTextView = (TextView) findViewById(R.id.createLabelTextView);
         continueWritingLabelTV = (TextView) findViewById(R.id.continueWritingLabelTV);
         createTextImageVIew = (ImageView) findViewById(R.id.createTextImageVIew);
-        writeStoryText = (TextView) findViewById(R.id.write_story);
-        TakeChallengetext = (TextView) findViewById(R.id.write_challenge);
         languageLayout = (RelativeLayout) findViewById(R.id.languageLayout);
         referral = findViewById(R.id.referral);
         langView = (View) findViewById(R.id.langView);
@@ -372,10 +355,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         drawerProfileCoachmark.setOnClickListener(this);
         drawerSettingsCoachmark.setOnClickListener(this);
         drawerMyMoneyCoachmark.setOnClickListener(this);
-        chooseLayout.setOnClickListener(this);
-        overLayViewChooseStory.setOnClickListener(this);
-        writeStoryText.setOnClickListener(this);
-        TakeChallengetext.setOnClickListener(this);
+
         referral.setOnClickListener(this);
         settingTextView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_app_settings), null, null, null);
         videosTextView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_mom_vlogs), null, null, null);
@@ -424,9 +404,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         viewBookmarkedArticleTextView.setOnClickListener(this);
         profileImageView.setOnClickListener(this);
         drawerTopContainer.setOnClickListener(this);
-        uploadVideo.setOnClickListener(this);
-        uploadChallenge.setOnClickListener(this);
-        overLayChooseVideo.setOnClickListener(this);
         slideAnim = AnimationUtils.loadAnimation(this, R.anim.appear_from_bottom);
         fadeAnim = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
         slideDownAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_slide_down_from_top);
@@ -692,7 +669,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             rateAppDialogFragment.show(getFragmentManager(), rateAppDialogFragment.getClass().getSimpleName());
         }
 
-        findActiveChallenge();
+        //     findActiveChallenge();
         getUsersData();
     }
 
@@ -752,6 +729,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         @Override
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
             Crashlytics.logException(t);
+            apiExceptions(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -846,6 +824,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         public void onFailure(Call<ResponseBody> call, Throwable t) {
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
+            apiExceptions(t);
             draftsShimmerLayout.setVisibility(View.GONE);
             createLabelTextView.setVisibility(View.VISIBLE);
             createTextImageVIew.setVisibility(View.VISIBLE);
@@ -1082,6 +1061,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 findValues(notificationExtras.getString("categoryId"));
                 Intent intent1 = new Intent(this, ShortStoryChallengeDetailActivity.class);
                 intent1.putExtra("Display_Name", deepLinkDisplayName);
+                intent1.putExtra("challenge", shortStoryChallengesList);
                 intent1.putExtra("position", 0);
                 intent1.putExtra("topics", shortStoriesTopicList.get(0).getDisplay_name());
                 intent1.putExtra("parentId", shortStoriesTopicList.get(0).getId());
@@ -1124,7 +1104,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     startActivity(challengeIntent);
                 } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_PERSONALINFO)) {
                     Intent intent1 = new Intent(DashboardActivity.this, RewardsContainerActivity.class);
-                    intent1.putExtra("pageNumber", 1);
+                    intent1.putExtra("showProfileInfo", true);
                     startActivity(intent1);
                 } else {
                 }
@@ -1187,12 +1167,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_ADD_SHORT_STORY_URL)) {
                     //String temp = tempDeepLinkURL.concat("category-8220f60fd2f6432ba4417861a50f0587");
                     final String deepLinkChallengeId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
-                    if (deepLinkChallengeId == null || deepLinkChallengeId.isEmpty()) {
+                    if (StringUtils.isNullOrEmpty(deepLinkChallengeId)) {
                         Intent ssIntent = new Intent(this, AddShortStoryActivity.class);
                         startActivity(ssIntent);
                     } else {
                         findValues(deepLinkChallengeId);
-                        if (shortStoryChallengesList != null && deepLinkDisplayName != null && deepLinkImageUrl != null && shortStoriesTopicList != null && shortStoryChallengesList.size() != 0 && deepLinkDisplayName.size() != 0 && deepLinkImageUrl.size() != 0 && shortStoriesTopicList.size() != 0) {
+                        if (StringUtils.isNullOrEmpty(shortStoryChallengesList) && StringUtils.isNullOrEmpty(deepLinkDisplayName) && StringUtils.isNullOrEmpty(deepLinkImageUrl) && shortStoriesTopicList != null && !shortStoriesTopicList.isEmpty()) {
                             Intent deepLinkIntent = new Intent(this, ShortStoryChallengeDetailActivity.class);
                             deepLinkIntent.putExtra("selectedrequest", FromDeepLink);
                             deepLinkIntent.putExtra("Display_Name", deepLinkDisplayName);
@@ -1331,11 +1311,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void findValues(String deepLinkChallengeId) {
         try {
-            //shortStoriesTopicList = BaseApplication.getShortStoryTopicList();
+            // shortStoriesTopicList = BaseApplication.getShortStoryTopicList();
             if (shortStoriesTopicList != null && shortStoriesTopicList.size() != 0) {
-                shortStoryChallengesList = new ArrayList<>();
-                deepLinkDisplayName = new ArrayList<>();
-                deepLinkImageUrl = new ArrayList<>();
                 num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
                 for (int j = 0; j < num_of_categorys; j++) {
                     if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
@@ -1343,9 +1320,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         for (int k = 0; k < num_of_challeneges; k++) {
                             if (deepLinkChallengeId.equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId())) {
                                 if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null && shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().size() != 0) {
-                                    shortStoryChallengesList.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
-                                    deepLinkDisplayName.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
-                                    deepLinkImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                    shortStoryChallengesList = shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId();
+                                    deepLinkDisplayName = shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name();
+                                    deepLinkImageUrl = shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl();
                                     break;
                                 }
                             }
@@ -1364,9 +1341,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         shortStoriesTopicList.add(res.getData().get(i));
                     }
                 }
-                shortStoryChallengesList = new ArrayList<>();
-                deepLinkDisplayName = new ArrayList<>();
-                deepLinkImageUrl = new ArrayList<>();
                 num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
                 for (int j = 0; j < num_of_categorys; j++) {
                     if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
@@ -1374,9 +1348,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         for (int k = 0; k < num_of_challeneges; k++) {
                             if (deepLinkChallengeId.equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId())) {
                                 if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null && shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().size() != 0) {
-                                    shortStoryChallengesList.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
-                                    deepLinkDisplayName.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
-                                    deepLinkImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                    shortStoryChallengesList = shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId();
+                                    deepLinkDisplayName = shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name();
+                                    deepLinkImageUrl = shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl();
                                     break;
                                 }
                             }
@@ -1405,9 +1379,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 shortStoriesTopicList.add(res.getData().get(i));
                             }
                         }
-                        shortStoryChallengesList = new ArrayList<>();
-                        deepLinkDisplayName = new ArrayList<>();
-                        deepLinkImageUrl = new ArrayList<>();
                         num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
                         for (int j = 0; j < num_of_categorys; j++) {
                             if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
@@ -1415,9 +1386,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 for (int k = 0; k < num_of_challeneges; k++) {
                                     if (deepLinkChallengeId.equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId())) {
                                         if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null && shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().size() != 0) {
-                                            shortStoryChallengesList.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
-                                            deepLinkDisplayName.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
-                                            deepLinkImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                            shortStoryChallengesList = shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId();
+                                            deepLinkDisplayName = shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name();
+                                            deepLinkImageUrl = shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl();
                                             break;
                                         }
                                     }
@@ -1433,6 +1404,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     Crashlytics.logException(t);
+                    apiExceptions(t);
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
             });
@@ -1468,6 +1440,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         public void onFailure(Call<ShortStoryDetailResult> call, Throwable t) {
             removeProgressDialog();
             Crashlytics.logException(t);
+            apiExceptions(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -1510,6 +1483,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         @Override
         public void onFailure(Call<BlogPageResponse> call, Throwable t) {
             removeProgressDialog();
+            apiExceptions(t);
         }
     };
 
@@ -1564,10 +1538,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onStop() {
         super.onStop();
-        chooseLayout.setVisibility(View.GONE);
-        chooseOptionLayout.setVisibility(View.GONE);
-        overLayViewChooseStory.setVisibility(View.GONE);
-        rootChooseLayout.setVisibility(View.GONE);
     }
 
     public void refreshMenu() {
@@ -1699,10 +1669,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.storyContainer:
                 hideCreateContentView();
-                chooseLayout.setVisibility(View.VISIBLE);
-                overLayViewChooseStory.setVisibility(View.VISIBLE);
-                chooseOptionLayout.setVisibility(View.VISIBLE);
-                rootChooseLayout.setVisibility(View.VISIBLE);
+                Intent chooseShortStory = new Intent(this, ChooseShortStoryCategoryActivity.class);
+                chooseShortStory.putExtra("source", "dashboard");
+                startActivity(chooseShortStory);
                 break;
             case R.id.videoContainer: {
                 hideCreateContentView();
@@ -1786,7 +1755,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 mDrawerLayout.closeDrawers();
                 Intent intent = new Intent(this, ShortStoriesListingContainerActivity.class);
                 intent.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
-                startActivityForResult(intent, 1234);
+                startActivity(intent);
             }
             break;
             case R.id.groupsTextView: {
@@ -1825,52 +1794,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             default:
                 break;
         }
-        if (v.getId() == R.id.overlayView_choose_story_challenge) {
-            chooseLayout.setVisibility(View.GONE);
-            chooseOptionLayout.setVisibility(View.GONE);
-            overLayViewChooseStory.setVisibility(View.GONE);
-            rootChooseLayout.setVisibility(View.GONE);
-        }
-        if (v.getId() == R.id.overlayView_choose_video_challenge) {
-            chooseLayoutVideo.setVisibility(View.INVISIBLE);
-        }
-
-        if (v.getId() == R.id.write_story) {
-            Intent ssintent = new Intent(this, AddShortStoryActivity.class);
-            ssintent.putExtra("selectedrequest", shortstory);
-            startActivity(ssintent);
-            chooseLayout.setVisibility(View.GONE);
-
-        }
-
-        if (v.getId() == R.id.write_challenge) {
-            if (challengeId == null || Display_Name == null || ImageUrl == null || shortStoriesTopicList == null || challengeId.size() == 0 || Display_Name.size() == 0 || ImageUrl.size() == 0 || shortStoriesTopicList.size() == 0) {
-                findActiveChallenge();
-            }
-            if (challengeId != null && Display_Name != null && ImageUrl != null && shortStoriesTopicList != null && challengeId.size() != 0 && Display_Name.size() != 0 && ImageUrl.size() != 0 && shortStoriesTopicList.size() != 0) {
-                Intent intent = new Intent(this, ShortStoryChallengeDetailActivity.class);
-                intent.putExtra("selectedrequest", challenge);
-                intent.putExtra("Display_Name", Display_Name);
-                intent.putExtra("challenge", challengeId);
-                intent.putExtra("position", 0);
-                intent.putExtra("topics", shortStoriesTopicList.get(0).getDisplay_name());
-                intent.putExtra("parentId", shortStoriesTopicList.get(0).getId());
-                intent.putExtra("StringUrl", ImageUrl);
-                startActivity(intent);
-                chooseLayout.setVisibility(View.GONE);
-
-            } else {
-                findActiveChallenge();
-            }
-        }
-        if (v.getId() == R.id.upload_video) {
-            MixPanelUtils.pushAddMomVlogClickEvent(mMixpanel, "BottomSheet");
-            Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Create_video", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
-
-            Intent intent = new Intent(this, ChooseVideoCategoryActivity.class);
-            startActivity(intent);
-            chooseLayoutVideo.setVisibility(View.GONE);
-        }
 
     }
 
@@ -1891,144 +1814,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                apiExceptions(t);
             }
         });
     }
 
-    private void findActiveChallenge() {
-        try {
-            if (shortStoriesTopicList != null && shortStoriesTopicList.size() != 0) {
-                challengeId = new ArrayList<>();
-                Display_Name = new ArrayList<>();
-                ImageUrl = new ArrayList<>();
-                num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
-                for (int j = 0; j < num_of_categorys; j++) {
-                    if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
-                        num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
-                        for (int k = num_of_challeneges - 1; k >= 0; k--) {
-                            if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
-                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null && shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().size() != 0) {
-                                    if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
-                                        challengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
-                                        Display_Name.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
-                                        ImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
-                                        break;
-                                    }
-                                }
-                            }
-
-                        }
-                    }
-                }
-            }
-
-            if (shortStoriesTopicList == null || shortStoriesTopicList.size() == 0) {
-                try {
-                    FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                    String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                    Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-                    res = gson.fromJson(fileContent, TopicsResponse.class);
-                    shortStoriesTopicList = new ArrayList<Topics>();
-                    if (res != null) {
-                        for (int i = 0; i < res.getData().size(); i++) {
-                            if (res.getData() != null && res.getData().get(i) != null && res.getData().get(i).getId() != null && AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
-                                shortStoriesTopicList.add(res.getData().get(i));
-                            }
-                        }
-                        challengeId = new ArrayList<>();
-                        Display_Name = new ArrayList<>();
-                        ImageUrl = new ArrayList<>();
-                        num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
-                        if (num_of_categorys != 0) {
-                            for (int j = 0; j < num_of_categorys; j++) {
-                                if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
-                                    num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
-                                    for (int k = num_of_challeneges - 1; k >= 0; k--) {
-                                        if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
-                                            if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null && shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().size() != 0) {
-                                                if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
-                                                    challengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
-                                                    Display_Name.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
-                                                    ImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-                } catch (IllegalStateException | JsonSyntaxException | NullPointerException exception) {
-                    Crashlytics.logException(exception);
-                }
-            }
-
-        } catch (FileNotFoundException e) {
-            Crashlytics.logException(e);
-            Log.d("FileNotFoundException", Log.getStackTraceString(e));
-            Retrofit retro = BaseApplication.getInstance().getRetrofit();
-            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
-            caller.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
-                    Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
-
-                    try {
-                        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                        String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-                        res = gson.fromJson(fileContent, TopicsResponse.class);
-                        if (res != null) {
-                            shortStoriesTopicList = new ArrayList<Topics>();
-                            for (int i = 0; i < res.getData().size(); i++) {
-                                if (AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
-                                    shortStoriesTopicList.add(res.getData().get(i));
-                                }
-                            }
-                            challengeId = new ArrayList<>();
-                            Display_Name = new ArrayList<>();
-                            ImageUrl = new ArrayList<>();
-                            num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
-                            if (num_of_categorys != 0) {
-                                for (int j = 0; j < num_of_categorys; j++) {
-                                    if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
-                                        num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
-                                        for (int k = num_of_challeneges - 1; k >= 0; k--) {
-                                            if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
-                                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null && shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().size() != 0) {
-                                                    if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
-                                                        challengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
-                                                        Display_Name.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
-                                                        ImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
-                    } catch (FileNotFoundException e) {
-                        Crashlytics.logException(e);
-                        Log.d("FileNotFoundException", Log.getStackTraceString(e));
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Crashlytics.logException(t);
-                    Log.d("MC4KException", Log.getStackTraceString(t));
-                }
-            });
-        }
-    }
 
     private void hideCreateContentView() {
         createContentContainer.setVisibility(View.INVISIBLE);
@@ -2075,13 +1865,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
         try {
             switch (requestCode) {
-                case 1234:
-                    chooseLayout.setVisibility(View.VISIBLE);
-                    overLayViewChooseStory.setVisibility(View.VISIBLE);
-                    chooseOptionLayout.setVisibility(View.VISIBLE);
-                    rootChooseLayout.setVisibility(View.VISIBLE);
-                    break;
-
                 case Constants.OPEN_GALLERY:
                     break;
                 case Constants.TAKE_PICTURE:
@@ -2094,8 +1877,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         isGooglePlayServicesAvailable();
                     }
                     break;
-
-
                 case AppConstants.REQUEST_ACCOUNT_PICKER:
                     if (resultCode == RESULT_OK && data != null &&
                             data.getExtras() != null) {
@@ -2183,6 +1964,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 removeProgressDialog();
                 showToast(getString(R.string.server_went_wrong));
                 Crashlytics.logException(t);
+                apiExceptions(t);
                 Log.d("MC4kException", Log.getStackTraceString(t));
             }
         });
@@ -2646,13 +2428,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    public void showChooseLayoutForShortStory() {
-        chooseLayout.setVisibility(View.VISIBLE);
-        overLayViewChooseStory.setVisibility(View.VISIBLE);
-        chooseOptionLayout.setVisibility(View.VISIBLE);
-        rootChooseLayout.setVisibility(View.VISIBLE);
-    }
-
     public void appUpdatePopUp() {
         if (!StringUtils.isNullOrEmpty(onlineVersionCode) && !StringUtils.isNullOrEmpty(currentVersion)) {
             String[] v1 = currentVersion.split("\\.");
@@ -2728,10 +2503,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Intent intent = new Intent(this, BadgeActivity.class);
                 intent.putExtra(Constants.USER_ID, separated[separated.length - 2]);
                 startActivity(intent);
-
                 return true;
-
             }
+
             Pattern pattern3 = Pattern.compile(AppConstants.BADGES_DETAIL_REGEX);
             Matcher matcher3 = pattern3.matcher(urlWithNoParams);
             if (matcher3.matches()) {
@@ -2763,6 +2537,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(intent);
                 return true;
             }
+
             Pattern pattern6 = Pattern.compile(AppConstants.USER_ANALYTICS_REGEX);
             Matcher matcher6 = pattern6.matcher(urlWithNoParams);
             if (matcher6.matches()) {

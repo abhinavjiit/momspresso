@@ -63,33 +63,22 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
     companion object {
         @JvmStatic
-        fun newInstance(
-            id: Int,
-            comingFrom: String,
-            isComingFromRewards: Boolean = false,
-            Id: Int
-        ) =
-            PaymentModeDtailsSubmissionFragment().apply {
-                arguments = Bundle().apply {
-                    this.putInt("id", id)
-                    this.putString("comingFrom", comingFrom)
-                    this.putBoolean("isComingFromRewards", isComingFromRewards)
-                    this.putInt("Id", Id)
-                }
+        fun newInstance(id: Int, comingFrom: String, isComingFromRewards: Boolean = false, Id: Int) =
+                PaymentModeDtailsSubmissionFragment().apply {
+                    arguments = Bundle().apply {
+                        this.putInt("id", id)
+                        this.putString("comingFrom", comingFrom)
+                        this.putBoolean("isComingFromRewards", isComingFromRewards)
+                        this.putInt("Id", Id)
+                    }
 
-            }
+                }
     }
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(
-            R.layout.campaign_enter_registered_paytm_mobile_number_screen,
-            container,
-            false
-        )
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.campaign_enter_registered_paytm_mobile_number_screen, container, false)
         paytmContainer = view.findViewById(R.id.paytmContainer)
         upiContainer = view.findViewById(R.id.upiContainer)
         bankTransferContainer = view.findViewById(R.id.bankTransferContainer)
@@ -113,7 +102,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
         if (arguments != null && arguments!!.containsKey("id")) {
             paymantModeId = arguments!!.getInt("id")
-            comingFrom = arguments!!.getString("comingFrom").toString()
+            comingFrom = arguments!!.getString("comingFrom")
             ID = arguments!!.getInt("Id")
 
             isComingFromRewards = if (arguments!!.containsKey("isComingFromRewards")) {
@@ -153,31 +142,9 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
         back.setOnClickListener {
             if (isComingFromRewards) {
                 (activity as RewardsContainerActivity).onBackPressed()
-                Utils.campaignEvent(
-                    activity,
-                    "Payment Option",
-                    source,
-                    "Back",
-                    "",
-                    "android",
-                    SharedPrefUtils.getAppLocale(activity),
-                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                    System.currentTimeMillis().toString(),
-                    "Show_payment_option_detail"
-                )
+                Utils.campaignEvent(activity, "Payment Option", source, "Back", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_payment_option_detail")
             } else {
-                Utils.campaignEvent(
-                    activity,
-                    "Bank Detail",
-                    "Bank Detail",
-                    "Cancel",
-                    "",
-                    "android",
-                    SharedPrefUtils.getAppLocale(activity),
-                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                    System.currentTimeMillis().toString(),
-                    "Change_bank_account_detail_no"
-                )
+                Utils.campaignEvent(activity, "Bank Detail", "Bank Detail", "Cancel", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Change_bank_account_detail_no")
                 (activity as CampaignContainerActivity).onBackPressed()
             }
         }
@@ -188,68 +155,57 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
 
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getAllBankName()
-            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<BaseResponseGeneric<List<BankNameModal>>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getAllBankName().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<List<BankNameModal>>> {
 
 
-                override fun onComplete() {
-                    removeProgressDialog()
-                }
+            override fun onComplete() {
+                removeProgressDialog()
+            }
 
-                override fun onSubscribe(d: Disposable) {
-                }
+            override fun onSubscribe(d: Disposable) {
+            }
 
-                override fun onNext(response: BaseResponseGeneric<List<BankNameModal>>) {
-                    if (response != null && response.code == 200 && Constants.SUCCESS == response.status
-                        && response.data != null && response.data!!.result != null && response.data!!.result.isNotEmpty()
-                    ) {
-                        if (response.data!!.result != null) {
-                            allBankNames = response.data!!.result
-                            response.data!!.result.forEach {
-                                bankNames.add(it.name!!)
+            override fun onNext(response: BaseResponseGeneric<List<BankNameModal>>) {
+                if (response != null && response.code == 200 && Constants.SUCCESS == response.status
+                        && response.data != null && response.data!!.result != null && response.data!!.result.isNotEmpty()) {
+                    if (response.data!!.result != null) {
+                        allBankNames = response.data!!.result
+                        response.data!!.result.forEach {
+                            bankNames.add(it.name!!)
+                        }
+                        if (selectBankAccountspinner != null) {
+                            val arrayAdapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item, bankNames)
+                            selectBankAccountspinner.adapter = arrayAdapter
+
+                            selectBankAccountspinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+
+                                    val item = parent.getItemAtPosition(position).toString()
+                                    (parent.getChildAt(0) as TextView).setTextColor(resources.getColor(R.color.greytxt_color))
+                                    selectedBankName = item
+                                }
+
+                                override fun onNothingSelected(parent: AdapterView<*>) {
+
+
+                                }
                             }
-                            activity?.let {
-                                val arrayAdapter = ArrayAdapter(
-                                    it,
-                                    android.R.layout.simple_spinner_dropdown_item,
-                                    bankNames
-                                )
-                                selectBankAccountspinner.adapter = arrayAdapter
-                                selectBankAccountspinner.onItemSelectedListener =
-                                    object : AdapterView.OnItemSelectedListener {
-                                        override fun onItemSelected(
-                                            parent: AdapterView<*>,
-                                            view: View,
-                                            position: Int,
-                                            id: Long
-                                        ) {
-                                            val item = parent.getItemAtPosition(position).toString()
-                                            (parent.getChildAt(0) as TextView).setTextColor(
-                                                resources.getColor(R.color.greytxt_color)
-                                            )
-                                            selectedBankName = item
-                                        }
-
-                                        override fun onNothingSelected(parent: AdapterView<*>) {
-                                        }
-                                    }
-                            }
-
-
-                        } else {
                         }
 
+
                     } else {
-
                     }
-                }
 
-                override fun onError(e: Throwable) {
-                    removeProgressDialog()
-                    Log.e("exception in error", e.message.toString())
+                } else {
+
                 }
-            })
+            }
+
+            override fun onError(e: Throwable) {
+                removeProgressDialog()
+                Log.e("exception in error", e.message.toString())
+            }
+        })
     }
 
 
@@ -265,90 +221,69 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
             when (paymantModeId) {
                 1 -> {
-                    addAcoountDetailModal = AddAccountDetailModal(
-                        account_type_id = paymantModeId.toString().trim(),
-                        account_number = addMobileNumberEditText.text.toString().trim()
-                    )
+                    addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString().trim(), account_number = addMobileNumberEditText.text.toString().trim())
                 }
                 2 -> {
-                    addAcoountDetailModal = AddAccountDetailModal(
-                        account_type_id = paymantModeId.toString().trim(),
-                        account_number = addUpiEditTextView.text.toString().trim()
-                    )
+                    addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString().trim(), account_number = addUpiEditTextView.text.toString().trim())
                 }
                 3 -> {
-                    addAcoountDetailModal = AddAccountDetailModal(
-                        account_type_id = paymantModeId.toString().trim(),
-                        account_number = accountNumberEditTextView?.text.toString().trim(),
-                        account_ifsc_code = ifscEditTextView?.text.toString().trim().toUpperCase(),
-                        account_name = addAccountHolderNameEditTextView?.text.toString().trim()
-                    )
+                    addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString().trim(), account_number = accountNumberEditTextView?.text.toString().trim(), account_ifsc_code = ifscEditTextView?.text.toString().trim().toUpperCase(), account_name = addAccountHolderNameEditTextView?.text.toString().trim())
                 }
                 else -> {
-                    addAcoountDetailModal = AddAccountDetailModal(
-                        account_type_id = paymantModeId.toString().trim(),
-                        account_number = addMobileNumberEditText.text.toString().trim()
-                    )
+                    addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString().trim(), account_number = addMobileNumberEditText.text.toString().trim())
                 }
 
             }
 
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java)
-                .addAccountDetail(addAcoountDetailModal).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Observer<BaseResponseGeneric<DefaultData>> {
-                    override fun onComplete() {
-                        removeProgressDialog()
-                    }
+            BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).addAccountDetail(addAcoountDetailModal).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<DefaultData>> {
+                override fun onComplete() {
+                    removeProgressDialog()
+                }
 
-                    override fun onSubscribe(d: Disposable) {
-                    }
+                override fun onSubscribe(d: Disposable) {
+                }
 
-                    override fun onNext(t: BaseResponseGeneric<DefaultData>) {
-                        /*if (comingFrom.equals("firstTime") && !isComingFromRewards) {
-                            var panCardDetailsSubmissionFragment = PanCardDetailsSubmissionFragment.newInstance(isComingFromRewards = false)
-                            (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, panCardDetailsSubmissionFragment,
-                                    CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PanCardDetailsSubmissionFragment")
-                                    .commit()
-                        } else {*/
-                        when (paymantModeId) {
-                            1 -> {
-                                ToastUtils.showToast(context, "PaytmNumber is Updated Successfully")
-                            }
-                            else -> {
-                                ToastUtils.showToast(
-                                    context,
-                                    "BankDetails are Updated Successfully"
-                                )
-                            }
+                override fun onNext(t: BaseResponseGeneric<DefaultData>) {
+                    /*if (comingFrom.equals("firstTime") && !isComingFromRewards) {
+                        var panCardDetailsSubmissionFragment = PanCardDetailsSubmissionFragment.newInstance(isComingFromRewards = false)
+                        (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, panCardDetailsSubmissionFragment,
+                                CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PanCardDetailsSubmissionFragment")
+                                .commit()
+                    } else {*/
+                    when (paymantModeId) {
+                        1 -> {
+                            ToastUtils.showToast(context, "PaytmNumber is Updated Successfully")
                         }
-                        activity!!.supportFragmentManager.popBackStack()
-                        var fragment = targetFragment
-                        if (fragment != null && fragment is CampaignPaymentModesFragment) {
-                            fragment.onActivityResult(2019, Activity.RESULT_OK, null)
+                        else -> {
+                            ToastUtils.showToast(context, "BankDetails are Updated Successfully")
                         }
+                    }
+                    activity!!.supportFragmentManager.popBackStack()
+                    var fragment = targetFragment
+                    if (fragment != null && fragment is CampaignPaymentModesFragment) {
+                        fragment.onActivityResult(2019, Activity.RESULT_OK, null)
+                    }
 
 //                    }
 
+                }
+
+                override fun onError(e: Throwable) {
+                    removeProgressDialog()
+                    val code = (e as HttpException).code()
+                    if (code == 400) {
+                        var data = e.response()?.errorBody()!!.byteStream()
+                        var jsonParser = JsonParser()
+                        var jsonObject = jsonParser.parse(
+                                InputStreamReader(data, "UTF-8")) as JsonObject
+                        var reason = jsonObject.get("reason")
+                        Toast.makeText(context, reason.asString, Toast.LENGTH_SHORT).show()
                     }
 
-                    override fun onError(e: Throwable) {
-                        removeProgressDialog()
-                        val code = (e as HttpException).code()
-                        if (code == 400) {
-                            var data = e.response()?.errorBody()!!.byteStream()
-                            var jsonParser = JsonParser()
-                            var jsonObject = jsonParser.parse(
-                                InputStreamReader(data, "UTF-8")
-                            ) as JsonObject
-                            var reason = jsonObject.get("reason")
-                            Toast.makeText(context, reason.asString, Toast.LENGTH_SHORT).show()
-                        }
-
-                        Log.e("exception in error", e.message.toString())
-                    }
-                })
+                    Log.e("exception in error", e.message.toString())
+                }
+            })
         }
     }
 
@@ -366,15 +301,11 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
 
 
-                if (accountNumberEditTextView?.text.toString().equals(
-                        confirmAccountNumberEditTextView?.text.toString()
-                    )
-                ) {
+                if (accountNumberEditTextView?.text.toString().equals(confirmAccountNumberEditTextView?.text.toString())) {
                     return true
                 }
 
-                Toast.makeText(activity, "account number is not matching", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(activity, "account number is not matching", Toast.LENGTH_SHORT).show()
                 return false
 
 
@@ -407,31 +338,25 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
     private fun fetchLastUpdatedDetails(ID: Int) {
         showProgressDialog(resources.getString(R.string.please_wait))
 
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java)
-            .getAllPaymentModeDetails(ID).subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<BaseResponseGeneric<GetAllPaymentDetails>> {
-                override fun onComplete() {
-                    removeProgressDialog(); }
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getAllPaymentModeDetails(ID).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<GetAllPaymentDetails>> {
+            override fun onComplete() {
+                removeProgressDialog(); }
 
-                override fun onSubscribe(d: Disposable) {
-                }
+            override fun onSubscribe(d: Disposable) {
+            }
 
-                override fun onNext(response: BaseResponseGeneric<GetAllPaymentDetails>) {
+            override fun onNext(response: BaseResponseGeneric<GetAllPaymentDetails>) {
 
-                    if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.result != null) {
+                if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.result != null) {
 
 
-                        addAccountHolderNameEditTextView?.setText(response.data!!.result.account_name)
-                        accountNumberEditTextView?.setText(response.data!!.result.account_number)
-                        confirmAccountNumberEditTextView?.setText(response.data!!.result.account_number)
-                        ifscEditTextView?.setText(response.data!!.result.account_ifsc_code)
-                        selectBankAccountEditText?.setText(response.data!!.result.bank_name)
-                        if (paytmContainer.visibility == View.VISIBLE && response.data!!.result.account_ifsc_code.isNullOrEmpty()) {
-                            addMobileNumberEditText.setText(response.data!!.result.account_number)
-
-
-                        }
+                    addAccountHolderNameEditTextView?.setText(response.data!!.result.account_name)
+                    accountNumberEditTextView?.setText(response.data!!.result.account_number)
+                    confirmAccountNumberEditTextView?.setText(response.data!!.result.account_number)
+                    ifscEditTextView?.setText(response.data!!.result.account_ifsc_code)
+                    selectBankAccountEditText?.setText(response.data!!.result.bank_name)
+                    if (paytmContainer.visibility == View.VISIBLE && response.data!!.result.account_ifsc_code.isNullOrEmpty()) {
+                        addMobileNumberEditText.setText(response.data!!.result.account_number)
 
 
                     }
@@ -439,12 +364,15 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
                 }
 
-                override fun onError(e: Throwable) {
-                    removeProgressDialog()
-                    Log.e("exception in error", e.message.toString())
-                }
 
-            })
+            }
+
+            override fun onError(e: Throwable) {
+                removeProgressDialog()
+                Log.e("exception in error", e.message.toString())
+            }
+
+        })
 
     }
 

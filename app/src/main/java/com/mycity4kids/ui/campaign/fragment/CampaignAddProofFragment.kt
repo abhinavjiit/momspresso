@@ -203,7 +203,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             }
 
             deliverableTypeList = if (arguments!!.containsKey("deliverableTypeList")) {
-                arguments!!.getIntegerArrayList("deliverableTypeList")!!
+                arguments!!.getIntegerArrayList("deliverableTypeList")
             } else {
                 emptyList<Int>() as ArrayList<Int>
             }
@@ -683,14 +683,14 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 if (data != null) {
                     try {
                         val storage = FirebaseStorage.getInstance("gs://api-project-3577377239.appspot.com")
-                        var file = File(data.data?.path);//create path from uri
+                        var file = File(data.data.path);//create path from uri
                         /*  var split = file.getPath().split(":");//split the path.
                           var path = split[1];*/
                         val storageRef = storage.reference
                         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
                         val riversRef = storageRef.child("user/" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
                                 + "/media/" + file + "_" + timeStamp)
-                        val uploadTask = riversRef.putFile(data.data!!)
+                        val uploadTask = riversRef.putFile(data.data)
                         Log.e("file path ", riversRef.path)
                         showProgressDialog("")
                         uploadTask.addOnFailureListener {
