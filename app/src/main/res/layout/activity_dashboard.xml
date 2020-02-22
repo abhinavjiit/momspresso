@@ -2181,25 +2181,4 @@
                 app:fontName="oswald.ttf" />
         </RelativeLayout>
     </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/choose_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible">
-
-        <include layout="@layout/choose_challenge_story_layout" />
-
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/choose_layout_video"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible">
-
-        <include layout="@layout/video_container_choose_option_challenge" />
-    </RelativeLayout>
-
 </FrameLayout>

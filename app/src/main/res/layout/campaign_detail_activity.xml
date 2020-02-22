@@ -199,9 +199,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="web"
-                    android:textIsSelectable="true"
                     android:textColor="@color/campaign_list_buttons"
                     android:textColorLink="#0000ee"
+                    android:textIsSelectable="true"
                     android:textSize="15sp"
                     app:fontName="open_sans.ttf"
                     app:layout_constraintStart_toStartOf="@id/read_this_box" />
@@ -738,8 +738,8 @@
                 android:id="@+id/cross_demo"
                 android:layout_width="@dimen/space_40"
                 android:layout_height="@dimen/space_40"
-                android:padding="@dimen/space_10"
                 android:layout_gravity="right"
+                android:padding="@dimen/space_10"
                 android:src="@drawable/cross_icon" />
 
             <VideoView
@@ -757,4 +757,10 @@
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
+
+    <include
+        android:id="@+id/includeInstaPopUp"
+        layout="@layout/campaign_detail_insta_handle_pop_up"
+        android:visibility="gone" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

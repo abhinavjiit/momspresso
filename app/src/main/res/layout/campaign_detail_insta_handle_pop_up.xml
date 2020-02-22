@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent_black_90"
+    android:clickable="true"
+    android:focusable="true">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_30"
+        android:layout_marginEnd="@dimen/space_30"
+        app:cardCornerRadius="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white_color"
+            android:paddingBottom="@dimen/space_50">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/headerTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_30"
+                android:gravity="center_horizontal"
+                android:text="Add your Instagram handle"
+                android:textColor="@color/campaign_4A4A4A"
+                android:textSize="@dimen/space_16"
+                app:fontName="Oswald-Medium.ttf"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:textAllCaps="true" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/instaHandleContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/space_16"
+                android:layout_marginTop="@dimen/space_16"
+                android:layout_marginRight="@dimen/space_16"
+                android:background="@drawable/dark_border_rounded_corner"
+                android:padding="12dp"
+                app:layout_constraintTop_toBottomOf="@id/headerTextView">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/instagramImageView"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    app:layout_constraintBottom_toBottomOf="@id/instaHandleContainer"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/instaHandleContainer"
+                    app:srcCompat="@drawable/ic_instagram" />
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="16dp"
+                    android:background="#DADADA"
+                    app:layout_constraintBottom_toBottomOf="@id/instaHandleContainer"
+                    app:layout_constraintLeft_toRightOf="@id/instagramImageView"
+                    app:layout_constraintTop_toTopOf="@id/instaHandleContainer" />
+
+                <com.mycity4kids.widget.CustomFontEditText
+                    android:id="@+id/instaHandleEditTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_16"
+                    android:background="#F1F1F1"
+                    android:hint="e.g. ritu_19.."
+                    android:textColor="@color/ad.author_name.text"
+                    app:layout_constraintEnd_toEndOf="@id/instaHandleContainer"
+                    app:layout_constraintLeft_toRightOf="@id/divider"
+                    app:layout_constraintStart_toStartOf="@id/divider"
+                    app:layout_constraintTop_toTopOf="@id/instaHandleContainer" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/infoTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/space_16"
+                android:layout_marginTop="@dimen/space_16"
+                android:padding="@dimen/space_5"
+                android:text="We need this information to invite you to our instagram campaigns"
+                android:textColor="#9B9B9B"
+                android:textSize="13sp"
+                app:fontName="OpenSans-Regular.ttf"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/instaHandleContainer" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_20"
+                app:cardCornerRadius="@dimen/space_4"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/infoTextView">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/confirmTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/app_red"
+                    android:paddingStart="50dp"
+                    android:paddingTop="@dimen/space_10"
+                    android:paddingEnd="@dimen/space_50"
+                    android:paddingBottom="@dimen/space_10"
+                    android:text="Confirm"
+                    android:textColor="@color/white_color"
+                    android:textSize="20sp"
+                    app:fontName="oswald_regular.ttf"
+                    app:textAllCaps="true" />
+            </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

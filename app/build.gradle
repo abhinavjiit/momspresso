@@ -5,10 +5,22 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.fabric'
 apply plugin: 'io.gitlab.arturbosch.detekt'
+apply plugin: 'checkstyle'
 
 repositories {
     maven { url 'https://dl.bintray.com/drummer-aidan/maven' }
 }
+
+checkstyle {
+    // assign the latest checkstyle version explicitly
+    // default version is very old, likes 5.9
+    toolVersion = '8.29'
+    // checkstyle.xml copy from:
+    // https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-8.6/src/main/resources/google_checks.xml
+    // the version should be as same as plugin version
+    configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+}
+
 
 android {
     compileSdkVersion 29
@@ -143,6 +155,29 @@ detekt {
         }
         html {
             enabled = true
+        }
+    }
+}
+
+task checkstyle(type: Checkstyle) {
+    classpath = files()
+    source "${project.rootDir}"
+    include '**/*.java'
+    exclude '**/gen/**'
+    exclude '**/R.java'
+    exclude '**/BuildConfig.java'
+
+    def configProps = ['proj.module.dir': projectDir.absolutePath]
+    configProperties configProps
+    // Define the output folder of the generated reports
+    reports {
+        html {
+            enabled true
+            destination rootProject.file("build/reports/checkstyle/checkstyle.html")
+        }
+        xml {
+            enabled true
+            destination rootProject.file("build/reports/checkstyle/checkstyle.xml")
         }
     }
 }

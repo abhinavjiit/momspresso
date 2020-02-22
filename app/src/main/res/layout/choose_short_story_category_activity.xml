@@ -7,7 +7,7 @@
     android:fillViewport="true"
     android:paddingBottom="30dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/rootLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -42,17 +42,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="@string/choose_video_category"
+                        android:drawableStart="@drawable/ic_back_svg"
+                        android:drawablePadding="@dimen/space_10"
+                        android:text="@string/select_category"
                         android:textColor="@color/campaign_515151"
                         android:textSize="20sp"
-                        android:textStyle="bold"
-                        app:textAllCaps="true" />
+                        android:textStyle="bold" />
 
                     <com.mycity4kids.widget.CustomFontTextView
                         android:id="@+id/continueTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:padding="10dp"
                         android:text="@string/lang_sel.continue"
@@ -69,6 +70,7 @@
             android:id="@+id/challengesTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/id_appbar"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="@string/video_challenge_text"
@@ -77,30 +79,11 @@
             android:visibility="gone"
             app:fontName="oswald_regular.ttf" />
 
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/draftsShimmerLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            app:duration="800">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <include layout="@layout/drafts_shimmer_layout" />
-
-                <include layout="@layout/drafts_shimmer_layout" />
-
-            </LinearLayout>
-
-        </com.facebook.shimmer.ShimmerFrameLayout>
-
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/horizontalRecyclerViewForVideoChallenge"
+            android:id="@+id/shortStoryChallengeHorizontalView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/challengesTextView"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:nestedScrollingEnabled="true"
@@ -113,18 +96,20 @@
             android:id="@+id/categoriesTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/shortStoryChallengeHorizontalView"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="@string/choose_video_categories_text"
             android:textColor="@color/app_red"
             android:textSize="20sp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:fontName="oswald_regular.ttf" />
 
         <com.mycity4kids.ui.videochallengenewui.ExpandableHeightGridView
-            android:id="@+id/gridview"
+            android:id="@+id/topicsGridView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@+id/categoriesTextView"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
@@ -136,5 +121,22 @@
             android:verticalSpacing="16dp"
             android:visibility="visible" />
 
-    </LinearLayout>
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shortStoryShimmer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/id_appbar"
+            android:background="@color/white_color"
+            android:visibility="visible"
+            app:duration="800">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <include layout="@layout/shimmer_choose_short_story_category" />
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+    </RelativeLayout>
 </ScrollView>
