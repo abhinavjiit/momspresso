@@ -23,11 +23,6 @@ import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import com.facebook.accountkit.AccountKitLoginResult
-import com.facebook.accountkit.ui.AccountKitActivity
-import com.facebook.accountkit.ui.AccountKitConfiguration
-import com.facebook.accountkit.ui.LoginType
-import com.facebook.accountkit.ui.ThemeUIManager
 import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
 import com.google.android.libraries.places.api.Places
@@ -36,12 +31,10 @@ import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
-import com.mycity4kids.base.BaseActivity
-import com.mycity4kids.base.BaseFragment
-import com.mycity4kids.utils.DateTimeUtils
-import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseActivity
+import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
@@ -63,6 +56,8 @@ import com.mycity4kids.ui.fragment.CityListingDialogFragment
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.ui.rewards.dialog.PickerDialogFragment
 import com.mycity4kids.utils.AppUtils
+import com.mycity4kids.utils.DateTimeUtils
+import com.mycity4kids.utils.StringUtils
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -77,7 +72,9 @@ import java.util.*
 const val VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE = 1000
 const val REQUEST_SELECT_PLACE = 2000
 
-class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragment.OnClickDoneListener, CityListingDialogFragment.IChangeCity, PickerDialogFragment.OnClickDoneListener {
+class RewardsPersonalInfoFragment : BaseFragment(),
+    ChangePreferredLanguageDialogFragment.OnClickDoneListener,
+    CityListingDialogFragment.IChangeCity, PickerDialogFragment.OnClickDoneListener {
 
     private var isNewRegistration: Boolean = false
     var address: String? = null
@@ -189,25 +186,33 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         private lateinit var textKidsDOB: TextView
 
         @JvmStatic
-        fun newInstance(isComingFromRewards: Boolean = false, isComingfromCampaign: Boolean = false, referralCode: String = "") =
-                RewardsPersonalInfoFragment().apply {
-                    arguments = Bundle().apply {
-                        this.putBoolean("isComingFromRewards", isComingFromRewards)
-                        this.putBoolean("isComingfromCampaign", isComingfromCampaign)
-                        this.putString("referralCode", referralCode)
-                    }
+        fun newInstance(
+            isComingFromRewards: Boolean = false,
+            isComingfromCampaign: Boolean = false,
+            referralCode: String = ""
+        ) =
+            RewardsPersonalInfoFragment().apply {
+                arguments = Bundle().apply {
+                    this.putBoolean("isComingFromRewards", isComingFromRewards)
+                    this.putBoolean("isComingfromCampaign", isComingfromCampaign)
+                    this.putString("referralCode", referralCode)
                 }
+            }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.fragment_rewards_personal_info, container, false)
 
         activity?.let {
-            Utils.pushGenericEvent(activity, "Show_MyMoney_RegistrationForm_Unregistered",
-                    SharedPrefUtils.getUserDetailModel(it).dynamoId, "RewardsPersonalInfoFragment")
+            Utils.pushGenericEvent(
+                activity, "Show_MyMoney_RegistrationForm_Unregistered",
+                SharedPrefUtils.getUserDetailModel(it).dynamoId, "RewardsPersonalInfoFragment"
+            )
         }
 
         textReferCodeError = containerView.findViewById(R.id.textReferCodeError)
@@ -302,7 +307,10 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 var interestName = Constants.TypeOfLanguages.findById(it)
                 preSelectedLanguage.add(it)
                 context?.let {
-                    val subsubLL = LayoutInflater.from(context).inflate(R.layout.shape_rewards_border_rectangular, null) as LinearLayout
+                    val subsubLL = LayoutInflater.from(context).inflate(
+                        R.layout.shape_rewards_border_rectangular,
+                        null
+                    ) as LinearLayout
                     val catTextView = subsubLL.getChildAt(0) as TextView
                     catTextView.setText(interestName)
                     catTextView.isSelected = true
@@ -326,7 +334,10 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 var interestName = Constants.TypeOfInterest.findById(it.toInt())
                 preSelectedInterest.add(it.toString())
                 context?.let {
-                    val subsubLL = LayoutInflater.from(context).inflate(R.layout.shape_rewards_border_rectangular, null) as LinearLayout
+                    val subsubLL = LayoutInflater.from(context).inflate(
+                        R.layout.shape_rewards_border_rectangular,
+                        null
+                    ) as LinearLayout
                     val catTextView = subsubLL.getChildAt(0) as TextView
                     catTextView.setText(interestName)
                     catTextView.isSelected = true
@@ -359,7 +370,11 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             genderSpinner.setSelection(apiGetResponse.gender!!)
         }
         if (apiGetResponse.dob != null) {
-            RewardsPersonalInfoFragment.textDOB.setText(AppUtils.convertTimestampToDate(apiGetResponse.dob))
+            RewardsPersonalInfoFragment.textDOB.setText(
+                AppUtils.convertTimestampToDate(
+                    apiGetResponse.dob
+                )
+            )
         }
 
         if (apiGetResponse.isExpecting != null && apiGetResponse.isExpecting == 1 && apiGetResponse.expectedDate != null) {
@@ -374,9 +389,18 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         if (apiGetResponse.kidsInfo != null && apiGetResponse.kidsInfo!!.isNotEmpty()) {
             for (i in 0..apiGetResponse.kidsInfo!!.size - 1) {
                 if (i == 0 && apiGetResponse.kidsInfo!!.size == 1) {
-                    createKidsDetailDynamicView(apiGetResponse.kidsInfo!!.get(i).gender!!, AppUtils.convertTimestampToDate(apiGetResponse.kidsInfo!!.get(i).dob), apiGetResponse.kidsInfo!!.get(i).name, false)
+                    createKidsDetailDynamicView(
+                        apiGetResponse.kidsInfo!!.get(i).gender!!,
+                        AppUtils.convertTimestampToDate(apiGetResponse.kidsInfo!!.get(i).dob),
+                        apiGetResponse.kidsInfo!!.get(i).name,
+                        false
+                    )
                 } else {
-                    createKidsDetailDynamicView(apiGetResponse.kidsInfo!!.get(i).gender!!, AppUtils.convertTimestampToDate(apiGetResponse.kidsInfo!!.get(i).dob), apiGetResponse.kidsInfo!!.get(i).name)
+                    createKidsDetailDynamicView(
+                        apiGetResponse.kidsInfo!!.get(i).gender!!,
+                        AppUtils.convertTimestampToDate(apiGetResponse.kidsInfo!!.get(i).dob),
+                        apiGetResponse.kidsInfo!!.get(i).name
+                    )
                 }
             }
             linearKidsEmptyView.visibility = View.GONE
@@ -400,7 +424,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
 
         editAddNumber.setOnClickListener {
-//            varifyNumberWithFacebookAccountKit()
+            //            varifyNumberWithFacebookAccountKit()
             val intent = Intent(activity, OTPActivity::class.java)
             startActivityForResult(intent, VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE)
         }
@@ -427,8 +451,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 //            List<Place.Field> fields = Arrays . asList (Place.Field.ID, Place.Field.NAME)
             val fieldsArr = arrayOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG).asList()
             val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fieldsArr)
-                    .setTypeFilter(TypeFilter.CITIES)
-                    .build(it.context)
+                .setTypeFilter(TypeFilter.CITIES)
+                .build(it.context)
 
             startActivityForResult(intent, REQUEST_SELECT_PLACE)
 
@@ -436,7 +460,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
         textVerify = containerView.findViewById(R.id.textVerify)
         textVerify.setOnClickListener {
-//            varifyNumberWithFacebookAccountKit()
+            //            varifyNumberWithFacebookAccountKit()
             val intent = Intent(activity, OTPActivity::class.java)
             startActivityForResult(intent, VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE)
         }
@@ -481,7 +505,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         textDeleteChild.setOnClickListener {
             if (linearKidsDetail.childCount > 0) {
                 if (linearKidsDetail.childCount == 1) {
-                    linearKidsDetail.getChildAt(0).findViewById<TextView>(R.id.textDeleteChild).visibility = View.GONE
+                    linearKidsDetail.getChildAt(0).findViewById<TextView>(R.id.textDeleteChild)
+                        .visibility = View.GONE
                     linearKidsEmptyView.visibility = View.GONE
                 } else {
                     linearKidsEmptyView.visibility = View.GONE
@@ -490,16 +515,17 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             }
         }
 
-        (containerView.findViewById<CheckBox>(R.id.checkAreYouExpecting)).setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
-            override fun onCheckedChanged(p0: CompoundButton?, isChecked: Boolean) {
-                if (isChecked) {
-                    layoutMotherExptectedDate.visibility = View.VISIBLE
-                } else {
-                    layoutMotherExptectedDate.visibility = View.GONE
-                    editExpectedDate.setText("")
+        (containerView.findViewById<CheckBox>(R.id.checkAreYouExpecting)).setOnCheckedChangeListener(
+            object : CompoundButton.OnCheckedChangeListener {
+                override fun onCheckedChanged(p0: CompoundButton?, isChecked: Boolean) {
+                    if (isChecked) {
+                        layoutMotherExptectedDate.visibility = View.VISIBLE
+                    } else {
+                        layoutMotherExptectedDate.visibility = View.GONE
+                        editExpectedDate.setText("")
+                    }
                 }
-            }
-        })
+            })
 
         textAddChild.setOnClickListener {
             if (validateChildData()) {
@@ -510,15 +536,35 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
 
         textEditInterest.setOnClickListener {
-            var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.INTEREST.name,
-                    isSingleSelection = true, preSelectedItemIds = preSelectedInterest, context = this@RewardsPersonalInfoFragment)
-            fragmentManager?.let { it1 -> fragment.show(it1, RewardsSocialInfoFragment::class.java.simpleName) }
+            var fragment = PickerDialogFragment.newInstance(
+                columnCount = 1,
+                popType = Constants.PopListRequestType.INTEREST.name,
+                isSingleSelection = true,
+                preSelectedItemIds = preSelectedInterest,
+                context = this@RewardsPersonalInfoFragment
+            )
+            fragmentManager?.let { it1 ->
+                fragment.show(
+                    it1,
+                    RewardsSocialInfoFragment::class.java.simpleName
+                )
+            }
         }
 
         editInterest.setOnClickListener {
-            var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.INTEREST.name,
-                    isSingleSelection = true, preSelectedItemIds = preSelectedInterest, context = this@RewardsPersonalInfoFragment)
-            fragmentManager?.let { it1 -> fragment.show(it1, RewardsSocialInfoFragment::class.java.simpleName) }
+            var fragment = PickerDialogFragment.newInstance(
+                columnCount = 1,
+                popType = Constants.PopListRequestType.INTEREST.name,
+                isSingleSelection = true,
+                preSelectedItemIds = preSelectedInterest,
+                context = this@RewardsPersonalInfoFragment
+            )
+            fragmentManager?.let { it1 ->
+                fragment.show(
+                    it1,
+                    RewardsSocialInfoFragment::class.java.simpleName
+                )
+            }
         }
 
         RewardsPersonalInfoFragment.textDOB.setOnClickListener {
@@ -532,15 +578,35 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
 
         textEditLanguage.setOnClickListener {
-            var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.LANGUAGE.name,
-                    isSingleSelection = true, preSelectedItemIds = preSelectedLanguage, context = this@RewardsPersonalInfoFragment)
-            fragmentManager?.let { it1 -> fragment.show(it1, RewardsSocialInfoFragment::class.java.simpleName) }
+            var fragment = PickerDialogFragment.newInstance(
+                columnCount = 1,
+                popType = Constants.PopListRequestType.LANGUAGE.name,
+                isSingleSelection = true,
+                preSelectedItemIds = preSelectedLanguage,
+                context = this@RewardsPersonalInfoFragment
+            )
+            fragmentManager?.let { it1 ->
+                fragment.show(
+                    it1,
+                    RewardsSocialInfoFragment::class.java.simpleName
+                )
+            }
         }
 
         editLanguage.setOnClickListener {
-            var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.LANGUAGE.name,
-                    isSingleSelection = true, preSelectedItemIds = preSelectedLanguage, context = this@RewardsPersonalInfoFragment)
-            fragmentManager?.let { it1 -> fragment.show(it1, RewardsSocialInfoFragment::class.java.simpleName) }
+            var fragment = PickerDialogFragment.newInstance(
+                columnCount = 1,
+                popType = Constants.PopListRequestType.LANGUAGE.name,
+                isSingleSelection = true,
+                preSelectedItemIds = preSelectedLanguage,
+                context = this@RewardsPersonalInfoFragment
+            )
+            fragmentManager?.let { it1 ->
+                fragment.show(
+                    it1,
+                    RewardsSocialInfoFragment::class.java.simpleName
+                )
+            }
         }
 
         val genderList = ArrayList<String>()
@@ -550,8 +616,10 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         val spinAdapter = CustomSpinnerAdapter(activity, genderList)
         spinnerGender.adapter = spinAdapter
         spinnerGender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapter: AdapterView<*>, v: View,
-                                        position: Int, id: Long) {
+            override fun onItemSelected(
+                adapter: AdapterView<*>, v: View,
+                position: Int, id: Long
+            ) {
                 spinnerGender.setSelection(position)
             }
 
@@ -562,8 +630,10 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         genderSpinner.adapter = spinAdapter
         genderSpinner.setSelection(1)
         genderSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapter: AdapterView<*>, v: View,
-                                        position: Int, id: Long) {
+            override fun onItemSelected(
+                adapter: AdapterView<*>, v: View,
+                position: Int, id: Long
+            ) {
                 genderSpinner.setSelection(position)
             }
 
@@ -584,53 +654,67 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
 
         containerView.findViewById<RadioGroup>(R.id.radioGroupFamilyType)
-                .setOnCheckedChangeListener { radioGroup, i ->
-                    when (i) {
-                        0 -> {
+            .setOnCheckedChangeListener { radioGroup, i ->
+                when (i) {
+                    0 -> {
 
-                        }
+                    }
 
-                        1 -> {
+                    1 -> {
 
-                        }
                     }
                 }
+            }
 
         containerView.findViewById<RadioGroup>(R.id.radioGroupAreMother)
-                .setOnCheckedChangeListener { radioGroup, i ->
-                    when (i) {
-                        R.id.radioNo -> {
-                            linearKidsDetail.removeAllViews()
-                            layoutNumberOfKids.visibility = View.GONE
-                            linearKidsDetail.visibility = View.GONE
-                            linearKidsEmptyView.visibility = View.GONE
-                            textAddChild.visibility = View.GONE
-                            layoutDynamicNumberOfKids.visibility = View.GONE
-                        }
-
-                        R.id.radioYes -> {
-                            textAddChild.visibility = View.VISIBLE
-                            spinnernumberOfKids.setSelection(0)
-                            layoutNumberOfKids.visibility = View.VISIBLE
-                            linearKidsDetail.visibility = View.VISIBLE
-                            linearKidsEmptyView.visibility = View.VISIBLE
-                            layoutDynamicNumberOfKids.visibility = View.VISIBLE
-                        }
-
+            .setOnCheckedChangeListener { radioGroup, i ->
+                when (i) {
+                    R.id.radioNo -> {
+                        linearKidsDetail.removeAllViews()
+                        layoutNumberOfKids.visibility = View.GONE
+                        linearKidsDetail.visibility = View.GONE
+                        linearKidsEmptyView.visibility = View.GONE
+                        textAddChild.visibility = View.GONE
+                        layoutDynamicNumberOfKids.visibility = View.GONE
                     }
+
+                    R.id.radioYes -> {
+                        textAddChild.visibility = View.VISIBLE
+                        spinnernumberOfKids.setSelection(0)
+                        layoutNumberOfKids.visibility = View.VISIBLE
+                        linearKidsDetail.visibility = View.VISIBLE
+                        linearKidsEmptyView.visibility = View.VISIBLE
+                        layoutDynamicNumberOfKids.visibility = View.VISIBLE
+                    }
+
                 }
+            }
     }
 
     fun prepareDataForPosting(): Boolean {
         if (!isNewRegistration && editFirstName.text.isNullOrEmpty()) {
-            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_first_name)), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                activity,
+                resources.getString(
+                    R.string.cannot_be_left_blank,
+                    resources.getString(R.string.rewards_first_name)
+                ),
+                Toast.LENGTH_SHORT
+            ).show()
             return false
         } else {
             apiGetResponse.firstName = editFirstName.text.toString()
         }
 
         if (!isNewRegistration && editLastName.text.isNullOrEmpty()) {
-            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_last_name)), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                activity,
+                resources.getString(
+                    R.string.cannot_be_left_blank,
+                    resources.getString(R.string.rewards_last_name)
+                ),
+                Toast.LENGTH_SHORT
+            ).show()
             return false
         } else {
             apiGetResponse.lastName = editLastName.text.toString()
@@ -642,7 +726,14 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 //        }
 
         if (accountKitAuthCode.isNullOrEmpty() && apiGetResponse.contact.isNullOrEmpty()) {
-            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_phone)), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                activity,
+                resources.getString(
+                    R.string.cannot_be_left_blank,
+                    resources.getString(R.string.rewards_phone)
+                ),
+                Toast.LENGTH_SHORT
+            ).show()
             return false
         } else {
             if (!apiGetResponse.contact.isNullOrEmpty()) {
@@ -661,7 +752,14 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
 
         if (editLocation.text.isNullOrEmpty()) {
-            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_location)), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                activity,
+                resources.getString(
+                    R.string.cannot_be_left_blank,
+                    resources.getString(R.string.rewards_location)
+                ),
+                Toast.LENGTH_SHORT
+            ).show()
             return false
         } else {
             apiGetResponse.location = editLocation.text.toString()
@@ -686,10 +784,18 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
 
         if (RewardsPersonalInfoFragment.textDOB.text.isNullOrEmpty()) {
-            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_dob)), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                activity,
+                resources.getString(
+                    R.string.cannot_be_left_blank,
+                    resources.getString(R.string.rewards_dob)
+                ),
+                Toast.LENGTH_SHORT
+            ).show()
             return false
         } else {
-            apiGetResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsPersonalInfoFragment.textDOB.text.toString())
+            apiGetResponse.dob =
+                DateTimeUtils.convertStringToTimestamp(RewardsPersonalInfoFragment.textDOB.text.toString())
         }
 
 
@@ -699,7 +805,14 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         if (!isNewRegistration && preSelectedLanguage.isEmpty()) {
 
 
-            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_language)), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                activity,
+                resources.getString(
+                    R.string.cannot_be_left_blank,
+                    resources.getString(R.string.rewards_language)
+                ),
+                Toast.LENGTH_SHORT
+            ).show()
             return false
         } else {
             apiGetResponse.preferred_languages = preSelectedLanguage
@@ -725,11 +838,19 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
         if (checkAreYouExpecting.isChecked) {
             if (editExpectedDate.text.isNullOrEmpty()) {
-                Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_expected_date)), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    activity,
+                    resources.getString(
+                        R.string.cannot_be_left_blank,
+                        resources.getString(R.string.rewards_expected_date)
+                    ),
+                    Toast.LENGTH_SHORT
+                ).show()
                 return false
             } else {
                 apiGetResponse.isExpecting = 1
-                apiGetResponse.expectedDate = DateTimeUtils.convertStringToTimestamp(editExpectedDate.text.toString())
+                apiGetResponse.expectedDate =
+                    DateTimeUtils.convertStringToTimestamp(editExpectedDate.text.toString())
             }
         } else {
             apiGetResponse.isExpecting = 0
@@ -742,13 +863,18 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 for (i in 0..linearKidsDetail.childCount) {
                     var kidsInfoResponse = KidsInfoResponse()
                     if (linearKidsDetail.getChildAt(i) != null) {
-                        kidsInfoResponse.gender = if (linearKidsDetail.getChildAt(i).findViewById<Spinner>(R.id.spinnerGender).selectedItemPosition == 0) {
-                            0
-                        } else {
-                            1
-                        }
-                        kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textKidsDOB).text.toString())
-                        kidsInfoResponse.name = linearKidsDetail.getChildAt(i).findViewById<EditText>(R.id.editKidsName).text.toString()
+                        kidsInfoResponse.gender =
+                            if (linearKidsDetail.getChildAt(i).findViewById<Spinner>(R.id.spinnerGender).selectedItemPosition == 0) {
+                                0
+                            } else {
+                                1
+                            }
+                        kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(
+                            linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textKidsDOB).text.toString()
+                        )
+                        kidsInfoResponse.name =
+                            linearKidsDetail.getChildAt(i).findViewById<EditText>(R.id.editKidsName)
+                                .text.toString()
                         kidsList.add(kidsInfoResponse)
                     }
                 }
@@ -762,11 +888,19 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                         } else {
                             1
                         }
-                        kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsPersonalInfoFragment.textKidsDOB.text.toString())
+                        kidsInfoResponse.dob =
+                            DateTimeUtils.convertStringToTimestamp(RewardsPersonalInfoFragment.textKidsDOB.text.toString())
                         kidsInfoResponse.name = editKidsName.text.toString()
                         apiGetResponse.kidsInfo!!.add(kidsInfoResponse)
                     } else {
-                        Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            activity,
+                            resources.getString(
+                                R.string.cannot_be_left_blank,
+                                resources.getString(R.string.rewards_number_of_kids)
+                            ),
+                            Toast.LENGTH_SHORT
+                        ).show()
                         return false
                     }
                 }
@@ -779,12 +913,20 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                     } else {
                         1
                     }
-                    kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsPersonalInfoFragment.textKidsDOB.text.toString())
+                    kidsInfoResponse.dob =
+                        DateTimeUtils.convertStringToTimestamp(RewardsPersonalInfoFragment.textKidsDOB.text.toString())
                     kidsInfoResponse.name = editKidsName.text.toString()
                     kidsInfoLocal.add(kidsInfoResponse)
                     apiGetResponse.kidsInfo = kidsInfoLocal
                 } else {
-                    Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        activity,
+                        resources.getString(
+                            R.string.cannot_be_left_blank,
+                            resources.getString(R.string.rewards_number_of_kids)
+                        ),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return false
                 }
             }
@@ -797,15 +939,15 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 apiGetResponse.referred_by = editReferralCode.text.toString()
             } else if (validReferralCode.equals("notValid")) {
                 (activity as BaseActivity).showAlertDialog(
-                        getString(R.string.alert_message_title),
-                        getString(R.string.referral_code_alert_message),
-                        OnButtonClicked {
-                            editReferralCode.text = null
-                            validReferralCode = "valid"
-                            if (prepareDataForPosting()) {
-                                postDataofRewardsToServer()
-                            }
+                    getString(R.string.alert_message_title),
+                    getString(R.string.referral_code_alert_message),
+                    OnButtonClicked {
+                        editReferralCode.text = null
+                        validReferralCode = "valid"
+                        if (prepareDataForPosting()) {
+                            postDataofRewardsToServer()
                         }
+                    }
                 )
                 return false
             } else if (validReferralCode.equals("empty")) {
@@ -827,18 +969,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
 
         return true
-    }
-
-
-    private fun varifyNumberWithFacebookAccountKit() {
-        val intent = Intent(activity, AccountKitActivity::class.java)
-        val configurationBuilder = AccountKitConfiguration.AccountKitConfigurationBuilder(
-                LoginType.PHONE, AccountKitActivity.ResponseType.CODE)
-        val themeId = R.style.AppLoginTheme
-        val themeManager = ThemeUIManager(themeId)
-        configurationBuilder.setUIManager(themeManager)
-        intent.putExtra(AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION, configurationBuilder.build())
-        startActivityForResult(intent, VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -891,40 +1021,48 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     /*post data to server*/
     private fun postDataofRewardsToServer() {
         val userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
-        Utils.pushGenericEvent(activity, "CTA_Submit_MyMoney_RegistrationForm_Unregistered",
-                userId, "RewardsPersonalInfoFragment")
+        Utils.pushGenericEvent(
+            activity, "CTA_Submit_MyMoney_RegistrationForm_Unregistered",
+            userId, "RewardsPersonalInfoFragment"
+        )
         if (!userId.isNullOrEmpty()) {
             showProgressDialog(resources.getString(R.string.please_wait))
 
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiDataForAny(userId!!, apiGetResponse, pageValue = 4).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<RewardsPersonalResponse> {
-                override fun onComplete() {
-                    removeProgressDialog()
-                }
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java)
+                .sendRewardsapiDataForAny(userId!!, apiGetResponse, pageValue = 4)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : Observer<RewardsPersonalResponse> {
+                    override fun onComplete() {
+                        removeProgressDialog()
+                    }
 
-                override fun onSubscribe(d: Disposable) {
-                }
+                    override fun onSubscribe(d: Disposable) {
+                    }
 
-                override fun onNext(response: RewardsPersonalResponse) {
-                    if (response.code == 200) {
-                        if (Constants.SUCCESS == response.status) {
-                            if (isComingFromCampaign) {
-                                SharedPrefUtils.setIsRewardsAdded(BaseApplication.getAppContext(), "1")
+                    override fun onNext(response: RewardsPersonalResponse) {
+                        if (response.code == 200) {
+                            if (Constants.SUCCESS == response.status) {
+                                if (isComingFromCampaign) {
+                                    SharedPrefUtils.setIsRewardsAdded(
+                                        BaseApplication.getAppContext(),
+                                        "1"
+                                    )
+                                }
+                                saveAndContinueListener.profileOnSaveAndContinue()
+                                if (isNewRegistration) {
+                                    facebookEventForRegistration()
+                                }
+                            } else if (Constants.FAILURE == response.status) {
+                                Toast.makeText(context, response.reason, Toast.LENGTH_LONG).show()
                             }
-                            saveAndContinueListener.profileOnSaveAndContinue()
-                            if (isNewRegistration) {
-                                facebookEventForRegistration()
-                            }
-                        } else if (Constants.FAILURE == response.status) {
-                            Toast.makeText(context, response.reason, Toast.LENGTH_LONG).show()
                         }
                     }
-                }
 
-                override fun onError(e: Throwable) {
-                    removeProgressDialog()
-                    Log.e("exception in error", e.message.toString())
-                }
-            })
+                    override fun onError(e: Throwable) {
+                        removeProgressDialog()
+                        Log.e("exception in error", e.message.toString())
+                    }
+                })
         }
     }
 
@@ -947,71 +1085,82 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         val userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         if (userId != null) {
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData(userId, 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java)
+                .getRewardsapiData(userId, 1).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
+                    override fun onComplete() {
+                    }
+
+                    override fun onSubscribe(d: Disposable) {
+                    }
+
+                    override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
+                        if (response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
+                            apiGetResponse = response.data!!.result
+                            fetchCityData()
+                            setValuesToComponents()
+                        } else {
+                        }
+                    }
+
+                    override fun onError(e: Throwable) {
+                        removeProgressDialog()
+                        Log.d("exception in error", e.message.toString())
+                    }
+                })
+        }
+    }
+
+    private fun fetchCityData() {
+        BaseApplication.getInstance().retrofit.create(ConfigAPIs::class.java).getCityConfigRx()
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<BaseResponseGeneric<CityConfigResultResponse>> {
                 override fun onComplete() {
+                    removeProgressDialog()
                 }
 
                 override fun onSubscribe(d: Disposable) {
                 }
 
-                override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
+                override fun onNext(response: BaseResponseGeneric<CityConfigResultResponse>) {
                     if (response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
-                        apiGetResponse = response.data!!.result
-                        fetchCityData()
-                        setValuesToComponents()
+                        if (response.data!!.result != null && response!!.data!!.result != null && response!!.data!!.result.cityData.isNotEmpty()) {
+                            val currentCity =
+                                SharedPrefUtils.getCurrentCityModel(saveAndContinueListener as RewardsContainerActivity)
+                            (response!!.data!!.result.cityData).forEach {
+                                if (AppConstants.ALL_CITY_NEW_ID != it.id) {
+                                    cityList.add(it)
+                                }
+                                if (AppConstants.OTHERS_NEW_CITY_ID == it.id) {
+                                    if (currentCity.name != null && "Others" != currentCity.name && currentCity.id == AppConstants.OTHERS_CITY_ID) {
+                                        cityList.get(cityList.size - 1).cityName =
+                                            ("Others(" + currentCity.name + ")")
+                                    }
+                                }
+                            }
+
+                            (cityList).forEach {
+                                val cId = Integer.parseInt(it.id!!.replace("city-", ""))
+                                it.isSelected = currentCity.id == cId
+                            }
+                        }
                     } else {
+
                     }
                 }
 
                 override fun onError(e: Throwable) {
                     removeProgressDialog()
-                    Log.d("exception in error", e.message.toString())
                 }
             })
-        }
     }
 
-    private fun fetchCityData() {
-        BaseApplication.getInstance().retrofit.create(ConfigAPIs::class.java).getCityConfigRx().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CityConfigResultResponse>> {
-            override fun onComplete() {
-                removeProgressDialog()
-            }
-
-            override fun onSubscribe(d: Disposable) {
-            }
-
-            override fun onNext(response: BaseResponseGeneric<CityConfigResultResponse>) {
-                if (response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
-                    if (response.data!!.result != null && response!!.data!!.result != null && response!!.data!!.result.cityData.isNotEmpty()) {
-                        val currentCity = SharedPrefUtils.getCurrentCityModel(saveAndContinueListener as RewardsContainerActivity)
-                        (response!!.data!!.result.cityData).forEach {
-                            if (AppConstants.ALL_CITY_NEW_ID != it.id) {
-                                cityList.add(it)
-                            }
-                            if (AppConstants.OTHERS_NEW_CITY_ID == it.id) {
-                                if (currentCity.name != null && "Others" != currentCity.name && currentCity.id == AppConstants.OTHERS_CITY_ID) {
-                                    cityList.get(cityList.size - 1).cityName = ("Others(" + currentCity.name + ")")
-                                }
-                            }
-                        }
-
-                        (cityList).forEach {
-                            val cId = Integer.parseInt(it.id!!.replace("city-", ""))
-                            it.isSelected = currentCity.id == cId
-                        }
-                    }
-                } else {
-
-                }
-            }
-
-            override fun onError(e: Throwable) {
-                removeProgressDialog()
-            }
-        })
-    }
-
-    fun showDatePickerDialog(isShowTillCurrent: Boolean, isShowFutureDate: Boolean = false, isForParent: Boolean = false) {
+    fun showDatePickerDialog(
+        isShowTillCurrent: Boolean,
+        isShowFutureDate: Boolean = false,
+        isForParent: Boolean = false
+    ) {
         val newFragment = RewardsPersonalInfoFragment.DatePickerFragment()
         var bundle = Bundle()
         bundle.putBoolean("is_show_current_only", isShowTillCurrent)
@@ -1034,7 +1183,16 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         @SuppressLint("NewApi")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             // Use the current date as the default date in the picker
-            val dlg = activity?.let { DatePickerDialog(it, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, this, curent_year, current_month, current_day) }
+            val dlg = activity?.let {
+                DatePickerDialog(
+                    it,
+                    android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
+                    this,
+                    curent_year,
+                    current_month,
+                    current_day
+                )
+            }
 
             if (arguments != null) {
                 isShowTillCurrent = arguments!!.getBoolean("is_show_current_only", false)
@@ -1067,16 +1225,27 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     }
 
     private fun validateChildData(): Boolean {
-        Log.d("text value", " " + RewardsPersonalInfoFragment.textKidsDOB.text + " " + linearKidsEmptyView.visibility)
+        Log.d(
+            "text value",
+            " " + RewardsPersonalInfoFragment.textKidsDOB.text + " " + linearKidsEmptyView.visibility
+        )
         if (linearKidsEmptyView.visibility == View.VISIBLE && RewardsPersonalInfoFragment.textKidsDOB.text.isBlank()) {
-            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_dob)), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                activity,
+                resources.getString(
+                    R.string.cannot_be_left_blank,
+                    resources.getString(R.string.rewards_dob)
+                ),
+                Toast.LENGTH_SHORT
+            ).show()
             return false
         } else if (linearKidsEmptyView.visibility == View.GONE) {
             linearKidsEmptyView.visibility = View.VISIBLE
             textDeleteChild.visibility = View.VISIBLE
             if (linearKidsDetail.childCount > 0) {
                 for (i in 0..linearKidsDetail.childCount - 1) {
-                    linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textDeleteChild).visibility = View.VISIBLE
+                    linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textDeleteChild)
+                        .visibility = View.VISIBLE
                 }
             }
             return false
@@ -1087,10 +1256,17 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         return true
     }
 
-    fun createKidsDetailDynamicView(gender: Int? = null, date: String = "", name: String? = "", shouldDelteShow: Boolean = true) {
+    fun createKidsDetailDynamicView(
+        gender: Int? = null,
+        date: String = "",
+        name: String? = "",
+        shouldDelteShow: Boolean = true
+    ) {
         val params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        val inflater = activity!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        val inflater =
+            activity!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val indexView = inflater.inflate(R.layout.dynamic_child_view, null)
         var textHeader = indexView.findViewById<TextView>(R.id.textHeader)
         var textDelete = indexView.findViewById<TextView>(R.id.textDeleteChild)
@@ -1124,7 +1300,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 }
             }
             if (linearKidsEmptyView.visibility == View.GONE && linearKidsDetail.childCount == 1) {
-                linearKidsDetail.getChildAt(0).findViewById<TextView>(R.id.textDeleteChild).visibility = View.GONE
+                linearKidsDetail.getChildAt(0).findViewById<TextView>(R.id.textDeleteChild)
+                    .visibility = View.GONE
             } else if (linearKidsEmptyView.visibility == View.VISIBLE && linearKidsDetail.childCount == 0) {
                 textDeleteChild.visibility = View.GONE
             }
@@ -1140,8 +1317,10 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         val spinAdapter = CustomSpinnerAdapter(activity, genderList)
         spinnerGender.adapter = spinAdapter
         spinnerGender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapter: AdapterView<*>, v: View,
-                                        position: Int, id: Long) {
+            override fun onItemSelected(
+                adapter: AdapterView<*>, v: View,
+                position: Int, id: Long
+            ) {
                 spinnerGender.setSelection(position)
             }
 
@@ -1196,7 +1375,10 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                     preSelectedInterest.add(name)
                 }
                 context?.let { mContext ->
-                    val subsubLL = LayoutInflater.from(activity).inflate(R.layout.shape_rewards_border_rectangular, null) as LinearLayout
+                    val subsubLL = LayoutInflater.from(activity).inflate(
+                        R.layout.shape_rewards_border_rectangular,
+                        null
+                    ) as LinearLayout
                     val catTextView = subsubLL.getChildAt(0) as TextView
                     catTextView.setText(it)
                     catTextView.isSelected = true
@@ -1226,7 +1408,10 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                     preSelectedLanguage.add(name)
                 }
                 context?.let { mContext ->
-                    val subsubLL = LayoutInflater.from(context).inflate(R.layout.shape_rewards_border_rectangular, null) as LinearLayout
+                    val subsubLL = LayoutInflater.from(context).inflate(
+                        R.layout.shape_rewards_border_rectangular,
+                        null
+                    ) as LinearLayout
                     val catTextView = subsubLL.getChildAt(0) as TextView
                     catTextView.setText(it)
                     catTextView.isSelected = true
@@ -1240,43 +1425,54 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     private fun validateReferralCode() {
         if (!editReferralCode.text.trim().isNullOrEmpty()) {
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).validateReferralCode(editReferralCode.text.toString()!!).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ReferralCodeResult>> {
-                override fun onComplete() {
-                    removeProgressDialog()
-                }
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java)
+                .validateReferralCode(editReferralCode.text.toString()!!)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : Observer<BaseResponseGeneric<ReferralCodeResult>> {
+                    override fun onComplete() {
+                        removeProgressDialog()
+                    }
 
-                override fun onSubscribe(d: Disposable) {
+                    override fun onSubscribe(d: Disposable) {
 
-                }
+                    }
 
-                override fun onNext(response: BaseResponseGeneric<ReferralCodeResult>) {
-                    if (response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response!!.data!!.result != null) {
-                        if (response!!.data!!.result.is_valid) {
-                            textReferCodeError.setTextColor(activity!!.resources.getColor(R.color.green_dark))
-                            textReferCodeError.setText("Successfully Applied")
-                            editReferralCode.isEnabled = true
-                            textApplyReferral.isEnabled = false
-                            validReferralCode = "valid"
-                            if (isAdded) {
-                                Toast.makeText(activity, "Successfully Applied", Toast.LENGTH_SHORT).show()
-                            }
-                        } else {
-                            textReferCodeError.visibility = View.VISIBLE
-                            textReferCodeError.setText("Code is not valid")
-                            validReferralCode = "notValid"
-                            textReferCodeError.setTextColor(activity!!.resources.getColor(R.color.campaign_refer_code_error))
-                            if (isAdded) {
-                                Toast.makeText(activity, "Code is not valid", Toast.LENGTH_SHORT).show()
+                    override fun onNext(response: BaseResponseGeneric<ReferralCodeResult>) {
+                        if (response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response!!.data!!.result != null) {
+                            if (response!!.data!!.result.is_valid) {
+                                textReferCodeError.setTextColor(activity!!.resources.getColor(R.color.green_dark))
+                                textReferCodeError.setText("Successfully Applied")
+                                editReferralCode.isEnabled = true
+                                textApplyReferral.isEnabled = false
+                                validReferralCode = "valid"
+                                if (isAdded) {
+                                    Toast.makeText(
+                                        activity,
+                                        "Successfully Applied",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            } else {
+                                textReferCodeError.visibility = View.VISIBLE
+                                textReferCodeError.setText("Code is not valid")
+                                validReferralCode = "notValid"
+                                textReferCodeError.setTextColor(activity!!.resources.getColor(R.color.campaign_refer_code_error))
+                                if (isAdded) {
+                                    Toast.makeText(
+                                        activity,
+                                        "Code is not valid",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             }
                         }
                     }
-                }
 
-                override fun onError(e: Throwable) {
-                    removeProgressDialog()
-                    Log.d("exception in error", e.message.toString())
-                }
-            })
+                    override fun onError(e: Throwable) {
+                        removeProgressDialog()
+                        Log.d("exception in error", e.message.toString())
+                    }
+                })
         }
     }
 

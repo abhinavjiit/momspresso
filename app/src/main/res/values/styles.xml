@@ -1,4 +1,4 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -273,22 +273,6 @@
     <style name="NavigationDrawerStyle">
         <item name="android:textSize">18sp</item>
         <item name="android:fontFamily"></item>
-    </style>
-
-
-    <style name="AppLoginTheme" parent="Theme.AccountKit">
-        <item name="com_accountkit_primary_color">@color/app_red</item>
-
-        <!-- Button -->
-        <item name="com_accountkit_button_background_color">@color/app_red</item>
-        <item name="com_accountkit_button_border_color">@color/app_red</item>
-        <item name="com_accountkit_button_text_color">@android:color/white</item>
-        <item name="com_accountkit_button_pressed_background_color">@color/app_red</item>
-
-        <!-- input -->
-        <item name="com_accountkit_input_border_color">#96D54058</item>
-        <item name="com_accountkit_input_text_color">@color/black_color</item>
-        <item name="com_accountkit_input_background_color">#24D54058</item>
     </style>
 
     <style name="PlayerTheme" parent="android:Theme.Holo">

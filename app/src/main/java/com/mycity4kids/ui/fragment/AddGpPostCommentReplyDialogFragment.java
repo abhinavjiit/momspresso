@@ -45,6 +45,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -59,11 +65,9 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.DateTimeUtils;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
@@ -78,8 +82,10 @@ import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.AudioRecordView;
+import com.mycity4kids.utils.DateTimeUtils;
 import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.PermissionUtil;
+import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
 
@@ -93,12 +99,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
-
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -106,7 +106,6 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 import static android.app.Activity.RESULT_OK;
-import static com.facebook.accountkit.internal.AccountKitController.getApplicationContext;
 
 /**
  * Created by user on 08-06-2015.
@@ -227,9 +226,9 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         mImgRecordButton = rootView.findViewById(R.id.record_button_red);
         mImgRecordCross = rootView.findViewById(R.id.bottomSheetCross);
         mLinearBottomSheet = rootView.findViewById(R.id.bottomsheet);
-        slideAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.appear_from_bottom);
+        slideAnim = AnimationUtils.loadAnimation(getContext(), R.anim.appear_from_bottom);
         fadeAnim = AnimationUtils.loadAnimation(getContext(), R.anim.alpha_anim);
-        slideDownAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_slide_down_from_top);
+        slideDownAnim = AnimationUtils.loadAnimation(getContext(), R.anim.anim_slide_down_from_top);
         playAudioLayout = rootView.findViewById(R.id.playAudioLayout);
         timerLayout = rootView.findViewById(R.id.timerLayout);
         playAudioImageView = rootView.findViewById(R.id.playAudioImageView);
@@ -1274,7 +1273,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                          public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
                              Crashlytics.logException(t);
                              Log.d("MC4KException", Log.getStackTraceString(t));
-                             if(isAdded()) {
+                             if (isAdded()) {
                                  ((BaseActivity) getActivity()).apiExceptions(t);
                                  Toast.makeText(getActivity(), "went_wrong", Toast.LENGTH_SHORT)
                                          .show();
