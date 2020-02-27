@@ -39,7 +39,11 @@ class MyCollectionsWidget : RelativeLayout, OnClickListener {
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         initializeView()
     }
 
@@ -67,67 +71,90 @@ class MyCollectionsWidget : RelativeLayout, OnClickListener {
         }
         authorId?.let {
             BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java)
-                    .getUserCollectionList(authorId, 0, 7)
-                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
-                        override fun onComplete() {
-                        }
+                .getUserCollectionList(authorId, 0, 7)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
+                    override fun onComplete() {
+                    }
 
-                        override fun onSubscribe(d: Disposable) {
-                        }
+                    override fun onSubscribe(d: Disposable) {
+                    }
 
-                        override fun onNext(response: BaseResponseGeneric<UserCollectionsListModel>) {
-                            try {
-                                if (response.code == 200 && response.status == "success" && response.data?.result != null) {
-                                    userCollectionsListModel = response.data!!.result
-                                    if (userCollectionsListModel.collectionsList.size > 0) {
-                                        collectionsContainer.visibility = View.VISIBLE
-                                        collectionsShimmerContainer.visibility = View.GONE
-                                    } else {
-                                        collectionsShimmerContainer.visibility = View.GONE
-                                        if (isPrivateProfile) {
-                                            collectionsContainer.visibility = View.VISIBLE
-                                        } else {
-                                            collectionsContainer.visibility = View.GONE
-                                        }
-                                    }
-                                    val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-                                    for (i in 0 until userCollectionsListModel.collectionsList.size) {
-                                        val itemView = inflater.inflate(R.layout.profile_collections_item, null)
-                                        try {
-                                            Picasso.get().load(userCollectionsListModel.collectionsList[i].imageUrl)
-                                                    .placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                                                    .fit().into(itemView.findViewById<ImageView>(R.id.collectionImageView))
-                                        } catch (e: Exception) {
-                                            itemView.findViewById<ImageView>(R.id.collectionImageView).setImageDrawable(
-                                                    ContextCompat.getDrawable(context, R.drawable.default_article))
-                                        }
-
-                                        itemView.findViewById<TextView>(R.id.collectionTitleTextView).text = userCollectionsListModel.collectionsList[i].name
-                                        itemView.findViewById<ImageView>(R.id.collectionImageView).clipToOutline = true
-                                        itemView.setOnClickListener(OnClickListener {
-                                            val intent = Intent(it.context, UserCollectionItemListActivity::class.java)
-                                            intent.putExtra("id", userCollectionsListModel.collectionsList[i].userCollectionId)
-                                            it.context.startActivity(intent)
-                                        })
-                                        collectionsHSVContainer.addView(itemView)
-                                    }
+                    override fun onNext(response: BaseResponseGeneric<UserCollectionsListModel>) {
+                        try {
+                            if (response.code == 200 && response.status == "success" && response.data?.result != null) {
+                                userCollectionsListModel = response.data!!.result
+                                if (userCollectionsListModel.collectionsList.size > 0) {
+                                    collectionsContainer.visibility = View.VISIBLE
+                                    collectionsShimmerContainer.visibility = View.GONE
                                 } else {
-                                    this@MyCollectionsWidget.visibility = View.GONE
+                                    collectionsShimmerContainer.visibility = View.GONE
+                                    if (isPrivateProfile) {
+                                        collectionsContainer.visibility = View.VISIBLE
+                                    } else {
+                                        collectionsContainer.visibility = View.GONE
+                                    }
                                 }
-                            } catch (e: Exception) {
-                                this@MyCollectionsWidget.visibility = View.GONE
-                                Crashlytics.logException(e)
-                                Log.d("MC4kException", Log.getStackTraceString(e))
-                            }
-                        }
+                                val inflater =
+                                    context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                                for (i in 0 until userCollectionsListModel.collectionsList.size) {
+                                    val itemView =
+                                        inflater.inflate(R.layout.profile_collections_item, null)
+                                    try {
+                                        Picasso.get()
+                                            .load(userCollectionsListModel.collectionsList[i].imageUrl)
+                                            .placeholder(R.drawable.default_article)
+                                            .error(R.drawable.default_article)
+                                            .fit()
+                                            .into(itemView.findViewById<ImageView>(R.id.collectionImageView))
+                                    } catch (e: Exception) {
+                                        itemView.findViewById<ImageView>(R.id.collectionImageView)
+                                            .setImageDrawable(
+                                                ContextCompat.getDrawable(
+                                                    context,
+                                                    R.drawable.default_article
+                                                )
+                                            )
+                                    }
 
-                        override fun onError(e: Throwable) {
+                                    itemView.findViewById<TextView>(R.id.collectionTitleTextView)
+                                        .text = userCollectionsListModel.collectionsList[i].name
+                                    itemView.findViewById<ImageView>(R.id.collectionImageView)
+                                        .clipToOutline = true
+                                    itemView.setOnClickListener(OnClickListener {
+                                        val intent = Intent(
+                                            it.context,
+                                            UserCollectionItemListActivity::class.java
+                                        )
+                                        intent.putExtra(
+                                            "id",
+                                            userCollectionsListModel.collectionsList[i].userCollectionId
+                                        )
+//                                            it.context.startActivity(intent)
+                                        intent.putExtra("position", i)
+                                        (context as UserProfileActivity).startActivityForResult(
+                                            intent,
+                                            1000
+                                        )
+                                    })
+                                    collectionsHSVContainer.addView(itemView)
+                                }
+                            } else {
+                                this@MyCollectionsWidget.visibility = View.GONE
+                            }
+                        } catch (e: Exception) {
                             this@MyCollectionsWidget.visibility = View.GONE
                             Crashlytics.logException(e)
                             Log.d("MC4kException", Log.getStackTraceString(e))
                         }
-                    })
+                    }
+
+                    override fun onError(e: Throwable) {
+                        this@MyCollectionsWidget.visibility = View.GONE
+                        Crashlytics.logException(e)
+                        Log.d("MC4kException", Log.getStackTraceString(e))
+                    }
+                })
         }
     }
 
@@ -139,8 +166,10 @@ class MyCollectionsWidget : RelativeLayout, OnClickListener {
                         val addCollectionPopUpDialogFragment = AddCollectionPopUpDialogFragment()
                         val fm = (context as UserProfileActivity).supportFragmentManager
                         addCollectionPopUpDialogFragment.show(fm, "collectionAddPopUp")
-                        Utils.pushProfileEvents(context, "CTA_Add_Collection_From_Profile", "UserProfileActivity",
-                                "Add Collection", "-")
+                        Utils.pushProfileEvents(
+                            context, "CTA_Add_Collection_From_Profile", "UserProfileActivity",
+                            "Add Collection", "-"
+                        )
                     }
                 }
                 v?.id == R.id.viewAllTextView -> {
@@ -162,4 +191,11 @@ class MyCollectionsWidget : RelativeLayout, OnClickListener {
         getCollections(authorId, privateProfile)
     }
 
+    fun deleteCollection(authorId: String?, collectionPos: Int?, privateProfile: Boolean) {
+        /*for (i in 1 until collectionsHSVContainer.childCount-1) {
+            collectionsHSVContainer.removeViewAt(i)
+        }*/
+        collectionsHSVContainer.removeViews(1, collectionsHSVContainer.childCount - 1)
+        getCollections(authorId, privateProfile)
+    }
 }

@@ -60,6 +60,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI
 import com.mycity4kids.ui.activity.ChangePasswordActivity
+import com.mycity4kids.ui.activity.OTPActivity
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter
 import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment
 import com.mycity4kids.ui.fragment.CityListingDialogFragment
@@ -289,9 +290,10 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
 
         if (!apiGetResponse.email.isNullOrBlank()) {
             editEmail.setText(apiGetResponse.email)
-        } else {
+            editEmail.isEnabled = false
+        } /*else {
             editEmail.setText(SharedPrefUtils.getUserDetailModel(activity)?.email)
-        }
+        }*/
 
 
         if (!apiGetResponse.cityName.isNullOrBlank()) editLocation.setText(apiGetResponse.cityName)
@@ -420,7 +422,10 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
         aboutEditText = containerView.findViewById(R.id.aboutEditText)
 
         editAddNumber.setOnClickListener {
-            varifyNumberWithFacebookAccountKit()
+//            varifyNumberWithFacebookAccountKit()
+            val intent = Intent(activity, OTPActivity::class.java)
+            startActivityForResult(intent, VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE)
+
         }
 
         /*textApplyReferral.setOnClickListener {
@@ -464,7 +469,9 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
 
         textVerify = containerView.findViewById(R.id.textVerify)
         textVerify.setOnClickListener {
-            varifyNumberWithFacebookAccountKit()
+//            varifyNumberWithFacebookAccountKit()
+            val intent = Intent(activity, OTPActivity::class.java)
+            startActivityForResult(intent, VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE)
         }
         (containerView.findViewById<TextView>(R.id.textSaveAndContinue)).setOnClickListener {
             if (prepareDataForPosting()) {
@@ -1031,7 +1038,8 @@ class ProfileInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragmen
             }
             VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE -> {
                 if (data != null && resultCode == Activity.RESULT_OK) {
-                    accountKitAuthCode = (data!!.getParcelableExtra(AccountKitLoginResult.RESULT_KEY) as AccountKitLoginResult).authorizationCode!!
+//                    accountKitAuthCode = (data!!.getParcelableExtra(AccountKitLoginResult.RESULT_KEY) as AccountKitLoginResult).authorizationCode!!
+                    accountKitAuthCode = data.getStringExtra("auth_token")!!
                     Log.d("account code ", accountKitAuthCode)
 //                        apiGetResponse.contact = null
                     editPhone.visibility = View.VISIBLE

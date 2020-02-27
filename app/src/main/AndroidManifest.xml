@@ -464,6 +464,9 @@
         <activity
             android:name=".ui.activity.FollowingListFBSuggestionActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.OTPActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="io.branch.sdk.BranchKey"

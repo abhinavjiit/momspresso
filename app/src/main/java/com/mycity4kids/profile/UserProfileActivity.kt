@@ -3,6 +3,7 @@ package com.mycity4kids.profile
 import android.Manifest
 import android.accounts.NetworkErrorException
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.PorterDuff
@@ -31,10 +32,10 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
-import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.R
 import com.mycity4kids.animation.MyCityAnimationsUtil
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.editor.EditorPostActivity
@@ -64,12 +65,17 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
 class UserProfileActivity : BaseActivity(),
-        UserContentAdapter.RecyclerViewClickListener, View.OnClickListener, UsersFeaturedContentAdapter.RecyclerViewClickListener,
-        AddCollectionPopUpDialogFragment.AddCollectionInterface, UsersBookmarksAdapter.RecyclerViewClickListener,
-        ResizableTextView.SeeMore {
+    UserContentAdapter.RecyclerViewClickListener, View.OnClickListener,
+    UsersFeaturedContentAdapter.RecyclerViewClickListener,
+    AddCollectionPopUpDialogFragment.AddCollectionInterface,
+    UsersBookmarksAdapter.RecyclerViewClickListener,
+    ResizableTextView.SeeMore {
 
     val REQUEST_GALLERY_PERMISSION = 1
-    val PERMISSIONS_INIT = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    val PERMISSIONS_INIT = arrayOf(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
     val sharableProfileImageName = "profile"
     var shareCardType: String? = null
     var shareMedium: String? = null
@@ -139,8 +145,17 @@ class UserProfileActivity : BaseActivity(),
     private lateinit var sharedStoryItem: MixFeedResult
 
 
-    private val userContentAdapter: UserContentAdapter by lazy { UserContentAdapter(this, AppUtils.isPrivateProfile(authorId)) }
-    private val usersFeaturedContentAdapter: UsersFeaturedContentAdapter by lazy { UsersFeaturedContentAdapter(this) }
+    private val userContentAdapter: UserContentAdapter by lazy {
+        UserContentAdapter(
+            this,
+            AppUtils.isPrivateProfile(authorId)
+        )
+    }
+    private val usersFeaturedContentAdapter: UsersFeaturedContentAdapter by lazy {
+        UsersFeaturedContentAdapter(
+            this
+        )
+    }
     private val usersBookmarksAdapter: UsersBookmarksAdapter by lazy { UsersBookmarksAdapter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -290,7 +305,10 @@ class UserProfileActivity : BaseActivity(),
         val bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI::class.java)
         val call = bloggerDashboardAPI.getBloggerData(authorId)
         call.enqueue(object : Callback<UserDetailResponse> {
-            override fun onResponse(call: Call<UserDetailResponse>, response: retrofit2.Response<UserDetailResponse>) {
+            override fun onResponse(
+                call: Call<UserDetailResponse>,
+                response: retrofit2.Response<UserDetailResponse>
+            ) {
                 if (null == response.body()) {
                     return
                 }
@@ -308,7 +326,10 @@ class UserProfileActivity : BaseActivity(),
                         processAuthorPostCount(responseData)
                         processAuthorsFollowingAndFollowership(responseData)
                         processAuthorPersonalDetails(responseData)
-                        profileShareCardWidget.populateUserDetails(authorId!!, responseData.data[0].result)
+                        profileShareCardWidget.populateUserDetails(
+                            authorId!!,
+                            responseData.data[0].result
+                        )
                     }
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
@@ -335,7 +356,10 @@ class UserProfileActivity : BaseActivity(),
         articleDetailRequest.articleId = ""
         val callBookmark = articleDetailsAPI.checkFollowingBookmarkStatus("0", authorId)
         callBookmark.enqueue(object : Callback<ArticleDetailResponse> {
-            override fun onResponse(call: Call<ArticleDetailResponse>, response: retrofit2.Response<ArticleDetailResponse>) {
+            override fun onResponse(
+                call: Call<ArticleDetailResponse>,
+                response: retrofit2.Response<ArticleDetailResponse>
+            ) {
                 if (null == response.body()) {
                     showToast(getString(R.string.server_went_wrong))
                     return
@@ -376,82 +400,96 @@ class UserProfileActivity : BaseActivity(),
             followAuthorTextView.setText(R.string.ad_follow_author)
             val followUnfollowUserResponseCall = followAPI.unfollowUser(request)
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback)
-            Utils.pushProfileEvents(this, "CTA_Unfollow_Profile", "UserProfileActivity",
-                    "Unfollow", "-")
+            Utils.pushProfileEvents(
+                this, "CTA_Unfollow_Profile", "UserProfileActivity",
+                "Unfollow", "-"
+            )
         } else {
             isFollowing = true
             followAuthorTextView.setText(R.string.ad_following_author)
             val followUnfollowUserResponseCall = followAPI.followUser(request)
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback)
-            Utils.pushProfileEvents(this, "CTA_Follow_Profile", "UserProfileActivity",
-                    "Follow", "-")
+            Utils.pushProfileEvents(
+                this, "CTA_Follow_Profile", "UserProfileActivity",
+                "Follow", "-"
+            )
         }
     }
 
-    private var followUserResponseCallback: Callback<FollowUnfollowUserResponse> = object : Callback<FollowUnfollowUserResponse> {
-        override fun onResponse(call: Call<FollowUnfollowUserResponse>, response: retrofit2.Response<FollowUnfollowUserResponse>) {
-            isFollowUnFollowRequestRunning = false
-            if (response.body() == null) {
-                showToast(getString(R.string.went_wrong))
-                return
-            }
-            try {
-                val responseData = response.body()
-                if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-
-                } else {
-                    followAuthorTextView.setText(R.string.ad_follow_author)
-                    isFollowing = false
+    private var followUserResponseCallback: Callback<FollowUnfollowUserResponse> =
+        object : Callback<FollowUnfollowUserResponse> {
+            override fun onResponse(
+                call: Call<FollowUnfollowUserResponse>,
+                response: retrofit2.Response<FollowUnfollowUserResponse>
+            ) {
+                isFollowUnFollowRequestRunning = false
+                if (response.body() == null) {
+                    showToast(getString(R.string.went_wrong))
+                    return
                 }
-            } catch (e: Exception) {
-                showToast(getString(R.string.server_went_wrong))
-                Crashlytics.logException(e)
-                Log.d("MC4kException", Log.getStackTraceString(e))
-            }
-        }
+                try {
+                    val responseData = response.body()
+                    if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
 
-        override fun onFailure(call: Call<FollowUnfollowUserResponse>, t: Throwable) {
-            isFollowUnFollowRequestRunning = false
-            showToast(getString(R.string.server_went_wrong))
-            Crashlytics.logException(t)
-            Log.d("MC4kException", Log.getStackTraceString(t))
-        }
-    }
-
-    private var unfollowUserResponseCallback: Callback<FollowUnfollowUserResponse> = object : Callback<FollowUnfollowUserResponse> {
-        override fun onResponse(call: Call<FollowUnfollowUserResponse>, response: retrofit2.Response<FollowUnfollowUserResponse>) {
-            isFollowUnFollowRequestRunning = false
-            if (response.body() == null) {
-                showToast(getString(R.string.went_wrong))
-                return
-            }
-            try {
-                val responseData = response.body()
-                if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-                } else {
-                    followAuthorTextView.setText(R.string.ad_following_author)
-                    isFollowing = true
+                    } else {
+                        followAuthorTextView.setText(R.string.ad_follow_author)
+                        isFollowing = false
+                    }
+                } catch (e: Exception) {
+                    showToast(getString(R.string.server_went_wrong))
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
                 }
-            } catch (e: Exception) {
+            }
+
+            override fun onFailure(call: Call<FollowUnfollowUserResponse>, t: Throwable) {
+                isFollowUnFollowRequestRunning = false
                 showToast(getString(R.string.server_went_wrong))
-                Crashlytics.logException(e)
-                Log.d("MC4kException", Log.getStackTraceString(e))
+                Crashlytics.logException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
 
-        override fun onFailure(call: Call<FollowUnfollowUserResponse>, t: Throwable) {
-            isFollowUnFollowRequestRunning = false
-            showToast(getString(R.string.server_went_wrong))
-            Crashlytics.logException(t)
-            Log.d("MC4kException", Log.getStackTraceString(t))
+    private var unfollowUserResponseCallback: Callback<FollowUnfollowUserResponse> =
+        object : Callback<FollowUnfollowUserResponse> {
+            override fun onResponse(
+                call: Call<FollowUnfollowUserResponse>,
+                response: retrofit2.Response<FollowUnfollowUserResponse>
+            ) {
+                isFollowUnFollowRequestRunning = false
+                if (response.body() == null) {
+                    showToast(getString(R.string.went_wrong))
+                    return
+                }
+                try {
+                    val responseData = response.body()
+                    if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                    } else {
+                        followAuthorTextView.setText(R.string.ad_following_author)
+                        isFollowing = true
+                    }
+                } catch (e: Exception) {
+                    showToast(getString(R.string.server_went_wrong))
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            }
+
+            override fun onFailure(call: Call<FollowUnfollowUserResponse>, t: Throwable) {
+                isFollowUnFollowRequestRunning = false
+                showToast(getString(R.string.server_went_wrong))
+                Crashlytics.logException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
         }
-    }
 
     private fun processAuthorPersonalDetails(responseData: UserDetailResponse) {
-        authorNameTextView.text = responseData.data[0].result.firstName + " " + responseData.data[0].result.lastName
+        authorNameTextView.text =
+            responseData.data[0].result.firstName + " " + responseData.data[0].result.lastName
         if (!StringUtils.isNullOrEmpty(responseData.data[0].result.profilePicUrl.clientApp)) {
             Picasso.get().load(responseData.data[0].result.profilePicUrl.clientApp)
-                    .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(RoundedTransformation()).into(profileImageView)
+                .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi)
+                .transform(RoundedTransformation()).into(profileImageView)
         }
         if (responseData.data[0].result.userBio == null || responseData.data[0].result.userBio.isEmpty()) {
             authorBioTextView.visibility = View.GONE
@@ -498,10 +536,12 @@ class UserProfileActivity : BaseActivity(),
     private fun processAuthorRankAndCrown(responseData: UserDetailResponse) {
         var crown: Crown? = null
         try {
-            val jsonObject = Gson().toJsonTree(responseData.data.get(0).result.crownData).asJsonObject
+            val jsonObject =
+                Gson().toJsonTree(responseData.data.get(0).result.crownData).asJsonObject
             crown = Gson().fromJson<Crown>(jsonObject, Crown::class.java)
             Picasso.get().load(crown.image_url).error(
-                    R.drawable.family_xxhdpi).fit().into(crownImageView)
+                R.drawable.family_xxhdpi
+            ).fit().into(crownImageView)
             if (!profileDetail.isNullOrBlank() && profileDetail == "rank") {
                 showCrownDialog(crown)
             }
@@ -520,7 +560,10 @@ class UserProfileActivity : BaseActivity(),
             if (AppConstants.LANG_KEY_ENGLISH == responseData.data[0].result.ranks[0].langKey) {
                 rankLanguageTextView.text = getString(R.string.blogger_profile_rank_in, "ENGLISH")
             } else {
-                rankLanguageTextView.text = getString(R.string.blogger_profile_rank_in, responseData.data[0].result.ranks[0].langValue.toUpperCase())
+                rankLanguageTextView.text = getString(
+                    R.string.blogger_profile_rank_in,
+                    responseData.data[0].result.ranks[0].langValue.toUpperCase()
+                )
             }
         } else {
             rankContainer.setOnClickListener(this)
@@ -537,7 +580,13 @@ class UserProfileActivity : BaseActivity(),
                     multipleRankList.add(responseData.data[0].result.ranks[i])
                 }
             }
-            MyCityAnimationsUtil.animate(this@UserProfileActivity, rankContainer, multipleRankList, 0, true)
+            MyCityAnimationsUtil.animate(
+                this@UserProfileActivity,
+                rankContainer,
+                multipleRankList,
+                0,
+                true
+            )
         }
     }
 
@@ -546,7 +595,10 @@ class UserProfileActivity : BaseActivity(),
         val bloggerDashboardAPI = retro.create(BloggerDashboardAPI::class.java)
         val call = bloggerDashboardAPI.getUsersAllContent(authorId, start, size, null)
         call.enqueue(object : Callback<MixFeedResponse> {
-            override fun onResponse(call: Call<MixFeedResponse>, response: retrofit2.Response<MixFeedResponse>) {
+            override fun onResponse(
+                call: Call<MixFeedResponse>,
+                response: retrofit2.Response<MixFeedResponse>
+            ) {
                 try {
                     isRequestRunning = false
                     bottomLoadingView.visibility = View.GONE
@@ -560,7 +612,8 @@ class UserProfileActivity : BaseActivity(),
                         if (responseData.data == null && userContentList?.size == 1) {
                             userContentAdapter.setListData(userContentList)
                             userContentAdapter.notifyDataSetChanged()
-                            emptyListTextView.text = getString(R.string.profile_empty_created_content)
+                            emptyListTextView.text =
+                                getString(R.string.profile_empty_created_content)
                             emptyListTextView.visibility = View.VISIBLE
                         } else {
                             processUserContentResponse(responseData.data?.result)
@@ -605,7 +658,10 @@ class UserProfileActivity : BaseActivity(),
         val bloggerDashboardAPI = retro.create(BloggerDashboardAPI::class.java)
         val call = bloggerDashboardAPI.getUsersAllBookmark(start, size, 1)
         call.enqueue(object : Callback<MixFeedResponse> {
-            override fun onResponse(call: Call<MixFeedResponse>, response: retrofit2.Response<MixFeedResponse>) {
+            override fun onResponse(
+                call: Call<MixFeedResponse>,
+                response: retrofit2.Response<MixFeedResponse>
+            ) {
                 try {
                     isRequestRunning = false
                     bottomLoadingView.visibility = View.GONE
@@ -658,7 +714,10 @@ class UserProfileActivity : BaseActivity(),
         authorId?.let {
             val call = featureListAPI.getFeaturedOnCollections(it, start, size)
             call.enqueue(object : Callback<FeaturedOnModel> {
-                override fun onResponse(call: Call<FeaturedOnModel>, response: retrofit2.Response<FeaturedOnModel>) {
+                override fun onResponse(
+                    call: Call<FeaturedOnModel>,
+                    response: retrofit2.Response<FeaturedOnModel>
+                ) {
                     try {
                         if (null == response.body()) {
                             val nee = NetworkErrorException(response.raw().toString())
@@ -771,11 +830,15 @@ class UserProfileActivity : BaseActivity(),
                 emptyListTextView.visibility = View.GONE
                 getFeaturedContent()
                 if (AppUtils.isPrivateProfile(authorId)) {
-                    Utils.pushProfileEvents(this, "CTA_Private_Featured_Collections", "UserProfileActivity",
-                            "Featured Collections", "-")
+                    Utils.pushProfileEvents(
+                        this, "CTA_Private_Featured_Collections", "UserProfileActivity",
+                        "Featured Collections", "-"
+                    )
                 } else {
-                    Utils.pushProfileEvents(this, "CTA_Public_Featured_Collections", "UserProfileActivity",
-                            "Featured Collections", "-")
+                    Utils.pushProfileEvents(
+                        this, "CTA_Public_Featured_Collections", "UserProfileActivity",
+                        "Featured Collections", "-"
+                    )
                 }
             }
             view?.id == R.id.bookmarksTab -> {
@@ -788,8 +851,10 @@ class UserProfileActivity : BaseActivity(),
                 recyclerView.adapter = usersBookmarksAdapter
                 emptyListTextView.visibility = View.GONE
                 getUsersBookmark()
-                Utils.pushProfileEvents(this, "CTA_Bookmarks", "UserProfileActivity",
-                        "Bookmarks", "-")
+                Utils.pushProfileEvents(
+                    this, "CTA_Bookmarks", "UserProfileActivity",
+                    "Bookmarks", "-"
+                )
             }
             view?.id == R.id.badgeContainer -> {
                 val intent = Intent(this, BadgeActivity::class.java)
@@ -852,24 +917,34 @@ class UserProfileActivity : BaseActivity(),
                 val intent = Intent(this, ProfileSetting::class.java)
                 intent.putExtra("isRewardAdded", isRewardAdded)
                 startActivity(intent)
-                Utils.pushProfileEvents(this, "CTA_Settings", "UserProfileActivity",
-                        "Settings", "-")
+                Utils.pushProfileEvents(
+                    this, "CTA_Settings", "UserProfileActivity",
+                    "Settings", "-"
+                )
             }
         }
     }
 
     private fun shareGenericImage() {
         try {
-            val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/profile.jpg")
-            val shareText = getString(R.string.profile_follow_author,
-                    authorNameTextView.text.toString(), (AppConstants.USER_PROFILE_SHARE_BASE_URL + authorId))
+            val uri =
+                Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/profile.jpg")
+            val shareText = getString(
+                R.string.profile_follow_author,
+                authorNameTextView.text.toString(),
+                (AppConstants.USER_PROFILE_SHARE_BASE_URL + authorId)
+            )
             AppUtils.shareGenericImageAndOrLink(this, uri, shareText)
             if (AppUtils.isPrivateProfile(authorId)) {
-                Utils.pushProfileEvents(this, "CTA_Share_Private_Profile", "UserProfileActivity",
-                        "Share", "-")
+                Utils.pushProfileEvents(
+                    this, "CTA_Share_Private_Profile", "UserProfileActivity",
+                    "Share", "-"
+                )
             } else {
-                Utils.pushProfileEvents(this, "CTA_Share_Public_Profile", "UserProfileActivity",
-                        "Share", "-")
+                Utils.pushProfileEvents(
+                    this, "CTA_Share_Public_Profile", "UserProfileActivity",
+                    "Share", "-"
+                )
             }
         } catch (e: Exception) {
             Crashlytics.logException(e)
@@ -885,8 +960,10 @@ class UserProfileActivity : BaseActivity(),
             view.id == R.id.draftContainer -> {
                 val intent = Intent(this, UserDraftsContentActivity::class.java)
                 startActivity(intent)
-                Utils.pushProfileEvents(this, "CTA_Drafts_Folder", "UserProfileActivity",
-                        "Drafts folder", "-")
+                Utils.pushProfileEvents(
+                    this, "CTA_Drafts_Folder", "UserProfileActivity",
+                    "Drafts folder", "-"
+                )
             }
             view.id == R.id.articleContainer -> {
                 val intent = Intent(this, UserPublishedContentActivity::class.java)
@@ -894,8 +971,10 @@ class UserProfileActivity : BaseActivity(),
                 intent.putExtra(Constants.AUTHOR_ID, authorId)
                 intent.putExtra("contentType", AppConstants.CONTENT_TYPE_ARTICLE)
                 startActivity(intent)
-                Utils.pushProfileEvents(this, "CTA_Blogs_Folder", "UserProfileActivity",
-                        "Blogs folder", "-")
+                Utils.pushProfileEvents(
+                    this, "CTA_Blogs_Folder", "UserProfileActivity",
+                    "Blogs folder", "-"
+                )
             }
             view.id == R.id.storyContainer -> {
                 val intent = Intent(this, UserPublishedContentActivity::class.java)
@@ -903,8 +982,10 @@ class UserProfileActivity : BaseActivity(),
                 intent.putExtra(Constants.AUTHOR_ID, authorId)
                 intent.putExtra("contentType", AppConstants.CONTENT_TYPE_SHORT_STORY)
                 startActivity(intent)
-                Utils.pushProfileEvents(this, "CTA_100WS_Folder", "UserProfileActivity",
-                        "100WS folder", "-")
+                Utils.pushProfileEvents(
+                    this, "CTA_100WS_Folder", "UserProfileActivity",
+                    "100WS folder", "-"
+                )
             }
             view.id == R.id.vlogContainer -> {
                 val intent = Intent(this, UserPublishedContentActivity::class.java)
@@ -912,8 +993,10 @@ class UserProfileActivity : BaseActivity(),
                 intent.putExtra(Constants.AUTHOR_ID, authorId)
                 intent.putExtra("contentType", AppConstants.CONTENT_TYPE_VIDEO)
                 startActivity(intent)
-                Utils.pushProfileEvents(this, "CTA_Vlogs_Folder", "UserProfileActivity",
-                        "Vlogs folder", "-")
+                Utils.pushProfileEvents(
+                    this, "CTA_Vlogs_Folder", "UserProfileActivity",
+                    "Vlogs folder", "-"
+                )
             }
             view.id == R.id.shareArticleImageView -> {
                 shareContent(userContentList?.get(position))
@@ -935,15 +1018,18 @@ class UserProfileActivity : BaseActivity(),
             }
             view.id == R.id.genericShareImageView -> {
                 try {
-                    val addCollectionAndCollectionitemDialogFragment = AddCollectionAndCollectionItemDialogFragment()
+                    val addCollectionAndCollectionitemDialogFragment =
+                        AddCollectionAndCollectionItemDialogFragment()
                     val bundle = Bundle()
                     bundle.putString("articleId", userContentList?.get(position)?.id)
                     bundle.putString("type", AppConstants.SHORT_STORY_COLLECTION_TYPE)
                     addCollectionAndCollectionitemDialogFragment.arguments = bundle
                     val fm = supportFragmentManager
                     addCollectionAndCollectionitemDialogFragment.show(fm!!, "collectionAdd")
-                    Utils.pushProfileEvents(this, "CTA_100WS_Add_To_Collection",
-                            "UserProfileActivity", "Add to Collection", "-")
+                    Utils.pushProfileEvents(
+                        this, "CTA_100WS_Add_To_Collection",
+                        "UserProfileActivity", "Add to Collection", "-"
+                    )
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
@@ -958,7 +1044,10 @@ class UserProfileActivity : BaseActivity(),
                 intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + "userProfileActivity")
                 intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen")
                 intent.putExtra(Constants.ARTICLE_INDEX, "" + position)
-                intent.putExtra(Constants.AUTHOR, userContentList?.get(position)?.userId + "~" + userContentList?.get(position)?.userName)
+                intent.putExtra(
+                    Constants.AUTHOR,
+                    userContentList?.get(position)?.userId + "~" + userContentList?.get(position)?.userName
+                )
                 startActivity(intent)
 
             }
@@ -974,11 +1063,21 @@ class UserProfileActivity : BaseActivity(),
                         if (it) {
                             likeStatus = "0";
                             currentShortStoryPosition = position;
-                            recommendUnrecommentArticleAPI("0", userContentList?.get(position)?.id, userContentList?.get(position)?.userId, userContentList?.get(position)?.userName)
+                            recommendUnrecommentArticleAPI(
+                                "0",
+                                userContentList?.get(position)?.id,
+                                userContentList?.get(position)?.userId,
+                                userContentList?.get(position)?.userName
+                            )
                         } else {
                             likeStatus = "1"
                             currentShortStoryPosition = position
-                            recommendUnrecommentArticleAPI("1", userContentList?.get(position)?.id, userContentList?.get(position)?.userId, userContentList?.get(position)?.userName)
+                            recommendUnrecommentArticleAPI(
+                                "1",
+                                userContentList?.get(position)?.id,
+                                userContentList?.get(position)?.userId,
+                                userContentList?.get(position)?.userName
+                            )
                         }
                     }
                 }
@@ -995,57 +1094,86 @@ class UserProfileActivity : BaseActivity(),
     private fun editArticle(position: Int) {
         val retrofit = BaseApplication.getInstance().retrofit
         val articleDetailsAPI = retrofit.create(ArticleDetailsAPI::class.java)
-        val call = articleDetailsAPI.getArticleDetailsFromRedis(userContentList?.get(position)?.id, "articleId")
+        val call = articleDetailsAPI.getArticleDetailsFromRedis(
+            userContentList?.get(position)?.id,
+            "articleId"
+        )
         call.enqueue(articleDetailResponseCallback)
     }
 
     private fun editStory(view: View, position: Int) {
         val retrofit = BaseApplication.getInstance().retrofit
         val shortStoryAPI = retrofit.create(ShortStoryAPI::class.java)
-        val call = shortStoryAPI.getShortStoryDetails(userContentList?.get(position)?.id, "articleId")
+        val call =
+            shortStoryAPI.getShortStoryDetails(userContentList?.get(position)?.id, "articleId")
         call.enqueue(ssDetailResponseCallbackRedis)
     }
 
-    private var articleDetailResponseCallback: Callback<ArticleDetailResult> = object : Callback<ArticleDetailResult> {
-        override fun onResponse(call: Call<ArticleDetailResult?>, response: Response<ArticleDetailResult>) {
-            removeProgressDialog()
-            if (response.body() == null) { //                showToast("Something went wrong from server");
-                return
+    private var articleDetailResponseCallback: Callback<ArticleDetailResult> =
+        object : Callback<ArticleDetailResult> {
+            override fun onResponse(
+                call: Call<ArticleDetailResult?>,
+                response: Response<ArticleDetailResult>
+            ) {
+                removeProgressDialog()
+                if (response.body() == null) { //                showToast("Something went wrong from server");
+                    return
+                }
+                try {
+                    val responseData = response.body()
+                    launchArticleEditor(responseData)
+                } catch (e: java.lang.Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
             }
-            try {
-                val responseData = response.body()
-                launchArticleEditor(responseData)
-            } catch (e: java.lang.Exception) {
-                Crashlytics.logException(e)
-                Log.d("MC4kException", Log.getStackTraceString(e))
+
+            override fun onFailure(call: Call<ArticleDetailResult>, t: Throwable) {
+                removeProgressDialog()
+                if (t is UnknownHostException) {
+                } else if (t is SocketTimeoutException) {
+                } else {
+                    Crashlytics.logException(t)
+                    Log.d("MC4kException", Log.getStackTraceString(t))
+                }
             }
         }
 
-        override fun onFailure(call: Call<ArticleDetailResult>, t: Throwable) {
-            removeProgressDialog()
-            if (t is UnknownHostException) {
-            } else if (t is SocketTimeoutException) {
-            } else {
+    private var ssDetailResponseCallbackRedis: Callback<ShortStoryDetailResult> =
+        object : Callback<ShortStoryDetailResult> {
+            override fun onResponse(
+                call: Call<ShortStoryDetailResult?>,
+                response: Response<ShortStoryDetailResult>
+            ) {
+                removeProgressDialog()
+                if (response.body() == null) {
+                    return
+                }
+                val responseData = response.body()
+                responseData?.let { launchStoryEditor(it) }
+            }
+
+            override fun onFailure(call: Call<ShortStoryDetailResult>, t: Throwable) {
+                removeProgressDialog()
                 Crashlytics.logException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
-    }
 
-    private var ssDetailResponseCallbackRedis: Callback<ShortStoryDetailResult> = object : Callback<ShortStoryDetailResult> {
-        override fun onResponse(call: Call<ShortStoryDetailResult?>, response: Response<ShortStoryDetailResult>) {
-            removeProgressDialog()
-            if (response.body() == null) {
-                return
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == 1000) {
+            if (data?.getStringExtra(AppConstants.COLLECTION_EDIT_TYPE).equals("deleteCollection")) {
+                showProgressDialog(getString(R.string.please_wait))
+                Handler().postDelayed(Runnable {
+                    myCollectionsWidget.deleteCollection(
+                        authorId,
+                        data?.getIntExtra("collectionPos", 0),
+                        AppUtils.isPrivateProfile(authorId)
+                    )
+                    removeProgressDialog()
+                }, 1000)
             }
-            val responseData = response.body()
-            responseData?.let { launchStoryEditor(it) }
-        }
-
-        override fun onFailure(call: Call<ShortStoryDetailResult>, t: Throwable) {
-            removeProgressDialog()
-            Crashlytics.logException(t)
-            Log.d("MC4kException", Log.getStackTraceString(t))
         }
     }
 
@@ -1057,8 +1185,10 @@ class UserProfileActivity : BaseActivity(),
         if (imageList?.size!! > 0) {
             for (images in imageList) {
                 if (bodyDescription?.contains(images.key)!!) {
-                    bodyDesc = bodyDesc?.replace(images.key, "<p style='text-align:center'><img src=" +
-                            images.value + " style=\"width: 100%;\"+></p>")
+                    bodyDesc = bodyDesc?.replace(
+                        images.key, "<p style='text-align:center'><img src=" +
+                                images.value + " style=\"width: 100%;\"+></p>"
+                    )
                 }
             }
             val bodyImgTxt = "<html><head></head><body>$bodyDesc</body></html>"
@@ -1107,11 +1237,25 @@ class UserProfileActivity : BaseActivity(),
 
         val hashtags = AppUtils.getHasTagFromCategoryList(tagList)
         AppUtils.copyToClipboard(hashtags)
-        ToastUtils.showToast(this@UserProfileActivity, getString(R.string.all_insta_share_clipboard_msg))
+        ToastUtils.showToast(
+            this@UserProfileActivity,
+            getString(R.string.all_insta_share_clipboard_msg)
+        )
     }
 
-    private fun recommendUnrecommentArticleAPI(status: String, articleId: String?, authorId: String?, author: String?) {
-        Utils.pushLikeStoryEvent(this@UserProfileActivity, "ArticleListingFragment", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + "", articleId, "$authorId~$author")
+    private fun recommendUnrecommentArticleAPI(
+        status: String,
+        articleId: String?,
+        authorId: String?,
+        author: String?
+    ) {
+        Utils.pushLikeStoryEvent(
+            this@UserProfileActivity,
+            "ArticleListingFragment",
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + "",
+            articleId,
+            "$authorId~$author"
+        )
         val retro = BaseApplication.getInstance().retrofit
         val articleDetailsAPI = retro.create(ArticleDetailsAPI::class.java)
 
@@ -1119,54 +1263,71 @@ class UserProfileActivity : BaseActivity(),
         val recommendUnrecommendArticleRequest = RecommendUnrecommendArticleRequest()
         recommendUnrecommendArticleRequest.articleId = articleId
         recommendUnrecommendArticleRequest.status = likeStatus
-        val recommendUnrecommendArticle = articleDetailsAPI.recommendUnrecommendArticle(recommendUnrecommendArticleRequest)
+        val recommendUnrecommendArticle =
+            articleDetailsAPI.recommendUnrecommendArticle(recommendUnrecommendArticleRequest)
         recommendUnrecommendArticle.enqueue(recommendUnrecommendArticleResponseCallback)
     }
 
-    private val recommendUnrecommendArticleResponseCallback = object : Callback<RecommendUnrecommendArticleResponse> {
-        override fun onResponse(call: Call<RecommendUnrecommendArticleResponse>, response: retrofit2.Response<RecommendUnrecommendArticleResponse>) {
-            isRecommendRequestRunning = false
-            if (response.body() == null) {
-                ToastUtils.showToast(this@UserProfileActivity, getString(R.string.server_went_wrong))
-                return
-            }
-
-            try {
-                val responseData = response.body()
-                if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-                    if (likeStatus == "1") {
-                        if (responseData.data.isNotEmpty()) {
-                            userContentList?.get(currentShortStoryPosition)?.likesCount = userContentList?.get(currentShortStoryPosition)?.likesCount?.plus(1)!!
-                        }
-                        userContentList?.get(currentShortStoryPosition)?.isLiked = true
-                    } else {
-                        if (responseData.data.isNotEmpty()) {
-                            userContentList?.get(currentShortStoryPosition)?.likesCount = userContentList?.get(currentShortStoryPosition)?.likesCount?.minus(1)!!
-                        }
-                        userContentList?.get(currentShortStoryPosition)?.isLiked = false
-                    }
-                    userContentAdapter.notifyDataSetChanged()
-
-                    ToastUtils.showToast(this@UserProfileActivity, responseData.reason)
-
-                } else {
-
-                    ToastUtils.showToast(this@UserProfileActivity, getString(R.string.server_went_wrong))
+    private val recommendUnrecommendArticleResponseCallback =
+        object : Callback<RecommendUnrecommendArticleResponse> {
+            override fun onResponse(
+                call: Call<RecommendUnrecommendArticleResponse>,
+                response: retrofit2.Response<RecommendUnrecommendArticleResponse>
+            ) {
+                isRecommendRequestRunning = false
+                if (response.body() == null) {
+                    ToastUtils.showToast(
+                        this@UserProfileActivity,
+                        getString(R.string.server_went_wrong)
+                    )
+                    return
                 }
-            } catch (e: Exception) {
-                Crashlytics.logException(e)
-                Log.d("MC4kException", Log.getStackTraceString(e))
-                ToastUtils.showToast(this@UserProfileActivity, getString(R.string.went_wrong))
+
+                try {
+                    val responseData = response.body()
+                    if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                        if (likeStatus == "1") {
+                            if (responseData.data.isNotEmpty()) {
+                                userContentList?.get(currentShortStoryPosition)?.likesCount =
+                                    userContentList?.get(currentShortStoryPosition)?.likesCount?.plus(
+                                        1
+                                    )!!
+                            }
+                            userContentList?.get(currentShortStoryPosition)?.isLiked = true
+                        } else {
+                            if (responseData.data.isNotEmpty()) {
+                                userContentList?.get(currentShortStoryPosition)?.likesCount =
+                                    userContentList?.get(currentShortStoryPosition)?.likesCount?.minus(
+                                        1
+                                    )!!
+                            }
+                            userContentList?.get(currentShortStoryPosition)?.isLiked = false
+                        }
+                        userContentAdapter.notifyDataSetChanged()
+
+                        ToastUtils.showToast(this@UserProfileActivity, responseData.reason)
+
+                    } else {
+
+                        ToastUtils.showToast(
+                            this@UserProfileActivity,
+                            getString(R.string.server_went_wrong)
+                        )
+                    }
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                    ToastUtils.showToast(this@UserProfileActivity, getString(R.string.went_wrong))
+                }
+
             }
 
+            override fun onFailure(call: Call<RecommendUnrecommendArticleResponse>, t: Throwable) {
+                isRecommendRequestRunning = false
+                Crashlytics.logException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
         }
-
-        override fun onFailure(call: Call<RecommendUnrecommendArticleResponse>, t: Throwable) {
-            isRecommendRequestRunning = false
-            Crashlytics.logException(t)
-            Log.d("MC4kException", Log.getStackTraceString(t))
-        }
-    }
 
 
     @SuppressLint("RestrictedApi")
@@ -1177,7 +1338,10 @@ class UserProfileActivity : BaseActivity(),
             val drawable = popupMenu.menu.getItem(i).icon
             if (drawable != null) {
                 drawable.mutate()
-                drawable.setColorFilter(ContextCompat.getColor(this, R.color.app_red), PorterDuff.Mode.SRC_ATOP)
+                drawable.setColorFilter(
+                    ContextCompat.getColor(this, R.color.app_red),
+                    PorterDuff.Mode.SRC_ATOP
+                )
             }
         }
         popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
@@ -1187,9 +1351,18 @@ class UserProfileActivity : BaseActivity(),
                     getSharableViewForPosition(position, AppConstants.MEDIUM_GENERIC)
                     return true
                 } else if (id == R.id.copyLink) {
-                    AppUtils.copyToClipboard(AppUtils.getShortStoryShareUrl(userContentList?.get(position)?.userType,
-                            userContentList?.get(position)?.blogTitleSlug, userContentList?.get(position)?.titleSlug))
-                    Toast.makeText(this@UserProfileActivity, getString(R.string.ss_story_link_copied), Toast.LENGTH_SHORT).show()
+                    AppUtils.copyToClipboard(
+                        AppUtils.getShortStoryShareUrl(
+                            userContentList?.get(position)?.userType,
+                            userContentList?.get(position)?.blogTitleSlug,
+                            userContentList?.get(position)?.titleSlug
+                        )
+                    )
+                    Toast.makeText(
+                        this@UserProfileActivity,
+                        getString(R.string.ss_story_link_copied),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return true
                 } else if (id == R.id.reportContentShortStory) {
                     val reportContentDialogFragment = ReportContentDialogFragment()
@@ -1222,7 +1395,10 @@ class UserProfileActivity : BaseActivity(),
         if ("1" == userContentList?.get(position)?.isMomspresso) {
             val call = articleDetailsAPI.addVideoWatchLater(articleDetailRequest)
             call.enqueue(object : Callback<AddBookmarkResponse> {
-                override fun onResponse(call: Call<AddBookmarkResponse>, response: retrofit2.Response<AddBookmarkResponse>) {
+                override fun onResponse(
+                    call: Call<AddBookmarkResponse>,
+                    response: retrofit2.Response<AddBookmarkResponse>
+                ) {
                     if (null == response.body()) {
                         showToast(getString(R.string.server_went_wrong))
                         return
@@ -1241,13 +1417,20 @@ class UserProfileActivity : BaseActivity(),
                 }
 
             })
-            Utils.pushWatchLaterArticleEvent(this, "Profile",
-                    SharedPrefUtils.getUserDetailModel(this).dynamoId + "",
-                    userContentList?.get(position)?.id, authorId + "~" + userContentList?.get(position)?.userName)
+            Utils.pushWatchLaterArticleEvent(
+                this,
+                "Profile",
+                SharedPrefUtils.getUserDetailModel(this).dynamoId + "",
+                userContentList?.get(position)?.id,
+                authorId + "~" + userContentList?.get(position)?.userName
+            )
         } else {
             val call = articleDetailsAPI.addBookmark(articleDetailRequest)
             call.enqueue(object : Callback<AddBookmarkResponse> {
-                override fun onResponse(call: Call<AddBookmarkResponse>, response: retrofit2.Response<AddBookmarkResponse>) {
+                override fun onResponse(
+                    call: Call<AddBookmarkResponse>,
+                    response: retrofit2.Response<AddBookmarkResponse>
+                ) {
                     if (null == response.body()) {
                         showToast(getString(R.string.server_went_wrong))
                         return
@@ -1266,9 +1449,13 @@ class UserProfileActivity : BaseActivity(),
                 }
 
             })
-            Utils.pushBookmarkArticleEvent(this, "Profile",
-                    SharedPrefUtils.getUserDetailModel(this).dynamoId + "",
-                    userContentList?.get(position)?.id, authorId + "~" + userContentList?.get(position)?.userName)
+            Utils.pushBookmarkArticleEvent(
+                this,
+                "Profile",
+                SharedPrefUtils.getUserDetailModel(this).dynamoId + "",
+                userContentList?.get(position)?.id,
+                authorId + "~" + userContentList?.get(position)?.userName
+            )
         }
     }
 
@@ -1279,27 +1466,42 @@ class UserProfileActivity : BaseActivity(),
             }
             view.id == R.id.collectionItem1TextView -> {
                 val intent = Intent(this, UserCollectionItemListActivity::class.java)
-                intent.putExtra("id", userFeaturedOnList?.get(position)?.collectionList?.get(0)?.userCollectionId)
+                intent.putExtra(
+                    "id",
+                    userFeaturedOnList?.get(position)?.collectionList?.get(0)?.userCollectionId
+                )
                 startActivity(intent)
             }
             view.id == R.id.collectionItem2TextView -> {
                 val intent = Intent(this, UserCollectionItemListActivity::class.java)
-                intent.putExtra("id", userFeaturedOnList?.get(position)?.collectionList?.get(1)?.userCollectionId)
+                intent.putExtra(
+                    "id",
+                    userFeaturedOnList?.get(position)?.collectionList?.get(1)?.userCollectionId
+                )
                 startActivity(intent)
             }
             view.id == R.id.collectionItem3TextView -> {
                 val intent = Intent(this, UserCollectionItemListActivity::class.java)
-                intent.putExtra("id", userFeaturedOnList?.get(position)?.collectionList?.get(2)?.userCollectionId)
+                intent.putExtra(
+                    "id",
+                    userFeaturedOnList?.get(position)?.collectionList?.get(2)?.userCollectionId
+                )
                 startActivity(intent)
             }
             view.id == R.id.collectionItem4TextView -> {
                 val intent = Intent(this, UserCollectionItemListActivity::class.java)
-                intent.putExtra("id", userFeaturedOnList?.get(position)?.collectionList?.get(3)?.userCollectionId)
+                intent.putExtra(
+                    "id",
+                    userFeaturedOnList?.get(position)?.collectionList?.get(3)?.userCollectionId
+                )
                 startActivity(intent)
             }
             view.id == R.id.moreItemsTextView -> {
                 val featureIntent = Intent(this, FeaturedOnActivity::class.java)
-                featureIntent.putExtra(AppConstants.CONTENT_ID, userFeaturedOnList?.get(position)?.id)
+                featureIntent.putExtra(
+                    AppConstants.CONTENT_ID,
+                    userFeaturedOnList?.get(position)?.id
+                )
                 startActivity(featureIntent)
             }
         }
@@ -1353,12 +1555,16 @@ class UserProfileActivity : BaseActivity(),
     private fun shareContent(data: MixFeedResult?) {
         when {
             data?.itemType == AppConstants.CONTENT_TYPE_ARTICLE -> {
-                val shareIntent = AppUtils.getArticleShareIntent(data.userType, data.blogTitleSlug, data.titleSlug,
-                        getString(R.string.check_out_blog), data.title, data.userName)
+                val shareIntent = AppUtils.getArticleShareIntent(
+                    data.userType, data.blogTitleSlug, data.titleSlug,
+                    getString(R.string.check_out_blog), data.title, data.userName
+                )
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"))
-                Utils.pushShareArticleEvent(this, "Profile",
-                        SharedPrefUtils.getUserDetailModel(this).dynamoId + "", data.id,
-                        data.userId + "~" + data.userName, "-")
+                Utils.pushShareArticleEvent(
+                    this, "Profile",
+                    SharedPrefUtils.getUserDetailModel(this).dynamoId + "", data.id,
+                    data.userId + "~" + data.userName, "-"
+                )
             }
             data?.itemType == AppConstants.CONTENT_TYPE_SHORT_STORY -> {
             }
@@ -1379,10 +1585,15 @@ class UserProfileActivity : BaseActivity(),
 
     private fun createSharableImageWhileCheckingPermissions(): Boolean {
         if (Build.VERSION.SDK_INT >= 23) {
-            if (ActivityCompat.checkSelfPermission(this,
-                            Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                    ActivityCompat.checkSelfPermission(this,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 requestPermissions()
                 return true
             } else {
@@ -1415,12 +1626,19 @@ class UserProfileActivity : BaseActivity(),
     }
 
     private fun requestPermissions() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Snackbar.make(rootLayout, R.string.permission_storage_rationale,
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok) { requestUngrantedPermissions() }.show()
+        if (ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) || ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        ) {
+            Snackbar.make(
+                rootLayout, R.string.permission_storage_rationale,
+                Snackbar.LENGTH_INDEFINITE
+            )
+                .setAction(R.string.ok) { requestUngrantedPermissions() }.show()
         } else {
             requestUngrantedPermissions()
         }
@@ -1437,13 +1655,17 @@ class UserProfileActivity : BaseActivity(),
         ActivityCompat.requestPermissions(this, requiredPermission, REQUEST_GALLERY_PERMISSION)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-                                            grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         if (requestCode == REQUEST_GALLERY_PERMISSION) {
             if (PermissionUtil.verifyPermissions(grantResults)) {
-                Snackbar.make(rootLayout, R.string.permision_available_init,
-                        Snackbar.LENGTH_SHORT)
-                        .show()
+                Snackbar.make(
+                    rootLayout, R.string.permision_available_init,
+                    Snackbar.LENGTH_SHORT
+                )
+                    .show()
                 try {
                     if (shareCardType == "profile") {
                         AppUtils.getBitmapFromView(profileShareCardWidget, sharableProfileImageName)
@@ -1456,9 +1678,11 @@ class UserProfileActivity : BaseActivity(),
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             } else {
-                Snackbar.make(rootLayout, R.string.permissions_not_granted,
-                        Snackbar.LENGTH_SHORT)
-                        .show()
+                Snackbar.make(
+                    rootLayout, R.string.permissions_not_granted,
+                    Snackbar.LENGTH_SHORT
+                )
+                    .show()
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -1483,7 +1707,10 @@ class UserProfileActivity : BaseActivity(),
 
     private fun getSharableViewForPosition(position: Int, medium: String) {
         shareCardType = "story"
-        storyShareCardWidget = recyclerView.layoutManager!!.findViewByPosition(position)!!.findViewById<StoryShareCardWidget>(R.id.storyShareCardWidget)
+        storyShareCardWidget =
+            recyclerView.layoutManager!!.findViewByPosition(position)!!.findViewById<StoryShareCardWidget>(
+                R.id.storyShareCardWidget
+            )
         shareStoryImageView = storyShareCardWidget.findViewById(R.id.storyImageView)
         shareMedium = medium
         sharedStoryItem = userContentList?.get(position)!!
@@ -1493,8 +1720,15 @@ class UserProfileActivity : BaseActivity(),
     private fun checkPermissionAndCreateShareableImage() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (ActivityCompat
-                            .checkSelfPermission(this@UserProfileActivity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ActivityCompat
-                            .checkSelfPermission(this@UserProfileActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    .checkSelfPermission(
+                        this@UserProfileActivity,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED || ActivityCompat
+                    .checkSelfPermission(
+                        this@UserProfileActivity,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 requestPermissions()
             } else {
                 try {
@@ -1518,42 +1752,69 @@ class UserProfileActivity : BaseActivity(),
 
     private fun createBitmapForSharingStory() {
         val bitmap1 = (shareStoryImageView.drawable as BitmapDrawable).bitmap!!
-        shareStoryImageView.setImageBitmap(SharingUtils.getRoundCornerBitmap(bitmap1, AppUtils.dpTopx(4.0f)))
+        shareStoryImageView.setImageBitmap(
+            SharingUtils.getRoundCornerBitmap(
+                bitmap1,
+                AppUtils.dpTopx(4.0f)
+            )
+        )
         AppUtils.getBitmapFromView(storyShareCardWidget, AppConstants.STORY_SHARE_IMAGE_NAME)
         shareStory()
     }
 
     private fun shareStory() {
-        val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() +
-                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg")
+        val uri = Uri.parse(
+            "file://" + Environment.getExternalStorageDirectory() +
+                    "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg"
+        )
         when (shareMedium) {
             AppConstants.MEDIUM_FACEBOOK -> {
                 SharingUtils.shareViaFacebook(this)
-                Utils.pushShareStoryEvent(this@UserProfileActivity, "TopicsShortStoriesTabFragment",
-                        authorId + "", sharedStoryItem.id,
-                        sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Facebook")
+                Utils.pushShareStoryEvent(
+                    this@UserProfileActivity, "TopicsShortStoriesTabFragment",
+                    authorId + "", sharedStoryItem.id,
+                    sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Facebook"
+                )
             }
             AppConstants.MEDIUM_WHATSAPP -> {
-                if (AppUtils.shareImageWithWhatsApp(this@UserProfileActivity, uri, getString(R.string.ss_follow_author,
-                                sharedStoryItem.userName, AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId))) {
-                    Utils.pushShareStoryEvent(this@UserProfileActivity, "TopicsShortStoriesTabFragment",
-                            authorId + "", sharedStoryItem.id,
-                            sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Whatsapp")
+                if (AppUtils.shareImageWithWhatsApp(
+                        this@UserProfileActivity, uri, getString(
+                            R.string.ss_follow_author,
+                            sharedStoryItem.userName,
+                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId
+                        )
+                    )
+                ) {
+                    Utils.pushShareStoryEvent(
+                        this@UserProfileActivity, "TopicsShortStoriesTabFragment",
+                        authorId + "", sharedStoryItem.id,
+                        sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Whatsapp"
+                    )
                 }
             }
             AppConstants.MEDIUM_INSTAGRAM -> {
                 if (AppUtils.shareImageWithInstagram(this@UserProfileActivity, uri)) {
-                    Utils.pushShareStoryEvent(this@UserProfileActivity, "TopicsShortStoriesTabFragment",
-                            authorId + "", sharedStoryItem.id,
-                            sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Instagram")
+                    Utils.pushShareStoryEvent(
+                        this@UserProfileActivity, "TopicsShortStoriesTabFragment",
+                        authorId + "", sharedStoryItem.id,
+                        sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Instagram"
+                    )
                 }
             }
             AppConstants.MEDIUM_GENERIC -> {
-                if (AppUtils.shareGenericImageAndOrLink(this@UserProfileActivity, uri, getString(R.string.ss_follow_author,
-                                sharedStoryItem.userName, AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId))) {
-                    Utils.pushShareStoryEvent(this@UserProfileActivity, "TopicsShortStoriesTabFragment",
-                            authorId + "", sharedStoryItem.id,
-                            sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Generic")
+                if (AppUtils.shareGenericImageAndOrLink(
+                        this@UserProfileActivity, uri, getString(
+                            R.string.ss_follow_author,
+                            sharedStoryItem.userName,
+                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId
+                        )
+                    )
+                ) {
+                    Utils.pushShareStoryEvent(
+                        this@UserProfileActivity, "TopicsShortStoriesTabFragment",
+                        authorId + "", sharedStoryItem.id,
+                        sharedStoryItem.userId + "~" + sharedStoryItem.userName, "Generic"
+                    )
                 }
             }
         }

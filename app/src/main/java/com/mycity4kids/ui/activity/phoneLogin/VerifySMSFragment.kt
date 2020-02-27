@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.activity.phoneLogin
 
 import android.accounts.NetworkErrorException
+import android.app.Activity
 import android.content.*
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -17,13 +18,14 @@ import com.crashlytics.android.Crashlytics
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
-import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.models.request.PhoneLoginRequest
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI
 import com.mycity4kids.ui.activity.ActivityLogin
+import com.mycity4kids.ui.activity.OTPActivity
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
@@ -44,7 +46,11 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
     var smsToken: String? = null
     var phoneNumber: String? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_verify_sms, container, false)
 
         otpEditText1 = view.findViewById(R.id.otpEditText1)
@@ -61,7 +67,8 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
         phoneNumber = arguments?.getString("phoneNumber")
 
         activity?.let {
-            verifySmsTextView?.text = getString(R.string.lang_sel_continue).toLowerCase().capitalize()
+            verifySmsTextView?.text =
+                getString(R.string.lang_sel_continue).toLowerCase().capitalize()
         }
         verifySmsTextView?.isEnabled = false
 
@@ -187,14 +194,23 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
     }
 
     val triggerSMSResponseCallback = object : Callback<ResponseBody> {
-        override fun onResponse(call: Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {
+        override fun onResponse(
+            call: Call<ResponseBody>,
+            response: retrofit2.Response<ResponseBody>
+        ) {
             removeProgressDialog()
             if (response.body() == null) {
                 if (response.errorBody() != null) {
                     val resData = String(response.errorBody()!!.bytes())
                     val jObject = JSONObject(resData)
                     activity?.let {
-                        (activity as ActivityLogin).showToast(jObject.getString("reason"))
+                        //                        (activity as ActivityLogin).showToast(jObject.getString("reason"))
+
+                        if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
+                            (activity as ActivityLogin).showToast(jObject.getString("reason"))
+                        } else if (activity?.javaClass?.simpleName.equals("OTPActivity")) {
+                            (activity as OTPActivity).showToast(jObject.getString("reason"))
+                        }
                     }
                     return
                 }
@@ -208,7 +224,8 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                 if (response.isSuccessful) {
                     val resData = String(response.body()!!.bytes())
                     val jObject = JSONObject(resData)
-                    smsToken = jObject.getJSONObject("data").getJSONObject("result").getString("sms_token")
+                    smsToken =
+                        jObject.getJSONObject("data").getJSONObject("result").getString("sms_token")
                 } else {
 
                 }
@@ -228,20 +245,30 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
 
     fun verifySMS(sms_token: String?) {
         val phoneLoginRequest = PhoneLoginRequest()
-        phoneLoginRequest.verification_code = otpEditText1?.text?.toString() + otpEditText2?.text?.toString() + otpEditText3?.text?.toString() +
-                otpEditText4?.text?.toString() + otpEditText5?.text?.toString() + otpEditText6?.text?.toString()
+        phoneLoginRequest.verification_code =
+            otpEditText1?.text?.toString() + otpEditText2?.text?.toString() + otpEditText3?.text?.toString() +
+                    otpEditText4?.text?.toString() + otpEditText5?.text?.toString() + otpEditText6?.text?.toString()
         phoneLoginRequest.sms_token = sms_token
         val retrofit = BaseApplication.getInstance().retrofit
         val loginRegistrationAPI = retrofit.create(LoginRegistrationAPI::class.java)
         val call = loginRegistrationAPI.verifySMS(phoneLoginRequest)
         call.enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {
+            override fun onResponse(
+                call: Call<ResponseBody>,
+                response: retrofit2.Response<ResponseBody>
+            ) {
                 if (response.body() == null) {
                     if (response.errorBody() != null) {
                         val resData = String(response.errorBody()!!.bytes())
                         val jObject = JSONObject(resData)
                         activity?.let {
-                            (activity as ActivityLogin).showToast(jObject.getString("reason"))
+                            //                            (activity as ActivityLogin).showToast(jObject.getString("reason"))
+
+                            if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
+                                (activity as ActivityLogin).showToast(jObject.getString("reason"))
+                            } else if (activity?.javaClass?.simpleName.equals("OTPActivity")) {
+                                (activity as OTPActivity).showToast(jObject.getString("reason"))
+                            }
                         }
                         return
                     }
@@ -256,13 +283,35 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                         val resData = String(response.body()!!.bytes())
                         val jObject = JSONObject(resData)
                         if (response.code() == 200) {
-                            val auth_token = jObject.getJSONObject("data").getJSONObject("result").getString("auth_token")
+                            val auth_token = jObject.getJSONObject("data").getJSONObject("result")
+                                .getString("auth_token")
                             activity?.let {
-                                (activity as ActivityLogin).phoneLogin(auth_token)
+                                //                                (activity as ActivityLogin).phoneLogin(auth_token)
+                                if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
+                                    (activity as ActivityLogin).phoneLogin(auth_token)
+                                } else if (activity?.javaClass?.simpleName.equals("OTPActivity")) {
+                                    /* System.out.println("-------" + activity!!.supportFragmentManager.backStackEntryCount)
+                                     for (i in fragmentManager!!.backStackEntryCount downTo 2) {
+                                         activity!!.supportFragmentManager.popBackStack()
+                                     }*/
+                                    val intent = Intent()
+                                    intent.putExtra("auth_token", auth_token)
+                                    (activity as OTPActivity).setResult(Activity.RESULT_OK, intent)
+                                    (activity as OTPActivity).finish()
+//                                    (activity as OTPActivity).updateMobile(auth_token)
+//                                    fragmentManager!!.popBackStack("ProfileInfoFragment", 0)
+//                                    activity!!.supportFragmentManager.popBackStackImmediate()
+                                }
                             }
                         } else if (response.code() == 401) {
                             activity?.let {
-                                (activity as ActivityLogin).showToast(jObject.getString("reason"))
+                                //                                (activity as ActivityLogin).showToast(jObject.getString("reason"))
+
+                                if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
+                                    (activity as ActivityLogin).showToast(jObject.getString("reason"))
+                                } else if (activity?.javaClass?.simpleName.equals("OTPActivity")) {
+                                    (activity as OTPActivity).showToast(jObject.getString("reason"))
+                                }
                             }
                         }
                     }
@@ -291,9 +340,10 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
         }
 
         override fun afterTextChanged(s: Editable) {
-            verifySmsTextView?.isEnabled = !(otpEditText1?.text?.toString().isNullOrBlank() || otpEditText2?.text?.toString().isNullOrBlank() ||
-                    otpEditText3?.text?.toString().isNullOrBlank() || otpEditText4?.text?.toString().isNullOrBlank() ||
-                    otpEditText5?.text?.toString().isNullOrBlank() || otpEditText6?.text?.toString().isNullOrBlank())
+            verifySmsTextView?.isEnabled =
+                !(otpEditText1?.text?.toString().isNullOrBlank() || otpEditText2?.text?.toString().isNullOrBlank() ||
+                        otpEditText3?.text?.toString().isNullOrBlank() || otpEditText4?.text?.toString().isNullOrBlank() ||
+                        otpEditText5?.text?.toString().isNullOrBlank() || otpEditText6?.text?.toString().isNullOrBlank())
 
             when {
                 otpEditText1?.id == mEditText?.id -> {
@@ -369,7 +419,8 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
 
         override fun onTick(millisUntilFinished: Long) {
             activity?.let {
-                countdownTimerTextView?.text = getString(R.string.login_remaining_time, millisUntilFinished / 1000)
+                countdownTimerTextView?.text =
+                    getString(R.string.login_remaining_time, millisUntilFinished / 1000)
             }
         }
     }

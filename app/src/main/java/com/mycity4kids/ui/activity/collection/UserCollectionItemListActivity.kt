@@ -25,10 +25,9 @@ import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.mycity4kids.base.BaseActivity
-import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
@@ -46,6 +45,7 @@ import com.mycity4kids.ui.activity.ShortStoryContainerActivity
 import com.mycity4kids.ui.adapter.CollectionItemsListAdapter
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.EndlessScrollListener
+import com.mycity4kids.utils.ToastUtils
 import com.squareup.picasso.Picasso
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -55,7 +55,8 @@ import okhttp3.ResponseBody
 import org.json.JSONObject
 import java.io.InputStreamReader
 
-class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, CollectionItemsListAdapter.RecyclerViewClick {
+class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener,
+    CollectionItemsListAdapter.RecyclerViewClick {
 
 
     private lateinit var collectionId: String
@@ -80,6 +81,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
     private lateinit var descriptionTextView: TextView
     private lateinit var collectionDescription: TextView
     private lateinit var toolbar: Toolbar
+    private var collectionPos: Int = 0
     private var editType = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,17 +108,28 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         collectionItemRecyclerView = findViewById(R.id.collectionItemRecyclerView)
         val intent = intent
         collectionId = intent.getStringExtra("id")
+        collectionPos = intent.getIntExtra("position", 0)
         val thumbStates = ColorStateList(
-                arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
-                intArrayOf(
-                        ContextCompat.getColor(this@UserCollectionItemListActivity, R.color.white_color), ContextCompat.getColor(this@UserCollectionItemListActivity, R.color.add_video_details_mute_label))
+            arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
+            intArrayOf(
+                ContextCompat.getColor(this@UserCollectionItemListActivity, R.color.white_color),
+                ContextCompat.getColor(
+                    this@UserCollectionItemListActivity,
+                    R.color.add_video_details_mute_label
+                )
+            )
         )
         visibleToAll?.thumbTintList = thumbStates
         if (Build.VERSION.SDK_INT >= 24) {
             val trackStates = ColorStateList(
-                    arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
-                    intArrayOf(
-                            ContextCompat.getColor(this@UserCollectionItemListActivity, R.color.switch_button_green_collection), ContextCompat.getColor(this@UserCollectionItemListActivity, R.color.white_color))
+                arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
+                intArrayOf(
+                    ContextCompat.getColor(
+                        this@UserCollectionItemListActivity,
+                        R.color.switch_button_green_collection
+                    ),
+                    ContextCompat.getColor(this@UserCollectionItemListActivity, R.color.white_color)
+                )
             )
             visibleToAll?.trackTintList = trackStates
 
@@ -129,7 +142,8 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
             }
         }
         val linearLayoutManager = LinearLayoutManager(this)
-        collectionItemsListAdapter = CollectionItemsListAdapter(this@UserCollectionItemListActivity, this)
+        collectionItemsListAdapter =
+            CollectionItemsListAdapter(this@UserCollectionItemListActivity, this)
         collectionItemRecyclerView.layoutManager = linearLayoutManager
         collectionItemRecyclerView.adapter = collectionItemsListAdapter
 
@@ -140,7 +154,8 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         followFollowingTextView.setOnClickListener {
             followUnfollow()
         }
-        collectionItemRecyclerView.addOnScrollListener(object : EndlessScrollListener(linearLayoutManager) {
+        collectionItemRecyclerView.addOnScrollListener(object :
+            EndlessScrollListener(linearLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
                 getUserCollectionItems(totalItemsCount)
             }
@@ -164,7 +179,10 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                     deleteCollectionMainLayout.visibility = View.VISIBLE
                     return true
                 } else if (id == R.id.edit_collection) {
-                    val intent = Intent(this@UserCollectionItemListActivity, EditCollectionActivity::class.java)
+                    val intent = Intent(
+                        this@UserCollectionItemListActivity,
+                        EditCollectionActivity::class.java
+                    )
                     intent.putExtra("collectionId", collectionId)
                     startActivityForResult(intent, 1000)
                 }
@@ -172,43 +190,50 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
             }
         })
 
-        val menuHelper = MenuPopupHelper(this@UserCollectionItemListActivity, popup.menu as MenuBuilder, view)
+        val menuHelper =
+            MenuPopupHelper(this@UserCollectionItemListActivity, popup.menu as MenuBuilder, view)
         menuHelper.setForceShowIcon(true)
         menuHelper.show()
     }
 
     fun getUserCollectionItems(start: Int) {
-        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getUserCollectionItems(collectionId, start, 10).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
-            override fun onComplete() {
-            }
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java)
+            .getUserCollectionItems(collectionId, start, 10).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
+                override fun onComplete() {
+                }
 
-            override fun onSubscribe(d: Disposable) {
-            }
+                override fun onSubscribe(d: Disposable) {
+                }
 
-            override fun onNext(response: BaseResponseGeneric<UserCollectionsListModel>) {
-                try {
-                    if (response.code == 200 && response.status == Constants.SUCCESS && response.data?.result != null) {
-                        userCollectionsListModel = response.data!!.result
-                        setFirstCallData(start)
-                        shimmer1.visibility = View.GONE
-                        shimmer1.stopShimmerAnimation()
-                        dataList.addAll(userCollectionsListModel.collectionItems)
-                        collectionItemsListAdapter.setListData(dataList)
-                        collectionItemsListAdapter.notifyDataSetChanged()
-                    } else {
-                        ToastUtils.showToast(this@UserCollectionItemListActivity, response.data?.msg)
+                override fun onNext(response: BaseResponseGeneric<UserCollectionsListModel>) {
+                    try {
+                        if (response.code == 200 && response.status == Constants.SUCCESS && response.data?.result != null) {
+                            userCollectionsListModel = response.data!!.result
+                            setFirstCallData(start)
+                            shimmer1.visibility = View.GONE
+                            shimmer1.stopShimmerAnimation()
+                            dataList.addAll(userCollectionsListModel.collectionItems)
+                            collectionItemsListAdapter.setListData(dataList)
+                            collectionItemsListAdapter.notifyDataSetChanged()
+                        } else {
+                            ToastUtils.showToast(
+                                this@UserCollectionItemListActivity,
+                                response.data?.msg
+                            )
+                        }
+                    } catch (e: Exception) {
+                        Crashlytics.logException(e)
+                        Log.d("MC4KException", Log.getStackTraceString(e))
                     }
-                } catch (e: Exception) {
+                }
+
+                override fun onError(e: Throwable) {
                     Crashlytics.logException(e)
                     Log.d("MC4KException", Log.getStackTraceString(e))
                 }
-            }
-
-            override fun onError(e: Throwable) {
-                Crashlytics.logException(e)
-                Log.d("MC4KException", Log.getStackTraceString(e))
-            }
-        })
+            })
     }
 
     private fun updateCollection(delete: Boolean, isPublic: Boolean) {
@@ -219,33 +244,37 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         val list = ArrayList<String>()
         list.add(collectionId)
         updateCollectionRequestModel.userCollectionId = list
-        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).editCollection(updateCollectionRequestModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
-            override fun onComplete() {
-                removeProgressDialog()
-            }
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java)
+            .editCollection(updateCollectionRequestModel).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
+                override fun onComplete() {
+                    removeProgressDialog()
+                }
 
-            override fun onSubscribe(d: Disposable) {
-            }
+                override fun onSubscribe(d: Disposable) {
+                }
 
-            override fun onNext(t: BaseResponseGeneric<AddCollectionRequestModel>) {
-                if (t.code == 200 && t.status == Constants.SUCCESS) {
-                    ToastUtils.showToast(this@UserCollectionItemListActivity, t.data?.msg)
-                    if (delete) {
-                        val intent = Intent()
-                        intent.putExtra(AppConstants.COLLECTION_EDIT_TYPE, "deleteCollection")
-                        intent.putExtra("CollectionId", collectionId)
-                        setResult(Activity.RESULT_OK, intent)
-                        finish()
+                override fun onNext(t: BaseResponseGeneric<AddCollectionRequestModel>) {
+                    if (t.code == 200 && t.status == Constants.SUCCESS) {
+                        ToastUtils.showToast(this@UserCollectionItemListActivity, t.data?.msg)
+                        if (delete) {
+                            val intent = Intent()
+                            intent.putExtra(AppConstants.COLLECTION_EDIT_TYPE, "deleteCollection")
+                            intent.putExtra("CollectionId", collectionId)
+                            intent.putExtra("collectionPos", collectionPos + 1)
+                            setResult(Activity.RESULT_OK, intent)
+                            finish()
+                        }
                     }
                 }
-            }
 
-            override fun onError(e: Throwable) {
-                removeProgressDialog()
-                Crashlytics.logException(e)
-                Log.d("MC4KException", Log.getStackTraceString(e))
-            }
-        })
+                override fun onError(e: Throwable) {
+                    removeProgressDialog()
+                    Crashlytics.logException(e)
+                    Log.d("MC4KException", Log.getStackTraceString(e))
+                }
+            })
     }
 
 
@@ -265,72 +294,95 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
         val addCollectionRequestModel = AddCollectionRequestModel()
         if (AppConstants.FOLLOWING == userCollectionsListModel.isFollowed) {
             addCollectionRequestModel.deleted = true
-            addCollectionRequestModel.userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
+            addCollectionRequestModel.userId =
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
             addCollectionRequestModel.userCollectionId = collectionId
-            Utils.pushProfileEvents(this, "CTA_Unfollow_Collection_Detail", "UserCollectionItemListActivity",
-                    "Unfollow", "-");
+            Utils.pushProfileEvents(
+                this, "CTA_Unfollow_Collection_Detail", "UserCollectionItemListActivity",
+                "Unfollow", "-"
+            );
         } else {
             addCollectionRequestModel.deleted = false
-            addCollectionRequestModel.userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
+            addCollectionRequestModel.userId =
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
             addCollectionRequestModel.userCollectionId = collectionId
-            Utils.pushProfileEvents(this, "CTA_Follow_Collection_Detail", "UserCollectionItemListActivity",
-                    "Follow", "-");
+            Utils.pushProfileEvents(
+                this, "CTA_Follow_Collection_Detail", "UserCollectionItemListActivity",
+                "Follow", "-"
+            );
         }
 
-        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).followUnfollowCollection(addCollectionRequestModel = addCollectionRequestModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<ResponseBody> {
-            override fun onComplete() {
-            }
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java)
+            .followUnfollowCollection(addCollectionRequestModel = addCollectionRequestModel)
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<ResponseBody> {
+                override fun onComplete() {
+                }
 
-            override fun onSubscribe(d: Disposable) {
-            }
+                override fun onSubscribe(d: Disposable) {
+                }
 
-            override fun onNext(t: ResponseBody) {
-                try {
-                    val strResponse = String(t.bytes())
-                    val jsonObject = JSONObject(strResponse)
-                    val code = jsonObject.getInt("code")
-                    if (code == 200) {
-                        val arr = jsonObject.getJSONObject("data").getString("msg")
-                        ToastUtils.showToast(this@UserCollectionItemListActivity, arr)
-                        if (AppConstants.FOLLOWING == userCollectionsListModel.isFollowed) {
-                            userCollectionsListModel.isFollowed = AppConstants.FOLLOW
-                            followFollowingTextView.text = resources.getString(R.string.ad_follow_author)
-                            followersCount.text = ((userCollectionsListModel.totalCollectionFollowers)?.minus(1)).toString()
-                            userCollectionsListModel.totalCollectionFollowers = (userCollectionsListModel.totalCollectionFollowers)?.minus(1)
+                override fun onNext(t: ResponseBody) {
+                    try {
+                        val strResponse = String(t.bytes())
+                        val jsonObject = JSONObject(strResponse)
+                        val code = jsonObject.getInt("code")
+                        if (code == 200) {
+                            val arr = jsonObject.getJSONObject("data").getString("msg")
+                            ToastUtils.showToast(this@UserCollectionItemListActivity, arr)
+                            if (AppConstants.FOLLOWING == userCollectionsListModel.isFollowed) {
+                                userCollectionsListModel.isFollowed = AppConstants.FOLLOW
+                                followFollowingTextView.text =
+                                    resources.getString(R.string.ad_follow_author)
+                                followersCount.text =
+                                    ((userCollectionsListModel.totalCollectionFollowers)?.minus(1)).toString()
+                                userCollectionsListModel.totalCollectionFollowers =
+                                    (userCollectionsListModel.totalCollectionFollowers)?.minus(1)
 
+                            } else {
+                                followersCount.text =
+                                    ((userCollectionsListModel.totalCollectionFollowers)?.plus(1)).toString()
+                                userCollectionsListModel.totalCollectionFollowers =
+                                    (userCollectionsListModel.totalCollectionFollowers)?.plus(1)
+                                userCollectionsListModel.isFollowed = AppConstants.FOLLOWING
+                                followFollowingTextView.text =
+                                    resources.getString(R.string.ad_following_author)
+                            }
                         } else {
-                            followersCount.text = ((userCollectionsListModel.totalCollectionFollowers)?.plus(1)).toString()
-                            userCollectionsListModel.totalCollectionFollowers = (userCollectionsListModel.totalCollectionFollowers)?.plus(1)
-                            userCollectionsListModel.isFollowed = AppConstants.FOLLOWING
-                            followFollowingTextView.text = resources.getString(R.string.ad_following_author)
-                        }
-                    } else {
-                        val reason = jsonObject.getString("reason")
-                        ToastUtils.showToast(this@UserCollectionItemListActivity, reason)
+                            val reason = jsonObject.getString("reason")
+                            ToastUtils.showToast(this@UserCollectionItemListActivity, reason)
 
+                        }
+                    } catch (e: Exception) {
+                        Crashlytics.logException(e)
+                        Log.d("MC4KException", Log.getStackTraceString(e))
+                        ToastUtils.showToast(
+                            this@UserCollectionItemListActivity,
+                            "something went wrong"
+                        )
                     }
-                } catch (e: Exception) {
+                }
+
+                override fun onError(e: Throwable) {
                     Crashlytics.logException(e)
                     Log.d("MC4KException", Log.getStackTraceString(e))
-                    ToastUtils.showToast(this@UserCollectionItemListActivity, "something went wrong")
+                    val code = (e as retrofit2.HttpException).code()
+                    if (code == 402) {
+                        val data = e.response()?.errorBody()!!.byteStream()
+                        val jsonParser = JsonParser()
+                        val jsonObject = jsonParser.parse(
+                            InputStreamReader(data, "UTF-8")
+                        ) as JsonObject
+                        val reason = jsonObject.get("reason")
+                        Toast.makeText(
+                            this@UserCollectionItemListActivity,
+                            reason.asString,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    Log.e("exception in error", e.message.toString())
                 }
-            }
-
-            override fun onError(e: Throwable) {
-                Crashlytics.logException(e)
-                Log.d("MC4KException", Log.getStackTraceString(e))
-                val code = (e as retrofit2.HttpException).code()
-                if (code == 402) {
-                    val data = e.response()?.errorBody()!!.byteStream()
-                    val jsonParser = JsonParser()
-                    val jsonObject = jsonParser.parse(
-                            InputStreamReader(data, "UTF-8")) as JsonObject
-                    val reason = jsonObject.get("reason")
-                    Toast.makeText(this@UserCollectionItemListActivity, reason.asString, Toast.LENGTH_SHORT).show()
-                }
-                Log.e("exception in error", e.message.toString())
-            }
-        })
+            })
 
 
     }
@@ -338,8 +390,14 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.followersCount, R.id.rightArrow, R.id.followersTextView -> {
-                val intentt = Intent(this@UserCollectionItemListActivity, FollowersAndFollowingListActivity::class.java)
-                intentt.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.COLLECTION_FOLLOWING_LIST)
+                val intentt = Intent(
+                    this@UserCollectionItemListActivity,
+                    FollowersAndFollowingListActivity::class.java
+                )
+                intentt.putExtra(
+                    AppConstants.FOLLOW_LIST_TYPE,
+                    AppConstants.COLLECTION_FOLLOWING_LIST
+                )
                 intentt.putExtra("collectionId", collectionId)
                 startActivity(intentt)
             }
@@ -355,13 +413,16 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
             R.id.share -> {
                 userCollectionsListModel.shareUrl?.let {
                     val contentStr = userCollectionsListModel.shareUrl
-                    val shareIntent = ShareCompat.IntentBuilder.from(this@UserCollectionItemListActivity)
+                    val shareIntent =
+                        ShareCompat.IntentBuilder.from(this@UserCollectionItemListActivity)
                             .setType("text/plain")
                             .setText(contentStr)
                             .intent
                     startActivity(shareIntent)
-                    Utils.pushProfileEvents(this@UserCollectionItemListActivity, "CTA_Share_Private_Collection_Detail",
-                            "UserCollectionItemListActivity", "Share", "-")
+                    Utils.pushProfileEvents(
+                        this@UserCollectionItemListActivity, "CTA_Share_Private_Collection_Detail",
+                        "UserCollectionItemListActivity", "Share", "-"
+                    )
                 }
             }
             R.id.confirmTextView -> {
@@ -377,19 +438,26 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
     override fun onRecyclerViewclick(position: Int) {
         when {
             dataList[position].itemType == AppConstants.ARTICLE_COLLECTION_TYPE -> {
-                val intent = Intent(this@UserCollectionItemListActivity, ArticleDetailsContainerActivity::class.java)
+                val intent = Intent(
+                    this@UserCollectionItemListActivity,
+                    ArticleDetailsContainerActivity::class.java
+                )
                 intent.putExtra(Constants.ARTICLE_ID, dataList[position].item_info.id)
                 startActivity(intent)
             }
             dataList[position].itemType == AppConstants.VIDEO_COLLECTION_TYPE -> {
-                val intent = Intent(this@UserCollectionItemListActivity, ParallelFeedActivity::class.java)
+                val intent =
+                    Intent(this@UserCollectionItemListActivity, ParallelFeedActivity::class.java)
                 intent.putExtra(Constants.STREAM_URL, dataList[position].item_info.streamUrl)
                 intent.putExtra(Constants.VIDEO_ID, dataList[position].item)
                 intent.putExtra(Constants.AUTHOR_ID, dataList[position].item_info.author.id)
                 startActivity(intent)
             }
             dataList[position].itemType == AppConstants.SHORT_STORY_COLLECTION_TYPE -> {
-                val intent = Intent(this@UserCollectionItemListActivity, ShortStoryContainerActivity::class.java)
+                val intent = Intent(
+                    this@UserCollectionItemListActivity,
+                    ShortStoryContainerActivity::class.java
+                )
                 intent.putExtra(Constants.ARTICLE_ID, dataList[position].item)
                 intent.putExtra(Constants.AUTHOR_ID, dataList[position].item_info.userId)
                 intent.putExtra(Constants.BLOG_SLUG, dataList[position].item_info.blogTitleSlug)
@@ -417,7 +485,8 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                         editType = "editCollection"
                         val collectionName = data.getStringExtra("collectionName")
                         collectionNameTextView?.text = collectionName
-                        userCollectionsListModel.summary = data.getStringExtra("collectionDescription")
+                        userCollectionsListModel.summary =
+                            data.getStringExtra("collectionDescription")
                         if (!userCollectionsListModel.summary.isNullOrBlank()) {
                             collectionDescription.visibility = View.VISIBLE
                             descriptionTextView.visibility = View.VISIBLE
@@ -427,9 +496,11 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                             descriptionTextView.visibility = View.GONE
                         }
                         try {
-                            userCollectionsListModel.imageUrl = data.getStringExtra("collectionImage")
+                            userCollectionsListModel.imageUrl =
+                                data.getStringExtra("collectionImage")
                             Picasso.get().load(data.getStringExtra("collectionImage"))
-                                    .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageVIEW)
+                                .placeholder(R.drawable.default_article)
+                                .error(R.drawable.default_article).into(collectionImageVIEW)
                         } catch (e: Exception) {
                             collectionImageVIEW?.setImageResource(R.drawable.default_article)
                         }
@@ -487,8 +558,10 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                     collectionDescription.visibility = View.VISIBLE
                     collectionDescription.text = userCollectionsListModel.summary
                 }
-                Utils.pushGenericEvent(this@UserCollectionItemListActivity, "Show_Private_Collection_Detail",
-                        userCollectionsListModel.userId, "UserCollectionItemListActivity")
+                Utils.pushGenericEvent(
+                    this@UserCollectionItemListActivity, "Show_Private_Collection_Detail",
+                    userCollectionsListModel.userId, "UserCollectionItemListActivity"
+                )
             } else {
                 if (userCollectionsListModel.collectionItems.isEmpty()) {
                     itemNotAddedTextView.visibility = View.VISIBLE
@@ -507,13 +580,16 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener, Col
                 }
                 visibleToAll?.visibility = View.GONE
                 setting.visibility = View.GONE
-                Utils.pushGenericEvent(this@UserCollectionItemListActivity, "Show_Public_Collection_Detail",
-                        userCollectionsListModel.userId, "UserCollectionItemListActivity")
+                Utils.pushGenericEvent(
+                    this@UserCollectionItemListActivity, "Show_Public_Collection_Detail",
+                    userCollectionsListModel.userId, "UserCollectionItemListActivity"
+                )
             }
             followersCount.text = userCollectionsListModel.totalCollectionFollowers.toString()
             try {
                 Picasso.get().load(userCollectionsListModel.imageUrl)
-                        .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageVIEW)
+                    .placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                    .into(collectionImageVIEW)
             } catch (e: Exception) {
                 collectionImageVIEW?.setImageResource(R.drawable.default_article)
             }

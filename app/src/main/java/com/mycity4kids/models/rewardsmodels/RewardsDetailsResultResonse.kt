@@ -70,9 +70,9 @@ data class RewardsDetailsResultResonse(
         @SerializedName("work_status")
         @Expose
         var workStatus: Int? = null,
-        @SerializedName("mobile_token")
+        @SerializedName("mobile_auth_token")
         @Expose
-        var mobile_token: String? = null,
+        var mobile_auth_token: String? = null,
         @SerializedName("is_expecting")
         @Expose
         var isExpecting: Int? = null,

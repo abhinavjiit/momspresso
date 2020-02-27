@@ -56,6 +56,7 @@ import com.mycity4kids.models.rewardsmodels.RewardsPersonalResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
+import com.mycity4kids.ui.activity.OTPActivity
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter
 import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment
 import com.mycity4kids.ui.fragment.CityListingDialogFragment
@@ -399,7 +400,9 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
 
         editAddNumber.setOnClickListener {
-            varifyNumberWithFacebookAccountKit()
+//            varifyNumberWithFacebookAccountKit()
+            val intent = Intent(activity, OTPActivity::class.java)
+            startActivityForResult(intent, VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE)
         }
 
         textApplyReferral.setOnClickListener {
@@ -433,7 +436,9 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
         textVerify = containerView.findViewById(R.id.textVerify)
         textVerify.setOnClickListener {
-            varifyNumberWithFacebookAccountKit()
+//            varifyNumberWithFacebookAccountKit()
+            val intent = Intent(activity, OTPActivity::class.java)
+            startActivityForResult(intent, VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE)
         }
         (containerView.findViewById<TextView>(R.id.textSaveAndContinue)).setOnClickListener {
             if (prepareDataForPosting()) {
@@ -642,9 +647,9 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         } else {
             if (!apiGetResponse.contact.isNullOrEmpty()) {
                 apiGetResponse.contact = apiGetResponse.contact
-                apiGetResponse.mobile_token = ""
+                apiGetResponse.mobile_auth_token = ""
             } else if (!accountKitAuthCode.isNullOrEmpty()) {
-                apiGetResponse.mobile_token = accountKitAuthCode
+                apiGetResponse.mobile_auth_token = accountKitAuthCode
                 apiGetResponse.contact = ""
             }
         }
@@ -852,8 +857,9 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 }
                 VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE -> {
                     if (data != null && resultCode == Activity.RESULT_OK) {
-                        accountKitAuthCode = (data!!.getParcelableExtra(AccountKitLoginResult.RESULT_KEY) as AccountKitLoginResult).authorizationCode!!
-                        Log.d("account code ", accountKitAuthCode)
+//                        accountKitAuthCode = (data!!.getParcelableExtra(AccountKitLoginResult.RESULT_KEY) as AccountKitLoginResult).authorizationCode!!
+//                        Log.d("account code ", accountKitAuthCode)
+                        accountKitAuthCode = data.getStringExtra("auth_token")!!
                         apiGetResponse.contact = null
                         editPhone.visibility = View.VISIBLE
                         textVerify.visibility = View.VISIBLE

@@ -23,6 +23,8 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.models.request.PhoneLoginRequest
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI
 import com.mycity4kids.ui.activity.ActivityLogin
+import com.mycity4kids.ui.activity.OTPActivity
+import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
@@ -133,7 +135,16 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
         bundle.putString("smsToken", sms_token)
         bundle.putString("phoneNumber", phoneEditText?.text?.toString())
         verifySMSFragment.arguments = bundle
-        (activity as ActivityLogin).addFragment(verifySMSFragment, bundle, true, null)
+//        (activity as ActivityLogin).addFragment(verifySMSFragment, bundle, true, null)
+
+        if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
+            (activity as ActivityLogin).addFragment(verifySMSFragment, bundle, true, null)
+        } else if (activity?.javaClass?.simpleName.equals("OTPActivity")){
+            (activity as OTPActivity).supportFragmentManager.popBackStack()
+            activity!!.supportFragmentManager.beginTransaction().replace(R.id.container, verifySMSFragment,
+                VerifySMSFragment::class.java.simpleName).addToBackStack(null)
+                .commit()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
