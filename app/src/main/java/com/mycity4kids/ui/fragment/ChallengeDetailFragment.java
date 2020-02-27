@@ -21,10 +21,9 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
-import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.gtmutils.Utils;
@@ -35,6 +34,7 @@ import com.mycity4kids.ui.videochallengenewui.Adapter.VideoChallengePagerAdapter
 import com.mycity4kids.ui.videochallengenewui.activity.ExoplayerVideoChallengePlayViewActivity;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.videotrimmer.utils.FileUtils;
 import com.squareup.picasso.Picasso;
 
@@ -49,7 +49,7 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
     AppBarLayout appBarLayout;
     RelativeLayout challengeHeaderRelative;
     RelativeLayout mainMediaFrameLayout;
-    SimpleExoPlayerView exoplayerChallengeDetailListing;
+    PlayerView exoplayerChallengeDetailListing;
     LinearLayout submitButtonLinearLayout;
     TextView challengeNameText, submitStoryText, toolbarTitleTextView;
     com.getbase.floatingactionbutton.FloatingActionButton saveTextView;
@@ -79,7 +79,7 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
         rootLayout = (CoordinatorLayout) view.findViewById(R.id.mainprofile_parent_layout);
         challengeHeaderRelative = (RelativeLayout) view.findViewById(R.id.challengeHeaderRelative);
         mainMediaFrameLayout = (RelativeLayout) view.findViewById(R.id.main_media_frame);
-        exoplayerChallengeDetailListing = (SimpleExoPlayerView) view.findViewById(R.id.exoplayerChallengeDetailListing);
+        exoplayerChallengeDetailListing = (PlayerView) view.findViewById(R.id.exoplayerChallengeDetailListing);
         submitButtonLinearLayout = (LinearLayout) view.findViewById(R.id.submit_challenge_relative_Layout);
         challengeNameText = (TextView) view.findViewById(R.id.ChallengeNameText);
         submitStoryText = (TextView) view.findViewById(R.id.submit_story_text);

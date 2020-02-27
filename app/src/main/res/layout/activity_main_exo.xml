@@ -91,7 +91,7 @@
                 android:layout_below="@+id/articleViewCountTextView"
                 android:background="#000000">
 
-                <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+                <com.google.android.exoplayer2.ui.PlayerView
                     android:id="@+id/exoplayer"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

@@ -15,22 +15,27 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.ui.PlaybackControlView;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.StringUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
@@ -54,9 +59,11 @@ import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.ExoPlayerRecyclerView;
 import com.mycity4kids.ui.adapter.VideoRecyclerViewAdapter;
 import com.mycity4kids.ui.fragment.ViewAllCommentsDialogFragment;
+import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.DividerItemDecoration;
 import com.mycity4kids.utils.EndlessScrollListener;
 import com.mycity4kids.utils.MixPanelUtils;
+import com.mycity4kids.utils.StringUtils;
 
 import org.json.JSONObject;
 
@@ -64,12 +71,6 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -93,7 +94,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private final String STATE_RESUME_POSITION = "resumePosition";
     private final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
 
-    private SimpleExoPlayerView mExoPlayerView;
+    private PlayerView mExoPlayerView;
     private MediaSource mVideoSource;
     public boolean mExoPlayerFullscreen = false;
     private FrameLayout mFullScreenButton;
@@ -309,7 +310,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         if (StringUtils.isNullOrEmpty(streamUrl)) {
             streamUrl = responseData.getUrl();
             if (mExoPlayerView == null) {
-                mExoPlayerView = (SimpleExoPlayerView) findViewById(R.id.exoplayer);
+                mExoPlayerView = (PlayerView) findViewById(R.id.exoplayer);
                 initFullscreenDialog();
                 initFullscreenButton();
 
@@ -350,7 +351,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
             mAdapter.setListUpdate(updateFollowPos, finalList);
-         }
+        }
     }
 
     Callback<FollowUnfollowUserResponse> followUserResponseCallback = new Callback<FollowUnfollowUserResponse>() {
@@ -543,7 +544,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         }
 
         if (mExoPlayerView == null) {
-            mExoPlayerView = (SimpleExoPlayerView) findViewById(R.id.exoplayer);
+            mExoPlayerView = (PlayerView) findViewById(R.id.exoplayer);
             initFullscreenDialog();
             initFullscreenButton();
             String userAgent = Util.getUserAgent(ParallelFeedActivity.this, getApplicationContext().getApplicationInfo().packageName);
