@@ -77,6 +77,7 @@ class ChooseShortStoryCategoryActivity : BaseActivity(), ShortStoryChallengeTopi
             intent.putExtra("categoryName", publicShortStoryTopics?.get(position)?.display_name)
             startActivity(intent)
         }
+
     }
 
     override fun onStart() {

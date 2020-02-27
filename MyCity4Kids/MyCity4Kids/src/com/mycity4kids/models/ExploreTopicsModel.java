@@ -33,7 +33,7 @@ public class ExploreTopicsModel implements Parcelable {
     @SerializedName("extraData")
     private List<ExtraData> extraData;
 
-    public class ExtraData  {
+    public class ExtraData {
         @SerializedName("challenges")
         private Challenges challenges;
         @SerializedName("metaTitle")

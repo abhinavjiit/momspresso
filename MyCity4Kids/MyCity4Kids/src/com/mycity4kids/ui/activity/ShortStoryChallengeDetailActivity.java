@@ -168,7 +168,6 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
         bodyTextView = (TextView) findViewById(R.id.bodyTextView);
         authorTextView = (TextView) findViewById(R.id.authorTextView);
         pullToRefresh = findViewById(R.id.pullToRefresh);
-
         frameLayout.getBackground().setAlpha(0);
         fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
         popularSortFAB = (FloatingActionButton) findViewById(R.id.popularSortFAB);

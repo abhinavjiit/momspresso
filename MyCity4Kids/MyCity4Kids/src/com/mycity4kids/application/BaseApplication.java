@@ -11,6 +11,7 @@ import android.os.StrictMode;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+
 import com.comscore.analytics.comScore;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -19,7 +20,6 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.libraries.places.api.Places;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.MessageEvent;
 import com.mycity4kids.R;
@@ -54,6 +54,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+
 
 /**
  * This class holds some application-global instances.
@@ -179,13 +180,6 @@ public class BaseApplication extends Application {
         return campaignRewards;
     }
 
-    public Retrofit getCoroutineRetrofit() {
-        if (null == coroutineRetrofit) {
-            createRetrofitInstanceForCampaign(AppConstants.LIVE_URL);
-        }
-        return coroutineRetrofit;
-    }
-
     public Retrofit createRetrofitInstanceForCampaign(String base_url) {
         Interceptor mainInterceptor = new Interceptor() {
             @Override
@@ -242,6 +236,7 @@ public class BaseApplication extends Application {
     }
 
     @Override
+
     public void onCreate() {
         super.onCreate();
         // workaround for http://code.google.com/p/android/issues/detail?id=20915
@@ -326,8 +321,6 @@ public class BaseApplication extends Application {
                 HttpUrl originalHttpUrl = original.url();
                 Request.Builder requestBuilder = original.newBuilder();
                 requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
-//                requestBuilder.addHeader("id", "be13a0f26bbf41f0833906ec374f07db");
-//                requestBuilder.addHeader("mc4kToken", "ya29.GltVBy0pjSImNx6PgYPeTg9DlTGaR12FlHJYEXi9YN3h39ZHZekRio46xKXB1uHfV_mkDH3V05DRKkFKi2ZzYICMJ5fsxn05eJ_ub7GgCtYAeRdAhgHGZ5Y07AN2");
                 requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
                 requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
                 requestBuilder.addHeader("agent", "android");
@@ -514,7 +507,6 @@ public class BaseApplication extends Application {
                 Request original = chain.request();
                 HttpUrl originalHttpUrl = original.url();
                 Request.Builder requestBuilder = original.newBuilder();
-
                 requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
                 requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
                 requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());

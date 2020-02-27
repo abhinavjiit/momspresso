@@ -57,7 +57,6 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
         }
     }
 
-
     @Override
     public int getItemCount() {
         return challengeTopics.size();
