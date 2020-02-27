@@ -28,7 +28,18 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
@@ -47,14 +58,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.StringUtils;
-import com.mycity4kids.utils.ToastUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.EditorPostActivity;
@@ -102,15 +110,13 @@ import com.mycity4kids.ui.rewards.activity.RewardsShareReferralCodeActivity;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
+import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.utils.PermissionUtil;
+import com.mycity4kids.utils.StringUtils;
+import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.videotrimmer.utils.FileUtils;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -119,28 +125,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.ResponseBody;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class DashboardActivity extends BaseActivity implements View.OnClickListener, FragmentManager.OnBackStackChangedListener,
-        GroupMembershipStatus.IMembershipStatus, UserAllDraftsRecyclerAdapter.DraftRecyclerViewClickListener {
+public class DashboardActivity extends BaseActivity implements View.OnClickListener,
+        FragmentManager.OnBackStackChangedListener,
+        GroupMembershipStatus.IMembershipStatus,
+        UserAllDraftsRecyclerAdapter.DraftRecyclerViewClickListener {
 
     private FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
     private int num_of_challeneges;
@@ -228,7 +226,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         BaseApplication.startSocket();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(720).build();
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(720).build();
         mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
         if (SharedPrefUtils.getFirebaseRemoteConfigUpdateFlag(BaseApplication.getAppContext())) {
@@ -236,7 +235,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             mFirebaseRemoteConfig.fetch(0).addOnCompleteListener(this, task -> {
                 removeProgressDialog();
                 mFirebaseRemoteConfig.activate();
-                SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(BaseApplication.getAppContext(), false);
+                SharedPrefUtils
+                        .setFirebaseRemoteConfigUpdateFlag(BaseApplication.getAppContext(), false);
             });
         } else {
             mFirebaseRemoteConfig.fetchAndActivate()
@@ -259,8 +259,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         t.send(new HitBuilders.EventBuilder().setCategory("UX").setAction("User Sign In").build());
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
-        mMixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
-        Utils.pushGenericEvent(this, "Dashboard_event", SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "DashboardActivity");
+        mMixpanel = MixpanelAPI
+                .getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+        Utils.pushGenericEvent(this, "Dashboard_event",
+                SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "DashboardActivity");
         try {
             currentVersion = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
@@ -278,8 +280,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         onNewIntent(intent);
 
         if (null != intent.getParcelableExtra("notificationExtras")) {
-            if ("upcoming_event_list".equals(((Bundle) intent.getParcelableExtra("notificationExtras")).getString("type")))
+            if ("upcoming_event_list"
+                    .equals(((Bundle) intent.getParcelableExtra("notificationExtras"))
+                            .getString("type"))) {
                 fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
+            }
         }
         final FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.addOnBackStackChangedListener(this);
@@ -357,11 +362,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         drawerMyMoneyCoachmark.setOnClickListener(this);
 
         referral.setOnClickListener(this);
-        settingTextView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_app_settings), null, null, null);
-        videosTextView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_mom_vlogs), null, null, null);
-        homeTextView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.drawer_home_red), null, null, null);
-        selectedLangTextView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_language), null, null, null);
-        referral.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.share_dra), null, null, null);
+        settingTextView.setCompoundDrawablesWithIntrinsicBounds(
+                getResources().getDrawable(R.drawable.ic_app_settings), null, null, null);
+        videosTextView.setCompoundDrawablesWithIntrinsicBounds(
+                getResources().getDrawable(R.drawable.ic_mom_vlogs), null, null, null);
+        homeTextView.setCompoundDrawablesWithIntrinsicBounds(
+                getResources().getDrawable(R.drawable.drawer_home_red), null, null, null);
+        selectedLangTextView.setCompoundDrawablesWithIntrinsicBounds(
+                getResources().getDrawable(R.drawable.ic_language), null, null, null);
+        referral.setCompoundDrawablesWithIntrinsicBounds(
+                getResources().getDrawable(R.drawable.share_dra), null, null, null);
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.HORIZONTAL);
         draftsRecyclerView.setLayoutManager(llm);
@@ -378,7 +388,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
         getSupportActionBar().show();
 
-        Utils.pushOpenScreenEvent(this, "DashboardScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(this, "DashboardScreen",
+                SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         downArrowImageView.setOnClickListener(this);
         searchAllImageView.setOnClickListener(this);
@@ -406,7 +417,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         drawerTopContainer.setOnClickListener(this);
         slideAnim = AnimationUtils.loadAnimation(this, R.anim.appear_from_bottom);
         fadeAnim = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
-        slideDownAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_slide_down_from_top);
+        slideDownAnim = AnimationUtils
+                .loadAnimation(getApplicationContext(), R.anim.anim_slide_down_from_top);
         slideDownAnim.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -453,7 +465,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "Drawer")) {
+                if (!SharedPrefUtils
+                        .isCoachmarksShownFlag(BaseApplication.getAppContext(), "Drawer")) {
                     drawerContainer.getLayoutParams().width = drawerView.getWidth();
                     drawerMyMoneyContainer.getLayoutParams().width = drawerView.getWidth();
                     drawerSettingsContainer.getLayoutParams().width = drawerView.getWidth();
@@ -461,40 +474,59 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     drawerMyMoneyContainer.requestLayout();
                     drawerSettingsContainer.requestLayout();
                     drawerProfileCoachmark.setVisibility(View.VISIBLE);
-                    if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                    if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils
+                            .getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_english));
-                        selectedlangGuideTextView.setText(getString(R.string.language_label_english));
-                    } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                        selectedlangGuideTextView
+                                .setText(getString(R.string.language_label_english));
+                    } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils
+                            .getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_hindi));
                         selectedlangGuideTextView.setText(getString(R.string.language_label_hindi));
-                    } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                    } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils
+                            .getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_marathi));
-                        selectedlangGuideTextView.setText(getString(R.string.language_label_marathi));
-                    } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                        selectedlangGuideTextView
+                                .setText(getString(R.string.language_label_marathi));
+                    } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils
+                            .getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_bengali));
-                        selectedlangGuideTextView.setText(getString(R.string.language_label_bengali));
-                    } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                        selectedlangGuideTextView
+                                .setText(getString(R.string.language_label_bengali));
+                    } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils
+                            .getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_tamil));
                         selectedlangGuideTextView.setText(getString(R.string.language_label_tamil));
-                    } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                    } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils
+                            .getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_telegu));
-                        selectedlangGuideTextView.setText(getString(R.string.language_label_telegu));
-                    } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                        selectedlangGuideTextView
+                                .setText(getString(R.string.language_label_telegu));
+                    } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils
+                            .getAppLocale(BaseApplication.getAppContext()))) {
                         selectedLangTextView.setText(getString(R.string.language_label_kannada));
                         langTextView.setText(getString(R.string.language_label_kannada));
-                        selectedlangGuideTextView.setText(getString(R.string.language_label_kannada));
-                    } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                        selectedlangGuideTextView
+                                .setText(getString(R.string.language_label_kannada));
+                    } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils
+                            .getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_malayalam));
-                        selectedlangGuideTextView.setText(getString(R.string.language_label_malayalam));
-                    } else if (AppConstants.LOCALE_GUJARATI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                        selectedlangGuideTextView
+                                .setText(getString(R.string.language_label_malayalam));
+                    } else if (AppConstants.LOCALE_GUJARATI.equals(SharedPrefUtils
+                            .getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_gujarati));
-                        selectedlangGuideTextView.setText(getString(R.string.language_label_gujarati));
-                    } else if (AppConstants.LOCALE_PUNJABI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                        selectedlangGuideTextView
+                                .setText(getString(R.string.language_label_gujarati));
+                    } else if (AppConstants.LOCALE_PUNJABI.equals(SharedPrefUtils
+                            .getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_punjabi));
-                        selectedlangGuideTextView.setText(getString(R.string.language_label_punjabi));
+                        selectedlangGuideTextView
+                                .setText(getString(R.string.language_label_punjabi));
                     } else {
                         langTextView.setText(getString(R.string.language_label_english));
-                        selectedlangGuideTextView.setText(getString(R.string.language_label_english));
+                        selectedlangGuideTextView
+                                .setText(getString(R.string.language_label_english));
                     }
                 }
             }
@@ -505,35 +537,45 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onDrawerStateChanged(int newState) {
-                if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                if (AppConstants.LOCALE_ENGLISH
+                        .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_english));
                     selectedlangGuideTextView.setText(getString(R.string.language_label_english));
-                } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                } else if (AppConstants.LOCALE_HINDI
+                        .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_hindi));
                     selectedlangGuideTextView.setText(getString(R.string.language_label_hindi));
-                } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                } else if (AppConstants.LOCALE_MARATHI
+                        .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_marathi));
                     selectedlangGuideTextView.setText(getString(R.string.language_label_marathi));
-                } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                } else if (AppConstants.LOCALE_BENGALI
+                        .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_bengali));
                     selectedlangGuideTextView.setText(getString(R.string.language_label_bengali));
-                } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                } else if (AppConstants.LOCALE_TAMIL
+                        .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_tamil));
                     selectedlangGuideTextView.setText(getString(R.string.language_label_tamil));
-                } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                } else if (AppConstants.LOCALE_TELUGU
+                        .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_telegu));
                     selectedlangGuideTextView.setText(getString(R.string.language_label_telegu));
-                } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                } else if (AppConstants.LOCALE_KANNADA
+                        .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     selectedLangTextView.setText(getString(R.string.language_label_kannada));
                     langTextView.setText(getString(R.string.language_label_kannada));
                     selectedlangGuideTextView.setText(getString(R.string.language_label_kannada));
-                } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                } else if (AppConstants.LOCALE_MALAYALAM
+                        .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_malayalam));
                     selectedlangGuideTextView.setText(getString(R.string.language_label_malayalam));
-                } else if (AppConstants.LOCALE_GUJARATI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                } else if (AppConstants.LOCALE_GUJARATI
+                        .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_gujarati));
                     selectedlangGuideTextView.setText(getString(R.string.language_label_gujarati));
-                } else if (AppConstants.LOCALE_PUNJABI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+                } else if (AppConstants.LOCALE_PUNJABI
+                        .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_punjabi));
                     selectedlangGuideTextView.setText(getString(R.string.language_label_punjabi));
                 } else {
@@ -542,12 +584,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
             }
         });
-        if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))) {
-            Picasso.get().load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(R.drawable.family_xxhdpi)
+        if (!StringUtils
+                .isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))) {
+            Picasso.get().load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))
+                    .placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).into(profileImageView);
         }
-        usernameTextView.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
-        coachUsernameTextView.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
+        usernameTextView.setText(
+                SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils
+                        .getUserDetailModel(this).getLast_name());
+        coachUsernameTextView.setText(
+                SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils
+                        .getUserDetailModel(this).getLast_name());
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -558,7 +606,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         bottomNavigationView.setTextSize(12.0f);
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 item -> {
-                    final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+                    final Fragment topFragment = getSupportFragmentManager()
+                            .findFragmentById(R.id.content_frame);
                     Fragment selectedFragment = null;
                     switch (item.getItemId()) {
                         case R.id.action_profile:
@@ -573,12 +622,19 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             break;
                         case R.id.action_momVlog:
                             MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
-                            Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Bottom_nav_videos",
-                                    "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-                                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
-                                    String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
-                            Intent cityIntent = new Intent(DashboardActivity.this, CategoryVideosListingActivity.class);
-                            cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
+                            Utils.momVlogEvent(DashboardActivity.this, "Home Screen",
+                                    "Bottom_nav_videos",
+                                    "", "android",
+                                    SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                                    SharedPrefUtils
+                                            .getUserDetailModel(BaseApplication.getAppContext())
+                                            .getDynamoId(),
+                                    String.valueOf(System.currentTimeMillis()),
+                                    "Show_Video_Listing", "", "");
+                            Intent cityIntent = new Intent(DashboardActivity.this,
+                                    CategoryVideosListingActivity.class);
+                            cityIntent
+                                    .putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
                             startActivity(cityIntent);
                             break;
                         case R.id.action_home:
@@ -610,7 +666,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             if (topFragment instanceof GroupsViewFragment) {
                                 return true;
                             }
-                            Utils.groupsEvent(DashboardActivity.this, "Home Screen", "Group_bottom_nav", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Group_listing", "", "");
+                            Utils.groupsEvent(DashboardActivity.this, "Home Screen",
+                                    "Group_bottom_nav", "android",
+                                    SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                                    SharedPrefUtils
+                                            .getUserDetailModel(BaseApplication.getAppContext())
+                                            .getDynamoId(),
+                                    String.valueOf(System.currentTimeMillis()), "Group_listing", "",
+                                    "");
                             GroupsViewFragment groupsFragment = new GroupsViewFragment();
                             Bundle eBundle = new Bundle();
                             groupsFragment.setArguments(eBundle);
@@ -622,9 +685,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         if (Constants.PROFILE_FRAGMENT.equals(fragmentToLoad)) {
             Intent pIntent = new Intent(this, UserProfileActivity.class);
             Bundle notificationExtras = getIntent().getParcelableExtra("notificationExtras");
-            pIntent.putExtra(Constants.USER_ID, SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-            pIntent.putExtra(AppConstants.BADGE_ID, notificationExtras.getString(AppConstants.BADGE_ID));
-            pIntent.putExtra(AppConstants.MILESTONE_ID, notificationExtras.getString(AppConstants.MILESTONE_ID));
+            pIntent.putExtra(Constants.USER_ID,
+                    SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+            pIntent.putExtra(AppConstants.BADGE_ID,
+                    notificationExtras.getString(AppConstants.BADGE_ID));
+            pIntent.putExtra(AppConstants.MILESTONE_ID,
+                    notificationExtras.getString(AppConstants.MILESTONE_ID));
             startActivity(pIntent);
         } else if (Constants.SUGGESTED_TOPICS_FRAGMENT.equals(fragmentToLoad)) {
             SuggestedTopicsFragment fragment0 = new SuggestedTopicsFragment();
@@ -655,7 +721,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
         }
 
-        RateVersion reteVersionModel = SharedPrefUtils.getRateVersion(BaseApplication.getAppContext());
+        RateVersion reteVersionModel = SharedPrefUtils
+                .getRateVersion(BaseApplication.getAppContext());
         int currentRateVersion = reteVersionModel.getAppRateVersion();
         currentRateVersion++;
         boolean isCompleteRateProcess = reteVersionModel.isAppRateComplete();
@@ -663,10 +730,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         rateModel.setAppRateComplete(isCompleteRateProcess);
         rateModel.setAppRateVersion(currentRateVersion);
         SharedPrefUtils.setAppRateVersion(BaseApplication.getAppContext(), rateModel);
-        if (!SharedPrefUtils.getRateVersion(BaseApplication.getAppContext()).isAppRateComplete() && currentRateVersion >= 10 && rateNowDialog) {
+        if (!SharedPrefUtils.getRateVersion(BaseApplication.getAppContext()).isAppRateComplete()
+                && currentRateVersion >= 10 && rateNowDialog) {
             RateAppDialogFragment rateAppDialogFragment = new RateAppDialogFragment();
             reteVersionModel.setAppRateVersion(-20);
-            rateAppDialogFragment.show(getFragmentManager(), rateAppDialogFragment.getClass().getSimpleName());
+            rateAppDialogFragment
+                    .show(getFragmentManager(), rateAppDialogFragment.getClass().getSimpleName());
         }
 
         //     findActiveChallenge();
@@ -699,7 +768,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private void getUsersData() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
-        String userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
+        String userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                .getDynamoId();
         if (!userId.isEmpty()) {
             Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(userId);
             call.enqueue(userDetailsResponseListener);
@@ -708,16 +778,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private Callback<UserDetailResponse> userDetailsResponseListener = new Callback<UserDetailResponse>() {
         @Override
-        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+        public void onResponse(Call<UserDetailResponse> call,
+                retrofit2.Response<UserDetailResponse> response) {
             removeProgressDialog();
             if (response == null || null == response.body()) {
                 return;
             }
             try {
                 UserDetailResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    if (responseData.getData() != null && responseData.getData().get(0) != null && responseData.getData().get(0).getResult() != null) {
-                        SharedPrefUtils.setIsRewardsAdded(BaseApplication.getAppContext(), responseData.getData().get(0).getResult().getRewardsAdded());
+                if (responseData.getCode() == 200 && Constants.SUCCESS
+                        .equals(responseData.getStatus())) {
+                    if (responseData.getData() != null && responseData.getData().get(0) != null
+                            && responseData.getData().get(0).getResult() != null) {
+                        SharedPrefUtils.setIsRewardsAdded(BaseApplication.getAppContext(),
+                                responseData.getData().get(0).getResult().getRewardsAdded());
                     }
                 }
             } catch (Exception e) {
@@ -742,7 +816,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             draftsShimmerLayout.setVisibility(View.GONE);
             if (response.body() == null) {
                 if (response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    NetworkErrorException nee = new NetworkErrorException(
+                            response.raw().toString());
                     Crashlytics.logException(nee);
                 }
                 createLabelTextView.setVisibility(View.VISIBLE);
@@ -768,33 +843,42 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         return;
                     }
 
-                    JSONArray resultJsonObject = jObject.getJSONObject("data").optJSONArray("result");
+                    JSONArray resultJsonObject = jObject.getJSONObject("data")
+                            .optJSONArray("result");
                     ArrayList<AllDraftsResponse.AllDraftsData.AllDraftsResult> draftList = new ArrayList<>();
                     ArrayList<Map<String, String>> retMap;
                     for (int i = 0; i < resultJsonObject.length(); i++) {
                         AllDraftsResponse.AllDraftsData.AllDraftsResult draftitem = new AllDraftsResponse.AllDraftsData.AllDraftsResult();
                         draftitem.setId(resultJsonObject.getJSONObject(i).getString("id"));
-                        draftitem.setArticleType(resultJsonObject.getJSONObject(i).getString("articleType"));
-                        draftitem.setCreatedTime(resultJsonObject.getJSONObject(i).getString("createdTime"));
-                        draftitem.setUpdatedTime(resultJsonObject.getJSONObject(i).getLong("updatedTime"));
+                        draftitem.setArticleType(
+                                resultJsonObject.getJSONObject(i).getString("articleType"));
+                        draftitem.setCreatedTime(
+                                resultJsonObject.getJSONObject(i).getString("createdTime"));
+                        draftitem.setUpdatedTime(
+                                resultJsonObject.getJSONObject(i).getLong("updatedTime"));
                         draftitem.setBody(resultJsonObject.getJSONObject(i).getString("body"));
                         draftitem.setTitle(resultJsonObject.getJSONObject(i).getString("title"));
                         if (resultJsonObject.getJSONObject(i).has("contentType")) {
-                            draftitem.setContentType(resultJsonObject.getJSONObject(i).getString("contentType"));
+                            draftitem.setContentType(
+                                    resultJsonObject.getJSONObject(i).getString("contentType"));
 
                         } else {
                             draftitem.setContentType("0");
                         }
                         if (resultJsonObject.getJSONObject(i).has("tags")) {
-                            JSONArray tagsArray = resultJsonObject.getJSONObject(i).optJSONArray("tags");
+                            JSONArray tagsArray = resultJsonObject.getJSONObject(i)
+                                    .optJSONArray("tags");
                             if (null != tagsArray) {
-                                retMap = new Gson().fromJson(tagsArray.toString(), new TypeToken<ArrayList<HashMap<String, String>>>() {
-                                }.getType());
+                                retMap = new Gson().fromJson(tagsArray.toString(),
+                                        new TypeToken<ArrayList<HashMap<String, String>>>() {
+                                        }.getType());
                                 draftitem.setTags(retMap);
                             } else {
-                                JSONArray jsArray = resultJsonObject.getJSONObject(i).getJSONObject("tags").optJSONArray("tagsArr");
-                                retMap = new Gson().fromJson(jsArray.toString(), new TypeToken<ArrayList<HashMap<String, String>>>() {
-                                }.getType());
+                                JSONArray jsArray = resultJsonObject.getJSONObject(i)
+                                        .getJSONObject("tags").optJSONArray("tagsArr");
+                                retMap = new Gson().fromJson(jsArray.toString(),
+                                        new TypeToken<ArrayList<HashMap<String, String>>>() {
+                                        }.getType());
                                 draftitem.setTags(retMap);
                             }
                         } else {
@@ -851,27 +935,32 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         if (notificationExtras != null) {
             try {
                 for (String key : notificationExtras.keySet()) {
-                    Log.e("notificationExtras", key + " : " + (notificationExtras.get(key) != null ? notificationExtras.get(key) : "NULL"));
+                    Log.e("notificationExtras",
+                            key + " : " + (notificationExtras.get(key) != null ? notificationExtras
+                                    .get(key) : "NULL"));
                 }
             } catch (Exception e) {
             }
             if (notificationExtras.getString("type").equals("remote_config_silent_update")) {
                 showProgressDialog(getString(R.string.please_wait));
-                mFirebaseRemoteConfig.fetch(0).addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        removeProgressDialog();
-                        mFirebaseRemoteConfig.activate();
-                        SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(BaseApplication.getAppContext(), false);
-                    }
-                });
+                mFirebaseRemoteConfig.fetch(0)
+                        .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                removeProgressDialog();
+                                mFirebaseRemoteConfig.activate();
+                                SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(
+                                        BaseApplication.getAppContext(), false);
+                            }
+                        });
             } else if (notificationExtras.getString("type").equalsIgnoreCase("article_details")) {
                 pushEvent("article_details");
                 String articleId = notificationExtras.getString("id");
                 String authorId = notificationExtras.getString("userId");
                 String blogSlug = notificationExtras.getString("blogSlug");
                 String titleSlug = notificationExtras.getString("titleSlug");
-                Intent intent1 = new Intent(DashboardActivity.this, ArticleDetailsContainerActivity.class);
+                Intent intent1 = new Intent(DashboardActivity.this,
+                        ArticleDetailsContainerActivity.class);
                 intent1.putExtra(Constants.ARTICLE_ID, articleId);
                 intent1.putExtra(Constants.AUTHOR_ID, authorId);
                 intent1.putExtra(Constants.BLOG_SLUG, blogSlug);
@@ -883,10 +972,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(intent1);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("collection_detail")) {
                 pushEvent("collection_detail");
-                Intent intent = new Intent(DashboardActivity.this, UserCollectionItemListActivity.class);
+                Intent intent = new Intent(DashboardActivity.this,
+                        UserCollectionItemListActivity.class);
                 intent.putExtra("id", notificationExtras.getString(AppConstants.COLLECTION_ID));
                 startActivity(intent);
-            } else if (notificationExtras.getString("type").equalsIgnoreCase("create_content_prompt")) {
+            } else if (notificationExtras.getString("type")
+                    .equalsIgnoreCase("create_content_prompt")) {
                 pushEvent("create_content_prompt");
                 fragmentToLoad = Constants.CREATE_CONTENT_PROMPT;
             } else if (notificationExtras.getString("type").equalsIgnoreCase("momsights_screen")) {
@@ -898,15 +989,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
                 campaignIntent.putExtra("campaign_listing", "campaign_listing");
                 startActivity(campaignIntent);
-            } else if (notificationExtras.getString("type").equalsIgnoreCase("choose_video_category")) {
+            } else if (notificationExtras.getString("type")
+                    .equalsIgnoreCase("choose_video_category")) {
                 pushEvent("choose_video_category");
                 Intent createVideoIntent = new Intent(this, ChooseVideoCategoryActivity.class);
                 createVideoIntent.putExtra("comingFrom", "notification");
                 startActivity(createVideoIntent);
-            } else if (notificationExtras.getString("type").equalsIgnoreCase("video_challenge_details")) {
+            } else if (notificationExtras.getString("type")
+                    .equalsIgnoreCase("video_challenge_details")) {
                 pushEvent("video_challenge_details");
                 Intent videoChallengeIntent = new Intent(this, NewVideoChallengeActivity.class);
-                videoChallengeIntent.putExtra(Constants.CHALLENGE_ID, "" + notificationExtras.getString("challengeId"));
+                videoChallengeIntent.putExtra(Constants.CHALLENGE_ID,
+                        "" + notificationExtras.getString("challengeId"));
                 videoChallengeIntent.putExtra("comingFrom", "notification");
                 startActivity(videoChallengeIntent);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("campaign_detail")) {
@@ -916,13 +1010,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 campaignIntent.putExtra("campaign_detail", "campaign_detail");
                 campaignIntent.putExtra("fromNotification", true);
                 startActivity(campaignIntent);
-            } else if (notificationExtras.getString("type").equalsIgnoreCase("campaign_submit_proof")) {
+            } else if (notificationExtras.getString("type")
+                    .equalsIgnoreCase("campaign_submit_proof")) {
                 pushEvent("campaign_submit_proof");
                 Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
                 campaignIntent.putExtra("campaign_Id", notificationExtras.getString("campaign_id"));
                 campaignIntent.putExtra("campaign_submit_proof", "campaign_submit_proof");
                 startActivity(campaignIntent);
-            } else if (notificationExtras.getString("type").equalsIgnoreCase("mymoney_bankdetails")) {
+            } else if (notificationExtras.getString("type")
+                    .equalsIgnoreCase("mymoney_bankdetails")) {
                 pushEvent("mymoney_bankdetails");
                 Intent campaignIntent = new Intent(this, RewardsContainerActivity.class);
                 campaignIntent.putExtra("isComingfromCampaign", true);
@@ -942,7 +1038,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(campaignIntent);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("shortStoryDetails")) {
                 pushEvent("shortStoryDetails");
-                Intent ssIntent = new Intent(DashboardActivity.this, ShortStoryContainerActivity.class);
+                Intent ssIntent = new Intent(DashboardActivity.this,
+                        ShortStoryContainerActivity.class);
                 ssIntent.putExtra(Constants.AUTHOR_ID, notificationExtras.getString("userId"));
                 ssIntent.putExtra(Constants.ARTICLE_ID, notificationExtras.getString("id"));
                 ssIntent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
@@ -967,34 +1064,49 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(intent1);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_membership")
                     || notificationExtras.getString("type").equalsIgnoreCase("group_new_post")
-                    || notificationExtras.getString("type").equalsIgnoreCase("group_admin_group_edit")
+                    || notificationExtras.getString("type")
+                    .equalsIgnoreCase("group_admin_group_edit")
                     || notificationExtras.getString("type").equalsIgnoreCase("group_admin")) {
                 pushEvent(notificationExtras.getString(notificationExtras.getString("type")));
                 GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
-                groupMembershipStatus.checkMembershipStatus(Integer.parseInt(notificationExtras.getString("groupId")), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-            } else if (notificationExtras.getString("type").equalsIgnoreCase("group_new_response")) {
+                groupMembershipStatus.checkMembershipStatus(
+                        Integer.parseInt(notificationExtras.getString("groupId")),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                                .getDynamoId());
+            } else if (notificationExtras.getString("type")
+                    .equalsIgnoreCase("group_new_response")) {
                 pushEvent("group_new_response");
                 Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
-                gpPostIntent.putExtra("postId", Integer.parseInt(notificationExtras.getString("postId")));
-                gpPostIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
-                gpPostIntent.putExtra("responseId", Integer.parseInt(notificationExtras.getString("responseId")));
+                gpPostIntent.putExtra("postId",
+                        Integer.parseInt(notificationExtras.getString("postId")));
+                gpPostIntent.putExtra("groupId",
+                        Integer.parseInt(notificationExtras.getString("groupId")));
+                gpPostIntent.putExtra("responseId",
+                        Integer.parseInt(notificationExtras.getString("responseId")));
                 startActivity(gpPostIntent);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_new_reply")) {
                 pushEvent("group_new_reply");
                 Intent gpPostIntent = new Intent(this, ViewGroupPostCommentsRepliesActivity.class);
-                gpPostIntent.putExtra("postId", Integer.parseInt(notificationExtras.getString("postId")));
-                gpPostIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
-                gpPostIntent.putExtra("responseId", Integer.parseInt(notificationExtras.getString("responseId")));
+                gpPostIntent.putExtra("postId",
+                        Integer.parseInt(notificationExtras.getString("postId")));
+                gpPostIntent.putExtra("groupId",
+                        Integer.parseInt(notificationExtras.getString("groupId")));
+                gpPostIntent.putExtra("responseId",
+                        Integer.parseInt(notificationExtras.getString("responseId")));
                 startActivity(gpPostIntent);
-            } else if (notificationExtras.getString("type").equalsIgnoreCase("group_admin_membership")) {
+            } else if (notificationExtras.getString("type")
+                    .equalsIgnoreCase("group_admin_membership")) {
                 pushEvent("group_admin_membership");
                 Intent memberIntent = new Intent(this, GroupMembershipActivity.class);
-                memberIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
+                memberIntent.putExtra("groupId",
+                        Integer.parseInt(notificationExtras.getString("groupId")));
                 startActivity(memberIntent);
-            } else if (notificationExtras.getString("type").equalsIgnoreCase("group_admin_reported")) {
+            } else if (notificationExtras.getString("type")
+                    .equalsIgnoreCase("group_admin_reported")) {
                 pushEvent("group_admin_reported");
                 Intent reportIntent = new Intent(this, GroupsReportedContentActivity.class);
-                reportIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
+                reportIntent.putExtra("groupId",
+                        Integer.parseInt(notificationExtras.getString("groupId")));
                 startActivity(reportIntent);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("webView")) {
                 pushEvent("webView");
@@ -1013,8 +1125,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     Intent intent1 = new Intent(this, UserProfileActivity.class);
                     intent1.putExtra("fromNotification", true);
                     intent1.putExtra(Constants.USER_ID, u_id);
-                    intent1.putExtra(AppConstants.BADGE_ID, notificationExtras.getString(AppConstants.BADGE_ID));
-                    intent1.putExtra(AppConstants.MILESTONE_ID, notificationExtras.getString(AppConstants.MILESTONE_ID));
+                    intent1.putExtra(AppConstants.BADGE_ID,
+                            notificationExtras.getString(AppConstants.BADGE_ID));
+                    intent1.putExtra(AppConstants.MILESTONE_ID,
+                            notificationExtras.getString(AppConstants.MILESTONE_ID));
                     intent1.putExtra(Constants.FROM_SCREEN, "Notification");
                     startActivity(intent1);
                 } else {
@@ -1024,13 +1138,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 pushEvent("badge_list");
                 Intent badgeIntent = new Intent(this, BadgeActivity.class);
                 startActivity(badgeIntent);
-            } else if (notificationExtras.getString("type").equalsIgnoreCase("upcoming_event_list")) {
+            } else if (notificationExtras.getString("type")
+                    .equalsIgnoreCase("upcoming_event_list")) {
                 pushEvent("upcoming_event_list");
                 fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
             } else if (notificationExtras.getString("type").equalsIgnoreCase("suggested_topics")) {
                 pushEvent("suggested_topics");
                 fragmentToLoad = Constants.SUGGESTED_TOPICS_FRAGMENT;
-            } else if (notificationExtras.getString("type").equalsIgnoreCase(AppConstants.APP_SETTINGS_DEEPLINK)) {
+            } else if (notificationExtras.getString("type")
+                    .equalsIgnoreCase(AppConstants.APP_SETTINGS_DEEPLINK)) {
                 pushEvent(AppConstants.APP_SETTINGS_DEEPLINK);
                 Intent intent1 = new Intent(this, AppSettingsActivity.class);
                 intent1.putExtra("fromNotification", true);
@@ -1054,9 +1170,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 pushEvent("shortStoryListing");
                 Intent intent1 = new Intent(this, ShortStoriesListingContainerActivity.class);
                 intent1.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
-                intent1.putExtra("selectedTabCategoryId", notificationExtras.getString("categoryId"));
+                intent1.putExtra("selectedTabCategoryId",
+                        notificationExtras.getString("categoryId"));
                 startActivity(intent1);
-            } else if (notificationExtras.getString("type").equalsIgnoreCase("shortStoryListingInChallengeListing")) {
+            } else if (notificationExtras.getString("type")
+                    .equalsIgnoreCase("shortStoryListingInChallengeListing")) {
                 pushEvent("shortStoryListingInChallenge");
                 findValues(notificationExtras.getString("categoryId"));
                 Intent intent1 = new Intent(this, ShortStoryChallengeDetailActivity.class);
@@ -1070,7 +1188,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_listing")) {
                 pushEvent("group_listing");
                 fragmentToLoad = Constants.GROUP_LISTING_FRAGMENT;
-            } else if (notificationExtras.getString("type").equalsIgnoreCase("shortStoryPublishSuccess")) {
+            } else if (notificationExtras.getString("type")
+                    .equalsIgnoreCase("shortStoryPublishSuccess")) {
                 pushEvent("shortStoryPublishSuccess");
                 Intent intent1 = new Intent(this, ShortStoryModerationOrShareActivity.class);
                 intent1.putExtra("shareUrl", "");
@@ -1087,23 +1206,31 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
             Log.i("MixFeedData", branchdata + ":");
             if (!StringUtils.isNullOrEmpty(branchdata)) {
-                if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH__CAMPAIGN_LISTING)) {
-                    Intent intent1 = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
+                if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType()
+                        .equals(AppConstants.BRANCH__CAMPAIGN_LISTING)) {
+                    Intent intent1 = new Intent(DashboardActivity.this,
+                            CampaignContainerActivity.class);
                     startActivity(intent1);
-                } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_CAMPAIGN_DETAIL)) {
+                } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel
+                        .getType().equals(AppConstants.BRANCH_CAMPAIGN_DETAIL)) {
                     String campaignID = branchModel.getId();
-                    Intent campaignIntent = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
+                    Intent campaignIntent = new Intent(DashboardActivity.this,
+                            CampaignContainerActivity.class);
                     campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
                     startActivity(campaignIntent);
-                } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_MOMVLOGS)) {
+                } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel
+                        .getType().equals(AppConstants.BRANCH_MOMVLOGS)) {
                     String challengeId = branchModel.getId();
-                    Intent challengeIntent = new Intent(DashboardActivity.this, NewVideoChallengeActivity.class);
+                    Intent challengeIntent = new Intent(DashboardActivity.this,
+                            NewVideoChallengeActivity.class);
                     challengeIntent.putExtra("challenge", challengeId);
                     challengeIntent.putExtra("mappedId", branchModel.getMapped_category());
                     challengeIntent.putExtra("comingFrom", "branch_deep_link");
                     startActivity(challengeIntent);
-                } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_PERSONALINFO)) {
-                    Intent intent1 = new Intent(DashboardActivity.this, RewardsContainerActivity.class);
+                } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel
+                        .getType().equals(AppConstants.BRANCH_PERSONALINFO)) {
+                    Intent intent1 = new Intent(DashboardActivity.this,
+                            RewardsContainerActivity.class);
                     intent1.putExtra("showProfileInfo", true);
                     startActivity(intent1);
                 } else {
@@ -1113,7 +1240,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             String tempDeepLinkURL = _intent.getStringExtra(AppConstants.DEEP_LINK_URL);
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                jsonObject.put("userId",
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                                .getDynamoId());
                 jsonObject.put("url", "" + tempDeepLinkURL);
                 mMixpanel.track("DeepLinking", jsonObject);
             } catch (Exception e) {
@@ -1122,94 +1251,143 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             if (!StringUtils.isNullOrEmpty(tempDeepLinkURL)) {
                 if (matchRegex(tempDeepLinkURL)) {
                     //////// need to optimize this code
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_EDITOR_URL) || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_EDITOR_URL)) {
-                    final String bloggerId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
-                    if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId.equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
-                        showAlertDialog("Message", "Logged in as " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name(), new OnButtonClicked() {
-                            @Override
-                            public void onButtonCLick(int buttonId) {
-                                Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT,
-                                        SharedPrefUtils.getUserDetailModel(DashboardActivity.this).getDynamoId() + "", "Mobile Deep Link");
-                                launchEditor();
-                            }
-                        });
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_EDITOR_URL)
+                        || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_EDITOR_URL)) {
+                    final String bloggerId = tempDeepLinkURL
+                            .substring(tempDeepLinkURL.lastIndexOf("/") + 1,
+                                    tempDeepLinkURL.length());
+                    if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId
+                            .equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
+                        showAlertDialog("Message",
+                                "Logged in as " + SharedPrefUtils.getUserDetailModel(this)
+                                        .getFirst_name() + " " + SharedPrefUtils
+                                        .getUserDetailModel(this).getLast_name(),
+                                new OnButtonClicked() {
+                                    @Override
+                                    public void onButtonCLick(int buttonId) {
+                                        Utils.pushEvent(DashboardActivity.this,
+                                                GTMEventType.ADD_BLOG_CLICKED_EVENT,
+                                                SharedPrefUtils
+                                                        .getUserDetailModel(DashboardActivity.this)
+                                                        .getDynamoId() + "", "Mobile Deep Link");
+                                        launchEditor();
+                                    }
+                                });
                     } else {
                         Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT,
-                                SharedPrefUtils.getUserDetailModel(DashboardActivity.this).getDynamoId() + "", "Mobile Deep Link");
+                                SharedPrefUtils.getUserDetailModel(DashboardActivity.this)
+                                        .getDynamoId() + "", "Mobile Deep Link");
                         launchEditor();
                     }
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_ADD_FUNNY_VIDEO_URL) || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_ADD_FUNNY_VIDEO_URL)) {
-                    final String bloggerId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
-                    if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId.equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
-                        showAlertDialog("Message", "Logged in as " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name(), new OnButtonClicked() {
-                            @Override
-                            public void onButtonCLick(int buttonId) {
-                                launchAddVideoOptions();
-                            }
-                        });
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_ADD_FUNNY_VIDEO_URL)
+                        || tempDeepLinkURL
+                        .contains(AppConstants.DEEPLINK_MOMSPRESSO_ADD_FUNNY_VIDEO_URL)) {
+                    final String bloggerId = tempDeepLinkURL
+                            .substring(tempDeepLinkURL.lastIndexOf("/") + 1,
+                                    tempDeepLinkURL.length());
+                    if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId
+                            .equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
+                        showAlertDialog("Message",
+                                "Logged in as " + SharedPrefUtils.getUserDetailModel(this)
+                                        .getFirst_name() + " " + SharedPrefUtils
+                                        .getUserDetailModel(this).getLast_name(),
+                                new OnButtonClicked() {
+                                    @Override
+                                    public void onButtonCLick(int buttonId) {
+                                        launchAddVideoOptions();
+                                    }
+                                });
                     } else {
                         launchAddVideoOptions();
                     }
-                } else if (tempDeepLinkURL.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_1) || tempDeepLinkURL.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_2)) {
+                } else if (tempDeepLinkURL.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_1)
+                        || tempDeepLinkURL.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_2)) {
                     fragmentToLoad = Constants.PROFILE_FRAGMENT;
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_PROFILE_URL) || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_PROFILE_URL)) {
-                    final String bloggerId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
-                    if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId.equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
-                        showAlertDialog("Message", "Logged in as " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name(), new OnButtonClicked() {
-                            @Override
-                            public void onButtonCLick(int buttonId) {
-                                fragmentToLoad = Constants.PROFILE_FRAGMENT;
-                            }
-                        });
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_PROFILE_URL)
+                        || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_PROFILE_URL)) {
+                    final String bloggerId = tempDeepLinkURL
+                            .substring(tempDeepLinkURL.lastIndexOf("/") + 1,
+                                    tempDeepLinkURL.length());
+                    if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId
+                            .equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
+                        showAlertDialog("Message",
+                                "Logged in as " + SharedPrefUtils.getUserDetailModel(this)
+                                        .getFirst_name() + " " + SharedPrefUtils
+                                        .getUserDetailModel(this).getLast_name(),
+                                new OnButtonClicked() {
+                                    @Override
+                                    public void onButtonCLick(int buttonId) {
+                                        fragmentToLoad = Constants.PROFILE_FRAGMENT;
+                                    }
+                                });
                     } else {
                         fragmentToLoad = Constants.PROFILE_FRAGMENT;
                     }
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_ADD_SHORT_STORY_URL)) {
                     //String temp = tempDeepLinkURL.concat("category-8220f60fd2f6432ba4417861a50f0587");
-                    final String deepLinkChallengeId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
+                    final String deepLinkChallengeId = tempDeepLinkURL
+                            .substring(tempDeepLinkURL.lastIndexOf("/") + 1,
+                                    tempDeepLinkURL.length());
                     if (StringUtils.isNullOrEmpty(deepLinkChallengeId)) {
                         Intent ssIntent = new Intent(this, AddShortStoryActivity.class);
                         startActivity(ssIntent);
                     } else {
                         findValues(deepLinkChallengeId);
-                        if (StringUtils.isNullOrEmpty(shortStoryChallengesList) && StringUtils.isNullOrEmpty(deepLinkDisplayName) && StringUtils.isNullOrEmpty(deepLinkImageUrl) && shortStoriesTopicList != null && !shortStoriesTopicList.isEmpty()) {
-                            Intent deepLinkIntent = new Intent(this, ShortStoryChallengeDetailActivity.class);
+                        if (StringUtils.isNullOrEmpty(shortStoryChallengesList) && StringUtils
+                                .isNullOrEmpty(deepLinkDisplayName) && StringUtils
+                                .isNullOrEmpty(deepLinkImageUrl) && shortStoriesTopicList != null
+                                && !shortStoriesTopicList.isEmpty()) {
+                            Intent deepLinkIntent = new Intent(this,
+                                    ShortStoryChallengeDetailActivity.class);
                             deepLinkIntent.putExtra("selectedrequest", FromDeepLink);
                             deepLinkIntent.putExtra("Display_Name", deepLinkDisplayName);
                             deepLinkIntent.putExtra("challenge", shortStoryChallengesList);
                             deepLinkIntent.putExtra("position", 0);
-                            deepLinkIntent.putExtra("topics", shortStoriesTopicList.get(0).getDisplay_name());
-                            deepLinkIntent.putExtra("parentId", shortStoriesTopicList.get(0).getId());
+                            deepLinkIntent.putExtra("topics",
+                                    shortStoriesTopicList.get(0).getDisplay_name());
+                            deepLinkIntent
+                                    .putExtra("parentId", shortStoriesTopicList.get(0).getId());
                             deepLinkIntent.putExtra("StringUrl", deepLinkImageUrl);
                             startActivity(deepLinkIntent);
                         } else {
                             findValues(deepLinkChallengeId);
-                            Intent deepLinkIntent = new Intent(this, ShortStoryChallengeDetailActivity.class);
+                            Intent deepLinkIntent = new Intent(this,
+                                    ShortStoryChallengeDetailActivity.class);
                             deepLinkIntent.putExtra("selectedrequest", FromDeepLink);
                             deepLinkIntent.putExtra("Display_Name", deepLinkDisplayName);
                             deepLinkIntent.putExtra("challenge", shortStoryChallengesList);
                             deepLinkIntent.putExtra("position", 0);
-                            deepLinkIntent.putExtra("topics", shortStoriesTopicList.get(0).getDisplay_name());
-                            deepLinkIntent.putExtra("parentId", shortStoriesTopicList.get(0).getId());
+                            deepLinkIntent.putExtra("topics",
+                                    shortStoriesTopicList.get(0).getDisplay_name());
+                            deepLinkIntent
+                                    .putExtra("parentId", shortStoriesTopicList.get(0).getId());
                             deepLinkIntent.putExtra("StringUrl", deepLinkImageUrl);
                             startActivity(deepLinkIntent);
                             ToastUtils.showToast(this, "server problem, please try again later");
                         }
                     }
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_EDIT_SHORT_DRAFT_URL)) {
-                    final String draftId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
+                    final String draftId = tempDeepLinkURL
+                            .substring(tempDeepLinkURL.lastIndexOf("/") + 1,
+                                    tempDeepLinkURL.length());
                     Intent ssIntent = new Intent(this, UserDraftsContentActivity.class);
                     ssIntent.putExtra("isPrivateProfile", true);
                     ssIntent.putExtra("contentType", "shortStory");
-                    ssIntent.putExtra(Constants.AUTHOR_ID, SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+                    ssIntent.putExtra(Constants.AUTHOR_ID,
+                            SharedPrefUtils.getUserDetailModel(this).getDynamoId());
                     startActivity(ssIntent);
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_EDIT_SHORT_STORY_URL)) {
-                    final String storyId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
+                    final String storyId = tempDeepLinkURL
+                            .substring(tempDeepLinkURL.lastIndexOf("/") + 1,
+                                    tempDeepLinkURL.length());
                     Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                     ShortStoryAPI shortStoryAPI = retrofit.create(ShortStoryAPI.class);
-                    Call<ShortStoryDetailResult> call = shortStoryAPI.getShortStoryDetails(storyId, "articleId");
+                    Call<ShortStoryDetailResult> call = shortStoryAPI
+                            .getShortStoryDetails(storyId, "articleId");
                     call.enqueue(ssDetailResponseCallback);
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_SUGGESTED_TOPIC_URL) || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_SUGGESTED_TOPIC_URL)) {
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_SUGGESTED_TOPIC_URL)
+                        || tempDeepLinkURL
+                        .contains(AppConstants.DEEPLINK_MOMSPRESSO_SUGGESTED_TOPIC_URL)) {
                     fragmentToLoad = Constants.SUGGESTED_TOPICS_FRAGMENT;
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_UPCOMING_EVENTS)) {
                     fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
@@ -1223,26 +1401,34 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     }
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_PAGE)) {
                     Intent rewardForm = new Intent(this, RewardsContainerActivity.class);
-                    final String referralCode = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("=") + 1, tempDeepLinkURL.length());
+                    final String referralCode = tempDeepLinkURL
+                            .substring(tempDeepLinkURL.lastIndexOf("=") + 1,
+                                    tempDeepLinkURL.length());
                     rewardForm.putExtra("pageLimit", 1);
                     rewardForm.putExtra("pageNumber", 1);
                     rewardForm.putExtra("referral", referralCode);
                     startActivity(rewardForm);
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_MYMONEY)) {
+                } else if (tempDeepLinkURL
+                        .contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_MYMONEY)) {
                     Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
                     startActivity(campaignIntent);
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_CAMPAIGN)) {
                     if (tempDeepLinkURL.contains("?")) {
-                        final String campaignID = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.indexOf("?"));
+                        final String campaignID = tempDeepLinkURL
+                                .substring(tempDeepLinkURL.lastIndexOf("/") + 1,
+                                        tempDeepLinkURL.indexOf("?"));
                         if (!StringUtils.isNullOrEmpty(campaignID)) {
-                            Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
+                            Intent campaignIntent = new Intent(this,
+                                    CampaignContainerActivity.class);
                             campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
                             startActivity(campaignIntent);
                         }
                     } else {
-                        final String campaignID = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1);
+                        final String campaignID = tempDeepLinkURL
+                                .substring(tempDeepLinkURL.lastIndexOf("/") + 1);
                         if (!StringUtils.isNullOrEmpty(campaignID)) {
-                            Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
+                            Intent campaignIntent = new Intent(this,
+                                    CampaignContainerActivity.class);
                             campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
                             startActivity(campaignIntent);
                         }
@@ -1273,8 +1459,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else if (separated[separated.length - 1].equals("join")) {
                         String[] groupArray = separated[separated.length - 2].split("-");
                         long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
-                        GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
-                        groupMembershipStatus.checkMembershipStatus((int) groupId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(
+                                this);
+                        groupMembershipStatus.checkMembershipStatus((int) groupId,
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                                        .getDynamoId());
                     } else {
                         String[] groupArray;
                         long groupId;
@@ -1289,8 +1478,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         if (groupId == -1) {
                             return;
                         }
-                        GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
-                        groupMembershipStatus.checkMembershipStatus((int) groupId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(
+                                this);
+                        groupMembershipStatus.checkMembershipStatus((int) groupId,
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                                        .getDynamoId());
                     }
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_REFERRAL)) {
                     Intent intent1 = new Intent(this, RewardsContainerActivity.class);
@@ -1306,7 +1498,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void pushEvent(String type) {
         Utils.pushNotificationClickEvent(this, type,
-                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), "DashboardActivity");
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                "DashboardActivity");
     }
 
     private void findValues(String deepLinkChallengeId) {
@@ -1315,14 +1508,25 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             if (shortStoriesTopicList != null && shortStoriesTopicList.size() != 0) {
                 num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
                 for (int j = 0; j < num_of_categorys; j++) {
-                    if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
-                        num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
+                    if (shortStoriesTopicList.get(0).getChild().get(j).getId()
+                            .equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
+                        num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j)
+                                .getChild().size();
                         for (int k = 0; k < num_of_challeneges; k++) {
-                            if (deepLinkChallengeId.equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId())) {
-                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null && shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().size() != 0) {
-                                    shortStoryChallengesList = shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId();
-                                    deepLinkDisplayName = shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name();
-                                    deepLinkImageUrl = shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl();
+                            if (deepLinkChallengeId
+                                    .equals(shortStoriesTopicList.get(0).getChild().get(j)
+                                            .getChild().get(k).getId())) {
+                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k)
+                                        .getExtraData() != null &&
+                                        shortStoriesTopicList.get(0).getChild().get(j).getChild()
+                                                .get(k).getExtraData().size() != 0) {
+                                    shortStoryChallengesList = shortStoriesTopicList.get(0)
+                                            .getChild().get(j).getChild().get(k).getId();
+                                    deepLinkDisplayName = shortStoriesTopicList.get(0).getChild()
+                                            .get(j).getChild().get(k).getDisplay_name();
+                                    deepLinkImageUrl = shortStoriesTopicList.get(0).getChild()
+                                            .get(j).getChild().get(k).getExtraData().get(0)
+                                            .getChallenge().getImageUrl();
                                     break;
                                 }
                             }
@@ -1331,9 +1535,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
             }
             if (shortStoriesTopicList == null || shortStoriesTopicList.size() == 0) {
-                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                FileInputStream fileInputStream = BaseApplication.getAppContext()
+                        .openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                 String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory())
+                        .create();
                 res = gson.fromJson(fileContent, TopicsResponse.class);
                 shortStoriesTopicList = new ArrayList<Topics>();
                 for (int i = 0; i < res.getData().size(); i++) {
@@ -1343,14 +1549,25 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
                 num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
                 for (int j = 0; j < num_of_categorys; j++) {
-                    if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
-                        num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
+                    if (shortStoriesTopicList.get(0).getChild().get(j).getId()
+                            .equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
+                        num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j)
+                                .getChild().size();
                         for (int k = 0; k < num_of_challeneges; k++) {
-                            if (deepLinkChallengeId.equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId())) {
-                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null && shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().size() != 0) {
-                                    shortStoryChallengesList = shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId();
-                                    deepLinkDisplayName = shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name();
-                                    deepLinkImageUrl = shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl();
+                            if (deepLinkChallengeId
+                                    .equals(shortStoriesTopicList.get(0).getChild().get(j)
+                                            .getChild().get(k).getId())) {
+                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k)
+                                        .getExtraData() != null &&
+                                        shortStoriesTopicList.get(0).getChild().get(j).getChild()
+                                                .get(k).getExtraData().size() != 0) {
+                                    shortStoryChallengesList = shortStoriesTopicList.get(0)
+                                            .getChild().get(j).getChild().get(k).getId();
+                                    deepLinkDisplayName = shortStoriesTopicList.get(0).getChild()
+                                            .get(j).getChild().get(k).getDisplay_name();
+                                    deepLinkImageUrl = shortStoriesTopicList.get(0).getChild()
+                                            .get(j).getChild().get(k).getExtraData().get(0)
+                                            .getChallenge().getImageUrl();
                                     break;
                                 }
                             }
@@ -1366,29 +1583,48 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
             caller.enqueue(new Callback<ResponseBody>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
+                public void onResponse(Call<ResponseBody> call,
+                        retrofit2.Response<ResponseBody> response) {
+                    AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(),
+                            AppConstants.CATEGORIES_JSON_FILE, response.body());
                     try {
-                        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                        FileInputStream fileInputStream = BaseApplication.getAppContext()
+                                .openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                         String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                        Gson gson = new GsonBuilder()
+                                .registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                         res = gson.fromJson(fileContent, TopicsResponse.class);
                         shortStoriesTopicList = new ArrayList<Topics>();
                         for (int i = 0; i < res.getData().size(); i++) {
-                            if (AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
+                            if (AppConstants.SHORT_STORY_CATEGORYID
+                                    .equals(res.getData().get(i).getId())) {
                                 shortStoriesTopicList.add(res.getData().get(i));
                             }
                         }
                         num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
                         for (int j = 0; j < num_of_categorys; j++) {
-                            if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
-                                num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
+                            if (shortStoriesTopicList.get(0).getChild().get(j).getId()
+                                    .equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
+                                num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j)
+                                        .getChild().size();
                                 for (int k = 0; k < num_of_challeneges; k++) {
-                                    if (deepLinkChallengeId.equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId())) {
-                                        if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null && shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().size() != 0) {
-                                            shortStoryChallengesList = shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId();
-                                            deepLinkDisplayName = shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name();
-                                            deepLinkImageUrl = shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl();
+                                    if (deepLinkChallengeId
+                                            .equals(shortStoriesTopicList.get(0).getChild().get(j)
+                                                    .getChild().get(k).getId())) {
+                                        if (shortStoriesTopicList.get(0).getChild().get(j)
+                                                .getChild().get(k).getExtraData() != null &&
+                                                shortStoriesTopicList.get(0).getChild().get(j)
+                                                        .getChild().get(k).getExtraData().size()
+                                                        != 0) {
+                                            shortStoryChallengesList = shortStoriesTopicList.get(0)
+                                                    .getChild().get(j).getChild().get(k).getId();
+                                            deepLinkDisplayName = shortStoriesTopicList.get(0)
+                                                    .getChild().get(j).getChild().get(k)
+                                                    .getDisplay_name();
+                                            deepLinkImageUrl = shortStoriesTopicList.get(0)
+                                                    .getChild().get(j).getChild().get(k)
+                                                    .getExtraData().get(0).getChallenge()
+                                                    .getImageUrl();
                                             break;
                                         }
                                     }
@@ -1413,7 +1649,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     Callback<ShortStoryDetailResult> ssDetailResponseCallback = new Callback<ShortStoryDetailResult>() {
         @Override
-        public void onResponse(Call<ShortStoryDetailResult> call, retrofit2.Response<ShortStoryDetailResult> response) {
+        public void onResponse(Call<ShortStoryDetailResult> call,
+                retrofit2.Response<ShortStoryDetailResult> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
                 return;
@@ -1450,25 +1687,30 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         BlogPageAPI getBlogPageAPI = retrofit.create(BlogPageAPI.class);
 
-        Call<BlogPageResponse> call = getBlogPageAPI.getUserBlogPage(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        Call<BlogPageResponse> call = getBlogPageAPI
+                .getUserBlogPage(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         call.enqueue(blogPageSetUpResponseListener);
     }
 
     private Callback<BlogPageResponse> blogPageSetUpResponseListener = new Callback<BlogPageResponse>() {
         @Override
-        public void onResponse(Call<BlogPageResponse> call, retrofit2.Response<BlogPageResponse> response) {
+        public void onResponse(Call<BlogPageResponse> call,
+                retrofit2.Response<BlogPageResponse> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    NetworkErrorException nee = new NetworkErrorException(
+                            response.raw().toString());
                     Crashlytics.logException(nee);
                 }
                 return;
             }
             BlogPageResponse responseModel = response.body();
-            if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
+            if (responseModel.getCode() == 200 && Constants.SUCCESS
+                    .equals(responseModel.getStatus())) {
                 if (responseModel.getData().getResult().getIsSetup() == 1) {
-                    SharedPreferences pref = getApplicationContext().getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
+                    SharedPreferences pref = getApplicationContext()
+                            .getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putBoolean("blogSetup", true);
                     editor.commit();
@@ -1505,13 +1747,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         ((BaseApplication) getApplication()).setView(root);
-        final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        final Fragment topFragment = getSupportFragmentManager()
+                .findFragmentById(R.id.content_frame);
 
-        if (topFragment instanceof FragmentMC4KHomeNew && SharedPrefUtils.isTopicSelectionChanged(BaseApplication.getAppContext())) {
+        if (topFragment instanceof FragmentMC4KHomeNew && SharedPrefUtils
+                .isTopicSelectionChanged(BaseApplication.getAppContext())) {
             ((FragmentMC4KHomeNew) topFragment).hideFollowTopicHeader();
         }
         refreshMenu();
-        final Fragment topFragmentt = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        final Fragment topFragmentt = getSupportFragmentManager()
+                .findFragmentById(R.id.content_frame);
         Menu menu = bottomNavigationView.getMenu();
         if (topFragmentt instanceof ExploreArticleListingTypeFragment) {
             menu.findItem(R.id.action_profile).setChecked(true);
@@ -1609,7 +1854,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.drawerProfileCoachmark: {
                 drawerProfileCoachmark.setVisibility(View.GONE);
                 drawerMyMoneyCoachmark.setVisibility(View.GONE);
-                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "Drawer", true);
+                SharedPrefUtils
+                        .setCoachmarksShownFlag(BaseApplication.getAppContext(), "Drawer", true);
             }
             break;
             case R.id.homeCoachmark: {
@@ -1634,7 +1880,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             break;
             case R.id.menuCoachmark: {
                 menuCoachmark.setVisibility(View.GONE);
-                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "HomeScreen", true);
+                SharedPrefUtils
+                        .setCoachmarksShownFlag(BaseApplication.getAppContext(), "HomeScreen",
+                                true);
                 showMyMoneyRegistrationPrompt(getIntent());
             }
             break;
@@ -1657,7 +1905,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.articleContainer:
                 hideCreateContentView();
-                if ("0".equals(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getUserType()) && !SharedPrefUtils.getBecomeBloggerFlag(BaseApplication.getAppContext())) {
+                if ("0".equals(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                        .getUserType()) && !SharedPrefUtils
+                        .getBecomeBloggerFlag(BaseApplication.getAppContext())) {
                     BecomeBloggerFragment becomeBloggerFragment = new BecomeBloggerFragment();
                     Bundle searchBundle = new Bundle();
                     becomeBloggerFragment.setArguments(searchBundle);
@@ -1676,7 +1926,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.videoContainer: {
                 hideCreateContentView();
                 mDrawerLayout.closeDrawers();
-                Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Create_video", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
+                Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Create_video", "",
+                        "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                                .getDynamoId(), String.valueOf(System.currentTimeMillis()),
+                        "Show_video_creation_categories", "", "");
                 MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
                 Intent cityIntent = new Intent(this, ChooseVideoCategoryActivity.class);
                 cityIntent.putExtra("comingFrom", "createDashboardIcon");
@@ -1690,7 +1944,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.topContainer:
             case R.id.profileImageView:
                 mDrawerLayout.closeDrawers();
-                Utils.campaignEvent(this, "profile", "sidebar", "Update", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "CTA_Update_Rewards");
+                Utils.campaignEvent(this, "profile", "sidebar", "Update", "", "android",
+                        SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                                .getDynamoId(), String.valueOf(System.currentTimeMillis()),
+                        "CTA_Update_Rewards");
                 Intent pIntent = new Intent(this, UserProfileActivity.class);
                 startActivity(pIntent);
                 break;
@@ -1732,12 +1990,17 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.secondCoachmark:
                 secondCoachmark.setVisibility(View.GONE);
-                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "home", true);
+                SharedPrefUtils
+                        .setCoachmarksShownFlag(BaseApplication.getAppContext(), "home", true);
                 break;
             case R.id.videosTextView: {
                 mDrawerLayout.closeDrawers();
                 MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
-                Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Sidebar_vlogs", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
+                Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Sidebar_vlogs", "",
+                        "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                                .getDynamoId(), String.valueOf(System.currentTimeMillis()),
+                        "Show_Video_Listing", "", "");
                 Intent cityIntent = new Intent(this, CategoryVideosListingActivity.class);
                 cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
                 startActivity(cityIntent);
@@ -1747,7 +2010,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 mDrawerLayout.closeDrawers();
                 Intent intent = new Intent(this, FilteredTopicsArticleListingActivity.class);
                 intent.putExtra("selectedTopics", AppConstants.MOMSPRESSO_CATEGORYID);
-                intent.putExtra("displayName", getString(R.string.all_videos_tabbar_momspresso_label));
+                intent.putExtra("displayName",
+                        getString(R.string.all_videos_tabbar_momspresso_label));
                 startActivity(intent);
             }
             break;
@@ -1760,7 +2024,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             break;
             case R.id.groupsTextView: {
                 mDrawerLayout.closeDrawers();
-                Utils.groupsEvent(DashboardActivity.this, "Home Screen", "Sidebar_groups", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Group_listing", "", "");
+                Utils.groupsEvent(DashboardActivity.this, "Home Screen", "Sidebar_groups",
+                        "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                                .getDynamoId(), String.valueOf(System.currentTimeMillis()),
+                        "Group_listing", "", "");
                 GroupsViewFragment groupsFragment = new GroupsViewFragment();
                 Bundle eBundle = new Bundle();
                 groupsFragment.setArguments(eBundle);
@@ -1768,7 +2036,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;
             case R.id.rewardsTextView: {
-                Utils.campaignEvent(this, "Campaign Listing", "Sidebar", "Rewards", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Campaign_Listing");
+                Utils.campaignEvent(this, "Campaign Listing", "Sidebar", "Rewards", "", "android",
+                        SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                                .getDynamoId(), String.valueOf(System.currentTimeMillis()),
+                        "Show_Campaign_Listing");
                 mDrawerLayout.closeDrawers();
                 Intent cityIntent = new Intent(this, CampaignContainerActivity.class);
                 startActivity(cityIntent);
@@ -1781,7 +2053,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             break;
             case R.id.referral:
                 Utils.pushGenericEvent(this, "CTA_MyMoney_Sidebar_Refer",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), "Home Screen");
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                                .getDynamoId(), "Home Screen");
                 Intent intent = new Intent(this, RewardsShareReferralCodeActivity.class);
                 startActivity(intent);
                 break;
@@ -1799,16 +2072,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void fireEventForVideoCreationIntent() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
+        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit
+                .create(VlogsListingAndDetailsAPI.class);
         VlogsEventRequest vlogsEventRequest = new VlogsEventRequest();
         vlogsEventRequest.setCreatedTime(System.currentTimeMillis());
-        vlogsEventRequest.setKey(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+        vlogsEventRequest.setKey(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                .getDynamoId());
         vlogsEventRequest.setTopic("create_video_fab");
         vlogsEventRequest.setPayload(vlogsEventRequest.getPayload());
-        Call<ResponseBody> call = vlogsListingAndDetailsAPI.addVlogsCreateIntentEvent(vlogsEventRequest);
+        Call<ResponseBody> call = vlogsListingAndDetailsAPI
+                .addVlogsCreateIntentEvent(vlogsEventRequest);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+            public void onResponse(Call<ResponseBody> call,
+                    retrofit2.Response<ResponseBody> response) {
 
             }
 
@@ -1894,7 +2171,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     if (selectedUri != null) {
                         startTrimActivity(selectedUri);
                     } else {
-                        Toast.makeText(this, R.string.toast_cannot_retrieve_selected_video, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.toast_cannot_retrieve_selected_video,
+                                Toast.LENGTH_SHORT).show();
                     }
                     break;
                 default:
@@ -1945,11 +2223,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         Call<DeepLinkingResposnse> call = deepLinkingAPI.getUrlDetails(deepLinkURL);
         call.enqueue(new Callback<DeepLinkingResposnse>() {
             @Override
-            public void onResponse(Call<DeepLinkingResposnse> call, retrofit2.Response<DeepLinkingResposnse> response) {
+            public void onResponse(Call<DeepLinkingResposnse> call,
+                    retrofit2.Response<DeepLinkingResposnse> response) {
                 removeProgressDialog();
                 try {
                     DeepLinkingResposnse responseData = response.body();
-                    if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    if (responseData.getCode() == 200 && Constants.SUCCESS
+                            .equals(responseData.getStatus())) {
                         identifyTargetScreen(responseData.getData().getResult());
                     } else {
                         showToast(getString(R.string.toast_response_error));
@@ -2032,7 +2312,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderAuthorListingScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getAuthor_name())) {
-            Intent _authorListIntent = new Intent(DashboardActivity.this, UserProfileActivity.class);
+            Intent _authorListIntent = new Intent(DashboardActivity.this,
+                    UserProfileActivity.class);
             _authorListIntent.putExtra(Constants.USER_ID, data.getAuthor_id());
             _authorListIntent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
             _authorListIntent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
@@ -2043,7 +2324,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderBloggerListingScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getBlog_title())) {
-            Intent _bloggerListIntent = new Intent(DashboardActivity.this, UserProfileActivity.class);
+            Intent _bloggerListIntent = new Intent(DashboardActivity.this,
+                    UserProfileActivity.class);
             _bloggerListIntent.putExtra(Constants.USER_ID, data.getAuthor_id());
             _bloggerListIntent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
             _bloggerListIntent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
@@ -2054,7 +2336,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderArticleDetailScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getArticle_id())) {
-            Intent intent = new Intent(DashboardActivity.this, ArticleDetailsContainerActivity.class);
+            Intent intent = new Intent(DashboardActivity.this,
+                    ArticleDetailsContainerActivity.class);
             intent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
             intent.putExtra(Constants.ARTICLE_ID, data.getArticle_id());
             intent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
@@ -2131,7 +2414,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private void requestUngrantedPermissions(String imageFrom) {
         ArrayList<String> permissionList = new ArrayList<>();
         for (int i = 0; i < PERMISSIONS_STORAGE_CAMERA.length; i++) {
-            if (ActivityCompat.checkSelfPermission(this, PERMISSIONS_STORAGE_CAMERA[i]) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, PERMISSIONS_STORAGE_CAMERA[i])
+                    != PackageManager.PERMISSION_GRANTED) {
                 permissionList.add(PERMISSIONS_STORAGE_CAMERA[i]);
             }
         }
@@ -2148,7 +2432,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull int[] grantResults) {
 
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
             Log.i("Permissions", "Received response for camera permissions request.");
@@ -2174,7 +2458,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent.setType("video/mp4");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
-                startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
+                startActivityForResult(
+                        Intent.createChooser(intent, getString(R.string.label_select_video)),
+                        AppConstants.REQUEST_VIDEO_TRIMMER);
             } else {
                 Log.i("Permissions", "storage permissions were NOT granted.");
                 Snackbar.make(rootLayout, R.string.permissions_not_granted,
@@ -2193,7 +2479,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onBackStackChanged() {
-        final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        final Fragment topFragment = getSupportFragmentManager()
+                .findFragmentById(R.id.content_frame);
         Menu menu = bottomNavigationView.getMenu();
         transparentLayerToolbar.setVisibility(View.GONE);
         transparentLayerNavigation.setVisibility(View.GONE);
@@ -2209,29 +2496,36 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             toolbarRelativeLayout.setVisibility(View.VISIBLE);
         } else if (topFragment instanceof UploadVideoInfoFragment) {
             toolbarUnderline.setVisibility(View.VISIBLE);
-            toolbarTitleTextView.setText(getString(R.string.home_screen_trending_first_video_upload));
+            toolbarTitleTextView
+                    .setText(getString(R.string.home_screen_trending_first_video_upload));
             menu.findItem(R.id.action_write).setChecked(true);
             toolbarRelativeLayout.setVisibility(View.VISIBLE);
         } else {
             toolbarUnderline.setVisibility(View.VISIBLE);
             if (topFragment instanceof ExploreArticleListingTypeFragment) {
-                Utils.pushOpenScreenEvent(this, "TopicScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                toolbarTitleTextView.setText(getString(R.string.home_screen_select_an_option_title));
-                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.myprofile_toolbar_title));
+                Utils.pushOpenScreenEvent(this, "TopicScreen",
+                        SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+                toolbarTitleTextView
+                        .setText(getString(R.string.home_screen_select_an_option_title));
+                toolbarTitleTextView.setTextColor(
+                        ContextCompat.getColor(this, R.color.myprofile_toolbar_title));
                 menu.findItem(R.id.action_profile).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-                selectOptToolbarTitle.setText(getString(R.string.home_screen_select_an_option_title));
+                selectOptToolbarTitle
+                        .setText(getString(R.string.home_screen_select_an_option_title));
             } else if (topFragment instanceof SuggestedTopicsFragment) {
                 Utils.pushOpenScreenEvent(this, "SuggestedTopicScreen",
                         SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_suggested_topic_title));
-                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
+                toolbarTitleTextView.setTextColor(
+                        ContextCompat.getColor(this, R.color.notification_toolbar_title));
                 menu.findItem(R.id.action_write).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
             } else if (topFragment instanceof FragmentMC4KHomeNew) {
                 Utils.pushOpenScreenEvent(this, "HomeScreen",
                         SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "HomeScreen") &&
+                if (!SharedPrefUtils
+                        .isCoachmarksShownFlag(BaseApplication.getAppContext(), "HomeScreen") &&
                         !BuildConfig.DEBUG) {
                     homeCoachmark.setVisibility(View.VISIBLE);
                 }
@@ -2240,30 +2534,39 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
                 langTextView.setVisibility(View.VISIBLE);
                 toolbarTitleTextView.setText(getString(R.string.navigation_bar_home));
-                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
+                toolbarTitleTextView.setTextColor(
+                        ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
             } else if (topFragment instanceof TopicsListingFragment) {
-                Utils.pushOpenScreenEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article")) {
+                Utils.pushOpenScreenEvent(this, "TopicArticlesListingScreen",
+                        SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+                if (!SharedPrefUtils
+                        .isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article")) {
                     ((TopicsListingFragment) topFragment).showGuideView();
                 }
                 toolbarTitleTextView.setOnClickListener(this);
                 toolbarTitleTextView.setText(mToolbarTitle);
-                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
+                toolbarTitleTextView.setTextColor(
+                        ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
             } else if (topFragment instanceof TopicsShortStoriesContainerFragment) {
-                Utils.pushOpenScreenEvent(this, "TopicsShortStoriesContainerFragment", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+                Utils.pushOpenScreenEvent(this, "TopicsShortStoriesContainerFragment",
+                        SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setOnClickListener(this);
-                toolbarTitleTextView.setText(getString(R.string.article_listing_type_short_story_label));
-                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
+                toolbarTitleTextView
+                        .setText(getString(R.string.article_listing_type_short_story_label));
+                toolbarTitleTextView.setTextColor(
+                        ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
             } else if (topFragment instanceof GroupsViewFragment) {
-                Utils.pushOpenScreenEvent(this, "GroupsViewFragment", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+                Utils.pushOpenScreenEvent(this, "GroupsViewFragment",
+                        SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.groups_support_groups));
-                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.groups_light_black_color));
+                toolbarTitleTextView.setTextColor(
+                        ContextCompat.getColor(this, R.color.groups_light_black_color));
                 menu.findItem(R.id.action_location).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
             }
@@ -2326,11 +2629,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
         }
 
-        if (!AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(userType) && !AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(userType)) {
-            if ("male".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender()) ||
-                    "m".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())) {
+        if (!AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(userType)
+                && !AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(userType)) {
+            if ("male".equalsIgnoreCase(
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())
+                    ||
+                    "m".equalsIgnoreCase(
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                                    .getGender())) {
                 Toast.makeText(this, getString(R.string.women_only), Toast.LENGTH_SHORT).show();
-                if (BuildConfig.DEBUG || AppConstants.DEBUGGING_USER_ID.contains(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
+                if (BuildConfig.DEBUG || AppConstants.DEBUGGING_USER_ID.contains(
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                                .getDynamoId())) {
 
                 } else {
                     return;
@@ -2345,14 +2655,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             intent.putExtra("groupId", groupId);
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
-        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {
-            Toast.makeText(this, getString(R.string.groups_user_blocked_msg), Toast.LENGTH_SHORT).show();
-        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED
+                .equals(body.getData().getResult().get(0).getStatus())) {
+            Toast.makeText(this, getString(R.string.groups_user_blocked_msg), Toast.LENGTH_SHORT)
+                    .show();
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER
+                .equals(body.getData().getResult().get(0).getStatus())) {
             Intent intent = new Intent(this, GroupDetailsActivity.class);
             intent.putExtra("groupId", groupId);
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
-        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION
+                .equals(body.getData().getResult().get(0).getStatus())) {
             Intent intent = new Intent(this, GroupsSummaryActivity.class);
             intent.putExtra("groupId", groupId);
             intent.putExtra("pendingMembershipFlag", true);
@@ -2386,7 +2700,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onDraftItemClick(View view, int position) {
-        if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(allDraftsList.get(position).getContentType())) {
+        if (AppConstants.CONTENT_TYPE_SHORT_STORY
+                .equals(allDraftsList.get(position).getContentType())) {
             if (Build.VERSION.SDK_INT > 15) {
                 DraftListResult draftListResult = new DraftListResult();
                 draftListResult.setArticleType(allDraftsList.get(position).getArticleType());
@@ -2429,19 +2744,23 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     }
 
     public void appUpdatePopUp() {
-        if (!StringUtils.isNullOrEmpty(onlineVersionCode) && !StringUtils.isNullOrEmpty(currentVersion)) {
+        if (!StringUtils.isNullOrEmpty(onlineVersionCode) && !StringUtils
+                .isNullOrEmpty(currentVersion)) {
             String[] v1 = currentVersion.split("\\.");
             String[] v2 = onlineVersionCode.split("\\.");
             Log.d("current::::", currentVersion);
             Log.d("online", onlineVersionCode);
-            if (v1.length != v2.length)
+            if (v1.length != v2.length) {
                 return;
+            }
             for (int pos = 0; pos < v1.length; pos++) {
                 if (Integer.parseInt(v1[pos]) > Integer.parseInt(v2[pos])) {
                     rateNowDialog = true;
                     break;
                 } else if (Integer.parseInt(v1[pos]) < Integer.parseInt(v2[pos])) {
-                    if (SharedPrefUtils.getFrequencyForShowingUpdateApp(BaseApplication.getAppContext()) != frequecy) {
+                    if (SharedPrefUtils
+                            .getFrequencyForShowingUpdateApp(BaseApplication.getAppContext())
+                            != frequecy) {
                         Dialog dialog = new Dialog(this);
                         dialog.setContentView(R.layout.update_app_pop_up_layout);
                         dialog.setCancelable(true);
@@ -2449,16 +2768,21 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         updateNow.setOnClickListener(view -> {
                             String appPackage = DashboardActivity.this.getPackageName();
                             try {
-                                Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackage));
+                                Intent rateIntent = new Intent(Intent.ACTION_VIEW,
+                                        Uri.parse("market://details?id=" + appPackage));
                                 startActivity(rateIntent);
                             } catch (Exception e) {
-                                Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackage));
+                                Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(
+                                        "https://play.google.com/store/apps/details?id="
+                                                + appPackage));
                                 startActivity(rateIntent);
                             }
                             dialog.dismiss();
                         });
                         dialog.show();
-                        SharedPrefUtils.setFrequencyForShowingAppUpdate(BaseApplication.getAppContext(), frequecy);
+                        SharedPrefUtils
+                                .setFrequencyForShowingAppUpdate(BaseApplication.getAppContext(),
+                                        frequecy);
                         break;
                     } else {
                         rateNowDialog = true;

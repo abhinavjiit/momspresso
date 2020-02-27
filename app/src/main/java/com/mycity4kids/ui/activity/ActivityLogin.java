@@ -6,10 +6,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentManager;
-
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -21,16 +19,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.StringUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.facebook.FacebookUtils;
-import com.mycity4kids.google.GooglePlusUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IFacebookUser;
 import com.mycity4kids.models.request.LoginRegistrationRequest;
@@ -49,11 +44,10 @@ import com.mycity4kids.ui.fragment.ChooseLoginAccountDialogFragment;
 import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment;
 import com.mycity4kids.ui.fragment.SignInFragment;
 import com.mycity4kids.ui.fragment.SignUpFragment;
-
-import org.json.JSONObject;
-
+import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.utils.StringUtils;
 import java.util.ArrayList;
-
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -62,6 +56,8 @@ import retrofit2.Retrofit;
  * Created by Hemant Parmar on 19-06-2016.
  */
 public class ActivityLogin extends BaseActivity implements IFacebookUser {
+
+    public static final String SCOPES = "https://www.googleapis.com/auth/plus.login " + " email ";
 
     public static final int RECOVERABLE_REQUEST_CODE = 98;
     private static final int RC_SIGN_IN = 9001;
@@ -82,14 +78,13 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
         View root = findViewById(R.id.content_frame);
         ((BaseApplication) getApplication()).setActivity(this);
         ((BaseApplication) getApplication()).setView(root);
-        Utils.pushOpenScreenEvent(this, "LoginSignUpScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail().requestScopes(new Scope(Scopes.PLUS_ME))
-                .build();
+        Utils.pushOpenScreenEvent(this, "LoginSignUpScreen",
+                SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         GoogleSignInOptions options =
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestScopes(new Scope(Scopes.PLUS_ME))
+                        .requestEmail()
                         .build();
 
         mSignInClient = GoogleSignIn.getClient(this, options);
@@ -149,7 +144,8 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
                     if (responseData.getData().get(0).getResult().size() > 1) {
                         chooseLoginAccountFragment = new ChooseLoginAccountDialogFragment();
                         Bundle _args = new Bundle();
-                        _args.putParcelableArrayList("accountList", (ArrayList<? extends Parcelable>) responseData.getData().get(0).getResult());
+                        _args.putParcelableArrayList("accountList",
+                                (ArrayList<? extends Parcelable>) responseData.getData().get(0).getResult());
                         chooseLoginAccountFragment.setArguments(_args);
                         FragmentManager fm = getSupportFragmentManager();
                         chooseLoginAccountFragment.setCancelable(false);
@@ -216,8 +212,9 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
 
     public void getGooglePlusInfo(GoogleSignInAccount result) {
         try {
-            if (isFinishing())
+            if (isFinishing()) {
                 return;
+            }
 
             loginMode = "gp";
             googleEmailId = result.getEmail();
@@ -255,7 +252,8 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
         model.setSessionId(userDetailResult.getSessionId());
         model.setLoginMode(loginMode);
         SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), model);
-        SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), userDetailResult.getProfilePicUrl().getClientApp());
+        SharedPrefUtils
+                .setProfileImgUrl(BaseApplication.getAppContext(), userDetailResult.getProfilePicUrl().getClientApp());
         SharedPrefUtils.setLastLoginTimestamp(BaseApplication.getAppContext(), System.currentTimeMillis());
 
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
@@ -297,7 +295,8 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
             dialogFragment.show(getFragmentManager(), "verify email");
         } else {
             if ("phone".equals(loginMode) &&
-                    ((StringUtils.isNullOrEmpty(userDetailResult.getFirstName()) && StringUtils.isNullOrEmpty(userDetailResult.getLastName()))
+                    ((StringUtils.isNullOrEmpty(userDetailResult.getFirstName()) && StringUtils
+                            .isNullOrEmpty(userDetailResult.getLastName()))
                             || userDetailResult.getFirstName().toUpperCase().contains("XXX"))) {
                 Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
                 startService(intent);
@@ -318,10 +317,11 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
     }
 
     public class GetGoogleToken extends AsyncTask<Void, String, String> {
+
         @Override
         protected String doInBackground(Void... params) {
             try {
-                googleToken = GoogleAuthUtil.getToken(ActivityLogin.this, googleEmailId, "oauth2:" + GooglePlusUtils.SCOPES);
+                googleToken = GoogleAuthUtil.getToken(ActivityLogin.this, googleEmailId, "oauth2:" + SCOPES);
                 return googleToken;
             } catch (UserRecoverableAuthException userAuthEx) {
                 userAuthEx.printStackTrace();
@@ -337,8 +337,9 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if (StringUtils.isNullOrEmpty(result))
+            if (StringUtils.isNullOrEmpty(result)) {
                 return;
+            }
 
             LoginRegistrationRequest lr = new LoginRegistrationRequest();
             lr.setCityId("" + SharedPrefUtils.getCurrentCityModel(ActivityLogin.this).getId());
@@ -387,13 +388,16 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
                     model.setSessionId(responseData.getData().get(0).getResult().getSessionId());
                     model.setLoginMode(loginMode);
                     SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), model);
-                    SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
+                    SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(),
+                            responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
                     SharedPrefUtils.setLastLoginTimestamp(BaseApplication.getAppContext(), System.currentTimeMillis());
 
-                    MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+                    MixpanelAPI mixpanel = MixpanelAPI
+                            .getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
                     try {
                         JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("userId",
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                         jsonObject.put("loginFrom", loginMode);
                         mixpanel.track("UserLogin", jsonObject);
                     } catch (Exception e) {
@@ -596,8 +600,9 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
             removeProgressDialog();
             Bundle extra = _data.getExtras();
             googleToken = extra.getString("authtoken");
-            if (StringUtils.isNullOrEmpty(googleToken))
+            if (StringUtils.isNullOrEmpty(googleToken)) {
                 return;
+            }
 
             LoginRegistrationRequest lr = new LoginRegistrationRequest();
             lr.setCityId("" + SharedPrefUtils.getCurrentCityModel(this).getId());

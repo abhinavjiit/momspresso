@@ -379,7 +379,6 @@
         <activity
             android:name=".ui.activity.NotificationActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="com.facebook.accountkit.ui.AccountKitActivity" />
         <activity
             android:name=".ui.activity.UsersBookmarkListActivity"
             android:screenOrientation="portrait" />
@@ -409,6 +408,10 @@
             android:theme="@style/EditorTheme" />
         <activity
             android:name=".ui.activity.ChooseVideoCategoryActivity"
+            android:parentActivityName=".ui.activity.DashboardActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ChooseShortStoryCategoryActivity"
             android:parentActivityName=".ui.activity.DashboardActivity"
             android:screenOrientation="portrait" />
         <activity
