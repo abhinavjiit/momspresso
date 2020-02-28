@@ -170,7 +170,6 @@ public class AppConstants {
     public static final int CONTRIBUTOR_SORT_TYPE_RANK = 2;
 
     public static final String NOTIFICATION_TYPE_WEBVIEW = "webView";
-    public static final String NOTIFICATION_TYPE_UPCOMING_EVENTS = "upcoming_event_list";
     public static final String NOTIFICATION_TYPE_PROFILE = "profile";
     public static final String NOTIFICATION_TYPE_APP_SETTINGS = "app_settings";
     public static final String NOTIFICATION_TYPE_ARTICLE_DETAILS = "article_details";
@@ -178,18 +177,26 @@ public class AppConstants {
     public static final String NOTIFICATION_TYPE_EDITOR = "editor";
     public static final String NOTIFICATION_TYPE_SUGGESTED_TOPICS = "suggested_topics";
     public static final String NOTIFICATION_TYPE_TODAYS_BEST = "todays_best";
-    public static final String NOTIFICATION_TYPE_SHORT_STORY_LIST = "short_story_list";
-    public static final String NOTIFICATION_TYPE_SHORT_STORY_DETAILS = "short_story_details";
-    public static final String NOTIFICATION_TYPE_GROUP_DETAILS = "group_details";
-    public static final String NOTIFICATION_TYPE_POST_DETAILS = "post_details";
+    public static final String NOTIFICATION_TYPE_SHORT_STORY_LIST = "shortStoryListing";
+    public static final String NOTIFICATION_TYPE_SHORT_STORY_DETAILS = "shortStoryDetails";
     public static final String NOTIFICATION_TYPE_GROUP_LISTING = "group_listing";
     public static final String NOTIFICATION_TYPE_MOMSIGHT_REWARD_LISTING = "momsights_screen";
-    public static final String NOTIFICATION_TYPE_CAMPAIGN_LISING = "campaign_listing";
+    public static final String NOTIFICATION_TYPE_CAMPAIGN_LISTING = "campaign_listing";
     public static final String NOTIFICATION_TYPE_CAMPAIGN_DETAIL = "campaign_detail";
     public static final String NOTIFICATION_TYPE_CAMPAIGN_SUBMIT_PROOF = "campaign_submit_proof";
     public static final String NOTIFICATION_TYPE_CAMPAIGN_PANCARD = "mymoney_pancard";
-    public static final String NOTIFICATION_TYPE_CAMPAIGN_CATEGORY_LISTING = "category_listing";
+    public static final String NOTIFICATION_TYPE_CATEGORY_LISTING = "category_listing";
     public static final String NOTIFICATION_TYPE_CAMPAIGN_BANKDETAILS = "mymoney_bankdetails";
+    public static final String NOTIFICATION_TYPE_COLLECTION_DETAILS = "collection_detail";
+    public static final String NOTIFICATION_TYPE_REMOTE_CONFIG_SILENT_UPDATE = "remote_config_silent_update";
+    public static final String NOTIFICATION_TYPE_CREATE_CONTENT_PROMPT = "create_content_prompt";
+    public static final String NOTIFICATION_TYPE_CHOOSE_VIDEO_CATEGORY = "choose_video_category";
+    public static final String NOTIFICATION_TYPE_VIDEO_CHALLENGE_DETAILS = "video_challenge_details";
+    public static final String NOTIFICATION_TYPE_BADGE_LIST = "badge_list";
+    public static final String NOTIFICATION_TYPE_MY_MONEY_EARNINGS = "my_money_earnings";
+    public static final String NOTIFICATION_TYPE_MY_MONEY_PROFILE = "my_money_profile";
+    public static final String NOTIFICATION_TYPE_STORY_LIST_IN_CHALLENGE = "shortStoryListingInChallengeListing";
+    public static final String NOTIFICATION_TYPE_STORY_PUBLISH_SUCCESS = "shortStoryPublishSuccess";
 
     public static final String NOTIFICATION_CENTER_APP_SETTINGS = "-1";
     public static final String NOTIFICATION_CENTER_WEB_VIEW = "0";

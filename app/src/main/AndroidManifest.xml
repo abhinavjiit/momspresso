@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.mycity4kids"
-    android:versionCode="187"
-    android:versionName="13.0.23">
+    package="com.mycity4kids">
 
     <uses-sdk tools:overrideLibrary="io.branch.referral, com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
     <!-- So that we can get the account name -->
@@ -388,12 +386,6 @@
         <activity
             android:name=".ui.activity.SuggestedTopicsActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.EditProfileNewActivity"
-            android:parentActivityName=".profile.UserProfileActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/EditorTheme"
-            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activity.PhoneLoginUserDetailActivity"
             android:screenOrientation="portrait"

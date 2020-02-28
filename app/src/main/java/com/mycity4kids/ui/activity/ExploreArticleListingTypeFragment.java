@@ -12,16 +12,14 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
@@ -36,11 +34,9 @@ import com.mycity4kids.ui.fragment.GroupsViewFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.widget.HeaderGridView;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,7 +45,8 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 25/5/17.
  */
-public class ExploreArticleListingTypeFragment extends BaseFragment implements View.OnClickListener, TopicsRecyclerGridAdapter.RecyclerViewClickListener {
+public class ExploreArticleListingTypeFragment extends BaseFragment implements View.OnClickListener,
+        TopicsRecyclerGridAdapter.RecyclerViewClickListener {
 
     private final static String MEET_CONTRIBUTOR_ID = "meetContributorId";
     private final static String EXPLORE_SECTION_ID = "exploreSectionId";
@@ -142,9 +139,9 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
 
         }
 
-
         try {
-            FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+            FileInputStream fileInputStream = BaseApplication.getAppContext()
+                    .openFileInput(AppConstants.CATEGORIES_JSON_FILE);
             String fileContent = AppUtils.convertStreamToString(fileInputStream);
             Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
             ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
@@ -165,10 +162,12 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             caller.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
+                    AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE,
+                            response.body());
 
                     try {
-                        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                        FileInputStream fileInputStream = BaseApplication.getAppContext()
+                                .openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                         String fileContent = AppUtils.convertStreamToString(fileInputStream);
                         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                         ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
@@ -218,14 +217,16 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
 
             //Prepare structure for multi-expandable listview.
             for (int i = 0; i < responseData.getData().size(); i++) {
-                if ("1".equals(responseData.getData().get(i).getShowInMenu()) && !AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())
+                if ("1".equals(responseData.getData().get(i).getShowInMenu()) && !AppConstants.SHORT_STORY_CATEGORYID
+                        .equals(responseData.getData().get(i).getId())
                         && !AppConstants.HOME_VIDEOS_CATEGORYID.equals(responseData.getData().get(i).getId())) {
                     mainTopicsList.add(responseData.getData().get(i));
                 }
             }
             if (!"search".equals(fragType)) {
                 ExploreTopicsModel contributorListModel = new ExploreTopicsModel();
-                contributorListModel.setDisplay_name(getString(R.string.explore_listing_explore_categories_meet_contributor));
+                contributorListModel
+                        .setDisplay_name(getString(R.string.explore_listing_explore_categories_meet_contributor));
                 contributorListModel.setId(MEET_CONTRIBUTOR_ID);
                 mainTopicsList.add(contributorListModel);
             }
@@ -256,8 +257,6 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 coachmarkMymoneyLinearLayout.setVisibility(View.GONE);
                 quickLinkContainer.setVisibility(View.VISIBLE);
                 SharedPrefUtils.myMoneyCoachMark(BaseApplication.getAppContext(), 1);
-
-
             case R.id.guideOverlay:
                 guideOverLay.setVisibility(View.GONE);
                 if (isAdded()) {
@@ -267,7 +266,8 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 break;
             case R.id.todaysBestTextView: {
                 Utils.pushOpenScreenEvent(getActivity(), "TodaysBestScreen", dynamoUserId + "");
-                Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "TodaysBestScreen");
+                Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "",
+                        "TodaysBestScreen");
                 Intent intent = new Intent(getActivity(), ArticleListingActivity.class);
                 intent.putExtra(Constants.SORT_TYPE, Constants.KEY_TODAYS_BEST);
                 startActivity(intent);
@@ -275,7 +275,8 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             break;
             case R.id.editorsPickTextView: {
                 Utils.pushOpenScreenEvent(getActivity(), "EditorsPickScreen", dynamoUserId + "");
-                Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "EditorsPickScreen");
+                Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "",
+                        "EditorsPickScreen");
                 Intent intent = new Intent(getActivity(), ArticleListingActivity.class);
                 intent.putExtra(Constants.SORT_TYPE, Constants.KEY_EDITOR_PICKS);
                 startActivity(intent);
@@ -313,7 +314,10 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             case R.id.videosContainer: {
                 Utils.pushOpenScreenEvent(getActivity(), "VideosScreen", dynamoUserId + "");
                 Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "VideosScreen");
-                Utils.momVlogEvent(getActivity(), "Home Screen", "Discover_vlogs", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
+                Utils.momVlogEvent(getActivity(), "Home Screen", "Discover_vlogs", "", "android",
+                        SharedPrefUtils.getAppLocale(getActivity()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
                 Intent cityIntent = new Intent(getActivity(), CategoryVideosListingActivity.class);
                 cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
                 startActivity(cityIntent);

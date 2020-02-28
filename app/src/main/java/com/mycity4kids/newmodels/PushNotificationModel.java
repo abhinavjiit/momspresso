@@ -1,14 +1,11 @@
 package com.mycity4kids.newmodels;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by kapil.vij on 20-07-2015.
  */
-public class PushNotificationModel implements Parcelable {
+public class PushNotificationModel {
 
     @SerializedName("action")
     private String action;
@@ -42,6 +39,12 @@ public class PushNotificationModel implements Parcelable {
     private String comingFrom;
     @SerializedName("categoryId")
     private String categoryId;
+    @SerializedName("collectionId")
+    private String collectionId;
+    @SerializedName("badgeId")
+    private String badgeId;
+    @SerializedName("milestoneId")
+    private String milestoneId;
 
     public String getSound() {
         return sound;
@@ -171,56 +174,27 @@ public class PushNotificationModel implements Parcelable {
         this.categoryId = categoryId;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getCollectionId() {
+        return collectionId;
     }
 
-    private PushNotificationModel(Parcel in) {
-        super();
-        action = in.readString();
-        message_id = in.readString();
-        type = in.readString();
-        title = in.readString();
-        url = in.readString();
-        userId = in.readString();
-        id = in.readString();
-        blogTitleSlug = in.readString();
-        titleSlug = in.readString();
-        rich_image_url = in.readString();
-        challengeId = in.readString();
-        body = in.readString();
-        comingFrom = in.readString();
-        categoryId = in.readString();
+    public void setCollectionId(String collectionId) {
+        this.collectionId = collectionId;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(action);
-        dest.writeString(message_id);
-        dest.writeString(type);
-        dest.writeString(title);
-        dest.writeString(url);
-        dest.writeString(userId);
-        dest.writeString(id);
-        dest.writeString(blogTitleSlug);
-        dest.writeString(titleSlug);
-        dest.writeString(rich_image_url);
-        dest.writeString(challengeId);
-        dest.writeString(body);
-        dest.writeString(comingFrom);
-        dest.writeString(categoryId);
+    public String getBadgeId() {
+        return badgeId;
     }
 
-    public static Parcelable.Creator<PushNotificationModel> CREATOR = new Parcelable.Creator<PushNotificationModel>() {
-        @Override
-        public PushNotificationModel createFromParcel(Parcel source) {
-            return new PushNotificationModel(source);
-        }
+    public void setBadgeId(String badgeId) {
+        this.badgeId = badgeId;
+    }
 
-        @Override
-        public PushNotificationModel[] newArray(int size) {
-            return new PushNotificationModel[size];
-        }
-    };
+    public String getMilestoneId() {
+        return milestoneId;
+    }
+
+    public void setMilestoneId(String milestoneId) {
+        this.milestoneId = milestoneId;
+    }
 }
