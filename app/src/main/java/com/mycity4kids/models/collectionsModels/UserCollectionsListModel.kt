@@ -30,6 +30,4 @@ class UserCollectionsListModel {
     var shareUrl: String? = null
     @SerializedName("summary")
     var summary: String? = null
-
-
 }

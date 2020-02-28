@@ -2,7 +2,6 @@ package com.mycity4kids.models.campaignmodels
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import java.util.HashMap
 
 class CampaignDetailDeliverable {
 
@@ -22,5 +21,4 @@ class CampaignDetailDeliverable {
     fun setAdditionalProperty(name: String, value: Any) {
         this.additionalProperties[name] = value
     }*/
-
 }

@@ -37,7 +37,6 @@ class FacebookFriends : BaseActivity(), FBFriendsAdapter.RecyclerViewClickListen
         llm.orientation = RecyclerView.VERTICAL
         recyclerView?.layoutManager = llm
         recyclerView?.adapter = adapter
-
     }
 
     override fun onClick(v: View?) {
@@ -45,7 +44,6 @@ class FacebookFriends : BaseActivity(), FBFriendsAdapter.RecyclerViewClickListen
     }
 
     override fun onClick(view: View, position: Int) {
-
     }
 
     override fun getFacebookUser(jObject: JSONObject?, token: String?) {

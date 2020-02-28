@@ -10,12 +10,11 @@ class AllCampaignDataResponse {
         var code: Int = 0
         @SerializedName("data")
         @Expose
-        var data: Data? = null
+        var data: CampaignListData? = null
         @SerializedName("reason")
         @Expose
         var reason: String? = null
         @SerializedName("status")
         @Expose
         var status: String? = null
-
 }

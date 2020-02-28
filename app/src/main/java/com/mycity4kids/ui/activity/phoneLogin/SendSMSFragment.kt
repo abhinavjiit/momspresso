@@ -24,7 +24,6 @@ import com.mycity4kids.models.request.PhoneLoginRequest
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI
 import com.mycity4kids.ui.activity.ActivityLogin
 import com.mycity4kids.ui.activity.OTPActivity
-import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
@@ -49,13 +48,10 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
             }
-
         })
 
         useSmsTextView?.setOnClickListener(this)
@@ -114,13 +110,11 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
                     }
                     launchVerifySMSFragment(sms_token)
                 } else {
-
                 }
             } catch (e: Exception) {
                 Crashlytics.logException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
-
         }
 
         override fun onFailure(call: Call<ResponseBody>, e: Throwable) {
@@ -139,7 +133,7 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
 
         if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
             (activity as ActivityLogin).addFragment(verifySMSFragment, bundle, true, null)
-        } else if (activity?.javaClass?.simpleName.equals("OTPActivity")){
+        } else if (activity?.javaClass?.simpleName.equals("OTPActivity")) {
             (activity as OTPActivity).supportFragmentManager.popBackStack()
             activity!!.supportFragmentManager.beginTransaction().replace(R.id.container, verifySMSFragment,
                 VerifySMSFragment::class.java.simpleName).addToBackStack(null)

@@ -80,9 +80,9 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
     var shareMedium: String? = null
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         val rootView = inflater.inflate(
                 R.layout.badge_dialog_fragment, container,
@@ -146,8 +146,8 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
         val badgeListResponseCall = badgeAPI.getBadgeDetail(userId, badgeId)
         badgeListResponseCall.enqueue(object : Callback<BadgeListResponse> {
             override fun onResponse(
-                    call: Call<BadgeListResponse>,
-                    response: retrofit2.Response<BadgeListResponse>
+                call: Call<BadgeListResponse>,
+                response: retrofit2.Response<BadgeListResponse>
             ) {
                 try {
                     badgesShimmerContainer.visibility = View.GONE
@@ -384,8 +384,11 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-                                            grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         if (requestCode == REQUEST_GALLERY_PERMISSION) {
             if (PermissionUtil.verifyPermissions(grantResults)) {
                 Snackbar.make(rootLayout, R.string.permision_available_init,
@@ -406,7 +409,6 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
                             shareWithGeneric()
                         }
                         else -> {
-
                         }
                     }
                 } catch (e: Exception) {

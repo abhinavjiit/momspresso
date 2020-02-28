@@ -111,16 +111,16 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var txtTrackerStatus: TextView
     private lateinit var demoUploadLayout: RelativeLayout
     private lateinit var playDemoIcon: ImageView
-    private var position: Int = 0;
+    private var position: Int = 0
     private var mediaController: MediaController? = null
     private var forYouStatus: Int = 0
     private var userId: String? = null
     private lateinit var defaultCampaignPopUp: View
     private var defaultCampaignShow: Boolean = false
     private val urlPattern = Pattern.compile(
-            "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
-                    + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
-                    + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
+            "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)" +
+                    "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*" +
+                    "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
             Pattern.CASE_INSENSITIVE or Pattern.MULTILINE or Pattern.DOTALL)
     private var spannable: SpannableString? = null
 
@@ -143,7 +143,6 @@ class CampaignDetailFragment : BaseFragment() {
     val handler = CoroutineExceptionHandler { _, exception ->
         Crashlytics.logException(exception)
         Log.d("MC4kException", Log.getStackTraceString(exception))
-
     }
 
     companion object {
@@ -157,8 +156,11 @@ class CampaignDetailFragment : BaseFragment() {
                 }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         containerView = inflater.inflate(R.layout.campaign_detail_activity, container, false)
         id = arguments!!.getInt("id")
         comingFrom = arguments!!.getString("comingFrom")
@@ -241,17 +243,14 @@ class CampaignDetailFragment : BaseFragment() {
         }
         referCode.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
-
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 referCodeError.visibility = View.GONE
             }
-
         })
         return containerView
     }
@@ -312,7 +311,7 @@ class CampaignDetailFragment : BaseFragment() {
         readThisBox = containerView.findViewById(R.id.read_this_box)
         getHelp = containerView.findViewById(R.id.get_help)
         detail_recyclerview = containerView.findViewById(R.id.detail_recyclerview)
-        txtTrackerStatus = containerView.findViewById(R.id.txtTrackerStatus);
+        txtTrackerStatus = containerView.findViewById(R.id.txtTrackerStatus)
         toolbar = containerView.findViewById(R.id.toolbar)
         scrollView2 = containerView.findViewById(R.id.scrollView2)
         shimmer1 = containerView.findViewById(R.id.shimmer1)
@@ -328,7 +327,6 @@ class CampaignDetailFragment : BaseFragment() {
             }
 
             override fun onSubscribe(d: Disposable) {
-
             }
 
             override fun onNext(response: BaseResponseGeneric<CampaignDetailResult>) {
@@ -415,7 +413,6 @@ class CampaignDetailFragment : BaseFragment() {
 
         bottomLayout.setOnClickListener {
             setClickAction()
-
         }
         setLabels()
     }
@@ -459,7 +456,7 @@ class CampaignDetailFragment : BaseFragment() {
         }
         if (matchStart != null && matchEnd != null) {
             spannable!!.setSpan(clickableSpan, matchStart, matchEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        };
+        }
         textView.text = Html.fromHtml(spannable.toString())
         textView.movementMethod = LinkMovementMethod.getInstance()
 //        textView.highlightColor = Color.TRANSPARENT
@@ -487,7 +484,6 @@ class CampaignDetailFragment : BaseFragment() {
             val campaignAPI = retro.create(CampaignAPI::class.java)
             val call = campaignAPI.postRegisterCampaign(participateRequest)
             call.enqueue(participateCampaign)
-
         } else if (submitBtn.text == resources.getString(R.string.detail_bottom_share)) {
             activity?.let {
                 Utils.campaignEvent(it, "Campaign Listing", "Campaign Detail", "Share", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
@@ -546,7 +542,7 @@ class CampaignDetailFragment : BaseFragment() {
                     if (!SharedPrefUtils.isDefaultCampaignShown(BaseApplication.getAppContext()))
                         fetchDefaultCampaign()
                     submitBtn.text = resources.getString(R.string.detail_bottom_share)
-                    Toast.makeText(context, responseData.reason, Toast.LENGTH_SHORT).show()////////////////////////////////////////////////
+                    Toast.makeText(context, responseData.reason, Toast.LENGTH_SHORT).show() // //////////////////////////////////////////////
                 }
             } catch (e: Exception) {
                 Crashlytics.logException(e)
@@ -611,7 +607,6 @@ class CampaignDetailFragment : BaseFragment() {
         default_campaign_name.setText(defaultapigetResponse!!.name)
         default_submission_status.text = resources.getString(R.string.campaign_details_apply_now)
     }
-
 
     val withdrawParticipateCampaign = object : Callback<ParticipateCampaignResponse> {
         override fun onResponse(call: Call<ParticipateCampaignResponse>, response: retrofit2.Response<ParticipateCampaignResponse>) {
@@ -696,7 +691,7 @@ class CampaignDetailFragment : BaseFragment() {
                 labelText.text = AppUtils.fromHtml(it.resources.getString(R.string.label_campaign_apply))
                 submitBtn.text = it.resources.getString(R.string.detail_bottom_apply_now)
             }
-            labelText.setMovementMethod(LinkMovementMethod.getInstance());
+            labelText.setMovementMethod(LinkMovementMethod.getInstance())
         } else if (status == 2) {
             hideShowReferral(status)
             applicationStatus.setBackgroundResource(R.drawable.campaign_subscription_open)
@@ -758,7 +753,7 @@ class CampaignDetailFragment : BaseFragment() {
                     submitBtn.text = it.resources.getString(R.string.check_ypur_eligibility)
                     bottomLayout.setBackgroundColor(it.resources.getColor(R.color.campaign_listing_light_green_bottom))
                 }
-                labelText.setMovementMethod(LinkMovementMethod.getInstance());
+                labelText.setMovementMethod(LinkMovementMethod.getInstance())
             } else {
                 if (isRewardAdded.equals("1", true)) {
                     if (forYouStatus == 0) {
@@ -879,7 +874,6 @@ class CampaignDetailFragment : BaseFragment() {
         }
     }
 
-
     fun showRewardDialog() {
         Utils.pushGenericEvent(activity, "CTA_CampaignDetail_Register",
                 SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, "CampaignDetailFragment")
@@ -924,7 +918,6 @@ class CampaignDetailFragment : BaseFragment() {
         }
     }
 
-
     private fun fetchForYou() {
         // showProgressDialog(resources.getString(R.string.please_wait))
         BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getForYouStatus(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BasicResponse> {
@@ -947,11 +940,8 @@ class CampaignDetailFragment : BaseFragment() {
             override fun onError(e: Throwable) {
                 // removeProgressDialog()
             }
-
-
         })
     }
-
 
     private suspend fun checkInstagramHandle(): Boolean {
         val job = CoroutineScope(Dispatchers.Main + handler).launch {
@@ -981,7 +971,6 @@ class CampaignDetailFragment : BaseFragment() {
         job.join()
         return showInstPopUpFlag
     }
-
 
     private suspend fun showInstaHandlePopUp() {
         instaHandlePopUpView.visibility = View.VISIBLE
@@ -1022,7 +1011,7 @@ class CampaignDetailFragment : BaseFragment() {
     }
 
     private fun isValid(): String {
-        val instaHandleEditTextView = containerView.findViewById<EditText>(R.id.instaHandleEditTextView)//^([A-Za-z0-9._](?:(?:[A-Za-z0-9._]|(?:\.(?!\.))){2,28}(?:[A-Za-z0-9._]))?)$
+        val instaHandleEditTextView = containerView.findViewById<EditText>(R.id.instaHandleEditTextView) // ^([A-Za-z0-9._](?:(?:[A-Za-z0-9._]|(?:\.(?!\.))){2,28}(?:[A-Za-z0-9._]))?)$
         val instaHandle = instaHandleEditTextView.text.toString()
         val pattern = Pattern.compile("^([A-Za-z0-9._](?:(?:[A-Za-z0-9._]|(?:\\.(?!\\.))){2,28}(?:[A-Za-z0-9._]))?)\$")
         val matcher = pattern.matcher(instaHandle)
@@ -1044,8 +1033,3 @@ class CampaignDetailFragment : BaseFragment() {
         shimmer1.stopShimmerAnimation()
     }
 }
-
-
-
-
-

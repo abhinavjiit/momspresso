@@ -23,4 +23,3 @@ class FeaturedOnModel : BaseResponse() {
         var total_items: Int = 0
     }
 }
-

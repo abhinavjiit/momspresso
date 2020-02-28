@@ -16,7 +16,6 @@ import com.mycity4kids.ui.rewards.adapter.PickerDialogAdapter
 import com.mycity4kids.ui.rewards.fragment.ProfileInfoFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsPersonalInfoFragment
 
-
 /**
  * A fragment representing a list of Items.
  * Activities containing this fragment MUST implement the
@@ -30,7 +29,7 @@ class PickerDialogFragment : DialogFragment(), PickerDialogAdapter.onItemClickLi
             } else {
                 preSelectedItemNames!!.add(clickedText)
             }
-        }else{
+        } else {
             preSelectedItemNames!!.add(clickedText)
         }
         adapter.notifyDataSetChanged()
@@ -107,8 +106,11 @@ class PickerDialogFragment : DialogFragment(), PickerDialogAdapter.onItemClickLi
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         containerView = inflater.inflate(R.layout.picker_dialog_fragment, container, false)
 
         // Set the adapter
@@ -126,7 +128,6 @@ class PickerDialogFragment : DialogFragment(), PickerDialogAdapter.onItemClickLi
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-
             }
         }
         adapter = PickerDialogAdapter(preSelectedItemNames, popAllData, this@PickerDialogFragment)
@@ -178,5 +179,4 @@ class PickerDialogFragment : DialogFragment(), PickerDialogAdapter.onItemClickLi
     interface OnClickDoneListener {
         fun onItemClick(selectedValue: ArrayList<String>, popupType: String)
     }
-
 }

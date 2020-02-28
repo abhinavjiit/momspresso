@@ -19,6 +19,5 @@ class ShortStoriesThumbnailAdapter(val fragmentManager: FragmentManager) : Fragm
         } else {
             return ShortStoryTextFormatFragment()
         }
-
     }
 }

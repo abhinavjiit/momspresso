@@ -281,8 +281,11 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-                                            grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         if (requestCode == REQUEST_GALLERY_PERMISSION) {
             if (PermissionUtil.verifyPermissions(grantResults)) {
                 Snackbar.make(rootLayout, R.string.permision_available_init,
@@ -303,7 +306,6 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
                             shareWithGeneric()
                         }
                         else -> {
-
                         }
                     }
                 } catch (e: Exception) {

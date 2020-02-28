@@ -42,7 +42,6 @@ class RewardsShareReferralCodeActivity : BaseActivity() {
         layoutWhatsApp = findViewById(R.id.layoutWhatsApp)
         myClipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager?
 
-
         backText = findViewById(R.id.backToolbar)
         backText.setOnClickListener {
             finish()
@@ -62,10 +61,9 @@ class RewardsShareReferralCodeActivity : BaseActivity() {
         textCode.setOnClickListener {
 
             val myClip = ClipData.newPlainText("text", textCode.text.toString())
-            myClipboard?.setPrimaryClip(myClip);
+            myClipboard?.setPrimaryClip(myClip)
 
             Toast.makeText(this, "ReferralCode Copied", Toast.LENGTH_SHORT).show()
-
         }
 
         fetReferralCode()
@@ -110,7 +108,6 @@ class RewardsShareReferralCodeActivity : BaseActivity() {
         startActivity(shareIntent)
     }
 
-
     fun shareViaWhatsApp() {
         val whatsappIntent = Intent(ACTION_SEND)
         whatsappIntent.setType("text/plain")
@@ -124,13 +121,12 @@ class RewardsShareReferralCodeActivity : BaseActivity() {
             //  Objects.requireNonNull(this@RewardsShareReferralCodeActivity).startActivity(whatsappIntent)
         } catch (ex: android.content.ActivityNotFoundException) {
             Toast.makeText(this@RewardsShareReferralCodeActivity, getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show()
-
         }
     }
 
     /*fetch data from server*/
     private fun fetReferralCode() {
-        //var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(this@RewardsShareReferralCodeActivity)?.dynamoId
+        // var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(this@RewardsShareReferralCodeActivity)?.dynamoId
         var userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
         if (userId != null) {
             showProgressDialog(resources.getString(R.string.please_wait))
@@ -140,7 +136,6 @@ class RewardsShareReferralCodeActivity : BaseActivity() {
                 }
 
                 override fun onSubscribe(d: Disposable) {
-
                 }
 
                 override fun onNext(response: BaseResponseGeneric<ReferralCodeResult>) {
@@ -156,5 +151,4 @@ class RewardsShareReferralCodeActivity : BaseActivity() {
             })
         }
     }
-
 }

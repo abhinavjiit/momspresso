@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class MilestonesListAdapter(
-        private val mListener: RecyclerViewClickListener
+    private val mListener: RecyclerViewClickListener
 ) : RecyclerView.Adapter<MilestonesListAdapter.MilestonesViewHolder>() {
 
     private var milestonesList: ArrayList<MilestonesResult>? = null
@@ -144,8 +144,8 @@ class MilestonesListAdapter(
     }
 
     inner class MilestonesViewHolder internal constructor(
-            view: View,
-            val listener: RecyclerViewClickListener
+        view: View,
+        val listener: RecyclerViewClickListener
     ) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
         var milestoneBgImageView: ImageView? = null

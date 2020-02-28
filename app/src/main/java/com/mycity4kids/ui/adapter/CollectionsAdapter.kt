@@ -19,7 +19,6 @@ class CollectionsAdapter(activity: Context) : BaseAdapter() {
     var context: Context = activity
     private var userCollectionsTopicList = ArrayList<UserCollectionsModel>()
 
-
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var view = convertView
         val viewHolder: ViewHolder
@@ -29,7 +28,6 @@ class CollectionsAdapter(activity: Context) : BaseAdapter() {
             viewHolder.tagImageView = view.findViewById<ImageView>(R.id.tagImageView)
             viewHolder.topicsNameTextView = view.findViewById<TextView>(R.id.topicsNameTextView)
             view.tag = viewHolder
-
         } else {
             viewHolder = view.tag as ViewHolder
         }
@@ -46,7 +44,6 @@ class CollectionsAdapter(activity: Context) : BaseAdapter() {
 
     fun getUserColletions(collectionsTopics: ArrayList<UserCollectionsModel>) {
         userCollectionsTopicList = collectionsTopics
-
     }
 
     override fun getItem(position: Int): Any {
@@ -65,9 +62,5 @@ class CollectionsAdapter(activity: Context) : BaseAdapter() {
 
         var tagImageView: ImageView? = null
         var topicsNameTextView: TextView? = null
-
-
     }
 }
-
-

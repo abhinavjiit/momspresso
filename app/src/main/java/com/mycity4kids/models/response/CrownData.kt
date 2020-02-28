@@ -8,5 +8,4 @@ class CrownData {
     @SerializedName("result")
     @Expose
     var result: Crown? = null
-
 }

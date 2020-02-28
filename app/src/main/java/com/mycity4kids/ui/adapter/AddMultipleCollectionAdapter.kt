@@ -28,7 +28,6 @@ class AddMultipleCollectionAdapter(var recyclerViewClickListner: RecyclerViewCli
 
     private var mInflater: LayoutInflater = BaseApplication.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == 1) {
             val view = mInflater.inflate(R.layout.add_multiple_collection_item, parent, false)
@@ -94,7 +93,6 @@ class AddMultipleCollectionAdapter(var recyclerViewClickListner: RecyclerViewCli
                         holder.checkBoxImageView.setImageResource(R.drawable.ic_done)
                     } else {
                         holder.checkBoxImageView.setImageResource(R.drawable.ic_rectangle)
-
                     }
                 }
                 AppConstants.CONTENT_TYPE_VIDEO -> {
@@ -127,7 +125,6 @@ class AddMultipleCollectionAdapter(var recyclerViewClickListner: RecyclerViewCli
                         holder.checkBoxImageView.setImageResource(R.drawable.ic_done)
                     } else {
                         holder.checkBoxImageView.setImageResource(R.drawable.ic_rectangle)
-
                     }
                 }
             }
@@ -153,7 +150,6 @@ class AddMultipleCollectionAdapter(var recyclerViewClickListner: RecyclerViewCli
         var articleVideoShortStoryIcon: ImageView = mView.articleVideoShortStoryIcon
         var root: RelativeLayout = mView.root
         var checkBoxImageView: ImageView = mView.checkBoxImageView
-
     }
 
     class ViewHolderCreatedCollection(mView: View) : RecyclerView.ViewHolder(mView) {
@@ -164,11 +160,9 @@ class AddMultipleCollectionAdapter(var recyclerViewClickListner: RecyclerViewCli
         var articleVideoShortStoryIcon: ImageView = mView.articleVideoShortStoryIcon
         var root: RelativeLayout = mView.root
         var checkBoxImageView: ImageView = mView.checkBoxImageView
-
     }
 
     interface RecyclerViewClick {
         fun onclick(position: Int)
     }
-
 }

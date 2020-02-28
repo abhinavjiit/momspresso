@@ -65,5 +65,4 @@ class FBFriendsAdapter(private val mListener: RecyclerViewClickListener) : Recyc
     interface RecyclerViewClickListener {
         fun onClick(view: View, position: Int)
     }
-
 }

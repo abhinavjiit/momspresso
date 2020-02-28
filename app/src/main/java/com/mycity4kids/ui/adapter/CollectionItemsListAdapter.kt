@@ -17,9 +17,7 @@ import com.mycity4kids.models.collectionsModels.UserCollectionsModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.user_collection_items_list_adapter.view.*
 
-
 class CollectionItemsListAdapter(var activity: Context, var recyclerViewClick: RecyclerViewClick) : RecyclerView.Adapter<CollectionItemsListAdapter.ViewHolder>() {
-
 
     private var mInflater: LayoutInflater = BaseApplication.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     var context: Context = activity
@@ -33,7 +31,6 @@ class CollectionItemsListAdapter(var activity: Context, var recyclerViewClick: R
     override fun getItemCount(): Int {
 
         return userCollectionsTopicList.size
-
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -53,7 +50,6 @@ class CollectionItemsListAdapter(var activity: Context, var recyclerViewClick: R
                 holder.articleVideoShortStoryIcon.setImageResource(R.drawable.ic_video)
                 if (userCollectionsTopicList[position].item_info.author != null)
                     holder.articleAuthorName.text = userCollectionsTopicList[position].item_info.author.firstName + userCollectionsTopicList[position].item_info.author.lastName
-
             } else if (userCollectionsTopicList[position].itemType.equals(AppConstants.CONTENT_TYPE_ARTICLE)) {
                 try {
                     Picasso.get().load(userCollectionsTopicList[position].item_info.imageUrl.thumbMax)
@@ -74,8 +70,6 @@ class CollectionItemsListAdapter(var activity: Context, var recyclerViewClick: R
                 holder.articleVideoShortStoryIcon.setImageResource(R.drawable.shortstory_red)
 
                 holder.articleAuthorName.text = userCollectionsTopicList[position].item_info.userName
-
-
             }
             holder.root.setOnClickListener {
                 recyclerViewClick.onRecyclerViewclick(position)
@@ -83,16 +77,12 @@ class CollectionItemsListAdapter(var activity: Context, var recyclerViewClick: R
         } catch (e: Exception) {
             Crashlytics.logException(e)
             Log.d("MC4KException", Log.getStackTraceString(e))
-
         }
-
-
     }
 
     fun setListData(topicsData: ArrayList<UserCollectionsModel>) {
         userCollectionsTopicList = topicsData
     }
-
 
     class ViewHolder(mView: View, recyclerViewClick: RecyclerViewClick) : RecyclerView.ViewHolder(mView) {
         var articleTitleTextView: TextView = mView.articleTitleTextView
@@ -101,12 +91,9 @@ class CollectionItemsListAdapter(var activity: Context, var recyclerViewClick: R
         var viewCountTextView: TextView = mView.viewCountTextView
         var articleVideoShortStoryIcon: ImageView = mView.articleVideoShortStoryIcon
         var root: RelativeLayout = mView.root
-
     }
 
     interface RecyclerViewClick {
         fun onRecyclerViewclick(position: Int)
     }
-
-
 }

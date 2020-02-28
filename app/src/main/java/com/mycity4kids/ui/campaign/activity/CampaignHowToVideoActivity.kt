@@ -28,7 +28,6 @@ class CampaignHowToVideoActivity : BaseActivity() {
         videoView = findViewById(R.id.videoView)
         crossImageView = findViewById(R.id.crossImageView)
 
-
         crossImageView.setOnClickListener {
             videoView.stopPlayback()
             videoView.setMediaController(null)

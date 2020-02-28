@@ -64,7 +64,6 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is CreateContentViewHolder -> {
-
             }
             is FeedViewHolder -> addArticleItem(holder.txvArticleTitle, holder.forYouInfoLL, holder.viewCountTextView, holder.commentCountTextView,
                     holder.recommendCountTextView, holder.txvAuthorName, holder.articleImageView, holder.videoIndicatorImageView,
@@ -245,10 +244,22 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         }
     }
 
-    private fun addArticleItem(articleTitleTV: TextView, forYouInfoLL: LinearLayout, viewCountTV: TextView,
-                               commentCountTV: TextView, recommendCountTV: TextView, authorNameTV: TextView,
-                               articleIV: ImageView, videoIndicatorIV: ImageView, bookmarkArticleIV: ImageView, watchLaterIV: ImageView,
-                               data: MixFeedResult?, position: Int, holder: FeedViewHolder, private: Boolean) {
+    private fun addArticleItem(
+        articleTitleTV: TextView,
+        forYouInfoLL: LinearLayout,
+        viewCountTV: TextView,
+        commentCountTV: TextView,
+        recommendCountTV: TextView,
+        authorNameTV: TextView,
+        articleIV: ImageView,
+        videoIndicatorIV: ImageView,
+        bookmarkArticleIV: ImageView,
+        watchLaterIV: ImageView,
+        data: MixFeedResult?,
+        position: Int,
+        holder: FeedViewHolder,
+        private: Boolean
+    ) {
         articleTitleTV.text = data?.title
         forYouInfoLL.visibility = View.GONE
         if (null == data?.articleCount || 0 == data.articleCount) {
@@ -275,8 +286,8 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
             authorNameTV.text = data?.userName
         }
         try {
-            if (!StringUtils.isNullOrEmpty(data?.videoUrl) && (data?.imageUrl?.thumbMax == null
-                            || data.imageUrl.thumbMax.contains("default.jp"))) {
+            if (!StringUtils.isNullOrEmpty(data?.videoUrl) && (data?.imageUrl?.thumbMax == null ||
+                            data.imageUrl.thumbMax.contains("default.jp"))) {
                 Picasso.get().load(AppUtils.getYoutubeThumbnailURLMomspresso(data?.videoUrl))
                         .placeholder(R.drawable.default_article).into(articleIV)
             } else {
@@ -313,9 +324,19 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         }
     }
 
-    private fun addShortStoryItem(logoImageView: ImageView, storyAuthorTextView: TextView, shareStoryImageView: ImageView, storyImage: ImageView, authorNameTV: TextView,
-                                  storyCommentCountTV: TextView, storyRecommendationCountTV: TextView, likeIV: ImageView,
-                                  data: MixFeedResult?, holder: ShortStoriesViewHolder, private: Boolean) {
+    private fun addShortStoryItem(
+        logoImageView: ImageView,
+        storyAuthorTextView: TextView,
+        shareStoryImageView: ImageView,
+        storyImage: ImageView,
+        authorNameTV: TextView,
+        storyCommentCountTV: TextView,
+        storyRecommendationCountTV: TextView,
+        likeIV: ImageView,
+        data: MixFeedResult?,
+        holder: ShortStoriesViewHolder,
+        private: Boolean
+    ) {
         authorNameTV.text = data?.userName
         if (null == data?.commentsCount) {
             storyCommentCountTV.text = "0"
@@ -354,9 +375,19 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         }
     }
 
-    private fun addVideoItem(winnerLayout: RelativeLayout, txvArticleTitle: TextView, txvAuthorName: TextView, articleImageView: ImageView,
-                             viewCountTextView: TextView, commentCountTextView: TextView,
-                             recommendCountTextView: TextView, goldLogo: TextView, data: MixFeedResult?, holder: RecyclerView.ViewHolder, private: Boolean) {
+    private fun addVideoItem(
+        winnerLayout: RelativeLayout,
+        txvArticleTitle: TextView,
+        txvAuthorName: TextView,
+        articleImageView: ImageView,
+        viewCountTextView: TextView,
+        commentCountTextView: TextView,
+        recommendCountTextView: TextView,
+        goldLogo: TextView,
+        data: MixFeedResult?,
+        holder: RecyclerView.ViewHolder,
+        private: Boolean
+    ) {
         txvArticleTitle.text = data?.title
         viewCountTextView.text = "" + data?.view_count
         commentCountTextView.text = "" + data?.comment_count
@@ -402,5 +433,4 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         private val CONTENT_TYPE_ARTICLE = 2
         private val CONTENT_TYPE_VIDEO = 3
     }
-
 }

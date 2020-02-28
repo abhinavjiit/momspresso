@@ -7,17 +7,14 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
-import com.mycity4kids.ui.campaign.PaymentModesModal
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.paymets_modes_adapter.view.*
 
-
-class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, private val context: Fragment)
-    : RecyclerView.Adapter<PaymentModesAdapter.ViewHolder>() {
+class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, private val context: Fragment) :
+    RecyclerView.Adapter<PaymentModesAdapter.ViewHolder>() {
 
     private var paymentMode: List<PaymentModesModal> = paymentModeList
     private var clickListener = context as ClickListener
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -28,8 +25,6 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (position == 0) {
             holder.selectOptionPaymentTextView.visibility = View.VISIBLE
-
-
         } else {
             holder.selectOptionPaymentTextView.visibility = View.GONE
         }
@@ -52,7 +47,6 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
                 holder.accountNumberTextView.visibility = View.GONE
                 holder.nonDefaultEditTextView.visibility = View.INVISIBLE
                 holder.viewBaseLine.visibility = View.INVISIBLE
-
             }
             holder.nonDefaultModeImageView.setOnClickListener {
 //                clickListener.onRadioButton(position)
@@ -65,8 +59,6 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
                 clickListener.onCellClick(paymentMode[position].type_id, position, paymentMode[position].id)
             }
         }
-
-
     }
 
     override fun getItemCount(): Int = paymentMode.size
@@ -89,7 +81,6 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
         val accountNumberTextView: TextView = mView.accountNumberTextView
         val nonDefaultEditTextView: TextView = mView.nonDefaultEditTextView
         val viewBaseLine: View = mView.viewBaseLine
-
     }
 
     interface ClickListener {
@@ -97,4 +88,3 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
         fun onRadioButton(position: Int)
     }
 }
-

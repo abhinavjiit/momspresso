@@ -17,8 +17,6 @@ class ShortStoryImageData {
     @SerializedName("status")
     @Expose
     var status: String? = null
-
-
 }
 
 class ShortStoryImageDataResponse {

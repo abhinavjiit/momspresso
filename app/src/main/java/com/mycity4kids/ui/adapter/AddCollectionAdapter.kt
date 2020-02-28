@@ -28,7 +28,6 @@ class AddCollectionAdapter(val activity: Context, var recyclerViewClickListner: 
     private var mInflater: LayoutInflater = BaseApplication.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private var collectionList = ArrayList<UserCollectionsModel>()
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == ADD_COLLECTION_TYPE) {
             val view = mInflater.inflate(R.layout.add_collection_adapter, parent, false)
@@ -45,7 +44,7 @@ class AddCollectionAdapter(val activity: Context, var recyclerViewClickListner: 
             try {
                 Picasso.get().load(collectionList[position].imageUrl).placeholder(R.drawable.default_article).into(holder.collectionImageVIEW)
             } catch (e: Exception) {
-                holder.collectionImageVIEW.setBackgroundResource(R.drawable.default_article);
+                holder.collectionImageVIEW.setBackgroundResource(R.drawable.default_article)
             }
 
             holder.collectionTitle.text = collectionList[position].name
@@ -60,7 +59,7 @@ class AddCollectionAdapter(val activity: Context, var recyclerViewClickListner: 
                     try {
                         Picasso.get().load(collectionList[position].item_info.imageUrl.thumbMax).into(holder.collectionItemImageVIEW)
                     } catch (e: Exception) {
-                        holder.collectionItemImageVIEW.setBackgroundResource(R.drawable.default_article);
+                        holder.collectionItemImageVIEW.setBackgroundResource(R.drawable.default_article)
                     }
                 }
                 AppConstants.SHORT_STORY_COLLECTION_TYPE -> {
@@ -84,11 +83,8 @@ class AddCollectionAdapter(val activity: Context, var recyclerViewClickListner: 
             holder.close.setOnClickListener {
                 recyclerViewClickListner.onClick(position)
             }
-
         }
-
     }
-
 
     override fun getItemCount(): Int {
         return collectionList.size
@@ -107,22 +103,17 @@ class AddCollectionAdapter(val activity: Context, var recyclerViewClickListner: 
 
     fun setListData(listData: ArrayList<UserCollectionsModel>) {
         collectionList = listData
-
     }
 
     fun setItemListData(listData: ArrayList<UserCollectionsModel>) {
         collectionList = listData
-
     }
-
 
     class ViewHolderCollection(mView: View, recyclerViewClickListner: RecyclerViewClickListener) : RecyclerView.ViewHolder(mView) {
         var collectionImageVIEW: ImageView = mView.collectionImageVIEW
         var collectionTitle: TextView = mView.collectionTitle
         var collectionDiscription: TextView = mView.collectionDiscription
         var root: RelativeLayout = mView.root
-
-
     }
 
     class ViewHolderCollectionItem(mView: View, recyclerViewClickListner: RecyclerViewClickListener) : RecyclerView.ViewHolder(mView) {
@@ -131,12 +122,9 @@ class AddCollectionAdapter(val activity: Context, var recyclerViewClickListner: 
         var collectionDiscription: TextView = mView.collectionDiscription
         var root: RelativeLayout = mView.root
         var close: ImageView = mView.close
-
-
     }
 
     interface RecyclerViewClickListener {
         fun onClick(position: Int)
     }
-
 }

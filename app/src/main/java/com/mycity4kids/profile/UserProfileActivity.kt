@@ -85,7 +85,6 @@ class UserProfileActivity : BaseActivity(),
     lateinit var likeStatus: String
     var currentShortStoryPosition: Int = -1
 
-
     private lateinit var rootLayout: CoordinatorLayout
     private lateinit var toolbar: Toolbar
     private lateinit var appBarLayout: AppBarLayout
@@ -143,7 +142,6 @@ class UserProfileActivity : BaseActivity(),
     private lateinit var storyShareCardWidget: StoryShareCardWidget
     private lateinit var shareStoryImageView: ImageView
     private lateinit var sharedStoryItem: MixFeedResult
-
 
     private val userContentAdapter: UserContentAdapter by lazy {
         UserContentAdapter(
@@ -430,7 +428,6 @@ class UserProfileActivity : BaseActivity(),
                 try {
                     val responseData = response.body()
                     if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-
                     } else {
                         followAuthorTextView.setText(R.string.ad_follow_author)
                         isFollowing = false
@@ -1049,7 +1046,6 @@ class UserProfileActivity : BaseActivity(),
                     userContentList?.get(position)?.userId + "~" + userContentList?.get(position)?.userName
                 )
                 startActivity(intent)
-
             }
             view.id == R.id.bookmarkArticleImageView -> {
                 bookmarkItem(position)
@@ -1061,8 +1057,8 @@ class UserProfileActivity : BaseActivity(),
                 if (!isRecommendRequestRunning) {
                     userContentList?.get(position)?.isLiked?.let {
                         if (it) {
-                            likeStatus = "0";
-                            currentShortStoryPosition = position;
+                            likeStatus = "0"
+                            currentShortStoryPosition = position
                             recommendUnrecommentArticleAPI(
                                 "0",
                                 userContentList?.get(position)?.id,
@@ -1306,7 +1302,6 @@ class UserProfileActivity : BaseActivity(),
                         userContentAdapter.notifyDataSetChanged()
 
                         ToastUtils.showToast(this@UserProfileActivity, responseData.reason)
-
                     } else {
 
                         ToastUtils.showToast(
@@ -1319,7 +1314,6 @@ class UserProfileActivity : BaseActivity(),
                     Log.d("MC4kException", Log.getStackTraceString(e))
                     ToastUtils.showToast(this@UserProfileActivity, getString(R.string.went_wrong))
                 }
-
             }
 
             override fun onFailure(call: Call<RecommendUnrecommendArticleResponse>, t: Throwable) {
@@ -1328,7 +1322,6 @@ class UserProfileActivity : BaseActivity(),
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
-
 
     @SuppressLint("RestrictedApi")
     private fun chooseMenuOptionsItem(view: View, position: Int) {
@@ -1382,8 +1375,6 @@ class UserProfileActivity : BaseActivity(),
         val menuPopupHelper = MenuPopupHelper(view.context, popupMenu.menu as MenuBuilder, view)
         menuPopupHelper.setForceShowIcon(true)
         menuPopupHelper.show()
-
-
     }
 
     private fun bookmarkItem(position: Int) {
@@ -1415,7 +1406,6 @@ class UserProfileActivity : BaseActivity(),
                     Crashlytics.logException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
-
             })
             Utils.pushWatchLaterArticleEvent(
                 this,
@@ -1447,7 +1437,6 @@ class UserProfileActivity : BaseActivity(),
                     Crashlytics.logException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
-
             })
             Utils.pushBookmarkArticleEvent(
                 this,
@@ -1544,7 +1533,6 @@ class UserProfileActivity : BaseActivity(),
                 launchContentDetail(userBookmarkList?.get(position))
             }
             view.id == R.id.removeBookmarkTextView -> {
-
             }
             view.id == R.id.shareImageView -> {
                 shareContent(userBookmarkList?.get(position))
@@ -1569,7 +1557,6 @@ class UserProfileActivity : BaseActivity(),
             data?.itemType == AppConstants.CONTENT_TYPE_SHORT_STORY -> {
             }
             data?.itemType == AppConstants.CONTENT_TYPE_VIDEO -> {
-
             }
         }
     }
@@ -1656,7 +1643,8 @@ class UserProfileActivity : BaseActivity(),
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<String>,
+        requestCode: Int,
+        permissions: Array<String>,
         grantResults: IntArray
     ) {
         if (requestCode == REQUEST_GALLERY_PERMISSION) {
@@ -1737,7 +1725,6 @@ class UserProfileActivity : BaseActivity(),
                     Crashlytics.logException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
-
             }
         } else {
             try {
@@ -1746,7 +1733,6 @@ class UserProfileActivity : BaseActivity(),
                 Crashlytics.logException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
-
         }
     }
 
@@ -1818,8 +1804,5 @@ class UserProfileActivity : BaseActivity(),
                 }
             }
         }
-
     }
-
 }
-

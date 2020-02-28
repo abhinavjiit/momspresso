@@ -75,7 +75,6 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
                 Crashlytics.logException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
-
         }
 
         override fun onFailure(call: Call<TotalPayoutResponse>, t: Throwable) {
@@ -125,7 +124,6 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
                     .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                     .build()
         } catch (e: Exception) {
-
         }
 
         readArticlesTextView?.text = getString(R.string.read_articles).toLowerCase().capitalize()
@@ -299,7 +297,6 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
     }
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) {
-
     }
 
     private fun fetchTotalEarning() {
@@ -320,4 +317,3 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         return true
     }
 }
-

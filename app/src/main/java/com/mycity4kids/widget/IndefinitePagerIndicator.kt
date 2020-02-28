@@ -17,9 +17,9 @@ import androidx.viewpager.widget.ViewPager
 import com.mycity4kids.R
 
 class IndefinitePagerIndicator @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyle: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
 ) : View(context, attrs, defStyle), ViewPager.OnPageChangeListener {
 
     companion object {
@@ -33,7 +33,6 @@ class IndefinitePagerIndicator @JvmOverloads constructor(
 
         private fun dpToPx(dp: Float, resources: Resources): Int =
                 (dp * ((resources.displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT).toFloat())).toInt()
-
     }
 
     private var recyclerView: RecyclerView? = null
@@ -172,7 +171,6 @@ class IndefinitePagerIndicator @JvmOverloads constructor(
             setMeasuredDimension(getCalculatedWidth(), minimumViewSize)
         }
     }
-
 
     /**
      * Gets the coordinate for a dot based on the position in the pager.

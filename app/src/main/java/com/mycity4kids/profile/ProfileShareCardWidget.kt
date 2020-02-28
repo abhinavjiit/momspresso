@@ -157,7 +157,6 @@ class ProfileShareCardWidget : RelativeLayout {
             } else {
                 rankLanguageTextView.text = context.getString(R.string.blogger_profile_rank_in,
                         responseData.ranks[0].langValue.toUpperCase())
-
             }
         } else {
             responseData.ranks.sort()

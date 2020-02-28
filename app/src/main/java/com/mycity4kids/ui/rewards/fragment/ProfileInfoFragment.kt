@@ -1,6 +1,5 @@
 package com.mycity4kids.ui.rewards.fragment
 
-
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -98,10 +97,10 @@ class ProfileInfoFragment : BaseFragment(),
 
     override fun onItemClick(selectedValueName: ArrayList<String>, popupType: String) {
         if (popupType == Constants.PopListRequestType.INTEREST.name) {
-            //preSelectedInterest = selectedValue
+            // preSelectedInterest = selectedValue
             setFloatingLayout(selectedValueName, popupType)
         } else if (popupType == Constants.PopListRequestType.LANGUAGE.name) {
-            //preSelectedDurables = selectedValue
+            // preSelectedDurables = selectedValue
             setFloatingLayout(selectedValueName, popupType)
         }
     }
@@ -192,7 +191,6 @@ class ProfileInfoFragment : BaseFragment(),
     private var referralCode: String = ""
     private lateinit var spinAdapter: CustomSpinnerAdapter
 
-
     private val REQUEST_CAMERA = 0
     private val REQUEST_EDIT_PICTURE = 1
     private val PERMISSIONS_EDIT_PICTURE = arrayOf(
@@ -226,7 +224,8 @@ class ProfileInfoFragment : BaseFragment(),
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
@@ -301,7 +300,6 @@ class ProfileInfoFragment : BaseFragment(),
             editEmail.setText(SharedPrefUtils.getUserDetailModel(activity)?.email)
         }*/
 
-
         if (!apiGetResponse.cityName.isNullOrBlank()) editLocation.setText(apiGetResponse.cityName)
         if (apiGetResponse.latitude != null) lat = apiGetResponse.latitude!!
 
@@ -341,7 +339,6 @@ class ProfileInfoFragment : BaseFragment(),
 //            editLanguage.visibility = View.GONE
             linearLanguage.visibility = View.GONE
             textEditLanguage.visibility = View.GONE
-
         }
 
         if (apiGetResponse.interests != null && apiGetResponse.interests!!.isNotEmpty()) {
@@ -368,7 +365,6 @@ class ProfileInfoFragment : BaseFragment(),
 //            editInterest.visibility = View.GONE
             linearInterest.visibility = View.GONE
             textEditInterest.visibility = View.GONE
-
         }
 
         if (apiGetResponse.isMother != null && apiGetResponse.isMother.equals("1") && apiGetResponse.kids != null && apiGetResponse.kids!!.isNotEmpty()) {
@@ -387,7 +383,7 @@ class ProfileInfoFragment : BaseFragment(),
 
         if (apiGetResponse.gender != null) {
             val selectionPosition =
-                spinAdapter.getPosition(StringUtils.firstLetterToUpperCase(apiGetResponse.gender));
+                spinAdapter.getPosition(StringUtils.firstLetterToUpperCase(apiGetResponse.gender))
             genderSpinner.setSelection(selectionPosition)
         }
         if (apiGetResponse.dob != null) {
@@ -447,7 +443,6 @@ class ProfileInfoFragment : BaseFragment(),
             //            varifyNumberWithFacebookAccountKit()
             val intent = Intent(activity, OTPActivity::class.java)
             startActivityForResult(intent, VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE)
-
         }
 
         /*textApplyReferral.setOnClickListener {
@@ -459,12 +454,12 @@ class ProfileInfoFragment : BaseFragment(),
                 if (ActivityCompat.checkSelfPermission(
                         it.context,
                         Manifest.permission.CAMERA
-                    ) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(
+                    ) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(
                         it.context,
                         Manifest.permission.READ_EXTERNAL_STORAGE
-                    ) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(
+                    ) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(
                         it.context,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
                     ) != PackageManager.PERMISSION_GRANTED
@@ -477,12 +472,12 @@ class ProfileInfoFragment : BaseFragment(),
                 } else if (ActivityCompat.checkSelfPermission(
                         it.context,
                         Manifest.permission.CAMERA
-                    ) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(
+                    ) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(
                         it.context,
                         Manifest.permission.READ_EXTERNAL_STORAGE
-                    ) == PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(
+                    ) == PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(
                         it.context,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
                     ) == PackageManager.PERMISSION_GRANTED
@@ -504,7 +499,6 @@ class ProfileInfoFragment : BaseFragment(),
             Places.initialize(BaseApplication.getAppContext(), AppConstants.PLACES_API_KEY)
         }
 
-
         editLocation.setOnClickListener {
             val fieldsArr = arrayOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG).asList()
             val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fieldsArr)
@@ -512,7 +506,6 @@ class ProfileInfoFragment : BaseFragment(),
                 .build(it.context)
 
             startActivityForResult(intent, REQUEST_SELECT_PLACE)
-
         }
 
         textVerify = containerView.findViewById(R.id.textVerify)
@@ -568,7 +561,6 @@ class ProfileInfoFragment : BaseFragment(),
                 } else {
                     linearKidsEmptyView.visibility = View.GONE
                 }
-
             }
         }
 
@@ -588,7 +580,6 @@ class ProfileInfoFragment : BaseFragment(),
             if (validateChildData()) {
                 createKidsDetailDynamicView()
             } else {
-
             }
         }
 
@@ -674,28 +665,30 @@ class ProfileInfoFragment : BaseFragment(),
         spinnerGender.adapter = spinAdapter
         spinnerGender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                adapter: AdapterView<*>, v: View,
-                position: Int, id: Long
+                adapter: AdapterView<*>,
+                v: View,
+                position: Int,
+                id: Long
             ) {
                 spinnerGender.setSelection(position)
             }
 
             override fun onNothingSelected(arg0: AdapterView<*>) {
-
             }
         }
         genderSpinner.adapter = spinAdapter
         genderSpinner.setSelection(1)
         genderSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                adapter: AdapterView<*>, v: View,
-                position: Int, id: Long
+                adapter: AdapterView<*>,
+                v: View,
+                position: Int,
+                id: Long
             ) {
                 genderSpinner.setSelection(position)
             }
 
             override fun onNothingSelected(arg0: AdapterView<*>) {
-
             }
         }
 
@@ -714,11 +707,9 @@ class ProfileInfoFragment : BaseFragment(),
             .setOnCheckedChangeListener { radioGroup, i ->
                 when (i) {
                     0 -> {
-
                     }
 
                     1 -> {
-
                     }
                 }
             }
@@ -743,7 +734,6 @@ class ProfileInfoFragment : BaseFragment(),
                         linearKidsEmptyView.visibility = View.VISIBLE
                         layoutDynamicNumberOfKids.visibility = View.VISIBLE
                     }
-
                 }
             }
 
@@ -757,8 +747,8 @@ class ProfileInfoFragment : BaseFragment(),
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 activity as RewardsContainerActivity,
                 Manifest.permission.READ_EXTERNAL_STORAGE
-            )
-            || ActivityCompat.shouldShowRequestPermissionRationale(
+            ) ||
+            ActivityCompat.shouldShowRequestPermissionRationale(
                 activity as RewardsContainerActivity,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) || ActivityCompat.shouldShowRequestPermissionRationale(
@@ -868,7 +858,7 @@ class ProfileInfoFragment : BaseFragment(),
         val image = File.createTempFile(
             imageFileName, // prefix
             ".jpg", // suffix
-            dir      // directory
+            dir // directory
         )
 
         mCurrentPhotoPath = "file:" + image.absolutePath
@@ -897,11 +887,12 @@ class ProfileInfoFragment : BaseFragment(),
         // prepare call in Retrofit 2.0
         val imageUploadAPI = retro.create(ImageUploadAPI::class.java)
 
-        val call = imageUploadAPI.uploadImage(//userId,
+        val call = imageUploadAPI.uploadImage(
+            // userId,
             imageType,
             requestBodyFile
         )
-        //asynchronous call
+        // asynchronous call
         call.enqueue(object : Callback<ImageUploadResponse> {
             override fun onResponse(
                 call: Call<ImageUploadResponse>,
@@ -912,7 +903,7 @@ class ProfileInfoFragment : BaseFragment(),
 
                 removeProgressDialog()
                 if (responseModel!!.code != 200) {
-                    //                                 showToast(getString(R.string.toast_response_error));
+                    // showToast(getString(R.string.toast_response_error));
                     return
                 } else {
                     if (!StringUtils.isNullOrEmpty(responseModel.data.result.url)) {
@@ -965,7 +956,6 @@ class ProfileInfoFragment : BaseFragment(),
             }
         })
     }
-
 
     fun prepareDataForPosting(): Boolean {
         if (editFirstName.text.trim().isEmpty()) {
@@ -1031,8 +1021,6 @@ class ProfileInfoFragment : BaseFragment(),
             }
         }
 
-
-
         if (isvalid()) {
             apiGetResponse.email = editEmail.text.toString().trim()
         } else {
@@ -1054,10 +1042,8 @@ class ProfileInfoFragment : BaseFragment(),
             address = editLocation.text.toString()
         }
 
-
         apiGetResponse.latitude = lat
         apiGetResponse.longitude = lng
-
 
         if (radioGroupWorkingStatus.checkedRadioButtonId == R.id.radiokWorking) {
             apiGetResponse.workStatus = "1"
@@ -1086,9 +1072,7 @@ class ProfileInfoFragment : BaseFragment(),
                 DateTimeUtils.convertStringToMilliTimestamp(textDOB.text.toString()).toString()
         }
 
-
         preSelectedLanguage.removeAll(Collections.singleton(""))
-
 
         if (preSelectedLanguage.isEmpty()) {
             Toast.makeText(
@@ -1116,7 +1100,6 @@ class ProfileInfoFragment : BaseFragment(),
                 try {
                     preSelectedInterestForPosting.add(it)
                 } catch (ex: Exception) {
-
                 }
             }
             apiGetResponse.interests = preSelectedInterestForPosting
@@ -1361,7 +1344,6 @@ class ProfileInfoFragment : BaseFragment(),
                 logger.logEvent(AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION, bundle)
             }
         } catch (e: Exception) {
-
         }
     }
 
@@ -1397,7 +1379,6 @@ class ProfileInfoFragment : BaseFragment(),
         }
     }
 
-
     private fun fetchCityData() {
         BaseApplication.getInstance().retrofit.create(ConfigAPIs::class.java).getCityConfigRx()
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -1432,7 +1413,6 @@ class ProfileInfoFragment : BaseFragment(),
                             }
                         }
                     } else {
-
                     }
                 }
 
@@ -1588,7 +1568,6 @@ class ProfileInfoFragment : BaseFragment(),
             } else if (linearKidsEmptyView.visibility == View.VISIBLE && linearKidsDetail.childCount == 0) {
                 textDeleteChild.visibility = View.GONE
             }
-
         }
         var spinnerGender = indexView.findViewById<Spinner>(R.id.spinnerGender)
         var textDOB = indexView.findViewById<TextView>(R.id.textKidsDOB)
@@ -1601,14 +1580,15 @@ class ProfileInfoFragment : BaseFragment(),
         spinnerGender.adapter = spinAdapter
         spinnerGender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                adapter: AdapterView<*>, v: View,
-                position: Int, id: Long
+                adapter: AdapterView<*>,
+                v: View,
+                position: Int,
+                id: Long
             ) {
                 spinnerGender.setSelection(position)
             }
 
             override fun onNothingSelected(arg0: AdapterView<*>) {
-
             }
         }
 
@@ -1619,7 +1599,7 @@ class ProfileInfoFragment : BaseFragment(),
 
         if (gender != null && !date.isNullOrEmpty()) {
             textDOB.text = date
-            val selectionPosition = spinAdapter.getPosition(gender);
+            val selectionPosition = spinAdapter.getPosition(gender)
             spinnerGender.setSelection(selectionPosition)
             if (!name.isNullOrEmpty()) {
                 editKidsName.setText(name)
@@ -1666,7 +1646,7 @@ class ProfileInfoFragment : BaseFragment(),
                     val catTextView = subsubLL.getChildAt(0) as TextView
                     catTextView.setText(it)
                     catTextView.isSelected = true
-                    //subsubLL.tag = it
+                    // subsubLL.tag = it
                     floatingInterest.addView(subsubLL)
                 }
             }
@@ -1699,7 +1679,7 @@ class ProfileInfoFragment : BaseFragment(),
                     val catTextView = subsubLL.getChildAt(0) as TextView
                     catTextView.setText(it)
                     catTextView.isSelected = true
-                    //subsubLL.tag = it
+                    // subsubLL.tag = it
                     floatingLanguage.addView(subsubLL)
                 }
             }
@@ -1761,4 +1741,3 @@ class ProfileInfoFragment : BaseFragment(),
         return true
     }
 }
-

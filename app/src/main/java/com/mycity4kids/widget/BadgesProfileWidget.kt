@@ -94,7 +94,6 @@ class BadgesProfileWidget : LinearLayout {
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         })
-
     }
 
     private fun processResponse(data: ArrayList<BadgeListResponse.BadgeListData.BadgeListResult>) {

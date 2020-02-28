@@ -33,8 +33,11 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener, 
     private var callbackManager: CallbackManager? = null
     private val list = mutableListOf<FBObject>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.user_follow_fb_suggestion_tab_fragment, container, false)
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
         recyclerView = view.findViewById(R.id.recyclerView)
@@ -94,8 +97,6 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener, 
                 list.get(position).followStatus = "0"
                 adapter?.notifyDataSetChanged()
             }
-
         }
-
     }
 }

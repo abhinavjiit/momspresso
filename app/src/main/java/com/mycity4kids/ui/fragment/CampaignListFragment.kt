@@ -102,8 +102,11 @@ class CampaignListFragment : BaseFragment() {
                 }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         containerView = inflater.inflate(R.layout.reward_campaign, container, false)
         backIcon = containerView.findViewById(R.id.back)
         ashimmerFrameLayout = containerView.findViewById(R.id.shimmer1)
@@ -311,12 +314,10 @@ class CampaignListFragment : BaseFragment() {
         ashimmerFrameLayout.startShimmerAnimation()
     }
 
-
     override fun onPause() {
         super.onPause()
         ashimmerFrameLayout.stopShimmerAnimation()
     }
-
 
     fun setDefaultCampaignValues() {
         upperTextHeader.text = resources.getString(R.string.campaign_list_sorry_not_eligible)
@@ -384,7 +385,6 @@ class CampaignListFragment : BaseFragment() {
         }
     }
 
-
     private fun getProfileCompletionPecentage(result: UserDetailResult): Int {
         val totalProgress = 100
         var progress = 0
@@ -426,7 +426,6 @@ class CampaignListFragment : BaseFragment() {
         call.enqueue(getTotalPayout)
     }
 
-
     internal var getTotalPayout: Callback<TotalPayoutResponse> = object : Callback<TotalPayoutResponse> {
         override fun onResponse(call: Call<TotalPayoutResponse>, response: retrofit2.Response<TotalPayoutResponse>) {
             if (response.body() == null) {
@@ -456,4 +455,3 @@ class CampaignListFragment : BaseFragment() {
         }
     }
 }
-

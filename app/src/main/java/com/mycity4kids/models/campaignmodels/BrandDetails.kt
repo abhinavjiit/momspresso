@@ -32,5 +32,4 @@ class BrandDetails {
     @SerializedName("updated_time")
     @Expose
     var updatedTime: Int = 0
-
 }

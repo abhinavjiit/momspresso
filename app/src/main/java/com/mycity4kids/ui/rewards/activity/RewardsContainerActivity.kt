@@ -30,7 +30,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-
 class RewardsContainerActivity : BaseActivity(),
         RewardsPersonalInfoFragment.SaveAndContinueListener,
         ProfileInfoFragment.SaveAndContinueListener,
@@ -138,7 +137,6 @@ class RewardsContainerActivity : BaseActivity(),
 
         /*initialize XML components*/
         initializeXMLComponents()
-
     }
 
     private fun initializeXMLComponents() {
@@ -233,7 +231,6 @@ class RewardsContainerActivity : BaseActivity(),
         showProgressDialog(resources.getString(R.string.please_wait))
         BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).postForDefaultAccount(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
             override fun onComplete() {
-
             }
 
             override fun onSubscribe(d: Disposable) {
@@ -249,17 +246,13 @@ class RewardsContainerActivity : BaseActivity(),
                     removeProgressDialog()
 
                     Toast.makeText(this@RewardsContainerActivity, t.reason.toString(), Toast.LENGTH_SHORT).show()
-
                 }
-
             }
 
             override fun onError(e: Throwable) {
                 removeProgressDialog()
                 Log.e("exception in error", e.message.toString())
             }
-
-
         })
     }
 

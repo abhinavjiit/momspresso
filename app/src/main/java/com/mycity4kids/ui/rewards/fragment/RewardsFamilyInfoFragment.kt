@@ -1,6 +1,5 @@
 package com.mycity4kids.ui.rewards.fragment
 
-
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -40,10 +39,10 @@ import org.apmem.tools.layouts.FlowLayout
 class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDoneListener {
     override fun onItemClick(selectedValueName: ArrayList<String>, popupType: String) {
         if (popupType == Constants.PopListRequestType.INTEREST.name) {
-            //preSelectedInterest = selectedValue
+            // preSelectedInterest = selectedValue
             setFloatingLayout(selectedValueName, popupType)
         } else if (popupType == Constants.PopListRequestType.LANGUAGE.name) {
-            //preSelectedDurables = selectedValue
+            // preSelectedDurables = selectedValue
             setFloatingLayout(selectedValueName, popupType)
         }
     }
@@ -74,7 +73,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                 val catTextView = subsubLL.getChildAt(0) as TextView
                 catTextView.setText(it)
                 catTextView.isSelected = true
-                //subsubLL.tag = it
+                // subsubLL.tag = it
                 floatingInterest.addView(subsubLL)
             }
         } else if (popupType == Constants.PopListRequestType.LANGUAGE.name) {
@@ -102,7 +101,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                 val catTextView = subsubLL.getChildAt(0) as TextView
                 catTextView.setText(it)
                 catTextView.isSelected = true
-                //subsubLL.tag = it
+                // subsubLL.tag = it
                 floatingLanguage.addView(subsubLL)
             }
         }
@@ -159,9 +158,11 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                 }
     }
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.fragment_rewards_family_info, container, false)
         checkAreYouExpecting = containerView.findViewById(R.id.checkAreYouExpecting)
@@ -198,7 +199,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                 }
 
                 override fun onSubscribe(d: Disposable) {
-
                 }
 
                 override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
@@ -207,7 +207,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                         /*setting values to components*/
                         setValuesToComponents()
                     } else {
-
                     }
                 }
 
@@ -244,7 +243,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
             editLanguage.visibility = View.VISIBLE
             linearLanguage.visibility = View.GONE
             textEditLanguage.visibility = View.GONE
-
         }
 
         if (apiGetResponse.interest != null && apiGetResponse.interest!!.isNotEmpty()) {
@@ -265,7 +263,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
             editInterest.visibility = View.VISIBLE
             linearInterest.visibility = View.GONE
             textEditInterest.visibility = View.GONE
-
         }
 
         if (apiGetResponse.isMother != null && apiGetResponse.kidsInfo != null && apiGetResponse.kidsInfo!!.isNotEmpty()) {
@@ -372,7 +369,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                 try {
                     preSelectedInterestForPosting.add(it.toInt())
                 } catch (ex: Exception) {
-
                 }
             }
             apiGetResponse.interest = preSelectedInterestForPosting
@@ -411,7 +407,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                 Log.e("dob text is ", RewardsFamilyInfoFragment.textKidsDOB.text.toString())
                 if (linearKidsEmptyView.visibility == View.VISIBLE) {
                     if (!RewardsFamilyInfoFragment.textKidsDOB.text.isNullOrEmpty()) {
-                        //if (apiGetResponse.kidsInfo.isNullOrEmpty()) {
+                        // if (apiGetResponse.kidsInfo.isNullOrEmpty()) {
                         var kidsInfoResponse = KidsInfoResponse()
                         kidsInfoResponse.gender = if (spinnerGender.selectedItemPosition == 0) {
                             0
@@ -421,7 +417,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                         kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textKidsDOB.text.toString())
                         kidsInfoResponse.name = editKidsName.text.toString()
                         apiGetResponse.kidsInfo!!.add(kidsInfoResponse)
-                        //}
+                        // }
                     } else {
                         Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
                         return false
@@ -495,7 +491,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         var spinnerGender = indexView.findViewById<Spinner>(R.id.spinnerGender)
         var textDOB = indexView.findViewById<TextView>(R.id.textKidsDOB)
 
-        //textHeader.setText(String.format(resources.getString(R.string.kids_number), linearKidsDetail.childCount+1))
+        // textHeader.setText(String.format(resources.getString(R.string.kids_number), linearKidsDetail.childCount+1))
         val genderList = java.util.ArrayList<String>()
         genderList.add("Male")
         genderList.add("Female")
@@ -503,13 +499,16 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         val spinAdapter = CustomSpinnerAdapter(activity, genderList)
         spinnerGender.adapter = spinAdapter
         spinnerGender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapter: AdapterView<*>, v: View,
-                                        position: Int, id: Long) {
+            override fun onItemSelected(
+                adapter: AdapterView<*>,
+                v: View,
+                position: Int,
+                id: Long
+            ) {
                 spinnerGender.setSelection(position)
             }
 
             override fun onNothingSelected(arg0: AdapterView<*>) {
-
             }
         }
 
@@ -559,7 +558,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                 }
 
                 override fun onSubscribe(d: Disposable) {
-
                 }
 
                 override fun onNext(response: BaseResponseGeneric<SetupBlogData>) {
@@ -569,7 +567,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                         }
                         submitListener.FamilyOnSubmit()
                     } else {
-
                     }
                 }
 

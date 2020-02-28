@@ -26,9 +26,7 @@ import com.mycity4kids.ui.videochallengenewui.ExpandableHeightGridView
 import retrofit2.Call
 import retrofit2.Callback
 
-
 class ShortStoryThumbnailListFragment : BaseFragment() {
-
 
     private lateinit var collectionGridView: ExpandableHeightGridView
     private lateinit var shortShortiesAdapter: ShortStoriesAdapter
@@ -42,7 +40,6 @@ class ShortStoryThumbnailListFragment : BaseFragment() {
     private var mLodingView: RelativeLayout? = null
     private lateinit var shimmer1: ShimmerFrameLayout
     private var bottomLoadingView: RelativeLayout? = null
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.short_story_thumbnail_list_fragment, container, false)

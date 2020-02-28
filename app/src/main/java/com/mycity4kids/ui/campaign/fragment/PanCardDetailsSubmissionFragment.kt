@@ -30,7 +30,6 @@ import retrofit2.HttpException
 import java.io.InputStreamReader
 import java.util.regex.Pattern
 
-
 class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
 
     private var panNumber: String? = null
@@ -49,12 +48,14 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                     arguments = Bundle().apply {
                         this.putBoolean("isComingFromRewards", isComingFromRewards)
                     }
-
                 }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.pancard_detail_submission_fragment, container, false)
         back = view.findViewById(R.id.back)
         toolbar = view.findViewById(R.id.toolbar)
@@ -113,7 +114,6 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                     panNumber = response.data!!.result.pan
                     panCardDetailEditTextView.setText(panNumber)
                 } else {
-
                 }
             }
 
@@ -223,7 +223,6 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
         if (context is RewardsContainerActivity) {
             submitOnClickListener = context
         } else if (context is CampaignContainerActivity) {
-
         }
     }
 

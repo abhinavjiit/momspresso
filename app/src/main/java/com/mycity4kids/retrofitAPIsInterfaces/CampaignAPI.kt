@@ -17,37 +17,40 @@ import retrofit2.http.*
 interface CampaignAPI {
 
     @GET("/rewards/v1/campaigns/generic/")
-    fun getDefaultCampaignDetail()
-            : Observable<BaseResponseGeneric<CampaignDetailResult>>
-
+    fun getDefaultCampaignDetail():
+            Observable<BaseResponseGeneric<CampaignDetailResult>>
 
     @GET("/rewards/v1/campaigns/recommendations/{userId}")
-    fun getCampaignList(@Path("userId") userId: String? = null,
-                        @Query("start") start: Int,
-                        @Query("end") end: Int,
-                        @Query("v") v: Double)
-            : Call<AllCampaignDataResponse>
+    fun getCampaignList(
+        @Path("userId") userId: String? = null,
+        @Query("start") start: Int,
+        @Query("end") end: Int,
+        @Query("v") v: Double
+    ):
+            Call<AllCampaignDataResponse>
 
     @GET("/rewards/v1/campaigns/{campaign-id}")
-    fun getCampaignDetail(@Path("campaign-id") campaignId: Int,
-                          @Query("v") v: Double)
-            : Observable<BaseResponseGeneric<CampaignDetailResult>>
+    fun getCampaignDetail(
+        @Path("campaign-id") campaignId: Int,
+        @Query("v") v: Double
+    ):
+            Observable<BaseResponseGeneric<CampaignDetailResult>>
 
     @GET("/rewards/v1/preproofs/{campaign-id}")
-    fun getPreProof(@Path("campaign-id") campaignId: Int)
-            : Call<PreProofResponse>
+    fun getPreProof(@Path("campaign-id") campaignId: Int):
+            Call<PreProofResponse>
 
     @GET("/v1/utilities/faqs/rewards/")
-    fun getFaqsList()
-            : Observable<BaseResponseGeneric<FaqResponse>>
+    fun getFaqsList():
+            Observable<BaseResponseGeneric<FaqResponse>>
 
     @GET("rewards/v1/campaigns/submissions/{campaignId}")
-    fun getSubmissionDetail(@Path("campaignId") campaignId: Int)
-            : Observable<BaseResponseGeneric<GetCampaignSubmissionDetailsResponse>>
+    fun getSubmissionDetail(@Path("campaignId") campaignId: Int):
+            Observable<BaseResponseGeneric<GetCampaignSubmissionDetailsResponse>>
 
     @DELETE("rewards/v1/campaigns/proofs/{proofId}")
-    fun deleteProofById(@Path("proofId") proofId: Int)
-            : Observable<BaseResponseGeneric<RewardsDetailsResultResonse>>
+    fun deleteProofById(@Path("proofId") proofId: Int):
+            Observable<BaseResponseGeneric<RewardsDetailsResultResonse>>
 
     @GET("/payments/v1/account/")
     fun getPaymentModes(): Observable<BaseResponseGeneric<PaymentModeListModal>>
@@ -65,29 +68,28 @@ interface CampaignAPI {
     fun getAllPaymentModeDetails(@Path("id") id: Int): Observable<BaseResponseGeneric<GetAllPaymentDetails>>
 
     @POST("rewards/v1/campaigns/proofs/")
-    fun postProofToServer(@Body proofPostModel: ProofPostModel)
-            : Observable<BaseResponseGeneric<RewardsDetailsResultResonse>>
+    fun postProofToServer(@Body proofPostModel: ProofPostModel):
+            Observable<BaseResponseGeneric<RewardsDetailsResultResonse>>
 
     @PUT("rewards/v1/campaigns/proofs/{proofId}")
-    fun updateProofToServer(@Path("proofId") proofId: Int, @Body proofPostModel: ProofPostModel)
-            : Observable<BaseResponseGeneric<RewardsDetailsResultResonse>>
-
+    fun updateProofToServer(@Path("proofId") proofId: Int, @Body proofPostModel: ProofPostModel):
+            Observable<BaseResponseGeneric<RewardsDetailsResultResonse>>
 
     @POST("rewards/v1/campaigns/participate/")
-    fun postRegisterCampaign(@Body body: CampaignParticipate)
-            : Call<ParticipateCampaignResponse>
+    fun postRegisterCampaign(@Body body: CampaignParticipate):
+            Call<ParticipateCampaignResponse>
 
     @POST("rewards/v1/campaigns/subscribe/{campaignId}")
-    fun postSubscribeCampaign(@Path("campaignId") campaignId: Int)
-            : Call<ParticipateCampaignResponse>
+    fun postSubscribeCampaign(@Path("campaignId") campaignId: Int):
+            Call<ParticipateCampaignResponse>
 
     @POST("rewards/v1/campaigns/referrals/")
-    fun postReferralCampaign(@Body body: CampaignReferral)
-            : Call<ParticipateCampaignResponse>
+    fun postReferralCampaign(@Body body: CampaignReferral):
+            Call<ParticipateCampaignResponse>
 
     @POST("/payments/v1/account/")
-    fun addAccountDetail(@Body addAccountDetailModal: AddAccountDetailModal)
-            : Observable<BaseResponseGeneric<DefaultData>>
+    fun addAccountDetail(@Body addAccountDetailModal: AddAccountDetailModal):
+            Observable<BaseResponseGeneric<DefaultData>>
 
     @GET("/payments/v1/user/pan/")
     fun getPanNumber(): Observable<BaseResponseGeneric<ProofPostModel>>
@@ -102,21 +104,19 @@ interface CampaignAPI {
     fun addPanNumber(@Body proofPostModel: ProofPostModel): Observable<BaseResponseGeneric<ProofPostModel>>
 
     @GET("/rewards/v2/users/payments/counts/{userId}")
-    fun getTotalPayout(@Path("userId") userId: String? = null)
-            : Call<TotalPayoutResponse>
-
+    fun getTotalPayout(@Path("userId") userId: String? = null):
+            Call<TotalPayoutResponse>
 
     @GET("/rewards/v2/users/payments/{userId}")
-    fun getAllCampaignTotalPayout(@Path("userId") userId: String? = null)
-            : Call<AllCampaignTotalPayoutResponse>
-
+    fun getAllCampaignTotalPayout(@Path("userId") userId: String? = null):
+            Call<AllCampaignTotalPayoutResponse>
 
     @GET("rewards/v1/campaigns/proofs/instructions/{campaignId}")
     fun getProofInstruction(@Path("campaignId") campaignId: Int): Observable<BaseResponseGeneric<ProofInstructionResult>>
 
     @POST("/rewards/v1/campaigns/participations/withdraws/")
-    fun unapplyCampaign(@Body body: CampaignParticipate)
-            : Call<ParticipateCampaignResponse>
+    fun unapplyCampaign(@Body body: CampaignParticipate):
+            Call<ParticipateCampaignResponse>
 
     @GET
     fun getAdSlotData(@Url url: String): Call<ResponseBody>

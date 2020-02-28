@@ -3,7 +3,6 @@ package com.mycity4kids.models.campaignmodels
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-
 class FaqResponse {
     @SerializedName("faqs")
     @Expose
@@ -17,6 +16,4 @@ class QuestionAnswerResponse {
     @SerializedName("question")
     @Expose
     var question: String? = null
-
 }
-

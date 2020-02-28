@@ -12,7 +12,6 @@ import com.mycity4kids.ui.activity.FeaturedOnActivity
 import com.squareup.picasso.Picasso
 import java.util.*
 
-
 class FeatureOnRecyclerAdapter(private val mListener: RecyclerViewClickListener) : RecyclerView.Adapter<FeatureOnRecyclerAdapter.FeatureOnViewHolder>() {
     private var featuredList: ArrayList<UserCollectionsModel>? = null
     internal var recyclerView: RecyclerView? = null

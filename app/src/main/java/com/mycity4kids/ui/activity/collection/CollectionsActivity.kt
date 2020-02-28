@@ -31,7 +31,6 @@ class CollectionsActivity : BaseActivity() {
         back = findViewById(R.id.back)
         tabs = findViewById(R.id.collectionTabLayout)
 
-
         if (AppUtils.isPrivateProfile(intent.getStringExtra("userId"))) {
             isPrivate = true
             userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()
@@ -66,8 +65,5 @@ class CollectionsActivity : BaseActivity() {
                 collectionsViewPager.currentItem = tab!!.position
             }
         })
-
-
     }
-
 }

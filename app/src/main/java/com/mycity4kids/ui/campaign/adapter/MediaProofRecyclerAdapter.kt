@@ -11,8 +11,10 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.campaign_image_proof_sreenshots.view.*
 
 class MediaProofRecyclerAdapter(
-        private val mediaLists: List<CampaignProofResponse>, private val context: Fragment)
-    : RecyclerView.Adapter<MediaProofRecyclerAdapter.ViewHolder>() {
+    private val mediaLists: List<CampaignProofResponse>,
+    private val context: Fragment
+) :
+    RecyclerView.Adapter<MediaProofRecyclerAdapter.ViewHolder>() {
 
     private val mOnClickListener: View.OnClickListener
     private var campaignProofResponse: List<CampaignProofResponse> = mediaLists
@@ -34,20 +36,18 @@ class MediaProofRecyclerAdapter(
         if (!campaignProofResponse.isNullOrEmpty()) {
             if (position < campaignProofResponse.size) {
                 val item = campaignProofResponse.get(position)
-                if(item.isTemplate){
+                if (item.isTemplate) {
                     holder.relativeParent.setOnClickListener {
                         clickListener.onCellClick()
                     }
 
                     holder.imageScreenshot.setImageDrawable(context.resources.getDrawable(R.drawable.ic_add_proof))
                     holder.imageEdit.visibility = View.GONE
-
-                }else{
+                } else {
                     Picasso.get().load(item.url)
                             .placeholder(R.drawable.ic_add_proof).error(R.drawable.ic_add_proof).into(holder.imageScreenshot)
                     if (item.proofStatus == 1 || item.proofStatus == 0) {
                         holder.imageEdit.visibility = View.VISIBLE
-
                     } else if (item.proofStatus == 2) {
                         holder.imageAcceptDeleteProof.setImageDrawable(context.context!!.resources.getDrawable(R.drawable.ic_delete_cross))
                         holder.imageEdit.visibility = View.VISIBLE
@@ -73,7 +73,6 @@ class MediaProofRecyclerAdapter(
                         setOnClickListener(mOnClickListener)
                     }
                 }
-
             } else {
                 holder.relativeParent.setOnClickListener {
                     clickListener.onCellClick()

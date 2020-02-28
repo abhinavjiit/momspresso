@@ -62,7 +62,6 @@ import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
-
 class ShortStoriesCardActivity : BaseActivity() {
     private val REQUEST_INIT_PERMISSION = 1
     private val PERMISSIONS_INIT = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -382,7 +381,6 @@ class ShortStoriesCardActivity : BaseActivity() {
                 Crashlytics.logException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
-
         }
 
         override fun onFailure(call: Call<ArticleDraftResponse>, t: Throwable) {
@@ -452,10 +450,10 @@ class ShortStoriesCardActivity : BaseActivity() {
 
     fun requestStoragePermissions() {
         // BEGIN_INCLUDE(contacts_permission_request)
-        if (ActivityCompat.checkSelfPermission(this@ShortStoriesCardActivity, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)
-                || ActivityCompat.shouldShowRequestPermissionRationale(this,
+        if (ActivityCompat.checkSelfPermission(this@ShortStoriesCardActivity, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE) ||
+                ActivityCompat.shouldShowRequestPermissionRationale(this,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             Snackbar.make(mLayout, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
@@ -705,7 +703,7 @@ class ShortStoriesCardActivity : BaseActivity() {
                     0 <= green && green <= 255 &&
                     0 <= blue && blue <= 255 &&
                     0f <= alpha && alpha <= 1f) {
-                return Color.argb((alpha * 255).toInt(), red, green, blue);
+                return Color.argb((alpha * 255).toInt(), red, green, blue)
             }
         } catch (e: Exception) {
             Crashlytics.logException(e)
@@ -749,10 +747,10 @@ class ShortStoriesCardActivity : BaseActivity() {
 
     fun setEnabledDisabled(isEnabled: Boolean) {
         if (isEnabled) {
-            back.setColorFilter(ContextCompat.getColor(this, R.color.black_color), PorterDuff.Mode.SRC_IN);
+            back.setColorFilter(ContextCompat.getColor(this, R.color.black_color), PorterDuff.Mode.SRC_IN)
             back.isClickable = true
         } else {
-            back.setColorFilter(ContextCompat.getColor(this, R.color.color_979797), PorterDuff.Mode.SRC_IN);
+            back.setColorFilter(ContextCompat.getColor(this, R.color.color_979797), PorterDuff.Mode.SRC_IN)
             back.isClickable = false
         }
     }
