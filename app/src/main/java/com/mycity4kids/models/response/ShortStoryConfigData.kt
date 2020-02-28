@@ -17,8 +17,6 @@ class ShortStoryConfigData {
     @SerializedName("status")
     @Expose
     var status: String? = null
-
-
 }
 
 class ShortStoryConfigDataResponse {

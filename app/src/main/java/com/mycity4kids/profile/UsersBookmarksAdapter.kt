@@ -84,8 +84,8 @@ class UsersBookmarksAdapter(private val mListener: RecyclerViewClickListener) : 
             }
         } else if (holder is UserVideoBookmarksViewHolder) {
             holder.contentTitleTextView.text = mixFeedResult?.get(position)?.title
-            holder.authorTextView.text = ""//holder.itemView.context.getString(R.string.user_activities_bookmarks_by) +
-            //" " + mixFeedResult?.get(position)?.userName
+            holder.authorTextView.text = "" // holder.itemView.context.getString(R.string.user_activities_bookmarks_by) +
+            // " " + mixFeedResult?.get(position)?.userName
 
             if (0 == mixFeedResult?.get(position)?.view_count) {
                 holder.viewCountTextView.visibility = View.GONE
@@ -117,7 +117,6 @@ class UsersBookmarksAdapter(private val mListener: RecyclerViewClickListener) : 
             } catch (e: Exception) {
                 holder.contentImageView.setBackgroundResource(R.drawable.default_article)
             }
-
         }
     }
 

@@ -42,9 +42,7 @@ class ShortStoryChallengeTopicsAdapter(private val clickListener: RecyclerViewCl
 
     fun setShortStoryChallengesData(data: ArrayList<Topics>) {
         shortStoryChallengesList = data
-
     }
-
 
     class ViewHolder(itemView: View, private val clickListener: RecyclerViewClickListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         override fun onClick(v: View) {

@@ -20,7 +20,6 @@ class ShortStoriesAdapter(activity: Context, showCategory: Boolean) : BaseAdapte
     var showCategory: Boolean = showCategory
     private var userCollectionsTopicList = ArrayList<Images>()
 
-
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var view = convertView
         val viewHolder: ViewHolder
@@ -30,7 +29,6 @@ class ShortStoriesAdapter(activity: Context, showCategory: Boolean) : BaseAdapte
             viewHolder.tagImageView = view.findViewById<ImageView>(R.id.tagImageView)
             viewHolder.topicsNameTextView = view.findViewById<TextView>(R.id.topicsTextView)
             view.tag = viewHolder
-
         } else {
             viewHolder = view.tag as ViewHolder
         }
@@ -58,7 +56,6 @@ class ShortStoriesAdapter(activity: Context, showCategory: Boolean) : BaseAdapte
 
     fun getUserColletions(collectionsTopics: ArrayList<Images>) {
         userCollectionsTopicList = collectionsTopics
-
     }
 
     override fun getItem(position: Int): Any {
@@ -77,9 +74,5 @@ class ShortStoriesAdapter(activity: Context, showCategory: Boolean) : BaseAdapte
 
         var tagImageView: ImageView? = null
         var topicsNameTextView: TextView? = null
-
-
     }
 }
-
-

@@ -17,7 +17,6 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.mycity4kids.utils.AppUtils
 
-
 class CampaignCongratulationFragment : BaseFragment() {
 
     private lateinit var whatsappShareImageView: ImageView
@@ -34,14 +33,15 @@ class CampaignCongratulationFragment : BaseFragment() {
         fun newInstance() =
                 CampaignCongratulationFragment().apply {
                     arguments = Bundle().apply {
-
                     }
-
                 }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.campaign_congratulation_layout, container, false)
         whatsappShareImageView = view.findViewById(R.id.whatsappShareImageView)
         facebookShareImageView = view.findViewById(R.id.facebookShareImageView)
@@ -56,7 +56,7 @@ class CampaignCongratulationFragment : BaseFragment() {
         cancel.setOnClickListener {
             Utils.campaignEvent(activity, "Campaign Listing", "Thank you screen", "Close", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
             submitListener.congratulateScreenDone()
-//.setText("http://www.momspresso.com/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
+// .setText("http://www.momspresso.com/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
         }
 
         whatsappShareImageView.setOnClickListener {

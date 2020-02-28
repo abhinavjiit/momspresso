@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import com.mycity4kids.ui.fragment.UserCreatedCollectionsFragment
 import com.mycity4kids.ui.fragment.UserFollowedCollectionsFragment
 
-
 class CollectionPagerAdapter(val fragmentManager: FragmentManager, var isPrivate: Boolean, var userId: String) : FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getCount(): Int {
@@ -15,7 +14,6 @@ class CollectionPagerAdapter(val fragmentManager: FragmentManager, var isPrivate
             2
         else
             1
-
     }
 
     override fun getItem(position: Int): Fragment {
@@ -30,7 +28,6 @@ class CollectionPagerAdapter(val fragmentManager: FragmentManager, var isPrivate
             } else {
                 return UserFollowedCollectionsFragment()
             }
-
         } else {
             val userCreatedCollectionsFragment = UserCreatedCollectionsFragment()
             val bundle = Bundle()
@@ -39,6 +36,4 @@ class CollectionPagerAdapter(val fragmentManager: FragmentManager, var isPrivate
             return userCreatedCollectionsFragment
         }
     }
-
-
 }

@@ -138,6 +138,5 @@ class MilestonesFragment : BaseFragment(), View.OnClickListener, MilestonesListA
     }
 
     override fun onClick(v: View) {
-
     }
 }

@@ -44,7 +44,6 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
             Picasso.get().load(imageUrl)
                     .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageView)
             userCollectionsListModel.imageUrl = imageUrl
-
         } catch (e: Exception) {
             collectionImageView.setImageResource(R.drawable.default_article)
         }
@@ -52,7 +51,6 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
 
     override fun onClick(position: Int) {
         deleteCollectionItem(position)
-
     }
 
     private lateinit var collectionItemRecyclerView: RecyclerView
@@ -157,7 +155,6 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                         dataList.addAll(userCollectionsListModel.collectionItems)
                         collectionItemsListAdapter.setItemListData(dataList)
                         collectionItemsListAdapter.notifyDataSetChanged()
-
                     } else {
                         ToastUtils.showToast(this@EditCollectionActivity, response.data?.msg)
                     }
@@ -174,7 +171,6 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
         })
     }
 
-
     private fun deleteCollectionItem(position: Int) {
         showProgressDialog(resources.getString(R.string.please_wait))
         val addCollectionRequestModel = AddCollectionRequestModel()
@@ -185,10 +181,8 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
         addCollectionRequestModel.userCollectionId = dataList[position].userCollectionId
         addCollectionRequestModel.userId = dataList[position].userId
 
-
         BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).editCollectionItem(addCollectionRequestModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
             override fun onComplete() {
-
             }
 
             override fun onSubscribe(d: Disposable) {
@@ -208,7 +202,6 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                         ToastUtils.showToast(this@EditCollectionActivity, t.data?.msg)
                     } else {
                         ToastUtils.showToast(this@EditCollectionActivity, t.data?.msg)
-
                     }
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
@@ -234,7 +227,6 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
         })
     }
 
-
     private fun editCollection() {
         val updateCollectionRequestModel = UpdateCollectionRequestModel()
         val list = ArrayList<String>()
@@ -243,7 +235,6 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
         updateCollectionRequestModel.name = collectionNameChangeEditTextView.text.toString()
         updateCollectionRequestModel.imageUrl = userCollectionsListModel.imageUrl
         updateCollectionRequestModel.summary = descriptionEditTextView?.text.toString()
-
 
         BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).editCollection(updateCollectionRequestModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
             override fun onComplete() {

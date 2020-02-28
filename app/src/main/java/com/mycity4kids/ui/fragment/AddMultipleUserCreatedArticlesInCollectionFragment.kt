@@ -60,7 +60,6 @@ class AddMultipleUserCreatedArticlesInCollectionFragment : BaseFragment(), AddMu
     private var totalItemCount: Int = 0
     private val userContentAdapter: AddMultipleCollectionAdapter by lazy { AddMultipleCollectionAdapter(this, viewType = "CREATED") }
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.add_multiple_created_articles_fragment, container, false)
         recyclerView = rootView.findViewById(R.id.recyclerView)
@@ -93,7 +92,6 @@ class AddMultipleUserCreatedArticlesInCollectionFragment : BaseFragment(), AddMu
             }
         })
         return rootView
-
     }
 
     private fun getUsersCreatedContent() {
@@ -169,5 +167,4 @@ class AddMultipleUserCreatedArticlesInCollectionFragment : BaseFragment(), AddMu
         super.onStop()
         shimmer1.stopShimmerAnimation()
     }
-
 }

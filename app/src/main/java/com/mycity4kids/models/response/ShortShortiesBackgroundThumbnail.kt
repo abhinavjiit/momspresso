@@ -6,12 +6,13 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 class ShortShortiesBackgroundThumbnail(
-        @SerializedName("images")
-        @Expose
-        var images: ImageListData?,
-        @SerializedName("categories")
-        @Expose
-        var categories: ArrayList<Categories>? = null) : Parcelable {
+    @SerializedName("images")
+    @Expose
+    var images: ImageListData?,
+    @SerializedName("categories")
+    @Expose
+    var categories: ArrayList<Categories>? = null
+) : Parcelable {
 
     constructor(parcel: Parcel) : this(
             parcel.readParcelable(ImageListData::class.java.classLoader),
@@ -37,14 +38,16 @@ class ShortShortiesBackgroundThumbnail(
     }
 }
 
-class ImageListData(@SerializedName("count")
-                    var count: Int? = 0,
-                    @SerializedName("next")
-                    var next: String? = null,
-                    @SerializedName("previous")
-                    var previous: String? = null,
-                    @SerializedName("results")
-                    var results: ArrayList<Images>? = null) : Parcelable {
+class ImageListData(
+    @SerializedName("count")
+    var count: Int? = 0,
+    @SerializedName("next")
+    var next: String? = null,
+    @SerializedName("previous")
+    var previous: String? = null,
+    @SerializedName("results")
+    var results: ArrayList<Images>? = null
+) : Parcelable {
 
     constructor(parcel: Parcel) : this(parcel.readInt(),
             parcel.readString(),
@@ -71,16 +74,16 @@ class ImageListData(@SerializedName("count")
             return arrayOfNulls(size)
         }
     }
-
 }
 
 class Images(
-        @SerializedName("image_url")
-        var image_url: String? = null,
-        @SerializedName("id")
-        var id: Int? = 0,
-        @SerializedName("font_colour")
-        var font_colour: String? = null) : Parcelable {
+    @SerializedName("image_url")
+    var image_url: String? = null,
+    @SerializedName("id")
+    var id: Int? = 0,
+    @SerializedName("font_colour")
+    var font_colour: String? = null
+) : Parcelable {
 
     constructor(parcel: Parcel) : this(parcel.readString(),
             parcel.readInt(),
@@ -105,19 +108,18 @@ class Images(
             return arrayOfNulls(size)
         }
     }
-
 }
 
-
 class Categories(
-        @SerializedName("category_id")
-        var category_id: String? = null,
-        @SerializedName("id")
-        var id: Int? = 0,
-        @SerializedName("name")
-        var name: String? = null,
-        @SerializedName("image_url")
-        var image_url: String? = null) : Parcelable {
+    @SerializedName("category_id")
+    var category_id: String? = null,
+    @SerializedName("id")
+    var id: Int? = 0,
+    @SerializedName("name")
+    var name: String? = null,
+    @SerializedName("image_url")
+    var image_url: String? = null
+) : Parcelable {
 
     constructor(parcel: Parcel) : this(
             parcel.readString(),

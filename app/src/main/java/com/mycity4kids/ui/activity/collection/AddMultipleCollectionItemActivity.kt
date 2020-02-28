@@ -55,7 +55,6 @@ class AddMultipleCollectionItemActivity : BaseActivity(), View.OnClickListener {
         })
     }
 
-
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.add -> {
@@ -139,9 +138,7 @@ class AddMultipleCollectionItemActivity : BaseActivity(), View.OnClickListener {
                     Log.d("MC4kException", Log.getStackTraceString(t))
                 }
             }
-
         })
-
     }
 
     private fun getUserDetail(authorId: String) {
@@ -180,11 +177,8 @@ class AddMultipleCollectionItemActivity : BaseActivity(), View.OnClickListener {
                     Crashlytics.logException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
-
             }
         })
-
-
     }
 
     fun getUserCreatedList(dataList: List<MixFeedResult>?) {

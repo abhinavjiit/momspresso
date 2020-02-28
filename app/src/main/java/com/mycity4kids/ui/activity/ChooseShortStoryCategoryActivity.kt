@@ -137,7 +137,6 @@ class ChooseShortStoryCategoryActivity : BaseActivity(), ShortStoryChallengeTopi
                     }
                 }
             }
-
         } catch (e: FileNotFoundException) {
             Crashlytics.logException(e)
             Log.d("FileNotFoundException", Log.getStackTraceString(e))
@@ -208,4 +207,3 @@ class ChooseShortStoryCategoryActivity : BaseActivity(), ShortStoryChallengeTopi
         }
     }
 }
-

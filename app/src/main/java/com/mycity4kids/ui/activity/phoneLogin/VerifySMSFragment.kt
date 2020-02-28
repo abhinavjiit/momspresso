@@ -105,7 +105,6 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
     override fun onPause() {
         super.onPause()
         activity?.unregisterReceiver(smsVerificationReceiver)
-
     }
 
     private fun startSMSRetrieverAPI() {
@@ -227,13 +226,11 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                     smsToken =
                         jObject.getJSONObject("data").getJSONObject("result").getString("sms_token")
                 } else {
-
                 }
             } catch (e: Exception) {
                 Crashlytics.logException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
-
         }
 
         override fun onFailure(call: Call<ResponseBody>, e: Throwable) {
@@ -387,7 +384,6 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                     }
                 }
                 otpEditText6?.id == mEditText?.id -> {
-
                 }
             }
         }

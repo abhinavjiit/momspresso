@@ -43,7 +43,6 @@ import java.io.InputStreamReader
 class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollectionAdapter.RecyclerViewClickListener {
     override fun onClick(position: Int) {
         addCollectionItem(position)
-
     }
 
     lateinit var addCollectionAdapter: AddCollectionAdapter
@@ -56,7 +55,6 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
     private lateinit var cancel: ImageView
     private lateinit var noItemAddedTextView: TextView
     var type: String? = null
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.add_collection_activity, container,
@@ -88,7 +86,6 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
                 Crashlytics.logException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
-
         }
         addCollectionRecyclerView.addOnScrollListener(object : EndlessScrollListener(linearLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
@@ -169,7 +166,6 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
         addCollectionRequestModel1.item = articleId
         BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).addCollectionItem(addCollectionRequestModel1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
             override fun onComplete() {
-
             }
 
             override fun onSubscribe(d: Disposable) {
@@ -204,7 +200,6 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
                     Log.e("exception in error", e.message.toString())
                 }
             }
-
         })
     }
 

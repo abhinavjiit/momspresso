@@ -17,5 +17,4 @@ class CrownDataResponse {
     @SerializedName("status")
     @Expose
     var status: String? = null
-
 }

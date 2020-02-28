@@ -49,8 +49,11 @@ class TrackerFragment : BaseFragment() {
     private lateinit var campaignName: String
     private lateinit var imageUrl: String
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.fragment_tracker, container, false)
 
@@ -89,7 +92,7 @@ class TrackerFragment : BaseFragment() {
         (containerView.findViewById<TextView>(R.id.textCampaign)).text = campaignName
         (containerView.findViewById<TextView>(R.id.textTotalPayout)).text = totalPayout.toString()
         var imageBrandLogo = containerView.findViewById<ImageView>(R.id.imageBrandLogo)
-        if (!imageUrl.isNullOrEmpty() && !imageUrl.trim().isEmpty() ) {
+        if (!imageUrl.isNullOrEmpty() && !imageUrl.trim().isEmpty()) {
             Picasso.get().load(imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageBrandLogo)
         }
 
@@ -124,7 +127,6 @@ class TrackerFragment : BaseFragment() {
             }
 
             override fun onSubscribe(d: Disposable) {
-
             }
 
             override fun onNext(response: BaseResponseGeneric<ArrayList<TrackerDataModel>>) {
@@ -132,7 +134,6 @@ class TrackerFragment : BaseFragment() {
                     trackerDataModel.addAll(response.data!!.result)
                     adapter.notifyDataSetChanged()
                 } else {
-
                 }
             }
 

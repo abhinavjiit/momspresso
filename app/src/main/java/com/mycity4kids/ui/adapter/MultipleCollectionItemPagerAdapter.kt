@@ -37,5 +37,4 @@ class MultipleCollectionItemPagerAdapter(val fragmentManager: FragmentManager, v
         else
             1
     }
-
 }

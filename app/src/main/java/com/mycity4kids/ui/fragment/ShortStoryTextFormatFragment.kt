@@ -19,11 +19,11 @@ class ShortStoryTextFormatFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.short_story_text_format_fragment, container, false)
-        textSizeUp =view.findViewById(R.id.textsize_up)
-        textSizeDown =view.findViewById(R.id.textsize_down)
-        textAlignLeft =view.findViewById(R.id.align_left)
-        textAlignCenter =view.findViewById(R.id.align_center)
-        textAlignRight =view.findViewById(R.id.align_right)
+        textSizeUp = view.findViewById(R.id.textsize_up)
+        textSizeDown = view.findViewById(R.id.textsize_down)
+        textAlignLeft = view.findViewById(R.id.align_left)
+        textAlignCenter = view.findViewById(R.id.align_center)
+        textAlignRight = view.findViewById(R.id.align_right)
 
         textSizeUp.setOnClickListener {
             (context as ShortStoriesCardActivity).increaseTextSize()

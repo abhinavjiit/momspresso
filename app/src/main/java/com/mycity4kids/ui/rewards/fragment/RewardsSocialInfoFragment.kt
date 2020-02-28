@@ -1,6 +1,5 @@
 package com.mycity4kids.ui.rewards.fragment
 
-
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -62,12 +61,11 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
     }
 
     override fun onConnectionFailed(p0: ConnectionResult) {
-
     }
 
-    override fun getFacebookUser(jObject:JSONObject?, user: String?) {
+    override fun getFacebookUser(jObject: JSONObject?, user: String?) {
         try {
-            if (user != null) {activity
+            if (user != null) { activity
                 facebookAuthToken = user
                 editFacebook.setText(getString(R.string.rewards_social_facebook_connected))
                 setValuesForSocial(Constants.SocialPlatformName.facebook, facebookAuthToken!!)
@@ -79,7 +77,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
             (activity as RewardsContainerActivity).showToast(getString(R.string.toast_response_error))
         }
     }
-    
+
     private lateinit var containerView: View
     private lateinit var submitListener: SubmitListener
     private lateinit var layoutInstagram: LinearLayout
@@ -111,13 +109,15 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         fun newInstance(isComingFromRewards: Boolean = false, fromCampaign: Boolean = false) = RewardsSocialInfoFragment().apply {
             arguments = Bundle().apply {
                 this.putBoolean("isComingFromRewards", isComingFromRewards)
-
             }
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.fragment_rewards_social_info, container, false)
 
@@ -145,7 +145,6 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
                 .build()
         callbackManager = CallbackManager.Factory.create()
 
-
         /*initialize XML components*/
         initializeXMLComponents()
 
@@ -168,7 +167,6 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
                 }
 
                 override fun onSubscribe(d: Disposable) {
-
                 }
 
                 override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
@@ -178,7 +176,6 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
                         /*setting values to components*/
                         setValuesToComponents()
                     } else {
-
                     }
                 }
 
@@ -276,7 +273,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
             apiGetResponse.socialAccounts = localListSocialAccount
         }
 
-        //Log.e("apiGetResponse is ", Gson().toJson(apiGetResponse))
+        // Log.e("apiGetResponse is ", Gson().toJson(apiGetResponse))
     }
 
     private fun initializeXMLComponents() {
@@ -304,11 +301,11 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         }
 
         layoutInstagram.setOnClickListener {
-            //AuthenticateWithInstagram()
+            // AuthenticateWithInstagram()
         }
 
         editInstagram.setOnClickListener {
-            //AuthenticateWithInstagram()
+            // AuthenticateWithInstagram()
         }
 
         layoutFacebook.setOnClickListener {
@@ -336,13 +333,16 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         val householdAdapter = CustomSpinnerAdapter(activity, householdList)
         spinnerHouseHold.adapter = householdAdapter
         spinnerHouseHold.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapter: AdapterView<*>, v: View,
-                                        position: Int, id: Long) {
+            override fun onItemSelected(
+                adapter: AdapterView<*>,
+                v: View,
+                position: Int,
+                id: Long
+            ) {
                 spinnerHouseHold.setSelection(position)
             }
 
             override fun onNothingSelected(arg0: AdapterView<*>) {
-
             }
         }
 
@@ -354,24 +354,30 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         val professionAdapter = CustomSpinnerAdapter(activity, professionList)
         spinnerProfession.adapter = professionAdapter
         spinnerProfession.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapter: AdapterView<*>, v: View,
-                                        position: Int, id: Long) {
+            override fun onItemSelected(
+                adapter: AdapterView<*>,
+                v: View,
+                position: Int,
+                id: Long
+            ) {
                 spinnerProfession.setSelection(position)
             }
 
             override fun onNothingSelected(arg0: AdapterView<*>) {
-
             }
         }
 
         spinnerHouseHold.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapter: AdapterView<*>, v: View,
-                                        position: Int, id: Long) {
+            override fun onItemSelected(
+                adapter: AdapterView<*>,
+                v: View,
+                position: Int,
+                id: Long
+            ) {
                 spinnerHouseHold.setSelection(position)
             }
 
             override fun onNothingSelected(arg0: AdapterView<*>) {
-
             }
         }
 
@@ -413,7 +419,6 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         } else {
             ToastUtils.showToast(context, "space is not allowed")
             return false
-
         }
 //        }
 
@@ -431,40 +436,29 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
                 if (matcher.matches() || handle.isEmpty()) {
                     return true
                 }
-
-
             }
 
             1 -> {
 
                 if (!handle.trim().contains(" ")) {
                     return true
-
                 }
             }
             3 -> {
 
                 if (!handle.trim().contains(" ")) {
                     return true
-
                 }
             }
             4 -> {
                 if (!handle.trim().contains(" ")) {
                     return true
-
                 }
-
             }
-
-
         }
-
-
 
         return false
     }
-
 
     /*fetch data from server*/
     private fun postDataofRewardsToServer() {
@@ -480,7 +474,6 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
                 }
 
                 override fun onSubscribe(d: Disposable) {
-
                 }
 
                 override fun onNext(response: RewardsPersonalResponse) {
@@ -511,7 +504,6 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         fun socialOnSubmitListener()
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == 0) {
@@ -524,5 +516,4 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
     fun updateFaceBookView() {
         editFacebook.setText(getString(R.string.rewards_social_facebook_connected))
     }
-
 }

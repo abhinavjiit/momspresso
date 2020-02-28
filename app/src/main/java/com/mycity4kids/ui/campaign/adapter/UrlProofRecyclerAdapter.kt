@@ -12,8 +12,8 @@ import com.mycity4kids.R
 import com.mycity4kids.models.campaignmodels.CampaignProofResponse
 import kotlinx.android.synthetic.main.campaign_url_proof_cell.view.*
 
-class UrlProofRecyclerAdapter(private val mediaLists: List<CampaignProofResponse>, private val context: Fragment)
-    : RecyclerView.Adapter<UrlProofRecyclerAdapter.ViewHolder>() {
+class UrlProofRecyclerAdapter(private val mediaLists: List<CampaignProofResponse>, private val context: Fragment) :
+    RecyclerView.Adapter<UrlProofRecyclerAdapter.ViewHolder>() {
 
     private val mOnClickListener: View.OnClickListener
     private var campaignProofResponse: List<CampaignProofResponse> = mediaLists
@@ -50,18 +50,14 @@ class UrlProofRecyclerAdapter(private val mediaLists: List<CampaignProofResponse
                 holder.textUrl.addTextChangedListener(object : TextWatcher {
                     override fun afterTextChanged(text: Editable?) {
                         if (!text.toString().isNullOrEmpty()) {
-
                         }
                     }
 
                     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
                     }
 
                     override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
                     }
-
                 })
 
                 if (item.proofStatus == 0 && item.proofStatus == 1) {
@@ -85,7 +81,7 @@ class UrlProofRecyclerAdapter(private val mediaLists: List<CampaignProofResponse
 
                 holder.imageDelete.setOnClickListener {
                     holder.textUrl.setText("")
-                    //clickListener.onUrlProofDelete(holder.adapterPosition)
+                    // clickListener.onUrlProofDelete(holder.adapterPosition)
                 }
 
                 with(holder.mView) {
@@ -112,7 +108,6 @@ class UrlProofRecyclerAdapter(private val mediaLists: List<CampaignProofResponse
 
                     override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                     }
-
                 })
 
                 holder.imageDelete.setOnClickListener {
@@ -139,7 +134,6 @@ class UrlProofRecyclerAdapter(private val mediaLists: List<CampaignProofResponse
 
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
-
             })
 
             holder.imageDelete.setOnClickListener {

@@ -6,30 +6,30 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class PaymentModesModal(
-        @SerializedName("type_id")
-        @Expose
-        var type_id: Int = 0,
-        @SerializedName("icon")
-        @Expose
-        var icon: String? = null,
-        @SerializedName("name")
-        @Expose
-        var name: String? = null,
-        @SerializedName("isChecked")
-        @Expose
-        var isChecked: Boolean = false,
-        @SerializedName("isDefault")
-        @Expose
-        var isDefault: Boolean = false,
-        @SerializedName("accountNumber")
-        @Expose
-        var accountNumber: String? = null,
-        @SerializedName("id")
-        @Expose
-        var id: Int = 0,
-        @SerializedName("exists")
-        @Expose
-        val exists: Exists? = null
+    @SerializedName("type_id")
+    @Expose
+    var type_id: Int = 0,
+    @SerializedName("icon")
+    @Expose
+    var icon: String? = null,
+    @SerializedName("name")
+    @Expose
+    var name: String? = null,
+    @SerializedName("isChecked")
+    @Expose
+    var isChecked: Boolean = false,
+    @SerializedName("isDefault")
+    @Expose
+    var isDefault: Boolean = false,
+    @SerializedName("accountNumber")
+    @Expose
+    var accountNumber: String? = null,
+    @SerializedName("id")
+    @Expose
+    var id: Int = 0,
+    @SerializedName("exists")
+    @Expose
+    val exists: Exists? = null
 
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
@@ -41,7 +41,6 @@ data class PaymentModesModal(
             parcel.readString(),
             parcel.readInt(),
             parcel.readParcelable(Exists::class.java.classLoader))
-
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(type_id)

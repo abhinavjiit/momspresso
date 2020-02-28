@@ -80,7 +80,6 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         submitOnClickListener.onPaymentModeDone(defaultId)
     }
 
-
     override fun onClick(p0: View?) {
         /*for (i in 0..allPaymantModes!!.size - 1) {
             if (allPaymantModes[i].isDefault) {
@@ -129,7 +128,6 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
             val pattern = Pattern.compile("[A-Z]{5}[0-9]{4}[A-Z]{1}")
             val matcher = pattern.matcher(panCardNumber)
 
-
             if (matcher.matches()) {
                 if (!panNumber.isNullOrEmpty()) {
                     val proofPostModel = ProofPostModel(pan = panCardDetailEditTextView.text.toString())
@@ -170,11 +168,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                             }
 
                             Log.e("exception in error", e.message.toString())
-
-
                         }
-
-
                     })
                 } else {
                     val proofPostModel = ProofPostModel(pan = panCardDetailEditTextView.text.toString())
@@ -182,7 +176,6 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                     BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).addPanNumber(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
                         override fun onComplete() {
                             removeProgressDialog()
-
                         }
 
                         override fun onSubscribe(d: Disposable) {
@@ -199,8 +192,6 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                                             CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
                                             .commit()
                                 }
-
-
                             }
                         }
 
@@ -218,18 +209,11 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
 
                             Log.e("exception in error", e.message.toString())
                         }
-
-
                     })
                 }
-
-
             } else {
                 Toast.makeText(activity, panCardNumber + " is Not Matching the Correct Formate", Toast.LENGTH_SHORT).show()
-
             }
-
-
         } else {
             Toast.makeText(activity, "field cann't be empty", Toast.LENGTH_SHORT).show()
         }
@@ -247,15 +231,12 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
             }
 
             override fun onNext(t: BaseResponseGeneric<ProofPostModel>) {
-
             }
 
             override fun onError(e: Throwable) {
                 removeProgressDialog()
                 Log.e("exception in error", e.message.toString())
             }
-
-
         })
     }
 
@@ -274,12 +255,14 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                     arguments = Bundle().apply {
                         this.putBoolean("isComingFromRewards", isComingFromRewards)
                     }
-
                 }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.campaign_payment_modes_fragment, container, false)
         toolbar = view.findViewById(R.id.toolbar)
         back = view.findViewById(R.id.back)
@@ -287,7 +270,6 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         if (arguments != null) {
             isComingFromRewards = if (arguments!!.containsKey("isComingFromRewards")) {
                 arguments!!.getBoolean("isComingFromRewards")
-
             } else {
                 false
             }
@@ -304,7 +286,6 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                 (activity as RewardsContainerActivity).onBackPressed()
             } else {
                 (activity as CampaignContainerActivity).onBackPressed()
-
             }
         }
         textLater = view.findViewById(R.id.textLater)
@@ -338,7 +319,6 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         fetchPaymentModes()
         saveContinueTextView.setOnClickListener(this)
 
-
         return view
     }
 
@@ -357,17 +337,13 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                     panNumber = response.data!!.result.pan
                     panCardDetailEditTextView.setText(panNumber)
                 } else {
-
                 }
             }
 
             override fun onError(e: Throwable) {
                 removeProgressDialog()
                 Log.e("exception in error", e.message.toString())
-
             }
-
-
         })
     }
 
@@ -375,7 +351,6 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     private fun fetchPaymentModes() {
         showProgressDialog(resources.getString(R.string.please_wait))
         BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getPaymentModes().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<PaymentModeListModal>> {
-
 
             override fun onComplete() {
                 removeProgressDialog()
@@ -385,8 +360,8 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
             }
 
             override fun onNext(response: BaseResponseGeneric<PaymentModeListModal>) {
-                if (response != null && response.code == 200 && Constants.SUCCESS == response.status
-                        && response.data != null && response.data!!.result != null && response.data!!.result.available!!.isNotEmpty()) {
+                if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
+                        response.data != null && response.data!!.result != null && response.data!!.result.available!!.isNotEmpty()) {
                     allPaymentData = response.data!!.result
                     allPaymantModes.clear()
                     availableList.clear()
@@ -421,7 +396,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                     }
                     paymentModesAdapter = PaymentModesAdapter(allPaymantModes, this@CampaignPaymentModesFragment)
                     recyclerPaymentModesOption.adapter = paymentModesAdapter
-                    //faqRecyclerAdapter.notifyDataSetChanged()
+                    // faqRecyclerAdapter.notifyDataSetChanged()
                 } else {
                 }
             }
@@ -444,8 +419,6 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         if (context is RewardsContainerActivity) {
             submitOnClickListener = context
         } else if (context is CampaignContainerActivity) {
-
-
         }
     }
 

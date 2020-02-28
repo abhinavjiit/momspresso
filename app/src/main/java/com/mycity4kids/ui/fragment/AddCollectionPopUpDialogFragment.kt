@@ -108,7 +108,6 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
 
         BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).addCollection(addCollectionRequestModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
             override fun onComplete() {
-
             }
 
             override fun onSubscribe(d: Disposable) {
@@ -213,7 +212,6 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
         intent.putExtra("collectionId", collectionId)
         startActivity(intent)
     }
-
 
     interface AddCollectionInterface {
         fun onCollectionAddSuccess()

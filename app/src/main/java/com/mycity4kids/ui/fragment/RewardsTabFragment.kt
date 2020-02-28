@@ -41,9 +41,11 @@ class RewardsTabFragment : BaseFragment() {
     private var totalPayout: Int = 0
     private var isRewardsAdded = "0"
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         containerView = inflater.inflate(R.layout.fragment_rewards, container, false)
         textStartReward = containerView.findViewById(R.id.textStartReward)
         textPersonalInfo = containerView.findViewById(R.id.textPersonalInfo)
@@ -75,7 +77,6 @@ class RewardsTabFragment : BaseFragment() {
             }
             var intent = Intent(activity, RewardsShareReferralCodeActivity::class.java)
             startActivity(intent)
-
         }
 
         textSocial.setOnClickListener {
@@ -125,7 +126,6 @@ class RewardsTabFragment : BaseFragment() {
             }
         }
 
-
         textStartReward.setOnClickListener {
             startActivity(Intent(activity, RewardsContainerActivity::class.java))
         }
@@ -141,7 +141,6 @@ class RewardsTabFragment : BaseFragment() {
         val call = campaignAPI.getTotalPayout(userId)
         call.enqueue(getTotalPayout)
     }
-
 
     private val getTotalPayout = object : Callback<TotalPayoutResponse> {
         override fun onResponse(call: Call<TotalPayoutResponse>, response: retrofit2.Response<TotalPayoutResponse>) {
@@ -176,6 +175,4 @@ class RewardsTabFragment : BaseFragment() {
             Log.d("MC4kException", Log.getStackTraceString(t))
         }
     }
-
-
 }

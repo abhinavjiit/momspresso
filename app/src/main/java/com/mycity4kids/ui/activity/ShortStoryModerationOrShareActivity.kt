@@ -42,7 +42,6 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.*
 
-
 class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener,
         EasyPermissions.PermissionCallbacks {
 

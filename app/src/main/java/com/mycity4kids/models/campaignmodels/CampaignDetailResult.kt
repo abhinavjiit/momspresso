@@ -107,5 +107,4 @@ class CampaignDetailResult {
     fun setAdditionalProperty(name: String, value: Any) {
         this.additionalProperties[name] = value
     }*/
-
 }

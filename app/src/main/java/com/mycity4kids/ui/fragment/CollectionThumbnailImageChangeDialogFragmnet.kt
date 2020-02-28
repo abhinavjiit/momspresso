@@ -37,7 +37,6 @@ class CollectionThumbnailImageChangeDialogFragmnet : DialogFragment() {
     lateinit var sendImage: SendImage
     val dataList = ArrayList<String>()
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.collection_thumbnail_image_dialog_fragment, container,
                 false)
@@ -67,7 +66,6 @@ class CollectionThumbnailImageChangeDialogFragmnet : DialogFragment() {
         return view
     }
 
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         sendImage = context as SendImage
@@ -87,7 +85,6 @@ class CollectionThumbnailImageChangeDialogFragmnet : DialogFragment() {
             dialog.window!!.setWindowAnimations(R.style.CollectionDialogAnimation)
             //            dialog.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.blue_bg_rounded_corners));
             dialog.window!!.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.campaign_4A4A4A)))
-
         }
 
         shimmer1.startShimmerAnimation()
@@ -115,16 +112,12 @@ class CollectionThumbnailImageChangeDialogFragmnet : DialogFragment() {
                     }
                     collectionImageThumbnailAdapter.setImages(dataList)
                     collectionImageThumbnailAdapter.notifyDataSetChanged()
-
                 } catch (e: Exception) {
-
                 }
             }
 
             override fun onError(e: Throwable) {
             }
-
-
         })
     }
 
@@ -137,4 +130,3 @@ class CollectionThumbnailImageChangeDialogFragmnet : DialogFragment() {
         fun onsendData(imageUrl: String)
     }
 }
-

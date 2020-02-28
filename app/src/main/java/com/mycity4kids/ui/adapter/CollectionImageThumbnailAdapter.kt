@@ -11,7 +11,6 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.squareup.picasso.Picasso
 
-
 class CollectionImageThumbnailAdapter(var activity: Context) : BaseAdapter() {
     private var mInflater: LayoutInflater = BaseApplication.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     var context: Context = activity
@@ -24,7 +23,6 @@ class CollectionImageThumbnailAdapter(var activity: Context) : BaseAdapter() {
             viewHolder = ViewHolder()
             viewHolder.tagImageView = view.findViewById<ImageView>(R.id.tagImageView)
             view.tag = viewHolder
-
         } else {
             viewHolder = view.tag as ViewHolder
         }
@@ -56,8 +54,5 @@ class CollectionImageThumbnailAdapter(var activity: Context) : BaseAdapter() {
     class ViewHolder {
 
         var tagImageView: ImageView? = null
-
-
     }
-
 }

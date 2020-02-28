@@ -112,7 +112,6 @@ class UserCreatedCollectionsFragment : BaseFragment() {
                     Log.d("MC4KException", Log.getStackTraceString(e))
                 }
             })
-
         }
     }
 
@@ -149,7 +148,6 @@ class UserCreatedCollectionsFragment : BaseFragment() {
             userCreatedFollowedCollectionAdapter.notifyDataSetChanged()
         }
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

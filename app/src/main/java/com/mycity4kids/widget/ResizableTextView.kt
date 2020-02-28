@@ -12,11 +12,9 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
-import android.widget.TextView
 import com.crashlytics.android.Crashlytics
 import com.mycity4kids.R
 import com.mycity4kids.utils.AppUtils
-
 
 class ResizableTextView : CustomFontTextView {
     private var userBio: String = ""
@@ -82,7 +80,7 @@ class ResizableTextView : CustomFontTextView {
     private fun init(context: Context, attrs: AttributeSet?, defStyle: Int) {
         val a = context.obtainStyledAttributes(attrs, R.styleable.ResizableTextView, defStyle, 0)
 
-        //get the value of "etw_maxLines" attribute if it has been specified
+        // get the value of "etw_maxLines" attribute if it has been specified
 
         try {
             _maxLines = a.getInt(R.styleable.ResizableTextView_maxLines, maxLines)
@@ -92,7 +90,10 @@ class ResizableTextView : CustomFontTextView {
     }
 
     private fun addClickablePartTextViewResizable(
-            strSpanned: Spanned, spanableText: String, userBio: String): SpannableStringBuilder {
+        strSpanned: Spanned,
+        spanableText: String,
+        userBio: String
+    ): SpannableStringBuilder {
         val str = strSpanned.toString()
         val ssb = SpannableStringBuilder(strSpanned)
         if (str.contains(spanableText)) {

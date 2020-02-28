@@ -29,7 +29,6 @@ import retrofit2.Callback
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResult>, val context: Activity?) : RecyclerView.Adapter<RewardCampaignAdapter.RewardHolder>() {
 
     private var forYouStatus: Int = 0
@@ -49,7 +48,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
         holder.bindPhoto(itemPhoto)
     }
 
-    //1
+    // 1
     inner class RewardHolder(private val view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
         private var campaignList: CampaignDataListResult? = null
@@ -70,7 +69,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
             compareDate(campaignList.campaignStatus)
         }
 
-        //4
+        // 4
         override fun onClick(v: View) {
             if (v == (view.share)) {
                 val userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
@@ -231,7 +230,6 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
             }
         }
 
-
         fun showInviteDialog() {
             if (context != null) {
                 val dialog = Dialog(context)
@@ -256,7 +254,6 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                 dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 dialog.show()
             }
-
         }
 
         val subscribeCampaign = object : Callback<ParticipateCampaignResponse> {
@@ -286,7 +283,5 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
-
-
     }
 }

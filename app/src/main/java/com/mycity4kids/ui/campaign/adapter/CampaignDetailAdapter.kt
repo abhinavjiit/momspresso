@@ -1,7 +1,6 @@
 package com.mycity4kids.ui.adapter
 
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.text.SpannableString
 import android.text.Spanned
@@ -36,9 +35,9 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
     inner class RewardHolder(private val view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
         private var deliverableList: List<CampaignDetailDeliverable>? = null
         private val urlPattern = Pattern.compile(
-                "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
-                        + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
-                        + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
+                "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)" +
+                        "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*" +
+                        "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
                 Pattern.CASE_INSENSITIVE or Pattern.MULTILINE or Pattern.DOTALL)
         private var spannable: SpannableString? = null
 
@@ -60,7 +59,7 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
                     (view.view).visibility = View.VISIBLE
                     (view.deliverable_text).visibility = View.VISIBLE
                     (view.deliverable_header).visibility = View.VISIBLE
-                    (view.deliverable_text).setMovementMethod(LinkMovementMethod.getInstance());
+                    (view.deliverable_text).setMovementMethod(LinkMovementMethod.getInstance())
                     (view.deliverable_header).setText(deliverableList.get(position).name)
                 } else {
                     (view.view).visibility = View.GONE
@@ -70,12 +69,11 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
             }
         }
 
-        //4
+        // 4
         override fun onClick(v: View) {
-            //val context = itemView.context
+            // val context = itemView.context
 //            (context as CampaignContainerActivity).addCampaginDetailFragment(campaignList!!.id)
         }
-
 
         private fun getOffset(instruction: String) {
             val matcher = urlPattern.matcher(instruction)
@@ -99,7 +97,7 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
             }
             if (matchStart != null && matchEnd != null) {
                 spannable!!.setSpan(clickableSpan, matchStart, matchEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            };
+            }
             (view.deliverable_text).text = spannable
             (view.deliverable_text).isClickable = true
             (view.deliverable_text).movementMethod = LinkMovementMethod.getInstance()

@@ -58,7 +58,6 @@ import java.io.InputStreamReader
 class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener,
     CollectionItemsListAdapter.RecyclerViewClick {
 
-
     private lateinit var collectionId: String
     var userCollectionsListModel = UserCollectionsListModel()
     private lateinit var collectionItemsListAdapter: CollectionItemsListAdapter
@@ -132,7 +131,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener,
                 )
             )
             visibleToAll?.trackTintList = trackStates
-
         }
         visibleToAll?.setOnClickListener {
             if (visibleToAll?.isChecked == true) {
@@ -277,7 +275,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener,
             })
     }
 
-
     override fun onStart() {
         super.onStart()
         shimmer1.startShimmerAnimation()
@@ -286,9 +283,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener,
     override fun onStop() {
         super.onStop()
         shimmer1.stopShimmerAnimation()
-
     }
-
 
     private fun followUnfollow() {
         val addCollectionRequestModel = AddCollectionRequestModel()
@@ -300,7 +295,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener,
             Utils.pushProfileEvents(
                 this, "CTA_Unfollow_Collection_Detail", "UserCollectionItemListActivity",
                 "Unfollow", "-"
-            );
+            )
         } else {
             addCollectionRequestModel.deleted = false
             addCollectionRequestModel.userId =
@@ -309,7 +304,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener,
             Utils.pushProfileEvents(
                 this, "CTA_Follow_Collection_Detail", "UserCollectionItemListActivity",
                 "Follow", "-"
-            );
+            )
         }
 
         BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java)
@@ -338,7 +333,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener,
                                     ((userCollectionsListModel.totalCollectionFollowers)?.minus(1)).toString()
                                 userCollectionsListModel.totalCollectionFollowers =
                                     (userCollectionsListModel.totalCollectionFollowers)?.minus(1)
-
                             } else {
                                 followersCount.text =
                                     ((userCollectionsListModel.totalCollectionFollowers)?.plus(1)).toString()
@@ -351,7 +345,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener,
                         } else {
                             val reason = jsonObject.getString("reason")
                             ToastUtils.showToast(this@UserCollectionItemListActivity, reason)
-
                         }
                     } catch (e: Exception) {
                         Crashlytics.logException(e)
@@ -383,8 +376,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener,
                     Log.e("exception in error", e.message.toString())
                 }
             })
-
-
     }
 
     override fun onClick(v: View?) {
@@ -434,7 +425,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener,
         }
     }
 
-
     override fun onRecyclerViewclick(position: Int) {
         when {
             dataList[position].itemType == AppConstants.ARTICLE_COLLECTION_TYPE -> {
@@ -466,7 +456,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener,
             }
         }
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -512,7 +501,6 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener,
             Log.d("MC4KException", Log.getStackTraceString(e))
         }
     }
-
 
     override fun onBackPressed() {
         val intent = Intent()
@@ -595,5 +583,4 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener,
             }
         }
     }
-
 }

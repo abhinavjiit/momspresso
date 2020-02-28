@@ -2,7 +2,6 @@ package com.mycity4kids.models.collectionsModels
 
 import com.google.gson.annotations.SerializedName
 
-
 class UpdateCollectionRequestModel {
     @SerializedName("name")
     var name: String? = null
@@ -37,6 +36,4 @@ class UpdateCollectionRequestModel {
     override fun hashCode(): Int {
         return item?.hashCode() ?: 0
     }
-
-
 }

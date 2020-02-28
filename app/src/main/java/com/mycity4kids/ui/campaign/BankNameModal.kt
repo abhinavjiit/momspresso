@@ -6,12 +6,13 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class BankNameModal(
-        @SerializedName("id")
-        @Expose
-        val id: Int = -1,
-        @SerializedName("name")
-        @Expose
-        val name: String? = null) : Parcelable {
+    @SerializedName("id")
+    @Expose
+    val id: Int = -1,
+    @SerializedName("name")
+    @Expose
+    val name: String? = null
+) : Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readInt(),
             parcel.readString())

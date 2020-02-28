@@ -57,10 +57,9 @@ class TrackerActivity : BaseActivity() {
     }
 
     fun initializeXML() {
-        var fragment = TrackerFragment.newInstance(campaignId = campaignId,brandName = brandName,campaignName = campaignName,totalPayout = totalPayout,imageUrl = imageUrl)
+        var fragment = TrackerFragment.newInstance(campaignId = campaignId, brandName = brandName, campaignName = campaignName, totalPayout = totalPayout, imageUrl = imageUrl)
         supportFragmentManager.beginTransaction().replace(R.id.container, fragment,
                 TrackerFragment::class.java.simpleName)
                 .commit()
     }
-
 }

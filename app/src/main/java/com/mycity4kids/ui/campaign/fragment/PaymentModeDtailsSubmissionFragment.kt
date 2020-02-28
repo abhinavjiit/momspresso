@@ -33,9 +33,7 @@ import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
 import java.io.InputStreamReader
 
-
 class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener {
-
 
     private var paymantModeId: Int = 0
     private lateinit var comingFrom: String
@@ -71,13 +69,14 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                         this.putBoolean("isComingFromRewards", isComingFromRewards)
                         this.putInt("Id", Id)
                     }
-
                 }
     }
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.campaign_enter_registered_paytm_mobile_number_screen, container, false)
         paytmContainer = view.findViewById(R.id.paytmContainer)
         upiContainer = view.findViewById(R.id.upiContainer)
@@ -95,7 +94,6 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
         toolbar = view.findViewById(R.id.toolbar)
         activity!!.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
-
         paytmContainer.visibility = View.GONE
         upiContainer.visibility = View.GONE
         bankTransferContainer.visibility = View.GONE
@@ -112,14 +110,10 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
             }
         }
 
-
-
-
         when (paymantModeId) {
             1 -> paytmContainer.visibility = View.VISIBLE
             2 -> upiContainer.visibility = View.VISIBLE
             else -> bankTransferContainer.visibility = View.VISIBLE
-
         }
 
         if (bankTransferContainer.visibility == View.VISIBLE) {
@@ -128,9 +122,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
         if (ID != -1 && comingFrom.equals("comingForEdit")) {
 
             fetchLastUpdatedDetails(ID)
-
         }
-
 
         submitTextViewCampaign.setOnClickListener(this)
 
@@ -153,10 +145,8 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
     private fun fetchAllBankName() {
 
-
         showProgressDialog(resources.getString(R.string.please_wait))
         BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getAllBankName().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<List<BankNameModal>>> {
-
 
             override fun onComplete() {
                 removeProgressDialog()
@@ -166,8 +156,8 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
             }
 
             override fun onNext(response: BaseResponseGeneric<List<BankNameModal>>) {
-                if (response != null && response.code == 200 && Constants.SUCCESS == response.status
-                        && response.data != null && response.data!!.result != null && response.data!!.result.isNotEmpty()) {
+                if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
+                        response.data != null && response.data!!.result != null && response.data!!.result.isNotEmpty()) {
                     if (response.data!!.result != null) {
                         allBankNames = response.data!!.result
                         response.data!!.result.forEach {
@@ -186,18 +176,12 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                                 }
 
                                 override fun onNothingSelected(parent: AdapterView<*>) {
-
-
                                 }
                             }
                         }
-
-
                     } else {
                     }
-
                 } else {
-
                 }
             }
 
@@ -207,7 +191,6 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
             }
         })
     }
-
 
     override fun onClick(p0: View?) {
         if (isValid()) {
@@ -232,7 +215,6 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                 else -> {
                     addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString().trim(), account_number = addMobileNumberEditText.text.toString().trim())
                 }
-
             }
 
             showProgressDialog(resources.getString(R.string.please_wait))
@@ -266,7 +248,6 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                     }
 
 //                    }
-
                 }
 
                 override fun onError(e: Throwable) {
@@ -291,7 +272,6 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
         if (bankTransferContainer.visibility == View.VISIBLE) {
 
-
             if (!addAccountHolderNameEditTextView?.text.isNullOrEmpty() && !accountNumberEditTextView?.text.isNullOrEmpty() && !confirmAccountNumberEditTextView?.text.isNullOrEmpty() && !ifscEditTextView?.text.toString().trim().isNullOrEmpty() && !selectBankAccountEditText?.text.toString().trim().isNullOrEmpty()) {
 
                 if (ifscEditTextView?.text.toString().trim().contains(" ")) {
@@ -299,30 +279,23 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                     return false
                 }
 
-
-
                 if (accountNumberEditTextView?.text.toString().equals(confirmAccountNumberEditTextView?.text.toString())) {
                     return true
                 }
 
                 Toast.makeText(activity, "account number is not matching", Toast.LENGTH_SHORT).show()
                 return false
-
-
             } else {
 
                 Toast.makeText(activity, "fill the all fields", Toast.LENGTH_SHORT).show()
                 return false
             }
-
-
         } else if (paytmContainer.visibility == View.VISIBLE) {
             if (!addMobileNumberEditText.text.isNullOrEmpty() && addMobileNumberEditText.text.toString().trim().length == 10) {
                 return true
             }
             Toast.makeText(activity, "enter valid phone number", Toast.LENGTH_SHORT).show()
             return false
-
         } else {
             if (!addUpiEditTextView.text.isNullOrEmpty()) {
                 return true
@@ -330,10 +303,8 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
             Toast.makeText(activity, "field cann't be empty", Toast.LENGTH_SHORT).show()
 
             return false
-
         }
     }
-
 
     private fun fetchLastUpdatedDetails(ID: Int) {
         showProgressDialog(resources.getString(R.string.please_wait))
@@ -349,7 +320,6 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.result != null) {
 
-
                     addAccountHolderNameEditTextView?.setText(response.data!!.result.account_name)
                     accountNumberEditTextView?.setText(response.data!!.result.account_number)
                     confirmAccountNumberEditTextView?.setText(response.data!!.result.account_number)
@@ -357,23 +327,14 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                     selectBankAccountEditText?.setText(response.data!!.result.bank_name)
                     if (paytmContainer.visibility == View.VISIBLE && response.data!!.result.account_ifsc_code.isNullOrEmpty()) {
                         addMobileNumberEditText.setText(response.data!!.result.account_number)
-
-
                     }
-
-
                 }
-
-
             }
 
             override fun onError(e: Throwable) {
                 removeProgressDialog()
                 Log.e("exception in error", e.message.toString())
             }
-
         })
-
     }
-
 }

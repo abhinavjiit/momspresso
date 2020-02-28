@@ -15,8 +15,10 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.recycler_myearning.view.*
 
 class EarningRecyclerAdapter(
-        private val payoutList: List<AllCampaignTotalPayoutResponse.TotalPayoutResult>, private val context: Context)
-    : RecyclerView.Adapter<EarningRecyclerAdapter.ViewHolder>() {
+    private val payoutList: List<AllCampaignTotalPayoutResponse.TotalPayoutResult>,
+    private val context: Context
+) :
+    RecyclerView.Adapter<EarningRecyclerAdapter.ViewHolder>() {
     private val mOnClickListener: View.OnClickListener
     private var payoutsList: List<AllCampaignTotalPayoutResponse.TotalPayoutResult>? = null
     private var totalEarning: Double = 0.0
@@ -29,7 +31,6 @@ class EarningRecyclerAdapter(
             // one) that an item has been selected.
         }
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -62,7 +63,6 @@ class EarningRecyclerAdapter(
                     holder.relativeFour.visibility = View.VISIBLE
                     holder.netAmount.text = ("\u20b9" + item.payment_meta[0].net_amount)
                     holder.paymentStatus.text = (setStatus(item.payment_status, holder))
-
                 }
             } else {
                 totalEarning = 0.0
@@ -78,13 +78,10 @@ class EarningRecyclerAdapter(
                         holder.reimbursementAmount.text = item.payment_meta[i].total_amount.toString()
                         holder.paymentStatus.text = (setStatus(item.payment_status, holder))
                         totalEarning += item.payment_meta[i].net_amount
-
                     }
                 }
                 holder.netAmount.text = ("\u20b9" + totalEarning)
-
             }
-
 
             holder.relativeOne.setOnClickListener {
                 if (holder.relativeTwo.visibility == View.GONE) {
@@ -131,6 +128,5 @@ class EarningRecyclerAdapter(
         var reimbursementText: TextView = mView.reimbursement
         var earningss: RelativeLayout = mView.relative_one
         var Tds: RelativeLayout = mView.relative_two
-
     }
 }

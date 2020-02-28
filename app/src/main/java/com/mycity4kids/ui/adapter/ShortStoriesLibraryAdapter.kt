@@ -12,7 +12,6 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.models.response.Categories
 import com.mycity4kids.models.response.Images
-import com.mycity4kids.models.response.ShortShortiesBackgroundThumbnail
 import com.squareup.picasso.Picasso
 
 class ShortStoriesLibraryAdapter(activity: Context, showCategory: Boolean) : BaseAdapter() {
@@ -23,7 +22,6 @@ class ShortStoriesLibraryAdapter(activity: Context, showCategory: Boolean) : Bas
     private var userCollectionsTopicList = ArrayList<Images>()
     private var libraryCollectionList = ArrayList<Categories>()
 
-
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var view = convertView
         val viewHolder: ViewHolder
@@ -33,7 +31,6 @@ class ShortStoriesLibraryAdapter(activity: Context, showCategory: Boolean) : Bas
             viewHolder.tagImageView = view.findViewById<ImageView>(R.id.tagImageView)
             viewHolder.topicsNameTextView = view.findViewById<TextView>(R.id.topicsNameTextView)
             view.tag = viewHolder
-
         } else {
             viewHolder = view.tag as ViewHolder
         }
@@ -53,12 +50,10 @@ class ShortStoriesLibraryAdapter(activity: Context, showCategory: Boolean) : Bas
 
     fun getUserColletions(collectionsTopics: ArrayList<Images>) {
         userCollectionsTopicList = collectionsTopics
-
     }
 
     fun getLibraryColletions(collectionsTopics: ArrayList<Categories>) {
         libraryCollectionList = collectionsTopics
-
     }
 
     override fun getItem(position: Int): Any {
@@ -77,9 +72,5 @@ class ShortStoriesLibraryAdapter(activity: Context, showCategory: Boolean) : Bas
 
         var tagImageView: ImageView? = null
         var topicsNameTextView: TextView? = null
-
-
     }
 }
-
-

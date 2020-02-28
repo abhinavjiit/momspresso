@@ -13,7 +13,6 @@ import com.mycity4kids.ui.activity.ShortStoriesCardActivity
 import com.mycity4kids.ui.adapter.ShortStoriesLibraryAdapter
 import com.mycity4kids.ui.videochallengenewui.ExpandableHeightGridView
 
-
 class ShortStoryLibraryFragment : BaseFragment() {
 
     private lateinit var collectionGridView: ExpandableHeightGridView

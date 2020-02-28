@@ -10,10 +10,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
 import kotlinx.android.synthetic.main.picker_dialog_cell.view.*
 
-class PickerDialogAdapter(private val selectedValue: ArrayList<String>?,
-                          private val popupData: List<String>,
-                          private val mListener: onItemClickListener)
-    : RecyclerView.Adapter<PickerDialogAdapter.ViewHolder>() {
+class PickerDialogAdapter(
+    private val selectedValue: ArrayList<String>?,
+    private val popupData: List<String>,
+    private val mListener: onItemClickListener
+) :
+    RecyclerView.Adapter<PickerDialogAdapter.ViewHolder>() {
 
     private var mOnClickListener: onItemClickListener
     private var popupAllData = emptyList<String>()
@@ -30,7 +32,7 @@ class PickerDialogAdapter(private val selectedValue: ArrayList<String>?,
                 .inflate(R.layout.picker_dialog_cell, parent, false)
         return ViewHolder(view)
     }
-    //AIR_CONDITIONER
+    // AIR_CONDITIONER
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.mView.setOnClickListener {
             mOnClickListener.onItemClick(popupAllData.get(holder.adapterPosition))
@@ -40,12 +42,12 @@ class PickerDialogAdapter(private val selectedValue: ArrayList<String>?,
             mOnClickListener.onItemClick(popupAllData.get(holder.adapterPosition))
         }
 //        if(selectedValues.contains(popupAllData.get(holder.adapterPosition))){
-////            holder.isSelect.isChecked = true
-////        }else{
-////            holder.isSelect.isChecked= false
-////        }
+// //            holder.isSelect.isChecked = true
+// //        }else{
+// //            holder.isSelect.isChecked= false
+// //        }
 
-        Log.e("iscontion true", selectedValues.contains(popupAllData.get(holder.adapterPosition)).toString() )
+        Log.e("iscontion true", selectedValues.contains(popupAllData.get(holder.adapterPosition)).toString())
         holder.isSelect.isChecked = selectedValues.contains(popupAllData.get(holder.adapterPosition))
         holder.textValue.text = popupAllData.get(holder.adapterPosition)
     }
@@ -55,11 +57,9 @@ class PickerDialogAdapter(private val selectedValue: ArrayList<String>?,
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val isSelect: CheckBox = mView.checkIsSelect
         val textValue: TextView = mView.textValue
-
     }
 
     interface onItemClickListener {
         fun onItemClick(selectedValue: String)
     }
-
 }

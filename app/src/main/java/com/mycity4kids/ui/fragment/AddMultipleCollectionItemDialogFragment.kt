@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
@@ -33,11 +32,13 @@ import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
 import com.mycity4kids.ui.adapter.AddMultipleCollectionAdapter
 import com.mycity4kids.utils.ConnectivityUtils
+import com.mycity4kids.utils.ToastUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class AddMultipleCollectionItemDialogFragment : DialogFragment(), AddMultipleCollectionAdapter.RecyclerViewClick, View.OnClickListener {
+class AddMultipleCollectionItemDialogFragment : DialogFragment(),
+    AddMultipleCollectionAdapter.RecyclerViewClick, View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.back -> {
@@ -52,9 +53,12 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(), AddMultipleCol
                             val list = ArrayList<String>()
                             list.add(it)
                             updateCollectionRequestModel.userCollectionId = list
-                            updateCollectionRequestModel.userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
+                            updateCollectionRequestModel.userId =
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                                    .dynamoId
                             updateCollectionRequestModel.item = articleDataModelsNew[i].id
-                            updateCollectionRequestModel.itemType = AppConstants.ARTICLE_COLLECTION_TYPE
+                            updateCollectionRequestModel.itemType =
+                                AppConstants.ARTICLE_COLLECTION_TYPE
                             val dataList = ArrayList<UpdateCollectionRequestModel>()
                             dataList.add(updateCollectionRequestModel)
                             multipleCollectionList.addAll(dataList)
@@ -70,9 +74,9 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(), AddMultipleCol
     }
 
     override fun onclick(position: Int) {
-        articleDataModelsNew[position].isCollectionItemSelected = !articleDataModelsNew[position].isCollectionItemSelected
+        articleDataModelsNew[position].isCollectionItemSelected =
+            !articleDataModelsNew[position].isCollectionItemSelected
         addMultipleCollectionAdapter.notifyDataSetChanged()
-
     }
 
     lateinit var shimmer1: ShimmerFrameLayout
@@ -94,10 +98,15 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(), AddMultipleCol
     lateinit var skip: TextView
     var collectionId: String? = null
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.add_multiple_collection_item_activity, container,
-                false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val rootView = inflater.inflate(
+            R.layout.add_multiple_collection_item_activity, container,
+            false
+        )
         recyclerView = rootView.findViewById(R.id.recyclerView)
         bottomLoadingView = rootView.findViewById(R.id.bottomLoadingView)
         noBlogsTextView = rootView.findViewById(R.id.noBlogsTextView)
@@ -105,14 +114,15 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(), AddMultipleCol
         back = rootView.findViewById(R.id.back)
         skip = rootView.findViewById(R.id.skipTextView)
         add = rootView.findViewById(R.id.add)
-        rootView.findViewById<View>(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(activity, R.anim.rotate_indefinitely))
+        rootView.findViewById<View>(R.id.imgLoader)
+            .startAnimation(AnimationUtils.loadAnimation(activity, R.anim.rotate_indefinitely))
         collectionId = arguments?.getString("collectionId")
         getReadArticles()
         val llm = LinearLayoutManager(activity)
         llm.orientation = RecyclerView.VERTICAL
         recyclerView.layoutManager = llm
         articleDataModelsNew = ArrayList()
-     //   addMultipleCollectionAdapter = AddMultipleCollectionAdapter( this)
+        //   addMultipleCollectionAdapter = AddMultipleCollectionAdapter( this)
         recyclerView.adapter = addMultipleCollectionAdapter
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -147,7 +157,10 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(), AddMultipleCol
         super.onStart()
         val dialog = dialog
         if (dialog != null) {
-            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            dialog.window!!.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
             dialog.window!!.setWindowAnimations(R.style.CollectionDialogAnimation)
             dialog.window!!.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.transparent)))
         }
@@ -166,12 +179,18 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(), AddMultipleCol
         val collectionApi = retro.create(CollectionsAPI::class.java)
         val call = collectionApi.addMultipleCollectionItem(multipleCollectionList)
         call.enqueue(object : Callback<BaseResponseGeneric<AddCollectionRequestModel>> {
-            override fun onFailure(call: Call<BaseResponseGeneric<AddCollectionRequestModel>>, t: Throwable) {
+            override fun onFailure(
+                call: Call<BaseResponseGeneric<AddCollectionRequestModel>>,
+                t: Throwable
+            ) {
                 Crashlytics.logException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
 
-            override fun onResponse(call: Call<BaseResponseGeneric<AddCollectionRequestModel>>, response: Response<BaseResponseGeneric<AddCollectionRequestModel>>) {
+            override fun onResponse(
+                call: Call<BaseResponseGeneric<AddCollectionRequestModel>>,
+                response: Response<BaseResponseGeneric<AddCollectionRequestModel>>
+            ) {
                 if (response.body() == null) {
                     return
                 }
@@ -188,9 +207,7 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(), AddMultipleCol
                     Log.d("MC4kException", Log.getStackTraceString(t))
                 }
             }
-
         })
-
     }
 
     private fun getReadArticles() {
@@ -203,14 +220,22 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(), AddMultipleCol
 
         val retro = BaseApplication.getInstance().retrofit
         val userpublishedArticlesAPI = retro.create(BloggerDashboardAPI::class.java)
-        val call = userpublishedArticlesAPI.getAuthorsReadArticles(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, 10, chunk, "articles")
+        val call = userpublishedArticlesAPI.getAuthorsReadArticles(
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+            10,
+            chunk,
+            "articles"
+        )
         call.enqueue(object : Callback<ArticleListingResponse> {
             override fun onFailure(call: Call<ArticleListingResponse>, t: Throwable) {
                 Crashlytics.logException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
 
-            override fun onResponse(call: Call<ArticleListingResponse>, response: Response<ArticleListingResponse>) {
+            override fun onResponse(
+                call: Call<ArticleListingResponse>,
+                response: Response<ArticleListingResponse>
+            ) {
                 shimmer1.stopShimmerAnimation()
                 shimmer1.visibility = View.GONE
                 bottomLoadingView?.visibility = View.GONE
@@ -220,22 +245,16 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(), AddMultipleCol
                 try {
                     val responseData = response.body()
                     if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-
                         chunk = Integer.parseInt(responseData.data[0].chunks)
                         processPublisedArticlesResponse(responseData)
-
                     } else {
-
                     }
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
-
             }
-
         })
-
     }
 
     private fun processPublisedArticlesResponse(responseData: ArticleListingResponse) {
@@ -245,27 +264,26 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(), AddMultipleCol
 
             isLastPageReached = false
             if (!articleDataModelsNew.isNullOrEmpty()) {
-                //No more next results for search from pagination
+                // No more next results for search from pagination
             } else {
                 // No results
                 articleDataModelsNew.addAll(dataList)
-           //     addMultipleCollectionAdapter.setListData(articleDataModelsNew)
+                //     addMultipleCollectionAdapter.setListData(articleDataModelsNew)
                 addMultipleCollectionAdapter.notifyDataSetChanged()
                 noBlogsTextView?.visibility = View.VISIBLE
             }
         } else {
             if (nextPageNumber == 1) {
                 articleDataModelsNew.addAll(dataList)
-             //   addMultipleCollectionAdapter.setListData(articleDataModelsNew)
+                //   addMultipleCollectionAdapter.setListData(articleDataModelsNew)
                 addMultipleCollectionAdapter.notifyDataSetChanged()
             } else {
                 articleDataModelsNew.addAll(dataList)
             }
-         //   addMultipleCollectionAdapter.setListData(articleDataModelsNew)
+            //   addMultipleCollectionAdapter.setListData(articleDataModelsNew)
             nextPageNumber = nextPageNumber + 1
             addMultipleCollectionAdapter.notifyDataSetChanged()
         }
-
     }
 
     override fun onStop() {
@@ -273,6 +291,4 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(), AddMultipleCol
         shimmer1.stopShimmerAnimation()
         shimmer1.visibility = View.GONE
     }
-
-
 }

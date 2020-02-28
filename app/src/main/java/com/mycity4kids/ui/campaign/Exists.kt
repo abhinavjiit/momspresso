@@ -18,7 +18,6 @@ data class Exists(
         parcel.readInt()
     )
 
-
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(account_number)
         parcel.writeInt(id)
@@ -38,4 +37,3 @@ data class Exists(
         }
     }
 }
-

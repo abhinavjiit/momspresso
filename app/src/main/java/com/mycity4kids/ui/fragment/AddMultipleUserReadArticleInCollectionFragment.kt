@@ -80,7 +80,6 @@ class AddMultipleUserReadArticleInCollectionFragment : BaseFragment(), AddMultip
     }
 
     override fun onClick(v: View?) {
-
     }
 
     override fun onclick(position: Int) {
@@ -127,9 +126,7 @@ class AddMultipleUserReadArticleInCollectionFragment : BaseFragment(), AddMultip
 
                         chunk = Integer.parseInt(responseData.data[0].chunks)
                         processPublisedArticlesResponse(responseData)
-
                     } else {
-
                     }
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
@@ -144,7 +141,7 @@ class AddMultipleUserReadArticleInCollectionFragment : BaseFragment(), AddMultip
         if (dataList.size == 0) {
             isLastPageReached = false
             if (!articleDataModelsNew.isNullOrEmpty()) {
-                //No more next results for search from pagination
+                // No more next results for search from pagination
             } else {
                 // No results
                 articleDataModelsNew.addAll(dataList)

@@ -89,7 +89,6 @@ class MyTotalEarningActivity : BaseActivity() {
         }
 
         fetchAllCampaignPayout()
-
     }
 
     private fun fetchAllCampaignPayout() {

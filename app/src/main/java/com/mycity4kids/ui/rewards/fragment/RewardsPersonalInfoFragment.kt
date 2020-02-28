@@ -1,6 +1,5 @@
 package com.mycity4kids.ui.rewards.fragment
 
-
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Activity.RESULT_CANCELED
@@ -87,13 +86,12 @@ class RewardsPersonalInfoFragment : BaseFragment(),
 
     private lateinit var editReferralCode1: EditText
 
-
     override fun onItemClick(selectedValueName: ArrayList<String>, popupType: String) {
         if (popupType == Constants.PopListRequestType.INTEREST.name) {
-            //preSelectedInterest = selectedValue
+            // preSelectedInterest = selectedValue
             setFloatingLayout(selectedValueName, popupType)
         } else if (popupType == Constants.PopListRequestType.LANGUAGE.name) {
-            //preSelectedDurables = selectedValue
+            // preSelectedDurables = selectedValue
             setFloatingLayout(selectedValueName, popupType)
         }
     }
@@ -177,7 +175,6 @@ class RewardsPersonalInfoFragment : BaseFragment(),
     private var isComingFromRewards = false
     private var referralCode: String = ""
 
-
     private var endIndex: Int = 0
 
     companion object {
@@ -201,7 +198,8 @@ class RewardsPersonalInfoFragment : BaseFragment(),
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
@@ -322,7 +320,6 @@ class RewardsPersonalInfoFragment : BaseFragment(),
             editLanguage.visibility = View.GONE
             linearLanguage.visibility = View.GONE
             textEditLanguage.visibility = View.GONE
-
         }
 
         if (!isNewRegistration && apiGetResponse.interest != null && apiGetResponse.interest!!.isNotEmpty()) {
@@ -349,7 +346,6 @@ class RewardsPersonalInfoFragment : BaseFragment(),
             editInterest.visibility = View.GONE
             linearInterest.visibility = View.GONE
             textEditInterest.visibility = View.GONE
-
         }
 
         if (apiGetResponse.isMother != null && apiGetResponse.kidsInfo != null && apiGetResponse.kidsInfo!!.isNotEmpty()) {
@@ -422,7 +418,6 @@ class RewardsPersonalInfoFragment : BaseFragment(),
         editLocation = containerView.findViewById(R.id.editLocation)
         textApplyReferral = containerView.findViewById(R.id.textApplyReferral)
 
-
         editAddNumber.setOnClickListener {
             //            varifyNumberWithFacebookAccountKit()
             val intent = Intent(activity, OTPActivity::class.java)
@@ -436,7 +431,6 @@ class RewardsPersonalInfoFragment : BaseFragment(),
         if (!Places.isInitialized()) {
             Places.initialize(BaseApplication.getAppContext(), AppConstants.PLACES_API_KEY)
         }
-
 
         editLocation.setOnClickListener {
 
@@ -455,7 +449,6 @@ class RewardsPersonalInfoFragment : BaseFragment(),
                 .build(it.context)
 
             startActivityForResult(intent, REQUEST_SELECT_PLACE)
-
         }
 
         textVerify = containerView.findViewById(R.id.textVerify)
@@ -511,7 +504,6 @@ class RewardsPersonalInfoFragment : BaseFragment(),
                 } else {
                     linearKidsEmptyView.visibility = View.GONE
                 }
-
             }
         }
 
@@ -531,7 +523,6 @@ class RewardsPersonalInfoFragment : BaseFragment(),
             if (validateChildData()) {
                 createKidsDetailDynamicView()
             } else {
-
             }
         }
 
@@ -617,28 +608,30 @@ class RewardsPersonalInfoFragment : BaseFragment(),
         spinnerGender.adapter = spinAdapter
         spinnerGender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                adapter: AdapterView<*>, v: View,
-                position: Int, id: Long
+                adapter: AdapterView<*>,
+                v: View,
+                position: Int,
+                id: Long
             ) {
                 spinnerGender.setSelection(position)
             }
 
             override fun onNothingSelected(arg0: AdapterView<*>) {
-
             }
         }
         genderSpinner.adapter = spinAdapter
         genderSpinner.setSelection(1)
         genderSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                adapter: AdapterView<*>, v: View,
-                position: Int, id: Long
+                adapter: AdapterView<*>,
+                v: View,
+                position: Int,
+                id: Long
             ) {
                 genderSpinner.setSelection(position)
             }
 
             override fun onNothingSelected(arg0: AdapterView<*>) {
-
             }
         }
 
@@ -657,11 +650,9 @@ class RewardsPersonalInfoFragment : BaseFragment(),
             .setOnCheckedChangeListener { radioGroup, i ->
                 when (i) {
                     0 -> {
-
                     }
 
                     1 -> {
-
                     }
                 }
             }
@@ -686,7 +677,6 @@ class RewardsPersonalInfoFragment : BaseFragment(),
                         linearKidsEmptyView.visibility = View.VISIBLE
                         layoutDynamicNumberOfKids.visibility = View.VISIBLE
                     }
-
                 }
             }
     }
@@ -766,10 +756,8 @@ class RewardsPersonalInfoFragment : BaseFragment(),
             address = editLocation.text.toString()
         }
 
-
         apiGetResponse.latitude = lat
         apiGetResponse.longitude = lng
-
 
         if (radioGroupWorkingStatus.checkedRadioButtonId == R.id.radiokWorking) {
             apiGetResponse.workStatus = 1
@@ -798,12 +786,9 @@ class RewardsPersonalInfoFragment : BaseFragment(),
                 DateTimeUtils.convertStringToTimestamp(RewardsPersonalInfoFragment.textDOB.text.toString())
         }
 
-
         preSelectedLanguage.removeAll(Collections.singleton(""))
 
-
         if (!isNewRegistration && preSelectedLanguage.isEmpty()) {
-
 
             Toast.makeText(
                 activity,
@@ -830,7 +815,6 @@ class RewardsPersonalInfoFragment : BaseFragment(),
                 try {
                     preSelectedInterestForPosting.add(it.toInt())
                 } catch (ex: Exception) {
-
                 }
             }
             apiGetResponse.interest = preSelectedInterestForPosting
@@ -954,19 +938,15 @@ class RewardsPersonalInfoFragment : BaseFragment(),
 
                 if (!editReferralCode.text.toString().isNullOrEmpty()) {
 
-
                     editReferralCode.setFocusableInTouchMode(true)
                     editReferralCode.setError(getString(R.string.please_apply))
                     editReferralCode.requestFocus()
                     return false
-
                 } else {
                     apiGetResponse.referred_by = null
                 }
             }
         }
-
-
 
         return true
     }
@@ -1076,7 +1056,6 @@ class RewardsPersonalInfoFragment : BaseFragment(),
                 logger.logEvent(AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION, bundle)
             }
         } catch (e: Exception) {
-
         }
     }
 
@@ -1146,7 +1125,6 @@ class RewardsPersonalInfoFragment : BaseFragment(),
                             }
                         }
                     } else {
-
                     }
                 }
 
@@ -1305,7 +1283,6 @@ class RewardsPersonalInfoFragment : BaseFragment(),
             } else if (linearKidsEmptyView.visibility == View.VISIBLE && linearKidsDetail.childCount == 0) {
                 textDeleteChild.visibility = View.GONE
             }
-
         }
         var spinnerGender = indexView.findViewById<Spinner>(R.id.spinnerGender)
         var textDOB = indexView.findViewById<TextView>(R.id.textKidsDOB)
@@ -1318,14 +1295,15 @@ class RewardsPersonalInfoFragment : BaseFragment(),
         spinnerGender.adapter = spinAdapter
         spinnerGender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                adapter: AdapterView<*>, v: View,
-                position: Int, id: Long
+                adapter: AdapterView<*>,
+                v: View,
+                position: Int,
+                id: Long
             ) {
                 spinnerGender.setSelection(position)
             }
 
             override fun onNothingSelected(arg0: AdapterView<*>) {
-
             }
         }
 
@@ -1382,7 +1360,7 @@ class RewardsPersonalInfoFragment : BaseFragment(),
                     val catTextView = subsubLL.getChildAt(0) as TextView
                     catTextView.setText(it)
                     catTextView.isSelected = true
-                    //subsubLL.tag = it
+                    // subsubLL.tag = it
                     floatingInterest.addView(subsubLL)
                 }
             }
@@ -1415,7 +1393,7 @@ class RewardsPersonalInfoFragment : BaseFragment(),
                     val catTextView = subsubLL.getChildAt(0) as TextView
                     catTextView.setText(it)
                     catTextView.isSelected = true
-                    //subsubLL.tag = it
+                    // subsubLL.tag = it
                     floatingLanguage.addView(subsubLL)
                 }
             }
@@ -1434,7 +1412,6 @@ class RewardsPersonalInfoFragment : BaseFragment(),
                     }
 
                     override fun onSubscribe(d: Disposable) {
-
                     }
 
                     override fun onNext(response: BaseResponseGeneric<ReferralCodeResult>) {
@@ -1488,4 +1465,3 @@ class RewardsPersonalInfoFragment : BaseFragment(),
         return true
     }
 }
-

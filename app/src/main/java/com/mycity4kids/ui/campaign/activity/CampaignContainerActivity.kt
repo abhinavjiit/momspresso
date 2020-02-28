@@ -1,4 +1,4 @@
-package com.mycity4kids.ui.campaign.activity;
+package com.mycity4kids.ui.campaign.activity
 
 import android.app.Dialog
 import android.graphics.Color
@@ -29,7 +29,6 @@ import io.reactivex.schedulers.Schedulers
 
 class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.SubmitListener, CampaignCongratulationFragment.SubmitListener, CampaignPaymentModesFragment.SubmitListener {
     override fun onPanCardDone() {
-
     }
 
     override fun onPaymentModeDone(paymentModeId: Int) {
@@ -67,7 +66,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
         root = findViewById(R.id.container)
         (application as BaseApplication).activity = this
         deeplinkCampaignId = intent.getIntExtra("campaignID", -1)
-        fromNotification = if (intent.hasExtra("fromNotification")) {//fromNotification
+        fromNotification = if (intent.hasExtra("fromNotification")) { // fromNotification
             intent.getBooleanExtra("fromNotification", false)
         } else {
             false
@@ -121,7 +120,6 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.result != null) {
                     addAddProofFragment(deeplinkCampaignId, arrayList as ArrayList<Int>, response.data!!.result.campaignStatus!!)
                 } else {
-
                 }
             }
 
@@ -145,7 +143,6 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
                 .commit()
     }
 
-
     fun addCampaginDetailFragment(id: Int, comingFrom: String) {
 
         campaignDetailFragment = CampaignDetailFragment.newInstance(id, fromNotification, comingFrom)
@@ -153,9 +150,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
         supportFragmentManager.beginTransaction().replace(R.id.container, campaignFrag,
                 CampaignDetailFragment::class.java.simpleName).addToBackStack("campaignDetailFragment")
                 .commit()
-
     }
-
 
     fun addAddProofFragment(id: Int, deliverableTypeList: ArrayList<Int>, status: Int) {
         var campaignAddProofFragment = CampaignAddProofFragment.newInstance(id, deliverableTypeList, status)
@@ -195,8 +190,6 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
                         supportFragmentManager.popBackStack()
                     }
                 }
-
-
             } else if (currentFragment is CampaignDetailFragment) {
 
                 if (fragmentManager.backStackEntryCount == 3) {
@@ -211,7 +204,6 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
             }
         }
     }
-
 
     fun setTotalPayOut(totalPayOut: Double) {
         totalPay = totalPayOut
@@ -257,22 +249,14 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
                             .commit()
                 } else {
                     showRewardDialog()
-
                 }
-
-
             }
 
             override fun onError(e: Throwable) {
                 removeProgressDialog()
                 Log.e("exception in error", e.message.toString())
-
-
             }
-
-
         })
-
     }
 
     private fun showRewardDialog() {
@@ -290,5 +274,4 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
             dialog.show()
         }
     }
-
 }
