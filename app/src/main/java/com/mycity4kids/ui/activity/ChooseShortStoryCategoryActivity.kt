@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.google.gson.GsonBuilder
-import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.models.ExploreTopicsModel
 import com.mycity4kids.models.ExploreTopicsResponse
@@ -22,30 +22,36 @@ import com.mycity4kids.ui.adapter.ShortStoryTopicsGridAdapter
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.ArrayAdapterFactory
 import kotlinx.android.synthetic.main.choose_short_story_category_activity.*
-import kotlinx.coroutines.CoroutineExceptionHandler
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.FileNotFoundException
 
-class ChooseShortStoryCategoryActivity : BaseActivity(), ShortStoryChallengeTopicsAdapter.RecyclerViewClickListener {
-
-    val handler = CoroutineExceptionHandler { _, exception ->
-        Log.d("Exception", "$exception handled !")
-    }
+class ChooseShortStoryCategoryActivity : BaseActivity(),
+    ShortStoryChallengeTopicsAdapter.RecyclerViewClickListener {
 
     override fun onClick(v: View, position: Int) {
-        val intent = Intent(this@ChooseShortStoryCategoryActivity, ShortStoryChallengeDetailActivity::class.java)
+        val intent = Intent(
+            this@ChooseShortStoryCategoryActivity,
+            ShortStoryChallengeDetailActivity::class.java
+        )
         intent.putExtra("Display_Name", publicShortStoryChallenges?.get(position)?.display_name)
         intent.putExtra("challenge", publicShortStoryChallenges?.get(position)?.id)
         intent.putExtra("topics", publicShortStoryChallenges?.get(position)?.parentName)
         intent.putExtra("parentId", publicShortStoryChallenges?.get(position)?.parentId)
-        intent.putExtra("StringUrl", publicShortStoryChallenges?.get(position)?.extraData?.get(0)?.challenge?.imageUrl)
+        intent.putExtra(
+            "StringUrl",
+            publicShortStoryChallenges?.get(position)?.extraData?.get(0)?.challenge?.imageUrl
+        )
         startActivity(intent)
     }
 
-    private val shortStoryChallengeAdapter: ShortStoryChallengeTopicsAdapter by lazy { ShortStoryChallengeTopicsAdapter(this) }
+    private val shortStoryChallengeAdapter: ShortStoryChallengeTopicsAdapter by lazy {
+        ShortStoryChallengeTopicsAdapter(
+            this
+        )
+    }
     val adapter: ShortStoryTopicsGridAdapter by lazy { ShortStoryTopicsGridAdapter() }
     private var shortShortTopicsData: ArrayList<ExploreTopicsModel>? = null
     private var shortStoryChallengesData: ArrayList<Topics>? = null
@@ -72,7 +78,8 @@ class ChooseShortStoryCategoryActivity : BaseActivity(), ShortStoryChallengeTopi
         }
         topicsGridView.setOnItemClickListener { parent, view, position, id ->
             val topicId = publicShortStoryTopics?.get(position)?.id
-            val intent = Intent(this@ChooseShortStoryCategoryActivity, AddShortStoryActivity::class.java)
+            val intent =
+                Intent(this@ChooseShortStoryCategoryActivity, AddShortStoryActivity::class.java)
             intent.putExtra("categoryId", topicId)
             intent.putExtra("categoryName", publicShortStoryTopics?.get(position)?.display_name)
             startActivity(intent)
@@ -91,7 +98,8 @@ class ChooseShortStoryCategoryActivity : BaseActivity(), ShortStoryChallengeTopi
 
     private fun fetchShortStoryTopicsAndChallenges() {
         try {
-            val fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE)
+            val fileInputStream =
+                BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE)
             val fileContent = AppUtils.convertStreamToString(fileInputStream)
             val gson = GsonBuilder().registerTypeAdapterFactory(ArrayAdapterFactory()).create()
             val res = gson.fromJson(fileContent, ExploreTopicsResponse::class.java)
@@ -117,25 +125,32 @@ class ChooseShortStoryCategoryActivity : BaseActivity(), ShortStoryChallengeTopi
                     break
                 }
             }
-            shortStoryChallengesData?.forEach {
-                if (it.id == AppConstants.SHORT_STORY_CHALLENGE_ID) {
-                    shortStoryChallenges = it.child
+            for (i in 0 until shortStoryChallengesData?.size!!) {
+                if (shortStoryChallengesData?.get(i)?.id == AppConstants.SHORT_STORY_CHALLENGE_ID) {
+                    shortStoryChallenges = shortStoryChallengesData?.get(i)?.child
                     shortStoryChallenges?.let { challenges ->
                         publicShortStoryChallenges = ArrayList()
                         challenges.forEach { checkPublicChallenges ->
-                            if (checkPublicChallenges.publicVisibility == "1" && checkPublicChallenges.extraData[0].challenge.active == "1") {
-                                publicShortStoryChallenges?.add(checkPublicChallenges)
+                            if (checkPublicChallenges.publicVisibility == "1") {
+                                if (!checkPublicChallenges.extraData.isNullOrEmpty() && checkPublicChallenges.extraData?.get(
+                                        0
+                                    )?.challenge?.active == "1"
+                                )
+                                    publicShortStoryChallenges?.add(checkPublicChallenges)
                             }
                         }
                         publicShortStoryChallenges?.reverse()
                         publicShortStoryChallenges?.let { publicAndActiveChallenges ->
                             shortStoryShimmer.stopShimmerAnimation()
                             shortStoryShimmer.visibility = View.GONE
-                            shortStoryChallengeAdapter.setShortStoryChallengesData(publicAndActiveChallenges)
+                            shortStoryChallengeAdapter.setShortStoryChallengesData(
+                                publicAndActiveChallenges
+                            )
                             shortStoryChallengeAdapter.notifyDataSetChanged()
                         }
                     }
                 }
+                break
             }
         } catch (e: FileNotFoundException) {
             Crashlytics.logException(e)
@@ -149,13 +164,22 @@ class ChooseShortStoryCategoryActivity : BaseActivity(), ShortStoryChallengeTopi
                     Log.d("MC4KException", Log.getStackTraceString(t))
                 }
 
-                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                    val writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body())
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    val writtenToDisk = AppUtils.writeResponseBodyToDisk(
+                        BaseApplication.getAppContext(),
+                        AppConstants.CATEGORIES_JSON_FILE,
+                        response.body()
+                    )
                     Log.d("TopicsFilterActivity", "file download was a success? $writtenToDisk")
 
-                    val fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE)
+                    val fileInputStream = BaseApplication.getAppContext()
+                        .openFileInput(AppConstants.CATEGORIES_JSON_FILE)
                     val fileContent = AppUtils.convertStreamToString(fileInputStream)
-                    val gson = GsonBuilder().registerTypeAdapterFactory(ArrayAdapterFactory()).create()
+                    val gson =
+                        GsonBuilder().registerTypeAdapterFactory(ArrayAdapterFactory()).create()
                     val res = gson.fromJson(fileContent, ExploreTopicsResponse::class.java)
                     val challengesRes = gson.fromJson(fileContent, TopicsResponse::class.java)
                     shortShortTopicsData = ArrayList()
@@ -179,25 +203,33 @@ class ChooseShortStoryCategoryActivity : BaseActivity(), ShortStoryChallengeTopi
                             break
                         }
                     }
-                    shortStoryChallengesData?.forEach {
-                        if (it.id == AppConstants.SHORT_STORY_CHALLENGE_ID) {
-                            shortStoryChallenges = it.child
+                    for (i in 0 until shortStoryChallengesData?.size!!) {
+                        if (shortStoryChallengesData?.get(i)?.id == AppConstants.SHORT_STORY_CHALLENGE_ID) {
+                            shortStoryChallenges = shortStoryChallengesData?.get(i)?.child
                             shortStoryChallenges?.let { challenges ->
                                 publicShortStoryChallenges = ArrayList()
                                 challenges.forEach { checkPublicChallenges ->
-                                    if (checkPublicChallenges.publicVisibility == "1" && checkPublicChallenges.extraData[0].challenge.active == "1") {
-                                        publicShortStoryChallenges?.add(checkPublicChallenges)
+
+                                    if (checkPublicChallenges.publicVisibility == "1") {
+                                        if (!checkPublicChallenges.extraData.isNullOrEmpty() && checkPublicChallenges.extraData?.get(
+                                                0
+                                            )?.challenge?.active == "1"
+                                        )
+                                            publicShortStoryChallenges?.add(checkPublicChallenges)
                                     }
                                 }
                                 publicShortStoryChallenges?.reverse()
                                 publicShortStoryChallenges?.let { publicAndActiveChallenges ->
                                     shortStoryShimmer.stopShimmerAnimation()
                                     shortStoryShimmer.visibility = View.GONE
-                                    shortStoryChallengeAdapter.setShortStoryChallengesData(publicAndActiveChallenges)
+                                    shortStoryChallengeAdapter.setShortStoryChallengesData(
+                                        publicAndActiveChallenges
+                                    )
                                     shortStoryChallengeAdapter.notifyDataSetChanged()
                                 }
                             }
                         }
+                        break
                     }
                 }
             })

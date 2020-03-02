@@ -414,10 +414,6 @@
             android:name=".ui.activity.UserReadArticlesContentActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.MyTotalEarningActivity"
-            android:parentActivityName=".ui.activity.EditProfileNewActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.ParallelFeedActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.rankingTheme" />
