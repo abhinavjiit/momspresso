@@ -3,8 +3,6 @@ package com.mycity4kids.editor;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -357,7 +355,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-            @NonNull int[] grantResults) {
+                                           @NonNull int[] grantResults) {
         if (requestCode == REQUEST_INIT_PERMISSION) {
             if (PermissionUtil.verifyPermissions(grantResults)) {
                 Snackbar.make(mLayout, R.string.permision_available_init,
@@ -546,7 +544,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
                 public void onResponse(Call<ArticleDraftResponse> call,
-                        retrofit2.Response<ArticleDraftResponse> response) {
+                                       retrofit2.Response<ArticleDraftResponse> response) {
                     removeProgressDialog();
                     if (response == null || response.body() == null) {
                         showToast(getString(R.string.server_went_wrong));
@@ -598,7 +596,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
                 public void onResponse(Call<ArticleDraftResponse> call,
-                        retrofit2.Response<ArticleDraftResponse> response) {
+                                       retrofit2.Response<ArticleDraftResponse> response) {
                     removeProgressDialog();
                     if (response == null || response.body() == null) {
                         showToast(getString(R.string.went_wrong));
@@ -654,7 +652,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
                 public void onResponse(Call<ArticleDraftResponse> call,
-                        retrofit2.Response<ArticleDraftResponse> response) {
+                                       retrofit2.Response<ArticleDraftResponse> response) {
                     if (response.body() != null && response.isSuccessful()) {
                         ArticleDraftResponse responseModel = response.body();
                         if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
@@ -681,7 +679,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
                 public void onResponse(Call<ArticleDraftResponse> call,
-                        retrofit2.Response<ArticleDraftResponse> response) {
+                                       retrofit2.Response<ArticleDraftResponse> response) {
                     if (response.body() != null && response.isSuccessful()) {
                         ArticleDraftResponse responseModel = response.body();
                         if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
