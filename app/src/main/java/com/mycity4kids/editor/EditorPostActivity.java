@@ -3,6 +3,8 @@ package com.mycity4kids.editor;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -90,7 +92,8 @@ import retrofit2.Retrofit;
 /**
  * Created by anshul on 2/29/16.
  */
-public class EditorPostActivity extends BaseActivity implements EditorFragmentAbstract.EditorFragmentListener, View.OnClickListener, SpellCheckDialogFragment.ISpellcheckResult {
+public class EditorPostActivity extends BaseActivity implements EditorFragmentAbstract.EditorFragmentListener,
+        View.OnClickListener, SpellCheckDialogFragment.ISpellcheckResult {
 
     private FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
@@ -154,7 +157,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         super.onCreate(savedInstanceState);
         if (getIntent().getIntExtra(EDITOR_PARAM, USE_NEW_EDITOR) == USE_NEW_EDITOR) {
             setContentView(R.layout.activity_new_editor);
-            Utils.pushOpenScreenEvent(EditorPostActivity.this, "CreateArticleScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+            Utils.pushOpenScreenEvent(EditorPostActivity.this, "CreateArticleScreen",
+                    SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         }
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         closeEditorImageView = (ImageView) findViewById(R.id.closeEditorImageView);
@@ -195,7 +199,9 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         if (fragment != null && fragment.isVisible()) {
             ((ImageSettingsDialogFragment) fragment).dismissFragment();
         } else {
-            if ((mEditorFragment.getTitle().toString().isEmpty() && (mEditorFragment.getContent().toString().isEmpty())) || (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList"))) {
+            if ((mEditorFragment.getTitle().toString().isEmpty() && (mEditorFragment.getContent().toString().isEmpty()))
+                    || (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from")
+                    .equals("publishedList"))) {
                 super.onBackPressed();
                 finish();
             } else if (EditorFragmentAbstract.imageUploading == 0) {
@@ -206,7 +212,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     showToast(getString(R.string.error_network));
                     return;
                 }
-                saveDraftRequest(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
+                saveDraftRequest(titleFormatting(mEditorFragment.getTitle().toString().trim()),
+                        mEditorFragment.getContent().toString(), draftId);
             }
         }
     }
@@ -229,9 +236,11 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (ActivityCompat.checkSelfPermission(EditorPostActivity.this, Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED
-                            || ActivityCompat.checkSelfPermission(EditorPostActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                            || ActivityCompat
+                            .checkSelfPermission(EditorPostActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED
-                            || ActivityCompat.checkSelfPermission(EditorPostActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            || ActivityCompat
+                            .checkSelfPermission(EditorPostActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED) {
                         requestPermissions();
                     } else {
@@ -264,9 +273,11 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (ActivityCompat.checkSelfPermission(EditorPostActivity.this, Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED
-                            || ActivityCompat.checkSelfPermission(EditorPostActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                            || ActivityCompat
+                            .checkSelfPermission(EditorPostActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED
-                            || ActivityCompat.checkSelfPermission(EditorPostActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            || ActivityCompat
+                            .checkSelfPermission(EditorPostActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED) {
                         requestPermissions();
                     } else {
@@ -292,7 +303,9 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             }
             if (photoFile != null) {
                 try {
-                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, GenericFileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".my.package.name.provider", createImageFile()));
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, GenericFileProvider
+                            .getUriForFile(this, getApplicationContext().getPackageName() + ".my.package.name.provider",
+                                    createImageFile()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -344,7 +357,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_INIT_PERMISSION) {
             if (PermissionUtil.verifyPermissions(grantResults)) {
                 Snackbar.make(mLayout, R.string.permision_available_init,
@@ -395,7 +408,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 imageUri = data.getData();
                 if (resultCode == Activity.RESULT_OK) {
                     try {
-                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(EditorPostActivity.this.getContentResolver(), imageUri);
+                        Bitmap imageBitmap = MediaStore.Images.Media
+                                .getBitmap(EditorPostActivity.this.getContentResolver(), imageUri);
                         float actualHeight = imageBitmap.getHeight();
                         float actualWidth = imageBitmap.getWidth();
                         if (actualWidth < 720) {
@@ -422,10 +436,13 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                                 actualWidth = maxWidth;
                             }
                         }
-                        Bitmap finalBitmap = Bitmap.createScaledBitmap(imageBitmap, (int) actualWidth, (int) actualHeight, true);
+                        Bitmap finalBitmap = Bitmap
+                                .createScaledBitmap(imageBitmap, (int) actualWidth, (int) actualHeight, true);
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         finalBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
-                        String path = MediaStore.Images.Media.insertImage(EditorPostActivity.this.getContentResolver(), finalBitmap, "Title" + System.currentTimeMillis(), null);
+                        String path = MediaStore.Images.Media
+                                .insertImage(EditorPostActivity.this.getContentResolver(), finalBitmap,
+                                        "Title" + System.currentTimeMillis(), null);
                         Uri imageUriTemp = Uri.parse(path);
                         EditorFragmentAbstract.imageUploading = 0;
                         File file2 = FileUtils.getFile(this, imageUriTemp);
@@ -439,7 +456,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             case ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK) {
                     try {
-                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(mCurrentPhotoPath));
+                        Bitmap imageBitmap = MediaStore.Images.Media
+                                .getBitmap(getContentResolver(), Uri.parse(mCurrentPhotoPath));
                         ExifInterface ei = new ExifInterface(absoluteImagePath);
                         int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                                 ExifInterface.ORIENTATION_UNDEFINED);
@@ -486,7 +504,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                             }
                         }
 
-                        Bitmap finalBitmap = Bitmap.createScaledBitmap(imageBitmap, (int) actualWidth, (int) actualHeight, true);
+                        Bitmap finalBitmap = Bitmap
+                                .createScaledBitmap(imageBitmap, (int) actualWidth, (int) actualHeight, true);
                         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                         finalBitmap.compress(Bitmap.CompressFormat.JPEG, 75, bytes);
                         byte[] bitmapData = bytes.toByteArray();
@@ -526,16 +545,18 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(title, body, "0", null);
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
-                public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
+                public void onResponse(Call<ArticleDraftResponse> call,
+                        retrofit2.Response<ArticleDraftResponse> response) {
                     removeProgressDialog();
                     if (response == null || response.body() == null) {
                         showToast(getString(R.string.server_went_wrong));
-                        showAlertDialog(getString(R.string.draft_oops), getString(R.string.draft_not_saved), new OnButtonClicked() {
-                            @Override
-                            public void onButtonCLick(int buttonId) {
-                                finish();
-                            }
-                        });
+                        showAlertDialog(getString(R.string.draft_oops), getString(R.string.draft_not_saved),
+                                new OnButtonClicked() {
+                                    @Override
+                                    public void onButtonCLick(int buttonId) {
+                                        finish();
+                                    }
+                                });
                         return;
                     }
                     try {
@@ -572,10 +593,12 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             saveDraftRequest.setBody(body);
             saveDraftRequest.setArticleType("0");
             saveDraftRequest.setUserAgent1(AppConstants.ANDROID_NEW_EDITOR);
-            Call<ArticleDraftResponse> call = articleDraftAPI.updateDrafts(AppConstants.LIVE_URL + "v1/articles/" + draftId1, saveDraftRequest);
+            Call<ArticleDraftResponse> call = articleDraftAPI
+                    .updateDrafts(AppConstants.LIVE_URL + "v1/articles/" + draftId1, saveDraftRequest);
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
-                public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
+                public void onResponse(Call<ArticleDraftResponse> call,
+                        retrofit2.Response<ArticleDraftResponse> response) {
                     removeProgressDialog();
                     if (response == null || response.body() == null) {
                         showToast(getString(R.string.went_wrong));
@@ -630,7 +653,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(title, body, "0", null);
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
-                public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
+                public void onResponse(Call<ArticleDraftResponse> call,
+                        retrofit2.Response<ArticleDraftResponse> response) {
                     if (response.body() != null && response.isSuccessful()) {
                         ArticleDraftResponse responseModel = response.body();
                         if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
@@ -652,10 +676,12 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             saveDraftRequest.setBody(body);
             saveDraftRequest.setArticleType("0");
             saveDraftRequest.setUserAgent1(AppConstants.ANDROID_NEW_EDITOR);
-            Call<ArticleDraftResponse> call = articleDraftAPI.updateDrafts(AppConstants.LIVE_URL + "v1/articles/" + draftId1, saveDraftRequest);
+            Call<ArticleDraftResponse> call = articleDraftAPI
+                    .updateDrafts(AppConstants.LIVE_URL + "v1/articles/" + draftId1, saveDraftRequest);
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
-                public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
+                public void onResponse(Call<ArticleDraftResponse> call,
+                        retrofit2.Response<ArticleDraftResponse> response) {
                     if (response.body() != null && response.isSuccessful()) {
                         ArticleDraftResponse responseModel = response.body();
                         if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
@@ -681,8 +707,10 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm", Locale.US);
         calendar1.setTimeInMillis(lastUpdatedTime);
         Long diff = System.currentTimeMillis() - lastUpdatedTime;
-        if (diff / (1000 * 60 * 60) > 24 && !sdf.format(System.currentTimeMillis()).equals(sdf.format((lastUpdatedTime)))) {
-            lastSavedTextView.setText(getString(R.string.editor_last_saved_on, DateTimeUtils.getDateFromTimestamp(draftObject.getUpdatedTime())));
+        if (diff / (1000 * 60 * 60) > 24 && !sdf.format(System.currentTimeMillis())
+                .equals(sdf.format((lastUpdatedTime)))) {
+            lastSavedTextView.setText(getString(R.string.editor_last_saved_on,
+                    DateTimeUtils.getDateFromTimestamp(draftObject.getUpdatedTime())));
         } else {
             lastSavedTextView.setText(getString(R.string.editor_last_saved_at, sdf1.format(calendar1.getTime())));
         }
@@ -741,7 +769,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             mEditorFragment.setTitle(title);
             mEditorFragment.setContent(content);
             initiatePeriodicDraftSave();
-        } else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
+        } else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from")
+                .equals("publishedList")) {
             title = getIntent().getStringExtra("title");
             title = title.trim();
             content = getIntent().getStringExtra("content");
@@ -766,7 +795,9 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     private void initiatePeriodicDraftSave() {
         periodicUpdate = () -> {
             mHandler.postDelayed(periodicUpdate, 5000);
-            saveDraftsAsync(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
+            Log.e("TITLE", mEditorFragment.getTitle().toString().trim());
+            Log.e("CONTENT", mEditorFragment.getContent().toString().trim());
+//            saveDraftsAsync(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
         };
         mHandler.postDelayed(periodicUpdate, 5000);
     }
@@ -855,16 +886,20 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     showToast(getString(R.string.editor_title_char_limit));
                 } else if (mEditorFragment.getContent().toString().isEmpty()) {
                     showToast(getString(R.string.editor_body_empty));
-                } else if (mEditorFragment.getContent().toString().replace("&nbsp;", " ").split("\\s+").length < 299 && !BuildConfig.DEBUG) {
-                    showCustomToast(mEditorFragment.getContent().toString().replace("&nbsp;", " ").split("\\s+").length);
+                } else if (mEditorFragment.getContent().toString().replace("&nbsp;", " ").split("\\s+").length < 299
+                        && !BuildConfig.DEBUG) {
+                    showCustomToast(
+                            mEditorFragment.getContent().toString().replace("&nbsp;", " ").split("\\s+").length);
                 } else if (EditorFragmentAbstract.imageUploading == 0) {
                     Log.e("imageuploading", EditorFragmentAbstract.imageUploading + "");
                     showToast(getString(R.string.image_upload_wait));
                 } else {
-                    if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
+                    if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from")
+                            .equals("publishedList")) {
                         launchSpellCheckDialog();
                     } else {
-                        saveDraftBeforePublishRequest(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
+                        saveDraftBeforePublishRequest(titleFormatting(mEditorFragment.getTitle().toString().trim()),
+                                mEditorFragment.getContent().toString(), draftId);
                     }
                 }
                 break;
@@ -872,13 +907,15 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     }
 
     private void showCustomToast(int bodyWordCount) {
-        Toast toast = Toast.makeText(this, getString(R.string.article_editor_min_words_body, bodyWordCount), Toast.LENGTH_SHORT);
+        Toast toast = Toast
+                .makeText(this, getString(R.string.article_editor_min_words_body, bodyWordCount), Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
         LinearLayout toastLayout = (LinearLayout) toast.getView();
         TextView toastTV = (TextView) toastLayout.getChildAt(0);
         toastTV.setGravity(Gravity.CENTER);
         toastTV.setTextColor(ContextCompat.getColor(this, R.color.white_color));
-        toastLayout.getBackground().setColorFilter(ContextCompat.getColor(this, R.color.dark_grey), PorterDuff.Mode.SRC_IN);
+        toastLayout.getBackground()
+                .setColorFilter(ContextCompat.getColor(this, R.color.dark_grey), PorterDuff.Mode.SRC_IN);
         toast.show();
     }
 
@@ -901,7 +938,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             saveDraftRequest.setBody(body);
             saveDraftRequest.setArticleType("0");
             saveDraftRequest.setUserAgent1(AppConstants.ANDROID_NEW_EDITOR);
-            Call<ArticleDraftResponse> call = articleDraftAPI.updateDrafts(AppConstants.LIVE_URL + "v1/articles/" + draftId1, saveDraftRequest);
+            Call<ArticleDraftResponse> call = articleDraftAPI
+                    .updateDrafts(AppConstants.LIVE_URL + "v1/articles/" + draftId1, saveDraftRequest);
             call.enqueue(saveDraftBeforePublishResponseListener);
         }
     }
@@ -967,7 +1005,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         publishObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
         publishObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString().trim()));
         Log.d("draftId = ", draftId + "");
-        if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) || ("4".equals(moderation_status))) {
+        if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList"))
+                || ("4".equals(moderation_status))) {
             // coming from edit published articles
             Intent intent_1 = new Intent(EditorPostActivity.this, AddArticleTopicsActivityNew.class);
             publishObject.setId(articleId);
@@ -990,6 +1029,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     }
 
     private static class MyHandler extends Handler {
+
         private final WeakReference<EditorPostActivity> mActivity;
 
         MyHandler(EditorPostActivity activity) {
