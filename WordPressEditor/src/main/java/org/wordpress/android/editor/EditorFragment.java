@@ -53,6 +53,7 @@ import java.util.concurrent.TimeUnit;
 public class EditorFragment extends EditorFragmentAbstract implements View.OnClickListener, View.OnTouchListener,
         OnJsEditorStateChangedListener, OnImeBackListener, EditorWebViewAbstract.AuthHeaderRequestListener,
         EditorMediaUploadListener {
+
     private static final String ARG_PARAM_TITLE = "param_title";
     private static final String ARG_PARAM_CONTENT = "param_content";
 
@@ -158,7 +159,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom,
-                                       int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                    int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 mWebView.post(new Runnable() {
                     @Override
                     public void run() {
@@ -201,7 +202,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         mSourceViewTitle.setHint(mTitlePlaceholder);
         mSourceViewContent.setHint("<p>" + mContentPlaceholder + "</p>");
-
 
         // -- Format bar configuration
 
@@ -387,7 +387,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             htmlEditor = htmlEditor.replace("%%LOCALIZED_STRING_INIT%%",
                     "nativeState.localizedStringEdit = '" + getString(R.string.edit) + "';\n" +
                             "nativeState.localizedStringUploading = '" + getString(R.string.uploading) + "';\n" +
-                            "nativeState.localizedStringUploadingGallery = '" + getString(R.string.uploading_gallery_placeholder) + "';\n");
+                            "nativeState.localizedStringUploadingGallery = '" + getString(
+                            R.string.uploading_gallery_placeholder) + "';\n");
         }
 
         // To avoid reflection security issues with JavascriptInterface on API<17, we use an iframe to make URL requests
@@ -1091,7 +1092,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         });
     }
 
-    public void onMediaTapped(final String mediaId, final MediaType mediaType, final JSONObject meta, String uploadStatus) {
+    public void onMediaTapped(final String mediaId, final MediaType mediaType, final JSONObject meta,
+            String uploadStatus) {
         if (mediaType == null) {
             return;
         }
@@ -1276,6 +1278,19 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         imageUploading = 1;
     }
 
+    @Override
+    public void onPasteEvent() {
+        Log.e("Paste Event", "Paste Event");
+        mWebView.post(new Runnable() {
+            @Override
+            public void run() {
+                setTitle(getTitle());
+                setContent(getContent());
+                updateVisualEditorFields();
+            }
+        });
+    }
+
     private void updateVisualEditorFields() {
         mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_title').setPlainText('" +
                 Utils.escapeHtml(mTitle) + "');");
@@ -1369,7 +1384,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
      * In HTML mode, applies formatting to selected text, or inserts formatting tag at current cursor position
      *
      * @param toggleButton format bar button which was clicked
-     * @param tag          identifier tag
+     * @param tag identifier tag
      */
     private void applyFormattingHtmlMode(ToggleButton toggleButton, String tag) {
         if (mSourceViewContent == null) {
