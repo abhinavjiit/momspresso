@@ -26,13 +26,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -61,13 +59,6 @@ import com.mycity4kids.utils.DateTimeUtils;
 import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.StringUtils;
-
-import org.wordpress.android.editor.EditorFragmentAbstract;
-import org.wordpress.android.editor.EditorMediaUploadListener;
-import org.wordpress.android.editor.ImageSettingsDialogFragment;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.helpers.MediaFile;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -80,9 +71,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import org.wordpress.android.editor.EditorFragmentAbstract;
+import org.wordpress.android.editor.EditorMediaUploadListener;
+import org.wordpress.android.editor.ImageSettingsDialogFragment;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.helpers.MediaFile;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -355,7 +350,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_INIT_PERMISSION) {
             if (PermissionUtil.verifyPermissions(grantResults)) {
                 Snackbar.make(mLayout, R.string.permision_available_init,
@@ -544,7 +539,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
                 public void onResponse(Call<ArticleDraftResponse> call,
-                                       retrofit2.Response<ArticleDraftResponse> response) {
+                        retrofit2.Response<ArticleDraftResponse> response) {
                     removeProgressDialog();
                     if (response == null || response.body() == null) {
                         showToast(getString(R.string.server_went_wrong));
@@ -596,7 +591,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
                 public void onResponse(Call<ArticleDraftResponse> call,
-                                       retrofit2.Response<ArticleDraftResponse> response) {
+                        retrofit2.Response<ArticleDraftResponse> response) {
                     removeProgressDialog();
                     if (response == null || response.body() == null) {
                         showToast(getString(R.string.went_wrong));
@@ -652,7 +647,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
                 public void onResponse(Call<ArticleDraftResponse> call,
-                                       retrofit2.Response<ArticleDraftResponse> response) {
+                        retrofit2.Response<ArticleDraftResponse> response) {
                     if (response.body() != null && response.isSuccessful()) {
                         ArticleDraftResponse responseModel = response.body();
                         if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
@@ -679,7 +674,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
                 public void onResponse(Call<ArticleDraftResponse> call,
-                                       retrofit2.Response<ArticleDraftResponse> response) {
+                        retrofit2.Response<ArticleDraftResponse> response) {
                     if (response.body() != null && response.isSuccessful()) {
                         ArticleDraftResponse responseModel = response.body();
                         if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
