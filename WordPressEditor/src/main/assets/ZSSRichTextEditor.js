@@ -120,6 +120,7 @@ ZSSEditor.init = function() {
             event.preventDefault();
             var clipboardData = event.originalEvent.clipboardData.getData('text/plain');
             document.execCommand('insertText', false, clipboardData);
+            ZSSEditor.callback('callback-paste');
         });
     }
 }; //end

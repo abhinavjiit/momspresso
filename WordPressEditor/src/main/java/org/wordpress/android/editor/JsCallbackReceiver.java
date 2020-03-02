@@ -17,7 +17,7 @@ import static org.wordpress.android.editor.EditorFragmentAbstract.MediaType;
 
 public class JsCallbackReceiver {
     private static final String JS_CALLBACK_DELIMITER = "~";
-
+    private static final String CALLBACK_PASTE_EVENT = "callback-paste";
     private static final String CALLBACK_DOM_LOADED = "callback-dom-loaded";
     private static final String CALLBACK_NEW_FIELD = "callback-new-field";
 
@@ -49,6 +49,9 @@ public class JsCallbackReceiver {
     @JavascriptInterface
     public void executeCallback(String callbackId, String params) {
         switch (callbackId) {
+            case CALLBACK_PASTE_EVENT:
+                mListener.onPasteEvent();
+                break;
             case CALLBACK_DOM_LOADED:
                 mListener.onDomLoaded();
                 break;

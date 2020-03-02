@@ -15,4 +15,6 @@ public interface OnJsEditorStateChangedListener {
     void onVideoPressInfoRequested(String videoId);
     void onGetHtmlResponse(Map<String, String> responseArgs);
     void onImageReplaced(String responseArgs);
+
+    void onPasteEvent();
 }
