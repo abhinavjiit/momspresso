@@ -115,6 +115,9 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
         } else if (StringUtils.isNullOrEmpty(newPasswordEditText.getText().toString().trim())) {
             Toast.makeText(ChangePasswordActivity.this, getString(R.string.app_settings_change_pass_toast_new_pass_empty), Toast.LENGTH_SHORT).show();
             return false;
+        } else if (currentPasswordEditText.getText().toString().equals(newPasswordEditText.getText().toString())) {
+            Toast.makeText(ChangePasswordActivity.this, getString(R.string.app_settings_change_pass_toast_same_pass), Toast.LENGTH_SHORT).show();
+            return false;
         } else if (newPasswordEditText.getText().toString().trim().length() < 6) {
             Toast.makeText(ChangePasswordActivity.this, getString(R.string.app_settings_change_pass_toast_new_pass_min_length), Toast.LENGTH_SHORT).show();
             return false;
