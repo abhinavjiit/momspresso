@@ -2,8 +2,8 @@ package com.mycity4kids.ui.mymoneytracker.activity
 
 import android.os.Bundle
 import android.widget.ImageView
-import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.R
+import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.ui.mymoneytracker.fragment.TrackerFragment
 import kotlinx.android.synthetic.main.activity_tracker.*
 

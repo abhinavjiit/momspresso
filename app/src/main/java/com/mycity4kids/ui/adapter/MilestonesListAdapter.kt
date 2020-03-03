@@ -9,14 +9,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.google.gson.Gson
-import com.mycity4kids.utils.DateTimeUtils
 import com.mycity4kids.R
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.models.response.ImageURL
 import com.mycity4kids.profile.MilestonesResult
+import com.mycity4kids.utils.DateTimeUtils
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
-import java.util.*
 
 class MilestonesListAdapter(
     private val mListener: RecyclerViewClickListener
@@ -29,7 +28,8 @@ class MilestonesListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MilestonesViewHolder {
-        val v0 = LayoutInflater.from(parent.context).inflate(R.layout.milestones_item, parent, false)
+        val v0 =
+            LayoutInflater.from(parent.context).inflate(R.layout.milestones_item, parent, false)
         return MilestonesViewHolder(v0, mListener)
     }
 
@@ -40,7 +40,8 @@ class MilestonesListAdapter(
     override fun onBindViewHolder(holder: MilestonesViewHolder, position: Int) {
         try {
             if (!milestonesList?.get(position)?.milestone_bg_url.isNullOrBlank()) {
-                Picasso.get().load(milestonesList?.get(position)?.milestone_bg_url).into(holder.milestoneBgImageView)
+                Picasso.get().load(milestonesList?.get(position)?.milestone_bg_url)
+                    .into(holder.milestoneBgImageView)
             } else {
                 holder.milestoneBgImageView?.setBackgroundResource(R.drawable.default_article)
             }
@@ -52,7 +53,8 @@ class MilestonesListAdapter(
 
         try {
             if (!milestonesList?.get(position)?.milestone_image_url.isNullOrBlank()) {
-                Picasso.get().load(milestonesList?.get(position)?.milestone_image_url).into(holder.milestoneImageView)
+                Picasso.get().load(milestonesList?.get(position)?.milestone_image_url)
+                    .into(holder.milestoneImageView)
             } else {
                 holder.milestoneImageView?.setImageResource(R.drawable.default_article)
             }
@@ -67,7 +69,9 @@ class MilestonesListAdapter(
                 holder.contentTypeImageView?.visibility = View.VISIBLE
                 holder.contentTypeImageView?.setImageResource(R.drawable.draft_red)
                 try {
-                    val jsonObject = Gson().toJsonTree(milestonesList?.get(position)?.meta_data?.content_info?.imageUrl).asJsonObject
+                    val jsonObject =
+                        Gson().toJsonTree(milestonesList?.get(position)?.meta_data?.content_info?.imageUrl)
+                            .asJsonObject
                     val imageUrl = Gson().fromJson<ImageURL>(jsonObject, ImageURL::class.java)
                     Picasso.get().load(imageUrl?.thumbMin).into(holder.contentImageView)
                 } catch (e: Exception) {
@@ -80,7 +84,8 @@ class MilestonesListAdapter(
                 holder.contentTypeImageView?.visibility = View.VISIBLE
                 holder.contentTypeImageView?.setImageResource(R.drawable.shortstory_red)
                 try {
-                    val imageUrl: String? = milestonesList?.get(position)?.meta_data?.content_info?.imageUrl as String
+                    val imageUrl: String? =
+                        milestonesList?.get(position)?.meta_data?.content_info?.imageUrl as String
                     Picasso.get().load(imageUrl).into(holder.contentImageView)
                 } catch (e: Exception) {
                     holder.contentImageView?.setImageResource(R.drawable.default_article)
@@ -93,7 +98,8 @@ class MilestonesListAdapter(
                 holder.contentTypeImageView?.setImageResource(R.drawable.ic_video)
                 try {
                     Picasso.get().load(
-                            milestonesList?.get(position)?.meta_data?.content_info?.thumbnail).into(holder.contentImageView)
+                        milestonesList?.get(position)?.meta_data?.content_info?.thumbnail
+                    ).into(holder.contentImageView)
                 } catch (e: Exception) {
                     holder.contentImageView?.setImageResource(R.drawable.default_article)
                     Crashlytics.logException(e)
@@ -105,7 +111,8 @@ class MilestonesListAdapter(
                 holder.contentTypeImageView?.setImageResource(R.drawable.ic_rupee)
                 holder.milestoneImageView?.setImageDrawable(null)
                 try {
-                    val imageUrl: String? = milestonesList?.get(position)?.meta_data?.content_info?.imageUrl as String
+                    val imageUrl: String? =
+                        milestonesList?.get(position)?.meta_data?.content_info?.imageUrl as String
                     Picasso.get().load(imageUrl).into(holder.contentImageView)
                 } catch (e: Exception) {
                     holder.contentImageView?.setImageResource(R.drawable.default_article)
@@ -120,7 +127,8 @@ class MilestonesListAdapter(
             try {
                 val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ")
                 val formatter = SimpleDateFormat("dd MMM yyyy")
-                holder.dateTextView?.text = formatter.format((parser.parse(milestonesList?.get(position)?.meta_data?.content_info?.created_at)))
+                holder.dateTextView?.text =
+                    formatter.format((parser.parse(milestonesList?.get(position)?.meta_data?.content_info?.created_at)))
                 holder.dateTextView?.visibility = View.VISIBLE
             } catch (e: Exception) {
                 holder.dateTextView?.visibility = View.GONE
@@ -130,9 +138,11 @@ class MilestonesListAdapter(
         } else {
             try {
                 if (!milestonesList?.get(position)?.meta_data?.content_info?.created_at.isNullOrBlank()) {
-                    holder.dateTextView?.text = milestonesList?.get(position)?.meta_data?.content_info?.created_at?.toLong()?.let {
-                        DateTimeUtils.getDateFromTimestamp(it)
-                    }
+                    holder.dateTextView?.text =
+                        milestonesList?.get(position)?.meta_data?.content_info?.created_at?.toLong()
+                            ?.let {
+                                DateTimeUtils.getDateFromTimestamp(it)
+                            }
                 }
                 holder.dateTextView?.visibility = View.VISIBLE
             } catch (e: Exception) {

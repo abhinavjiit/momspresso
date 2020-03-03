@@ -25,7 +25,6 @@ import com.crashlytics.android.Crashlytics
 import com.facebook.share.model.ShareLinkContent
 import com.facebook.share.widget.ShareDialog
 import com.google.android.material.snackbar.Snackbar
-import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -35,13 +34,16 @@ import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.PermissionUtil
+import com.mycity4kids.utils.ToastUtils
 import com.squareup.picasso.Picasso
-import java.util.*
 
 class CrownDialogFragment : DialogFragment(), View.OnClickListener {
 
     val REQUEST_GALLERY_PERMISSION = 1
-    val PERMISSIONS_INIT = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    val PERMISSIONS_INIT = arrayOf(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
     val sharableCrownImageName = "crown"
 
     private lateinit var rootLayout: RelativeLayout
@@ -61,9 +63,15 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
     var crownData: Crown? = null
     var shareMedium: String? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.crown_dialog_fragment, container,
-                false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val rootView = inflater.inflate(
+            R.layout.crown_dialog_fragment, container,
+            false
+        )
 
         rootLayout = rootView.findViewById(R.id.rootLayout)
         crownImageView = rootView.findViewById(R.id.crownImageView)
@@ -98,7 +106,12 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
             shareContainer.visibility = View.VISIBLE
             shareJoyContainer.visibility = View.VISIBLE
             activity?.let {
-                Utils.pushGenericEvent(it, "Show_Private_Rank_Detail", userId, "CrownDialogFragment")
+                Utils.pushGenericEvent(
+                    it,
+                    "Show_Private_Rank_Detail",
+                    userId,
+                    "CrownDialogFragment"
+                )
             }
         } else {
             if (BuildConfig.DEBUG) {
@@ -121,9 +134,9 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
     private fun populateCrownDetails(userId: String, result: Crown?) {
         activity?.let {
             Picasso.get().load(result?.bg_url).error(R.drawable.default_article)
-                    .fit().into(crownBgImageView)
+                .fit().into(crownBgImageView)
             Picasso.get().load(result?.image_url).error(R.drawable.default_article)
-                    .fit().into(crownImageView)
+                .fit().into(crownImageView)
             crownTitleTextView.text = result?.title
             crownDescTextView.text = result?.desc
             if (AppUtils.isPrivateProfile(userId)) {
@@ -173,8 +186,10 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
     private fun shareWithGeneric() {
         activity?.let {
             if (AppUtils.shareGenericLinkWithSuccessStatus(activity, crownData?.sharing_url)) {
-                Utils.pushProfileEvents(it, "CTA_Generic_Share_Private_Rank_Detail",
-                        "CrownDialogFragment", "Generic Share", "-")
+                Utils.pushProfileEvents(
+                    it, "CTA_Generic_Share_Private_Rank_Detail",
+                    "CrownDialogFragment", "Generic Share", "-"
+                )
             }
         }
     }
@@ -184,11 +199,15 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
             return
         }
         activity?.let {
-            val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() +
-                    "/MyCity4Kids/videos/" + sharableCrownImageName + ".jpg")
+            val uri = Uri.parse(
+                "file://" + Environment.getExternalStorageDirectory() +
+                        "/MyCity4Kids/videos/" + sharableCrownImageName + ".jpg"
+            )
             if (AppUtils.shareImageWithInstagram(it, uri)) {
-                Utils.pushProfileEvents(it, "CTA_IG_Share_Private_Rank_Detail",
-                        "CrownDialogFragment", "IG Share", "-")
+                Utils.pushProfileEvents(
+                    it, "CTA_IG_Share_Private_Rank_Detail",
+                    "CrownDialogFragment", "IG Share", "-"
+                )
             }
         }
     }
@@ -196,12 +215,14 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
     private fun shareWithFB() {
         if (ShareDialog.canShow(ShareLinkContent::class.java)) {
             val content = ShareLinkContent.Builder()
-                    .setContentUrl(Uri.parse(crownData?.sharing_url))
-                    .build()
+                .setContentUrl(Uri.parse(crownData?.sharing_url))
+                .build()
             activity?.let {
                 ShareDialog(it).show(content)
-                Utils.pushProfileEvents(it, "CTA_FB_Share_Private_Rank_Detail",
-                        "CrownDialogFragment", "FB Share", "-")
+                Utils.pushProfileEvents(
+                    it, "CTA_FB_Share_Private_Rank_Detail",
+                    "CrownDialogFragment", "FB Share", "-"
+                )
             }
         }
     }
@@ -211,14 +232,23 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
             return
         }
         activity?.let {
-            val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() +
-                    "/MyCity4Kids/videos/" + sharableCrownImageName + ".jpg")
-            if (AppUtils.shareImageWithWhatsApp(it, uri, getString(R.string.badges_winner_share_text,
-                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).first_name,
-                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).last_name,
-                            crownData?.crown?.name, crownData?.sharing_url))) {
-                Utils.pushProfileEvents(it, "CTA_Whatsapp_Share_Private_Rank_Detail",
-                        "CrownDialogFragment", "Whatsapp Share", "-")
+            val uri = Uri.parse(
+                "file://" + Environment.getExternalStorageDirectory() +
+                        "/MyCity4Kids/videos/" + sharableCrownImageName + ".jpg"
+            )
+            if (AppUtils.shareImageWithWhatsApp(
+                    it, uri, getString(
+                        R.string.badges_winner_share_text,
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).first_name,
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).last_name,
+                        crownData?.crown?.name, crownData?.sharing_url
+                    )
+                )
+            ) {
+                Utils.pushProfileEvents(
+                    it, "CTA_Whatsapp_Share_Private_Rank_Detail",
+                    "CrownDialogFragment", "Whatsapp Share", "-"
+                )
             }
         }
     }
@@ -226,10 +256,15 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
     private fun createSharableImageWhileCheckingPermissions(): Boolean {
         context?.let {
             if (Build.VERSION.SDK_INT >= 23) {
-                if (ContextCompat.checkSelfPermission(it,
-                                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                        ContextCompat.checkSelfPermission(it,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(
+                        it,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(
+                        it,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
                     requestPermissions()
                     return true
                 } else {
@@ -257,11 +292,16 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
     private fun requestPermissions() {
         activity?.let {
             if (shouldShowRequestPermissionRationale(
-                            Manifest.permission.READ_EXTERNAL_STORAGE) || shouldShowRequestPermissionRationale(
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Snackbar.make(rootLayout, R.string.permission_storage_rationale,
-                        Snackbar.LENGTH_INDEFINITE)
-                        .setAction(R.string.ok) { requestUngrantedPermissions() }.show()
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) || shouldShowRequestPermissionRationale(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+            ) {
+                Snackbar.make(
+                    rootLayout, R.string.permission_storage_rationale,
+                    Snackbar.LENGTH_INDEFINITE
+                )
+                    .setAction(R.string.ok) { requestUngrantedPermissions() }.show()
             } else {
                 requestUngrantedPermissions()
             }
@@ -288,9 +328,11 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
     ) {
         if (requestCode == REQUEST_GALLERY_PERMISSION) {
             if (PermissionUtil.verifyPermissions(grantResults)) {
-                Snackbar.make(rootLayout, R.string.permision_available_init,
-                        Snackbar.LENGTH_SHORT)
-                        .show()
+                Snackbar.make(
+                    rootLayout, R.string.permision_available_init,
+                    Snackbar.LENGTH_SHORT
+                )
+                    .show()
                 try {
                     when (shareMedium) {
                         AppConstants.MEDIUM_FACEBOOK -> {
@@ -313,9 +355,11 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             } else {
-                Snackbar.make(rootLayout, R.string.permissions_not_granted,
-                        Snackbar.LENGTH_SHORT)
-                        .show()
+                Snackbar.make(
+                    rootLayout, R.string.permissions_not_granted,
+                    Snackbar.LENGTH_SHORT
+                )
+                    .show()
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)

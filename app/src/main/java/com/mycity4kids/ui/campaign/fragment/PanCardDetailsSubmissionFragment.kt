@@ -11,10 +11,9 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.mycity4kids.base.BaseFragment
-import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.campaignmodels.ProofPostModel
 import com.mycity4kids.models.response.BaseResponseGeneric
@@ -22,13 +21,14 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
+import com.mycity4kids.utils.ToastUtils
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.HttpException
 import java.io.InputStreamReader
 import java.util.regex.Pattern
+import retrofit2.HttpException
 
 class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
 

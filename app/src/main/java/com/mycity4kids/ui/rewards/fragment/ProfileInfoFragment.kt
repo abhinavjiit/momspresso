@@ -20,7 +20,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.CheckBox
+import android.widget.CompoundButton
+import android.widget.DatePicker
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.PopupMenu
+import android.widget.RadioGroup
+import android.widget.RelativeLayout
+import android.widget.Spinner
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatSpinner
@@ -45,7 +57,12 @@ import com.mycity4kids.constants.Constants
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.request.UpdateUserDetailsRequest
-import com.mycity4kids.models.response.*
+import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.models.response.CityInfoItem
+import com.mycity4kids.models.response.ImageUploadResponse
+import com.mycity4kids.models.response.KidsModel
+import com.mycity4kids.models.response.UserDetailResponse
+import com.mycity4kids.models.response.UserDetailResult
 import com.mycity4kids.models.rewardsmodels.CityConfigResultResponse
 import com.mycity4kids.models.rewardsmodels.RewardsPersonalResponse
 import com.mycity4kids.preference.SharedPrefUtils
@@ -71,17 +88,20 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.ArrayList
+import java.util.Calendar
+import java.util.Collections
+import java.util.Date
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.apmem.tools.layouts.FlowLayout
 import retrofit2.Call
 import retrofit2.Callback
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.*
 
 const val ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111
 const val ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE = 1113
@@ -211,16 +231,16 @@ class ProfileInfoFragment : BaseFragment(),
         lateinit var textView: TextView
         private lateinit var textDOB: TextView
         private lateinit var textKidsDOB: TextView
-/*
-        @JvmStatic
-        fun newInstance(isComingFromRewards: Boolean = false, isComingfromCampaign: Boolean = false, referralCode: String = "") =
-                ProfileInfoFragment().apply {
-                    arguments = Bundle().apply {
-                        this.putBoolean("isComingFromRewards", isComingFromRewards)
-                        this.putBoolean("isComingfromCampaign", isComingfromCampaign)
-                        this.putString("referralCode", referralCode)
-                    }
-                }*/
+        /*
+                @JvmStatic
+                fun newInstance(isComingFromRewards: Boolean = false, isComingfromCampaign: Boolean = false, referralCode: String = "") =
+                        ProfileInfoFragment().apply {
+                            arguments = Bundle().apply {
+                                this.putBoolean("isComingFromRewards", isComingFromRewards)
+                                this.putBoolean("isComingfromCampaign", isComingfromCampaign)
+                                this.putString("referralCode", referralCode)
+                            }
+                        }*/
     }
 
     override fun onCreateView(
@@ -335,8 +355,8 @@ class ProfileInfoFragment : BaseFragment(),
                 }
             }
         } else {
-//            langLayout.visibility = View.GONE
-//            editLanguage.visibility = View.GONE
+            //            langLayout.visibility = View.GONE
+            //            editLanguage.visibility = View.GONE
             linearLanguage.visibility = View.GONE
             textEditLanguage.visibility = View.GONE
         }
@@ -361,8 +381,8 @@ class ProfileInfoFragment : BaseFragment(),
                 }
             }
         } else {
-//            interestLayout.visibility = View.GONE
-//            editInterest.visibility = View.GONE
+            //            interestLayout.visibility = View.GONE
+            //            editInterest.visibility = View.GONE
             linearInterest.visibility = View.GONE
             textEditInterest.visibility = View.GONE
         }
@@ -996,10 +1016,10 @@ class ProfileInfoFragment : BaseFragment(),
             apiGetResponse.userBio = aboutEditText.text.toString()
         }
 
-//        if (BuildConfig.DEBUG) {
-//            accountKitAuthCode = "123"
-//            apiGetResponse.contact = "9999999999"
-//        }
+        //        if (BuildConfig.DEBUG) {
+        //            accountKitAuthCode = "123"
+        //            apiGetResponse.contact = "9999999999"
+        //        }
 
         if (accountKitAuthCode.trim().isEmpty() && apiGetResponse.mobile != null && apiGetResponse.mobile.trim().isEmpty()) {
             Toast.makeText(
@@ -1226,10 +1246,10 @@ class ProfileInfoFragment : BaseFragment(),
             }
             VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE -> {
                 if (data != null && resultCode == Activity.RESULT_OK) {
-//                    accountKitAuthCode = (data!!.getParcelableExtra(AccountKitLoginResult.RESULT_KEY) as AccountKitLoginResult).authorizationCode!!
+                    //                    accountKitAuthCode = (data!!.getParcelableExtra(AccountKitLoginResult.RESULT_KEY) as AccountKitLoginResult).authorizationCode!!
                     accountKitAuthCode = data.getStringExtra("auth_token")!!
                     Log.d("account code ", accountKitAuthCode)
-//                        apiGetResponse.contact = null
+                    //                        apiGetResponse.contact = null
                     editPhone.visibility = View.VISIBLE
                     textVerify.visibility = View.VISIBLE
                     editAddNumber.visibility = View.GONE

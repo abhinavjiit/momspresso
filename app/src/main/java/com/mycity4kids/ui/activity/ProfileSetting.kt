@@ -16,11 +16,10 @@ import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
-import com.mycity4kids.base.BaseActivity
-import com.mycity4kids.utils.ToastUtils
 import com.mixpanel.android.mpmetrics.MixpanelAPI
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.facebook.FacebookUtils
@@ -32,6 +31,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.ConnectivityUtils
+import com.mycity4kids.utils.ToastUtils
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call

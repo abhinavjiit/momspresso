@@ -7,7 +7,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
-import android.widget.*
+import android.widget.HorizontalScrollView
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -130,7 +134,7 @@ class MyCollectionsWidget : RelativeLayout, OnClickListener {
                                             "id",
                                             userCollectionsListModel.collectionsList[i].userCollectionId
                                         )
-//                                            it.context.startActivity(intent)
+                                        //                                            it.context.startActivity(intent)
                                         intent.putExtra("position", i)
                                         (context as UserProfileActivity).startActivityForResult(
                                             intent,

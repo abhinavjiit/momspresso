@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.R
+import com.mycity4kids.base.BaseFragment
 
 class ShortStoryBgBaseFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

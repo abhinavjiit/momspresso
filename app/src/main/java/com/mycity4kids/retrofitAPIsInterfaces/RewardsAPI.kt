@@ -9,7 +9,11 @@ import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.models.rewardsmodels.RewardsPersonalResponse
 import io.reactivex.Observable
 import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.PUT
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface RewardsAPI {
     @PUT("/rewards/v1/users/{userId}")
@@ -18,7 +22,7 @@ interface RewardsAPI {
         @Body rewardsDetailsResultResonse: RewardsDetailsResultResonse,
         @Query("fn") pageValue: Int
     ):
-            Observable<BaseResponseGeneric<SetupBlogData>>
+        Observable<BaseResponseGeneric<SetupBlogData>>
 
     @PUT("/rewards/v1/users/{userId}")
     fun sendRewardsapiDataTest(
@@ -26,7 +30,7 @@ interface RewardsAPI {
         @Body rewardsDetailsResultResonse: RewardsDetailsResultResonse,
         @Query("fn") pageValue: Int
     ):
-            Call<RewardsPersonalResponse>
+        Call<RewardsPersonalResponse>
 
     @PUT("/rewards/v1/users/{userId}")
     fun sendRewardsapiDataForAny(
@@ -34,23 +38,23 @@ interface RewardsAPI {
         @Body rewardsDetailsResultResonse: RewardsDetailsResultResonse,
         @Query("fn") pageValue: Int
     ):
-            Observable<RewardsPersonalResponse>
+        Observable<RewardsPersonalResponse>
 
     @GET("/rewards/v1/users/{userId}")
     fun getRewardsapiData(@Path("userId") userId: String, @Query("fn") pageValue: Int):
-            Observable<BaseResponseGeneric<RewardsDetailsResultResonse>>
+        Observable<BaseResponseGeneric<RewardsDetailsResultResonse>>
 
     @GET("/rewards/v1/users/referrals/{userId}")
     fun getReferralCode(@Path("userId") userId: String):
-            Observable<BaseResponseGeneric<ReferralCodeResult>>
+        Observable<BaseResponseGeneric<ReferralCodeResult>>
 
     @GET("/rewards/v1/users/referrals/validations/{referralCode}")
     fun validateReferralCode(@Path("referralCode") referralCode: String):
-            Observable<BaseResponseGeneric<ReferralCodeResult>>
+        Observable<BaseResponseGeneric<ReferralCodeResult>>
 
     @GET("v1/users/{userId}")
     fun getUserDetails(@Path("userId") userId: String, @Query("email") required: String):
-            Observable<BaseResponseGeneric<UserDetailResult>>
+        Observable<BaseResponseGeneric<UserDetailResult>>
 
     @PUT("/v2/users/{userId}")
     fun sendProfileDataForAny(
@@ -58,19 +62,19 @@ interface RewardsAPI {
         @Body userDetailResult: UserDetailResult,
         @Query("fn") pageValue: Int
     ):
-            Observable<RewardsPersonalResponse>
+        Observable<RewardsPersonalResponse>
 
     @GET("/article-category-images/category-images/{categoryId}/")
     fun getBackgroundThumbnail(
         @Path("categoryId") categoryId: String,
         @Query("page") pageValue: Int
     ):
-            Call<ShortStoryImageData>
+        Call<ShortStoryImageData>
 
     // coroutine
     @GET("/rewards/v1/users/{userId}")
     suspend fun getInstagramHandle(@Path("userId") userId: String, @Query("fn") pageValue: Int):
-            BaseResponseGeneric<RewardsDetailsResultResonse>
+        BaseResponseGeneric<RewardsDetailsResultResonse>
 
     @PUT("/rewards/v1/users/{userId}")
     suspend fun sendInstageamHandle(
@@ -78,5 +82,5 @@ interface RewardsAPI {
         @Body rewardsDetailsResultResonse: RewardsDetailsResultResonse,
         @Query("fn") pageValue: Int
     ):
-            RewardsPersonalResponse
+        RewardsPersonalResponse
 }

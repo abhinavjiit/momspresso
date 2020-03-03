@@ -6,7 +6,11 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.util.Log
-import android.view.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -23,18 +27,29 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 import kotlinx.android.synthetic.main.campaign_list_recycler_adapter.view.*
 import retrofit2.Call
 import retrofit2.Callback
-import java.text.SimpleDateFormat
-import java.util.*
 
-class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResult>, val context: Activity?) : RecyclerView.Adapter<RewardCampaignAdapter.RewardHolder>() {
+class RewardCampaignAdapter(
+    private var campaignList: List<CampaignDataListResult>,
+    val context: Activity?
+) : RecyclerView.Adapter<RewardCampaignAdapter.RewardHolder>() {
 
     private var forYouStatus: Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RewardHolder {
-        return RewardHolder(LayoutInflater.from(context).inflate(R.layout.campaign_list_recycler_adapter, parent, false))
+        return RewardHolder(
+            LayoutInflater.from(context).inflate(
+                R.layout.campaign_list_recycler_adapter,
+                parent,
+                false
+            )
+        )
     }
 
     fun updateForYouStatus(forYouStatus: Int) {
@@ -49,7 +64,8 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
     }
 
     // 1
-    inner class RewardHolder(private val view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    inner class RewardHolder(private val view: View) : RecyclerView.ViewHolder(view),
+        View.OnClickListener {
 
         private var campaignList: CampaignDataListResult? = null
 
@@ -60,8 +76,11 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
 
         fun bindPhoto(campaignList: CampaignDataListResult) {
             this.campaignList = campaignList
-            Picasso.get().load(campaignList.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(view.campaign_header)
-            Picasso.get().load(campaignList.brandDetails.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(view.brand_img)
+            Picasso.get().load(campaignList.imageUrl).placeholder(R.drawable.default_article)
+                .error(R.drawable.default_article).into(view.campaign_header)
+            Picasso.get().load(campaignList.brandDetails.imageUrl)
+                .placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                .into(view.brand_img)
             (view.brand_name).setText(campaignList.brandDetails.name)
             (view.campaign_name).setText(campaignList.name)
             (view.amount).setText("" + (campaignList.maxSlots - campaignList.totalUsedSlots))
@@ -72,27 +91,53 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
         // 4
         override fun onClick(v: View) {
             if (v == (view.share)) {
-                val userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
-                Utils.campaignEvent(context, "Campaign Detail", "Campaign Listing", "share", campaignList!!.name, "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+                val userId =
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
+                Utils.campaignEvent(
+                    context,
+                    "Campaign Detail",
+                    "Campaign Listing",
+                    "share",
+                    campaignList!!.name,
+                    "android",
+                    SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                    System.currentTimeMillis().toString(),
+                    "Show_Campaign_Listing"
+                )
 
                 context?.let {
                     val shareIntent = ShareCompat.IntentBuilder
-                            .from(it)
-                            .setType("text/plain")
-                            .setChooserTitle("Share URL")
-                            .setText("https://www.momspresso.com/mymoney/" + campaignList!!.nameSlug + "/" + campaignList!!.id + "?referrer=" + userId)
-                            .intent
+                        .from(it)
+                        .setType("text/plain")
+                        .setChooserTitle("Share URL")
+                        .setText("https://www.momspresso.com/mymoney/" + campaignList!!.nameSlug + "/" + campaignList!!.id + "?referrer=" + userId)
+                        .intent
 
                     if (shareIntent.resolveActivity(context!!.packageManager) != null) {
                         it.startActivity(shareIntent)
                     }
                 }
             } else {
-                Utils.campaignEvent(context, "Campaign Detail", "Campaign Listing", "Click_listing_card", campaignList!!.name, "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+                Utils.campaignEvent(
+                    context,
+                    "Campaign Detail",
+                    "Campaign Listing",
+                    "Click_listing_card",
+                    campaignList!!.name,
+                    "android",
+                    SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                    System.currentTimeMillis().toString(),
+                    "Show_Campaign_Listing"
+                )
                 if (campaignList!!.campaignStatus == 8)
                     showInviteDialog()
                 else
-                    (context as CampaignContainerActivity).addCampaginDetailFragment(campaignList!!.id, "")
+                    (context as CampaignContainerActivity).addCampaginDetailFragment(
+                        campaignList!!.id,
+                        ""
+                    )
             }
         }
 
@@ -216,7 +261,13 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
         }
 
         fun compareDate(campaignStatus: Int) {
-            if ((getCurrentDateTime().toString("yyyy-MM-dd")).compareTo(getDate(campaignList!!.startTime, "yyyy-MM-dd")) > 0) {
+            if ((getCurrentDateTime().toString("yyyy-MM-dd")).compareTo(
+                    getDate(
+                        campaignList!!.startTime,
+                        "yyyy-MM-dd"
+                    )
+                ) > 0
+            ) {
                 when (campaignStatus) {
                     0, 1, 5, 4, 6, 8 -> (view.end_date).setText(context!!.resources.getString(R.string.application_end_date))
                     else -> {
@@ -244,7 +295,11 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                     dialog.dismiss()
                 }
                 okBtn.setOnClickListener {
-                    (context as CampaignContainerActivity).showProgressDialog(context!!.resources.getString(R.string.please_wait))
+                    (context as CampaignContainerActivity).showProgressDialog(
+                        context!!.resources.getString(
+                            R.string.please_wait
+                        )
+                    )
                     val retro = BaseApplication.getInstance().retrofit
                     val campaignAPI = retro.create(CampaignAPI::class.java)
                     val call = campaignAPI.postSubscribeCampaign(campaignList!!.id)
@@ -257,7 +312,10 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
         }
 
         val subscribeCampaign = object : Callback<ParticipateCampaignResponse> {
-            override fun onResponse(call: Call<ParticipateCampaignResponse>, response: retrofit2.Response<ParticipateCampaignResponse>) {
+            override fun onResponse(
+                call: Call<ParticipateCampaignResponse>,
+                response: retrofit2.Response<ParticipateCampaignResponse>
+            ) {
                 (context as CampaignContainerActivity).removeProgressDialog()
                 if (response == null || null == response.body()) {
                     val nee = NetworkErrorException(response.raw().toString())
@@ -267,7 +325,11 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                 try {
                     val responseData = response.body()
                     if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-                        Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_invite_thankyou), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            context!!.resources.getString(R.string.toast_campaign_invite_thankyou),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
                         Toast.makeText(context, responseData.reason, Toast.LENGTH_SHORT).show()
                     }

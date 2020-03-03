@@ -9,12 +9,27 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.text.*
+import android.text.Editable
+import android.text.Html
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Log
-import android.view.*
-import android.widget.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.MediaController
+import android.widget.PopupWindow
+import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ShareCompat
@@ -23,10 +38,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.mycity4kids.base.BaseFragment
-import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
@@ -48,20 +62,22 @@ import com.mycity4kids.ui.campaign.activity.CampaignHowToVideoActivity
 import com.mycity4kids.ui.mymoneytracker.activity.TrackerActivity
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.utils.AppUtils
+import com.mycity4kids.utils.ToastUtils
 import com.squareup.picasso.Picasso
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.text.SimpleDateFormat
+import java.util.ArrayList
+import java.util.Calendar
+import java.util.regex.Pattern
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
-import java.text.SimpleDateFormat
-import java.util.*
-import java.util.regex.Pattern
 
 const val REWARDS_FILL_FORM_REQUEST = 1000
 
@@ -118,10 +134,11 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var defaultCampaignPopUp: View
     private var defaultCampaignShow: Boolean = false
     private val urlPattern = Pattern.compile(
-            "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)" +
-                    "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*" +
-                    "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
-            Pattern.CASE_INSENSITIVE or Pattern.MULTILINE or Pattern.DOTALL)
+        "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)" +
+            "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*" +
+            "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
+        Pattern.CASE_INSENSITIVE or Pattern.MULTILINE or Pattern.DOTALL
+    )
     private var spannable: SpannableString? = null
 
     private lateinit var default_campaign_header: ImageView
@@ -148,12 +165,12 @@ class CampaignDetailFragment : BaseFragment() {
     companion object {
         @JvmStatic
         fun newInstance(id: Int, fromNotification: Boolean = false, comingFrom: String) =
-                CampaignDetailFragment().apply {
-                    arguments = Bundle().apply {
-                        this.putInt("id", id)
-                        this.putString("comingFrom", comingFrom)
-                    }
+            CampaignDetailFragment().apply {
+                arguments = Bundle().apply {
+                    this.putInt("id", id)
+                    this.putString("comingFrom", comingFrom)
                 }
+            }
     }
 
     override fun onCreateView(
@@ -176,23 +193,35 @@ class CampaignDetailFragment : BaseFragment() {
         }
         initializeXml()
         backIcon = containerView.findViewById(R.id.back)
-        linearLayoutManager = LinearLayoutManager(activity as Context?, RecyclerView.VERTICAL, false)
+        linearLayoutManager =
+            LinearLayoutManager(activity as Context?, RecyclerView.VERTICAL, false)
         if (SharedPrefUtils.getDemoVideoSeen(BaseApplication.getAppContext())) {
             demoUploadLayout.visibility = View.GONE
             playDemoIcon.visibility = View.VISIBLE
         }
         backIcon.setOnClickListener {
-            Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "Back", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+            Utils.campaignEvent(
+                activity,
+                "Campaign Listing",
+                "Campaign Detail",
+                "Back",
+                "",
+                "android",
+                SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                System.currentTimeMillis().toString(),
+                "Show_Campaign_Listing"
+            )
             activity!!.onBackPressed()
         }
         shareText.setOnClickListener {
             activity?.let {
                 val shareIntent = ShareCompat.IntentBuilder
-                        .from(it)
-                        .setType("text/plain")
-                        .setChooserTitle("Share URL")
-                        .setText("https://www.momspresso.com/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
-                        .intent
+                    .from(it)
+                    .setType("text/plain")
+                    .setChooserTitle("Share URL")
+                    .setText("https://www.momspresso.com/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
+                    .intent
 
                 if (shareIntent.resolveActivity(activity!!.packageManager) != null) {
                     it.startActivity(shareIntent)
@@ -201,12 +230,18 @@ class CampaignDetailFragment : BaseFragment() {
         }
 
         mainLinearLayout.setOnClickListener {
-            (activity as CampaignContainerActivity).addCampaginDetailFragment(defaultapigetResponse?.id!!, "defaultCampaign")
+            (activity as CampaignContainerActivity).addCampaginDetailFragment(
+                defaultapigetResponse?.id!!,
+                "defaultCampaign"
+            )
         }
 
         getHelp.setOnClickListener {
-            val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                    "mailto", "support@momspresso-mymoney.com", null))
+            val emailIntent = Intent(
+                Intent.ACTION_SENDTO, Uri.fromParts(
+                "mailto", "support@momspresso-mymoney.com", null
+            )
+            )
             startActivity(Intent.createChooser(emailIntent, "Send email..."))
         }
 
@@ -321,7 +356,11 @@ class CampaignDetailFragment : BaseFragment() {
     }
 
     private fun fetchCampaignDetail() {
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getCampaignDetail(this!!.id!!, 2.0).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CampaignDetailResult>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getCampaignDetail(
+            this!!.id!!,
+            2.0
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<CampaignDetailResult>> {
 
             override fun onComplete() {
             }
@@ -353,8 +392,12 @@ class CampaignDetailFragment : BaseFragment() {
 
     private fun setResponseData(apiGetResponsee: CampaignDetailResult?) {
         apiGetResponse = apiGetResponsee
-        Picasso.get().load(apiGetResponse!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(bannerImg)
-        Picasso.get().load(apiGetResponse!!.brandDetails!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(brandImg)
+        Picasso.get().load(apiGetResponse!!.imageUrl).placeholder(R.drawable.default_article).error(
+            R.drawable.default_article
+        ).into(bannerImg)
+        Picasso.get().load(apiGetResponse!!.brandDetails!!.imageUrl).placeholder(R.drawable.default_article).error(
+            R.drawable.default_article
+        ).into(brandImg)
         brandName.setText(apiGetResponse!!.brandDetails!!.name)
         campaignName.setText(apiGetResponse!!.name)
         amount.setText("" + (apiGetResponse!!.maxSlots?.minus(apiGetResponse!!.totalUsedSlots!!)))
@@ -396,7 +439,8 @@ class CampaignDetailFragment : BaseFragment() {
 
         if (apiGetResponsee?.amount != null) {
             activity?.let {
-                showRewardText.text = resources.getString(R.string.dialog_you_can_earn) + apiGetResponsee?.amount?.toInt()
+                showRewardText.text =
+                    resources.getString(R.string.dialog_you_can_earn) + apiGetResponsee?.amount?.toInt()
             }
         } else {
             showRewardText.visibility = View.GONE
@@ -419,7 +463,8 @@ class CampaignDetailFragment : BaseFragment() {
 
     fun popupDisplay(): PopupWindow {
         val popupWindow = PopupWindow(context)
-        val inflater = (context as CampaignContainerActivity).getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val inflater =
+            (context as CampaignContainerActivity).getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = inflater.inflate(R.layout.unapply_campaign_popup, null)
         val textView = view.findViewById<TextView>(R.id.unapply_text)
         textView.setOnClickListener {
@@ -455,25 +500,41 @@ class CampaignDetailFragment : BaseFragment() {
             }
         }
         if (matchStart != null && matchEnd != null) {
-            spannable!!.setSpan(clickableSpan, matchStart, matchEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannable!!.setSpan(
+                clickableSpan,
+                matchStart,
+                matchEnd,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
         }
         textView.text = Html.fromHtml(spannable.toString())
         textView.movementMethod = LinkMovementMethod.getInstance()
-//        textView.highlightColor = Color.TRANSPARENT
+        //        textView.highlightColor = Color.TRANSPARENT
     }
 
-//    fun demoVideoLayout(): FrameLayout {
-//        videoView.stopPlayback()
-//        videoView.setMediaController(null)
-//        mediaController = null
-//        return demoVideoLayout
-//    }
+    //    fun demoVideoLayout(): FrameLayout {
+    //        videoView.stopPlayback()
+    //        videoView.setMediaController(null)
+    //        mediaController = null
+    //        return demoVideoLayout
+    //    }
 
     private fun setClickAction() {
         if (submitBtn.text == resources.getString(R.string.check_ypur_eligibility)) {
             showRewardDialog()
         } else if (submitBtn.text == resources.getString(R.string.detail_bottom_apply_now)) {
-            Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "applyNow", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+            Utils.campaignEvent(
+                activity,
+                "Campaign Listing",
+                "Campaign Detail",
+                "applyNow",
+                apiGetResponse!!.name,
+                "android",
+                SharedPrefUtils.getAppLocale(activity),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                System.currentTimeMillis().toString(),
+                "Show_Campaign_Listing"
+            )
             if ("defaultCampaign".equals(comingFrom))
                 SharedPrefUtils.setDefaultCampaignShownFlag(BaseApplication.getAppContext(), true)
             Log.d("Taggggggg", "ho gya")
@@ -486,36 +547,84 @@ class CampaignDetailFragment : BaseFragment() {
             call.enqueue(participateCampaign)
         } else if (submitBtn.text == resources.getString(R.string.detail_bottom_share)) {
             activity?.let {
-                Utils.campaignEvent(it, "Campaign Listing", "Campaign Detail", "Share", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+                Utils.campaignEvent(
+                    it,
+                    "Campaign Listing",
+                    "Campaign Detail",
+                    "Share",
+                    apiGetResponse!!.name,
+                    "android",
+                    SharedPrefUtils.getAppLocale(activity),
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                    System.currentTimeMillis().toString(),
+                    "Show_Campaign_Listing"
+                )
                 val shareIntent = ShareCompat.IntentBuilder
-                        .from(it)
-                        .setType("text/plain")
-                        .setChooserTitle("Share URL")
-                        .setText("https://www.momspresso.com/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
-                        .intent
+                    .from(it)
+                    .setType("text/plain")
+                    .setChooserTitle("Share URL")
+                    .setText("https://www.momspresso.com/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
+                    .intent
                 if (shareIntent.resolveActivity(it.packageManager) != null) {
                     it.startActivity(shareIntent)
                 }
             }
         } else if (submitBtn.text == resources.getString(R.string.detail_bottom_share_momspresso_reward)) {
             activity?.let {
-                Utils.campaignEvent(it, "Campaign Listing", "Campaign Detail", "Share_Rewards_Sticky_Bottom", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "CTA_Momspresso_Rewards_Share")
+                Utils.campaignEvent(
+                    it,
+                    "Campaign Listing",
+                    "Campaign Detail",
+                    "Share_Rewards_Sticky_Bottom",
+                    apiGetResponse!!.name,
+                    "android",
+                    SharedPrefUtils.getAppLocale(activity),
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                    System.currentTimeMillis().toString(),
+                    "CTA_Momspresso_Rewards_Share"
+                )
                 val shareIntent = ShareCompat.IntentBuilder
-                        .from(it)
-                        .setType("text/plain")
-                        .setChooserTitle("Share URL")
-                        .setText("https://www.momspresso.com/mymoney?referrer=" + userId)
-                        .intent
+                    .from(it)
+                    .setType("text/plain")
+                    .setChooserTitle("Share URL")
+                    .setText("https://www.momspresso.com/mymoney?referrer=" + userId)
+                    .intent
                 if (shareIntent.resolveActivity(it.packageManager) != null) {
                     it.startActivity(shareIntent)
                 }
             }
         } else if (submitBtn.text == resources.getString(R.string.detail_bottom_view_other)) {
             (context as CampaignContainerActivity).onBackPressed()
-            Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "View other campaigns", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+            Utils.campaignEvent(
+                activity,
+                "Campaign Listing",
+                "Campaign Detail",
+                "View other campaigns",
+                "",
+                "android",
+                SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                System.currentTimeMillis().toString(),
+                "Show_Campaign_Listing"
+            )
         } else if (submitBtn.text == resources.getString(R.string.detail_bottom_submit_proof)) {
-            Utils.campaignEvent(activity, "Proof Submission", "Campaign Detail", "Submit Proof", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Submission")
-            (activity as CampaignContainerActivity).addAddProofFragment(apiGetResponse!!.id!!, (apiGetResponse!!.deliverableTypes as ArrayList<Int>?)!!, status)
+            Utils.campaignEvent(
+                activity,
+                "Proof Submission",
+                "Campaign Detail",
+                "Submit Proof",
+                "",
+                "android",
+                SharedPrefUtils.getAppLocale(activity),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                System.currentTimeMillis().toString(),
+                "Show_Campaign_Submission"
+            )
+            (activity as CampaignContainerActivity).addAddProofFragment(
+                apiGetResponse!!.id!!,
+                (apiGetResponse!!.deliverableTypes as ArrayList<Int>?)!!,
+                status
+            )
             if (apiGetResponse != null && apiGetResponse!!.totalPayout != null && apiGetResponse!!.id != null && apiGetResponse!!.nameSlug != null) {
                 (activity as CampaignContainerActivity).setTotalPayOut(apiGetResponse!!.totalPayout!!)
                 (activity as CampaignContainerActivity).setIdCamp(apiGetResponse!!.id!!)
@@ -525,7 +634,10 @@ class CampaignDetailFragment : BaseFragment() {
     }
 
     val participateCampaign = object : Callback<ParticipateCampaignResponse> {
-        override fun onResponse(call: Call<ParticipateCampaignResponse>, response: retrofit2.Response<ParticipateCampaignResponse>) {
+        override fun onResponse(
+            call: Call<ParticipateCampaignResponse>,
+            response: retrofit2.Response<ParticipateCampaignResponse>
+        ) {
             removeProgressDialog()
             if (null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
@@ -542,7 +654,11 @@ class CampaignDetailFragment : BaseFragment() {
                     if (!SharedPrefUtils.isDefaultCampaignShown(BaseApplication.getAppContext()))
                         fetchDefaultCampaign()
                     submitBtn.text = resources.getString(R.string.detail_bottom_share)
-                    Toast.makeText(context, responseData.reason, Toast.LENGTH_SHORT).show() // //////////////////////////////////////////////
+                    Toast.makeText(
+                        context,
+                        responseData.reason,
+                        Toast.LENGTH_SHORT
+                    ).show() // //////////////////////////////////////////////
                 }
             } catch (e: Exception) {
                 Crashlytics.logException(e)
@@ -567,7 +683,10 @@ class CampaignDetailFragment : BaseFragment() {
 
     private fun fetchDefaultCampaign() {
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getDefaultCampaignDetail().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CampaignDetailResult>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getDefaultCampaignDetail().subscribeOn(
+            Schedulers.io()
+        ).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<CampaignDetailResult>> {
             override fun onComplete() {
                 removeProgressDialog()
             }
@@ -601,15 +720,22 @@ class CampaignDetailFragment : BaseFragment() {
     fun setDefaultCampaignValues() {
         upperTextHeader.text = resources.getString(R.string.sorry_not_eligible)
         lowerTextHeader.text = resources.getString(R.string.try_following_campaign)
-        Picasso.get().load(defaultapigetResponse!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(default_campaign_header)
-        Picasso.get().load(defaultapigetResponse!!.brandDetails!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(default_brand_img)
+        Picasso.get().load(defaultapigetResponse!!.imageUrl).placeholder(R.drawable.default_article).error(
+            R.drawable.default_article
+        ).into(default_campaign_header)
+        Picasso.get().load(defaultapigetResponse!!.brandDetails!!.imageUrl).placeholder(R.drawable.default_article).error(
+            R.drawable.default_article
+        ).into(default_brand_img)
         default_brand_name.setText(defaultapigetResponse!!.brandDetails!!.name)
         default_campaign_name.setText(defaultapigetResponse!!.name)
         default_submission_status.text = resources.getString(R.string.campaign_details_apply_now)
     }
 
     val withdrawParticipateCampaign = object : Callback<ParticipateCampaignResponse> {
-        override fun onResponse(call: Call<ParticipateCampaignResponse>, response: retrofit2.Response<ParticipateCampaignResponse>) {
+        override fun onResponse(
+            call: Call<ParticipateCampaignResponse>,
+            response: retrofit2.Response<ParticipateCampaignResponse>
+        ) {
             removeProgressDialog()
             if (null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
@@ -637,7 +763,10 @@ class CampaignDetailFragment : BaseFragment() {
     }
 
     val referCampaign = object : Callback<ParticipateCampaignResponse> {
-        override fun onResponse(call: Call<ParticipateCampaignResponse>, response: retrofit2.Response<ParticipateCampaignResponse>) {
+        override fun onResponse(
+            call: Call<ParticipateCampaignResponse>,
+            response: retrofit2.Response<ParticipateCampaignResponse>
+        ) {
             removeProgressDialog()
             if (null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
@@ -648,7 +777,11 @@ class CampaignDetailFragment : BaseFragment() {
                 val responseData = response.body()
                 if (responseData!!.code == 200) {
                     if (Constants.SUCCESS == responseData.status) {
-                        Toast.makeText(context, responseData.data.get(0).msg, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            responseData.data.get(0).msg,
+                            Toast.LENGTH_SHORT
+                        ).show()
                         viewLine.visibility = View.GONE
                         referCode.visibility = View.GONE
                         referCodeApply.visibility = View.GONE
@@ -681,14 +814,16 @@ class CampaignDetailFragment : BaseFragment() {
             context?.let {
                 applicationStatus.text = it.resources.getString(R.string.campaign_details_expired)
                 labelText.text = it.resources.getString(R.string.label_campaign_expired)
-                submitBtn.text = it.resources.getString(R.string.detail_bottom_share_momspresso_reward)
+                submitBtn.text =
+                    it.resources.getString(R.string.detail_bottom_share_momspresso_reward)
             }
         } else if (status == 1 || status == 18) {
             hideShowReferral(status)
             applicationStatus.setBackgroundResource(R.drawable.subscribe_now)
             context?.let {
                 applicationStatus.text = it.resources.getString(R.string.campaign_details_apply_now)
-                labelText.text = AppUtils.fromHtml(it.resources.getString(R.string.label_campaign_apply))
+                labelText.text =
+                    AppUtils.fromHtml(it.resources.getString(R.string.label_campaign_apply))
                 submitBtn.text = it.resources.getString(R.string.detail_bottom_apply_now)
             }
             labelText.setMovementMethod(LinkMovementMethod.getInstance())
@@ -696,9 +831,14 @@ class CampaignDetailFragment : BaseFragment() {
             hideShowReferral(status)
             applicationStatus.setBackgroundResource(R.drawable.campaign_subscription_open)
             context?.let {
-                applicationStatus.text = it.resources.getString(R.string.campaign_details_submission_open)
+                applicationStatus.text =
+                    it.resources.getString(R.string.campaign_details_submission_open)
                 submitBtn.text = it.resources.getString(R.string.detail_bottom_submit_proof)
-                Toast.makeText(it, it.resources.getString(R.string.toast_campaign_started), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    it,
+                    it.resources.getString(R.string.toast_campaign_started),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             labelText.visibility = View.GONE
             unapplyCampaign.visibility = View.VISIBLE
@@ -706,10 +846,19 @@ class CampaignDetailFragment : BaseFragment() {
             hideShowReferral(status)
             applicationStatus.setBackgroundResource(R.drawable.campaign_subscription_open)
             context?.let {
-                applicationStatus.text = it.resources.getString(R.string.campaign_details_submission_open)
-                Toast.makeText(it, it.resources.getString(R.string.toast_campaign_not_started), Toast.LENGTH_SHORT).show()
+                applicationStatus.text =
+                    it.resources.getString(R.string.campaign_details_submission_open)
+                Toast.makeText(
+                    it,
+                    it.resources.getString(R.string.toast_campaign_not_started),
+                    Toast.LENGTH_SHORT
+                ).show()
                 submitBtn.text = it.resources.getString(R.string.detail_bottom_share)
-                labelText.text = it.resources.getString(R.string.label_campaign_not_started) + " " + getDate(apiGetResponse!!.startTime!!, "dd MMM yyyy") + ". Please wait for campaign to start to submit proofs."
+                labelText.text =
+                    it.resources.getString(R.string.label_campaign_not_started) + " " + getDate(
+                        apiGetResponse!!.startTime!!,
+                        "dd MMM yyyy"
+                    ) + ". Please wait for campaign to start to submit proofs."
             }
             appliedTag.visibility = View.VISIBLE
             unapplyCampaign.visibility = View.VISIBLE
@@ -719,7 +868,11 @@ class CampaignDetailFragment : BaseFragment() {
             context?.let {
                 applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_submission_open))
                 submitBtn.text = it.resources.getString(R.string.detail_bottom_submit_proof)
-                Toast.makeText(it, it.resources.getString(R.string.toast_campaign_started), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    it,
+                    it.resources.getString(R.string.toast_campaign_started),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             labelText.visibility = View.GONE
             unapplyCampaign.visibility = View.VISIBLE
@@ -728,7 +881,11 @@ class CampaignDetailFragment : BaseFragment() {
             applicationStatus.setBackgroundResource(R.drawable.campaign_subscribed)
             context?.let {
                 applicationStatus.text = it.resources.getString(R.string.campaign_details_applied)
-                Toast.makeText(it, it.resources.getString(R.string.toast_campaign_applied), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    it,
+                    it.resources.getString(R.string.toast_campaign_applied),
+                    Toast.LENGTH_SHORT
+                ).show()
                 labelText.text = it.resources.getString(R.string.label_campaign_applied)
                 submitBtn.text = it.resources.getString(R.string.detail_bottom_share)
             }
@@ -738,18 +895,26 @@ class CampaignDetailFragment : BaseFragment() {
             hideShowReferral(status)
             applicationStatus.setBackgroundResource(R.drawable.campaign_submission_full)
             context?.let {
-                applicationStatus.text = it.resources.getString(R.string.campaign_details_application_full)
-                Toast.makeText(it, it.resources.getString(R.string.toast_campaign_full), Toast.LENGTH_SHORT).show()
+                applicationStatus.text =
+                    it.resources.getString(R.string.campaign_details_application_full)
+                Toast.makeText(
+                    it,
+                    it.resources.getString(R.string.toast_campaign_full),
+                    Toast.LENGTH_SHORT
+                ).show()
                 labelText.text = it.resources.getString(R.string.label_campaign_full)
-                submitBtn.text = it.resources.getString(R.string.detail_bottom_share_momspresso_reward)
+                submitBtn.text =
+                    it.resources.getString(R.string.detail_bottom_share_momspresso_reward)
             }
         } else if (status == 5) {
             hideShowReferral(status)
             if (isRewardAdded.isEmpty() || isRewardAdded.equals("0")) {
                 applicationStatus.setBackgroundResource(R.drawable.subscribe_now)
                 context?.let {
-                    applicationStatus.text = it.resources.getString(R.string.campaign_details_apply_now)
-                    labelText.text = AppUtils.fromHtml(it.resources.getString(R.string.label_campaign_apply))
+                    applicationStatus.text =
+                        it.resources.getString(R.string.campaign_details_apply_now)
+                    labelText.text =
+                        AppUtils.fromHtml(it.resources.getString(R.string.label_campaign_apply))
                     submitBtn.text = it.resources.getString(R.string.check_ypur_eligibility)
                     bottomLayout.setBackgroundColor(it.resources.getColor(R.color.campaign_listing_light_green_bottom))
                 }
@@ -759,17 +924,30 @@ class CampaignDetailFragment : BaseFragment() {
                     if (forYouStatus == 0) {
                         applicationStatus.setBackgroundResource(R.drawable.subscribe_now)
                         context?.let {
-                            applicationStatus.text = it.resources.getString(R.string.campaign_details_apply_now)
-                            Toast.makeText(it, it.resources.getString(R.string.checking_elegiblity), Toast.LENGTH_SHORT).show()
-                            labelText.text = AppUtils.fromHtml(it.resources.getString(R.string.label_campaign_apply))
-                            submitBtn.text = it.resources.getString(R.string.detail_bottom_apply_now)
+                            applicationStatus.text =
+                                it.resources.getString(R.string.campaign_details_apply_now)
+                            Toast.makeText(
+                                it,
+                                it.resources.getString(R.string.checking_elegiblity),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            labelText.text =
+                                AppUtils.fromHtml(it.resources.getString(R.string.label_campaign_apply))
+                            submitBtn.text =
+                                it.resources.getString(R.string.detail_bottom_apply_now)
                         }
                     } else {
                         applicationStatus.setBackgroundResource(R.drawable.subscribe_now)
                         context?.let {
-                            applicationStatus.text = it.resources.getString(R.string.campaign_details_apply_now)
-                            Toast.makeText(it, it.resources.getString(R.string.toast_not_elegible), Toast.LENGTH_SHORT).show()
-                            labelText.text = it.resources.getString(R.string.label_campaign_not_eligible)
+                            applicationStatus.text =
+                                it.resources.getString(R.string.campaign_details_apply_now)
+                            Toast.makeText(
+                                it,
+                                it.resources.getString(R.string.toast_not_elegible),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            labelText.text =
+                                it.resources.getString(R.string.label_campaign_not_eligible)
                             submitBtn.text = it.resources.getString(R.string.detail_bottom_share)
                         }
                     }
@@ -780,7 +958,11 @@ class CampaignDetailFragment : BaseFragment() {
             applicationStatus.setBackgroundResource(R.drawable.campaign_rejected)
             context?.let {
                 applicationStatus.text = it.resources.getString(R.string.campaign_details_rejected)
-                Toast.makeText(it, it.resources.getString(R.string.toast_campaign_reject), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    it,
+                    it.resources.getString(R.string.toast_campaign_reject),
+                    Toast.LENGTH_SHORT
+                ).show()
                 labelText.text = it.resources.getString(R.string.label_campaign_reject)
                 submitBtn.text = it.resources.getString(R.string.detail_bottom_view_other)
             }
@@ -790,14 +972,20 @@ class CampaignDetailFragment : BaseFragment() {
             context?.let {
                 applicationStatus.text = it.resources.getString(R.string.campaign_details_completed)
                 labelText.text = it.resources.getString(R.string.label_campaign_completed)
-                submitBtn.text = it.resources.getString(R.string.detail_bottom_share_momspresso_reward)
+                submitBtn.text =
+                    it.resources.getString(R.string.detail_bottom_share_momspresso_reward)
             }
         } else if (status == 9) {
             hideShowReferral(status)
             applicationStatus.setBackgroundResource(R.drawable.campaign_subscription_open)
             context?.let {
-                applicationStatus.text = it.resources.getString(R.string.campaign_list_proof_moderation)
-                Toast.makeText(it, it.resources.getString(R.string.toast_campaign_proof_moderation), Toast.LENGTH_SHORT).show()
+                applicationStatus.text =
+                    it.resources.getString(R.string.campaign_list_proof_moderation)
+                Toast.makeText(
+                    it,
+                    it.resources.getString(R.string.toast_campaign_proof_moderation),
+                    Toast.LENGTH_SHORT
+                ).show()
                 labelText.text = it.resources.getString(R.string.label_campaign_proof_moderation)
                 submitBtn.text = it.resources.getString(R.string.detail_bottom_submit_proof)
             }
@@ -806,7 +994,11 @@ class CampaignDetailFragment : BaseFragment() {
             applicationStatus.setBackgroundResource(R.drawable.campaign_proof_rejected_bg)
             context?.let {
                 applicationStatus.text = it.resources.getString(R.string.campaign_list_proof_reject)
-                Toast.makeText(it, it.resources.getString(R.string.toast_campaign_proof_reject), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    it,
+                    it.resources.getString(R.string.toast_campaign_proof_reject),
+                    Toast.LENGTH_SHORT
+                ).show()
                 labelText.text = it.resources.getString(R.string.label_campaign_proof_reject)
                 submitBtn.text = it.resources.getString(R.string.detail_bottom_submit_proof)
             }
@@ -847,7 +1039,18 @@ class CampaignDetailFragment : BaseFragment() {
 
     fun unapplyCampaignDialog() {
         activity.let {
-            Utils.campaignEvent(it, "Campaign Detail", "Campaign Detail", "Show_Earnings", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "CTA_Show_Earnings")
+            Utils.campaignEvent(
+                it,
+                "Campaign Detail",
+                "Campaign Detail",
+                "Show_Earnings",
+                apiGetResponse!!.name,
+                "android",
+                SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                System.currentTimeMillis().toString(),
+                "CTA_Show_Earnings"
+            )
             val dialog = it?.let { it1 -> Dialog(it1) }
             dialog?.window!!.requestFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.dialog_unapply_campaign)
@@ -875,12 +1078,18 @@ class CampaignDetailFragment : BaseFragment() {
     }
 
     fun showRewardDialog() {
-        Utils.pushGenericEvent(activity, "CTA_CampaignDetail_Register",
-                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, "CampaignDetailFragment")
-        Utils.campaignEvent(activity, "Rewards 1st screen", "Campaign Detail", "Rewards_popup_ok",
-                apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity),
-                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                System.currentTimeMillis().toString(), "Show_Rewards_Detail")
+        Utils.pushGenericEvent(
+            activity,
+            "CTA_CampaignDetail_Register",
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+            "CampaignDetailFragment"
+        )
+        Utils.campaignEvent(
+            activity, "Rewards 1st screen", "Campaign Detail", "Rewards_popup_ok",
+            apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity),
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+            System.currentTimeMillis().toString(), "Show_Rewards_Detail"
+        )
         val intent = Intent(context, RewardsContainerActivity::class.java)
         intent.putExtra("isComingfromCampaign", true)
         intent.putExtra("pageLimit", 2)
@@ -901,7 +1110,8 @@ class CampaignDetailFragment : BaseFragment() {
                 REWARDS_FILL_FORM_REQUEST -> {
                     showProgressDialog(resources.getString(R.string.please_wait))
                     bottomLayout.setBackgroundColor(resources.getColor(R.color.app_red))
-                    isRewardAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
+                    isRewardAdded =
+                        SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
                     if (isRewardAdded.equals("1", true)) {
                         val participateRequest = CampaignParticipate()
                         participateRequest.user_id = userId
@@ -920,7 +1130,10 @@ class CampaignDetailFragment : BaseFragment() {
 
     private fun fetchForYou() {
         // showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getForYouStatus(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BasicResponse> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getForYouStatus(
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BasicResponse> {
             override fun onNext(response: BasicResponse) {
                 if (response.code == 200 && response.data != null && response.status == Constants.SUCCESS) {
                     if (response.data.result != null && response.data.result.recm_status != null) {
@@ -946,7 +1159,11 @@ class CampaignDetailFragment : BaseFragment() {
     private suspend fun checkInstagramHandle(): Boolean {
         val job = CoroutineScope(Dispatchers.Main + handler).launch {
             userId?.let {
-                val socialAccountsDetailData = BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getInstagramHandle(it, 3)
+                val socialAccountsDetailData =
+                    BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getInstagramHandle(
+                        it,
+                        3
+                    )
                 socialAccountsDetailData.data?.result?.let { it1 ->
                     socialAccountsDetail = it1
                     if (socialAccountsDetailData.code == 200 && socialAccountsDetailData.status == Constants.SUCCESS) {
@@ -956,7 +1173,11 @@ class CampaignDetailFragment : BaseFragment() {
                             } else if (it.platform_name == AppConstants.MEDIUM_INSTAGRAM && !it.acc_link.isNullOrBlank()) {
                                 txtTrackerStatus.visibility = View.VISIBLE
                                 submitBtn.setText(resources.getString(R.string.detail_bottom_applied))
-                                Toast.makeText(context, resources.getString(R.string.toast_campaign_applied), Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    resources.getString(R.string.toast_campaign_applied),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                                 labelText.setText(resources.getString(R.string.label_campaign_applied))
                                 unapplyCampaign.visibility = View.VISIBLE
                                 showInstPopUpFlag = false
@@ -974,30 +1195,50 @@ class CampaignDetailFragment : BaseFragment() {
 
     private suspend fun showInstaHandlePopUp() {
         instaHandlePopUpView.visibility = View.VISIBLE
-        Utils.campaignEvent(activity, "Campaign_Detail_Fragment", "Campaign Detail", "Instagram_popup",
-                apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity),
-                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                System.currentTimeMillis().toString(), "Show_IG_popup")
+        Utils.campaignEvent(
+            activity, "Campaign_Detail_Fragment", "Campaign Detail", "Instagram_popup",
+            apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity),
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+            System.currentTimeMillis().toString(), "Show_IG_popup"
+        )
         val confimTextView = containerView.findViewById<TextView>(R.id.confirmTextView)
         confimTextView.setOnClickListener {
-            Utils.campaignEvent(activity, "Campaign_Detail_Fragment", "Campaign Detail", "Instagram_popup_confirm_text",
-                    apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity),
-                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                    System.currentTimeMillis().toString(), "CTA_IG_popup")
+            Utils.campaignEvent(
+                activity,
+                "Campaign_Detail_Fragment",
+                "Campaign Detail",
+                "Instagram_popup_confirm_text",
+                apiGetResponse!!.name,
+                "android",
+                SharedPrefUtils.getAppLocale(activity),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                System.currentTimeMillis().toString(),
+                "CTA_IG_popup"
+            )
             if (isValid().isNotBlank()) {
                 socialAccountsDetail.socialAccounts?.forEach {
                     if (it.platform_name == AppConstants.MEDIUM_INSTAGRAM) {
-                        it.acc_link = containerView.findViewById<EditText>(R.id.instaHandleEditTextView).text.toString()
+                        it.acc_link =
+                            containerView.findViewById<EditText>(R.id.instaHandleEditTextView).text.toString()
                     }
                 }
                 instaHandlePopUpView.visibility = View.GONE
                 CoroutineScope(Dispatchers.Main + handler).launch {
                     userId?.let {
-                        val response = BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendInstageamHandle(it, socialAccountsDetail, 3)
+                        val response =
+                            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendInstageamHandle(
+                                it,
+                                socialAccountsDetail,
+                                3
+                            )
                         if (response.code == 200 && response.status == Constants.SUCCESS) {
                             txtTrackerStatus.visibility = View.VISIBLE
                             submitBtn.setText(resources.getString(R.string.detail_bottom_applied))
-                            Toast.makeText(context, resources.getString(R.string.toast_campaign_applied), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                resources.getString(R.string.toast_campaign_applied),
+                                Toast.LENGTH_SHORT
+                            ).show()
                             labelText.setText(resources.getString(R.string.label_campaign_applied))
                             unapplyCampaign.visibility = View.VISIBLE
                         } else {
@@ -1011,14 +1252,19 @@ class CampaignDetailFragment : BaseFragment() {
     }
 
     private fun isValid(): String {
-        val instaHandleEditTextView = containerView.findViewById<EditText>(R.id.instaHandleEditTextView) // ^([A-Za-z0-9._](?:(?:[A-Za-z0-9._]|(?:\.(?!\.))){2,28}(?:[A-Za-z0-9._]))?)$
+        val instaHandleEditTextView =
+            containerView.findViewById<EditText>(R.id.instaHandleEditTextView) // ^([A-Za-z0-9._](?:(?:[A-Za-z0-9._]|(?:\.(?!\.))){2,28}(?:[A-Za-z0-9._]))?)$
         val instaHandle = instaHandleEditTextView.text.toString()
-        val pattern = Pattern.compile("^([A-Za-z0-9._](?:(?:[A-Za-z0-9._]|(?:\\.(?!\\.))){2,28}(?:[A-Za-z0-9._]))?)\$")
+        val pattern =
+            Pattern.compile("^([A-Za-z0-9._](?:(?:[A-Za-z0-9._]|(?:\\.(?!\\.))){2,28}(?:[A-Za-z0-9._]))?)\$")
         val matcher = pattern.matcher(instaHandle)
         if (matcher.matches()) {
             return instaHandle
         } else {
-            ToastUtils.showToast(activity, getString(R.string.enter_valid_instagram_campaign_detail_fragment_popup))
+            ToastUtils.showToast(
+                activity,
+                getString(R.string.enter_valid_instagram_campaign_detail_fragment_popup)
+            )
         }
         return ""
     }

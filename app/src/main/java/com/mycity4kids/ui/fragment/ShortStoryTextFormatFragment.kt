@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.R
+import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.ui.activity.ShortStoriesCardActivity
 
 class ShortStoryTextFormatFragment : BaseFragment() {

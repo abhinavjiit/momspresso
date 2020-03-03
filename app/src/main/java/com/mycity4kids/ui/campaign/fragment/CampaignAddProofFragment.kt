@@ -11,19 +11,28 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
-import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
-import com.mycity4kids.models.campaignmodels.*
+import com.mycity4kids.models.campaignmodels.CampaignProofResponse
+import com.mycity4kids.models.campaignmodels.FaqResponse
+import com.mycity4kids.models.campaignmodels.GetCampaignSubmissionDetailsResponse
+import com.mycity4kids.models.campaignmodels.PreProofResponse
+import com.mycity4kids.models.campaignmodels.ProofPostModel
+import com.mycity4kids.models.campaignmodels.QuestionAnswerResponse
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.preference.SharedPrefUtils
@@ -36,21 +45,24 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.Call
-import retrofit2.Callback
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.ArrayList
+import java.util.Date
+import retrofit2.Call
+import retrofit2.Callback
 
 const val SELECT_IMAGE = 1005
 
-class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickListener, MediaProofRecyclerAdapter.ClickListener {
+class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickListener,
+    MediaProofRecyclerAdapter.ClickListener {
     override fun onUrlComponentDelete(cellIndex: Int) {
         for (i in 0..campaignUrlProofList.size - 1) {
             var view = recyclerUrlProof.layoutManager?.findViewByPosition(i)
             var textview = view?.findViewById<EditText>(R.id.textUrl)
             if (textview != null && !textview.text.isNullOrEmpty()) {
-                this@CampaignAddProofFragment.campaignUrlProofList.get(i).url = textview.text.toString()
+                this@CampaignAddProofFragment.campaignUrlProofList.get(i).url =
+                    textview.text.toString()
             } else {
                 this@CampaignAddProofFragment.campaignUrlProofList.get(i).url = ""
             }
@@ -86,12 +98,24 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             if (campaignUrlProofList != null && campaignUrlProofList.size > i) {
                 var view = recyclerUrlProof.layoutManager?.findViewByPosition(i)
                 var textview = view?.findViewById<EditText>(R.id.textUrl)
-                var proofPostModel = ProofPostModel(url = textview?.text.toString(), campaign_id = campaignId, url_type = 1)
+                var proofPostModel = ProofPostModel(
+                    url = textview?.text.toString(),
+                    campaign_id = campaignId,
+                    url_type = 1
+                )
                 if (!textview?.text.isNullOrEmpty()) {
                     if (i == campaignUrlProofList.size - 1) {
-                        updateProofToServer(proofPostModel = proofPostModel, proofId = campaignUrlProofList.get(i).id!!, proceedToPayment = true)
+                        updateProofToServer(
+                            proofPostModel = proofPostModel,
+                            proofId = campaignUrlProofList.get(i).id!!,
+                            proceedToPayment = true
+                        )
                     } else {
-                        updateProofToServer(proofPostModel = proofPostModel, proofId = campaignUrlProofList.get(i).id!!, proceedToPayment = false)
+                        updateProofToServer(
+                            proofPostModel = proofPostModel,
+                            proofId = campaignUrlProofList.get(i).id!!,
+                            proceedToPayment = false
+                        )
                     }
                 } else {
                     submitListener.proofSubmitDone()
@@ -100,7 +124,11 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 var view = recyclerUrlProof.layoutManager?.findViewByPosition(i)
                 var textview = view?.findViewById<EditText>(R.id.textUrl)
                 if (!textview?.text.isNullOrEmpty()) {
-                    var proofPostModel = ProofPostModel(url = textview?.text.toString(), campaign_id = campaignId, url_type = 1)
+                    var proofPostModel = ProofPostModel(
+                        url = textview?.text.toString(),
+                        campaign_id = campaignId,
+                        url_type = 1
+                    )
                     if (i == campaignUrlProofList.size - 1) {
                         postProofToServer(proofPostModel, true, urlType = 1)
                     } else {
@@ -131,7 +159,9 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         val dialog = AlertDialog.Builder(activity!!, R.style.MyAlertDialogStyle)
         dialog.setMessage("Are you sure? you want to delete this image.").setNegativeButton("Delete") { dialog, which ->
             dialog.cancel()
-            if (!campaignImageProofList.isNullOrEmpty() && cellIndex < campaignImageProofList.size && !campaignImageProofList.get(cellIndex).url.isNullOrEmpty()) {
+            if (!campaignImageProofList.isNullOrEmpty() && cellIndex < campaignImageProofList.size && !campaignImageProofList.get(
+                    cellIndex
+                ).url.isNullOrEmpty()) {
                 deleteProof(campaignImageProofList.get(cellIndex).id!!, urlType = 0)
             }
         }.setPositiveButton(R.string.new_cancel) { dialog, which ->
@@ -174,13 +204,13 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     companion object {
         @JvmStatic
         fun newInstance(id: Int, deliverableTypeList: ArrayList<Int>, status: Int) =
-                CampaignAddProofFragment().apply {
-                    arguments = Bundle().apply {
-                        this.putInt("id", id)
-                        this.putIntegerArrayList("deliverableTypeList", deliverableTypeList)
-                        this.putInt("status", status)
-                    }
+            CampaignAddProofFragment().apply {
+                arguments = Bundle().apply {
+                    this.putInt("id", id)
+                    this.putIntegerArrayList("deliverableTypeList", deliverableTypeList)
+                    this.putInt("status", status)
                 }
+            }
     }
 
     override fun onCreateView(
@@ -228,7 +258,8 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 var view = recyclerUrlProof.layoutManager?.findViewByPosition(i)
                 var textview = view?.findViewById<EditText>(R.id.textUrl)
                 if (textview != null && !textview.text.isNullOrEmpty()) {
-                    this@CampaignAddProofFragment.campaignUrlProofList.get(i).url = textview.text.toString()
+                    this@CampaignAddProofFragment.campaignUrlProofList.get(i).url =
+                        textview.text.toString()
                 } else {
                     this@CampaignAddProofFragment.campaignUrlProofList.get(i).url = ""
                     isEmpty = true
@@ -245,7 +276,11 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 }
                 notifyUrlAdapter()
             } else {
-                Toast.makeText(activity, "Please add link in the box above before adding more", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    activity,
+                    "Please add link in the box above before adding more",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -263,7 +298,8 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         recyclerFaqs.adapter = faqRecyclerAdapter
 
         recyclerMediaProof = view.findViewById<RecyclerView>(R.id.recyclerMediaProof)
-        recyclerMediaProof.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+        recyclerMediaProof.layoutManager =
+            LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         mediaProofRecyclerAdapter = MediaProofRecyclerAdapter(campaignImageProofList, this)
         recyclerMediaProof.adapter = mediaProofRecyclerAdapter
 
@@ -286,7 +322,18 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             } else {
                 Toast.makeText(activity, "Please submit a proof", Toast.LENGTH_SHORT).show()
             }
-            Utils.campaignEvent(activity, "Payment Option", "Proof Submission", "Share_payment_details", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_payment_option_detail")
+            Utils.campaignEvent(
+                activity,
+                "Payment Option",
+                "Proof Submission",
+                "Share_payment_details",
+                "",
+                "android",
+                SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                System.currentTimeMillis().toString(),
+                "Show_payment_option_detail"
+            )
         }
 
         /*fetch faq data from server*/
@@ -306,7 +353,10 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     }
 
     val preProof = object : Callback<PreProofResponse> {
-        override fun onResponse(call: Call<PreProofResponse>, response: retrofit2.Response<PreProofResponse>) {
+        override fun onResponse(
+            call: Call<PreProofResponse>,
+            response: retrofit2.Response<PreProofResponse>
+        ) {
             removeProgressDialog()
             if (response == null || null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
@@ -317,7 +367,8 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 val responseData = response.body()
                 if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
                     if (responseData.data.get(0).result.get(0).isIs_image_required == 1) {
-                        addScreenShotTextView.text = responseData.data.get(0).result.get(0).image_name
+                        addScreenShotTextView.text =
+                            responseData.data.get(0).result.get(0).image_name
                         addScreenShotTextView1.visibility = View.VISIBLE
                     } else {
                         headerTextViewContainer1.visibility = View.GONE
@@ -376,7 +427,10 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     /*fetch data from server*/
     private fun fetchFaq() {
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getFaqsList().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<FaqResponse>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getFaqsList().subscribeOn(
+            Schedulers.io()
+        ).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<FaqResponse>> {
             override fun onComplete() {
                 removeProgressDialog()
             }
@@ -386,7 +440,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
             override fun onNext(response: BaseResponseGeneric<FaqResponse>) {
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
-                        response.data != null && response.data!!.result != null && response.data!!.result.faqs!!.isNotEmpty()) {
+                    response.data != null && response.data!!.result != null && response.data!!.result.faqs!!.isNotEmpty()) {
                     faqs.clear()
                     faqs.addAll(response.data!!.result.faqs as ArrayList)
                     faqRecyclerAdapter.notifyDataSetChanged()
@@ -410,7 +464,10 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     /*fetch data from server for submission*/
     private fun fetSubmissionDetail() {
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getSubmissionDetail(campaignId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<GetCampaignSubmissionDetailsResponse>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getSubmissionDetail(
+            campaignId
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<GetCampaignSubmissionDetailsResponse>> {
             override fun onComplete() {
                 removeProgressDialog()
             }
@@ -420,34 +477,44 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
             override fun onNext(response: BaseResponseGeneric<GetCampaignSubmissionDetailsResponse>) {
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
-                        response.data != null && response.data!!.result != null) {
+                    response.data != null && response.data!!.result != null) {
 
                     if (!response.data!!.result.campaignProofResponse.isNullOrEmpty()) {
-                        var campaignImageProofList = response.data!!.result.campaignProofResponse!!.filter {
-                            !it.url.isNullOrEmpty() && it.urlType == 0
-                        }
+                        var campaignImageProofList =
+                            response.data!!.result.campaignProofResponse!!.filter {
+                                !it.url.isNullOrEmpty() && it.urlType == 0
+                            }
 
-                        var campaignUrlProofList = response.data!!.result.campaignProofResponse!!.filter {
-                            !it.url.isNullOrEmpty() && it.urlType == 1
-                        }
+                        var campaignUrlProofList =
+                            response.data!!.result.campaignProofResponse!!.filter {
+                                !it.url.isNullOrEmpty() && it.urlType == 1
+                            }
 
                         this@CampaignAddProofFragment.campaignImageProofList.clear()
                         this@CampaignAddProofFragment.campaignUrlProofList.clear()
 
-                        this@CampaignAddProofFragment.campaignImageProofList.addAll(campaignImageProofList)
-                        this@CampaignAddProofFragment.campaignUrlProofList.addAll(campaignUrlProofList)
+                        this@CampaignAddProofFragment.campaignImageProofList.addAll(
+                            campaignImageProofList
+                        )
+                        this@CampaignAddProofFragment.campaignUrlProofList.addAll(
+                            campaignUrlProofList
+                        )
 
                         if (this@CampaignAddProofFragment.campaignImageProofList.size < 30) {
                             var campaignProofResponse = CampaignProofResponse()
                             campaignProofResponse.isTemplate = true
-                            this@CampaignAddProofFragment.campaignImageProofList.add(campaignProofResponse)
+                            this@CampaignAddProofFragment.campaignImageProofList.add(
+                                campaignProofResponse
+                            )
                             notifyMediaAdapter()
                         }
 
                         if (this@CampaignAddProofFragment.campaignUrlProofList.isNullOrEmpty()) {
                             var campaignProofResponse = CampaignProofResponse()
                             campaignProofResponse.id = 0
-                            this@CampaignAddProofFragment.campaignUrlProofList.add(campaignProofResponse)
+                            this@CampaignAddProofFragment.campaignUrlProofList.add(
+                                campaignProofResponse
+                            )
                             notifyUrlAdapter()
                             if (status != 22 || status != 16 || status != 17)
                                 textAddUrlProof.visibility = View.VISIBLE
@@ -468,7 +535,9 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                         if (this@CampaignAddProofFragment.campaignImageProofList.isNullOrEmpty()) {
                             var campaignProofResponse = CampaignProofResponse()
                             campaignProofResponse.isTemplate = true
-                            this@CampaignAddProofFragment.campaignImageProofList.add(campaignProofResponse)
+                            this@CampaignAddProofFragment.campaignImageProofList.add(
+                                campaignProofResponse
+                            )
                             notifyMediaAdapter()
                         }
                     }
@@ -489,7 +558,10 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     private fun fetchProofInstruction() {
 
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getProofInstruction(campaignId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofInstructionResult>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getProofInstruction(
+            campaignId
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<ProofInstructionResult>> {
             override fun onComplete() {
                 removeProgressDialog()
             }
@@ -498,21 +570,21 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             }
 
             override fun onNext(response: BaseResponseGeneric<ProofInstructionResult>) =
-                    if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
-                            response.data != null && response.data!!.result != null && response.data!!.result.readThis != null &&
-                            !response.data!!.result.readThis!!.instructions.isNullOrEmpty()) {
-                        val readBuilder = StringBuilder()
-                        for (instructions in response.data!!.result.readThis!!.instructions!!) {
-                            if (!instructions.isNullOrEmpty() && !instructions.equals(""))
-                                readBuilder.append("\u2022" + "  " + instructions + "\n")
-                        }
-                        if (!readBuilder.isEmpty()) {
-                            getOffset(readBuilder.toString(), textInstruction)
-                        }
-                        linearInstruction.visibility = View.VISIBLE
-                    } else {
-                        linearInstruction.visibility = View.GONE
+                if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
+                    response.data != null && response.data!!.result != null && response.data!!.result.readThis != null &&
+                    !response.data!!.result.readThis!!.instructions.isNullOrEmpty()) {
+                    val readBuilder = StringBuilder()
+                    for (instructions in response.data!!.result.readThis!!.instructions!!) {
+                        if (!instructions.isNullOrEmpty() && !instructions.equals(""))
+                            readBuilder.append("\u2022" + "  " + instructions + "\n")
                     }
+                    if (!readBuilder.isEmpty()) {
+                        getOffset(readBuilder.toString(), textInstruction)
+                    }
+                    linearInstruction.visibility = View.VISIBLE
+                } else {
+                    linearInstruction.visibility = View.GONE
+                }
 
             override fun onError(e: Throwable) {
                 removeProgressDialog()
@@ -528,9 +600,16 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     }
 
     /*Post proof on server*/
-    private fun postProofToServer(proofPostModel: ProofPostModel, proceedToPayment: Boolean = false, urlType: Int = -1) {
+    private fun postProofToServer(
+        proofPostModel: ProofPostModel,
+        proceedToPayment: Boolean = false,
+        urlType: Int = -1
+    ) {
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).postProofToServer(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).postProofToServer(
+            proofPostModel
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
             override fun onComplete() {
                 removeProgressDialog()
             }
@@ -540,7 +619,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
             override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
-                        response.data != null && response.data!!.result != null) {
+                    response.data != null && response.data!!.result != null) {
                     if (urlType != -1) {
                         if (urlType == 0) {
                             var campaignProofResponse = CampaignProofResponse()
@@ -548,10 +627,15 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                             campaignProofResponse.url = proofPostModel.url
                             campaignProofResponse.urlType = 0
                             campaignProofResponse.isTemplate = false
-                            this@CampaignAddProofFragment.campaignImageProofList.add(0, campaignProofResponse)
+                            this@CampaignAddProofFragment.campaignImageProofList.add(
+                                0,
+                                campaignProofResponse
+                            )
 
                             if (this@CampaignAddProofFragment.campaignImageProofList.size >= 31) {
-                                this@CampaignAddProofFragment.campaignImageProofList.removeAt(campaignImageProofList.size - 1)
+                                this@CampaignAddProofFragment.campaignImageProofList.removeAt(
+                                    campaignImageProofList.size - 1
+                                )
                             }
                             notifyMediaAdapter()
                         } else if (urlType == 1) {
@@ -572,9 +656,17 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     }
 
     /*Post proof on server*/
-    private fun updateProofToServer(proofPostModel: ProofPostModel, proceedToPayment: Boolean = false, proofId: Int) {
+    private fun updateProofToServer(
+        proofPostModel: ProofPostModel,
+        proceedToPayment: Boolean = false,
+        proofId: Int
+    ) {
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).updateProofToServer(proofId, proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).updateProofToServer(
+            proofId,
+            proofPostModel
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
             override fun onComplete() {
                 removeProgressDialog()
             }
@@ -584,7 +676,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
             override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
-                        response.data != null && response.data!!.result != null) {
+                    response.data != null && response.data!!.result != null) {
                     if (proceedToPayment) {
                         submitListener.proofSubmitDone()
                     }
@@ -602,7 +694,10 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     /*Delete proof on server*/
     private fun deleteProof(proofId: Int, urlType: Int = -1) {
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).deleteProofById(proofId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).deleteProofById(
+            proofId
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
             override fun onComplete() {
                 removeProgressDialog()
             }
@@ -612,27 +707,33 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
             override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
-                        response.data != null && response.data!!.result != null) {
+                    response.data != null && response.data!!.result != null) {
                     if (urlType != -1) {
                         if (urlType == 0) {
-                            var campaignProofListLocal = this@CampaignAddProofFragment.campaignImageProofList.filter { it.id != proofId }
+                            var campaignProofListLocal =
+                                this@CampaignAddProofFragment.campaignImageProofList.filter { it.id != proofId }
                             campaignImageProofList.clear()
                             campaignImageProofList.addAll(campaignProofListLocal)
 
                             if (campaignImageProofList.size > 0) {
-                                var campaignImageProof = campaignImageProofList.get(campaignImageProofList.size - 1)
+                                var campaignImageProof =
+                                    campaignImageProofList.get(campaignImageProofList.size - 1)
                                 if (!campaignImageProof.isTemplate) {
                                     var campaignProofResponse = CampaignProofResponse()
                                     campaignProofResponse.url = ""
                                     campaignProofResponse.urlType = 0
                                     campaignProofResponse.isTemplate = true
-                                    this@CampaignAddProofFragment.campaignImageProofList.add(campaignImageProofList.size, campaignProofResponse)
+                                    this@CampaignAddProofFragment.campaignImageProofList.add(
+                                        campaignImageProofList.size,
+                                        campaignProofResponse
+                                    )
                                 }
                             }
 
                             notifyMediaAdapter()
                         } else if (urlType == 1) {
-                            var campaignProofListLocal = this@CampaignAddProofFragment.campaignUrlProofList.filter { it.id != proofId }
+                            var campaignProofListLocal =
+                                this@CampaignAddProofFragment.campaignUrlProofList.filter { it.id != proofId }
                             campaignUrlProofList.clear()
                             campaignUrlProofList.addAll(campaignProofListLocal)
                             if (campaignUrlProofList.size < 3) {
@@ -669,14 +770,17 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             if (resultCode == Activity.RESULT_OK) {
                 if (data != null) {
                     try {
-                        val storage = FirebaseStorage.getInstance("gs://api-project-3577377239.appspot.com")
+                        val storage =
+                            FirebaseStorage.getInstance("gs://api-project-3577377239.appspot.com")
                         var file = File(data.data?.path); // create path from uri
                         /*  var split = file.getPath().split(":");//split the path.
                           var path = split[1];*/
                         val storageRef = storage.reference
                         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-                        val riversRef = storageRef.child("user/" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId +
-                                "/media/" + file + "_" + timeStamp)
+                        val riversRef = storageRef.child(
+                            "user/" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId +
+                                "/media/" + file + "_" + timeStamp
+                        )
                         val uploadTask = data.data?.let { riversRef.putFile(it) }
                         Log.e("file path ", riversRef.path)
                         showProgressDialog("")
@@ -686,7 +790,11 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                         }?.addOnSuccessListener {
                             riversRef.downloadUrl.addOnSuccessListener {
                                 Log.e("uploaded path ", it.toString())
-                                var proofPostModel = ProofPostModel(url = it.toString(), campaign_id = campaignId, url_type = 0)
+                                var proofPostModel = ProofPostModel(
+                                    url = it.toString(),
+                                    campaign_id = campaignId,
+                                    url_type = 0
+                                )
                                 postProofToServer(proofPostModel, urlType = 0)
                             }
                             Log.e("fcm ", "file uploaded succesfully")

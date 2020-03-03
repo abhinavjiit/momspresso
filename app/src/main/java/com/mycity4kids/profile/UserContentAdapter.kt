@@ -11,19 +11,21 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.R
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.models.response.MixFeedResult
 import com.mycity4kids.utils.AppUtils
+import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
-import java.util.*
 
 /**
  * Created by hemant on 19/7/17.
  */
-class UserContentAdapter(private val mListener: RecyclerViewClickListener, private val isPrivate: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class UserContentAdapter(
+    private val mListener: RecyclerViewClickListener,
+    private val isPrivate: Boolean
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var mixFeedList: ArrayList<MixFeedResult>? = null
 
@@ -43,19 +45,23 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             CONTENT_TYPE_CREATE -> {
-                val v0 = LayoutInflater.from(parent.context).inflate(R.layout.profile_add_content_item, parent, false)
+                val v0 = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.profile_add_content_item, parent, false)
                 CreateContentViewHolder(v0, mListener)
             }
             CONTENT_TYPE_ARTICLE -> {
-                val v0 = LayoutInflater.from(parent.context).inflate(R.layout.article_listing_item, parent, false)
+                val v0 = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.article_listing_item, parent, false)
                 FeedViewHolder(v0, mListener)
             }
             CONTENT_TYPE_SHORT_STORY -> {
-                val v0 = LayoutInflater.from(parent.context).inflate(R.layout.short_story_listing_item, parent, false)
+                val v0 = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.short_story_listing_item, parent, false)
                 ShortStoriesViewHolder(v0, mListener)
             }
             else -> {
-                val v0 = LayoutInflater.from(parent.context).inflate(R.layout.video_listing_item, parent, false)
+                val v0 = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.video_listing_item, parent, false)
                 VideosViewHolder(v0, mListener)
             }
         }
@@ -65,15 +71,48 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         when (holder) {
             is CreateContentViewHolder -> {
             }
-            is FeedViewHolder -> addArticleItem(holder.txvArticleTitle, holder.forYouInfoLL, holder.viewCountTextView, holder.commentCountTextView,
-                    holder.recommendCountTextView, holder.txvAuthorName, holder.articleImageView, holder.videoIndicatorImageView,
-                    holder.bookmarkArticleImageView, holder.watchLaterImageView, mixFeedList?.get(position), position, holder, isPrivate)
-            is VideosViewHolder -> addVideoItem(holder.winnerLayout, holder.txvArticleTitle, holder.txvAuthorName, holder.articleImageView,
-                    holder.viewCountTextView, holder.commentCountTextView, holder.recommendCountTextView,
-                    holder.goldLogo, mixFeedList?.get(position), holder, isPrivate)
-            is ShortStoriesViewHolder -> addShortStoryItem(holder.logoImageView, holder.storyAuthorTextView, holder.shareStoryImageView, holder.storyImage, holder.authorNameTextView,
-                    holder.storyCommentCountTextView, holder.storyRecommendationCountTextView, holder.likeImageView,
-                    mixFeedList?.get(position), holder, isPrivate)
+            is FeedViewHolder -> addArticleItem(
+                holder.txvArticleTitle,
+                holder.forYouInfoLL,
+                holder.viewCountTextView,
+                holder.commentCountTextView,
+                holder.recommendCountTextView,
+                holder.txvAuthorName,
+                holder.articleImageView,
+                holder.videoIndicatorImageView,
+                holder.bookmarkArticleImageView,
+                holder.watchLaterImageView,
+                mixFeedList?.get(position),
+                position,
+                holder,
+                isPrivate
+            )
+            is VideosViewHolder -> addVideoItem(
+                holder.winnerLayout,
+                holder.txvArticleTitle,
+                holder.txvAuthorName,
+                holder.articleImageView,
+                holder.viewCountTextView,
+                holder.commentCountTextView,
+                holder.recommendCountTextView,
+                holder.goldLogo,
+                mixFeedList?.get(position),
+                holder,
+                isPrivate
+            )
+            is ShortStoriesViewHolder -> addShortStoryItem(
+                holder.logoImageView,
+                holder.storyAuthorTextView,
+                holder.shareStoryImageView,
+                holder.storyImage,
+                holder.authorNameTextView,
+                holder.storyCommentCountTextView,
+                holder.storyRecommendationCountTextView,
+                holder.likeImageView,
+                mixFeedList?.get(position),
+                holder,
+                isPrivate
+            )
         }
     }
 
@@ -81,7 +120,10 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         return if (mixFeedList == null) 0 else mixFeedList!!.size
     }
 
-    inner class CreateContentViewHolder internal constructor(view: View, val listener: RecyclerViewClickListener) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    inner class CreateContentViewHolder internal constructor(
+        view: View,
+        val listener: RecyclerViewClickListener
+    ) : RecyclerView.ViewHolder(view), View.OnClickListener {
         private var draftContainer: RelativeLayout
         private var storyContainer: RelativeLayout
         private var articleContainer: RelativeLayout
@@ -105,7 +147,10 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         }
     }
 
-    inner class FeedViewHolder internal constructor(view: View, val listener: RecyclerViewClickListener) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    inner class FeedViewHolder internal constructor(
+        view: View,
+        val listener: RecyclerViewClickListener
+    ) : RecyclerView.ViewHolder(view), View.OnClickListener {
         internal var txvArticleTitle: TextView
         internal var txvAuthorName: TextView
         internal var articleImageView: ImageView
@@ -123,12 +168,15 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
             txvArticleTitle = view.findViewById<View>(R.id.txvArticleTitle) as TextView
             txvAuthorName = view.findViewById<View>(R.id.txvAuthorName) as TextView
             articleImageView = view.findViewById<View>(R.id.articleImageView) as ImageView
-            videoIndicatorImageView = view.findViewById<View>(R.id.videoIndicatorImageView) as ImageView
+            videoIndicatorImageView =
+                view.findViewById<View>(R.id.videoIndicatorImageView) as ImageView
             forYouInfoLL = view.findViewById<View>(R.id.forYouInfoLL) as LinearLayout
             viewCountTextView = view.findViewById<View>(R.id.viewCountTextView) as TextView
             commentCountTextView = view.findViewById<View>(R.id.commentCountTextView) as TextView
-            recommendCountTextView = view.findViewById<View>(R.id.recommendCountTextView) as TextView
-            bookmarkArticleImageView = view.findViewById<View>(R.id.bookmarkArticleImageView) as ImageView
+            recommendCountTextView =
+                view.findViewById<View>(R.id.recommendCountTextView) as TextView
+            bookmarkArticleImageView =
+                view.findViewById<View>(R.id.bookmarkArticleImageView) as ImageView
             shareArticleImageView = view.findViewById<View>(R.id.shareArticleImageView) as ImageView
             watchLaterImageView = view.findViewById<View>(R.id.watchLaterImageView) as ImageView
             editArticleTextView = view.findViewById<View>(R.id.editArticleTextView) as TextView
@@ -145,7 +193,8 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         }
     }
 
-    inner class ShortStoriesViewHolder(itemView: View, val listener: RecyclerViewClickListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ShortStoriesViewHolder(itemView: View, val listener: RecyclerViewClickListener) :
+        RecyclerView.ViewHolder(itemView), View.OnClickListener {
         internal var authorNameTextView: TextView
         internal var storyCommentCountTextView: TextView
         internal var storyRecommendationContainer: LinearLayout
@@ -167,22 +216,34 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
 
         init {
             authorNameTextView = itemView.findViewById<View>(R.id.authorNameTextView) as TextView
-            storyRecommendationContainer = itemView.findViewById<View>(R.id.storyRecommendationContainer) as LinearLayout
-            storyCommentContainer = itemView.findViewById<View>(R.id.storyCommentContainer) as LinearLayout
-            storyCommentCountTextView = itemView.findViewById<View>(R.id.storyCommentCountTextView) as TextView
-            storyRecommendationCountTextView = itemView.findViewById<View>(R.id.storyRecommendationCountTextView) as TextView
+            storyRecommendationContainer =
+                itemView.findViewById<View>(R.id.storyRecommendationContainer) as LinearLayout
+            storyCommentContainer =
+                itemView.findViewById<View>(R.id.storyCommentContainer) as LinearLayout
+            storyCommentCountTextView =
+                itemView.findViewById<View>(R.id.storyCommentCountTextView) as TextView
+            storyRecommendationCountTextView =
+                itemView.findViewById<View>(R.id.storyRecommendationCountTextView) as TextView
             storyImage = itemView.findViewById<View>(R.id.storyImageView1) as ImageView
             likeImageView = itemView.findViewById<View>(R.id.likeImageView) as ImageView
-            facebookShareImageView = itemView.findViewById<View>(R.id.facebookShareImageView) as ImageView
-            whatsappShareImageView = itemView.findViewById<View>(R.id.whatsappShareImageView) as ImageView
-            instagramShareImageView = itemView.findViewById<View>(R.id.instagramShareImageView) as ImageView
-            addToCollectionImageView = itemView.findViewById<View>(R.id.genericShareImageView) as ImageView
-            followAuthorTextView = itemView.findViewById<View>(R.id.followAuthorTextView) as TextView
-            storyShareCardWidget = itemView.findViewById<View>(R.id.storyShareCardWidget) as StoryShareCardWidget
+            facebookShareImageView =
+                itemView.findViewById<View>(R.id.facebookShareImageView) as ImageView
+            whatsappShareImageView =
+                itemView.findViewById<View>(R.id.whatsappShareImageView) as ImageView
+            instagramShareImageView =
+                itemView.findViewById<View>(R.id.instagramShareImageView) as ImageView
+            addToCollectionImageView =
+                itemView.findViewById<View>(R.id.genericShareImageView) as ImageView
+            followAuthorTextView =
+                itemView.findViewById<View>(R.id.followAuthorTextView) as TextView
+            storyShareCardWidget =
+                itemView.findViewById<View>(R.id.storyShareCardWidget) as StoryShareCardWidget
             editStoryTextView = itemView.findViewById(R.id.editStoryTextView) as TextView
-            shareStoryImageView = storyShareCardWidget.findViewById(R.id.storyImageView) as ImageView
+            shareStoryImageView =
+                storyShareCardWidget.findViewById(R.id.storyImageView) as ImageView
             logoImageView = storyShareCardWidget.findViewById(R.id.logoImageView) as ImageView
-            storyAuthorTextView = storyShareCardWidget.findViewById(R.id.storyAuthorTextView) as TextView
+            storyAuthorTextView =
+                storyShareCardWidget.findViewById(R.id.storyAuthorTextView) as TextView
             followAuthorTextView.visibility = View.INVISIBLE
             menuItem = itemView.findViewById<View>(R.id.menuItem) as ImageView
             whatsappShareImageView.tag = itemView
@@ -207,7 +268,8 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         }
     }
 
-    inner class VideosViewHolder(itemView: View, val listener: RecyclerViewClickListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class VideosViewHolder(itemView: View, val listener: RecyclerViewClickListener) :
+        RecyclerView.ViewHolder(itemView), View.OnClickListener {
         internal var winnerLayout: RelativeLayout
         internal var txvArticleTitle: TextView
         internal var txvAuthorName: TextView
@@ -224,13 +286,19 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
             txvAuthorName = itemView.findViewById<View>(R.id.txvAuthorName) as TextView
             articleImageView = itemView.findViewById<View>(R.id.articleImageView) as ImageView
             viewCountTextView = itemView.findViewById<View>(R.id.viewCountTextView) as TextView
-            commentCountTextView = itemView.findViewById<View>(R.id.commentCountTextView) as TextView
-            recommendCountTextView = itemView.findViewById<View>(R.id.recommendCountTextView) as TextView
+            commentCountTextView =
+                itemView.findViewById<View>(R.id.commentCountTextView) as TextView
+            recommendCountTextView =
+                itemView.findViewById<View>(R.id.recommendCountTextView) as TextView
 
-            var drawable = ContextCompat.getDrawable(itemView.context, R.drawable.ic_star_gold_videos)
+            var drawable =
+                ContextCompat.getDrawable(itemView.context, R.drawable.ic_star_gold_videos)
             drawable?.let {
                 drawable = DrawableCompat.wrap(it)
-                DrawableCompat.setTint(it, ContextCompat.getColor(itemView.context, R.color.gold_color_video_listing))
+                DrawableCompat.setTint(
+                    it,
+                    ContextCompat.getColor(itemView.context, R.color.gold_color_video_listing)
+                )
                 DrawableCompat.setTintMode(it, PorterDuff.Mode.SRC_IN)
             }
             goldLogo.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
@@ -287,13 +355,15 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         }
         try {
             if (!StringUtils.isNullOrEmpty(data?.videoUrl) && (data?.imageUrl?.thumbMax == null ||
-                            data.imageUrl.thumbMax.contains("default.jp"))) {
+                        data.imageUrl.thumbMax.contains("default.jp"))
+            ) {
                 Picasso.get().load(AppUtils.getYoutubeThumbnailURLMomspresso(data?.videoUrl))
-                        .placeholder(R.drawable.default_article).into(articleIV)
+                    .placeholder(R.drawable.default_article).into(articleIV)
             } else {
                 if (!StringUtils.isNullOrEmpty(data?.imageUrl?.thumbMax)) {
                     Picasso.get().load(data?.imageUrl?.thumbMax)
-                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(articleIV)
+                        .placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                        .into(articleIV)
                 } else {
                     articleIV.setBackgroundResource(R.drawable.default_article)
                 }
@@ -350,21 +420,36 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
         }
         data?.isLiked?.let {
             if (it) {
-                holder.likeImageView.setImageDrawable(ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_recommended))
+                holder.likeImageView.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        holder.itemView.context,
+                        R.drawable.ic_recommended
+                    )
+                )
             } else {
-                likeIV.setImageDrawable(ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_ss_like))
+                likeIV.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        holder.itemView.context,
+                        R.drawable.ic_ss_like
+                    )
+                )
             }
         }
 
         try {
-            Picasso.get().load(data?.storyImage?.trim { it <= ' ' }).placeholder(R.drawable.default_article).into(storyImage)
+            Picasso.get().load(data?.storyImage?.trim { it <= ' ' })
+                .placeholder(R.drawable.default_article).into(storyImage)
         } catch (e: Exception) {
             holder.storyImage.setImageResource(R.drawable.default_article)
         }
         try {
             Picasso.get().load(data?.storyImage?.trim { it <= ' ' }).into(shareStoryImageView)
             storyAuthorTextView.text = data?.userName
-            AppUtils.populateLogoImageLanguageWise(holder.itemView.context, logoImageView, data?.lang.toString())
+            AppUtils.populateLogoImageLanguageWise(
+                holder.itemView.context,
+                logoImageView,
+                data?.lang.toString()
+            )
         } catch (e: Exception) {
             holder.storyImage.setImageResource(R.drawable.default_article)
         }
@@ -406,7 +491,8 @@ class UserContentAdapter(private val mListener: RecyclerViewClickListener, priva
 
         try {
             Picasso.get().load(data?.thumbnail)
-                    .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(articleImageView)
+                .placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                .into(articleImageView)
         } catch (e: Exception) {
             articleImageView.setImageResource(R.drawable.default_article)
         }

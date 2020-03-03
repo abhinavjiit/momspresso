@@ -6,16 +6,22 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.RadioGroup
+import android.widget.RelativeLayout
+import android.widget.Spinner
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.fragment.app.Fragment
 import com.google.gson.Gson
-import com.mycity4kids.base.BaseFragment
-import com.mycity4kids.utils.DateTimeUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.SetupBlogData
@@ -26,6 +32,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter
 import com.mycity4kids.ui.rewards.dialog.PickerDialogFragment
 import com.mycity4kids.utils.AppUtils
+import com.mycity4kids.utils.DateTimeUtils
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -69,7 +76,10 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                 if (name != null) {
                     preSelectedInterest.add(name)
                 }
-                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.topic_follow_unfollow_item, null) as LinearLayout
+                val subsubLL = LayoutInflater.from(activity).inflate(
+                    R.layout.topic_follow_unfollow_item,
+                    null
+                ) as LinearLayout
                 val catTextView = subsubLL.getChildAt(0) as TextView
                 catTextView.setText(it)
                 catTextView.isSelected = true
@@ -97,7 +107,10 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                 if (name != null) {
                     preSelectedLanguage.add(name)
                 }
-                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.topic_follow_unfollow_item, null) as LinearLayout
+                val subsubLL = LayoutInflater.from(activity).inflate(
+                    R.layout.topic_follow_unfollow_item,
+                    null
+                ) as LinearLayout
                 val catTextView = subsubLL.getChildAt(0) as TextView
                 catTextView.setText(it)
                 catTextView.isSelected = true
@@ -149,13 +162,16 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         private lateinit var textKidsDOB: TextView
 
         @JvmStatic
-        fun newInstance(isComingFromRewards: Boolean = false, isComingfromCampaign: Boolean = false) =
-                RewardsFamilyInfoFragment().apply {
-                    arguments = Bundle().apply {
-                        this.putBoolean("isComingFromRewards", isComingFromRewards)
-                        this.putBoolean("isComingfromCampaign", isComingfromCampaign)
-                    }
+        fun newInstance(
+            isComingFromRewards: Boolean = false,
+            isComingfromCampaign: Boolean = false
+        ) =
+            RewardsFamilyInfoFragment().apply {
+                arguments = Bundle().apply {
+                    this.putBoolean("isComingFromRewards", isComingFromRewards)
+                    this.putBoolean("isComingfromCampaign", isComingfromCampaign)
                 }
+            }
     }
 
     override fun onCreateView(
@@ -189,31 +205,36 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
     /*fetch data from server*/
     private fun fetchRewardsData() {
-        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-//        var userId = "218f7fd8fe914c3887f508486fc9cf8e"
+        var userId =
+            com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+        //        var userId = "218f7fd8fe914c3887f508486fc9cf8e"
         if (!userId.isNullOrEmpty()) {
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData(userId!!, 2).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
-                override fun onComplete() {
-                    removeProgressDialog()
-                }
-
-                override fun onSubscribe(d: Disposable) {
-                }
-
-                override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
-                    if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
-                        apiGetResponse = response.data!!.result
-                        /*setting values to components*/
-                        setValuesToComponents()
-                    } else {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData(
+                userId!!,
+                2
+            ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
+                    override fun onComplete() {
+                        removeProgressDialog()
                     }
-                }
 
-                override fun onError(e: Throwable) {
-                    removeProgressDialog()
-                }
-            })
+                    override fun onSubscribe(d: Disposable) {
+                    }
+
+                    override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
+                        if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
+                            apiGetResponse = response.data!!.result
+                            /*setting values to components*/
+                            setValuesToComponents()
+                        } else {
+                        }
+                    }
+
+                    override fun onError(e: Throwable) {
+                        removeProgressDialog()
+                    }
+                })
         }
     }
 
@@ -233,7 +254,10 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
             apiGetResponse.preferred_languages!!.forEach {
                 var interestName = Constants.TypeOfLanguages.findById(it)
                 preSelectedLanguage.add(it)
-                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.topic_follow_unfollow_item, null) as LinearLayout
+                val subsubLL = LayoutInflater.from(activity).inflate(
+                    R.layout.topic_follow_unfollow_item,
+                    null
+                ) as LinearLayout
                 val catTextView = subsubLL.getChildAt(0) as TextView
                 catTextView.setText(interestName)
                 catTextView.isSelected = true
@@ -253,7 +277,10 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
             apiGetResponse.interest!!.forEach {
                 var interestName = Constants.TypeOfInterest.findById(it.toInt())
                 preSelectedInterest.add(it.toString())
-                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.topic_follow_unfollow_item, null) as LinearLayout
+                val subsubLL = LayoutInflater.from(activity).inflate(
+                    R.layout.topic_follow_unfollow_item,
+                    null
+                ) as LinearLayout
                 val catTextView = subsubLL.getChildAt(0) as TextView
                 catTextView.setText(interestName)
                 catTextView.isSelected = true
@@ -297,9 +324,18 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         if (apiGetResponse.kidsInfo != null && apiGetResponse.kidsInfo!!.isNotEmpty()) {
             for (i in 0..apiGetResponse.kidsInfo!!.size - 1) {
                 if (i == 0 && apiGetResponse.kidsInfo!!.size == 1) {
-                    createKidsDetailDynamicView(apiGetResponse.kidsInfo!!.get(i).gender!!, AppUtils.convertTimestampToDate(apiGetResponse.kidsInfo!!.get(i).dob), apiGetResponse.kidsInfo!!.get(i).name, false)
+                    createKidsDetailDynamicView(
+                        apiGetResponse.kidsInfo!!.get(i).gender!!,
+                        AppUtils.convertTimestampToDate(apiGetResponse.kidsInfo!!.get(i).dob),
+                        apiGetResponse.kidsInfo!!.get(i).name,
+                        false
+                    )
                 } else {
-                    createKidsDetailDynamicView(apiGetResponse.kidsInfo!!.get(i).gender!!, AppUtils.convertTimestampToDate(apiGetResponse.kidsInfo!!.get(i).dob), apiGetResponse.kidsInfo!!.get(i).name)
+                    createKidsDetailDynamicView(
+                        apiGetResponse.kidsInfo!!.get(i).gender!!,
+                        AppUtils.convertTimestampToDate(apiGetResponse.kidsInfo!!.get(i).dob),
+                        apiGetResponse.kidsInfo!!.get(i).name
+                    )
                 }
             }
             linearKidsEmptyView.visibility = View.GONE
@@ -310,16 +346,27 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
     }
 
     private fun validateChildData(): Boolean {
-        Log.e("text value", " " + RewardsFamilyInfoFragment.textKidsDOB.text + " " + linearKidsEmptyView.visibility)
+        Log.e(
+            "text value",
+            " " + RewardsFamilyInfoFragment.textKidsDOB.text + " " + linearKidsEmptyView.visibility
+        )
         if (linearKidsEmptyView.visibility == View.VISIBLE && RewardsFamilyInfoFragment.textKidsDOB.text.isBlank()) {
-            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_dob)), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                activity,
+                resources.getString(
+                    R.string.cannot_be_left_blank,
+                    resources.getString(R.string.rewards_dob)
+                ),
+                Toast.LENGTH_SHORT
+            ).show()
             return false
         } else if (linearKidsEmptyView.visibility == View.GONE) {
             linearKidsEmptyView.visibility = View.VISIBLE
             textDeleteChild.visibility = View.VISIBLE
             if (linearKidsDetail.childCount > 0) {
                 for (i in 0..linearKidsDetail.childCount - 1) {
-                    linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textDeleteChild).visibility = View.VISIBLE
+                    linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textDeleteChild).visibility =
+                        View.VISIBLE
                 }
             }
             return false
@@ -344,14 +391,29 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         }
 
         if (RewardsFamilyInfoFragment.textDOB.text.isNullOrEmpty()) {
-            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_dob)), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                activity,
+                resources.getString(
+                    R.string.cannot_be_left_blank,
+                    resources.getString(R.string.rewards_dob)
+                ),
+                Toast.LENGTH_SHORT
+            ).show()
             return false
         } else {
-            apiGetResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textDOB.text.toString())
+            apiGetResponse.dob =
+                DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textDOB.text.toString())
         }
 
         if (preSelectedLanguage.isEmpty()) {
-            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_language)), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                activity,
+                resources.getString(
+                    R.string.cannot_be_left_blank,
+                    resources.getString(R.string.rewards_language)
+                ),
+                Toast.LENGTH_SHORT
+            ).show()
             return false
         } else {
             apiGetResponse.preferred_languages = preSelectedLanguage
@@ -376,11 +438,19 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
         if (checkAreYouExpecting.isChecked) {
             if (editExpectedDate.text.isNullOrEmpty()) {
-                Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_expected_date)), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    activity,
+                    resources.getString(
+                        R.string.cannot_be_left_blank,
+                        resources.getString(R.string.rewards_expected_date)
+                    ),
+                    Toast.LENGTH_SHORT
+                ).show()
                 return false
             } else {
                 apiGetResponse.isExpecting = 1
-                apiGetResponse.expectedDate = DateTimeUtils.convertStringToTimestamp(editExpectedDate.text.toString())
+                apiGetResponse.expectedDate =
+                    DateTimeUtils.convertStringToTimestamp(editExpectedDate.text.toString())
             }
         } else {
             apiGetResponse.isExpecting = 0
@@ -393,13 +463,17 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                 for (i in 0..linearKidsDetail.childCount) {
                     var kidsInfoResponse = KidsInfoResponse()
                     if (linearKidsDetail.getChildAt(i) != null) {
-                        kidsInfoResponse.gender = if (linearKidsDetail.getChildAt(i).findViewById<Spinner>(R.id.spinnerGender).selectedItemPosition == 0) {
-                            0
-                        } else {
-                            1
-                        }
-                        kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textKidsDOB).text.toString())
-                        kidsInfoResponse.name = linearKidsDetail.getChildAt(i).findViewById<EditText>(R.id.editKidsName).text.toString()
+                        kidsInfoResponse.gender =
+                            if (linearKidsDetail.getChildAt(i).findViewById<Spinner>(R.id.spinnerGender).selectedItemPosition == 0) {
+                                0
+                            } else {
+                                1
+                            }
+                        kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(
+                            linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textKidsDOB).text.toString()
+                        )
+                        kidsInfoResponse.name =
+                            linearKidsDetail.getChildAt(i).findViewById<EditText>(R.id.editKidsName).text.toString()
                         kidsList.add(kidsInfoResponse)
                     }
                 }
@@ -414,12 +488,20 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                         } else {
                             1
                         }
-                        kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textKidsDOB.text.toString())
+                        kidsInfoResponse.dob =
+                            DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textKidsDOB.text.toString())
                         kidsInfoResponse.name = editKidsName.text.toString()
                         apiGetResponse.kidsInfo!!.add(kidsInfoResponse)
                         // }
                     } else {
-                        Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            activity,
+                            resources.getString(
+                                R.string.cannot_be_left_blank,
+                                resources.getString(R.string.rewards_number_of_kids)
+                            ),
+                            Toast.LENGTH_SHORT
+                        ).show()
                         return false
                     }
                 }
@@ -432,12 +514,20 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                     } else {
                         1
                     }
-                    kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textKidsDOB.text.toString())
+                    kidsInfoResponse.dob =
+                        DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textKidsDOB.text.toString())
                     kidsInfoResponse.name = editKidsName.text.toString()
                     kidsInfoLocal.add(kidsInfoResponse)
                     apiGetResponse.kidsInfo = kidsInfoLocal
                 } else {
-                    Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        activity,
+                        resources.getString(
+                            R.string.cannot_be_left_blank,
+                            resources.getString(R.string.rewards_number_of_kids)
+                        ),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return false
                 }
             }
@@ -450,10 +540,17 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         return true
     }
 
-    fun createKidsDetailDynamicView(gender: Int? = null, date: String = "", name: String? = "", shouldDelteShow: Boolean = true) {
+    fun createKidsDetailDynamicView(
+        gender: Int? = null,
+        date: String = "",
+        name: String? = "",
+        shouldDelteShow: Boolean = true
+    ) {
         val params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        val inflater = activity!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        val inflater =
+            activity!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val indexView = inflater.inflate(R.layout.dynamic_child_view, null)
         var textHeader = indexView.findViewById<TextView>(R.id.textHeader)
         var textDelete = indexView.findViewById<TextView>(R.id.textDeleteChild)
@@ -483,7 +580,8 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                 }
             }
             if (linearKidsEmptyView.visibility == View.GONE && linearKidsDetail.childCount == 1) {
-                linearKidsDetail.getChildAt(0).findViewById<TextView>(R.id.textDeleteChild).visibility = View.GONE
+                linearKidsDetail.getChildAt(0).findViewById<TextView>(R.id.textDeleteChild).visibility =
+                    View.GONE
             } else if (linearKidsEmptyView.visibility == View.VISIBLE && linearKidsDetail.childCount == 0) {
                 textDeleteChild.visibility = View.GONE
             }
@@ -535,7 +633,11 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         linearKidsDetail.addView(indexView)
     }
 
-    fun showDatePickerDialog(isShowTillCurrent: Boolean, isShowFutureDate: Boolean = false, isShowForParent: Boolean = false) {
+    fun showDatePickerDialog(
+        isShowTillCurrent: Boolean,
+        isShowFutureDate: Boolean = false,
+        isShowForParent: Boolean = false
+    ) {
         val newFragment = RewardsPersonalInfoFragment.DatePickerFragment()
         var bundle = Bundle()
         bundle.putBoolean("is_show_current_only", isShowTillCurrent)
@@ -547,42 +649,53 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
     /*send data to server*/
     private fun postDataofRewardsToServer() {
-        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-//        var userId = "218f7fd8fe914c3887f508486fc9cf8e"
+        var userId =
+            com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+        //        var userId = "218f7fd8fe914c3887f508486fc9cf8e"
         if (!userId.isNullOrEmpty()) {
             Log.e("body to api ", Gson().toJson(apiGetResponse))
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiData(userId!!, apiGetResponse, 2).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<SetupBlogData>> {
-                override fun onComplete() {
-                    removeProgressDialog()
-                }
-
-                override fun onSubscribe(d: Disposable) {
-                }
-
-                override fun onNext(response: BaseResponseGeneric<SetupBlogData>) {
-                    if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.msg.equals(Constants.SUCCESS_MESSAGE)) {
-                        if (isComingFromCampaign) {
-                            SharedPrefUtils.setIsRewardsAdded(BaseApplication.getAppContext(), "1")
-                        }
-                        submitListener.FamilyOnSubmit()
-                    } else {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiData(
+                userId!!,
+                apiGetResponse,
+                2
+            ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                object : Observer<BaseResponseGeneric<SetupBlogData>> {
+                    override fun onComplete() {
+                        removeProgressDialog()
                     }
-                }
 
-                override fun onError(e: Throwable) {
-                    removeProgressDialog()
-                }
-            })
+                    override fun onSubscribe(d: Disposable) {
+                    }
+
+                    override fun onNext(response: BaseResponseGeneric<SetupBlogData>) {
+                        if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.msg.equals(
+                                Constants.SUCCESS_MESSAGE
+                            )) {
+                            if (isComingFromCampaign) {
+                                SharedPrefUtils.setIsRewardsAdded(
+                                    BaseApplication.getAppContext(),
+                                    "1"
+                                )
+                            }
+                            submitListener.FamilyOnSubmit()
+                        } else {
+                        }
+                    }
+
+                    override fun onError(e: Throwable) {
+                        removeProgressDialog()
+                    }
+                })
         }
     }
 
-//    override fun onAttach(context: Context?) {
-//        super.onAttach(context)
-//        if (context is RewardsContainerActivity) {
-//            submitListener = context
-//        }
-//    }
+    //    override fun onAttach(context: Context?) {
+    //        super.onAttach(context)
+    //        if (context is RewardsContainerActivity) {
+    //            submitListener = context
+    //        }
+    //    }
 
     fun convertStringToTimestamp(): Long {
         return DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textDOB.getText().toString())

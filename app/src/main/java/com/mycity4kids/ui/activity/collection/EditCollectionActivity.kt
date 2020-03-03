@@ -15,11 +15,9 @@ import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.mycity4kids.base.BaseActivity
-import com.mycity4kids.utils.StringUtils
-import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.collectionsModels.AddCollectionRequestModel
 import com.mycity4kids.models.collectionsModels.UpdateCollectionRequestModel
@@ -30,13 +28,15 @@ import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
 import com.mycity4kids.ui.adapter.AddCollectionAdapter
 import com.mycity4kids.ui.fragment.CollectionThumbnailImageChangeDialogFragmnet
 import com.mycity4kids.utils.EndlessScrollListener
+import com.mycity4kids.utils.StringUtils
+import com.mycity4kids.utils.ToastUtils
 import com.squareup.picasso.Picasso
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.HttpException
 import java.io.InputStreamReader
+import retrofit2.HttpException
 
 class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerViewClickListener, CollectionThumbnailImageChangeDialogFragmnet.SendImage {
     override fun onsendData(imageUrl: String) {

@@ -33,17 +33,16 @@ import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.widget.ShareButtonWidget
 import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import org.apache.commons.lang3.text.WordUtils
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import retrofit2.Call
 import retrofit2.Callback
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
-import java.util.*
 
 class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener,
-        EasyPermissions.PermissionCallbacks {
+    EasyPermissions.PermissionCallbacks {
 
     private val RC_STORAGE_PERMISSION = 123
     private var storyShareCardWidget: StoryShareCardWidget? = null
@@ -77,7 +76,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
 
         userId = SharedPrefUtils.getUserDetailModel(this).dynamoId
         authorName = SharedPrefUtils.getUserDetailModel(this).first_name + " " +
-                SharedPrefUtils.getUserDetailModel(this).last_name
+            SharedPrefUtils.getUserDetailModel(this).last_name
         shareUrl = intent.getStringExtra("shareUrl")
         val storyId: String? = intent.getStringExtra(Constants.ARTICLE_ID)
 
@@ -107,12 +106,16 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
     private fun getShortStoryDetails(storyId: String?) {
         val retro = BaseApplication.getInstance().retrofit
         val shortStoryAPI = retro.create(ShortStoryAPI::class.java)
-        val call: Call<ShortStoryDetailResult> = shortStoryAPI.getShortStoryDetails(storyId, "articleId")
+        val call: Call<ShortStoryDetailResult> =
+            shortStoryAPI.getShortStoryDetails(storyId, "articleId")
         call.enqueue(storyDetailResponseCallbackRedis)
     }
 
     private var storyDetailResponseCallbackRedis = object : Callback<ShortStoryDetailResult> {
-        override fun onResponse(call: Call<ShortStoryDetailResult>, response: retrofit2.Response<ShortStoryDetailResult>) {
+        override fun onResponse(
+            call: Call<ShortStoryDetailResult>,
+            response: retrofit2.Response<ShortStoryDetailResult>
+        ) {
             removeProgressDialog()
             if (response.body() == null) {
                 return
@@ -202,32 +205,52 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
     }
 
     private fun shareStory() {
-        val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() +
-                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg")
+        val uri = Uri.parse(
+            "file://" + Environment.getExternalStorageDirectory() +
+                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg"
+        )
         when (shareMedium) {
             AppConstants.MEDIUM_FACEBOOK -> {
                 SharingUtils.shareViaFacebook(this)
-                Utils.pushShareStoryEvent(this, "ShortStoryModerationOrShareActivity",
-                        userId + "", shareUrl, "$userId~$authorName", "Facebook")
+                Utils.pushShareStoryEvent(
+                    this, "ShortStoryModerationOrShareActivity",
+                    userId + "", shareUrl, "$userId~$authorName", "Facebook"
+                )
             }
             AppConstants.MEDIUM_WHATSAPP -> {
-                if (AppUtils.shareImageWithWhatsApp(this, uri, getString(R.string.ss_follow_author,
-                                authorName, AppConstants.USER_PROFILE_SHARE_BASE_URL + userId))) {
-                    Utils.pushShareStoryEvent(this, "ShortStoryModerationOrShareActivity", userId + "", shareUrl,
-                            "$userId~$authorName", "Whatsapp")
+                if (AppUtils.shareImageWithWhatsApp(
+                        this, uri, getString(
+                        R.string.ss_follow_author,
+                        authorName, AppConstants.USER_PROFILE_SHARE_BASE_URL + userId
+                    )
+                    )
+                ) {
+                    Utils.pushShareStoryEvent(
+                        this, "ShortStoryModerationOrShareActivity", userId + "", shareUrl,
+                        "$userId~$authorName", "Whatsapp"
+                    )
                 }
             }
             AppConstants.MEDIUM_INSTAGRAM -> {
                 if (AppUtils.shareImageWithInstagram(this, uri)) {
-                    Utils.pushShareStoryEvent(this, "ShortStoryModerationOrShareActivity", userId + "", shareUrl,
-                            "$userId~$authorName", "Instagram")
+                    Utils.pushShareStoryEvent(
+                        this, "ShortStoryModerationOrShareActivity", userId + "", shareUrl,
+                        "$userId~$authorName", "Instagram"
+                    )
                 }
             }
             AppConstants.MEDIUM_GENERIC -> {
-                if (AppUtils.shareGenericImageAndOrLink(this, uri, getString(R.string.ss_follow_author,
-                                authorName, AppConstants.USER_PROFILE_SHARE_BASE_URL + userId))) {
-                    Utils.pushShareStoryEvent(this, "ShortStoryModerationOrShareActivity", userId + "", shareUrl,
-                            "$userId~$authorName", "Generic")
+                if (AppUtils.shareGenericImageAndOrLink(
+                        this, uri, getString(
+                        R.string.ss_follow_author,
+                        authorName, AppConstants.USER_PROFILE_SHARE_BASE_URL + userId
+                    )
+                    )
+                ) {
+                    Utils.pushShareStoryEvent(
+                        this, "ShortStoryModerationOrShareActivity", userId + "", shareUrl,
+                        "$userId~$authorName", "Generic"
+                    )
                 }
             }
         }
@@ -244,10 +267,11 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
             }
         } else {
             EasyPermissions.requestPermissions(
-                    this,
-                    getString(R.string.permission_storage_rationale),
-                    RC_STORAGE_PERMISSION,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                this,
+                getString(R.string.permission_storage_rationale),
+                RC_STORAGE_PERMISSION,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
             return false
         }
         return true
@@ -256,7 +280,12 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
     private fun createSharableImage(): Boolean {
         try {
             val bitmap = (shareStoryImageView?.drawable as BitmapDrawable).bitmap
-            shareStoryImageView?.setImageBitmap(SharingUtils.getRoundCornerBitmap(bitmap, AppUtils.dpTopx(4.0f)))
+            shareStoryImageView?.setImageBitmap(
+                SharingUtils.getRoundCornerBitmap(
+                    bitmap,
+                    AppUtils.dpTopx(4.0f)
+                )
+            )
             AppUtils.getBitmapFromView(storyShareCardWidget, AppConstants.STORY_SHARE_IMAGE_NAME)
         } catch (e: Exception) {
             Crashlytics.logException(e)
@@ -266,7 +295,11 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
         return true
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }

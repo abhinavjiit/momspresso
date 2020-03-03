@@ -9,11 +9,11 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.google.gson.Gson
-import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.R
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.models.response.UserDetailResult
 import com.mycity4kids.utils.RoundedTransformation
+import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.widget.BadgesProfileWidget
 import com.mycity4kids.widget.ResizableTextView
 import com.squareup.picasso.Picasso

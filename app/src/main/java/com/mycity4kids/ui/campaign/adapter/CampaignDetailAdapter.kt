@@ -13,32 +13,43 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
 import com.mycity4kids.models.campaignmodels.CampaignDetailDeliverable
-import kotlinx.android.synthetic.main.deliverable_list_recycler_adapter.view.*
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
 import java.util.regex.Pattern
+import kotlinx.android.synthetic.main.deliverable_list_recycler_adapter.view.*
 
-class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetailDeliverable>>?, val context: FragmentActivity?) : RecyclerView.Adapter<CampaignDetailAdapter.RewardHolder>() {
+class CampaignDetailAdapter(
+    private var deliverableList: List<List<CampaignDetailDeliverable>>?,
+    val context: FragmentActivity?
+) : RecyclerView.Adapter<CampaignDetailAdapter.RewardHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RewardHolder {
-        return RewardHolder(LayoutInflater.from(context).inflate(R.layout.deliverable_list_recycler_adapter, parent, false))
+        return RewardHolder(
+            LayoutInflater.from(context).inflate(
+                R.layout.deliverable_list_recycler_adapter,
+                parent,
+                false
+            )
+        )
     }
 
     override fun getItemCount(): Int =
-            deliverableList!!.get(0).size
+        deliverableList!!.get(0).size
 
     override fun onBindViewHolder(holder: RewardHolder, position: Int) {
-//        val itemPhoto = deliverableList!!.get(0).[position]
+        //        val itemPhoto = deliverableList!!.get(0).[position]
         holder.bindPhoto(deliverableList!!.get(0))
     }
 
-    inner class RewardHolder(private val view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    inner class RewardHolder(private val view: View) : RecyclerView.ViewHolder(view),
+        View.OnClickListener {
         private var deliverableList: List<CampaignDetailDeliverable>? = null
         private val urlPattern = Pattern.compile(
-                "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)" +
-                        "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*" +
-                        "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
-                Pattern.CASE_INSENSITIVE or Pattern.MULTILINE or Pattern.DOTALL)
+            "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)" +
+                "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*" +
+                "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
+            Pattern.CASE_INSENSITIVE or Pattern.MULTILINE or Pattern.DOTALL
+        )
         private var spannable: SpannableString? = null
 
         init {
@@ -55,7 +66,7 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
                 }
                 if (!builder.isEmpty()) {
                     getOffset(builder.toString())
-//                (view.deliverable_text).setText(builder.toString())
+                    //                (view.deliverable_text).setText(builder.toString())
                     (view.view).visibility = View.VISIBLE
                     (view.deliverable_text).visibility = View.VISIBLE
                     (view.deliverable_header).visibility = View.VISIBLE
@@ -72,7 +83,7 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
         // 4
         override fun onClick(v: View) {
             // val context = itemView.context
-//            (context as CampaignContainerActivity).addCampaginDetailFragment(campaignList!!.id)
+            //            (context as CampaignContainerActivity).addCampaginDetailFragment(campaignList!!.id)
         }
 
         private fun getOffset(instruction: String) {
@@ -96,12 +107,17 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
                 }
             }
             if (matchStart != null && matchEnd != null) {
-                spannable!!.setSpan(clickableSpan, matchStart, matchEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                spannable!!.setSpan(
+                    clickableSpan,
+                    matchStart,
+                    matchEnd,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
             }
             (view.deliverable_text).text = spannable
             (view.deliverable_text).isClickable = true
             (view.deliverable_text).movementMethod = LinkMovementMethod.getInstance()
-//            (view.deliverable_text).setHighlightColor(Color.TRANSPARENT);
+            //            (view.deliverable_text).setHighlightColor(Color.TRANSPARENT);
         }
 
         fun getDate(milliSeconds: Long, dateFormat: String): String {

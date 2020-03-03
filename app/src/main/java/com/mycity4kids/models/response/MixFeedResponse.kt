@@ -3,7 +3,6 @@ package com.mycity4kids.models.response
 import com.google.gson.annotations.SerializedName
 import com.mycity4kids.models.collectionsModels.UserCollectionsModel
 import com.mycity4kids.models.parentingdetails.DetailsBody
-import java.util.*
 
 data class MixFeedResponse(
     @SerializedName("code")

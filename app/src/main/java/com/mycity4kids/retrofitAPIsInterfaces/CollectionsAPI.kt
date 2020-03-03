@@ -2,7 +2,11 @@ package com.mycity4kids.retrofitAPIsInterfaces
 
 import com.mycity4kids.models.ExploreTopicsModel
 import com.mycity4kids.models.Topics
-import com.mycity4kids.models.collectionsModels.*
+import com.mycity4kids.models.collectionsModels.AddCollectionRequestModel
+import com.mycity4kids.models.collectionsModels.FeaturedOnModel
+import com.mycity4kids.models.collectionsModels.FollowCollectionRequestModel
+import com.mycity4kids.models.collectionsModels.UpdateCollectionRequestModel
+import com.mycity4kids.models.collectionsModels.UserCollectionsListModel
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.FollowUnfollowUserResponse
 import com.mycity4kids.models.response.MixFeedResponse
@@ -10,16 +14,20 @@ import io.reactivex.Observable
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface CollectionsAPI {
 
     @GET("/v1/collections/user/{userId}")
     fun getUserCollectionList(
-            @Path("userId") userId: String,
-            @Query("start") start: Int,
-            @Query("offset") offset: Int,
-            @Query("collectionType") collectionType: String? = null
+        @Path("userId") userId: String,
+        @Query("start") start: Int,
+        @Query("offset") offset: Int,
+        @Query("collectionType") collectionType: String? = null
     ): Observable<BaseResponseGeneric<UserCollectionsListModel>>
 
     @POST("v1/collections/")
@@ -30,9 +38,9 @@ interface CollectionsAPI {
 
     @GET("/v1/collections/{collectionId}")
     fun getUserCollectionItems(
-            @Path("collectionId") collectionId: String,
-            @Query("start") start: Int,
-            @Query("offset") offset: Int
+        @Path("collectionId") collectionId: String,
+        @Query("start") start: Int,
+        @Query("offset") offset: Int
     ): Observable<BaseResponseGeneric<UserCollectionsListModel>>
 
     @POST("/v1/collections/")
@@ -43,17 +51,17 @@ interface CollectionsAPI {
 
     @GET("/v1/collections/featured/{userId}")
     fun getFeaturedOnCollections(
-            @Path("userId") userId: String,
-            @Query("start") start: Int,
-            @Query("offset") end: Int
+        @Path("userId") userId: String,
+        @Query("start") start: Int,
+        @Query("offset") end: Int
     ): Call<FeaturedOnModel>
 
     @GET("/v1/collections/featuredItem/{contentId}/{contentType}")
     fun getFeatureList(
-            @Path("contentId") contentId: String,
-            @Path("contentType") contentType: String,
-            @Query("start") start: Int,
-            @Query("offset") end: Int
+        @Path("contentId") contentId: String,
+        @Path("contentType") contentType: String,
+        @Query("start") start: Int,
+        @Query("offset") end: Int
     ): Call<MixFeedResponse>
 
     @POST("/v1/followedCollections/")
@@ -67,9 +75,9 @@ interface CollectionsAPI {
 
     @GET("/v1/followedCollections/{userId}")
     fun getFollowedCollection(
-            @Path("userId") userId: String,
-            @Query("start") start: Int,
-            @Query("offset") offset: Int
+        @Path("userId") userId: String,
+        @Query("start") start: Int,
+        @Query("offset") offset: Int
     ): Observable<BaseResponseGeneric<UserCollectionsListModel>>
 
     // api.momspresso.com/v1/collectionItem/addItems/
@@ -78,14 +86,14 @@ interface CollectionsAPI {
 
     @GET("/v2/categories")
     suspend fun getShortStoryTopicsAsync(
-            @Query("id") id: String,
-            @Query("public") isPublic: String
+        @Query("id") id: String,
+        @Query("public") isPublic: String
     ): Response<ArrayList<ExploreTopicsModel>>
 
     @GET("/v2/categories")
     suspend fun getShortStoryChallengesAsync(
-            @Query("id") id: String,
-            @Query("isActive") isActive: String,
-            @Query("public") isPublic: String
+        @Query("id") id: String,
+        @Query("isActive") isActive: String,
+        @Query("public") isPublic: String
     ): Response<ArrayList<Topics>>
 }

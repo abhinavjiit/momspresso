@@ -23,11 +23,14 @@ import com.mycity4kids.models.response.FollowersFollowingResult
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.utils.StringUtils
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.follower_following_list_item.view.*
-import java.io.*
+import java.io.BufferedReader
+import java.io.BufferedWriter
+import java.io.IOException
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.*
+import kotlinx.android.synthetic.main.follower_following_list_item.view.*
 
 class CollectionFollowFollowersListAdapter(val mContext: Context, val listType: String) :
     RecyclerView.Adapter<CollectionFollowFollowersListAdapter.ViewHolder>() {

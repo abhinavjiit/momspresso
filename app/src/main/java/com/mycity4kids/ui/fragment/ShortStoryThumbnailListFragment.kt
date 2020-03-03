@@ -12,9 +12,9 @@ import android.widget.RelativeLayout
 import androidx.fragment.app.FragmentTransaction
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.models.response.Categories
 import com.mycity4kids.models.response.Images
 import com.mycity4kids.models.response.ShortShortiesBackgroundThumbnail

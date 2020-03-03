@@ -12,10 +12,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
-import com.mycity4kids.base.BaseActivity
-import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.campaignmodels.AllCampaignTotalPayoutResponse
@@ -24,10 +23,10 @@ import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.mycity4kids.ui.campaign.adapter.EarningRecyclerAdapter
 import com.mycity4kids.ui.rewards.activity.RewardsShareReferralCodeActivity
+import com.mycity4kids.utils.StringUtils
 import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
-import java.util.*
 
 class MyTotalEarningActivity : BaseActivity() {
 
@@ -41,7 +40,8 @@ class MyTotalEarningActivity : BaseActivity() {
     private lateinit var backIcon: ImageView
     private lateinit var paymentHistory: TextView
     private lateinit var referEarnContainerCL: ConstraintLayout
-    private var totalPayoutResponse: ArrayList<AllCampaignTotalPayoutResponse.TotalPayoutResult> = arrayListOf()
+    private var totalPayoutResponse: ArrayList<AllCampaignTotalPayoutResponse.TotalPayoutResult> =
+        arrayListOf()
     private lateinit var root: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,8 +68,9 @@ class MyTotalEarningActivity : BaseActivity() {
         recyclerEarnings.adapter = earningRecyclerAdapter
 
         if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))) {
-            Picasso.get().load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(R.drawable.family_xxhdpi)
-                    .error(R.drawable.family_xxhdpi).into(profileImageView)
+            Picasso.get().load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))
+                .placeholder(R.drawable.family_xxhdpi)
+                .error(R.drawable.family_xxhdpi).into(profileImageView)
         }
 
         backIcon.setOnClickListener {
@@ -82,8 +83,12 @@ class MyTotalEarningActivity : BaseActivity() {
         }
 
         referEarnContainerCL.setOnClickListener {
-            Utils.pushGenericEvent(this, "CTA_MyMoney_Earning_Screen_Refer",
-                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, "MyTotalEarningActivity")
+            Utils.pushGenericEvent(
+                this,
+                "CTA_MyMoney_Earning_Screen_Refer",
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                "MyTotalEarningActivity"
+            )
             val intent = Intent(this, RewardsShareReferralCodeActivity::class.java)
             startActivity(intent)
         }
@@ -101,7 +106,10 @@ class MyTotalEarningActivity : BaseActivity() {
     }
 
     private val getAllCampaignTotalPayout = object : Callback<AllCampaignTotalPayoutResponse> {
-        override fun onResponse(call: Call<AllCampaignTotalPayoutResponse>, response: retrofit2.Response<AllCampaignTotalPayoutResponse>) {
+        override fun onResponse(
+            call: Call<AllCampaignTotalPayoutResponse>,
+            response: retrofit2.Response<AllCampaignTotalPayoutResponse>
+        ) {
             removeProgressDialog()
             if (response == null || null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())

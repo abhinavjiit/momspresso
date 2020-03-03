@@ -10,7 +10,6 @@ import androidx.viewpager.widget.ViewPager
 import com.mycity4kids.R
 import com.squareup.picasso.Picasso
 import com.stfalcon.imageviewer.StfalconImageViewer
-import java.util.*
 
 /**
  * View Pager Adapter to be used in search result
@@ -32,10 +31,13 @@ class GroupMediaPostViewPagerAdapter(var mContext: Context) : PagerAdapter(), Vi
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val inflater = container.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val inflater =
+            container.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val v = inflater.inflate(R.layout.group_media_pager_item, container, false)
         val iv = v.findViewById<View>(R.id.mediaImageView) as ImageView
-        if (mediaList!![position] != null && !mediaList!![position]!!.trim { it <= ' ' }.isEmpty()) Picasso.get().load(mediaList!![position]).error(R.drawable.default_article).into(iv) else {
+        if (mediaList!![position] != null && !mediaList!![position]!!.trim { it <= ' ' }.isEmpty()) Picasso.get().load(
+            mediaList!![position]
+        ).error(R.drawable.default_article).into(iv) else {
             iv.setBackgroundResource(R.drawable.default_article)
             iv.visibility = View.GONE
         }
@@ -53,9 +55,9 @@ class GroupMediaPostViewPagerAdapter(var mContext: Context) : PagerAdapter(), Vi
 
     override fun onClick(v: View) {
         viewer = StfalconImageViewer.Builder<String>(mContext, mediaList, ::loadImage)
-                .withStartPosition(v.tag as Int)
-                .withTransitionFrom(v as ImageView)
-                .show()
+            .withStartPosition(v.tag as Int)
+            .withTransitionFrom(v as ImageView)
+            .show()
     }
 
     private fun loadImage(imageView: ImageView, url: String?) {
