@@ -40,6 +40,7 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
         intent.putExtra("challenge", publicShortStoryChallenges?.get(position)?.id)
         intent.putExtra("topics", publicShortStoryChallenges?.get(position)?.parentName)
         intent.putExtra("parentId", publicShortStoryChallenges?.get(position)?.parentId)
+        intent.putExtra("source", source)
         intent.putExtra(
             "StringUrl",
             publicShortStoryChallenges?.get(position)?.extraData?.get(0)?.challenge?.imageUrl
@@ -58,15 +59,14 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
     private var shortStoryChallenges: ArrayList<Topics>? = null
     private var publicShortStoryTopics: ArrayList<ExploreTopicsModel>? = null
     private var publicShortStoryChallenges: ArrayList<Topics>? = null
+    private var source: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.choose_short_story_category_activity)
-        val source = intent.getStringExtra("source")
-        if ("dashboard" == source) {
-            challengesTextView.visibility = View.VISIBLE
-            shortStoryChallengeHorizontalView.visibility = View.VISIBLE
-        }
+        source = intent.getStringExtra("source")
+        challengesTextView.visibility = View.VISIBLE
+        shortStoryChallengeHorizontalView.visibility = View.VISIBLE
         val llm = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         shortStoryChallengeHorizontalView.layoutManager = llm
         shortStoryChallengeHorizontalView.adapter = shortStoryChallengeAdapter

@@ -235,7 +235,12 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
             selectedActiveUrl = intent.getStringExtra("StringUrl");
             chooseLayout.setVisibility(View.VISIBLE);
         } else {
-            chooseLayout.setVisibility(View.INVISIBLE);
+            //  chooseLayout.setVisibility(View.INVISIBLE);
+            if ("storyListingCard".equals(getIntent().getStringExtra("source"))) {
+                chooseLayout.setVisibility(View.VISIBLE);
+            } else {
+                chooseLayout.setVisibility(View.INVISIBLE);
+            }
         }
       /*  if (challengeId != null && challengeId.size() != 0) {
             selectedId = challengeId.get(pos);
