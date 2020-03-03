@@ -628,7 +628,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
     }
 
-
     public void saveDraftsAsync(String title, String body, String draftId1) {
         if (mEditorFragment.getTitle().toString().isEmpty() && (mEditorFragment.getContent().toString().isEmpty())) {
             return;
@@ -788,9 +787,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     private void initiatePeriodicDraftSave() {
         periodicUpdate = () -> {
             mHandler.postDelayed(periodicUpdate, 5000);
-            Log.e("TITLE", mEditorFragment.getTitle().toString().trim());
-            Log.e("CONTENT", mEditorFragment.getContent().toString().trim());
-//            saveDraftsAsync(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
+            saveDraftsAsync(titleFormatting(mEditorFragment.getTitle().toString().trim()),
+                    mEditorFragment.getContent().toString(), draftId);
         };
         mHandler.postDelayed(periodicUpdate, 5000);
     }
