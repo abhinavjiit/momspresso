@@ -16,14 +16,19 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.AppCompatRadioButton;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
@@ -41,25 +46,16 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ShortStoryTopicsRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
+import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.widget.StartSnapHelper;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.widget.AppCompatRadioButton;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SnapHelper;
 import okhttp3.ResponseBody;
+import org.json.JSONArray;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -122,7 +118,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         chooseShortStoryTopicPopUp = (RelativeLayout) findViewById(R.id.choose_layout);
         View overlayLayout = (View) findViewById(R.id.overlayView_choose_story_challenge);
         RadioGroup chooseoptionradioButton = (RadioGroup) findViewById(R.id.reportReasonRadioGroup);
-        RadioGroup.LayoutParams rprms;
         wordCounterTextView = (TextView) findViewById(R.id.wordCounterTextView);
         publishTextView.setOnClickListener(this);
         overlayLayout.setOnClickListener(this);
@@ -218,7 +213,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             caller.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
+                    AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE,
+                            response.body());
                     try {
                         getShortStoryCategoryListAndChallengeData();
                         processInfoAccordingToSource();
@@ -244,7 +240,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     }
 
     private void getShortStoryCategoryListAndChallengeData() throws FileNotFoundException {
-        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+        FileInputStream fileInputStream = BaseApplication.getAppContext()
+                .openFileInput(AppConstants.CATEGORIES_JSON_FILE);
         String fileContent = AppUtils.convertStreamToString(fileInputStream);
         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
         TopicsResponse topicsResponse = gson.fromJson(fileContent, TopicsResponse.class);
@@ -334,8 +331,10 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         taggedChallengeName = getIntent().getStringExtra("challengeName");
         taggedCategoryName = getIntent().getStringExtra("selectedCategory");
         taggedCategoryId = getIntent().getStringExtra("shortStoryCategoryId");
-        if (AppConstants.VICHAAR_SAGAR_CATEGORY_ID.equals(taggedCategoryId)) {
-            storyTitleEditText.setHint(getString(R.string.short_s_add_title_hint) + "(" + getString(R.string.short_s_add_title_Optional) + ")");
+        if (AppConstants.SHORT_STORY_QUOTES_CATEGORY_ID.equals(taggedCategoryId)) {
+            storyTitleEditText.setHint(
+                    getString(R.string.short_s_add_title_hint) + "(" + getString(R.string.short_s_add_title_Optional)
+                            + ")");
             storyBodyEditText.setHint(getString(R.string.story_text_description_hint));
         }
         if (challengeImageUrl != null) {
@@ -344,7 +343,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 challengeHeader.setVisibility(View.VISIBLE);
                 challengeImage.setVisibility(View.VISIBLE);
                 challengeActiveText.setVisibility(View.GONE);
-                Picasso.get().load(challengeImageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                Picasso.get().load(challengeImageUrl).placeholder(R.drawable.default_article)
+                        .error(R.drawable.default_article)
                         .fit().into(challengeImage);
             } catch (Exception e) {
                 challengeImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_article));
@@ -368,6 +368,11 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             chooseOptionRadioButton.setOnCheckedChangeListener((radioGroup, i) -> {
                 taggedCategoryName = ssTopicsList.get(i).getDisplay_name();
                 taggedCategoryId = ssTopicsList.get(i).getId();
+                if (AppConstants.SHORT_STORY_QUOTES_CATEGORY_ID.equals(taggedCategoryId)) {
+                    storyTitleEditText.setHint(getString(R.string.short_s_add_title_hint) + "(" + getString(
+                            R.string.short_s_add_title_Optional) + ")");
+                    storyBodyEditText.setHint(getString(R.string.story_text_description_hint));
+                }
                 regulatePublishButtonState();
             });
             for (int i = 0; i < ssTopicsList.size(); i++) {
@@ -381,11 +386,11 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 rbn.setPadding(10, 0, 0, 0);
                 if (Build.VERSION.SDK_INT >= 21) {
                     ColorStateList colorStateList = new ColorStateList(
-                            new int[][]{
-                                    new int[]{-android.R.attr.state_enabled},
-                                    new int[]{android.R.attr.state_enabled}
+                            new int[][] {
+                                    new int[] {-android.R.attr.state_enabled},
+                                    new int[] {android.R.attr.state_enabled}
                             },
-                            new int[]{
+                            new int[] {
                                     getResources().getColor(R.color.app_red),
                                     getResources().getColor(R.color.app_red)
                             }
@@ -398,6 +403,11 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             if (getIntent().hasExtra("categoryId") && getIntent().hasExtra("categoryName")) {
                 taggedCategoryId = getIntent().getStringExtra("categoryId");
                 taggedCategoryName = getIntent().getStringExtra("categoryName");
+            }
+            if (AppConstants.SHORT_STORY_QUOTES_CATEGORY_ID.equals(taggedCategoryId)) {
+                storyTitleEditText.setHint(getString(R.string.short_s_add_title_hint) + "(" + getString(
+                        R.string.short_s_add_title_Optional) + ")");
+                storyBodyEditText.setHint(getString(R.string.story_text_description_hint));
             }
             chooseShortStoryTopicPopUp.setVisibility(View.GONE);
         }
@@ -432,11 +442,11 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             rbn.setPadding(10, 0, 0, 0);
             if (Build.VERSION.SDK_INT >= 21) {
                 ColorStateList colorStateList = new ColorStateList(
-                        new int[][]{
-                                new int[]{-android.R.attr.state_enabled},
-                                new int[]{android.R.attr.state_enabled}
+                        new int[][] {
+                                new int[] {-android.R.attr.state_enabled},
+                                new int[] {android.R.attr.state_enabled}
                         },
-                        new int[]{
+                        new int[] {
                                 getResources().getColor(R.color.app_red),
                                 getResources().getColor(R.color.app_red)
                         }
@@ -483,7 +493,9 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 }
                 String topicId = jsonArray.getJSONObject(i).keys().next().toString();
                 for (int j = shortStoryChallengeTopic.getChild().size() - 1; j >= 0; j--) {
-                    if (populateChallengeHeaderImage(topicId, j)) break;
+                    if (populateChallengeHeaderImage(topicId, j)) {
+                        break;
+                    }
                 }
             }
         } catch (Exception e) {
@@ -496,13 +508,15 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             try {
                 if (shortStoryChallengeTopic.getChild().get(j).getExtraData() != null &&
                         shortStoryChallengeTopic.getChild().get(j).getExtraData().size() != 0) {
-                    challengeImageUrl = shortStoryChallengeTopic.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl();
+                    challengeImageUrl = shortStoryChallengeTopic.getChild().get(j).getExtraData().get(0).getChallenge()
+                            .getImageUrl();
                 }
                 challengeHeaderText.setVisibility(View.VISIBLE);
                 challengeHeader.setVisibility(View.VISIBLE);
                 challengeImage.setVisibility(View.VISIBLE);
                 challengeActiveText.setVisibility(View.GONE);
-                Picasso.get().load(challengeImageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                Picasso.get().load(challengeImageUrl).placeholder(R.drawable.default_article)
+                        .error(R.drawable.default_article)
                         .fit().into(challengeImage);
             } catch (Exception e) {
                 challengeImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_article));
@@ -515,7 +529,9 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private void getChallengeHeaderImageUrlFromChallengeId(String key) {
         if (key != null) {
             for (int j = shortStoryChallengeTopic.getChild().size() - 1; j >= 0; j--) {
-                if (populateChallengeHeaderImage(key, j)) break;
+                if (populateChallengeHeaderImage(key, j)) {
+                    break;
+                }
             }
         }
     }
@@ -552,22 +568,24 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         if (!"publishedList".equals(source) && StringUtils.isNullOrEmpty(taggedCategoryId)) {
             return false;
         }
-        if (AppConstants.VICHAAR_SAGAR_CATEGORY_ID.equals(taggedCategoryId)) {
+        if (AppConstants.SHORT_STORY_QUOTES_CATEGORY_ID.equals(taggedCategoryId)) {
             return countWords(storyBodyEditText.getText().toString()) >= 5;
         }
-        return countWords(storyBodyEditText.getText().toString()) >= 10 && storyTitleEditText.getText().toString().trim().length() != 0;
+        return countWords(storyBodyEditText.getText().toString()) >= 10
+                && storyTitleEditText.getText().toString().trim().length() != 0;
     }
 
     private int countWords(String s) {
         String trim = s.trim();
-        if (trim.isEmpty())
+        if (trim.isEmpty()) {
             return 0;
+        }
         return trim.split("\\s+").length; // separate string around spaces
     }
 
     private void setCharLimit(EditText et, int max) {
         filter = new InputFilter.LengthFilter(max);
-        et.setFilters(new InputFilter[]{filter});
+        et.setFilters(new InputFilter[] {filter});
     }
 
     private void removeFilter(EditText et) {
@@ -630,8 +648,10 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         ssTopicsList.get(position).setIsSelected(true);
         taggedCategoryId = ssTopicsList.get(position).getId();
         taggedCategoryName = ssTopicsList.get(position).getDisplay_name();
-        if (ssTopicsList.get(position).getId().equalsIgnoreCase(AppConstants.VICHAAR_SAGAR_CATEGORY_ID)) {
-            storyTitleEditText.setHint(getString(R.string.short_s_add_title_hint) + "(" + getString(R.string.short_s_add_title_Optional) + ")");
+        if (ssTopicsList.get(position).getId().equalsIgnoreCase(AppConstants.SHORT_STORY_QUOTES_CATEGORY_ID)) {
+            storyTitleEditText.setHint(
+                    getString(R.string.short_s_add_title_hint) + "(" + getString(R.string.short_s_add_title_Optional)
+                            + ")");
             storyBodyEditText.setHint(getString(R.string.story_text_description_hint));
         } else {
             storyTitleEditText.setHint(R.string.short_s_add_title_hint);
@@ -655,7 +675,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             return false;
         }
 
-        if (AppConstants.VICHAAR_SAGAR_CATEGORY_ID.equals(taggedCategoryId)) {
+        if (AppConstants.SHORT_STORY_QUOTES_CATEGORY_ID.equals(taggedCategoryId)) {
             if (countWords(storyBodyEditText.getText().toString()) < 5) {
                 Toast.makeText(this, getString(R.string.editor_minimum_word_limit, 5), Toast.LENGTH_SHORT).show();
                 return false;
@@ -667,7 +687,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             }
         }
 
-        if (storyTitleEditText.getText() == null || StringUtils.isNullOrEmpty(storyTitleEditText.getText().toString())) {
+        if (storyTitleEditText.getText() == null || StringUtils
+                .isNullOrEmpty(storyTitleEditText.getText().toString())) {
             Toast.makeText(this, getString(R.string.editor_title_empty), Toast.LENGTH_SHORT).show();
             return false;
         } else if (countWords(storyBodyEditText.getText().toString()) < 10) {
@@ -684,16 +705,20 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (((storyTitleEditText.getText() == null || StringUtils.isNullOrEmpty(storyTitleEditText.getText().toString()))
-                && ((storyBodyEditText.getText() == null) || StringUtils.isNullOrEmpty(storyBodyEditText.getText().toString())))
+        if (((storyTitleEditText.getText() == null || StringUtils
+                .isNullOrEmpty(storyTitleEditText.getText().toString()))
+                && ((storyBodyEditText.getText() == null) || StringUtils
+                .isNullOrEmpty(storyBodyEditText.getText().toString())))
                 || "publishedList".equals(getIntent().getStringExtra("from"))) {
             super.onBackPressed();
             finish();
         } else {
             if (storyTitleEditText.getText().toString().trim().isEmpty()) {
-                saveDraftRequest(storyTitleEditText.getText().toString(), storyBodyEditText.getText().toString(), draftId);
+                saveDraftRequest(storyTitleEditText.getText().toString(), storyBodyEditText.getText().toString(),
+                        draftId);
             } else {
-                saveDraftRequest(storyTitleEditText.getText().toString().trim(), storyBodyEditText.getText().toString(), draftId);
+                saveDraftRequest(storyTitleEditText.getText().toString().trim(), storyBodyEditText.getText().toString(),
+                        draftId);
             }
         }
     }
@@ -751,7 +776,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             Call<ArticleDraftResponse> call = shortStoryAPI.saveOrPublishShortStory(shortStoryDraftOrPublishRequest);
             call.enqueue(saveDraftResponseListener);
         } else {
-            Call<ArticleDraftResponse> call = shortStoryAPI.updateOrPublishShortStory(draftId1, shortStoryDraftOrPublishRequest);
+            Call<ArticleDraftResponse> call = shortStoryAPI
+                    .updateOrPublishShortStory(draftId1, shortStoryDraftOrPublishRequest);
             call.enqueue(saveDraftResponseListener);
         }
     }
@@ -761,12 +787,13 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
             if (response.body() == null) {
                 showToast(getString(R.string.server_went_wrong));
-                showAlertDialog(getString(R.string.draft_oops), getString(R.string.draft_not_saved), new OnButtonClicked() {
-                    @Override
-                    public void onButtonCLick(int buttonId) {
-                        finish();
-                    }
-                });
+                showAlertDialog(getString(R.string.draft_oops), getString(R.string.draft_not_saved),
+                        new OnButtonClicked() {
+                            @Override
+                            public void onButtonCLick(int buttonId) {
+                                finish();
+                            }
+                        });
                 return;
             }
             try {
