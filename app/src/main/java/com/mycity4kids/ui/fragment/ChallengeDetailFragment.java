@@ -12,14 +12,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.material.appbar.AppBarLayout;
@@ -37,13 +35,11 @@ import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.videotrimmer.utils.FileUtils;
 import com.squareup.picasso.Picasso;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public class ChallengeDetailFragment extends Fragment implements View.OnClickListener {
-
 
     VideoChallengePagerAdapter videoChallengePagerAdapter;
     AppBarLayout appBarLayout;
@@ -71,7 +67,8 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.challenge_detail_fragment_layout, container, false);
 
         saveTextView = view.findViewById(R.id.saveTextView);
@@ -95,8 +92,6 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
         thumbNail.setOnClickListener(this);
 
         if (getArguments() != null) {
-
-
             selected_Name = getArguments().getString("selected_Name");
             selectedActiveUrl = getArguments().getString("selectedActiveUrl");
             challengeRules = getArguments().getString("challengeRules");
@@ -106,13 +101,9 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
             max_Duration = getArguments().getInt("max_Duration");
             topic = getArguments().getParcelable("topic");
             comingFrom = getArguments().getString("comingFrom");
-
-
             if (comingFrom.equals("chooseVideoCategory")) {
                 saveTextView.setVisibility(View.VISIBLE);
             }
-
-
         }
         Picasso.get().load(selectedActiveUrl).fit()
                 .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(thumbNail);
@@ -129,16 +120,13 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
             ((LinearLayout) root).setDividerDrawable(drawable);
         }
         if (getActivity() != null) {
-
-
-            videoChallengePagerAdapter = new VideoChallengePagerAdapter(getActivity().getSupportFragmentManager(), selected_Name, selectedActiveUrl, selectedId, topic, selectedStreamUrl, challengeRules);
+            videoChallengePagerAdapter = new VideoChallengePagerAdapter(getActivity().getSupportFragmentManager(),
+                    selected_Name, selectedActiveUrl, selectedId, topic, selectedStreamUrl, challengeRules);
             viewPager.setAdapter(videoChallengePagerAdapter);
-
             viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
             tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
-
 
                     viewPager.setCurrentItem(tab.getPosition());
                 }
@@ -150,17 +138,13 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
 
                 @Override
                 public void onTabReselected(TabLayout.Tab tab) {
-
                     viewPager.setCurrentItem(tab.getPosition());
-
-
                 }
             });
         }
 
         saveTextView.setOnClickListener(t -> {
             if (max_Duration != 0) {
-
                 ((NewVideoChallengeActivity) getActivity()).chooseAndpermissionDialog(max_Duration);
             } else {
                 ToastUtils.showToast(getActivity(), "duration should be greater than 0.0");
@@ -168,11 +152,8 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
                 Log.i("ERROR", String.valueOf(max_Duration));
             }
         });
-
-
         return view;
     }
-
 
     public void startTrimActivity(@NonNull Uri uri) {
         Intent intent = new Intent(getActivity(), VideoTrimmerActivity.class);
@@ -186,24 +167,30 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
         intent.putExtra("comingFrom", "Challenge");
         intent.putExtra("EXTRA_VIDEO_PATH", FileUtils.getPath(getActivity(), uri));
         startActivity(intent);
-
     }
-
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.thumbNail) {
-            Intent intent = new Intent(getActivity(), ExoplayerVideoChallengePlayViewActivity.class);
-            intent.putExtra("StreamUrl", selectedStreamUrl);
-            startActivity(intent);
-            Utils.momVlogEvent(getActivity(), "Challenge detail", "Prompt_video_play", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Detail", "", "");
-        }
+        try {
+            if (v.getId() == R.id.thumbNail) {
+                Intent intent = new Intent(getActivity(), ExoplayerVideoChallengePlayViewActivity.class);
+                intent.putExtra("StreamUrl", selectedStreamUrl);
+                startActivity(intent);
+                Utils.momVlogEvent(getActivity(), "Challenge detail", "Prompt_video_play", "", "android",
+                        SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        String.valueOf(System.currentTimeMillis()), "Show_Video_Detail", "", "");
+            }
 
-        if (v.getId() == R.id.back) {
-            if (getActivity() != null)
-                getActivity().finish();
+            if (v.getId() == R.id.back) {
+                if (getActivity() != null) {
+                    getActivity().finish();
+                }
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
         }
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -212,7 +199,6 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
             showDialogBox();
 
         }
-
     }
 
     private void showDialogBox() {
@@ -229,7 +215,6 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
         }
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -242,6 +227,4 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
         EventBus.getDefault().unregister(this);
 
     }
-
-
 }

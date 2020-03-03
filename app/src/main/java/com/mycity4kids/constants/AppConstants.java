@@ -230,6 +230,7 @@ public class AppConstants {
     public static final String NOTIFICATION_CENTER_COLLECTION_DETAIL = "28";
     public static final String NOTIFICATION_CENTER_BADGE_LISTING = "29";
     public static final String NOTIFICATION_CENTER_STORY_PUBLISH_SUCCESS = "30";
+    public static final String NOTIFICATION_CENTER_STORY_CHALLENGE_DETAIL = "31";
 
     public static final String FOLLOWING_STATUS_ACTIVITY_RESULT = "followingStatusActivityResult";
     public static final String VIDEO_STATUS_DRAFT = "0";
@@ -363,7 +364,7 @@ public class AppConstants {
     public static final String SHORT_STORY_CHALLENGE_ID = "category-743892a865774baf9c20cbcc5c01d35f";
 
     public static final String VIDEO_CHALLENGE_ID = "category-ee7ea82543bd4bc0a8dad288561f2beb";
-    public static final String VICHAAR_SAGAR_CATEGORY_ID = "category-8dcc26eb81de4042b225f82ec8e88cd3";
+    public static final String SHORT_STORY_QUOTES_CATEGORY_ID = "category-8dcc26eb81de4042b225f82ec8e88cd3";
     public static final String PUBLIC_VISIBILITY = "1";
     public static final String PUBLIC_INVISIBILITY = "0";
     public static final String MEDIUM_WHATSAPP = "whatsapp";

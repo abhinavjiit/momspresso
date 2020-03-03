@@ -12,12 +12,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.core.content.ContextCompat;
-
 import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.utils.DateTimeUtils;
-import com.mycity4kids.utils.StringUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
@@ -44,6 +40,7 @@ import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity;
+import com.mycity4kids.ui.activity.ShortStoryChallengeDetailActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryModerationOrShareActivity;
 import com.mycity4kids.ui.activity.SuggestedTopicsActivity;
@@ -54,10 +51,10 @@ import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.fragment.GroupsViewFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
+import com.mycity4kids.utils.DateTimeUtils;
+import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -112,11 +109,13 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
 
         holder.notificationTitleTextView.setText(("" + notificationList.get(position).getTitle()).toUpperCase());
         holder.notificationBodyTextView.setText("" + notificationList.get(position).getBody());
-        holder.notificationDateTextView.setText("" + DateTimeUtils.getMMMDDFormatDate(notificationList.get(position).getCreatedTime()));
+        holder.notificationDateTextView
+                .setText("" + DateTimeUtils.getMMMDDFormatDate(notificationList.get(position).getCreatedTime()));
 
         if (!StringUtils.isNullOrEmpty(notificationList.get(position).getThumbNail())) {
             Picasso.get().load(notificationList.get(position).getThumbNail())
-                    .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.notificationImageView);
+                    .placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                    .into(holder.notificationImageView);
         } else {
             Picasso.get().load(R.drawable.default_article).into(holder.notificationImageView);
         }
@@ -152,7 +151,8 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                 break;
                 case AppConstants.NOTIFICATION_CENTER_ARTICLE_DETAIL: {
                     String authorId;
-                    if (StringUtils.isNullOrEmpty(notificationList.get(position).getAuthorId()) || "0".equals(notificationList.get(position).getAuthorId())) {
+                    if (StringUtils.isNullOrEmpty(notificationList.get(position).getAuthorId()) || "0"
+                            .equals(notificationList.get(position).getAuthorId())) {
                         authorId = notificationList.get(position).getUserId();
                     } else {
                         authorId = notificationList.get(position).getAuthorId();
@@ -172,7 +172,8 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                 break;
                 case AppConstants.NOTIFICATION_CENTER_PROFILE: {
                     String authorId;
-                    if (StringUtils.isNullOrEmpty(notificationList.get(position).getAuthorId()) || "0".equals(notificationList.get(position).getAuthorId())) {
+                    if (StringUtils.isNullOrEmpty(notificationList.get(position).getAuthorId()) || "0"
+                            .equals(notificationList.get(position).getAuthorId())) {
                         authorId = notificationList.get(position).getUserId();
                     } else {
                         authorId = notificationList.get(position).getAuthorId();
@@ -244,14 +245,16 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                 }
                 break;
                 case AppConstants.NOTIFICATION_CENTER_GROUP_MEMBERSHIP: {
-                    GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(NotificationCenterListAdapter.this);
+                    GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(
+                            NotificationCenterListAdapter.this);
                     groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(),
                             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                     pushEvent("NOTIFICATION_CENTER_GROUP_MEMBERSHIP");
                 }
                 break;
                 case AppConstants.NOTIFICATION_CENTER_GROUP_NEW_POST: {
-                    GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(NotificationCenterListAdapter.this);
+                    GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(
+                            NotificationCenterListAdapter.this);
                     groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(),
                             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                     pushEvent("NOTIFICATION_CENTER_GROUP_NEW_POST");
@@ -276,26 +279,34 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                 }
                 break;
                 case AppConstants.NOTIFICATION_CENTER_GROUP_ADMIN_MEMBERSHIP: {
-                    GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(NotificationCenterListAdapter.this);
-                    groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(
+                            NotificationCenterListAdapter.this);
+                    groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(),
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                     pushEvent("NOTIFICATION_CENTER_GROUP_ADMIN_MEMBERSHIP");
                 }
                 break;
                 case AppConstants.NOTIFICATION_CENTER_GROUP_ADMIN_REPORTED: {
-                    GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(NotificationCenterListAdapter.this);
-                    groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(
+                            NotificationCenterListAdapter.this);
+                    groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(),
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                     pushEvent("NOTIFICATION_CENTER_GROUP_ADMIN_REPORTED");
                 }
                 break;
                 case AppConstants.NOTIFICATION_CENTER_GROUP_ADMIN_EDIT_GROUP: {
-                    GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(NotificationCenterListAdapter.this);
-                    groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(
+                            NotificationCenterListAdapter.this);
+                    groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(),
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                     pushEvent("NOTIFICATION_CENTER_GROUP_ADMIN_EDIT_GROUP");
                 }
                 break;
                 case AppConstants.NOTIFICATION_CENTER_GROUP_ADMIN: {
-                    GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(NotificationCenterListAdapter.this);
-                    groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(
+                            NotificationCenterListAdapter.this);
+                    groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(),
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                     pushEvent("NOTIFICATION_CENTER_GROUP_ADMIN");
                 }
                 break;
@@ -373,7 +384,8 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                 break;
                 case AppConstants.NOTIFICATION_CENTER_VIDEO_CHALLENGE_DETAIL: {
                     Intent videoChallengeIntent = new Intent(mContext, NewVideoChallengeActivity.class);
-                    videoChallengeIntent.putExtra(Constants.CHALLENGE_ID, "" + notificationList.get(position).getChallengeId());
+                    videoChallengeIntent
+                            .putExtra(Constants.CHALLENGE_ID, "" + notificationList.get(position).getChallengeId());
                     videoChallengeIntent.putExtra("comingFrom", "notification");
                     mContext.startActivity(videoChallengeIntent);
                     pushEvent("NOTIFICATION_CENTER_VIDEO_CHALLENGE_DETAIL");
@@ -399,6 +411,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     intent.putExtra(Constants.ARTICLE_ID, notificationList.get(position).getArticleId());
                     mContext.startActivity(intent);
                     pushEvent("NOTIFICATION_CENTER_STORY_PUBLISH_SUCCESS");
+                }
+                break;
+                case AppConstants.NOTIFICATION_CENTER_STORY_CHALLENGE_DETAIL: {
+                    if (!StringUtils.isNullOrEmpty(notificationList.get(position).getChallengeId())) {
+                        Intent intent = new Intent(mContext, ShortStoryChallengeDetailActivity.class);
+                        intent.putExtra("challenge", notificationList.get(position).getChallengeId());
+                        mContext.startActivity(intent);
+                        pushEvent("NOTIFICATION_CENTER_STORY_CHALLENGE_DETAIL");
+                    }
                 }
                 break;
             }
@@ -439,11 +460,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
             }
         }
 
-        if (!AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(userType) && !AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(userType)) {
-            if ("male".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender()) ||
-                    "m".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())) {
+        if (!AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(userType) && !AppConstants.GROUP_MEMBER_TYPE_ADMIN
+                .equals(userType)) {
+            if ("male".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())
+                    ||
+                    "m".equalsIgnoreCase(
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())) {
                 Toast.makeText(mContext, mContext.getString(R.string.women_only), Toast.LENGTH_SHORT).show();
-                if (BuildConfig.DEBUG || AppConstants.DEBUGGING_USER_ID.contains(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
+                if (BuildConfig.DEBUG || AppConstants.DEBUGGING_USER_ID
+                        .contains(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
 
                 } else {
                     return;
@@ -465,7 +490,8 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
             intent.putExtra("groupId", groupId);
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             mContext.startActivity(intent);
-        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION
+                .equals(body.getData().getResult().get(0).getStatus())) {
             Intent intent = new Intent(mContext, GroupsSummaryActivity.class);
             intent.putExtra("groupId", groupId);
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
@@ -485,6 +511,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
     }
 
     class ViewHolder {
+
         RelativeLayout rootView;
         TextView notificationTitleTextView;
         TextView notificationBodyTextView;
@@ -504,7 +531,8 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
 
     private Callback<NotificationCenterListResponse> markNotificationReadResponseCallback = new Callback<NotificationCenterListResponse>() {
         @Override
-        public void onResponse(Call<NotificationCenterListResponse> call, retrofit2.Response<NotificationCenterListResponse> response) {
+        public void onResponse(Call<NotificationCenterListResponse> call,
+                retrofit2.Response<NotificationCenterListResponse> response) {
             if (response == null || response.body() == null) {
                 return;
             }

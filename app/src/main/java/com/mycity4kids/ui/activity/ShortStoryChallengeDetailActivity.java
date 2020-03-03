@@ -23,7 +23,6 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.view.menu.MenuBuilder;
@@ -36,7 +35,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -72,20 +70,18 @@ import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.SharingUtils;
 import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.widget.StoryShareCardWidget;
-
-import org.json.JSONObject;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Map;
-
 import okhttp3.ResponseBody;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class ShortStoryChallengeDetailActivity extends BaseActivity implements View.OnClickListener, ChallengeListingRecycleAdapter.RecyclerViewClickListener {
+public class ShortStoryChallengeDetailActivity extends BaseActivity implements View.OnClickListener,
+        ChallengeListingRecycleAdapter.RecyclerViewClickListener {
 
     private static final int REQUEST_INIT_PERMISSION = 2;
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -143,7 +139,6 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
     private ImageView shareStoryImageView;
     private ArticleListingResult sharedStoryItem;
     private String shortStoryCategoryId;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,22 +237,6 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                 chooseLayout.setVisibility(View.INVISIBLE);
             }
         }
-      /*  if (challengeId != null && challengeId.size() != 0) {
-            selectedId = challengeId.get(pos);
-        } else {
-            ToastUtils.showToast(this, "server problem,please refresh your app");
-        }
-        if (activeUrl != null && activeUrl.size() != 0) {
-            selectedActiveUrl = activeUrl.get(pos);
-        } else {
-            ToastUtils.showToast(this, "server problem,please refresh your app");
-        }
-        if (Display_Name != null && Display_Name.size() != 0) {
-            selected_Name = Display_Name.get(pos);
-        } else {
-            ToastUtils.showToast(this, "server problem,please refresh your app");
-        }*/
-
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         llm = new LinearLayoutManager(this);
@@ -271,20 +250,18 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         shortStoryAPI = retro.create(ShortStoryAPI.class);
         hitFilteredTopicsArticleListingApi(sortType);
-        challengeListingRecycleAdapter = new ChallengeListingRecycleAdapter(this, this, pos, selected_Name, selectedActiveUrl);
+        challengeListingRecycleAdapter = new ChallengeListingRecycleAdapter(this, this, pos, selected_Name,
+                selectedActiveUrl);
         recyclerView.setAdapter(challengeListingRecycleAdapter);
         challengeListingRecycleAdapter.setListData(mDatalist);
         challengeListingRecycleAdapter.notifyDataSetChanged();
 
-        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                nextPageNumber = 1;
-                limit = 15;
-                mDatalist.clear();
-                hitFilteredTopicsArticleListingApi(sortType);
-                pullToRefresh.setRefreshing(false);
-            }
+        pullToRefresh.setOnRefreshListener(() -> {
+            nextPageNumber = 1;
+            limit = 15;
+            mDatalist.clear();
+            hitFilteredTopicsArticleListingApi(sortType);
+            pullToRefresh.setRefreshing(false);
         });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -307,9 +284,9 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
             }
         });
 
-
         try {
-            FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+            FileInputStream fileInputStream = BaseApplication.getAppContext()
+                    .openFileInput(AppConstants.CATEGORIES_JSON_FILE);
             String fileContent = AppUtils.convertStreamToString(fileInputStream);
             Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
             ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
@@ -318,14 +295,12 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
         } catch (FileNotFoundException e) {
             Retrofit retr = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsAPI = retr.create(TopicsCategoryAPI.class);
-
             Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
-
             caller.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
-
+                    AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE,
+                            response.body());
                     try {
                         FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                         String fileContent = AppUtils.convertStreamToString(fileInputStream);
@@ -339,7 +314,6 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                     }
                 }
 
-
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     Crashlytics.logException(t);
@@ -348,19 +322,15 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
             });
         }
 
-
-        chooseoptionradioButton.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                ssTopicsText = ssTopicsList.get(i).getDisplay_name();
-                shortStoryCategoryId = ssTopicsList.get(i).getId();
-            }
+        chooseoptionradioButton.setOnCheckedChangeListener((radioGroup, i) -> {
+            ssTopicsText = ssTopicsList.get(i).getDisplay_name();
+            shortStoryCategoryId = ssTopicsList.get(i).getId();
         });
-
     }
 
     private void addShortStoryCategories(RadioGroup chooseoptionradioButton) {
-        RadioGroup.LayoutParams rprms = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.WRAP_CONTENT);
+        RadioGroup.LayoutParams rprms = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,
+                RadioGroup.LayoutParams.WRAP_CONTENT);
         for (int i = 0; i < ssTopicsList.size(); i++) {
             AppCompatRadioButton rbn = new AppCompatRadioButton(this);
             rbn.setId(i);
@@ -370,11 +340,11 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
             rbn.setPadding(10, 0, 0, 0);
             if (Build.VERSION.SDK_INT >= 21) {
                 ColorStateList colorStateList = new ColorStateList(
-                        new int[][]{
-                                new int[]{-android.R.attr.state_enabled}, //disabled
-                                new int[]{android.R.attr.state_enabled} //enabled
+                        new int[][] {
+                                new int[] {-android.R.attr.state_enabled}, //disabled
+                                new int[] {android.R.attr.state_enabled} //enabled
                         },
-                        new int[]{
+                        new int[] {
                                 getResources().getColor(R.color.app_red)//// disabled
                                 , getResources().getColor(R.color.app_red) //enabled
                         }
@@ -384,7 +354,6 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
             }
         }
     }
-
 
     private void createTopicsData(ExploreTopicsResponse responseData) {
         try {
@@ -460,7 +429,8 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
-        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedId, sortType, from, from + limit - 1, "0");
+        Call<ArticleListingResponse> filterCall = topicsAPI
+                .getArticlesForCategory(selectedId, sortType, from, from + limit - 1, "0");
 
         filterCall.enqueue(articleListingResponseCallback);
     }
@@ -546,7 +516,8 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                 intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
                 intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
                 intent.putParcelableArrayListExtra("pagerListData", mDatalist);
-                intent.putExtra(Constants.AUTHOR, mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName());
+                intent.putExtra(Constants.AUTHOR,
+                        mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName());
                 startActivity(intent);
                 break;
             case R.id.storyRecommendationContainer:
@@ -554,11 +525,13 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                     if (mDatalist.get(position).isLiked()) {
                         likeStatus = "0";
                         currentShortStoryPosition = position;
-                        recommendUnrecommentArticleAPI("0", mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
+                        recommendUnrecommentArticleAPI("0", mDatalist.get(position).getId(),
+                                mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
                     } else {
                         likeStatus = "1";
                         currentShortStoryPosition = position;
-                        recommendUnrecommentArticleAPI("1", mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
+                        recommendUnrecommentArticleAPI("1", mDatalist.get(position).getId(),
+                                mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
                     }
                 }
                 break;
@@ -723,7 +696,8 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
     };
 
     private void recommendUnrecommentArticleAPI(String status, String articleId, String authorId, String author) {
-        Utils.pushLikeStoryEvent(this, "ChallengeDetailListingScreen", userDynamoId + "", articleId, authorId + "~" + author);
+        Utils.pushLikeStoryEvent(this, "ChallengeDetailListingScreen", userDynamoId + "", articleId,
+                authorId + "~" + author);
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
 
@@ -731,13 +705,15 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
         RecommendUnrecommendArticleRequest recommendUnrecommendArticleRequest = new RecommendUnrecommendArticleRequest();
         recommendUnrecommendArticleRequest.setArticleId(articleId);
         recommendUnrecommendArticleRequest.setStatus(likeStatus);
-        Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle = articleDetailsAPI.recommendUnrecommendArticle(recommendUnrecommendArticleRequest);
+        Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle = articleDetailsAPI
+                .recommendUnrecommendArticle(recommendUnrecommendArticleRequest);
         recommendUnrecommendArticle.enqueue(recommendUnrecommendArticleResponseCallback);
     }
 
     private Callback<RecommendUnrecommendArticleResponse> recommendUnrecommendArticleResponseCallback = new Callback<RecommendUnrecommendArticleResponse>() {
         @Override
-        public void onResponse(Call<RecommendUnrecommendArticleResponse> call, retrofit2.Response<RecommendUnrecommendArticleResponse> response) {
+        public void onResponse(Call<RecommendUnrecommendArticleResponse> call,
+                retrofit2.Response<RecommendUnrecommendArticleResponse> response) {
             isRecommendRequestRunning = false;
             if (null == response.body()) {
               /*  if (!isAdded()) {
@@ -752,12 +728,16 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     if (likeStatus.equals("1")) {
                         if (!responseData.getData().isEmpty()) {
-                            mDatalist.get(currentShortStoryPosition).setLikesCount("" + (Integer.parseInt(mDatalist.get(currentShortStoryPosition).getLikesCount()) + 1));
+                            mDatalist.get(currentShortStoryPosition).setLikesCount(
+                                    "" + (Integer.parseInt(mDatalist.get(currentShortStoryPosition).getLikesCount())
+                                            + 1));
                         }
                         mDatalist.get(currentShortStoryPosition).setLiked(true);
                     } else {
                         if (!responseData.getData().isEmpty()) {
-                            mDatalist.get(currentShortStoryPosition).setLikesCount("" + (Integer.parseInt(mDatalist.get(currentShortStoryPosition).getLikesCount()) - 1));
+                            mDatalist.get(currentShortStoryPosition).setLikesCount(
+                                    "" + (Integer.parseInt(mDatalist.get(currentShortStoryPosition).getLikesCount())
+                                            - 1));
                         }
                         mDatalist.get(currentShortStoryPosition).setLiked(false);
                     }
@@ -838,7 +818,7 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_INIT_PERMISSION) {
             if (PermissionUtil.verifyPermissions(grantResults)) {
                 Snackbar.make(root, R.string.permision_available_init,
@@ -896,13 +876,15 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
             return false;
         });
 
-        MenuPopupHelper menuPopupHelper = new MenuPopupHelper(view.getContext(), (MenuBuilder) popupMenu.getMenu(), view);
+        MenuPopupHelper menuPopupHelper = new MenuPopupHelper(view.getContext(), (MenuBuilder) popupMenu.getMenu(),
+                view);
         menuPopupHelper.setForceShowIcon(true);
         menuPopupHelper.show();
     }
 
     private void getSharableViewForPosition(int position, String medium) {
-        storyShareCardWidget = recyclerView.getLayoutManager().findViewByPosition(position + 1).findViewById(R.id.storyShareCardWidget);
+        storyShareCardWidget = recyclerView.getLayoutManager().findViewByPosition(position + 1)
+                .findViewById(R.id.storyShareCardWidget);
         shareStoryImageView = storyShareCardWidget.findViewById(R.id.storyImageView);
         shareMedium = medium;
         sharedStoryItem = mDatalist.get(position);
@@ -929,7 +911,8 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
             break;
             case AppConstants.MEDIUM_WHATSAPP: {
                 if (AppUtils.shareImageWithWhatsApp(this, uri, getString(R.string.ss_follow_author,
-                        sharedStoryItem.getUserName(), AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
+                        sharedStoryItem.getUserName(),
+                        AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
                     Utils.pushShareStoryEvent(this, "ChallengeDetailListingScreen",
                             userDynamoId + "", sharedStoryItem.getId(),
                             sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Whatsapp");
@@ -946,7 +929,8 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
             break;
             case AppConstants.MEDIUM_GENERIC: {
                 if (AppUtils.shareGenericImageAndOrLink(this, uri, getString(R.string.ss_follow_author,
-                        sharedStoryItem.getUserName(), AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
+                        sharedStoryItem.getUserName(),
+                        AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
                     Utils.pushShareStoryEvent(this, "ChallengeDetailListingScreen",
                             userDynamoId + "", sharedStoryItem.getId(),
                             sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Generic");
