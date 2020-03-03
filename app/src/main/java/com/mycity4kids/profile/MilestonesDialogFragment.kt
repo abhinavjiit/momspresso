@@ -32,7 +32,6 @@ import com.facebook.share.model.ShareLinkContent
 import com.facebook.share.widget.ShareDialog
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.snackbar.Snackbar
-import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -47,15 +46,18 @@ import com.mycity4kids.ui.activity.ShortStoryContainerActivity
 import com.mycity4kids.ui.rewards.activity.RewardsShareReferralCodeActivity
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.PermissionUtil
+import com.mycity4kids.utils.ToastUtils
 import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
-import java.util.*
 
 class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
 
     val REQUEST_GALLERY_PERMISSION = 1
-    val PERMISSIONS_INIT = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    val PERMISSIONS_INIT = arrayOf(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
     val sharableMilestoneImageName = "milestone"
 
     private var milestoneData: MilestonesResult? = null
@@ -79,9 +81,15 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
     var milestoneId: String? = null
     var shareMedium: String? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.milestones_dialog_fragment, container,
-                false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val rootView = inflater.inflate(
+            R.layout.milestones_dialog_fragment, container,
+            false
+        )
 
         rootLayout = rootView.findViewById(R.id.rootLayout)
         milestoneImageView = rootView.findViewById(R.id.milestoneImageView)
@@ -139,7 +147,10 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
         val milestoneAPI = retrofit.create(MilestonesAPI::class.java)
         val milestoneListResponseCall = milestoneAPI.getMilestoneDetail(userId, milestoneId)
         milestoneListResponseCall.enqueue(object : Callback<MilestonesResponse> {
-            override fun onResponse(call: Call<MilestonesResponse>, response: retrofit2.Response<MilestonesResponse>) {
+            override fun onResponse(
+                call: Call<MilestonesResponse>,
+                response: retrofit2.Response<MilestonesResponse>
+            ) {
                 try {
                     milestonesShimmerContainer.visibility = View.GONE
                     if (response.body() == null) {
@@ -172,30 +183,42 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
         activity?.let {
             milestoneData = result?.get(0)
             Picasso.get().load(milestoneData?.milestone_bg_url).error(R.drawable.default_article)
-                    .fit().into(milestoneBgImageView)
+                .fit().into(milestoneBgImageView)
             if (milestoneData?.item_type == AppConstants.CONTENT_TYPE_MYMONEY) {
-                milestoneTitleTextView.text = getString(R.string.milestones_dialog_title,
-                        milestoneData?.meta_data?.content_info?.payment_value?.toInt())
+                milestoneTitleTextView.text = getString(
+                    R.string.milestones_dialog_title,
+                    milestoneData?.meta_data?.content_info?.payment_value?.toInt()
+                )
                 val terms: String = getString(R.string.all_terms_conditions)
-                val fullDesc: String = getString(R.string.milestones_share_joy, getString(R.string.all_terms_conditions))
+                val fullDesc: String = getString(
+                    R.string.milestones_share_joy,
+                    getString(R.string.all_terms_conditions)
+                )
                 val spannableStringBuilder = SpannableStringBuilder(fullDesc)
                 val click = TermsConditionTextClick()
-                spannableStringBuilder.setSpan(click, fullDesc.indexOf(terms),
-                        fullDesc.indexOf(terms) + terms.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                spannableStringBuilder.setSpan(
+                    click, fullDesc.indexOf(terms),
+                    fullDesc.indexOf(terms) + terms.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
                 milestoneDescTextView.text = spannableStringBuilder
                 milestoneDescTextView.movementMethod = LinkMovementMethod.getInstance()
             } else {
-                Picasso.get().load(milestoneData?.milestone_image_url).error(R.drawable.default_article)
-                        .fit().into(milestoneImageView)
+                Picasso.get().load(milestoneData?.milestone_image_url)
+                    .error(R.drawable.default_article)
+                    .fit().into(milestoneImageView)
                 milestoneTitleTextView.text = milestoneData?.milestone_title
                 milestoneDescTextView.text = milestoneData?.milestone_desc
             }
             if (AppUtils.isPrivateProfile(userId)) {
-                Utils.pushProfileEvents(it, "Show_Private_Milestone_Detail", "MilestonesDialogFragment",
-                        "-", milestoneData?.milestone_name)
+                Utils.pushProfileEvents(
+                    it, "Show_Private_Milestone_Detail", "MilestonesDialogFragment",
+                    "-", milestoneData?.milestone_name
+                )
             } else {
-                Utils.pushProfileEvents(it, "Show_Public_Milestone_Detail", "MilestonesDialogFragment",
-                        "-", milestoneData?.milestone_name)
+                Utils.pushProfileEvents(
+                    it, "Show_Public_Milestone_Detail", "MilestonesDialogFragment",
+                    "-", milestoneData?.milestone_name
+                )
                 when {
                     result?.get(0)?.item_type == AppConstants.CONTENT_TYPE_ARTICLE -> {
                         viewContentTextView.visibility = View.VISIBLE
@@ -249,8 +272,13 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
                 when {
                     milestoneData?.item_type == AppConstants.CONTENT_TYPE_ARTICLE -> {
                         activity?.let {
-                            Utils.pushProfileEvents(it, "CTA_View_Article_Public_Milestone_Detail",
-                                    "MilestonesDialogFragment", "View article", milestoneData?.milestone_name)
+                            Utils.pushProfileEvents(
+                                it,
+                                "CTA_View_Article_Public_Milestone_Detail",
+                                "MilestonesDialogFragment",
+                                "View article",
+                                milestoneData?.milestone_name
+                            )
                             val intent = Intent(it, ArticleDetailsContainerActivity::class.java)
                             intent.putExtra(Constants.ARTICLE_ID, milestoneData?.content_id)
                             startActivity(intent)
@@ -258,8 +286,13 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
                     }
                     milestoneData?.item_type == AppConstants.CONTENT_TYPE_SHORT_STORY -> {
                         activity?.let {
-                            Utils.pushProfileEvents(it, "CTA_View_Story_Public_Milestone_Detail",
-                                    "MilestonesDialogFragment", "View Story", milestoneData?.milestone_name)
+                            Utils.pushProfileEvents(
+                                it,
+                                "CTA_View_Story_Public_Milestone_Detail",
+                                "MilestonesDialogFragment",
+                                "View Story",
+                                milestoneData?.milestone_name
+                            )
                             val intent = Intent(it, ShortStoryContainerActivity::class.java)
                             intent.putExtra(Constants.ARTICLE_ID, milestoneData?.content_id)
                             startActivity(intent)
@@ -267,8 +300,13 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
                     }
                     milestoneData?.item_type == AppConstants.CONTENT_TYPE_VIDEO -> {
                         activity?.let {
-                            Utils.pushProfileEvents(it, "CTA_View_Video_Public_Milestone_Detail",
-                                    "MilestonesDialogFragment", "View Video", milestoneData?.milestone_name)
+                            Utils.pushProfileEvents(
+                                it,
+                                "CTA_View_Video_Public_Milestone_Detail",
+                                "MilestonesDialogFragment",
+                                "View Video",
+                                milestoneData?.milestone_name
+                            )
                             val intent = Intent(activity, ParallelFeedActivity::class.java)
                             intent.putExtra(Constants.VIDEO_ID, milestoneData?.content_id)
                             startActivity(intent)
@@ -282,15 +320,28 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
     private fun shareWithGeneric() {
         activity?.let {
             if (AppConstants.CONTENT_TYPE_MYMONEY == milestoneData?.item_type) {
-                if (AppUtils.shareGenericLinkWithSuccessStatus(activity, getString(R.string.all_refer_url,
-                                milestoneData?.meta_data?.content_info?.referral_code))) {
-                    Utils.pushProfileEvents(it, "CTA_Generic_Share_Private_Milestone_Detail",
-                            "MilestonesDialogFragment", "Generic Share", milestoneData?.milestone_name)
+                if (AppUtils.shareGenericLinkWithSuccessStatus(
+                        activity, getString(
+                            R.string.all_refer_url,
+                            milestoneData?.meta_data?.content_info?.referral_code
+                        )
+                    )
+                ) {
+                    Utils.pushProfileEvents(
+                        it, "CTA_Generic_Share_Private_Milestone_Detail",
+                        "MilestonesDialogFragment", "Generic Share", milestoneData?.milestone_name
+                    )
                 }
             } else {
-                if (AppUtils.shareGenericLinkWithSuccessStatus(activity, milestoneData?.milestone_sharing_url)) {
-                    Utils.pushProfileEvents(it, "CTA_Generic_Share_Private_Milestone_Detail",
-                            "MilestonesDialogFragment", "Generic Share", milestoneData?.milestone_name)
+                if (AppUtils.shareGenericLinkWithSuccessStatus(
+                        activity,
+                        milestoneData?.milestone_sharing_url
+                    )
+                ) {
+                    Utils.pushProfileEvents(
+                        it, "CTA_Generic_Share_Private_Milestone_Detail",
+                        "MilestonesDialogFragment", "Generic Share", milestoneData?.milestone_name
+                    )
                 }
             }
         }
@@ -301,10 +352,13 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
             return
         }
         activity?.let {
-            val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/milestone.jpg")
+            val uri =
+                Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/milestone.jpg")
             if (AppUtils.shareImageWithInstagram(it, uri)) {
-                Utils.pushProfileEvents(it, "CTA_IG_Share_Private_Milestone_Detail",
-                        "MilestonesDialogFragment", "IG Share", milestoneData?.milestone_name)
+                Utils.pushProfileEvents(
+                    it, "CTA_IG_Share_Private_Milestone_Detail",
+                    "MilestonesDialogFragment", "IG Share", milestoneData?.milestone_name
+                )
             }
         }
     }
@@ -313,23 +367,34 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
         if (AppConstants.CONTENT_TYPE_MYMONEY == milestoneData?.item_type) {
             if (ShareDialog.canShow(ShareLinkContent::class.java)) {
                 val content = ShareLinkContent.Builder()
-                        .setContentUrl(Uri.parse(getString(R.string.all_refer_url, milestoneData?.meta_data?.content_info?.referral_code)))
-                        .build()
+                    .setContentUrl(
+                        Uri.parse(
+                            getString(
+                                R.string.all_refer_url,
+                                milestoneData?.meta_data?.content_info?.referral_code
+                            )
+                        )
+                    )
+                    .build()
                 activity?.let {
                     ShareDialog(it).show(content)
-                    Utils.pushProfileEvents(it, "CTA_FB_Share_Private_Milestone_Detail",
-                            "MilestonesDialogFragment", "FB Share", milestoneData?.milestone_name)
+                    Utils.pushProfileEvents(
+                        it, "CTA_FB_Share_Private_Milestone_Detail",
+                        "MilestonesDialogFragment", "FB Share", milestoneData?.milestone_name
+                    )
                 }
             }
         } else {
             if (ShareDialog.canShow(ShareLinkContent::class.java)) {
                 val content = ShareLinkContent.Builder()
-                        .setContentUrl(Uri.parse(milestoneData?.milestone_sharing_url))
-                        .build()
+                    .setContentUrl(Uri.parse(milestoneData?.milestone_sharing_url))
+                    .build()
                 activity?.let {
                     ShareDialog(it).show(content)
-                    Utils.pushProfileEvents(it, "CTA_FB_Share_Private_Milestone_Detail",
-                            "MilestonesDialogFragment", "FB Share", milestoneData?.milestone_name)
+                    Utils.pushProfileEvents(
+                        it, "CTA_FB_Share_Private_Milestone_Detail",
+                        "MilestonesDialogFragment", "FB Share", milestoneData?.milestone_name
+                    )
                 }
             }
         }
@@ -340,8 +405,9 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
             return
         }
         activity?.let {
-            val username = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).first_name + " " +
-                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).last_name
+            val username =
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).first_name + " " +
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).last_name
             var contentType: String? = ""
             when (milestoneData?.item_type) {
                 AppConstants.CONTENT_TYPE_ARTICLE -> {
@@ -355,21 +421,41 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
                 }
                 else -> viewContentTextView.visibility = View.GONE
             }
-            val uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/milestone.jpg")
+            val uri =
+                Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/milestone.jpg")
             if (AppConstants.CONTENT_TYPE_MYMONEY == milestoneData?.item_type) {
-                if (AppUtils.shareImageWithWhatsApp(it, uri, getString(R.string.milestone_mm_share,
-                                milestoneData?.meta_data?.content_info?.payment_value?.toInt(),
-                                milestoneData?.meta_data?.content_info?.referral_code, getString(R.string.all_refer_url,
-                                milestoneData?.meta_data?.content_info?.referral_code)))) {
-                    Utils.pushProfileEvents(it, "CTA_Whatsapp_Share_Private_Milestone_Detail",
-                            "MilestonesDialogFragment", "Whatsapp Share", milestoneData?.milestone_name)
+                if (AppUtils.shareImageWithWhatsApp(
+                        it, uri, getString(
+                            R.string.milestone_mm_share,
+                            milestoneData?.meta_data?.content_info?.payment_value?.toInt(),
+                            milestoneData?.meta_data?.content_info?.referral_code, getString(
+                                R.string.all_refer_url,
+                                milestoneData?.meta_data?.content_info?.referral_code
+                            )
+                        )
+                    )
+                ) {
+                    Utils.pushProfileEvents(
+                        it, "CTA_Whatsapp_Share_Private_Milestone_Detail",
+                        "MilestonesDialogFragment", "Whatsapp Share", milestoneData?.milestone_name
+                    )
                 }
             } else {
-                if (AppUtils.shareImageWithWhatsApp(it, uri, getString(R.string.milestones_share_text, username, contentType,
-                                milestoneData?.meta_data?.content_info?.title, milestoneData?.milestone_name,
-                                milestoneData?.milestone_sharing_url))) {
-                    Utils.pushProfileEvents(it, "CTA_Whatsapp_Share_Private_Milestone_Detail",
-                            "MilestonesDialogFragment", "Whatsapp Share", milestoneData?.milestone_name)
+                if (AppUtils.shareImageWithWhatsApp(
+                        it, uri, getString(
+                            R.string.milestones_share_text,
+                            username,
+                            contentType,
+                            milestoneData?.meta_data?.content_info?.title,
+                            milestoneData?.milestone_name,
+                            milestoneData?.milestone_sharing_url
+                        )
+                    )
+                ) {
+                    Utils.pushProfileEvents(
+                        it, "CTA_Whatsapp_Share_Private_Milestone_Detail",
+                        "MilestonesDialogFragment", "Whatsapp Share", milestoneData?.milestone_name
+                    )
                 }
             }
         }
@@ -378,10 +464,15 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
     private fun createSharableImageWhileCheckingPermissions(): Boolean {
         context?.let {
             if (Build.VERSION.SDK_INT >= 23) {
-                if (checkSelfPermission(it,
-                                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                        checkSelfPermission(it,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (checkSelfPermission(
+                        it,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED ||
+                    checkSelfPermission(
+                        it,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
                     requestPermissions()
                     return true
                 } else {
@@ -408,11 +499,16 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
     private fun requestPermissions() {
         activity?.let {
             if (shouldShowRequestPermissionRationale(
-                            Manifest.permission.READ_EXTERNAL_STORAGE) || shouldShowRequestPermissionRationale(
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Snackbar.make(rootLayout, R.string.permission_storage_rationale,
-                        Snackbar.LENGTH_INDEFINITE)
-                        .setAction(R.string.ok) { requestUngrantedPermissions() }.show()
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) || shouldShowRequestPermissionRationale(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+            ) {
+                Snackbar.make(
+                    rootLayout, R.string.permission_storage_rationale,
+                    Snackbar.LENGTH_INDEFINITE
+                )
+                    .setAction(R.string.ok) { requestUngrantedPermissions() }.show()
             } else {
                 requestUngrantedPermissions()
             }
@@ -439,9 +535,11 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
     ) {
         if (requestCode == REQUEST_GALLERY_PERMISSION) {
             if (PermissionUtil.verifyPermissions(grantResults)) {
-                Snackbar.make(rootLayout, R.string.permision_available_init,
-                        Snackbar.LENGTH_SHORT)
-                        .show()
+                Snackbar.make(
+                    rootLayout, R.string.permision_available_init,
+                    Snackbar.LENGTH_SHORT
+                )
+                    .show()
                 try {
                     when (shareMedium) {
                         AppConstants.MEDIUM_FACEBOOK -> {
@@ -464,9 +562,11 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             } else {
-                Snackbar.make(rootLayout, R.string.permissions_not_granted,
-                        Snackbar.LENGTH_SHORT)
-                        .show()
+                Snackbar.make(
+                    rootLayout, R.string.permissions_not_granted,
+                    Snackbar.LENGTH_SHORT
+                )
+                    .show()
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)

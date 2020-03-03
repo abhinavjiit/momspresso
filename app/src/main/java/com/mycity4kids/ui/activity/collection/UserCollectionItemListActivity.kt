@@ -51,9 +51,9 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.io.InputStreamReader
 import okhttp3.ResponseBody
 import org.json.JSONObject
-import java.io.InputStreamReader
 
 class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener,
     CollectionItemsListAdapter.RecyclerViewClick {

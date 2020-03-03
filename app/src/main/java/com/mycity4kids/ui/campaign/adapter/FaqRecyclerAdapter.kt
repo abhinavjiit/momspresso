@@ -1,13 +1,13 @@
 package com.mycity4kids.ui.campaign.adapter
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
 import com.mycity4kids.models.campaignmodels.QuestionAnswerResponse
 import kotlinx.android.synthetic.main.fragment_item.view.*

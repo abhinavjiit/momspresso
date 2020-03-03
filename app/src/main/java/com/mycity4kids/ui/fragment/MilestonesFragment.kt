@@ -10,11 +10,10 @@ import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
-import com.mycity4kids.base.BaseFragment
-import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.profile.MilestonesDialogFragment
@@ -22,6 +21,7 @@ import com.mycity4kids.profile.MilestonesResponse
 import com.mycity4kids.profile.MilestonesResult
 import com.mycity4kids.retrofitAPIsInterfaces.MilestonesAPI
 import com.mycity4kids.ui.adapter.MilestonesListAdapter
+import com.mycity4kids.utils.ToastUtils
 import retrofit2.Call
 import retrofit2.Callback
 

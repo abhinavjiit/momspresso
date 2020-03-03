@@ -18,10 +18,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.mycity4kids.base.BaseFragment
-import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.campaignmodels.AllCampaignDataResponse
@@ -40,15 +39,16 @@ import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.ui.rewards.activity.RewardsShareReferralCodeActivity
 import com.mycity4kids.utils.EndlessScrollListener
+import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.widget.RoundedHorizontalProgressBar
 import com.squareup.picasso.Picasso
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.util.ArrayList
 import retrofit2.Call
 import retrofit2.Callback
-import java.util.*
 
 const val REWARDS_FILL_FORM = 1000
 
@@ -96,10 +96,10 @@ class CampaignListFragment : BaseFragment() {
     companion object {
         @JvmStatic
         fun newInstance() =
-                CampaignListFragment().apply {
-                    arguments = Bundle().apply {
-                    }
+            CampaignListFragment().apply {
+                arguments = Bundle().apply {
                 }
+            }
     }
 
     override fun onCreateView(
@@ -139,10 +139,15 @@ class CampaignListFragment : BaseFragment() {
         dashboardLayout = containerView.findViewById(R.id.dashboard_layout)
         recyclerView.adapter = adapter
         campaignList.clear()
-        userName.text = SharedPrefUtils.getUserDetailModel(activity)?.first_name + " " + SharedPrefUtils.getUserDetailModel(activity)?.last_name
+        userName.text =
+            SharedPrefUtils.getUserDetailModel(activity)?.first_name + " " + SharedPrefUtils.getUserDetailModel(
+                activity
+            )?.last_name
         try {
-            Picasso.get().load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(R.drawable.family_xxhdpi)
-                    .error(R.drawable.family_xxhdpi).into(profileImageView)
+            Picasso.get().load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(
+                R.drawable.family_xxhdpi
+            )
+                .error(R.drawable.family_xxhdpi).into(profileImageView)
         } catch (e: Exception) {
             profileImageView.setImageResource(R.drawable.family_xxhdpi)
         }
@@ -183,7 +188,10 @@ class CampaignListFragment : BaseFragment() {
             checkRewardForm()
         }
         mainLinearLayout.setOnClickListener {
-            (activity as CampaignContainerActivity).addCampaginDetailFragment(defaultapigetResponse?.id!!, "defaultCampaign")
+            (activity as CampaignContainerActivity).addCampaginDetailFragment(
+                defaultapigetResponse?.id!!,
+                "defaultCampaign"
+            )
         }
 
         totalEarning.setOnClickListener {
@@ -204,12 +212,13 @@ class CampaignListFragment : BaseFragment() {
             when (requestCode) {
                 REWARDS_FILL_FORM -> {
                     fetchDefaultCampaign()
-                    isRewardAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
+                    isRewardAdded =
+                        SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
                     if (isRewardAdded.isNotEmpty() || isRewardAdded.equals("1")) {
                         //  fetchForYou()
                         registerRewards.visibility = View.GONE
                     }
-//                    checkRewardForm()
+                    //                    checkRewardForm()
                 }
             }
         }
@@ -218,8 +227,10 @@ class CampaignListFragment : BaseFragment() {
     fun checkRewardForm() {
         if (isRewardAdded.isEmpty() || isRewardAdded.equals("0")) {
             activity?.let {
-                Utils.pushGenericEvent(it, "CTA_CampaignListing_Register",
-                        SharedPrefUtils.getUserDetailModel(it).dynamoId, "CampaignListFragment")
+                Utils.pushGenericEvent(
+                    it, "CTA_CampaignListing_Register",
+                    SharedPrefUtils.getUserDetailModel(it).dynamoId, "CampaignListFragment"
+                )
             }
             val intent = Intent(context, RewardsContainerActivity::class.java)
             intent.putExtra("isComingfromCampaign", true)
@@ -246,7 +257,10 @@ class CampaignListFragment : BaseFragment() {
 
     private fun fetchDefaultCampaign() {
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getDefaultCampaignDetail().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CampaignDetailResult>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getDefaultCampaignDetail().subscribeOn(
+            Schedulers.io()
+        ).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<CampaignDetailResult>> {
             override fun onComplete() {
                 removeProgressDialog()
             }
@@ -278,7 +292,10 @@ class CampaignListFragment : BaseFragment() {
     }
 
     private val getCampaignList = object : Callback<AllCampaignDataResponse> {
-        override fun onResponse(call: Call<AllCampaignDataResponse>, response: retrofit2.Response<AllCampaignDataResponse>) {
+        override fun onResponse(
+            call: Call<AllCampaignDataResponse>,
+            response: retrofit2.Response<AllCampaignDataResponse>
+        ) {
             //   removeProgressDialog()
             if (null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
@@ -322,8 +339,12 @@ class CampaignListFragment : BaseFragment() {
     fun setDefaultCampaignValues() {
         upperTextHeader.text = resources.getString(R.string.campaign_list_sorry_not_eligible)
         lowerTextHeader.text = resources.getString(R.string.campaign_list_try_following_campaign)
-        Picasso.get().load(defaultapigetResponse!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(default_campaign_header)
-        Picasso.get().load(defaultapigetResponse!!.brandDetails!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(default_brand_img)
+        Picasso.get().load(defaultapigetResponse!!.imageUrl).placeholder(R.drawable.default_article).error(
+            R.drawable.default_article
+        ).into(default_campaign_header)
+        Picasso.get().load(defaultapigetResponse!!.brandDetails!!.imageUrl).placeholder(R.drawable.default_article).error(
+            R.drawable.default_article
+        ).into(default_brand_img)
         default_brand_name.setText(defaultapigetResponse!!.brandDetails!!.name)
         default_campaign_name.setText(defaultapigetResponse!!.name)
         default_submission_status.text = resources.getString(R.string.campaign_details_apply_now)
@@ -331,7 +352,10 @@ class CampaignListFragment : BaseFragment() {
 
     private fun fetchForYou() {
         // showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getForYouStatus(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BasicResponse> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getForYouStatus(
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BasicResponse> {
             override fun onNext(response: BasicResponse) {
                 if (response.code == 200 && response.data != null && response.status == "success") {
                     if (response.data.result != null && response.data.result.recm_status != null) {
@@ -359,29 +383,34 @@ class CampaignListFragment : BaseFragment() {
     private fun fetchRewardsData() {
         val userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         if (userId != null) {
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getUserDetails(userId, "yes").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserDetailResult>> {
-                override fun onComplete() {
-                }
-
-                override fun onSubscribe(d: Disposable) {
-                }
-
-                override fun onNext(response: BaseResponseGeneric<UserDetailResult>) {
-                    removeProgressDialog()
-                    if (response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
-                        progressBar.isIndeterminate = false
-                        apiResponse = response.data!!.result
-                        progressBar.progress = getProfileCompletionPecentage(apiResponse)
-                        profilePercentageTextView.text = "" + getProfileCompletionPecentage(apiResponse) + "%"
-                    } else {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getUserDetails(
+                userId,
+                "yes"
+            ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                object : Observer<BaseResponseGeneric<UserDetailResult>> {
+                    override fun onComplete() {
                     }
-                }
 
-                override fun onError(e: Throwable) {
-                    removeProgressDialog()
-                    Log.d("exception in error", e.message.toString())
-                }
-            })
+                    override fun onSubscribe(d: Disposable) {
+                    }
+
+                    override fun onNext(response: BaseResponseGeneric<UserDetailResult>) {
+                        removeProgressDialog()
+                        if (response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
+                            progressBar.isIndeterminate = false
+                            apiResponse = response.data!!.result
+                            progressBar.progress = getProfileCompletionPecentage(apiResponse)
+                            profilePercentageTextView.text =
+                                "" + getProfileCompletionPecentage(apiResponse) + "%"
+                        } else {
+                        }
+                    }
+
+                    override fun onError(e: Throwable) {
+                        removeProgressDialog()
+                        Log.d("exception in error", e.message.toString())
+                    }
+                })
         }
     }
 
@@ -426,32 +455,37 @@ class CampaignListFragment : BaseFragment() {
         call.enqueue(getTotalPayout)
     }
 
-    internal var getTotalPayout: Callback<TotalPayoutResponse> = object : Callback<TotalPayoutResponse> {
-        override fun onResponse(call: Call<TotalPayoutResponse>, response: retrofit2.Response<TotalPayoutResponse>) {
-            if (response.body() == null) {
-                return
-            }
-            try {
-                val responseData = response.body()
-                if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-                    if (responseData.data.size > 0) {
-                        loader.visibility = View.GONE
-                        totalPayout = responseData.data[0].result[0].total_payout
-                        totalCampaignCount = responseData.data[0].result[0].total_payout_campaign_count
-                        totalEarning.text = "\u20b9 " + totalPayout
-                        campaignNos.text = "" + totalCampaignCount + " Campaigns"
-                    }
+    internal var getTotalPayout: Callback<TotalPayoutResponse> =
+        object : Callback<TotalPayoutResponse> {
+            override fun onResponse(
+                call: Call<TotalPayoutResponse>,
+                response: retrofit2.Response<TotalPayoutResponse>
+            ) {
+                if (response.body() == null) {
+                    return
                 }
-            } catch (e: Exception) {
-                Crashlytics.logException(e)
-                Log.d("MC4kException", Log.getStackTraceString(e))
+                try {
+                    val responseData = response.body()
+                    if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                        if (responseData.data.size > 0) {
+                            loader.visibility = View.GONE
+                            totalPayout = responseData.data[0].result[0].total_payout
+                            totalCampaignCount =
+                                responseData.data[0].result[0].total_payout_campaign_count
+                            totalEarning.text = "\u20b9 " + totalPayout
+                            campaignNos.text = "" + totalCampaignCount + " Campaigns"
+                        }
+                    }
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            }
+
+            override fun onFailure(call: Call<TotalPayoutResponse>, t: Throwable) {
+                loader.visibility = View.GONE
+                Crashlytics.logException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
-
-        override fun onFailure(call: Call<TotalPayoutResponse>, t: Throwable) {
-            loader.visibility = View.GONE
-            Crashlytics.logException(t)
-            Log.d("MC4kException", Log.getStackTraceString(t))
-        }
-    }
 }

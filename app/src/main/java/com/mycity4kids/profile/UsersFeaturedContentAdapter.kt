@@ -10,14 +10,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
-import com.mycity4kids.utils.DateTimeUtils
-import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.R
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.models.response.MixFeedResult
+import com.mycity4kids.utils.DateTimeUtils
+import com.mycity4kids.utils.StringUtils
 import com.squareup.picasso.Picasso
-import org.apmem.tools.layouts.FlowLayout
 import java.text.SimpleDateFormat
+import org.apmem.tools.layouts.FlowLayout
 
 class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListener) :
         RecyclerView.Adapter<UsersFeaturedContentAdapter.UserFeaturedContentViewHolder>() {

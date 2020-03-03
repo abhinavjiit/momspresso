@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView.OnItemClickListener
-import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.R
+import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.models.response.Categories
 import com.mycity4kids.models.response.ShortShortiesBackgroundThumbnail
 import com.mycity4kids.ui.activity.ShortStoriesCardActivity

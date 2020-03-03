@@ -5,10 +5,9 @@ import android.util.Log
 import android.view.View
 import com.crashlytics.android.Crashlytics
 import com.google.android.material.tabs.TabLayout
-import com.mycity4kids.base.BaseActivity
-import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.collectionsModels.AddCollectionRequestModel
@@ -21,6 +20,7 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
 import com.mycity4kids.ui.adapter.MultipleCollectionItemPagerAdapter
+import com.mycity4kids.utils.ToastUtils
 import kotlinx.android.synthetic.main.multiple_collection_item_activity.*
 import retrofit2.Call
 import retrofit2.Callback

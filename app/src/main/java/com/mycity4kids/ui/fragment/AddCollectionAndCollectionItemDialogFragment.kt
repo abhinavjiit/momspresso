@@ -19,7 +19,6 @@ import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
@@ -33,12 +32,13 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
 import com.mycity4kids.ui.adapter.AddCollectionAdapter
 import com.mycity4kids.utils.EndlessScrollListener
+import com.mycity4kids.utils.ToastUtils
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.HttpException
 import java.io.InputStreamReader
+import retrofit2.HttpException
 
 class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollectionAdapter.RecyclerViewClickListener {
     override fun onClick(position: Int) {

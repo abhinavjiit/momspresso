@@ -16,7 +16,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.CheckBox
+import android.widget.CompoundButton
+import android.widget.DatePicker
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.RadioGroup
+import android.widget.RelativeLayout
+import android.widget.Spinner
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatSpinner
@@ -61,8 +71,10 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.util.ArrayList
+import java.util.Calendar
+import java.util.Collections
 import org.apmem.tools.layouts.FlowLayout
-import java.util.*
 
 /**editLanguage
  * A simple [Fragment] subclass.
@@ -435,14 +447,14 @@ class RewardsPersonalInfoFragment : BaseFragment(),
         editLocation.setOnClickListener {
 
             //            val typeFilter = AutocompleteFilter.Builder()
-//                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
-//                    .build()
-//            val intent = PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-//                    .setFilter(typeFilter)
-//                    .build(activity)
+            //                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+            //                    .build()
+            //            val intent = PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+            //                    .setFilter(typeFilter)
+            //                    .build(activity)
 
             // Start the autocomplete intent.
-//            List<Place.Field> fields = Arrays . asList (Place.Field.ID, Place.Field.NAME)
+            //            List<Place.Field> fields = Arrays . asList (Place.Field.ID, Place.Field.NAME)
             val fieldsArr = arrayOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG).asList()
             val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fieldsArr)
                 .setTypeFilter(TypeFilter.CITIES)
@@ -710,10 +722,10 @@ class RewardsPersonalInfoFragment : BaseFragment(),
             apiGetResponse.lastName = editLastName.text.toString()
         }
 
-//        if (BuildConfig.DEBUG) {
-//            accountKitAuthCode = "123"
-//            apiGetResponse.contact = "9999999999"
-//        }
+        //        if (BuildConfig.DEBUG) {
+        //            accountKitAuthCode = "123"
+        //            apiGetResponse.contact = "9999999999"
+        //        }
 
         if (accountKitAuthCode.isNullOrEmpty() && apiGetResponse.contact.isNullOrEmpty()) {
             Toast.makeText(
@@ -967,8 +979,8 @@ class RewardsPersonalInfoFragment : BaseFragment(),
                 }
                 VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE -> {
                     if (data != null && resultCode == Activity.RESULT_OK) {
-//                        accountKitAuthCode = (data!!.getParcelableExtra(AccountKitLoginResult.RESULT_KEY) as AccountKitLoginResult).authorizationCode!!
-//                        Log.d("account code ", accountKitAuthCode)
+                        //                        accountKitAuthCode = (data!!.getParcelableExtra(AccountKitLoginResult.RESULT_KEY) as AccountKitLoginResult).authorizationCode!!
+                        //                        Log.d("account code ", accountKitAuthCode)
                         accountKitAuthCode = data.getStringExtra("auth_token")!!
                         apiGetResponse.contact = null
                         editPhone.visibility = View.VISIBLE

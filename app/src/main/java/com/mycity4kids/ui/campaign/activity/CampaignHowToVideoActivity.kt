@@ -9,9 +9,9 @@ import android.widget.ImageView
 import android.widget.MediaController
 import android.widget.VideoView
 import com.crashlytics.android.Crashlytics
-import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.preference.SharedPrefUtils
 
 class CampaignHowToVideoActivity : BaseActivity() {

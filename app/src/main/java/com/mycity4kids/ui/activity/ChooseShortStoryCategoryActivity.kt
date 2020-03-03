@@ -21,12 +21,12 @@ import com.mycity4kids.ui.adapter.ShortStoryChallengeTopicsAdapter
 import com.mycity4kids.ui.adapter.ShortStoryTopicsGridAdapter
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.ArrayAdapterFactory
+import java.io.FileNotFoundException
 import kotlinx.android.synthetic.main.choose_short_story_category_activity.*
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.FileNotFoundException
 
 class ChooseShortStoryCategoryActivity : BaseActivity(),
     ShortStoryChallengeTopicsAdapter.RecyclerViewClickListener {

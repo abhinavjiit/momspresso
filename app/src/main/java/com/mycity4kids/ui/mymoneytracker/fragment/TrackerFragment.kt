@@ -10,9 +10,9 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.campaignmodels.CampaignDataListResult
 import com.mycity4kids.models.response.BaseResponseGeneric
@@ -25,7 +25,7 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.util.*
+import java.util.ArrayList
 
 /**
  * A placeholder fragment containing a simple view.
@@ -93,7 +93,9 @@ class TrackerFragment : BaseFragment() {
         (containerView.findViewById<TextView>(R.id.textTotalPayout)).text = totalPayout.toString()
         var imageBrandLogo = containerView.findViewById<ImageView>(R.id.imageBrandLogo)
         if (!imageUrl.isNullOrEmpty() && !imageUrl.trim().isEmpty()) {
-            Picasso.get().load(imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageBrandLogo)
+            Picasso.get().load(imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(
+                imageBrandLogo
+            )
         }
 
         recyclerView = containerView.findViewById(R.id.trackerListIndex)
@@ -108,20 +110,29 @@ class TrackerFragment : BaseFragment() {
     }
 
     companion object {
-        fun newInstance(campaignId: Int = 0, brandName: String = "", campaignName: String = "", totalPayout: Int = 0, imageUrl: String = "") =
-                TrackerFragment().apply {
-                    arguments = Bundle().apply {
-                        this.putInt("campaign_id", campaignId)
-                        this.putString("brand_name", brandName)
-                        this.putString("campaign_name", campaignName)
-                        this.putInt("total_payout", totalPayout)
-                        this.putString("image_url", imageUrl)
-                    }
+        fun newInstance(
+            campaignId: Int = 0,
+            brandName: String = "",
+            campaignName: String = "",
+            totalPayout: Int = 0,
+            imageUrl: String = ""
+        ) =
+            TrackerFragment().apply {
+                arguments = Bundle().apply {
+                    this.putInt("campaign_id", campaignId)
+                    this.putString("brand_name", brandName)
+                    this.putString("campaign_name", campaignName)
+                    this.putInt("total_payout", totalPayout)
+                    this.putString("image_url", imageUrl)
                 }
+            }
     }
 
     private fun getTrackerData(campaignId: Int) {
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getTrackerData(campaignId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ArrayList<TrackerDataModel>>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getTrackerData(
+            campaignId
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<ArrayList<TrackerDataModel>>> {
             override fun onComplete() {
                 removeProgressDialog()
             }

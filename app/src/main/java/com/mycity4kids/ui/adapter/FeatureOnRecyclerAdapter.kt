@@ -10,9 +10,9 @@ import com.mycity4kids.R
 import com.mycity4kids.models.collectionsModels.UserCollectionsModel
 import com.mycity4kids.ui.activity.FeaturedOnActivity
 import com.squareup.picasso.Picasso
-import java.util.*
 
-class FeatureOnRecyclerAdapter(private val mListener: RecyclerViewClickListener) : RecyclerView.Adapter<FeatureOnRecyclerAdapter.FeatureOnViewHolder>() {
+class FeatureOnRecyclerAdapter(private val mListener: RecyclerViewClickListener) :
+    RecyclerView.Adapter<FeatureOnRecyclerAdapter.FeatureOnViewHolder>() {
     private var featuredList: ArrayList<UserCollectionsModel>? = null
     internal var recyclerView: RecyclerView? = null
     private var mHolder: FeatureOnViewHolder? = null
@@ -27,7 +27,8 @@ class FeatureOnRecyclerAdapter(private val mListener: RecyclerViewClickListener)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeatureOnViewHolder {
-        val v0 = LayoutInflater.from(parent.context).inflate(R.layout.featured_on_item_cell, parent, false)
+        val v0 = LayoutInflater.from(parent.context)
+            .inflate(R.layout.featured_on_item_cell, parent, false)
         return FeatureOnViewHolder(v0)
     }
 
@@ -36,7 +37,8 @@ class FeatureOnRecyclerAdapter(private val mListener: RecyclerViewClickListener)
         try {
             if (!featuredList?.get(position)?.imageUrl.isNullOrBlank()) {
                 Picasso.get().load(featuredList?.get(position)?.imageUrl).placeholder(
-                        R.drawable.default_article).error(R.drawable.default_article).into(holder.contentImageView)
+                    R.drawable.default_article
+                ).error(R.drawable.default_article).into(holder.contentImageView)
             } else {
                 holder.contentImageView.setImageResource(R.drawable.default_article)
             }
@@ -48,13 +50,19 @@ class FeatureOnRecyclerAdapter(private val mListener: RecyclerViewClickListener)
         holder.author_name.text = featuredList?.get(position)?.user_info?.firstName + " " +
                 featuredList?.get(position)?.user_info?.lastName
         if (featuredList?.get(position)?.isFollowed.equals("1")) {
-            holder.follow_text.text = holder.itemView.context.resources.getString(R.string.ad_following_author)
+            holder.follow_text.text =
+                holder.itemView.context.resources.getString(R.string.ad_following_author)
         } else {
-            holder.follow_text.text = holder.itemView.context.resources.getString(R.string.ad_follow_author)
+            holder.follow_text.text =
+                holder.itemView.context.resources.getString(R.string.ad_follow_author)
         }
         holder.follow_text.setOnClickListener {
-            (holder.itemView.context as FeaturedOnActivity).followAPICall(featuredList?.get(position)?.userId,
-                    featuredList?.get(position)?.userCollectionId, featuredList?.get(position)?.sortOrder!!, position)
+            (holder.itemView.context as FeaturedOnActivity).followAPICall(
+                featuredList?.get(position)?.userId,
+                featuredList?.get(position)?.userCollectionId,
+                featuredList?.get(position)?.sortOrder!!,
+                position
+            )
         }
     }
 
@@ -62,7 +70,8 @@ class FeatureOnRecyclerAdapter(private val mListener: RecyclerViewClickListener)
         return if (featuredList == null) 0 else featuredList!!.size
     }
 
-    inner class FeatureOnViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class FeatureOnViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
         internal var contentImageView: ImageView
         internal var featured_name: TextView
         internal var author_name: TextView

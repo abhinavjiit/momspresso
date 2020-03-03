@@ -11,9 +11,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.CallbackManager
-import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.facebook.FacebookUtils
 import com.mycity4kids.interfaces.IFacebookUser
 import com.mycity4kids.preference.SharedPrefUtils

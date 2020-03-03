@@ -2,7 +2,11 @@ package com.mycity4kids.ui.activity.phoneLogin
 
 import android.accounts.NetworkErrorException
 import android.app.Activity
-import android.content.*
+import android.content.ActivityNotFoundException
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
@@ -244,7 +248,7 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
         val phoneLoginRequest = PhoneLoginRequest()
         phoneLoginRequest.verification_code =
             otpEditText1?.text?.toString() + otpEditText2?.text?.toString() + otpEditText3?.text?.toString() +
-                    otpEditText4?.text?.toString() + otpEditText5?.text?.toString() + otpEditText6?.text?.toString()
+                otpEditText4?.text?.toString() + otpEditText5?.text?.toString() + otpEditText6?.text?.toString()
         phoneLoginRequest.sms_token = sms_token
         val retrofit = BaseApplication.getInstance().retrofit
         val loginRegistrationAPI = retrofit.create(LoginRegistrationAPI::class.java)
@@ -295,9 +299,9 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                                     intent.putExtra("auth_token", auth_token)
                                     (activity as OTPActivity).setResult(Activity.RESULT_OK, intent)
                                     (activity as OTPActivity).finish()
-//                                    (activity as OTPActivity).updateMobile(auth_token)
-//                                    fragmentManager!!.popBackStack("ProfileInfoFragment", 0)
-//                                    activity!!.supportFragmentManager.popBackStackImmediate()
+                                    //                                    (activity as OTPActivity).updateMobile(auth_token)
+                                    //                                    fragmentManager!!.popBackStack("ProfileInfoFragment", 0)
+                                    //                                    activity!!.supportFragmentManager.popBackStackImmediate()
                                 }
                             }
                         } else if (response.code() == 401) {
@@ -339,8 +343,8 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
         override fun afterTextChanged(s: Editable) {
             verifySmsTextView?.isEnabled =
                 !(otpEditText1?.text?.toString().isNullOrBlank() || otpEditText2?.text?.toString().isNullOrBlank() ||
-                        otpEditText3?.text?.toString().isNullOrBlank() || otpEditText4?.text?.toString().isNullOrBlank() ||
-                        otpEditText5?.text?.toString().isNullOrBlank() || otpEditText6?.text?.toString().isNullOrBlank())
+                    otpEditText3?.text?.toString().isNullOrBlank() || otpEditText4?.text?.toString().isNullOrBlank() ||
+                    otpEditText5?.text?.toString().isNullOrBlank() || otpEditText6?.text?.toString().isNullOrBlank())
 
             when {
                 otpEditText1?.id == mEditText?.id -> {

@@ -16,7 +16,11 @@ import android.os.Handler
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.appcompat.widget.PopupMenu
@@ -44,25 +48,55 @@ import com.mycity4kids.models.collectionsModels.FeaturedOnModel
 import com.mycity4kids.models.request.ArticleDetailRequest
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest
-import com.mycity4kids.models.response.*
+import com.mycity4kids.models.response.AddBookmarkResponse
+import com.mycity4kids.models.response.ArticleDetailResponse
+import com.mycity4kids.models.response.ArticleDetailResult
+import com.mycity4kids.models.response.FollowUnfollowUserResponse
+import com.mycity4kids.models.response.LanguageRanksModel
+import com.mycity4kids.models.response.MixFeedResponse
+import com.mycity4kids.models.response.MixFeedResult
+import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse
+import com.mycity4kids.models.response.ShortStoryDetailResult
+import com.mycity4kids.models.response.UserDetailResponse
 import com.mycity4kids.preference.SharedPrefUtils
-import com.mycity4kids.retrofitAPIsInterfaces.*
-import com.mycity4kids.ui.activity.*
+import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
+import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI
+import com.mycity4kids.retrofitAPIsInterfaces.CollectionsAPI
+import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
+import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI
+import com.mycity4kids.ui.activity.AddShortStoryActivity
+import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity
+import com.mycity4kids.ui.activity.BadgeActivity
+import com.mycity4kids.ui.activity.FeaturedOnActivity
+import com.mycity4kids.ui.activity.FollowersAndFollowingListActivity
+import com.mycity4kids.ui.activity.IdTokenLoginActivity
+import com.mycity4kids.ui.activity.ParallelFeedActivity
+import com.mycity4kids.ui.activity.ProfileSetting
+import com.mycity4kids.ui.activity.RankingActivity
+import com.mycity4kids.ui.activity.ShortStoryContainerActivity
+import com.mycity4kids.ui.activity.UserDraftsContentActivity
+import com.mycity4kids.ui.activity.UserPublishedContentActivity
 import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity
 import com.mycity4kids.ui.fragment.AddCollectionAndCollectionItemDialogFragment
 import com.mycity4kids.ui.fragment.AddCollectionPopUpDialogFragment
 import com.mycity4kids.ui.fragment.ReportContentDialogFragment
 import com.mycity4kids.ui.fragment.UserBioDialogFragment
-import com.mycity4kids.utils.*
+import com.mycity4kids.utils.AppUtils
+import com.mycity4kids.utils.ConnectivityUtils
+import com.mycity4kids.utils.PermissionUtil
+import com.mycity4kids.utils.RoundedTransformation
+import com.mycity4kids.utils.SharingUtils
+import com.mycity4kids.utils.StringUtils
+import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.widget.BadgesProfileWidget
 import com.mycity4kids.widget.ResizableTextView
 import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 
 class UserProfileActivity : BaseActivity(),
     UserContentAdapter.RecyclerViewClickListener, View.OnClickListener,
@@ -894,7 +928,7 @@ class UserProfileActivity : BaseActivity(),
                 startActivity(intent)
             }
             view?.id == R.id.followingContainer -> {
-//                val intent = Intent(this, FollowingListFBSuggestionActivity::class.java)
+                //                val intent = Intent(this, FollowingListFBSuggestionActivity::class.java)
                 val intent = Intent(this, FollowersAndFollowingListActivity::class.java)
                 intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWING_LIST)
                 intent.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, authorId)
@@ -1183,7 +1217,7 @@ class UserProfileActivity : BaseActivity(),
                 if (bodyDescription?.contains(images.key)!!) {
                     bodyDesc = bodyDesc?.replace(
                         images.key, "<p style='text-align:center'><img src=" +
-                                images.value + " style=\"width: 100%;\"+></p>"
+                        images.value + " style=\"width: 100%;\"+></p>"
                     )
                 }
             }
@@ -1751,7 +1785,7 @@ class UserProfileActivity : BaseActivity(),
     private fun shareStory() {
         val uri = Uri.parse(
             "file://" + Environment.getExternalStorageDirectory() +
-                    "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg"
+                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg"
         )
         when (shareMedium) {
             AppConstants.MEDIUM_FACEBOOK -> {
@@ -1765,10 +1799,10 @@ class UserProfileActivity : BaseActivity(),
             AppConstants.MEDIUM_WHATSAPP -> {
                 if (AppUtils.shareImageWithWhatsApp(
                         this@UserProfileActivity, uri, getString(
-                            R.string.ss_follow_author,
-                            sharedStoryItem.userName,
-                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId
-                        )
+                        R.string.ss_follow_author,
+                        sharedStoryItem.userName,
+                        AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId
+                    )
                     )
                 ) {
                     Utils.pushShareStoryEvent(
@@ -1790,10 +1824,10 @@ class UserProfileActivity : BaseActivity(),
             AppConstants.MEDIUM_GENERIC -> {
                 if (AppUtils.shareGenericImageAndOrLink(
                         this@UserProfileActivity, uri, getString(
-                            R.string.ss_follow_author,
-                            sharedStoryItem.userName,
-                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId
-                        )
+                        R.string.ss_follow_author,
+                        sharedStoryItem.userName,
+                        AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId
+                    )
                     )
                 ) {
                     Utils.pushShareStoryEvent(

@@ -13,7 +13,11 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.*
+import android.view.Gravity
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -26,11 +30,9 @@ import androidx.viewpager.widget.ViewPager
 import com.crashlytics.android.Crashlytics
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
-import com.mycity4kids.base.BaseActivity
-import com.mycity4kids.utils.StringUtils
-import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils
@@ -49,7 +51,10 @@ import com.mycity4kids.ui.adapter.ShortStoriesThumbnailAdapter
 import com.mycity4kids.ui.fragment.ShortStoryLibraryFragment
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.OnDragTouchListener
+import com.mycity4kids.utils.StringUtils
+import com.mycity4kids.utils.ToastUtils
 import com.squareup.picasso.Picasso
+import java.io.File
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
@@ -58,13 +63,13 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
-import java.io.File
-import java.util.*
-import kotlin.collections.ArrayList
 
 class ShortStoriesCardActivity : BaseActivity() {
     private val REQUEST_INIT_PERMISSION = 1
-    private val PERMISSIONS_INIT = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    private val PERMISSIONS_INIT = arrayOf(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
     private lateinit var shortLayout: LinearLayout
     private lateinit var storyCoachmark: RelativeLayout
     private lateinit var moveTextCoachmark: RelativeLayout
@@ -144,7 +149,11 @@ class ShortStoriesCardActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
-        if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "storyCoachmark")) {
+        if (!SharedPrefUtils.isCoachmarksShownFlag(
+                BaseApplication.getAppContext(),
+                "storyCoachmark"
+            )
+        ) {
             storyCoachmark.visibility = View.VISIBLE
         }
 
@@ -238,7 +247,8 @@ class ShortStoriesCardActivity : BaseActivity() {
                 publishStory()
         }
 
-        rlLayout.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        rlLayout.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 val location = IntArray(2)
                 shortLayout.getLocationOnScreen(location)
@@ -303,7 +313,11 @@ class ShortStoriesCardActivity : BaseActivity() {
             }
             getBlogPage()
         } else {
-            saveDraftBeforePublishRequest(titleTv.text.toString().trim({ it <= ' ' }), storyTv.text.toString().trim({ it <= ' ' }), draftId)
+            saveDraftBeforePublishRequest(
+                titleTv.text.toString().trim({ it <= ' ' }),
+                storyTv.text.toString().trim({ it <= ' ' }),
+                draftId
+            )
         }
     }
 
@@ -353,13 +367,17 @@ class ShortStoriesCardActivity : BaseActivity() {
             val call = shortStoryAPI.saveOrPublishShortStory(shortStoryDraftOrPublishRequest)
             call.enqueue(saveDraftBeforePublishResponseListener)
         } else {
-            val call = shortStoryAPI.updateOrPublishShortStory(draftId1, shortStoryDraftOrPublishRequest)
+            val call =
+                shortStoryAPI.updateOrPublishShortStory(draftId1, shortStoryDraftOrPublishRequest)
             call.enqueue(saveDraftBeforePublishResponseListener)
         }
     }
 
     private val saveDraftBeforePublishResponseListener = object : Callback<ArticleDraftResponse> {
-        override fun onResponse(call: Call<ArticleDraftResponse>, response: retrofit2.Response<ArticleDraftResponse>) {
+        override fun onResponse(
+            call: Call<ArticleDraftResponse>,
+            response: retrofit2.Response<ArticleDraftResponse>
+        ) {
             if (response.body() == null) {
                 return
             }
@@ -395,50 +413,65 @@ class ShortStoriesCardActivity : BaseActivity() {
         BaseApplication.getInstance().destroyRetrofitInstance()
         val retrofit = BaseApplication.getInstance().retrofit
         val bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI::class.java)
-        val call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId)
+        val call =
+            bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId)
         call.enqueue(getUserDetailsResponseCallback)
     }
 
-    private val getUserDetailsResponseCallback: Callback<UserDetailResponse> = object : Callback<UserDetailResponse> {
-        override fun onResponse(call: Call<UserDetailResponse>, response: retrofit2.Response<UserDetailResponse>) {
-            removeProgressDialog()
-            if (response.body() == null) {
-                showToast(getString(R.string.went_wrong))
-                return
-            }
-            val responseData = response.body()
-            if (responseData != null) {
-                if (responseData.code == 200 && Constants.SUCCESS == responseData.status) {
-                    if (StringUtils.isNullOrEmpty(responseData.data[0].result.blogTitleSlug)) {
-                        launchBlogSetup(responseData)
-                    } else if (!StringUtils.isNullOrEmpty(responseData.data[0].result.blogTitleSlug)) {
-                        if (responseData.data[0].result.email == null || responseData.data[0].result.email.isEmpty()) {
+    private val getUserDetailsResponseCallback: Callback<UserDetailResponse> =
+        object : Callback<UserDetailResponse> {
+            override fun onResponse(
+                call: Call<UserDetailResponse>,
+                response: retrofit2.Response<UserDetailResponse>
+            ) {
+                removeProgressDialog()
+                if (response.body() == null) {
+                    showToast(getString(R.string.went_wrong))
+                    return
+                }
+                val responseData = response.body()
+                if (responseData != null) {
+                    if (responseData.code == 200 && Constants.SUCCESS == responseData.status) {
+                        if (StringUtils.isNullOrEmpty(responseData.data[0].result.blogTitleSlug)) {
                             launchBlogSetup(responseData)
-                        } else if (!StringUtils.isNullOrEmpty(responseData.data[0].result.email)) {
-                            if (Build.VERSION.SDK_INT >= 23) {
-                                if (ActivityCompat.checkSelfPermission(this@ShortStoriesCardActivity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this@ShortStoriesCardActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                                    Log.i("PERMISSIONS", "storage permissions has NOT been granted. Requesting permissions.")
-                                    requestStoragePermissions()
+                        } else if (!StringUtils.isNullOrEmpty(responseData.data[0].result.blogTitleSlug)) {
+                            if (responseData.data[0].result.email == null || responseData.data[0].result.email.isEmpty()) {
+                                launchBlogSetup(responseData)
+                            } else if (!StringUtils.isNullOrEmpty(responseData.data[0].result.email)) {
+                                if (Build.VERSION.SDK_INT >= 23) {
+                                    if (ActivityCompat.checkSelfPermission(
+                                            this@ShortStoriesCardActivity,
+                                            Manifest.permission.READ_EXTERNAL_STORAGE
+                                        ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
+                                            this@ShortStoriesCardActivity,
+                                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                        ) != PackageManager.PERMISSION_GRANTED
+                                    ) {
+                                        Log.i(
+                                            "PERMISSIONS",
+                                            "storage permissions has NOT been granted. Requesting permissions."
+                                        )
+                                        requestStoragePermissions()
+                                    } else {
+                                        createAndUploadShareableImage()
+                                    }
                                 } else {
                                     createAndUploadShareableImage()
                                 }
-                            } else {
-                                createAndUploadShareableImage()
                             }
                         }
                     }
+                } else {
+                    ToastUtils.showToast(this@ShortStoriesCardActivity, "something went wrong")
                 }
-            } else {
-                ToastUtils.showToast(this@ShortStoriesCardActivity, "something went wrong")
+            }
+
+            override fun onFailure(call: Call<UserDetailResponse>, t: Throwable) {
+                removeProgressDialog()
+                Crashlytics.logException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
-
-        override fun onFailure(call: Call<UserDetailResponse>, t: Throwable) {
-            removeProgressDialog()
-            Crashlytics.logException(t)
-            Log.d("MC4kException", Log.getStackTraceString(t))
-        }
-    }
 
     private fun launchBlogSetup(responseData: UserDetailResponse) {
         val intent = Intent(this@ShortStoriesCardActivity, BlogSetupActivity::class.java)
@@ -450,22 +483,36 @@ class ShortStoriesCardActivity : BaseActivity() {
 
     fun requestStoragePermissions() {
         // BEGIN_INCLUDE(contacts_permission_request)
-        if (ActivityCompat.checkSelfPermission(this@ShortStoriesCardActivity, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) ||
-                ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Snackbar.make(mLayout, R.string.permission_storage_rationale,
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok) { requestUngrantedPermissions() }
-                    .show()
+        if (ActivityCompat.checkSelfPermission(
+                this@ShortStoriesCardActivity,
+                Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) ||
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        ) {
+            Snackbar.make(
+                mLayout, R.string.permission_storage_rationale,
+                Snackbar.LENGTH_INDEFINITE
+            )
+                .setAction(R.string.ok) { requestUngrantedPermissions() }
+                .show()
         }
     }
 
     private fun requestUngrantedPermissions() {
         val permissionList = ArrayList<String>()
         for (i in PERMISSIONS_INIT.indices) {
-            if (ActivityCompat.checkSelfPermission(this, PERMISSIONS_INIT[i]) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    PERMISSIONS_INIT[i]
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 permissionList.add(PERMISSIONS_INIT[i])
             }
         }
@@ -484,7 +531,12 @@ class ShortStoriesCardActivity : BaseActivity() {
 
         val retro = BaseApplication.getInstance().retrofit
         val imageUploadAPI = retro.create(ImageUploadAPI::class.java)
-        path = MediaStore.Images.Media.insertImage(contentResolver, finalBitmap, "Title" + System.currentTimeMillis(), null)
+        path = MediaStore.Images.Media.insertImage(
+            contentResolver,
+            finalBitmap,
+            "Title" + System.currentTimeMillis(),
+            null
+        )
         imageUriTemp = Uri.parse(path)
         file = FileUtils.getFile(this, imageUriTemp)
 
@@ -497,7 +549,10 @@ class ShortStoriesCardActivity : BaseActivity() {
     }
 
     private val ssImageUploadCallback = object : Callback<ImageUploadResponse> {
-        override fun onResponse(call: Call<ImageUploadResponse>, response: retrofit2.Response<ImageUploadResponse>) {
+        override fun onResponse(
+            call: Call<ImageUploadResponse>,
+            response: retrofit2.Response<ImageUploadResponse>
+        ) {
             if (response.body() == null) {
                 removeProgressDialog()
                 showToast(getString(R.string.went_wrong))
@@ -577,7 +632,10 @@ class ShortStoriesCardActivity : BaseActivity() {
 
         val call = shortStoryAPI.updateOrPublishShortStory(draftId, shortStoryDraftOrPublishRequest)
         call.enqueue(object : Callback<ArticleDraftResponse> {
-            override fun onResponse(call: Call<ArticleDraftResponse>, response: retrofit2.Response<ArticleDraftResponse>) {
+            override fun onResponse(
+                call: Call<ArticleDraftResponse>,
+                response: retrofit2.Response<ArticleDraftResponse>
+            ) {
                 removeProgressDialog()
                 if (response.body() == null) {
                     showToast(getString(R.string.server_went_wrong))
@@ -612,13 +670,15 @@ class ShortStoriesCardActivity : BaseActivity() {
         val shortStoryAPI = retrofit.create(ShortStoryAPI::class.java)
         val shortStoryConfigRequest = ShortStoryConfigRequest()
 
-        shortStoryConfigRequest.created_by = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
+        shortStoryConfigRequest.created_by =
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
         shortStoryConfigRequest.short_story_id = draftId
         shortStoryConfigRequest.font_size_title = titleTvSize.toInt()
         shortStoryConfigRequest.font_size_body = storyTvSize.toInt()
         shortStoryConfigRequest.font_alignment = fontAlignment
         shortStoryConfigRequest.font_colour = font_Color
-        shortStoryConfigRequest.user_id = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
+        shortStoryConfigRequest.user_id =
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
         shortStoryConfigRequest.category_image = categoryImageId
         if ("publishedList".equals(source)) {
             val call = shortStoryAPI.updateConfig(draftId, shortStoryConfigRequest)
@@ -630,11 +690,21 @@ class ShortStoriesCardActivity : BaseActivity() {
     }
 
     private val shortStoryConfig = object : Callback<ResponseBody> {
-        override fun onResponse(call: Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {
+        override fun onResponse(
+            call: Call<ResponseBody>,
+            response: retrofit2.Response<ResponseBody>
+        ) {
             removeProgressDialog()
-            Utils.pushPublishStoryEvent(this@ShortStoriesCardActivity, "ShortStoriesCardActivity",
-                    SharedPrefUtils.getUserDetailModel(this@ShortStoriesCardActivity).dynamoId, "published")
-            val intent = Intent(this@ShortStoriesCardActivity, ShortStoryModerationOrShareActivity::class.java)
+            Utils.pushPublishStoryEvent(
+                this@ShortStoriesCardActivity,
+                "ShortStoriesCardActivity",
+                SharedPrefUtils.getUserDetailModel(this@ShortStoriesCardActivity).dynamoId,
+                "published"
+            )
+            val intent = Intent(
+                this@ShortStoriesCardActivity,
+                ShortStoryModerationOrShareActivity::class.java
+            )
             intent.putExtra("shareUrl", "" + shareUrl)
             intent.putExtra(Constants.ARTICLE_ID, draftId)
             startActivity(intent)
@@ -668,7 +738,10 @@ class ShortStoriesCardActivity : BaseActivity() {
     }
 
     private val getConfigData = object : Callback<ShortStoryConfigData> {
-        override fun onResponse(call: Call<ShortStoryConfigData>, response: retrofit2.Response<ShortStoryConfigData>) {
+        override fun onResponse(
+            call: Call<ShortStoryConfigData>,
+            response: retrofit2.Response<ShortStoryConfigData>
+        ) {
             if (null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
                 Crashlytics.logException(nee)
@@ -679,7 +752,17 @@ class ShortStoriesCardActivity : BaseActivity() {
                 responseData?.font_size_body?.toFloat()?.let { storyTv.textSize = it }
                 responseData?.font_size_title?.toFloat()?.let { titleTv.textSize = it }
                 responseData?.font_alignment?.let { textAlign(it) }
-                responseData?.category_image_url?.let { responseData?.font_colour?.let { it1 -> responseData?.category_image?.let { it2 -> setBackground(it, it1, it2) } } }
+                responseData?.category_image_url?.let {
+                    responseData?.font_colour?.let { it1 ->
+                        responseData?.category_image?.let { it2 ->
+                            setBackground(
+                                it,
+                                it1,
+                                it2
+                            )
+                        }
+                    }
+                }
             } catch (e: Exception) {
                 Crashlytics.logException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
@@ -700,9 +783,10 @@ class ShortStoriesCardActivity : BaseActivity() {
             val blue = colors.get(2).trim().toInt()
             val alpha = colors.get(3).trim().toFloat()
             if (0 <= red && red <= 255 &&
-                    0 <= green && green <= 255 &&
-                    0 <= blue && blue <= 255 &&
-                    0f <= alpha && alpha <= 1f) {
+                0 <= green && green <= 255 &&
+                0 <= blue && blue <= 255 &&
+                0f <= alpha && alpha <= 1f
+            ) {
                 return Color.argb((alpha * 255).toInt(), red, green, blue)
             }
         } catch (e: Exception) {
@@ -714,30 +798,31 @@ class ShortStoriesCardActivity : BaseActivity() {
 
     fun setBackground(url: String, fontColor: String, imageId: Int) {
         //        Glide.with(this).load("https://media.giphy.com/media/3o6ozrsVQF6Fv1ljNe/giphy.gif").listener(
-//                object : RequestListener<Drawable> {
-//                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?,
-//                                              isFirstResource: Boolean): Boolean {
-//                        isImageLoaded = false
-//                        return false
-//                    }
-//
-//                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?,
-//                                                 dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-//                        //do something when picture already loaded
-//                        isImageLoaded = true
-//                        return false
-//                    }
-//                }).into(cardBg)
-        Picasso.get().load(url).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                .fit().into(cardBg, object : com.squareup.picasso.Callback {
-                    override fun onSuccess() {
-                        isImageLoaded = true
-                    }
+        //                object : RequestListener<Drawable> {
+        //                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?,
+        //                                              isFirstResource: Boolean): Boolean {
+        //                        isImageLoaded = false
+        //                        return false
+        //                    }
+        //
+        //                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?,
+        //                                                 dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+        //                        //do something when picture already loaded
+        //                        isImageLoaded = true
+        //                        return false
+        //                    }
+        //                }).into(cardBg)
+        Picasso.get().load(url).placeholder(R.drawable.default_article)
+            .error(R.drawable.default_article)
+            .fit().into(cardBg, object : com.squareup.picasso.Callback {
+                override fun onSuccess() {
+                    isImageLoaded = true
+                }
 
-                    override fun onError(e: java.lang.Exception?) {
-                        isImageLoaded = false
-                    }
-                })
+                override fun onError(e: java.lang.Exception?) {
+                    isImageLoaded = false
+                }
+            })
         getHexColor(fontColor)?.let { divider.setBackgroundColor(it) }
         getHexColor(fontColor)?.let { titleTv.setTextColor(it) }
         getHexColor(fontColor)?.let { storyTv.setTextColor(it) }
@@ -747,10 +832,16 @@ class ShortStoriesCardActivity : BaseActivity() {
 
     fun setEnabledDisabled(isEnabled: Boolean) {
         if (isEnabled) {
-            back.setColorFilter(ContextCompat.getColor(this, R.color.black_color), PorterDuff.Mode.SRC_IN)
+            back.setColorFilter(
+                ContextCompat.getColor(this, R.color.black_color),
+                PorterDuff.Mode.SRC_IN
+            )
             back.isClickable = true
         } else {
-            back.setColorFilter(ContextCompat.getColor(this, R.color.color_979797), PorterDuff.Mode.SRC_IN)
+            back.setColorFilter(
+                ContextCompat.getColor(this, R.color.color_979797),
+                PorterDuff.Mode.SRC_IN
+            )
             back.isClickable = false
         }
     }
