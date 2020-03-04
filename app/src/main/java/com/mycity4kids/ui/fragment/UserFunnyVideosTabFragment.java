@@ -1,5 +1,8 @@
 package com.mycity4kids.ui.fragment;
 
+import static android.app.Activity.RESULT_OK;
+
+
 import android.Manifest;
 import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
@@ -26,29 +29,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
-import com.google.android.material.snackbar.Snackbar;
-import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.utils.StringUtils;
-import com.mycity4kids.R;
-import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.Constants;
-import com.mycity4kids.models.response.VlogsListingAndDetailResult;
-import com.mycity4kids.models.response.VlogsListingResponse;
-import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
-import com.mycity4kids.ui.activity.ParallelFeedActivity;
-import com.mycity4kids.ui.activity.SearchAllActivity;
-import com.mycity4kids.ui.activity.UserPublishedContentActivity;
-import com.mycity4kids.ui.activity.VideoTrimmerActivity;
-import com.mycity4kids.ui.adapter.MyFunnyVideosListingAdapter;
-import com.mycity4kids.utils.PermissionUtil;
-import com.mycity4kids.videotrimmer.utils.FileUtils;
-
-import java.util.ArrayList;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.view.menu.MenuBuilder;
@@ -57,17 +37,36 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
+import com.crashlytics.android.Crashlytics;
+import com.google.android.material.snackbar.Snackbar;
+import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
+import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
+import com.mycity4kids.models.response.VlogsListingAndDetailResult;
+import com.mycity4kids.models.response.VlogsListingResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
+import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
+import com.mycity4kids.ui.activity.ParallelFeedActivity;
+import com.mycity4kids.ui.activity.SearchAllActivity;
+import com.mycity4kids.ui.activity.UserPublishedContentActivity;
+import com.mycity4kids.ui.activity.VideoTrimmerActivity;
+import com.mycity4kids.ui.adapter.MyFunnyVideosListingAdapter;
+import com.mycity4kids.utils.PermissionUtil;
+import com.mycity4kids.utils.StringUtils;
+import com.mycity4kids.videotrimmer.utils.FileUtils;
+import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-import static android.app.Activity.RESULT_OK;
-
 /**
  * Created by hemant on 13/1/17.
  */
-public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, MyFunnyVideosListingAdapter.IEditVlog {
+public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnClickListener,
+        SwipeRefreshLayout.OnRefreshListener, MyFunnyVideosListingAdapter.IEditVlog {
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final int REQUEST_GALLERY_PERMISSION = 2;
@@ -99,7 +98,8 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.vlogs_listing_activity, container, false);
 
@@ -140,7 +140,8 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
+                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning
+                        && !isLastPageReached) {
                     mLodingView.setVisibility(View.VISIBLE);
                     hitArticleListingApi();
                     isReuqestRunning = true;
@@ -154,21 +155,27 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
 
                 Intent intent = new Intent(getActivity(), ParallelFeedActivity.class);
                 if (adapterView.getAdapter() instanceof MyFunnyVideosListingAdapter) {
-                    VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) adapterView.getAdapter().getItem(i);
+                    VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) adapterView
+                            .getAdapter().getItem(i);
                     switch (parentingListData.getPublication_status()) {
                         case AppConstants.VIDEO_STATUS_DRAFT: {
-                            if (isAdded())
+                            if (isAdded()) {
                                 ((UserPublishedContentActivity) getActivity()).showToast("This video is draft");
+                            }
                             break;
                         }
                         case AppConstants.VIDEO_STATUS_APPROVAL_PENDING: {
-                            if (isAdded())
-                                ((UserPublishedContentActivity) getActivity()).showToast("This video is Pending For Approval. Playing is disabled");
+                            if (isAdded()) {
+                                ((UserPublishedContentActivity) getActivity())
+                                        .showToast("This video is Pending For Approval. Playing is disabled");
+                            }
                             break;
                         }
                         case AppConstants.VIDEO_STATUS_APPROVAL_CANCELLED: {
-                            if (isAdded())
-                                ((UserPublishedContentActivity) getActivity()).showToast("This video's approval has been cancelled. Playing is disabled");
+                            if (isAdded()) {
+                                ((UserPublishedContentActivity) getActivity())
+                                        .showToast("This video's approval has been cancelled. Playing is disabled");
+                            }
                             break;
                         }
                         case AppConstants.VIDEO_STATUS_PUBLISHED: {
@@ -179,13 +186,17 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
                             intent.putExtra(Constants.FROM_SCREEN, "My Funny Videos Screen");
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "My Funny Videos");
                             intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
-                            intent.putExtra(Constants.AUTHOR, parentingListData.getAuthor().getId() + "~" + parentingListData.getAuthor().getFirstName() + " " + parentingListData.getAuthor().getLastName());
+                            intent.putExtra(Constants.AUTHOR,
+                                    parentingListData.getAuthor().getId() + "~" + parentingListData.getAuthor()
+                                            .getFirstName() + " " + parentingListData.getAuthor().getLastName());
                             startActivity(intent);
                             break;
                         }
                         case AppConstants.VIDEO_STATUS_UNPUBLISHED: {
-                            if (isAdded())
-                                ((UserPublishedContentActivity) getActivity()).showToast("This video has been unpublished");
+                            if (isAdded()) {
+                                ((UserPublishedContentActivity) getActivity())
+                                        .showToast("This video has been unpublished");
+                            }
                             break;
                         }
                     }
@@ -202,9 +213,12 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
         VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
         Call<VlogsListingResponse> callRecentVideoArticles;
         if (isPrivateProfile) {
-            callRecentVideoArticles = vlogsListingAndDetailsAPI.getPublishedVlogs(authorId, from, from + limit - 1, sortType);
+            callRecentVideoArticles = vlogsListingAndDetailsAPI
+                    .getPublishedVlogs(authorId, from, from + limit - 1, sortType);
         } else {
-            callRecentVideoArticles = vlogsListingAndDetailsAPI.getPublishedVlogsForPublicProfile(authorId, from, from + limit - 1, sortType, VIDEO_PUBLISHED_STATUS);
+            callRecentVideoArticles = vlogsListingAndDetailsAPI
+                    .getPublishedVlogsForPublicProfile(authorId, from, from + limit - 1, sortType,
+                            VIDEO_PUBLISHED_STATUS);
         }
 
         callRecentVideoArticles.enqueue(userVideosListResponseCallback);
@@ -220,8 +234,9 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
             if (null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
-                if (isAdded())
+                if (isAdded()) {
                     ((UserPublishedContentActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                }
                 return;
             }
             try {
@@ -229,14 +244,16 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processResponse(responseData);
                 } else {
-                    if (isAdded())
+                    if (isAdded()) {
                         ((UserPublishedContentActivity) getActivity()).showToast(responseData.getReason());
+                    }
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                if (isAdded())
+                if (isAdded()) {
                     ((UserPublishedContentActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                }
             }
         }
 
@@ -267,7 +284,8 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
                 articleDataModelsNew = dataList;
                 articlesListingAdapter.setNewListData(articleDataModelsNew);
                 articlesListingAdapter.notifyDataSetChanged();
-                if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(authorId)) {
+                if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()
+                        .equals(authorId)) {
                     firstUploadLayout.setVisibility(View.VISIBLE);
                     noBlogsTextView.setVisibility(View.GONE);
                 } else {
@@ -321,14 +339,11 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
                 startActivity(searchIntent);
                 break;
             case R.id.getStartedTextView:
-                ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
-                FragmentManager fm = getChildFragmentManager();
-                Bundle _args = new Bundle();
-                _args.putString("activity", "myfunnyvideos");
-                chooseVideoUploadOptionDialogFragment.setArguments(_args);
-                chooseVideoUploadOptionDialogFragment.setCancelable(true);
-                chooseVideoUploadOptionDialogFragment.setTargetFragment(this, 1111);
-                chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
+                if (isAdded()) {
+                    Intent intent = new Intent(getActivity(), ChooseVideoCategoryActivity.class);
+                    intent.putExtra("comingFrom", "createDashboardIcon");
+                    getActivity().startActivity(intent);
+                }
                 break;
         }
     }
@@ -344,8 +359,10 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
             if (selectedUri != null) {
                 startTrimActivity(selectedUri);
             } else {
-                if (isAdded())
-                    ((UserPublishedContentActivity) getActivity()).showToast(getString(R.string.toast_cannot_retrieve_selected_video));
+                if (isAdded()) {
+                    ((UserPublishedContentActivity) getActivity())
+                            .showToast(getString(R.string.toast_cannot_retrieve_selected_video));
+                }
             }
         }
     }
@@ -357,8 +374,9 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
             intent.putExtra("EXTRA_VIDEO_PATH", FileUtils.getPath(getActivity(), uri));
             startActivity(intent);
         } else {
-            if (isAdded())
+            if (isAdded()) {
                 ((UserPublishedContentActivity) getActivity()).showToast(getString(R.string.choose_mp4_file));
+            }
         }
     }
 
@@ -395,7 +413,8 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
     private void requestUngrantedPermissions(String imageFrom) {
         ArrayList<String> permissionList = new ArrayList<>();
         for (int i = 0; i < PERMISSIONS_STORAGE_CAMERA.length; i++) {
-            if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_STORAGE_CAMERA[i]) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_STORAGE_CAMERA[i])
+                    != PackageManager.PERMISSION_GRANTED) {
                 permissionList.add(PERMISSIONS_STORAGE_CAMERA[i]);
             }
         }
@@ -412,7 +431,7 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
             if (PermissionUtil.verifyPermissions(grantResults)) {
                 Snackbar.make(rootLayout, R.string.permision_available_init,
@@ -434,7 +453,8 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
                 intent.setType("video/mp4");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
-                startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
+                startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)),
+                        AppConstants.REQUEST_VIDEO_TRIMMER);
             } else {
                 Snackbar.make(rootLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
@@ -464,7 +484,8 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
         for (int i = 0; i < popup.getMenu().size(); i++) {
             MenuItem menuItem = popup.getMenu().getItem(i);
             SpannableString spannableString = new SpannableString(menuItem.getTitle());
-            spannableString.setSpan(new CustomTypeFace("", myTypeface), 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            spannableString.setSpan(new CustomTypeFace("", myTypeface), 0, spannableString.length(),
+                    Spanned.SPAN_INCLUSIVE_INCLUSIVE);
             menuItem.setTitle(spannableString);
         }
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -494,6 +515,7 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
 
 
     public class CustomTypeFace extends TypefaceSpan {
+
         private final Typeface typeface;
 
         CustomTypeFace(String family, Typeface type) {
