@@ -19,24 +19,19 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.StringUtils;
-import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
@@ -55,9 +50,9 @@ import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.ui.fragment.FilterTopicsDialogFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
-
-import org.json.JSONObject;
-
+import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.utils.StringUtils;
+import com.mycity4kids.utils.ToastUtils;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -67,8 +62,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import okhttp3.ResponseBody;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -82,7 +77,10 @@ import retrofit2.Retrofit;
  *
  * */
 
-public class FilteredTopicsArticleListingActivity extends BaseActivity implements OnClickListener, SwipeRefreshLayout.OnRefreshListener, FilterTopicsDialogFragment.OnTopicsSelectionComplete, /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
+public class FilteredTopicsArticleListingActivity extends BaseActivity implements OnClickListener,
+        SwipeRefreshLayout.OnRefreshListener,
+        FilterTopicsDialogFragment.OnTopicsSelectionComplete, /*FeedNativeAd.AdLoadingListener,*/
+        MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     private MainArticleRecyclerViewAdapter recyclerAdapter;
 
@@ -148,7 +146,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Topics");
-        Utils.pushOpenScreenEvent(FilteredTopicsArticleListingActivity.this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(FilteredTopicsArticleListingActivity.this, "TopicArticlesListingScreen",
+                SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
@@ -248,13 +247,15 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             caller.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(FilteredTopicsArticleListingActivity.this, AppConstants.CATEGORIES_JSON_FILE, response.body());
+                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(FilteredTopicsArticleListingActivity.this,
+                            AppConstants.CATEGORIES_JSON_FILE, response.body());
                     Log.d("FilteredTopicsArticle", "file download was a success? " + writtenToDisk);
 
                     try {
                         FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                         String fileContent = convertStreamToString(fileInputStream);
-                        TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
+                        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                        TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
                         createTopicsData(res);
                         getTopicLevelAndPrepareFilterData();
                         sortBgLayout.setVisibility(View.GONE);
@@ -291,7 +292,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             titleTextView.setText(displayName);
         }
 
-
         swipeRefreshLayout.setOnRefreshListener(FilteredTopicsArticleListingActivity.this);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -299,7 +299,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         nextPageNumber = 1;
         hitFilteredTopicsArticleListingApi(sortType);
 
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(this, this, false, selectedTopics + "~" + displayName, false);
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(this, this, false, selectedTopics + "~" + displayName,
+                false);
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
@@ -365,15 +366,19 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         if (StringUtils.isNullOrEmpty(filteredTopics)) {
             Call<ArticleListingResponse> filterCall;
             if (AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics)) {
-                filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+                filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1,
+                        SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             } else if (isLanguageListing) {
                 filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, "");
             } else {
-                filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+                filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1,
+                        SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             }
             filterCall.enqueue(articleListingResponseCallback);
         } else {
-            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(filteredTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+            Call<ArticleListingResponse> filterCall = topicsAPI
+                    .getArticlesForCategory(filteredTopics, sortType, from, from + limit - 1,
+                            SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
         }
     }
@@ -453,7 +458,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         switch (v.getId()) {
             case R.id.recentSort:
             case R.id.recentSortFAB:
-                Utils.pushSortListingEvent(FilteredTopicsArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(FilteredTopicsArticleListingActivity.this).getDynamoId(),
+                Utils.pushSortListingEvent(FilteredTopicsArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT,
+                        SharedPrefUtils.getUserDetailModel(FilteredTopicsArticleListingActivity.this).getDynamoId(),
                         listingType, "recent");
                 sortBgLayout.setVisibility(View.GONE);
                 fabMenu.collapse();
@@ -465,7 +471,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 break;
             case R.id.popularSort:
             case R.id.popularSortFAB:
-                Utils.pushSortListingEvent(FilteredTopicsArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(FilteredTopicsArticleListingActivity.this).getDynamoId(),
+                Utils.pushSortListingEvent(FilteredTopicsArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT,
+                        SharedPrefUtils.getUserDetailModel(FilteredTopicsArticleListingActivity.this).getDynamoId(),
                         listingType, "popular");
                 sortBgLayout.setVisibility(View.GONE);
                 fabMenu.collapse();
@@ -528,7 +535,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             String fileContent = convertStreamToString(fileInputStream);
             FollowTopics[] res = new Gson().fromJson(fileContent, FollowTopics[].class);
             if (!checkCurrentCategoryExists(res)) {
-                if (AppConstants.TOPIC_LEVEL_SUB_CATEGORY.equals(topicLevel) || AppConstants.TOPIC_LEVEL_MAIN_CATEGORY.equals(topicLevel)) {
+                if (AppConstants.TOPIC_LEVEL_SUB_CATEGORY.equals(topicLevel) || AppConstants.TOPIC_LEVEL_MAIN_CATEGORY
+                        .equals(topicLevel)) {
                 } else {
                     titleTextView.setVisibility(View.GONE);
                 }
@@ -556,8 +564,9 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicFollowingStatusAPI = retro.create(TopicsCategoryAPI.class);
 
-        Call<TopicsFollowingStatusResponse> callBookmark = topicFollowingStatusAPI.checkTopicsFollowingStatus(SharedPrefUtils.getUserDetailModel(this).getDynamoId(),
-                selectedTopics);
+        Call<TopicsFollowingStatusResponse> callBookmark = topicFollowingStatusAPI
+                .checkTopicsFollowingStatus(SharedPrefUtils.getUserDetailModel(this).getDynamoId(),
+                        selectedTopics);
         callBookmark.enqueue(isTopicFollowedResponseCallback);
     }
 
@@ -590,7 +599,9 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 caller.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(FilteredTopicsArticleListingActivity.this, AppConstants.CATEGORIES_JSON_FILE, response.body());
+                        boolean writtenToDisk = AppUtils
+                                .writeResponseBodyToDisk(FilteredTopicsArticleListingActivity.this,
+                                        AppConstants.CATEGORIES_JSON_FILE, response.body());
                         Log.d("FilteredTopicsArticle", "file download was a success? " + writtenToDisk);
 
                         try {
@@ -679,19 +690,24 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-                String popularURL = jsonObject.getJSONObject("data").getJSONObject("result").getJSONObject("category").getString("popularLocation");
+                String popularURL = jsonObject.getJSONObject("data").getJSONObject("result").getJSONObject("category")
+                        .getString("popularLocation");
                 Call<ResponseBody> caller = topicsAPI.downloadTopicsListForFollowUnfollow(popularURL);
 
                 caller.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(FilteredTopicsArticleListingActivity.this, AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE, response.body());
+                        boolean writtenToDisk = AppUtils
+                                .writeResponseBodyToDisk(FilteredTopicsArticleListingActivity.this,
+                                        AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE, response.body());
                         Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
 
                         try {
-                            FileInputStream fileInputStream = openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
+                            FileInputStream fileInputStream = openFileInput(
+                                    AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
                             String fileContent = convertStreamToString(fileInputStream);
-                            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory())
+                                    .create();
                             FollowTopics[] res = gson.fromJson(fileContent, FollowTopics[].class);
                             checkCurrentCategoryExists(res);
                         } catch (FileNotFoundException e) {
@@ -725,7 +741,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
     private Callback<TopicsFollowingStatusResponse> isTopicFollowedResponseCallback = new Callback<TopicsFollowingStatusResponse>() {
         @Override
-        public void onResponse(Call<TopicsFollowingStatusResponse> call, retrofit2.Response<TopicsFollowingStatusResponse> response) {
+        public void onResponse(Call<TopicsFollowingStatusResponse> call,
+                retrofit2.Response<TopicsFollowingStatusResponse> response) {
             if (response == null || null == response.body()) {
                 showToast(getString(R.string.server_went_wrong));
                 return;
@@ -786,22 +803,29 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         followUnfollowCategoriesRequest.setCategories(topicIdLList);
         if (isTopicFollowed == 0) {
             Log.d("GTM FOLLOW", displayName + ":" + selectedTopics);
-            Utils.pushTopicFollowUnfollowEvent(this, GTMEventType.FOLLOW_TOPIC_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Topic Articles List", displayName + "~" + selectedTopics);
+            Utils.pushTopicFollowUnfollowEvent(this, GTMEventType.FOLLOW_TOPIC_CLICK_EVENT,
+                    SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Topic Articles List",
+                    displayName + "~" + selectedTopics);
             followUnfollowTextView.setText(getString(R.string.ad_following_author));
             isTopicFollowed = 1;
         } else {
             Log.d("GTM UNFOLLOW", displayName + ":" + selectedTopics);
-            Utils.pushTopicFollowUnfollowEvent(this, GTMEventType.UNFOLLOW_TOPIC_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Topic Articles List", displayName + "~" + selectedTopics);
+            Utils.pushTopicFollowUnfollowEvent(this, GTMEventType.UNFOLLOW_TOPIC_CLICK_EVENT,
+                    SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Topic Articles List",
+                    displayName + "~" + selectedTopics);
             followUnfollowTextView.setText(getString(R.string.ad_follow_author));
             isTopicFollowed = 0;
         }
-        Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.followCategories(SharedPrefUtils.getUserDetailModel(this).getDynamoId(), followUnfollowCategoriesRequest);
+        Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI
+                .followCategories(SharedPrefUtils.getUserDetailModel(this).getDynamoId(),
+                        followUnfollowCategoriesRequest);
         call.enqueue(followUnfollowCategoriesResponseCallback);
     }
 
     private Callback<FollowUnfollowCategoriesResponse> followUnfollowCategoriesResponseCallback = new Callback<FollowUnfollowCategoriesResponse>() {
         @Override
-        public void onResponse(Call<FollowUnfollowCategoriesResponse> call, retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
+        public void onResponse(Call<FollowUnfollowCategoriesResponse> call,
+                retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
             removeProgressDialog();
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
@@ -879,7 +903,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
                     ArrayList<Topics> tempList = new ArrayList<>();
                     for (int k = 0; k < responseData.getData().get(i).getChild().get(j).getChild().size(); k++) {
-                        if ("1".equals(responseData.getData().get(i).getChild().get(j).getChild().get(k).getShowInMenu())) {
+                        if ("1".equals(
+                                responseData.getData().get(i).getChild().get(j).getChild().get(k).getShowInMenu())) {
                             //Adding All sub-subcategories
                             responseData.getData().get(i).getChild().get(j).getChild().get(k)
                                     .setParentId(responseData.getData().get(i).getId());
@@ -891,7 +916,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                     responseData.getData().get(i).getChild().get(j).setChild(tempList);
                 }
 
-                if ("1".equals(responseData.getData().get(i).getShowInMenu()) && !AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())) {
+                if ("1".equals(responseData.getData().get(i).getShowInMenu()) && !AppConstants.SHORT_STORY_CATEGORYID
+                        .equals(responseData.getData().get(i).getId())) {
                     for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
                         if ("1".equals(responseData.getData().get(i).getChild().get(k).getShowInMenu())) {
                             //Adding All subcategories
@@ -908,12 +934,18 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                                 Topics dupChildTopic = new Topics();
                                 dupChildTopic.setChild(new ArrayList<Topics>());
                                 dupChildTopic.setId(responseData.getData().get(i).getChild().get(k).getId());
-                                dupChildTopic.setIsSelected(responseData.getData().get(i).getChild().get(k).isSelected());
-                                dupChildTopic.setParentId(responseData.getData().get(i).getChild().get(k).getParentId());
-                                dupChildTopic.setDisplay_name(responseData.getData().get(i).getChild().get(k).getDisplay_name());
-                                dupChildTopic.setParentName(responseData.getData().get(i).getChild().get(k).getParentName());
-                                dupChildTopic.setPublicVisibility(responseData.getData().get(i).getChild().get(k).getPublicVisibility());
-                                dupChildTopic.setShowInMenu(responseData.getData().get(i).getChild().get(k).getShowInMenu());
+                                dupChildTopic
+                                        .setIsSelected(responseData.getData().get(i).getChild().get(k).isSelected());
+                                dupChildTopic
+                                        .setParentId(responseData.getData().get(i).getChild().get(k).getParentId());
+                                dupChildTopic.setDisplay_name(
+                                        responseData.getData().get(i).getChild().get(k).getDisplay_name());
+                                dupChildTopic
+                                        .setParentName(responseData.getData().get(i).getChild().get(k).getParentName());
+                                dupChildTopic.setPublicVisibility(
+                                        responseData.getData().get(i).getChild().get(k).getPublicVisibility());
+                                dupChildTopic
+                                        .setShowInMenu(responseData.getData().get(i).getChild().get(k).getShowInMenu());
                                 dupChildTopic.setSlug(responseData.getData().get(i).getChild().get(k).getSlug());
                                 dupChildTopic.setTitle(responseData.getData().get(i).getChild().get(k).getTitle());
                                 duplicateEntry.add(dupChildTopic);
@@ -954,7 +986,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
             default:
-                Intent intent = new Intent(FilteredTopicsArticleListingActivity.this, ArticleDetailsContainerActivity.class);
+                Intent intent = new Intent(FilteredTopicsArticleListingActivity.this,
+                        ArticleDetailsContainerActivity.class);
                 intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
                 intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
                 intent.putExtra(Constants.ARTICLE_COVER_IMAGE, articleDataModelsNew.get(position).getImageUrl());
@@ -967,7 +1000,9 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
                 intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
                 intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
-                intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
+                intent.putExtra(Constants.AUTHOR,
+                        articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position)
+                                .getUserName());
                 startActivity(intent);
                 break;
         }
