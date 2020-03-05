@@ -7,17 +7,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
@@ -31,17 +33,11 @@ import com.mycity4kids.ui.fragment.CategoryVideosTabFragment;
 import com.mycity4kids.ui.fragment.ChallengeCategoryVideoTabFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,6 +47,7 @@ import retrofit2.Retrofit;
  * Created by hemant on 25/5/17.
  */
 public class CategoryVideosListingActivity extends BaseActivity implements View.OnClickListener {
+
     private TabLayout tabLayout;
     private ViewPager viewPager;
     FrameLayout topLayerGuideLayout;
@@ -64,7 +61,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
     public ImageView imageSortBy;
     private FloatingActionButton fabAdd;
     private CoordinatorLayout root;
-    private RelativeLayout momVlogCoachMark;
+    private View momVlogCoachMark;
 
 
     @Override
@@ -74,7 +71,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setActivity(this);
         fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
-        momVlogCoachMark = (RelativeLayout) findViewById(R.id.momVlogCoachMark);
+        momVlogCoachMark = (CoordinatorLayout) findViewById(R.id.momVlogRootLayout);
         momVlogCoachMark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,7 +83,6 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
 
         if (!SharedPrefUtils.isCoachmarksShownFlag(CategoryVideosListingActivity.this, "Mom_vlog")) {
             momVlogCoachMark.setVisibility(View.VISIBLE);
-
 
         } else {
             fabAdd.setVisibility(View.VISIBLE);
@@ -119,7 +115,10 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 cityIntent.putExtra("comingFrom", "createDashboardIcon");
 
                 startActivity(cityIntent);
-                Utils.momVlogEvent(CategoryVideosListingActivity.this, "Video Listing", "FAB_create", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
+                Utils.momVlogEvent(CategoryVideosListingActivity.this, "Video Listing", "FAB_create", "", "android",
+                        SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
                 fireEventForVideoCreationIntent();
             }
         });
@@ -130,10 +129,12 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         parentTopicId = getIntent().getStringExtra("parentTopicId");
 
         toolbarTitleTextView.setText(getString(R.string.myprofile_section_videos_label));
-        Utils.pushOpenScreenEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(this, "TopicArticlesListingScreen",
+                SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         try {
 
-            FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+            FileInputStream fileInputStream = BaseApplication.getAppContext()
+                    .openFileInput(AppConstants.CATEGORIES_JSON_FILE);
             String fileContent = AppUtils.convertStreamToString(fileInputStream);
             Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
             TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
@@ -150,10 +151,13 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             caller.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
+                    boolean writtenToDisk = AppUtils
+                            .writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE,
+                                    response.body());
                     Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
                     try {
-                        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                        FileInputStream fileInputStream = BaseApplication.getAppContext()
+                                .openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                         String fileContent = AppUtils.convertStreamToString(fileInputStream);
                         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                         TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
@@ -219,7 +223,6 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             tabLayout.addTab(tabLayout.newTab().setText(subTopicsList.get(i).getDisplay_name()));
         }
 
-
         AppUtils.changeTabsFont(tabLayout);
 
         pagerAdapter = new VideoTopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), subTopicsList);
@@ -230,7 +233,11 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                Utils.momVlogEvent(CategoryVideosListingActivity.this, "Video Listing", "Vlogs_Tab", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_vlogs_tab", subTopicsList.get(tab.getPosition()).getId(), "");
+                Utils.momVlogEvent(CategoryVideosListingActivity.this, "Video Listing", "Vlogs_Tab", "", "android",
+                        SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        String.valueOf(System.currentTimeMillis()), "Show_vlogs_tab",
+                        subTopicsList.get(tab.getPosition()).getId(), "");
 
                 Fragment fragment = pagerAdapter.getItem(tab.getPosition());
                 if (fragment != null) {
@@ -246,7 +253,6 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
 
             }
 
@@ -296,10 +302,14 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                             dupChildTopic.setId(responseData.getData().get(i).getChild().get(k).getId());
                             dupChildTopic.setIsSelected(responseData.getData().get(i).getChild().get(k).isSelected());
                             dupChildTopic.setParentId(responseData.getData().get(i).getChild().get(k).getParentId());
-                            dupChildTopic.setDisplay_name(responseData.getData().get(i).getChild().get(k).getDisplay_name());
-                            dupChildTopic.setParentName(responseData.getData().get(i).getChild().get(k).getParentName());
-                            dupChildTopic.setPublicVisibility(responseData.getData().get(i).getChild().get(k).getPublicVisibility());
-                            dupChildTopic.setShowInMenu(responseData.getData().get(i).getChild().get(k).getShowInMenu());
+                            dupChildTopic
+                                    .setDisplay_name(responseData.getData().get(i).getChild().get(k).getDisplay_name());
+                            dupChildTopic
+                                    .setParentName(responseData.getData().get(i).getChild().get(k).getParentName());
+                            dupChildTopic.setPublicVisibility(
+                                    responseData.getData().get(i).getChild().get(k).getPublicVisibility());
+                            dupChildTopic
+                                    .setShowInMenu(responseData.getData().get(i).getChild().get(k).getShowInMenu());
                             dupChildTopic.setSlug(responseData.getData().get(i).getChild().get(k).getSlug());
                             dupChildTopic.setTitle(responseData.getData().get(i).getChild().get(k).getTitle());
                             duplicateEntry.add(dupChildTopic);
