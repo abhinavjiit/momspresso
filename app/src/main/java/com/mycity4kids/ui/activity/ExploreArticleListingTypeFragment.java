@@ -335,7 +335,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 GroupsViewFragment fragment0 = new GroupsViewFragment();
                 Bundle mBundle0 = new Bundle();
                 fragment0.setArguments(mBundle0);
-                ((DashboardActivity) getActivity()).addFragment(fragment0, mBundle0, true);
+                ((DashboardActivity) getActivity()).addFragment(fragment0, mBundle0);
             }
             break;
             case R.id.momsTVContainer: {

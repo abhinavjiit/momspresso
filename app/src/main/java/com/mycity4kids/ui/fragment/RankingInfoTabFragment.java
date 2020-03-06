@@ -284,7 +284,7 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
                 Bundle b = new Bundle();
                 b.putString(AppConstants.ANALYTICS_INFO_TYPE, AppConstants.ANALYTICS_INFO_RANK_CALCULATION);
                 analyticsStatsDialogFragment.setArguments(b);
-                ((RankingActivity) getActivity()).addFragment(analyticsStatsDialogFragment, b, false);
+                ((RankingActivity) getActivity()).addFragment(analyticsStatsDialogFragment, b);
                 break;
 
         }

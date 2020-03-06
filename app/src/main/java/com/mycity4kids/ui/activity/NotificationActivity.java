@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.ui.fragment.NotificationFragment;
 
 public class NotificationActivity extends BaseActivity {
@@ -38,7 +37,7 @@ public class NotificationActivity extends BaseActivity {
         NotificationFragment fragment = new NotificationFragment();
         Bundle mBundle = new Bundle();
         fragment.setArguments(mBundle);
-        addFragment(fragment, mBundle, true);
+        addFragment(fragment, mBundle);
     }
 
     @Override

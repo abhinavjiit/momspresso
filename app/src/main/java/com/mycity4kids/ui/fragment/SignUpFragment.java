@@ -58,7 +58,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
                 SendSMSFragment fragment = new SendSMSFragment();
                 Bundle mBundle = new Bundle();
                 fragment.setArguments(mBundle);
-                ((ActivityLogin) getActivity()).replaceFragmentWithAnimation(fragment, mBundle, true);
+                ((ActivityLogin) getActivity()).replaceFragmentWithAnimation(fragment, mBundle);
                 break;
             case R.id.connect_facebook:
                 Utils.pushGenericEvent(getActivity(), "SignUp_facebook_click_event", "NA", "SignUpFragment");
@@ -73,7 +73,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
                 SignInFragment signInFragment = new SignInFragment();
                 Bundle bundle = new Bundle();
                 signInFragment.setArguments(bundle);
-                ((ActivityLogin) getActivity()).replaceFragmentWithAnimation(signInFragment, bundle, true);
+                ((ActivityLogin) getActivity()).replaceFragmentWithAnimation(signInFragment, bundle);
                 break;
 
             default:

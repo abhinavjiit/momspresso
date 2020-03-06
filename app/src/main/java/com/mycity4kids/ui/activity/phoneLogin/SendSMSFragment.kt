@@ -132,7 +132,7 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
 //        (activity as ActivityLogin).addFragment(verifySMSFragment, bundle, true, null)
 
         if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
-            (activity as ActivityLogin).addFragment(verifySMSFragment, bundle, true, null)
+            (activity as ActivityLogin).addFragment(verifySMSFragment, bundle, null)
         } else if (activity?.javaClass?.simpleName.equals("OTPActivity")) {
             (activity as OTPActivity).supportFragmentManager.popBackStack()
             activity!!.supportFragmentManager.beginTransaction().replace(R.id.container, verifySMSFragment,

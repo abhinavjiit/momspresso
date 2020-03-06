@@ -314,7 +314,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     GroupsViewFragment fragment0 = new GroupsViewFragment();
                     Bundle mBundle0 = new Bundle();
                     fragment0.setArguments(mBundle0);
-                    ((DashboardActivity) mContext).addFragment(fragment0, mBundle0, true);
+                    ((DashboardActivity) mContext).addFragment(fragment0, mBundle0);
                     pushEvent("NOTIFICATION_CENTER_GROUP_LISTING");
                 }
                 break;

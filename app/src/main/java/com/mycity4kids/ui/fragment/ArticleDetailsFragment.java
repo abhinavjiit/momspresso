@@ -1320,7 +1320,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             commentFrag.setArguments(_args);
             ((ArticleDetailsContainerActivity) getActivity()).hideToolbarPerm();
             ((ArticleDetailsContainerActivity) getActivity())
-                    .addFragment(commentFrag, null, true, "topToBottom");
+                    .addFragment(commentFrag, null, "topToBottom");
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
@@ -1348,7 +1348,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             commentFrag.setArguments(_args);
             ((ArticleDetailsContainerActivity) getActivity()).hideToolbarPerm();
             ((ArticleDetailsContainerActivity) getActivity())
-                    .addFragment(commentFrag, null, true, "topToBottom");
+                    .addFragment(commentFrag, null, "topToBottom");
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));

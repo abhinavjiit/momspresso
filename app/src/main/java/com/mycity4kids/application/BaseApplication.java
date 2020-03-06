@@ -5,15 +5,11 @@ import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.os.Build;
 import android.os.StrictMode;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-
-import androidx.multidex.MultiDex;
-
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -26,13 +22,16 @@ import com.mycity4kids.MessageEvent;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.Topics;
+import com.mycity4kids.preference.PreferenceLocaleStore;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
-import com.mycity4kids.utils.LocaleManager;
-
-import org.greenrobot.eventbus.EventBus;
-
+import com.yariksoffice.lingver.Lingver;
+import io.branch.referral.Branch;
+import io.fabric.sdk.android.Fabric;
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -40,17 +39,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-
-import io.branch.referral.Branch;
-import io.fabric.sdk.android.Fabric;
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.greenrobot.eventbus.EventBus;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -59,12 +53,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * This class holds some application-global instances.
  */
 public class BaseApplication extends Application {
+
     public static final String TAG = BaseApplication.class.getName();
 
     String data = "";
-    private static BaseApplication mInstance;
-    private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit, azureRetrofit;
-    private static OkHttpClient client, customTimeoutOkHttpClient;
+    private static BaseApplication applicationInstance;
+    private static Retrofit retrofit;
+    private static Retrofit customTimeoutRetrofit;
+    private static Retrofit groupsRetrofit;
+    private static Retrofit azureRetrofit;
+    private static OkHttpClient client;
+    private static OkHttpClient customTimeoutOkHttpClient;
 
     private static ArrayList<Topics> topicList;
     private static ArrayList<Topics> shortStoryTopicList;
@@ -144,19 +143,18 @@ public class BaseApplication extends Application {
         ECOMMERCE_TRACKER,// Tracker used by all ecommerce transactions from a company.
     }
 
-    HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
+    HashMap<TrackerName, Tracker> trackers = new HashMap<TrackerName, Tracker>();
 
     public synchronized Tracker getTracker(TrackerName trackerId) {
-        if (!mTrackers.containsKey(trackerId)) {
+        if (!trackers.containsKey(trackerId)) {
 
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-            Tracker t = (trackerId == TrackerName.APP_TRACKER) ?
-                    analytics.newTracker(R.xml.app_tracker)
-                    : (trackerId == TrackerName.GLOBAL_TRACKER) ? analytics.newTracker(GA_PROPERTY_ID)
-                    : analytics.newTracker(R.xml.app_tracker);
-            mTrackers.put(trackerId, t);
+            Tracker t = (trackerId == TrackerName.APP_TRACKER)
+                    ? analytics.newTracker(R.xml.app_tracker) : (trackerId == TrackerName.GLOBAL_TRACKER)
+                    ? analytics.newTracker(GA_PROPERTY_ID) : analytics.newTracker(R.xml.app_tracker);
+            trackers.put(trackerId, t);
         }
-        return mTrackers.get(trackerId);
+        return trackers.get(trackerId);
     }
 
     public static Context getAppContext() {
@@ -164,11 +162,11 @@ public class BaseApplication extends Application {
     }
 
     public static BaseApplication getInstance() {
-        return mInstance;
+        return applicationInstance;
     }
 
-    protected static void setInstance(BaseApplication mInstance) {
-        BaseApplication.mInstance = mInstance;
+    protected static void setInstance(BaseApplication instance) {
+        BaseApplication.applicationInstance = instance;
     }
 
     @Override
@@ -178,6 +176,7 @@ public class BaseApplication extends Application {
         try {
             Class.forName("android.os.AsyncTask");
         } catch (ClassNotFoundException e) {
+            Log.d("MC4kException", Log.getStackTraceString(e));
         }
         Places.initialize(getApplicationContext(), AppConstants.PLACES_API_KEY);
 
@@ -192,13 +191,17 @@ public class BaseApplication extends Application {
 
         Branch.enableLogging();
         Branch.getAutoInstance(this);
-        PackageInfo pInfo = null;
+
+        PreferenceLocaleStore store = new PreferenceLocaleStore(this, new Locale(AppConstants.LOCALE_ENGLISH));
+        Lingver.init(this, store);
+
+        PackageInfo packageInfo = null;
         try {
-            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        appVersion = pInfo.versionName;
+        appVersion = packageInfo.versionName;
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
@@ -206,11 +209,14 @@ public class BaseApplication extends Application {
 
     public static void startSocket() {
         try {
-            if (!TextUtils.isEmpty(SharedPrefUtils.getUserDetailModel(mInstance).getDynamoId())) {
-                mSocket = IO.socket("https://socketio.momspresso.com/?user_id=" + SharedPrefUtils.getUserDetailModel(mInstance).getDynamoId()
+            if (!TextUtils.isEmpty(SharedPrefUtils.getUserDetailModel(applicationInstance).getDynamoId())) {
+                mSocket = IO.socket("https://socketio.momspresso.com/?user_id=" + SharedPrefUtils
+                        .getUserDetailModel(applicationInstance).getDynamoId()
 
-                        + "&mc4kToken=" + SharedPrefUtils.getUserDetailModel(mInstance).getMc4kToken() + "&lang=" + Locale.getDefault().getLanguage() + "&agent=android");
-                mSocket.on(SharedPrefUtils.getUserDetailModel(mInstance).getDynamoId(), onNewMessage);
+                        + "&mc4kToken=" + SharedPrefUtils.getUserDetailModel(applicationInstance).getMc4kToken()
+                        + "&lang="
+                        + Locale.getDefault().getLanguage() + "&agent=android");
+                mSocket.on(SharedPrefUtils.getUserDetailModel(applicationInstance).getDynamoId(), onNewMessage);
                 if (!mSocket.connected()) {
                     mSocket.connect();
                 }
@@ -230,22 +236,7 @@ public class BaseApplication extends Application {
         }
     };
 
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(LocaleManager.setLocale(base));
-        MultiDex.install(this);
-        Log.d(TAG, "attachBaseContext");
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        LocaleManager.setLocale(this);
-        LocaleManager.setNewLocale(this, newConfig.locale.getLanguage());
-        Log.d(TAG, "onConfigurationChanged: " + newConfig.locale.getLanguage());
-    }
-
-    public Retrofit createRetrofitInstance(String base_url) {
+    public Retrofit createRetrofitInstance(String baseUrl) {
         Interceptor mainInterceptor = new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -253,17 +244,18 @@ public class BaseApplication extends Application {
                 HttpUrl originalHttpUrl = original.url();
                 Request.Builder requestBuilder = original.newBuilder();
                 requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
-//                requestBuilder.addHeader("id", "be13a0f26bbf41f0833906ec374f07db");
-//                requestBuilder.addHeader("mc4kToken", "ya29.GltVBy0pjSImNx6PgYPeTg9DlTGaR12FlHJYEXi9YN3h39ZHZekRio46xKXB1uHfV_mkDH3V05DRKkFKi2ZzYICMJ5fsxn05eJ_ub7GgCtYAeRdAhgHGZ5Y07AN2");
-                requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
-                requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
+                requestBuilder
+                        .addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+                requestBuilder.addHeader("mc4kToken",
+                        SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
                 requestBuilder.addHeader("agent", "android");
                 requestBuilder.addHeader("manufacturer", Build.MANUFACTURER);
                 requestBuilder.addHeader("model", Build.MODEL);
                 requestBuilder.addHeader("source", "2");
                 requestBuilder.addHeader("appVersion", appVersion);
                 requestBuilder.addHeader("latitude", SharedPrefUtils.getUserLocationLatitude(getApplicationContext()));
-                requestBuilder.addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
+                requestBuilder
+                        .addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
                 requestBuilder.addHeader("userPrint", "" + AppUtils.getDeviceId(getApplicationContext()));
                 Request request = requestBuilder.build();
                 return chain.proceed(request);
@@ -285,6 +277,7 @@ public class BaseApplication extends Application {
             client = new OkHttpClient
                     .Builder()
                     .addInterceptor(mainInterceptor)
+                    .addInterceptor(logging)
                     .connectTimeout(60, TimeUnit.SECONDS)
                     .readTimeout(60, TimeUnit.SECONDS)
                     .writeTimeout(60, TimeUnit.SECONDS)
@@ -292,7 +285,7 @@ public class BaseApplication extends Application {
         }
 
         retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
+                .baseUrl(baseUrl)
                 .addConverterFactory(buildGsonConverter())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(client)
@@ -300,7 +293,7 @@ public class BaseApplication extends Application {
         return retrofit;
     }
 
-    public Retrofit createGroupRetrofitInstance(String base_url) {
+    public Retrofit createGroupRetrofitInstance(String baseUrl) {
         Interceptor mainInterceptor = new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -308,14 +301,17 @@ public class BaseApplication extends Application {
                 HttpUrl originalHttpUrl = original.url();
                 Request.Builder requestBuilder = original.newBuilder();
                 requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
-                requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
-                requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
+                requestBuilder
+                        .addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+                requestBuilder.addHeader("mc4kToken",
+                        SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
                 requestBuilder.addHeader("agent", "android");
                 requestBuilder.addHeader("manufacturer", Build.MANUFACTURER);
                 requestBuilder.addHeader("model", Build.MODEL);
                 requestBuilder.addHeader("appVersion", appVersion);
                 requestBuilder.addHeader("latitude", SharedPrefUtils.getUserLocationLatitude(getApplicationContext()));
-                requestBuilder.addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
+                requestBuilder
+                        .addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
                 requestBuilder.addHeader("userPrint", "" + AppUtils.getDeviceId(getApplicationContext()));
                 Request request = requestBuilder.build();
                 return chain.proceed(request);
@@ -337,6 +333,7 @@ public class BaseApplication extends Application {
             client = new OkHttpClient
                     .Builder()
                     .addInterceptor(mainInterceptor)
+                    .addInterceptor(logging)
                     .connectTimeout(60, TimeUnit.SECONDS)
                     .readTimeout(60, TimeUnit.SECONDS)
                     .writeTimeout(60, TimeUnit.SECONDS)
@@ -344,14 +341,14 @@ public class BaseApplication extends Application {
         }
 
         groupsRetrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
+                .baseUrl(baseUrl)
                 .addConverterFactory(buildGsonConverter())
                 .client(client)
                 .build();
         return groupsRetrofit;
     }
 
-    public Retrofit createAzureRetrofitInstance(String base_url) {
+    public Retrofit createAzureRetrofitInstance(String baseUrl) {
         Interceptor mainInterceptor = new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -387,7 +384,7 @@ public class BaseApplication extends Application {
         }
 
         azureRetrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
+                .baseUrl(baseUrl)
                 .addConverterFactory(buildGsonConverter())
                 .client(client)
                 .build();
@@ -434,7 +431,7 @@ public class BaseApplication extends Application {
         return customTimeoutRetrofit;
     }
 
-    public Retrofit createCustomTimeoutRetrofitInstance(String base_url, int timeout) {
+    public Retrofit createCustomTimeoutRetrofitInstance(String baseUrl, int timeout) {
         Interceptor mainInterceptor = new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -443,14 +440,17 @@ public class BaseApplication extends Application {
                 Request.Builder requestBuilder = original.newBuilder();
 
                 requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
-                requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
-                requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
+                requestBuilder
+                        .addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+                requestBuilder.addHeader("mc4kToken",
+                        SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
                 requestBuilder.addHeader("agent", "android");
                 requestBuilder.addHeader("manufacturer", Build.MANUFACTURER);
                 requestBuilder.addHeader("model", Build.MODEL);
                 requestBuilder.addHeader("appVersion", appVersion);
                 requestBuilder.addHeader("latitude", SharedPrefUtils.getUserLocationLatitude(getApplicationContext()));
-                requestBuilder.addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
+                requestBuilder
+                        .addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
                 requestBuilder.addHeader("userPrint", "" + AppUtils.getDeviceId(getApplicationContext()));
                 Request request = requestBuilder.build();
                 return chain.proceed(request);
@@ -480,7 +480,7 @@ public class BaseApplication extends Application {
         }
 
         customTimeoutRetrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
+                .baseUrl(baseUrl)
                 .addConverterFactory(buildGsonConverter())
                 .client(customTimeoutOkHttpClient)
                 .build();

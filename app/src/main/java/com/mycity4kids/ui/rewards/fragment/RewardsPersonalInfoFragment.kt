@@ -31,7 +31,6 @@ import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
 import com.google.android.libraries.places.api.Places
@@ -60,7 +59,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
 import com.mycity4kids.ui.activity.OTPActivity
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter
-import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment
 import com.mycity4kids.ui.fragment.CityListingDialogFragment
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.ui.rewards.dialog.PickerDialogFragment
@@ -76,15 +74,10 @@ import java.util.Calendar
 import java.util.Collections
 import org.apmem.tools.layouts.FlowLayout
 
-/**editLanguage
- * A simple [Fragment] subclass.
- */
-
 const val VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE = 1000
 const val REQUEST_SELECT_PLACE = 2000
 
 class RewardsPersonalInfoFragment : BaseFragment(),
-    ChangePreferredLanguageDialogFragment.OnClickDoneListener,
     CityListingDialogFragment.IChangeCity, PickerDialogFragment.OnClickDoneListener {
 
     private var isNewRegistration: Boolean = false
@@ -121,9 +114,6 @@ class RewardsPersonalInfoFragment : BaseFragment(),
         currentCityName = cityName
         selectedCityId = Integer.parseInt(cityList.get(pos).getId().replace("city-", ""))
         newSelectedCityId = cityList.get(pos).getId()
-    }
-
-    override fun onItemClick(language: String?) {
     }
 
     private lateinit var containerView: View

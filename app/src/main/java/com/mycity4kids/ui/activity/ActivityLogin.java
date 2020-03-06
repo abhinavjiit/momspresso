@@ -93,13 +93,13 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
         String fragmentToLaunch = getIntent().getStringExtra(AppConstants.LAUNCH_FRAGMENT);
         if (AppConstants.FRAGMENT_SIGNIN.equals(fragmentToLaunch)) {
             SignInFragment fragment = new SignInFragment();
-            replaceFragment(fragment, null, true);
+            replaceFragment(fragment, null);
         } else if (AppConstants.FRAGMENT_SIGNUP.equals(fragmentToLaunch)) {
             SignUpFragment fragment = new SignUpFragment();
-            replaceFragment(fragment, null, true);
+            replaceFragment(fragment, null);
         } else {
             SignInFragment fragment = new SignInFragment();
-            replaceFragment(fragment, null, true);
+            replaceFragment(fragment, null);
         }
     }
 
