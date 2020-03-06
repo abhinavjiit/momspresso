@@ -384,7 +384,10 @@ class CampaignDetailFragment : BaseFragment() {
             }
 
             override fun onError(e: Throwable) {
-                ToastUtils.showToast(activity, "something went wrong")
+                activity?.let {
+                    ToastUtils.showToast(it, "something went wrong")
+                }
+                Crashlytics.logException(e)
                 Log.e("exception in error", e.message.toString())
             }
         })

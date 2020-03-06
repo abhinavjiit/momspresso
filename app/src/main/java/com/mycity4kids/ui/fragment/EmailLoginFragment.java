@@ -86,7 +86,7 @@ public class EmailLoginFragment extends BaseFragment implements View.OnClickList
                 SignUpFragment signUpFragment = new SignUpFragment();
                 Bundle bundle = new Bundle();
                 signUpFragment.setArguments(bundle);
-                ((ActivityLogin) getActivity()).replaceFragmentWithAnimation(signUpFragment, bundle, true);
+                ((ActivityLogin) getActivity()).replaceFragmentWithAnimation(signUpFragment, bundle);
                 break;
             default:
                 break;

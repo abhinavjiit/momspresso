@@ -68,3 +68,4 @@
 -keepclassmembernames class kotlinx.** {
     volatile <fields>;
 }
+-keep class org.json.** { *; }

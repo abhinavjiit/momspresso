@@ -538,7 +538,7 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
                 Bundle b = new Bundle();
                 b.putString(AppConstants.ANALYTICS_INFO_TYPE, AppConstants.ANALYTICS_INFO_IMPROVE_PAGE_VIEWS);
                 analyticsStatsDialogFragment.setArguments(b);
-                ((RankingActivity) getActivity()).addFragment(analyticsStatsDialogFragment, b, false);
+                ((RankingActivity) getActivity()).addFragment(analyticsStatsDialogFragment, b);
             }
             break;
             case R.id.improveSocialShareTextView: {
@@ -546,7 +546,7 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
                 Bundle b = new Bundle();
                 b.putString(AppConstants.ANALYTICS_INFO_TYPE, AppConstants.ANALYTICS_INFO_IMPROVE_SOCIAL_SHARE);
                 analyticsStatsDialogFragment.setArguments(b);
-                ((RankingActivity) getActivity()).addFragment(analyticsStatsDialogFragment, b, false);
+                ((RankingActivity) getActivity()).addFragment(analyticsStatsDialogFragment, b);
             }
             break;
         }

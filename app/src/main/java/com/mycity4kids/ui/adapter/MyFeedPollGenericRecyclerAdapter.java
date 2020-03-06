@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Spannable;
@@ -25,45 +24,36 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
-
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.internal.LinkedTreeMap;
-import com.mycity4kids.utils.DateTimeUtils;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.request.GroupActionsRequest;
 import com.mycity4kids.models.response.GroupPostResult;
-import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsActionVoteResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.DateTimeUtils;
+import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.widget.GroupPostMediaViewPager;
 import com.mycity4kids.widget.IndefinitePagerIndicator;
 import com.squareup.picasso.Picasso;
-
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -73,7 +63,8 @@ import retrofit2.Retrofit;
  * Created by hemant on 4/12/17.
  */
 
-public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Handler.Callback {
+public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
+        Handler.Callback {
 
     private static final int POST_TYPE_TEXT = 0;
     private static final int POST_TYPE_MEDIA = 1;
@@ -81,36 +72,27 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
     private static final int POST_TYPE_IMAGE_POLL = 3;
     private static final int POST_TYPE_AUDIO = 4;
 
-    private final Context mContext;
-    private final LayoutInflater mInflator;
-    private final GroupResult selectedGroup;
-    private final String localizedNotHelpful, localizedHelpful, localizedComment;
+    private final Context context;
+    private final LayoutInflater inflater;
+    private final String localizedComment;
     private ArrayList<GroupPostResult> postList;
-    private HashMap<Integer, Integer> mViewPageStates = new HashMap<>();
-    private RecyclerViewClickListener mListener;
-    private int selectedPosition;
+    private HashMap<Integer, Integer> viewPageStates = new HashMap<>();
+    private RecyclerViewClickListener recyclerViewClickListener;
     private int pollPosition;
-    private String memberType;
     private int playingPosition;
-    private ProgressDialog mProgressDialog;
+    private ProgressDialog progressDialog;
     private AudioCommentViewHolder playingHolder;
     private MediaPlayer mediaPlayer;
     private static final int MSG_UPDATE_SEEK_BAR = 1845;
     private static final int MSG_UPDATE_TIME = 1846;
-    private Handler mHandler;
-    private long totalDuration, currentDuration;
-    private boolean isComment = false;
+    private Handler handler;
 
-    public MyFeedPollGenericRecyclerAdapter(Context pContext, RecyclerViewClickListener listener, GroupResult selectedGroup, String memberType) {
-        mContext = pContext;
-        mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mListener = listener;
-        this.selectedGroup = selectedGroup;
-        localizedComment = mContext.getString(R.string.ad_comments_title);
-        localizedHelpful = mContext.getString(R.string.groups_post_helpful);
-        localizedNotHelpful = mContext.getString(R.string.groups_post_nothelpful);
-        this.memberType = memberType;
-        mHandler = new Handler(this);
+    public MyFeedPollGenericRecyclerAdapter(Context context, RecyclerViewClickListener listener) {
+        this.context = context;
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        recyclerViewClickListener = listener;
+        localizedComment = this.context.getString(R.string.ad_comments_title);
+        handler = new Handler(this);
         this.playingPosition = -1;
     }
 
@@ -146,19 +128,19 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == POST_TYPE_TEXT) {
-            View v0 = mInflator.inflate(R.layout.groups_text_post_item, parent, false);
+            View v0 = inflater.inflate(R.layout.groups_text_post_item, parent, false);
             return new TextPostViewHolder(v0);
         } else if (viewType == POST_TYPE_MEDIA) {
-            View v0 = mInflator.inflate(R.layout.groups_media_post_item, parent, false);
+            View v0 = inflater.inflate(R.layout.groups_media_post_item, parent, false);
             return new MediaPostViewHolder(v0);
         } else if (viewType == POST_TYPE_AUDIO) {
-            View v0 = mInflator.inflate(R.layout.groups_post_audio_item, parent, false);
+            View v0 = inflater.inflate(R.layout.groups_post_audio_item, parent, false);
             return new AudioCommentViewHolder(v0);
         } else if (viewType == POST_TYPE_TEXT_POLL) {
-            View v0 = mInflator.inflate(R.layout.groups_text_poll_post_item, parent, false);
+            View v0 = inflater.inflate(R.layout.groups_text_poll_post_item, parent, false);
             return new TextPollPostViewHolder(v0);
         } else {
-            View v0 = mInflator.inflate(R.layout.groups_image_poll_post_item, parent, false);
+            View v0 = inflater.inflate(R.layout.groups_image_poll_post_item, parent, false);
             return new ImagePollPostViewHolder(v0);
         }
     }
@@ -171,78 +153,86 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 textPostViewHolder.userTag.setVisibility(View.GONE);
             } else {
                 if (postList != null && postList.size() != 0) {
-                    if (postList.get(position) != null && postList.get(position).getUserInfo() != null && postList.get(position).getUserInfo().getUserTag() != null) {
+                    if (postList.get(position) != null && postList.get(position).getUserInfo() != null
+                            && postList.get(position).getUserInfo().getUserTag() != null) {
                         if (postList.get(position).getUserInfo().getUserTag().size() != 0) {
-                            textPostViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                            textPostViewHolder.userTag
+                                    .setText(postList.get(position).getUserInfo().getUserTag().get(0));
                             textPostViewHolder.userTag.setVisibility(View.VISIBLE);
                         } else {
                             textPostViewHolder.userTag.setVisibility(View.GONE);
-
                         }
                     } else {
                         textPostViewHolder.userTag.setVisibility(View.GONE);
                     }
-
                 } else {
                     textPostViewHolder.userTag.setVisibility(View.GONE);
-
                 }
             }
             textPostViewHolder.postDataTextView.setText(postList.get(position).getContent());
             Linkify.addLinks(textPostViewHolder.postDataTextView, Linkify.WEB_URLS);
             textPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
-            textPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
+            textPostViewHolder.postDataTextView
+                    .setLinkTextColor(ContextCompat.getColor(context, R.color.groups_blue_color));
             addLinkHandler(textPostViewHolder.postDataTextView);
             if (postList.get(position).getHelpfullCount() < 1) {
                 textPostViewHolder.upvoteCountTextView.setText("");
             } else {
                 textPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
             }
-            textPostViewHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 textPostViewHolder.commentLayout.setVisibility(View.GONE);
-                textPostViewHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
+                textPostViewHolder.postCommentsTextView
+                        .setText(postList.get(position).getResponseCount() + " " + localizedComment);
             } else {
                 textPostViewHolder.beTheFirstOne.setVisibility(View.VISIBLE);
                 textPostViewHolder.commentLayout.setVisibility(View.VISIBLE);
                 textPostViewHolder.postCommentsTextView.setVisibility(View.VISIBLE);
-                textPostViewHolder.postCommentsTextView.setText(mContext.getResources().getString(R.string.group_add_comment_text));
+                textPostViewHolder.postCommentsTextView
+                        .setText(context.getResources().getString(R.string.group_add_comment_text));
             }
-            textPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
+            textPostViewHolder.postDateTextView
+                    .setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
             if (postList.get(position).getIsAnnon() == 1) {
-                textPostViewHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
-                textPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
+                textPostViewHolder.usernameTextView.setText(context.getString(R.string.groups_anonymous));
+                textPostViewHolder.userImageView
+                        .setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_incognito));
             } else {
-                textPostViewHolder.usernameTextView.setText(postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo().getLastName());
+                textPostViewHolder.usernameTextView.setText(
+                        postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo()
+                                .getLastName());
                 try {
                     Picasso.get().load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
-                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(textPostViewHolder.userImageView);
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                            .into(textPostViewHolder.userImageView);
                 } catch (Exception e) {
                     textPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
                 }
             }
             textPostViewHolder.groupName.setText(postList.get(position).getGroupInfo().getName());
             if (postList.get(position).getGroupInfo().getColor() != null) {
-                textPostViewHolder.groupName.setTextColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
-                textPostViewHolder.groupNameView.setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
+                textPostViewHolder.groupName
+                        .setTextColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
+                textPostViewHolder.groupNameView
+                        .setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
             }
             if (postList.get(position).getMarkedHelpful() == 1) {
                 textPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
             } else {
                 textPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
-
             }
-
         } else if (holder instanceof AudioCommentViewHolder) {
             AudioCommentViewHolder audioCommentViewHolder = (AudioCommentViewHolder) holder;
-
             if (postList.get(position).getIsAnnon() == 1) {
                 audioCommentViewHolder.userTag.setVisibility(View.GONE);
             } else {
                 if (postList != null && postList.size() != 0) {
-                    if (postList.get(position) != null && postList.get(position).getUserInfo() != null && postList.get(position).getUserInfo().getUserTag() != null) {
-                        if (postList.get(position).getUserInfo().getUserTag().size() != 0 && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
-                            audioCommentViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                    if (postList.get(position) != null && postList.get(position).getUserInfo() != null
+                            && postList.get(position).getUserInfo().getUserTag() != null) {
+                        if (postList.get(position).getUserInfo().getUserTag().size() != 0
+                                && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
+                            audioCommentViewHolder.userTag
+                                    .setText(postList.get(position).getUserInfo().getUserTag().get(0));
                             audioCommentViewHolder.userTag.setVisibility(View.VISIBLE);
                         } else {
                             audioCommentViewHolder.userTag.setVisibility(View.GONE);
@@ -250,16 +240,14 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     } else {
                         audioCommentViewHolder.userTag.setVisibility(View.GONE);
                     }
-
                 } else {
                     audioCommentViewHolder.userTag.setVisibility(View.GONE);
                 }
             }
-
-
             if (postList.get(position).getIsAnnon() == 1) {
-                audioCommentViewHolder.commentorUsernameTextView.setText(mContext.getString(R.string.groups_anonymous));
-                audioCommentViewHolder.commentorImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
+                audioCommentViewHolder.commentorUsernameTextView.setText(context.getString(R.string.groups_anonymous));
+                audioCommentViewHolder.commentorImageView
+                        .setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_incognito));
                 ArrayList<String> mediaList = new ArrayList<>();
                 Map<String, String> map = (Map<String, String>) postList.get(position).getMediaUrls();
                 if (map != null && !map.isEmpty()) {
@@ -273,21 +261,23 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     audioCommentViewHolder.media.setVisibility(View.GONE);
                 }
             } else {
-                audioCommentViewHolder.commentorUsernameTextView.setText(postList.get(position).getUserInfo().getFirstName()
-                        + " " + postList.get(position).getUserInfo().getLastName());
+                audioCommentViewHolder.commentorUsernameTextView
+                        .setText(postList.get(position).getUserInfo().getFirstName()
+                                + " " + postList.get(position).getUserInfo().getLastName());
                 try {
                     Picasso.get().load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
-                            .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(audioCommentViewHolder.commentorImageView);
+                            .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img)
+                            .into(audioCommentViewHolder.commentorImageView);
                 } catch (Exception e) {
                     audioCommentViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
                 }
                 try {
                     Picasso.get().load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
-                            .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(audioCommentViewHolder.profileImageView);
+                            .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img)
+                            .into(audioCommentViewHolder.profileImageView);
                 } catch (Exception e) {
                     audioCommentViewHolder.profileImageView.setBackgroundResource(R.drawable.default_commentor_img);
                 }
-
                 ArrayList<String> mediaList = new ArrayList<>();
                 Map<String, String> map = (Map<String, String>) postList.get(position).getMediaUrls();
                 if (map != null && !map.isEmpty()) {
@@ -306,12 +296,12 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 audioCommentViewHolder.commentDataTextView.setText(postList.get(position).getContent());
                 Linkify.addLinks(audioCommentViewHolder.commentDataTextView, Linkify.WEB_URLS);
                 audioCommentViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
-                audioCommentViewHolder.commentDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
+                audioCommentViewHolder.commentDataTextView
+                        .setLinkTextColor(ContextCompat.getColor(context, R.color.groups_blue_color));
                 addLinkHandler(audioCommentViewHolder.commentDataTextView);
             } else {
                 audioCommentViewHolder.commentDataTextView.setVisibility(View.GONE);
             }
-
             if (position == playingPosition) {
                 playingHolder = audioCommentViewHolder;
                 updatePlayingView();
@@ -319,91 +309,96 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 updateNonPlayingView(audioCommentViewHolder);
             }
 
-            audioCommentViewHolder.commentDateTextView.setText(DateTimeUtils.getFormattedDateGroups(postList.get(position).getCreatedAt()));
+            audioCommentViewHolder.commentDateTextView
+                    .setText(DateTimeUtils.getFormattedDateGroups(postList.get(position).getCreatedAt()));
             if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 audioCommentViewHolder.commentLayout.setVisibility(View.GONE);
-                audioCommentViewHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
+                audioCommentViewHolder.postCommentsTextView
+                        .setText(postList.get(position).getResponseCount() + " " + localizedComment);
             } else {
                 audioCommentViewHolder.beTheFirstOne.setVisibility(View.VISIBLE);
                 audioCommentViewHolder.commentLayout.setVisibility(View.VISIBLE);
                 audioCommentViewHolder.postCommentsTextView.setVisibility(View.VISIBLE);
-                audioCommentViewHolder.postCommentsTextView.setText(mContext.getResources().getString(R.string.group_add_comment_text));
+                audioCommentViewHolder.postCommentsTextView
+                        .setText(context.getResources().getString(R.string.group_add_comment_text));
             }
-
             if (postList.get(position).getHelpfullCount() < 1) {
                 audioCommentViewHolder.upvoteCommentCountTextView.setText("");
             } else {
-                audioCommentViewHolder.upvoteCommentCountTextView.setText(postList.get(position).getHelpfullCount() + "");
+                audioCommentViewHolder.upvoteCommentCountTextView
+                        .setText(postList.get(position).getHelpfullCount() + "");
             }
-
-            audioCommentViewHolder.downvoteCommentCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             audioCommentViewHolder.groupName.setText(postList.get(position).getGroupInfo().getName());
             if (postList.get(position).getGroupInfo().getColor() != null) {
-                audioCommentViewHolder.groupName.setTextColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
-                audioCommentViewHolder.groupNameView.setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
+                audioCommentViewHolder.groupName
+                        .setTextColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
+                audioCommentViewHolder.groupNameView
+                        .setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
             }
-
             if (postList.get(position).getMarkedHelpful() == 1) {
                 audioCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
             } else {
                 audioCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
             }
-
         } else if (holder instanceof MediaPostViewHolder) {
             MediaPostViewHolder mediaPostViewHolder = (MediaPostViewHolder) holder;
-
             if (postList.get(position).getIsAnnon() == 1) {
                 mediaPostViewHolder.userTag.setVisibility(View.GONE);
             } else {
                 if (postList != null && postList.size() != 0) {
-                    if (postList.get(position) != null && postList.get(position).getUserInfo() != null && postList.get(position).getUserInfo().getUserTag() != null) {
-                        if (postList.get(position).getUserInfo().getUserTag().size() != 0 && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
-                            mediaPostViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                    if (postList.get(position) != null && postList.get(position).getUserInfo() != null
+                            && postList.get(position).getUserInfo().getUserTag() != null) {
+                        if (postList.get(position).getUserInfo().getUserTag().size() != 0
+                                && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
+                            mediaPostViewHolder.userTag
+                                    .setText(postList.get(position).getUserInfo().getUserTag().get(0));
                             mediaPostViewHolder.userTag.setVisibility(View.VISIBLE);
-
                         } else {
                             mediaPostViewHolder.userTag.setVisibility(View.GONE);
-
                         }
                     } else {
                         mediaPostViewHolder.userTag.setVisibility(View.GONE);
                     }
-
                 } else {
                     mediaPostViewHolder.userTag.setVisibility(View.GONE);
-
                 }
             }
             mediaPostViewHolder.postDataTextView.setText(postList.get(position).getContent());
             Linkify.addLinks(mediaPostViewHolder.postDataTextView, Linkify.WEB_URLS);
             mediaPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
-            mediaPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
+            mediaPostViewHolder.postDataTextView
+                    .setLinkTextColor(ContextCompat.getColor(context, R.color.groups_blue_color));
             addLinkHandler(mediaPostViewHolder.postDataTextView);
             if (postList.get(position).getHelpfullCount() < 1) {
                 mediaPostViewHolder.upvoteCountTextView.setText("");
             } else {
                 mediaPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
             }
-            mediaPostViewHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 mediaPostViewHolder.commentLayout.setVisibility(View.GONE);
-                mediaPostViewHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
+                mediaPostViewHolder.postCommentsTextView
+                        .setText(postList.get(position).getResponseCount() + " " + localizedComment);
             } else {
                 mediaPostViewHolder.beTheFirstOne.setVisibility(View.VISIBLE);
                 mediaPostViewHolder.commentLayout.setVisibility(View.VISIBLE);
                 mediaPostViewHolder.postCommentsTextView.setVisibility(View.VISIBLE);
-                mediaPostViewHolder.postCommentsTextView.setText(mContext.getResources().getString(R.string.group_add_comment_text));
-
+                mediaPostViewHolder.postCommentsTextView
+                        .setText(context.getResources().getString(R.string.group_add_comment_text));
             }
-            mediaPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
+            mediaPostViewHolder.postDateTextView
+                    .setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
             if (postList.get(position).getIsAnnon() == 1) {
-                mediaPostViewHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
-                mediaPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
+                mediaPostViewHolder.usernameTextView.setText(context.getString(R.string.groups_anonymous));
+                mediaPostViewHolder.userImageView
+                        .setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_incognito));
             } else {
-                mediaPostViewHolder.usernameTextView.setText(postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo().getLastName());
+                mediaPostViewHolder.usernameTextView.setText(
+                        postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo()
+                                .getLastName());
                 try {
                     Picasso.get().load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
-                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(mediaPostViewHolder.userImageView);
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                            .into(mediaPostViewHolder.userImageView);
                 } catch (Exception e) {
                     mediaPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
                 }
@@ -411,75 +406,76 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             initializeViews((MediaPostViewHolder) holder, position);
             mediaPostViewHolder.groupName.setText(postList.get(position).getGroupInfo().getName());
             if (postList.get(position).getGroupInfo().getColor() != null) {
-                mediaPostViewHolder.groupName.setTextColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
-                mediaPostViewHolder.groupNameView.setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
+                mediaPostViewHolder.groupName
+                        .setTextColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
+                mediaPostViewHolder.groupNameView
+                        .setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
             }
-
-
             if (postList.get(position).getMarkedHelpful() == 1) {
-
                 mediaPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
             } else {
                 mediaPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
-
             }
         } else if (holder instanceof TextPollPostViewHolder) {
             TextPollPostViewHolder textPollPostViewHolder = (TextPollPostViewHolder) holder;
-
             if (postList.get(position).getIsAnnon() == 1) {
                 textPollPostViewHolder.userTag.setVisibility(View.GONE);
             } else {
                 if (postList != null && postList.size() != 0) {
-                    if (postList.get(position) != null && postList.get(position).getUserInfo() != null && postList.get(position).getUserInfo().getUserTag() != null) {
-                        if (postList.get(position).getUserInfo().getUserTag().size() != 0 && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
-                            textPollPostViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                    if (postList.get(position) != null && postList.get(position).getUserInfo() != null
+                            && postList.get(position).getUserInfo().getUserTag() != null) {
+                        if (postList.get(position).getUserInfo().getUserTag().size() != 0
+                                && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
+                            textPollPostViewHolder.userTag
+                                    .setText(postList.get(position).getUserInfo().getUserTag().get(0));
                             textPollPostViewHolder.userTag.setVisibility(View.VISIBLE);
-
                         } else {
                             textPollPostViewHolder.userTag.setVisibility(View.GONE);
-
                         }
                     } else {
                         textPollPostViewHolder.userTag.setVisibility(View.GONE);
                     }
-
                 } else {
                     textPollPostViewHolder.userTag.setVisibility(View.GONE);
-
                 }
             }
-
-
             textPollPostViewHolder.pollQuestionTextView.setText(postList.get(position).getContent());
             Linkify.addLinks(textPollPostViewHolder.pollQuestionTextView, Linkify.WEB_URLS);
             textPollPostViewHolder.pollQuestionTextView.setMovementMethod(LinkMovementMethod.getInstance());
-            textPollPostViewHolder.pollQuestionTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
+            textPollPostViewHolder.pollQuestionTextView
+                    .setLinkTextColor(ContextCompat.getColor(context, R.color.groups_blue_color));
             addLinkHandler(textPollPostViewHolder.pollQuestionTextView);
 
-            textPollPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
+            textPollPostViewHolder.postDateTextView
+                    .setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
             if (postList.get(position).getHelpfullCount() < 1) {
                 textPollPostViewHolder.upvoteCountTextView.setText("");
             } else {
                 textPollPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
             }
-            textPollPostViewHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 textPollPostViewHolder.commentLayout.setVisibility(View.GONE);
-                textPollPostViewHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
+                textPollPostViewHolder.postCommentsTextView
+                        .setText(postList.get(position).getResponseCount() + " " + localizedComment);
             } else {
                 textPollPostViewHolder.beTheFirstOne.setVisibility(View.VISIBLE);
                 textPollPostViewHolder.commentLayout.setVisibility(View.VISIBLE);
                 textPollPostViewHolder.postCommentsTextView.setVisibility(View.VISIBLE);
-                textPollPostViewHolder.postCommentsTextView.setText(mContext.getResources().getString(R.string.group_add_comment_text));
+                textPollPostViewHolder.postCommentsTextView
+                        .setText(context.getResources().getString(R.string.group_add_comment_text));
             }
             if (postList.get(position).getIsAnnon() == 1) {
-                textPollPostViewHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
-                textPollPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
+                textPollPostViewHolder.usernameTextView.setText(context.getString(R.string.groups_anonymous));
+                textPollPostViewHolder.userImageView
+                        .setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_incognito));
             } else {
-                textPollPostViewHolder.usernameTextView.setText(postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo().getLastName());
+                textPollPostViewHolder.usernameTextView.setText(
+                        postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo()
+                                .getLastName());
                 try {
                     Picasso.get().load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
-                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(textPollPostViewHolder.userImageView);
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                            .into(textPollPostViewHolder.userImageView);
                 } catch (Exception e) {
                     textPollPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
                 }
@@ -507,13 +503,16 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                         textPollPostViewHolder.pollOption4TextView.setText(entry.getValue());
                         textPollPostViewHolder.pollResult4TextView.setText(entry.getValue());
                         break;
+                    default:
+                        break;
                 }
             }
             textPollPostViewHolder.pollOption1ProgressBar.setProgress(0f);
             textPollPostViewHolder.pollOption2ProgressBar.setProgress(0f);
             textPollPostViewHolder.pollOption3ProgressBar.setProgress(0f);
             textPollPostViewHolder.pollOption4ProgressBar.setProgress(0f);
-            textPollPostViewHolder.totalVoteCountTextView.setText(mContext.getString(R.string.groups_total_votes, postList.get(position).getTotalVotesCount()));
+            textPollPostViewHolder.totalVoteCountTextView.setText(
+                    context.getString(R.string.groups_total_votes, postList.get(position).getTotalVotesCount()));
             if (postList.get(position).isVoted()) {
                 showVotingData(textPollPostViewHolder, postList.get(position));
             } else {
@@ -521,55 +520,59 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             }
             textPollPostViewHolder.groupName.setText(postList.get(position).getGroupInfo().getName());
             if (postList.get(position).getGroupInfo().getColor() != null) {
-                textPollPostViewHolder.groupName.setTextColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
-                textPollPostViewHolder.groupNameView.setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
+                textPollPostViewHolder.groupName
+                        .setTextColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
+                textPollPostViewHolder.groupNameView
+                        .setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
             }
             if (postList.get(position).getMarkedHelpful() == 1) {
-
                 textPollPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
             } else {
                 textPollPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
             }
-
         } else {
             ImagePollPostViewHolder imageHolder = (ImagePollPostViewHolder) holder;
             if (postList.get(position).getIsAnnon() == 1) {
                 imageHolder.userTag.setVisibility(View.GONE);
             } else {
                 if (postList != null && postList.size() != 0) {
-                    if (postList.get(position) != null && postList.get(position).getUserInfo() != null && postList.get(position).getUserInfo().getUserTag() != null) {
-                        if (postList.get(position).getUserInfo().getUserTag().size() != 0 && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
+                    if (postList.get(position) != null && postList.get(position).getUserInfo() != null
+                            && postList.get(position).getUserInfo().getUserTag() != null) {
+                        if (postList.get(position).getUserInfo().getUserTag().size() != 0
+                                && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
                             imageHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
                             imageHolder.userTag.setVisibility(View.VISIBLE);
-
                         } else {
                             imageHolder.userTag.setVisibility(View.GONE);
-
                         }
                     } else {
                         imageHolder.userTag.setVisibility(View.GONE);
                     }
-
                 } else {
                     imageHolder.userTag.setVisibility(View.GONE);
-
                 }
             }
             imageHolder.pollQuestionTextView.setText(postList.get(position).getContent());
             Linkify.addLinks(imageHolder.pollQuestionTextView, Linkify.WEB_URLS);
             imageHolder.pollQuestionTextView.setMovementMethod(LinkMovementMethod.getInstance());
-            imageHolder.pollQuestionTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
+            imageHolder.pollQuestionTextView
+                    .setLinkTextColor(ContextCompat.getColor(context, R.color.groups_blue_color));
             addLinkHandler(imageHolder.pollQuestionTextView);
 
-            imageHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
+            imageHolder.postDateTextView
+                    .setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
             if (postList.get(position).getIsAnnon() == 1) {
-                imageHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
-                imageHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
+                imageHolder.usernameTextView.setText(context.getString(R.string.groups_anonymous));
+                imageHolder.userImageView
+                        .setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_incognito));
             } else {
-                imageHolder.usernameTextView.setText(postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo().getLastName());
+                imageHolder.usernameTextView.setText(
+                        postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo()
+                                .getLastName());
                 try {
                     Picasso.get().load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
-                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.userImageView);
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                            .into(imageHolder.userImageView);
                 } catch (Exception e) {
                     imageHolder.userImageView.setBackgroundResource(R.drawable.default_article);
                 }
@@ -579,41 +582,48 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             } else {
                 imageHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
             }
-            imageHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 imageHolder.commentLayout.setVisibility(View.GONE);
-                imageHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
+                imageHolder.postCommentsTextView
+                        .setText(postList.get(position).getResponseCount() + " " + localizedComment);
             } else {
                 imageHolder.beTheFirstOne.setVisibility(View.VISIBLE);
                 imageHolder.commentLayout.setVisibility(View.VISIBLE);
                 imageHolder.postCommentsTextView.setVisibility(View.VISIBLE);
-                imageHolder.postCommentsTextView.setText(mContext.getResources().getString(R.string.group_add_comment_text));
+                imageHolder.postCommentsTextView
+                        .setText(context.getResources().getString(R.string.group_add_comment_text));
             }
-            Map<String, String> imageMap = (Map<String, String>) postList.get(position).getPollOptions();
             imageHolder.lastOptionsContainer.setVisibility(View.GONE);
             imageHolder.option3Container.setVisibility(View.GONE);
             imageHolder.option4Container.setVisibility(View.GONE);
+            Map<String, String> imageMap = (Map<String, String>) postList.get(position).getPollOptions();
             for (Map.Entry<String, String> entry : imageMap.entrySet()) {
                 switch (entry.getKey()) {
                     case "option1":
                         Picasso.get().load(entry.getValue())
-                                .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.option1ImageView);
+                                .placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                                .into(imageHolder.option1ImageView);
                         break;
                     case "option2":
                         Picasso.get().load(entry.getValue())
-                                .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.option2ImageView);
+                                .placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                                .into(imageHolder.option2ImageView);
                         break;
                     case "option3":
                         imageHolder.lastOptionsContainer.setVisibility(View.VISIBLE);
                         imageHolder.option3Container.setVisibility(View.VISIBLE);
                         Picasso.get().load(entry.getValue())
-                                .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.option3ImageView);
+                                .placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                                .into(imageHolder.option3ImageView);
                         break;
                     case "option4":
                         imageHolder.lastOptionsContainer.setVisibility(View.VISIBLE);
                         imageHolder.option4Container.setVisibility(View.VISIBLE);
                         Picasso.get().load(entry.getValue())
-                                .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.option4ImageView);
+                                .placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                                .into(imageHolder.option4ImageView);
+                        break;
+                    default:
                         break;
                 }
             }
@@ -621,7 +631,8 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             imageHolder.pollOption2ProgressBar.setProgress(0f);
             imageHolder.pollOption3ProgressBar.setProgress(0f);
             imageHolder.pollOption4ProgressBar.setProgress(0f);
-            imageHolder.totalVoteCountTextView.setText(mContext.getString(R.string.groups_total_votes, postList.get(position).getTotalVotesCount()));
+            imageHolder.totalVoteCountTextView.setText(
+                    context.getString(R.string.groups_total_votes, postList.get(position).getTotalVotesCount()));
             if (postList.get(position).isVoted()) {
                 showImagePollVotingData(imageHolder, postList.get(position));
             } else {
@@ -631,7 +642,8 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             imageHolder.groupName.setText(postList.get(position).getGroupInfo().getName());
             if (postList.get(position).getGroupInfo().getColor() != null) {
                 imageHolder.groupName.setTextColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
-                imageHolder.groupNameView.setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
+                imageHolder.groupNameView
+                        .setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
             }
             if (postList.get(position).getMarkedHelpful() == 1) {
                 imageHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
@@ -647,19 +659,23 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             case MSG_UPDATE_SEEK_BAR: {
                 if (mediaPlayer != null) {
                     playingHolder.audioSeekBar.setProgress(mediaPlayer.getCurrentPosition());
-                    mHandler.sendEmptyMessageDelayed(MSG_UPDATE_SEEK_BAR, 1000);
+                    handler.sendEmptyMessageDelayed(MSG_UPDATE_SEEK_BAR, 1000);
                     return true;
                 }
             }
             case MSG_UPDATE_TIME: {
                 if (mediaPlayer != null) {
-                    totalDuration = mediaPlayer.getDuration();
-                    currentDuration = mediaPlayer.getCurrentPosition();
-                    playingHolder.audioTimeElapsed.setText(milliSecondsToTimer(currentDuration) + "/" + milliSecondsToTimer(totalDuration));
-                    mHandler.sendEmptyMessageDelayed(MSG_UPDATE_TIME, 1000);
+                    long totalDuration = mediaPlayer.getDuration();
+                    long currentDuration = mediaPlayer.getCurrentPosition();
+                    playingHolder.audioTimeElapsed
+                            .setText(milliSecondsToTimer(currentDuration) + "/" + milliSecondsToTimer(totalDuration));
+                    handler.sendEmptyMessageDelayed(MSG_UPDATE_TIME, 1000);
                     return true;
                 }
             }
+            break;
+            default:
+                break;
         }
         return false;
     }
@@ -680,14 +696,22 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
     }
 
     private void showVotingData(TextPollPostViewHolder textPollPostViewHolder, GroupPostResult postResult) {
-        textPollPostViewHolder.pollOption1ProgressBar.setProgress((100f * postResult.getOption1VoteCount()) / postResult.getTotalVotesCount());
-        textPollPostViewHolder.pollOption2ProgressBar.setProgress((100f * postResult.getOption2VoteCount()) / postResult.getTotalVotesCount());
-        textPollPostViewHolder.pollOption3ProgressBar.setProgress((100f * postResult.getOption3VoteCount()) / postResult.getTotalVotesCount());
-        textPollPostViewHolder.pollOption4ProgressBar.setProgress((100f * postResult.getOption4VoteCount()) / postResult.getTotalVotesCount());
-        textPollPostViewHolder.pollOption1ProgressTextView.setText(AppUtils.round((100f * postResult.getOption1VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
-        textPollPostViewHolder.pollOption2ProgressTextView.setText(AppUtils.round((100f * postResult.getOption2VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
-        textPollPostViewHolder.pollOption3ProgressTextView.setText(AppUtils.round((100f * postResult.getOption3VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
-        textPollPostViewHolder.pollOption4ProgressTextView.setText(AppUtils.round((100f * postResult.getOption4VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
+        textPollPostViewHolder.pollOption1ProgressBar
+                .setProgress((100f * postResult.getOption1VoteCount()) / postResult.getTotalVotesCount());
+        textPollPostViewHolder.pollOption2ProgressBar
+                .setProgress((100f * postResult.getOption2VoteCount()) / postResult.getTotalVotesCount());
+        textPollPostViewHolder.pollOption3ProgressBar
+                .setProgress((100f * postResult.getOption3VoteCount()) / postResult.getTotalVotesCount());
+        textPollPostViewHolder.pollOption4ProgressBar
+                .setProgress((100f * postResult.getOption4VoteCount()) / postResult.getTotalVotesCount());
+        textPollPostViewHolder.pollOption1ProgressTextView.setText(
+                AppUtils.round((100f * postResult.getOption1VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
+        textPollPostViewHolder.pollOption2ProgressTextView.setText(
+                AppUtils.round((100f * postResult.getOption2VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
+        textPollPostViewHolder.pollOption3ProgressTextView.setText(
+                AppUtils.round((100f * postResult.getOption3VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
+        textPollPostViewHolder.pollOption4ProgressTextView.setText(
+                AppUtils.round((100f * postResult.getOption4VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
         textPollPostViewHolder.pollOption1ProgressTextView.setVisibility(View.VISIBLE);
         textPollPostViewHolder.pollOption2ProgressTextView.setVisibility(View.VISIBLE);
         textPollPostViewHolder.pollOption3ProgressTextView.setVisibility(View.VISIBLE);
@@ -703,14 +727,22 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
     }
 
     private void showImagePollVotingData(ImagePollPostViewHolder imageHolder, GroupPostResult postResult) {
-        imageHolder.pollOption1ProgressBar.setProgress((100f * postResult.getOption1VoteCount()) / postResult.getTotalVotesCount());
-        imageHolder.pollOption2ProgressBar.setProgress((100f * postResult.getOption2VoteCount()) / postResult.getTotalVotesCount());
-        imageHolder.pollOption3ProgressBar.setProgress((100f * postResult.getOption3VoteCount()) / postResult.getTotalVotesCount());
-        imageHolder.pollOption4ProgressBar.setProgress((100f * postResult.getOption4VoteCount()) / postResult.getTotalVotesCount());
-        imageHolder.pollOption1TextView.setText(AppUtils.round((100f * postResult.getOption1VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
-        imageHolder.pollOption2TextView.setText(AppUtils.round((100f * postResult.getOption2VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
-        imageHolder.pollOption3TextView.setText(AppUtils.round((100f * postResult.getOption3VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
-        imageHolder.pollOption4TextView.setText(AppUtils.round((100f * postResult.getOption4VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
+        imageHolder.pollOption1ProgressBar
+                .setProgress((100f * postResult.getOption1VoteCount()) / postResult.getTotalVotesCount());
+        imageHolder.pollOption2ProgressBar
+                .setProgress((100f * postResult.getOption2VoteCount()) / postResult.getTotalVotesCount());
+        imageHolder.pollOption3ProgressBar
+                .setProgress((100f * postResult.getOption3VoteCount()) / postResult.getTotalVotesCount());
+        imageHolder.pollOption4ProgressBar
+                .setProgress((100f * postResult.getOption4VoteCount()) / postResult.getTotalVotesCount());
+        imageHolder.pollOption1TextView.setText(
+                AppUtils.round((100f * postResult.getOption1VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
+        imageHolder.pollOption2TextView.setText(
+                AppUtils.round((100f * postResult.getOption2VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
+        imageHolder.pollOption3TextView.setText(
+                AppUtils.round((100f * postResult.getOption3VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
+        imageHolder.pollOption4TextView.setText(
+                AppUtils.round((100f * postResult.getOption4VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
         imageHolder.pollOption1ProgressBar.setVisibility(View.VISIBLE);
         imageHolder.pollOption2ProgressBar.setVisibility(View.VISIBLE);
         imageHolder.pollOption3ProgressBar.setVisibility(View.VISIBLE);
@@ -738,8 +770,8 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
         for (String entry : map.values()) {
             mediaList.add(entry);
         }
-        holder.mViewPagerAdapter.setDataList(mediaList);
-        holder.postDataViewPager.setAdapter(holder.mViewPagerAdapter);
+        holder.viewPagerAdapter.setDataList(mediaList);
+        holder.postDataViewPager.setAdapter(holder.viewPagerAdapter);
         holder.dotIndicatorView.attachToViewPager(holder.postDataViewPager);
         if (mediaList.size() == 1) {
             holder.indexTextView.setVisibility(View.GONE);
@@ -748,9 +780,9 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             holder.indexTextView.setVisibility(View.VISIBLE);
             holder.dotIndicatorView.setVisibility(View.VISIBLE);
         }
-        if (mViewPageStates.containsKey(position)) {
-            holder.postDataViewPager.setCurrentItem(mViewPageStates.get(position));
-            holder.indexTextView.setText((mViewPageStates.get(position) + 1) + "/" + mediaList.size());
+        if (viewPageStates.containsKey(position)) {
+            holder.postDataViewPager.setCurrentItem(viewPageStates.get(position));
+            holder.indexTextView.setText((viewPageStates.get(position) + 1) + "/" + mediaList.size());
         } else {
             holder.indexTextView.setText((holder.postDataViewPager.getCurrentItem() + 1) + "/" + mediaList.size());
         }
@@ -760,23 +792,32 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
     public void onViewRecycled(RecyclerView.ViewHolder holder) {
         if (holder instanceof MediaPostViewHolder) {
             MediaPostViewHolder viewHolder = (MediaPostViewHolder) holder;
-            mViewPageStates.put(holder.getAdapterPosition(), viewHolder.postDataViewPager.getCurrentItem());
+            viewPageStates.put(holder.getAdapterPosition(), viewHolder.postDataViewPager.getCurrentItem());
             super.onViewRecycled(holder);
         }
     }
 
     public class TextPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView userImageView, upvoteImageVIew, whatsappShare;
-        TextView usernameTextView, groupName;
+        ImageView userImageView;
+        ImageView upvoteImageVIew;
+        ImageView whatsappShare;
+        TextView usernameTextView;
+        TextView groupName;
         TextView postDateTextView;
-        TextView postDataTextView, userTag;
-        TextView upvoteCountTextView, downvoteCountTextView;
-        LinearLayout upvoteContainer, downvoteContainer;
-        TextView postCommentsTextView, typeHere, beTheFirstOne;
+        TextView postDataTextView;
+        TextView userTag;
+        TextView upvoteCountTextView;
+        TextView downvoteCountTextView;
+        LinearLayout upvoteContainer;
+        LinearLayout downvoteContainer;
+        TextView postCommentsTextView;
+        TextView typeHere;
+        TextView beTheFirstOne;
         ImageView postSettingImageView;
         ImageView shareTextView;
-        RelativeLayout commentLayout, groupNameLayout;
+        RelativeLayout commentLayout;
+        RelativeLayout groupNameLayout;
         View groupNameView;
 
         TextPostViewHolder(View view) {
@@ -814,71 +855,38 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             whatsappShare.setOnClickListener(this);
             commentLayout.setOnClickListener(this);
             postCommentsTextView.setOnClickListener(this);
-/*
-            commentLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                    intent.putExtra("groupItem", selectedGroup);
-                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT);
-                    intent.putExtra("postData", postList.get(getAdapterPosition()));
-                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
-                }
-            });
-
-
-            postCommentsTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
-
-                        Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                        intent.putExtra("groupItem", selectedGroup);
-                        intent.putExtra("postType", AppConstants.POST_TYPE_TEXT);
-                        intent.putExtra("postData", postList.get(getAdapterPosition()));
-                        intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                        intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                        intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                        ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
-
-                    } else {
-                        Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                        intent.putExtra("groupItem", selectedGroup);
-                        intent.putExtra("postType", AppConstants.POST_TYPE_TEXT);
-                        intent.putExtra("postData", postList.get(getAdapterPosition()));
-                        intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                        intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                        intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                        ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
-                    }
-                }
-            });*/
         }
 
         @Override
         public void onClick(View v) {
-            mListener.onGroupPostRecyclerItemClick(v, getAdapterPosition());
+            recyclerViewClickListener.onGroupPostRecyclerItemClick(v, getAdapterPosition());
         }
     }
 
     public class MediaPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView userImageView, whatsappShare;
-        TextView usernameTextView, groupName;
+
+        ImageView userImageView;
+        ImageView whatsappShare;
+        TextView usernameTextView;
+        TextView groupName;
         TextView postDateTextView;
         TextView postDataTextView;
         ImageView shareTextView;
-        TextView upvoteCountTextView, downvoteCountTextView, userTag;
-        LinearLayout upvoteContainer, downvoteContainer;
-        TextView postCommentsTextView, beTheFirstOne;
-        ImageView postSettingImageView, upvoteImageVIew;
+        TextView upvoteCountTextView;
+        TextView downvoteCountTextView;
+        TextView userTag;
+        LinearLayout upvoteContainer;
+        LinearLayout downvoteContainer;
+        TextView postCommentsTextView;
+        TextView beTheFirstOne;
+        ImageView postSettingImageView;
+        ImageView upvoteImageVIew;
         private IndefinitePagerIndicator dotIndicatorView;
         private GroupPostMediaViewPager postDataViewPager;
         private TextView indexTextView;
-        private GroupMediaPostViewPagerAdapter mViewPagerAdapter;
-        RelativeLayout commentLayout, groupNameLayout;
+        private GroupMediaPostViewPagerAdapter viewPagerAdapter;
+        RelativeLayout commentLayout;
+        RelativeLayout groupNameLayout;
         View groupNameView;
 
         MediaPostViewHolder(View view) {
@@ -908,8 +916,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             groupName = (TextView) view.findViewById(R.id.group_name);
             groupName.setOnClickListener(this);
 
-
-            mViewPagerAdapter = new GroupMediaPostViewPagerAdapter(mContext);
+            viewPagerAdapter = new GroupMediaPostViewPagerAdapter(context);
             postDataViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -937,76 +944,45 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             downvoteContainer.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
             commentLayout.setOnClickListener(this);
-           /* commentLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                    intent.putExtra("postType", AppConstants.POST_TYPE_MEDIA);
-                    intent.putExtra("postData", postList.get(getAdapterPosition()));
-                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getMediaUrls();
-                    intent.putExtra("mediaUrls", linkedTreeMap);
-                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
-                }
-            });
-
-            postCommentsTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
-
-                        Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                        intent.putExtra("postType", AppConstants.POST_TYPE_MEDIA);
-                        intent.putExtra("postData", postList.get(getAdapterPosition()));
-                        LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getMediaUrls();
-                        intent.putExtra("mediaUrls", linkedTreeMap);
-                        intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                        intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                        intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                        ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
-                    } else {
-                        Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                        intent.putExtra("postType", AppConstants.POST_TYPE_MEDIA);
-                        intent.putExtra("postData", postList.get(getAdapterPosition()));
-                        LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getMediaUrls();
-                        intent.putExtra("mediaUrls", linkedTreeMap);
-                        intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                        intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                        intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                        ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
-                    }
-                }
-            });*/
         }
 
         @Override
         public void onClick(View v) {
-            mListener.onGroupPostRecyclerItemClick(v, getAdapterPosition());
+            recyclerViewClickListener.onGroupPostRecyclerItemClick(v, getAdapterPosition());
         }
     }
 
 
-    public class AudioCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, SeekBar.OnSeekBarChangeListener {
+    public class AudioCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+            View.OnLongClickListener, SeekBar.OnSeekBarChangeListener {
 
-        ImageView commentorImageView, playAudioImageView, pauseAudioImageView, whatsappShare, profileImageView;
-        ImageView media, upvoteImageVIew;
-        TextView commentorUsernameTextView, audioTimeElapsed;
+        ImageView commentorImageView;
+        ImageView playAudioImageView;
+        ImageView pauseAudioImageView;
+        ImageView whatsappShare;
+        ImageView profileImageView;
+        ImageView media;
+        ImageView upvoteImageVIew;
+        TextView commentorUsernameTextView;
+        TextView audioTimeElapsed;
         TextView commentDataTextView;
         TextView commentDateTextView;
         View underlineView;
         SeekBar audioSeekBar;
-        TextView upvoteCommentCountTextView, downvoteCommentCountTextView, userTag;
-        LinearLayout upvoteCommentContainer, downvoteCommentContainer;
+        TextView upvoteCommentCountTextView;
+        TextView downvoteCommentCountTextView;
+        TextView userTag;
+        LinearLayout upvoteCommentContainer;
+        LinearLayout downvoteCommentContainer;
         RelativeLayout audiotRootView;
-        TextView postCommentsTextView, beTheFirstOne, groupName;
+        TextView postCommentsTextView;
+        TextView beTheFirstOne;
+        TextView groupName;
         ImageView postSettingImageView;
         ImageView shareTextView;
-        RelativeLayout commentLayout, groupNameLayout;
+        RelativeLayout commentLayout;
+        RelativeLayout groupNameLayout;
         View groupNameView;
-
 
         public AudioCommentViewHolder(View view) {
             super(view);
@@ -1041,50 +1017,6 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             postCommentsTextView.setOnClickListener(this);
             commentLayout.setOnClickListener(this);
 
-        /*    postCommentsTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
-
-                        Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                        intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
-                        intent.putExtra("postData", postList.get(getAdapterPosition()));
-                        LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
-                        intent.putExtra("pollOptions", linkedTreeMap);
-                        intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                        intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                        intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                        ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
-                    } else {
-
-                        Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                        intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
-                        intent.putExtra("postData", postList.get(getAdapterPosition()));
-                        LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
-                        intent.putExtra("pollOptions", linkedTreeMap);
-                        intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                        intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                        intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                        ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
-                    }
-                }
-            });
-            commentLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
-                    intent.putExtra("postData", postList.get(getAdapterPosition()));
-                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
-                    intent.putExtra("pollOptions", linkedTreeMap);
-                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
-                }
-            });*/
-
             groupNameLayout.setOnClickListener(this);
             commentDataTextView.setOnLongClickListener(this);
             view.setOnLongClickListener(this);
@@ -1110,7 +1042,6 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     } else {
                         mediaPlayer.start();
                         playingHolder = this;
-//                        startMediaPlayer(playingPosition);
                         updatePlayingView();
                     }
                 } else {
@@ -1124,17 +1055,16 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     }
                     playingHolder = this;
                     startMediaPlayer(playingPosition);
-                    showProgressDialog(mContext.getString(R.string.please_wait));
+                    showProgressDialog(context.getString(R.string.please_wait));
                 }
-//                updatePlayingView();
             } else {
-                mListener.onGroupPostRecyclerItemClick(view, getAdapterPosition());
+                recyclerViewClickListener.onGroupPostRecyclerItemClick(view, getAdapterPosition());
             }
         }
 
         @Override
         public boolean onLongClick(View view) {
-            mListener.onGroupPostRecyclerItemClick(view, getAdapterPosition());
+            recyclerViewClickListener.onGroupPostRecyclerItemClick(view, getAdapterPosition());
             return true;
         }
 
@@ -1158,22 +1088,44 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
     }
 
     public class TextPollPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView userImageView, whatsappShare;
+
+        ImageView userImageView;
+        ImageView whatsappShare;
         TextView usernameTextView;
         TextView postDateTextView;
-        TextView upvoteCountTextView, downvoteCountTextView;
-        LinearLayout upvoteContainer, downvoteContainer;
+        TextView upvoteCountTextView;
+        TextView downvoteCountTextView;
+        LinearLayout upvoteContainer;
+        LinearLayout downvoteContainer;
         TextView postCommentsTextView;
-        ImageView postSettingImageView, upvoteImageVIew;
-        TextView pollQuestionTextView, beTheFirstOne, userTag;
+        ImageView postSettingImageView;
+        ImageView upvoteImageVIew;
+        TextView pollQuestionTextView;
+        TextView beTheFirstOne;
+        TextView userTag;
         ImageView shareTextView;
-        RoundCornerProgressBar pollOption1ProgressBar, pollOption2ProgressBar, pollOption3ProgressBar, pollOption4ProgressBar;
-        TextView pollOption1TextView, pollOption2TextView, pollOption3TextView, pollOption4TextView;
-        TextView pollResult1TextView, pollResult2TextView, pollResult3TextView, pollResult4TextView;
-        TextView pollOption1ProgressTextView, pollOption2ProgressTextView, pollOption3ProgressTextView, pollOption4ProgressTextView;
-        TextView totalVoteCountTextView, groupName;
-        RelativeLayout option3Container, option4Container;
-        RelativeLayout commentLayout, groupNameLayout;
+        RoundCornerProgressBar pollOption1ProgressBar;
+        RoundCornerProgressBar pollOption2ProgressBar;
+        RoundCornerProgressBar pollOption3ProgressBar;
+        RoundCornerProgressBar pollOption4ProgressBar;
+        TextView pollOption1TextView;
+        TextView pollOption2TextView;
+        TextView pollOption3TextView;
+        TextView pollOption4TextView;
+        TextView pollResult1TextView;
+        TextView pollResult2TextView;
+        TextView pollResult3TextView;
+        TextView pollResult4TextView;
+        TextView pollOption1ProgressTextView;
+        TextView pollOption2ProgressTextView;
+        TextView pollOption3ProgressTextView;
+        TextView pollOption4ProgressTextView;
+        TextView totalVoteCountTextView;
+        TextView groupName;
+        RelativeLayout option3Container;
+        RelativeLayout option4Container;
+        RelativeLayout commentLayout;
+        RelativeLayout groupNameLayout;
         View groupNameView;
 
         TextPollPostViewHolder(View view) {
@@ -1230,104 +1182,56 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             whatsappShare.setOnClickListener(this);
             postCommentsTextView.setOnClickListener(this);
             commentLayout.setOnClickListener(this);
-/*
-            postCommentsTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
-
-                        Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                        intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
-                        intent.putExtra("postData", postList.get(getAdapterPosition()));
-                        LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
-                        intent.putExtra("pollOptions", linkedTreeMap);
-                        intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                        intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                        intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                        ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
-                    } else {
-
-
-                        Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                        intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
-                        intent.putExtra("postData", postList.get(getAdapterPosition()));
-                        LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
-                        intent.putExtra("pollOptions", linkedTreeMap);
-                        intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                        intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                        intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                        ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
-                    }
-                }
-            });
-            commentLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
-                    intent.putExtra("postData", postList.get(getAdapterPosition()));
-                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
-                    intent.putExtra("pollOptions", linkedTreeMap);
-                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
-                }
-            });*/
-            pollOption1ProgressBar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addVote(getAdapterPosition(), "option1");
-                }
-            });
-
-            pollOption2ProgressBar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addVote(getAdapterPosition(), "option2");
-                }
-            });
-
-            pollOption3ProgressBar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addVote(getAdapterPosition(), "option3");
-                }
-            });
-
-            pollOption4ProgressBar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addVote(getAdapterPosition(), "option4");
-                }
-            });
+            pollOption1ProgressBar.setOnClickListener(v -> addVote(getAdapterPosition(), "option1"));
+            pollOption2ProgressBar.setOnClickListener(v -> addVote(getAdapterPosition(), "option2"));
+            pollOption3ProgressBar.setOnClickListener(v -> addVote(getAdapterPosition(), "option3"));
+            pollOption4ProgressBar.setOnClickListener(v -> addVote(getAdapterPosition(), "option4"));
         }
 
         @Override
         public void onClick(View v) {
-            mListener.onGroupPostRecyclerItemClick(v, getAdapterPosition());
+            recyclerViewClickListener.onGroupPostRecyclerItemClick(v, getAdapterPosition());
         }
     }
 
     public class ImagePollPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView userImageView, whatsappShare;
+
+        ImageView userImageView;
+        ImageView whatsappShare;
         TextView usernameTextView;
         TextView postDateTextView;
-        TextView upvoteCountTextView, downvoteCountTextView;
-        LinearLayout upvoteContainer, downvoteContainer;
+        TextView upvoteCountTextView;
+        TextView downvoteCountTextView;
+        LinearLayout upvoteContainer;
+        LinearLayout downvoteContainer;
         TextView postCommentsTextView;
         ImageView postSettingImageView;
-        TextView pollQuestionTextView, userTag;
-        ImageView shareTextView, upvoteImageVIew;
-        ImageView option1ImageView, option2ImageView, option3ImageView, option4ImageView;
-        RoundCornerProgressBar pollOption1ProgressBar, pollOption2ProgressBar, pollOption3ProgressBar, pollOption4ProgressBar;
-        TextView pollOption1TextView, pollOption2TextView, pollOption3TextView, pollOption4TextView;
-        TextView totalVoteCountTextView, beTheFirstOne, groupName;
+        TextView pollQuestionTextView;
+        TextView userTag;
+        ImageView shareTextView;
+        ImageView upvoteImageVIew;
+        ImageView option1ImageView;
+        ImageView option2ImageView;
+        ImageView option3ImageView;
+        ImageView option4ImageView;
+        RoundCornerProgressBar pollOption1ProgressBar;
+        RoundCornerProgressBar pollOption2ProgressBar;
+        RoundCornerProgressBar pollOption3ProgressBar;
+        RoundCornerProgressBar pollOption4ProgressBar;
+        TextView pollOption1TextView;
+        TextView pollOption2TextView;
+        TextView pollOption3TextView;
+        TextView pollOption4TextView;
+        TextView totalVoteCountTextView;
+        TextView beTheFirstOne;
+        TextView groupName;
         LinearLayout lastOptionsContainer;
-        RelativeLayout commentLayout, groupNameLayout;
-        RelativeLayout option1Container, option2Container, option3Container, option4Container;
+        RelativeLayout commentLayout;
+        RelativeLayout groupNameLayout;
+        RelativeLayout option1Container;
+        RelativeLayout option2Container;
+        RelativeLayout option3Container;
+        RelativeLayout option4Container;
         View groupNameView;
 
         ImagePollPostViewHolder(View view) {
@@ -1383,138 +1287,79 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             whatsappShare.setOnClickListener(this);
             commentLayout.setOnClickListener(this);
             postCommentsTextView.setOnClickListener(this);
-            /*commentLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                    intent.putExtra("postType", AppConstants.POST_TYPE_IMAGE_POLL);
-                    intent.putExtra("postData", postList.get(getAdapterPosition()));
-                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
-                    intent.putExtra("pollOptions", linkedTreeMap);
-                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
-                }
-            });
-
-            postCommentsTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
-
-
-                        Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                        intent.putExtra("postType", AppConstants.POST_TYPE_IMAGE_POLL);
-                        intent.putExtra("postData", postList.get(getAdapterPosition()));
-                        LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
-                        intent.putExtra("pollOptions", linkedTreeMap);
-                        intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                        intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                        intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                        ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
-
-                    } else {
-                        Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                        intent.putExtra("postType", AppConstants.POST_TYPE_IMAGE_POLL);
-                        intent.putExtra("postData", postList.get(getAdapterPosition()));
-                        LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
-                        intent.putExtra("pollOptions", linkedTreeMap);
-                        intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                        intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                        intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                        ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
-                    }
-                }
-            });
-*/
-            option1Container.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addVote(getAdapterPosition(), "option1");
-                }
-            });
-
-            option2Container.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addVote(getAdapterPosition(), "option2");
-                }
-            });
-
-            option3Container.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addVote(getAdapterPosition(), "option3");
-                }
-            });
-
-            option4Container.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addVote(getAdapterPosition(), "option4");
-                }
-            });
+            option1Container.setOnClickListener(v -> addVote(getAdapterPosition(), "option1"));
+            option2Container.setOnClickListener(v -> addVote(getAdapterPosition(), "option2"));
+            option3Container.setOnClickListener(v -> addVote(getAdapterPosition(), "option3"));
+            option4Container.setOnClickListener(v -> addVote(getAdapterPosition(), "option4"));
         }
 
         @Override
         public void onClick(View v) {
-            mListener.onGroupPostRecyclerItemClick(v, getAdapterPosition());
+            recyclerViewClickListener.onGroupPostRecyclerItemClick(v, getAdapterPosition());
         }
     }
 
     private void addVote(int position, String option) {
-        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
         GroupActionsRequest groupActionsRequest = new GroupActionsRequest();
         groupActionsRequest.setGroupId(postList.get(position).getGroupId());
         groupActionsRequest.setPostId(postList.get(position).getId());
-        groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(mContext).getDynamoId());
+        groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(context).getDynamoId());
         groupActionsRequest.setVoteOption(option);
         pollPosition = position;
-        Call<GroupsActionVoteResponse> call = groupsAPI.addActionVote(groupActionsRequest);
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
+        Call<GroupsActionVoteResponse> call = groupsApi.addActionVote(groupActionsRequest);
         call.enqueue(groupActionResponseCallback);
     }
 
     private Callback<GroupsActionVoteResponse> groupActionResponseCallback = new Callback<GroupsActionVoteResponse>() {
         @Override
         public void onResponse(Call<GroupsActionVoteResponse> call, Response<GroupsActionVoteResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    if (response.code() == 400) {
-                        try {
-                            String errorBody = new String(response.errorBody().bytes());
-                            JSONObject jObject = new JSONObject(errorBody);
-                            String reason = jObject.getString("reason");
-                            if (!StringUtils.isNullOrEmpty(reason) && "already voted".equals(reason)) {
-
-                                postList.get(pollPosition).setVoted(true);
-                                postList.get(pollPosition).setTotalVotesCount(0);
-                                for (int i = 0; i < jObject.getJSONArray("data").length(); i++) {
-                                    postList.get(pollPosition).setTotalVotesCount(postList.get(pollPosition).getTotalVotesCount()
-                                            + Integer.parseInt(jObject.getJSONArray("data").getJSONObject(i).getString("count")));
-                                    switch (jObject.getJSONArray("data").getJSONObject(i).getString("name")) {
-                                        case "option1":
-                                            postList.get(pollPosition).setOption1VoteCount(Integer.parseInt(jObject.getJSONArray("data").getJSONObject(i).getString("count")));
-                                            break;
-                                        case "option2":
-                                            postList.get(pollPosition).setOption2VoteCount(Integer.parseInt(jObject.getJSONArray("data").getJSONObject(i).getString("count")));
-                                            break;
-                                        case "option3":
-                                            postList.get(pollPosition).setOption3VoteCount(Integer.parseInt(jObject.getJSONArray("data").getJSONObject(i).getString("count")));
-                                            break;
-                                        case "option4":
-                                            postList.get(pollPosition).setOption4VoteCount(Integer.parseInt(jObject.getJSONArray("data").getJSONObject(i).getString("count")));
-                                            break;
-                                    }
+            if (response.body() == null) {
+                if (response.code() == 400) {
+                    try {
+                        String errorBody = new String(response.errorBody().bytes());
+                        JSONObject jsonObject = new JSONObject(errorBody);
+                        String reason = jsonObject.getString("reason");
+                        if (!StringUtils.isNullOrEmpty(reason) && "already voted".equals(reason)) {
+                            postList.get(pollPosition).setVoted(true);
+                            postList.get(pollPosition).setTotalVotesCount(0);
+                            for (int i = 0; i < jsonObject.getJSONArray("data").length(); i++) {
+                                postList.get(pollPosition)
+                                        .setTotalVotesCount(postList.get(pollPosition).getTotalVotesCount()
+                                                + Integer.parseInt(
+                                                jsonObject.getJSONArray("data").getJSONObject(i)
+                                                        .getString("count")));
+                                switch (jsonObject.getJSONArray("data").getJSONObject(i).getString("name")) {
+                                    case "option1":
+                                        postList.get(pollPosition).setOption1VoteCount(Integer.parseInt(
+                                                jsonObject.getJSONArray("data").getJSONObject(i)
+                                                        .getString("count")));
+                                        break;
+                                    case "option2":
+                                        postList.get(pollPosition).setOption2VoteCount(Integer.parseInt(
+                                                jsonObject.getJSONArray("data").getJSONObject(i)
+                                                        .getString("count")));
+                                        break;
+                                    case "option3":
+                                        postList.get(pollPosition).setOption3VoteCount(Integer.parseInt(
+                                                jsonObject.getJSONArray("data").getJSONObject(i)
+                                                        .getString("count")));
+                                        break;
+                                    case "option4":
+                                        postList.get(pollPosition).setOption4VoteCount(Integer.parseInt(
+                                                jsonObject.getJSONArray("data").getJSONObject(i)
+                                                        .getString("count")));
+                                        break;
+                                    default:
+                                        break;
                                 }
-                                notifyDataSetChanged();
                             }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            notifyDataSetChanged();
                         }
+                    } catch (IOException | JSONException e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
                 return;
@@ -1542,14 +1387,13 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                                     postList.get(i).setOption4VoteCount(postList.get(i).getOption4VoteCount() + 1);
                                     postList.get(i).setTotalVotesCount(postList.get(i).getTotalVotesCount() + 1);
                                     break;
+                                default:
+                                    break;
                             }
                             notifyDataSetChanged();
                             break;
                         }
                     }
-
-                } else {
-
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
@@ -1582,17 +1426,17 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
     private class CustomerTextClick extends ClickableSpan {
 
-        private String mUrl;
+        private String url;
 
         CustomerTextClick(String url) {
-            mUrl = url;
+            this.url = url;
         }
 
         @Override
         public void onClick(@NotNull View widget) {
-            Intent intent = new Intent(mContext, NewsLetterWebviewActivity.class);
-            intent.putExtra(Constants.URL, mUrl);
-            mContext.startActivity(intent);
+            Intent intent = new Intent(context, NewsLetterWebviewActivity.class);
+            intent.putExtra(Constants.URL, url);
+            context.startActivity(intent);
         }
     }
 
@@ -1600,7 +1444,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
         mediaPlayer = new MediaPlayer();
         Map<String, String> map = (Map<String, String>) postList.get(position).getMediaUrls();
         for (String entry : map.values()) {
-            fetchAudioUrlFromFirebase(entry, playingHolder.audioSeekBar);
+            fetchAudioUrlFromFirebase(entry);
         }
     }
 
@@ -1616,8 +1460,8 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
     private void updateNonPlayingView(AudioCommentViewHolder holder) {
         if (holder == playingHolder) {
-            mHandler.removeMessages(MSG_UPDATE_SEEK_BAR);
-            mHandler.removeMessages(MSG_UPDATE_TIME);
+            handler.removeMessages(MSG_UPDATE_SEEK_BAR);
+            handler.removeMessages(MSG_UPDATE_TIME);
         }
         holder.audioSeekBar.setEnabled(false);
         holder.audioSeekBar.setProgress(0);
@@ -1631,87 +1475,66 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
         playingHolder.audioSeekBar.setEnabled(true);
         if (mediaPlayer.isPlaying()) {
             playingHolder.audioTimeElapsed.setVisibility(View.VISIBLE);
-            mHandler.sendEmptyMessageDelayed(MSG_UPDATE_SEEK_BAR, 1000);
-            mHandler.sendEmptyMessageDelayed(MSG_UPDATE_TIME, 1000);
+            handler.sendEmptyMessageDelayed(MSG_UPDATE_SEEK_BAR, 1000);
+            handler.sendEmptyMessageDelayed(MSG_UPDATE_TIME, 1000);
             playingHolder.playAudioImageView.setImageResource(R.drawable.pause);
         } else {
-            mHandler.removeMessages(MSG_UPDATE_SEEK_BAR);
-            mHandler.removeMessages(MSG_UPDATE_TIME);
+            handler.removeMessages(MSG_UPDATE_SEEK_BAR);
+            handler.removeMessages(MSG_UPDATE_TIME);
             playingHolder.playAudioImageView.setImageResource(R.drawable.play);
             playingHolder.audioTimeElapsed.setVisibility(View.GONE);
         }
     }
 
     public void showProgressDialog(String bodyText) {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(mContext);
-            mProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            mProgressDialog.setCancelable(false);
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(context);
+            progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            progressDialog.setCancelable(false);
         }
-
-        mProgressDialog.setMessage(bodyText);
-
-        if (!mProgressDialog.isShowing()) {
-            mProgressDialog.show();
+        progressDialog.setMessage(bodyText);
+        if (!progressDialog.isShowing()) {
+            progressDialog.show();
         }
     }
 
     public void removeProgressDialog() {
         try {
-            if (mProgressDialog != null && mProgressDialog.isShowing()) {
-                mProgressDialog.dismiss();
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
-    private void fetchAudioUrlFromFirebase(String url, SeekBar audioSeekBar) {
+    private void fetchAudioUrlFromFirebase(String url) {
         final FirebaseStorage storage = FirebaseStorage.getInstance();
         // Create a storage reference from our app
 
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         StorageReference storageRef = storage.getReferenceFromUrl(url);
-        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                try {
-                    // Download url of file
-                    final String url = uri.toString();
-                    mediaPlayer.setDataSource(url);
-                    // wait for media player to get prepare
-                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mediaPlayer) {
-                            removeProgressDialog();
-                            mediaPlayer.start();
-                            updatePlayingView();
-//                            updateProgressBar();
-                        }
-                    });
-                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                        @Override
-                        public void onCompletion(MediaPlayer mediaPlayer) {
-                            mHandler.removeMessages(MSG_UPDATE_SEEK_BAR);
-                            mHandler.removeMessages(MSG_UPDATE_TIME);
-                            releaseMediaPlayer();
-                        }
-                    });
-                    mediaPlayer.prepareAsync();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.i("TAG", e.getMessage());
-                    }
+        storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            try {
+                // Download url of file
+                final String url1 = uri.toString();
+                mediaPlayer.setDataSource(url1);
+                // wait for media player to get prepare
+                mediaPlayer.setOnPreparedListener(mediaPlayer -> {
+                    removeProgressDialog();
+                    mediaPlayer.start();
+                    updatePlayingView();
                 });
-
+                mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                    handler.removeMessages(MSG_UPDATE_SEEK_BAR);
+                    handler.removeMessages(MSG_UPDATE_TIME);
+                    releaseMediaPlayer();
+                });
+                mediaPlayer.prepareAsync();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).addOnFailureListener(e -> Log.i("TAG", e.getMessage()));
     }
 
     public String milliSecondsToTimer(long milliseconds) {
@@ -1742,7 +1565,6 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
     public void releasePlayer() {
         if (mediaPlayer != null) {
-//            mediaPlayer.stop();
             updateNonPlayingView(playingHolder);
             mediaPlayer.release();
             mediaPlayer = null;
@@ -1751,8 +1573,8 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
     }
 
     public interface RecyclerViewClickListener {
-        void onGroupPostRecyclerItemClick(View view, int position);
 
+        void onGroupPostRecyclerItemClick(View view, int position);
     }
 
 }
