@@ -10,6 +10,8 @@ EXIT_STATUS=0
 
 ./gradlew checkStyleChanged --rerun-tasks || EXIT_STATUS=$?
 
+./gradlew lint --rerun-tasks || EXIT_STATUS=$?
+
 git stash pop -q
 
 # return 1 exit code if running checks fails
