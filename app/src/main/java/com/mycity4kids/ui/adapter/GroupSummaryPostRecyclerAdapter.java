@@ -46,6 +46,9 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
     public static final int POST_TYPE_TEXT = 1;
     public static final int POST_TYPE_MEDIA = 2;
     public static final int POST_TYPE_TEXT_POLL = 3;
+
+
+
     private static final int POST_TYPE_IMAGE_POLL = 4;
 
     private HashMap<Integer, Integer> viewPageStates = new HashMap<>();
