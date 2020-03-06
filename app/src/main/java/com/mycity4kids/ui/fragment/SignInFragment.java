@@ -75,7 +75,7 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
                 SendSMSFragment fragment = new SendSMSFragment();
                 Bundle mBundle = new Bundle();
                 fragment.setArguments(mBundle);
-                ((ActivityLogin) getActivity()).replaceFragmentWithAnimation(fragment, mBundle, true);
+                ((ActivityLogin) getActivity()).replaceFragmentWithAnimation(fragment, mBundle);
             }
             break;
             case R.id.connect_facebook:
@@ -91,14 +91,14 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
                 EmailLoginFragment emailLoginFragment = new EmailLoginFragment();
                 Bundle mBundle = new Bundle();
                 emailLoginFragment.setArguments(mBundle);
-                ((ActivityLogin) getActivity()).replaceFragmentWithAnimation(emailLoginFragment, mBundle, true);
+                ((ActivityLogin) getActivity()).replaceFragmentWithAnimation(emailLoginFragment, mBundle);
                 break;
             case R.id.signupTextView:
                 Utils.pushGenericEvent(getActivity(), "Launch_sign_up_from_sign_in_event", "NA", "SignInFragment");
                 SignUpFragment signUpFragment = new SignUpFragment();
                 Bundle bundle = new Bundle();
                 signUpFragment.setArguments(bundle);
-                ((ActivityLogin) getActivity()).replaceFragmentWithAnimation(signUpFragment, bundle, true);
+                ((ActivityLogin) getActivity()).replaceFragmentWithAnimation(signUpFragment, bundle);
                 break;
             default:
                 break;

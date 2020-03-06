@@ -42,8 +42,6 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -604,7 +602,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             ExploreArticleListingTypeFragment fragment0 = new ExploreArticleListingTypeFragment();
                             Bundle mBundle0 = new Bundle();
                             fragment0.setArguments(mBundle0);
-                            addFragment(fragment0, mBundle0, true);
+                            addFragment(fragment0, mBundle0);
                             break;
                         case R.id.action_momVlog:
                             MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
@@ -631,7 +629,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             FragmentMC4KHomeNew fragment1 = new FragmentMC4KHomeNew();
                             Bundle mBundle1 = new Bundle();
                             fragment1.setArguments(mBundle1);
-                            addFragment(fragment1, mBundle1, true);
+                            addFragment(fragment1, mBundle1);
                             break;
                         case R.id.action_write:
                             userAllDraftsRecyclerAdapter.notifyDataSetChanged();
@@ -663,7 +661,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             GroupsViewFragment groupsFragment = new GroupsViewFragment();
                             Bundle eBundle = new Bundle();
                             groupsFragment.setArguments(eBundle);
-                            addFragment(groupsFragment, eBundle, true);
+                            addFragment(groupsFragment, eBundle);
                             break;
                     }
                     return true;
@@ -682,23 +680,23 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             SuggestedTopicsFragment fragment0 = new SuggestedTopicsFragment();
             Bundle mBundle0 = new Bundle();
             fragment0.setArguments(mBundle0);
-            addFragment(fragment0, mBundle0, true);
+            addFragment(fragment0, mBundle0);
         } else if (Constants.SHORT_STOY_FRAGMENT.equals(fragmentToLoad)) {
             TopicsShortStoriesContainerFragment fragment1 = new TopicsShortStoriesContainerFragment();
             Bundle mBundle1 = new Bundle();
             mBundle1.putString("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
             fragment1.setArguments(mBundle1);
-            addFragment(fragment1, mBundle1, true);
+            addFragment(fragment1, mBundle1);
         } else if (Constants.GROUP_LISTING_FRAGMENT.equals(fragmentToLoad)) {
             GroupsViewFragment fragment1 = new GroupsViewFragment();
             Bundle mBundle1 = new Bundle();
             fragment1.setArguments(mBundle1);
-            addFragment(fragment1, mBundle1, true);
+            addFragment(fragment1, mBundle1);
         } else if (Constants.CREATE_CONTENT_PROMPT.equals(fragmentToLoad)) {
-            replaceFragment(new FragmentMC4KHomeNew(), null, false);
+            replaceFragment(new FragmentMC4KHomeNew(), null);
             bottomNavigationView.setSelectedItemId(R.id.action_write);
         } else {
-            replaceFragment(new FragmentMC4KHomeNew(), null, false);
+            replaceFragment(new FragmentMC4KHomeNew(), null);
             String tabType = getIntent().getStringExtra("TabType");
             if ("profile".equals(tabType)) {
                 bottomNavigationView.setSelectedItemId(R.id.action_profile);
@@ -1864,7 +1862,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 FragmentMC4KHomeNew fragment1 = new FragmentMC4KHomeNew();
                 Bundle mBundle1 = new Bundle();
                 fragment1.setArguments(mBundle1);
-                addFragment(fragment1, mBundle1, true);
+                addFragment(fragment1, mBundle1);
                 break;
             case R.id.articleContainer:
                 hideCreateContentView();
@@ -1874,7 +1872,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     BecomeBloggerFragment becomeBloggerFragment = new BecomeBloggerFragment();
                     Bundle searchBundle = new Bundle();
                     becomeBloggerFragment.setArguments(searchBundle);
-                    addFragment(becomeBloggerFragment, searchBundle, true);
+                    addFragment(becomeBloggerFragment, searchBundle);
                 } else {
                     Intent intent = new Intent(this, SuggestedTopicsActivity.class);
                     startActivity(intent);
@@ -1995,7 +1993,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 GroupsViewFragment groupsFragment = new GroupsViewFragment();
                 Bundle eBundle = new Bundle();
                 groupsFragment.setArguments(eBundle);
-                addFragment(groupsFragment, eBundle, true);
+                addFragment(groupsFragment, eBundle);
             }
             break;
             case R.id.rewardsTextView: {

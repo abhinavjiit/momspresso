@@ -73,7 +73,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI
 import com.mycity4kids.ui.activity.ChangePasswordActivity
 import com.mycity4kids.ui.activity.OTPActivity
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter
-import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment
 import com.mycity4kids.ui.fragment.CityListingDialogFragment
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.ui.rewards.dialog.PickerDialogFragment
@@ -107,7 +106,6 @@ const val ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111
 const val ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE = 1113
 
 class ProfileInfoFragment : BaseFragment(),
-    ChangePreferredLanguageDialogFragment.OnClickDoneListener,
     CityListingDialogFragment.IChangeCity, PickerDialogFragment.OnClickDoneListener {
 
     private var isNewRegistration: Boolean = false
@@ -138,9 +136,6 @@ class ProfileInfoFragment : BaseFragment(),
         currentCityName = cityName
         selectedCityId = Integer.parseInt(cityList.get(pos).getId().replace("city-", ""))
         newSelectedCityId = cityList.get(pos).getId()
-    }
-
-    override fun onItemClick(language: String?) {
     }
 
     private lateinit var containerView: View

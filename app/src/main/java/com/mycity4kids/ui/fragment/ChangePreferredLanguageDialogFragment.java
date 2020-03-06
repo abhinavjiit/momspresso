@@ -4,52 +4,48 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.rewards.fragment.RewardsPersonalInfoFragment;
-import com.mycity4kids.utils.LocaleManager;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
+import com.yariksoffice.lingver.Lingver;
 
 /**
  * Created by user on 08-06-2015.
  */
 public class ChangePreferredLanguageDialogFragment extends DialogFragment implements OnClickListener {
 
-    private TextView englishTextView, hindiTextView, marathiTextView, bengaliTextView, tamilTextView,
-            teleguTextView, malayalamTextView, kannadaTextView, gujratiTextView, punjabiTextView;
-    private String selectedLang = "";
+    private TextView englishTextView;
+    private TextView hindiTextView;
+    private TextView marathiTextView;
+    private TextView bengaliTextView;
+    private TextView tamilTextView;
+    private TextView teleguTextView;
+    private TextView malayalamTextView;
+    private TextView kannadaTextView;
+    private TextView gujratiTextView;
+    private TextView punjabiTextView;
     private TextView cancelTextView;
     private String userId = "";
-    private Boolean isFromPopup = false;
-    private static OnClickDoneListener onClickDoneListener;
+    private String selectedLang;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            Bundle bundle = getArguments();
-            isFromPopup = bundle.getBoolean("isFromPopup");
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.choose_preferred_lang_dialog, container,
                 false);
@@ -91,7 +87,8 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
         switch (view.getId()) {
             case R.id.englishTextView:
                 if (isAdded()) {
-                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_english));
+                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId,
+                            getString(R.string.language_label_english));
                 }
                 selectedLang = AppConstants.LOCALE_ENGLISH;
                 englishTextView.setSelected(true);
@@ -103,12 +100,12 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
                 kannadaTextView.setSelected(false);
                 malayalamTextView.setSelected(false);
                 gujratiTextView.setSelected(false);
-
-                setNewLocale(selectedLang, false);
+                setNewLocale(selectedLang);
                 break;
             case R.id.hindiTextView:
                 if (isAdded()) {
-                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_hindi));
+                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId,
+                            getString(R.string.language_label_hindi));
                 }
                 selectedLang = AppConstants.LOCALE_HINDI;
                 englishTextView.setSelected(false);
@@ -120,12 +117,12 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
                 kannadaTextView.setSelected(false);
                 malayalamTextView.setSelected(false);
                 gujratiTextView.setSelected(false);
-
-                setNewLocale(selectedLang, false);
+                setNewLocale(selectedLang);
                 break;
             case R.id.marathiTextView:
                 if (isAdded()) {
-                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_marathi));
+                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId,
+                            getString(R.string.language_label_marathi));
                 }
                 selectedLang = AppConstants.LOCALE_MARATHI;
                 englishTextView.setSelected(false);
@@ -137,12 +134,12 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
                 kannadaTextView.setSelected(false);
                 malayalamTextView.setSelected(false);
                 gujratiTextView.setSelected(false);
-
-                setNewLocale(selectedLang, false);
+                setNewLocale(selectedLang);
                 break;
             case R.id.bengaliTextView:
                 if (isAdded()) {
-                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_bengali));
+                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId,
+                            getString(R.string.language_label_bengali));
                 }
                 selectedLang = AppConstants.LOCALE_BENGALI;
                 englishTextView.setSelected(false);
@@ -154,12 +151,12 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
                 kannadaTextView.setSelected(false);
                 malayalamTextView.setSelected(false);
                 gujratiTextView.setSelected(false);
-
-                setNewLocale(selectedLang, false);
+                setNewLocale(selectedLang);
                 break;
             case R.id.tamilTextView:
                 if (isAdded()) {
-                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_tamil));
+                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId,
+                            getString(R.string.language_label_tamil));
                 }
                 selectedLang = AppConstants.LOCALE_TAMIL;
                 englishTextView.setSelected(false);
@@ -171,12 +168,12 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
                 kannadaTextView.setSelected(false);
                 malayalamTextView.setSelected(false);
                 gujratiTextView.setSelected(false);
-
-                setNewLocale(selectedLang, false);
+                setNewLocale(selectedLang);
                 break;
             case R.id.teluguTextView:
                 if (isAdded()) {
-                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_telegu));
+                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId,
+                            getString(R.string.language_label_telegu));
                 }
                 selectedLang = AppConstants.LOCALE_TELUGU;
                 englishTextView.setSelected(false);
@@ -188,12 +185,12 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
                 kannadaTextView.setSelected(false);
                 malayalamTextView.setSelected(false);
                 gujratiTextView.setSelected(false);
-
-                setNewLocale(selectedLang, false);
+                setNewLocale(selectedLang);
                 break;
             case R.id.kannadaTextView:
                 if (isAdded()) {
-                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_kannada));
+                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId,
+                            getString(R.string.language_label_kannada));
                 }
                 selectedLang = AppConstants.LOCALE_KANNADA;
                 englishTextView.setSelected(false);
@@ -206,11 +203,12 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
                 malayalamTextView.setSelected(false);
                 gujratiTextView.setSelected(false);
 
-                setNewLocale(selectedLang, false);
+                setNewLocale(selectedLang);
                 break;
             case R.id.malayalamTextView:
                 if (isAdded()) {
-                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_malayalam));
+                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId,
+                            getString(R.string.language_label_malayalam));
                 }
                 selectedLang = AppConstants.LOCALE_MALAYALAM;
                 englishTextView.setSelected(false);
@@ -222,13 +220,12 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
                 kannadaTextView.setSelected(false);
                 malayalamTextView.setSelected(true);
                 gujratiTextView.setSelected(false);
-
-                setNewLocale(selectedLang, false);
+                setNewLocale(selectedLang);
                 break;
-
             case R.id.gujratiTextView:
                 if (isAdded()) {
-                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_gujarati));
+                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId,
+                            getString(R.string.language_label_gujarati));
                 }
                 selectedLang = AppConstants.LOCALE_GUJARATI;
                 englishTextView.setSelected(false);
@@ -240,13 +237,12 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
                 kannadaTextView.setSelected(false);
                 malayalamTextView.setSelected(false);
                 gujratiTextView.setSelected(true);
-                setNewLocale(selectedLang, false);
+                setNewLocale(selectedLang);
                 break;
-
             case R.id.punjabiTextView:
-
                 if (isAdded()) {
-                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_punjabi));
+                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId,
+                            getString(R.string.language_label_punjabi));
                 }
                 selectedLang = AppConstants.LOCALE_PUNJABI;
                 englishTextView.setSelected(false);
@@ -259,43 +255,27 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
                 malayalamTextView.setSelected(false);
                 gujratiTextView.setSelected(false);
                 punjabiTextView.setSelected(true);
-                setNewLocale(selectedLang, false);
+                setNewLocale(selectedLang);
                 break;
-
             case R.id.cancelTextView:
                 dismiss();
                 break;
+            default:
+                break;
         }
     }
 
-    public static ChangePreferredLanguageDialogFragment newInstance(RewardsPersonalInfoFragment context, Boolean isUsingAsPopup) {
-        onClickDoneListener = context;
-        Bundle args = new Bundle();
-        args.putBoolean("isFromPopup", isUsingAsPopup);
-        ChangePreferredLanguageDialogFragment fragment = new ChangePreferredLanguageDialogFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    private void setNewLocale(String language, boolean restartProcess) {
-        if (isFromPopup) {
-            onClickDoneListener.onItemClick(language);
-            dismiss();
-        } else {
-            getApplicationContext().deleteFile(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
-            getApplicationContext().deleteFile(AppConstants.CATEGORIES_JSON_FILE);
-            BaseApplication.setTopicList(null);
-            BaseApplication.setTopicsMap(null);
-            BaseApplication.setShortStoryTopicList(null);
-            LocaleManager.setNewLocale(getActivity(), language);
-            SharedPrefUtils.setConfigCategoryVersion(BaseApplication.getAppContext(), 0);
-            Intent i = new Intent(getActivity(), DashboardActivity.class);
-            startActivity(i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+    private void setNewLocale(String language) {
+        BaseApplication.getAppContext().deleteFile(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
+        BaseApplication.getAppContext().deleteFile(AppConstants.CATEGORIES_JSON_FILE);
+        BaseApplication.setTopicList(null);
+        BaseApplication.setTopicsMap(null);
+        BaseApplication.setShortStoryTopicList(null);
+        if (getActivity() != null) {
+            Lingver.getInstance().setLocale(getActivity(), language, "IN");
         }
+        SharedPrefUtils.setConfigCategoryVersion(BaseApplication.getAppContext(), 0);
+        Intent i = new Intent(getActivity(), DashboardActivity.class);
+        startActivity(i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
     }
-
-    public interface OnClickDoneListener {
-        void onItemClick(String language);
-    }
-
 }

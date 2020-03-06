@@ -1,3 +1,6 @@
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -37,19 +40,20 @@ android {
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 187
-        versionName "13.0.3"
+        versionName "13.0.31"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            minifyEnabled false
-            shrinkResources false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt'
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     configurations {
@@ -76,7 +80,6 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.gms:play-services-plus:17.0.0'
@@ -141,6 +144,9 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
 
     implementation 'com.github.nkzawa:socket.io-client:0.6.0'
+
+    implementation "com.github.YarikSOffice:lingver:1.2.1"
+
     compile('io.socket:socket.io-client:0.8.3') {
         exclude group: 'org.json', module: 'json'
     }
@@ -181,6 +187,59 @@ task checkstyle(type: Checkstyle) {
     def configProps = ['proj.module.dir': projectDir.absolutePath]
     configProperties configProps
     // Define the output folder of the generated reports
+    reports {
+        html {
+            enabled true
+            destination rootProject.file("build/reports/checkstyle/checkstyle.html")
+        }
+        xml {
+            enabled true
+            destination rootProject.file("build/reports/checkstyle/checkstyle.xml")
+        }
+    }
+}
+
+// Execute Checkstyle on all modified files
+task checkstyleChanged(type: Checkstyle) {
+    def changedFiles = getChangedFiles()
+    include changedFiles
+}
+
+/**
+ * Get all files that are changed but not deleted nor renamed.
+ * Compares to master or the specified target branch.
+ *
+ * @return list of all changed files
+ */
+def getChangedFiles() {
+    // Get list of all changed files including status
+    def systemOutStream = new ByteArrayOutputStream()
+    def command = "git diff HEAD --name-status --diff-filter=dr"
+    command.execute().waitForProcessOutput(systemOutStream, System.err)
+    def allFiles = systemOutStream.toString().trim().split('\n')
+    systemOutStream.close()
+
+    // Remove the status prefix
+    Pattern statusPattern = Pattern.compile("(\\w)\\t+(.+)")
+    List<String> files = new ArrayList<>()
+    for (file in allFiles) {
+        println file
+        Matcher matcher = statusPattern.matcher(file)
+        if (matcher.find()) {
+            files.add(matcher.group(2))
+        }
+    }
+
+    // Return the list of touched files
+    files
+}
+
+// Customize all the Checkstyle tasks
+tasks.withType(Checkstyle) {
+    // Specify all files that should be checked
+    classpath = files()
+    source "${project.rootDir}"
+
     reports {
         html {
             enabled true

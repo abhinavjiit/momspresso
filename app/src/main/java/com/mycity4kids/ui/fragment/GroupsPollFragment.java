@@ -113,7 +113,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         postList = new ArrayList<>();
-        myFeedPollGenericRecyclerAdapter = new MyFeedPollGenericRecyclerAdapter(getContext(), this, selectedGroup, memberType);
+        myFeedPollGenericRecyclerAdapter = new MyFeedPollGenericRecyclerAdapter(getContext(), this);
         myFeedPollGenericRecyclerAdapter.setData(postList);
         postSettingsContainer = (LinearLayout) fragmentView.findViewById(R.id.postSettingsContainer);
         postSettingsContainerMain = (RelativeLayout) fragmentView.findViewById(R.id.postSettingsContainerMain);

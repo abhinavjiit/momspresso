@@ -2,26 +2,24 @@ package com.mycity4kids.ui.activity;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
-
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
-
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.StringUtils;
+import androidx.appcompat.widget.Toolbar;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.utils.StringUtils;
 
 /**
  * Created by Hemant Parmar on 25-08-2015.
  */
 public class NewsLetterWebviewActivity extends BaseActivity {
+
     private String url;
     private WebView webview;
     private Toolbar toolbar;
@@ -35,7 +33,8 @@ public class NewsLetterWebviewActivity extends BaseActivity {
         ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
-        Utils.pushOpenScreenEvent(NewsLetterWebviewActivity.this, "WebViewScreen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(NewsLetterWebviewActivity.this, "WebViewScreen",
+                SharedPrefUtils.getUserDetailModel(this).getId() + "");
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         webview = (WebView) findViewById(R.id.webview);
 

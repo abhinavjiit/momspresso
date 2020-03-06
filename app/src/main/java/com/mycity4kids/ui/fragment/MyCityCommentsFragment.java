@@ -206,7 +206,7 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
                 }
                 commentFrag.setArguments(_args);
                 ((ArticleDetailsContainerActivity) getActivity()).hideToolbarPerm();
-                ((ArticleDetailsContainerActivity) getActivity()).addFragment(commentFrag, null, true, "topToBottom");
+                ((ArticleDetailsContainerActivity) getActivity()).addFragment(commentFrag, null, "topToBottom");
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
