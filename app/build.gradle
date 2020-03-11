@@ -180,6 +180,8 @@ task checkstyle(type: Checkstyle) {
     classpath = files()
     source "${project.rootDir}"
     include '**/*.java'
+    exclude '**/test/**'
+    exclude '**/androidTest/**'
     exclude '**/gen/**'
     exclude '**/R.java'
     exclude '**/BuildConfig.java'
@@ -277,7 +279,12 @@ tasks.withType(Checkstyle) {
     // Specify all files that should be checked
     classpath = files()
     source "${project.rootDir}"
-
+    include '**/*.java'
+    exclude '**/test/**'
+    exclude '**/androidTest/**'
+    exclude '**/gen/**'
+    exclude '**/R.java'
+    exclude '**/BuildConfig.java'
     reports {
         html {
             enabled true
