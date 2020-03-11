@@ -1,12 +1,5 @@
 package com.mycity4kids.constants;
 
-import android.net.Uri;
-
-import com.mycity4kids.BuildConfig;
-
-/**
- * @author Hemant Parmar
- */
 public class AppConstants {
 
     public static final String DEV_URL = "http://54.169.17.138/";
@@ -47,9 +40,6 @@ public class AppConstants {
     public static final String SLIDER_POSITION = "slider_position";
     public static final String NOTIFICATION_ID = "notification_id";
 
-    /**
-     * Deep Linking Constants
-     */
     public static final String DEEP_LINK_URL = "deep_link_url";
     public static final String DEEP_LINK_AUTHOR_LISTING = "author_listing";
     public static final String DEEP_LINK_BLOGGER_LISTING = "blogger_listing";
@@ -355,7 +345,7 @@ public class AppConstants {
 
     public static final String MIX_PANEL_TOKEN = "76ebc952badcc143b417b3a4cf89cadd";
     public static final long HOURS_24_TIMESTAMP = 86400000;
-    public static final long DAYS_10_TIMESTAMP = 1209600000l;
+    public static final long DAYS_10_TIMESTAMP = 1209600000L;
 
     public static final String ANDROID_NEW_EDITOR = "android_new_editor";
     public static final String ANDROID_OLD_EDITOR = "android_old_editor";
@@ -411,7 +401,5 @@ public class AppConstants {
     public static final String STORY_CATEGORY_INSPIRATIONAL = "category-f1a5dcea3d884bd8b75e0da8fb1763d3";
     public static final String STORY_CATEGORY_DARK = "category-c9fa6d31a7c44699a8df5814030399a2";
 
-    enum SocialPlatformName {
-
-    }
+    public static final String NEW_ARTICLE_DETAIL_FLAG = "new_article_detail_flag";
 }

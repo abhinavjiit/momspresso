@@ -266,6 +266,7 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
     }
 
     private void setNewLocale(String language) {
+        dismiss();
         BaseApplication.getAppContext().deleteFile(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
         BaseApplication.getAppContext().deleteFile(AppConstants.CATEGORIES_JSON_FILE);
         BaseApplication.setTopicList(null);
@@ -275,7 +276,10 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
             Lingver.getInstance().setLocale(getActivity(), language, "IN");
         }
         SharedPrefUtils.setConfigCategoryVersion(BaseApplication.getAppContext(), 0);
-        Intent i = new Intent(getActivity(), DashboardActivity.class);
-        startActivity(i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+        if (getActivity() != null) {
+            Intent i = new Intent(getActivity(), DashboardActivity.class);
+            getActivity().finish();
+            startActivity(i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+        }
     }
 }

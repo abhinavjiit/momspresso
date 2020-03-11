@@ -27,20 +27,23 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.annotation.NonNull;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.material.snackbar.Snackbar;
-import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.DateTimeUtils;
-import com.mycity4kids.utils.StringUtils;
-import com.mycity4kids.utils.ToastUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
@@ -66,39 +69,34 @@ import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.utils.DateTimeUtils;
 import com.mycity4kids.utils.GroupIdCategoryMap;
 import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.SharingUtils;
+import com.mycity4kids.utils.StringUtils;
+import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.widget.StoryShareCardWidget;
-
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Map;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.view.menu.MenuBuilder;
-import androidx.appcompat.view.menu.MenuPopupHelper;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import okhttp3.ResponseBody;
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class ArticleListingFragment extends BaseFragment implements GroupIdCategoryMap.GroupCategoryInterface, View.OnClickListener,
+public class ArticleListingFragment extends BaseFragment implements GroupIdCategoryMap.GroupCategoryInterface,
+        View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
-    private final static int LIMIT = 15;
-    private final static int FORYOU_LIMIT = 10;
+    private static final int LIMIT = 15;
+    private static final int FORYOU_LIMIT = 10;
     private static final int REQUEST_INIT_PERMISSION = 2;
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
     private MainArticleRecyclerViewAdapter recyclerAdapter;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
     private ArrayList<CampaignDataListResult> campaignListDataModels;
@@ -108,10 +106,12 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
     private boolean isReuqestRunning = false;
     private ProgressBar progressBar;
     private String chunks = "";
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private int pastVisiblesItems;
+    private int visibleItemCount;
+    private int totalItemCount;
     private boolean isHeaderVisible = false;
-    private boolean mIsVisibleToUser;
-    private RelativeLayout mLodingView;
+    private boolean isVisibleToUser;
+    private RelativeLayout lodingView;
     private TextView noBlogsTextView;
     private RecyclerView recyclerView;
     private LinearLayout addTopicsLayout;
@@ -119,7 +119,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
     private ShimmerFrameLayout ashimmerFrameLayout;
     private SwipeRefreshLayout pullToRefresh;
     private boolean fromPullToRefresh;
-    private Context mContext;
+    private Context activityContext;
     private int tabPosition;
     private MixpanelAPI mixpanel;
     private Tracker tracker;
@@ -138,7 +138,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mContext = context;
+        activityContext = context;
     }
 
     @Override
@@ -147,7 +147,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
 
         recyclerView = rootView.findViewById(R.id.recyclerView);
         ashimmerFrameLayout = rootView.findViewById(R.id.shimmer1);
-        mLodingView = rootView.findViewById(R.id.relativeLoadingView);
+        lodingView = rootView.findViewById(R.id.relativeLoadingView);
         noBlogsTextView = rootView.findViewById(R.id.noBlogsTextView);
         progressBar = rootView.findViewById(R.id.progressBar);
         addTopicsLayout = rootView.findViewById(R.id.addTopicsLayout);
@@ -160,7 +160,8 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
 
         addTopicsLayout.setOnClickListener(this);
 
-        rootView.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.rotate_indefinitely));
+        rootView.findViewById(R.id.imgLoader)
+                .startAnimation(AnimationUtils.loadAnimation(activityContext, R.anim.rotate_indefinitely));
         if (getArguments() != null) {
             sortType = getArguments().getString(Constants.SORT_TYPE);
             tabPosition = getArguments().getInt(Constants.TAB_POSITION);
@@ -169,25 +170,26 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         articleDataModelsNew = new ArrayList<>();
         campaignListDataModels = new ArrayList<>();
         nextPageNumber = 1;
-        hitArticleListingApi(nextPageNumber, sortType);
+        hitArticleListingApi(sortType);
 
         if (tabPosition == 0) {
-            long timeDiff = System.currentTimeMillis() - SharedPrefUtils.getLastLoginTimestamp(BaseApplication.getAppContext()) - AppConstants.HOURS_24_TIMESTAMP;
+            long timeDiff =
+                    System.currentTimeMillis() - SharedPrefUtils.getLastLoginTimestamp(BaseApplication.getAppContext())
+                            - AppConstants.HOURS_24_TIMESTAMP;
             if (SharedPrefUtils.getFollowTopicApproachChangeFlag(BaseApplication.getAppContext())) {
-                if (SharedPrefUtils.getFollowedTopicsCount(BaseApplication.getAppContext()) < 1 && timeDiff < 0 &&
-                        !SharedPrefUtils.isTopicSelectionChanged(BaseApplication.getAppContext()) &&
-                        !SharedPrefUtils.getUserSkippedFollowTopicFlag(BaseApplication.getAppContext())) {
-                    isHeaderVisible = true;
-                } else {
-                    isHeaderVisible = false;
-                }
+                isHeaderVisible =
+                        SharedPrefUtils.getFollowedTopicsCount(BaseApplication.getAppContext()) < 1 && timeDiff < 0
+                                && !SharedPrefUtils.isTopicSelectionChanged(BaseApplication.getAppContext())
+                                && !SharedPrefUtils.getUserSkippedFollowTopicFlag(BaseApplication.getAppContext());
             } else {
-                isHeaderVisible = SharedPrefUtils.getFollowedTopicsCount(BaseApplication.getAppContext()) < AppConstants.MINIMUM_TOPICS_FOLLOW_REQUIREMENT;
+                isHeaderVisible = SharedPrefUtils.getFollowedTopicsCount(BaseApplication.getAppContext())
+                        < AppConstants.MINIMUM_TOPICS_FOLLOW_REQUIREMENT;
             }
         }
 
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(mContext, this, isHeaderVisible, sortType, tabPosition == 0);
-        final LinearLayoutManager llm = new LinearLayoutManager(mContext);
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(activityContext, this, isHeaderVisible, sortType,
+                tabPosition == 0);
+        final LinearLayoutManager llm = new LinearLayoutManager(activityContext);
         llm.setOrientation(RecyclerView.VERTICAL);
 
         recyclerView.setLayoutManager(llm);
@@ -204,7 +206,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 sortType = getArguments().getString(Constants.SORT_TYPE);
                 nextPageNumber = 1;
                 fromPullToRefresh = true;
-                hitArticleListingApi(nextPageNumber, sortType);
+                hitArticleListingApi(sortType);
                 pullToRefresh.setRefreshing(false);
             }
         });
@@ -212,8 +214,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0) //check for scroll down
-                {
+                if (dy > 0) {
                     visibleItemCount = llm.getChildCount();
                     totalItemCount = llm.getItemCount();
                     pastVisiblesItems = llm.findFirstVisibleItemPosition();
@@ -221,8 +222,8 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                     if (!isReuqestRunning && !isLastPageReached) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             isReuqestRunning = true;
-                            mLodingView.setVisibility(View.VISIBLE);
-                            hitArticleListingApi(nextPageNumber, sortType);
+                            lodingView.setVisibility(View.VISIBLE);
+                            hitArticleListingApi(sortType);
                         }
                     }
                 }
@@ -239,7 +240,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
     @Override
     public void onStart() {
         super.onStart();
-        if (mIsVisibleToUser) {
+        if (isVisibleToUser) {
             onVisible();
         }
     }
@@ -247,7 +248,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
     @Override
     public void onStop() {
         super.onStop();
-        if (mIsVisibleToUser) {
+        if (isVisibleToUser) {
             onInVisible();
         }
     }
@@ -255,9 +256,9 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        mIsVisibleToUser = isVisibleToUser;
+        this.isVisibleToUser = isVisibleToUser;
         if (isResumed()) { // fragment have created
-            if (mIsVisibleToUser) {
+            if (this.isVisibleToUser) {
                 onVisible();
             } else {
                 onInVisible();
@@ -271,22 +272,24 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
             if (!StringUtils.isNullOrEmpty(sortType)) {
                 if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {
                     tracker.setScreenName("ForYouScreen");
-                    Utils.pushOpenScreenEvent(getActivity(), "ForYouScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
-                } /*else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
-                    tracker.setScreenName("EditorsPickScreen");
-                    Utils.pushOpenScreenEvent(getActivity(), "EditorsPickScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
-                }*/ else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
+                    Utils.pushOpenScreenEvent(getActivity(), "ForYouScreen",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
+                } else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
                     tracker.setScreenName("RecentScreen");
-                    Utils.pushOpenScreenEvent(getActivity(), "RecentScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
+                    Utils.pushOpenScreenEvent(getActivity(), "RecentScreen",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
                 } else if (Constants.KEY_TODAYS_BEST.equalsIgnoreCase(sortType)) {
                     tracker.setScreenName("TodaysBestScreen");
-                    Utils.pushOpenScreenEvent(getActivity(), "TodaysBestScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
+                    Utils.pushOpenScreenEvent(getActivity(), "TodaysBestScreen",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
                 } else if (Constants.KEY_TRENDING.equalsIgnoreCase(sortType)) {
                     tracker.setScreenName("AllTrendingScreen");
-                    Utils.pushOpenScreenEvent(getActivity(), "AllTrending", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
+                    Utils.pushOpenScreenEvent(getActivity(), "AllTrending",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
                 } else if (Constants.KEY_FOLLOWING.equalsIgnoreCase(sortType)) {
                     tracker.setScreenName("FollowingContentScreen");
-                    Utils.pushOpenScreenEvent(getActivity(), "FollowingContentScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
+                    Utils.pushOpenScreenEvent(getActivity(), "FollowingContentScreen",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
                 }
                 tracker.send(new HitBuilders.ScreenViewBuilder().build());
             }
@@ -312,118 +315,127 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         recyclerAdapter.notifyDataSetChanged();
     }
 
-    private void hitArticleListingApi(int pPageCount, String sortKey) {
-        if (!ConnectivityUtils.isNetworkEnabled(mContext)) {
+    private void hitArticleListingApi(String sortKey) {
+        if (!ConnectivityUtils.isNetworkEnabled(activityContext)) {
             removeProgressDialog();
-            ToastUtils.showToast(mContext, getString(R.string.error_network));
+            ToastUtils.showToast(activityContext, getString(R.string.error_network));
             return;
         }
         if (Constants.KEY_FOR_YOU.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-            RecommendationAPI recommendationAPI = retrofit.create(RecommendationAPI.class);
+            RecommendationAPI recommendationApi = retrofit.create(RecommendationAPI.class);
             if (fromPullToRefresh) {
                 fromPullToRefresh = false;
                 chunks = "";
             }
-            Call<ArticleListingResponse> call = recommendationAPI.getRecommendedArticlesList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), FORYOU_LIMIT, chunks, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+            Call<ArticleListingResponse> call = recommendationApi.getRecommendedArticlesList(
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), FORYOU_LIMIT,
+                    chunks, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             progressBar.setVisibility(View.VISIBLE);
             call.enqueue(recommendedArticlesResponseCallback);
         } else if (Constants.KEY_FOLLOWING.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-            RecommendationAPI recommendationAPI = retrofit.create(RecommendationAPI.class);
+            RecommendationAPI recommendationApi = retrofit.create(RecommendationAPI.class);
             if (fromPullToRefresh) {
                 fromPullToRefresh = false;
                 chunks = "";
             }
-            Call<ArticleListingResponse> call = recommendationAPI.getFollowingArticlesList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), LIMIT, chunks, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+            Call<ArticleListingResponse> call = recommendationApi.getFollowingArticlesList(
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), LIMIT, chunks,
+                    SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             progressBar.setVisibility(View.VISIBLE);
             call.enqueue(recommendedArticlesResponseCallback);
-        } /*else if (Constants.KEY_EDITOR_PICKS.equals(sortKey)) {
+        } else if (Constants.KEY_TODAYS_BEST.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-            TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+            TopicsCategoryAPI topicsApi = retrofit.create(TopicsCategoryAPI.class);
+            CampaignAPI campaignApi = retrofit.create(CampaignAPI.class);
             int from = (nextPageNumber - 1) * LIMIT + 1;
-            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(AppConstants.EDITOR_PICKS_CATEGORY_ID, 0, from, from + LIMIT - 1,
-                    SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
-            filterCall.enqueue(articleListingResponseCallback);
-        }*/ else if (Constants.KEY_TODAYS_BEST.equals(sortKey)) {
-            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-            TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
-            CampaignAPI campaignAPI = retrofit.create(CampaignAPI.class);
-            int from = (nextPageNumber - 1) * LIMIT + 1;
-            Call<ArticleListingResponse> filterCall = topicsAPI.getTodaysBestArticles(DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + System.currentTimeMillis()), from, from + LIMIT - 1,
-                    SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+            Call<ArticleListingResponse> filterCall = topicsApi
+                    .getTodaysBestArticles(DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + System.currentTimeMillis()),
+                            from, from + LIMIT - 1,
+                            SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
             if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getHomeAdSlotUrl(BaseApplication.getAppContext()))) {
-                Call<ResponseBody> adSlotCall = campaignAPI.getAdSlotData(SharedPrefUtils.getHomeAdSlotUrl(BaseApplication.getAppContext()));
+                Call<ResponseBody> adSlotCall = campaignApi
+                        .getAdSlotData(SharedPrefUtils.getHomeAdSlotUrl(BaseApplication.getAppContext()));
                 adSlotCall.enqueue(adSlotResponseCallback);
             } else {
                 if (SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext()).equals("1")) {
-                    Call<AllCampaignDataResponse> campaignListCall = campaignAPI.getCampaignList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), 0, 1, 3.0);
+                    Call<AllCampaignDataResponse> campaignListCall = campaignApi.getCampaignList(
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), 0, 1,
+                            3.0);
                     campaignListCall.enqueue(getCampaignList);
                 }
             }
         } else if (Constants.KEY_TRENDING.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-            TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+            TopicsCategoryAPI topicsApi = retrofit.create(TopicsCategoryAPI.class);
             int from = (nextPageNumber - 1) * LIMIT + 1;
-            Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(from, from + LIMIT - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+            Call<ArticleListingResponse> filterCall = topicsApi.getTrendingArticles(from, from + LIMIT - 1,
+                    SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
         } else {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-            TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+            TopicsCategoryAPI topicsApi = retrofit.create(TopicsCategoryAPI.class);
             int from = (nextPageNumber - 1) * LIMIT + 1;
-            Call<ArticleListingResponse> filterCall = topicsAPI.getRecentArticles(from, from + LIMIT - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+            Call<ArticleListingResponse> filterCall = topicsApi.getRecentArticles(from, from + LIMIT - 1,
+                    SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
         }
     }
 
-    private Callback<ArticleListingResponse> recommendedArticlesResponseCallback = new Callback<ArticleListingResponse>() {
-        @Override
-        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
-            if (!isAdded()) {
-                return;
-            }
-            progressBar.setVisibility(View.GONE);
-            mLodingView.setVisibility(View.GONE);
-            isReuqestRunning = false;
-            if (null == response.body()) {
-                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
-                ToastUtils.showToast(mContext, getString(R.string.server_went_wrong));
-                return;
-            }
-            try {
-                ArticleListingResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    processForYouResponse(responseData);
-                    ashimmerFrameLayout.stopShimmerAnimation();
-                    ashimmerFrameLayout.setVisibility(View.GONE);
-                } else {
-                    ToastUtils.showToast(mContext, responseData.getReason());
+    private Callback<ArticleListingResponse> recommendedArticlesResponseCallback =
+            new Callback<ArticleListingResponse>() {
+                @Override
+                public void onResponse(Call<ArticleListingResponse> call,
+                        retrofit2.Response<ArticleListingResponse> response) {
+                    if (!isAdded()) {
+                        return;
+                    }
+                    progressBar.setVisibility(View.GONE);
+                    lodingView.setVisibility(View.GONE);
+                    isReuqestRunning = false;
+                    if (null == response.body()) {
+                        NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                        Crashlytics.logException(nee);
+                        ToastUtils.showToast(activityContext, getString(R.string.server_went_wrong));
+                        return;
+                    }
+                    try {
+                        ArticleListingResponse responseData = response.body();
+                        if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                            processForYouResponse(responseData);
+                            ashimmerFrameLayout.stopShimmerAnimation();
+                            ashimmerFrameLayout.setVisibility(View.GONE);
+                        } else {
+                            ToastUtils.showToast(activityContext, responseData.getReason());
+                        }
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                        if (isAdded()) {
+                            ToastUtils.showToast(activityContext, getString(R.string.went_wrong));
+                        }
+                    }
                 }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-                if (isAdded())
-                    ToastUtils.showToast(mContext, getString(R.string.went_wrong));
-            }
-        }
 
-        @Override
-        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            progressBar.setVisibility(View.GONE);
-            mLodingView.setVisibility(View.GONE);
-            isReuqestRunning = false;
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-            if (isAdded())
-                ToastUtils.showToast(mContext, getString(R.string.went_wrong));
-        }
-    };
+                @Override
+                public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
+                    progressBar.setVisibility(View.GONE);
+                    lodingView.setVisibility(View.GONE);
+                    isReuqestRunning = false;
+                    Crashlytics.logException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
+                    if (isAdded()) {
+                        ToastUtils.showToast(activityContext, getString(R.string.went_wrong));
+                    }
+                }
+            };
 
     private void processForYouResponse(ArticleListingResponse responseData) {
         try {
-            if (responseData.getData().get(0).getResult() == null && (articleDataModelsNew == null || articleDataModelsNew.isEmpty())) {
+            if (responseData.getData().get(0).getResult() == null && (articleDataModelsNew == null
+                    || articleDataModelsNew.isEmpty())) {
                 addTopicsLayout.setVisibility(View.VISIBLE);
                 headerArticleCardLayout.setVisibility(View.GONE);
                 return;
@@ -469,7 +481,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 recyclerAdapter.notifyDataSetChanged();
             }
         } catch (Exception ex) {
-            mLodingView.setVisibility(View.GONE);
+            lodingView.setVisibility(View.GONE);
             Crashlytics.logException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));
         }
@@ -478,21 +490,21 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
 
     private Callback<AllCampaignDataResponse> getCampaignList = new Callback<AllCampaignDataResponse>() {
         @Override
-        public void onResponse(Call<AllCampaignDataResponse> call, retrofit2.Response<AllCampaignDataResponse> response) {
+        public void onResponse(Call<AllCampaignDataResponse> call,
+                retrofit2.Response<AllCampaignDataResponse> response) {
             if (response.body() == null) {
                 return;
             }
             try {
                 AllCampaignDataResponse allCampaignDataResponse = response.body();
-                if (allCampaignDataResponse.getCode() == 200 && Constants.SUCCESS.equals(allCampaignDataResponse.getStatus())) {
+                if (allCampaignDataResponse.getCode() == 200 && Constants.SUCCESS
+                        .equals(allCampaignDataResponse.getStatus())) {
                     processCampaignListingResponse(allCampaignDataResponse);
-                } else {
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
             }
-
         }
 
         @Override
@@ -510,8 +522,8 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                     return;
                 }
                 String resData = new String(response.body().bytes());
-                JSONObject jObject = new JSONObject(resData);
-                String htmlContent = jObject.getJSONObject("revive-0-0").getString("html");
+                JSONObject jsonObject = new JSONObject(resData);
+                String htmlContent = jsonObject.getJSONObject("revive-0-0").getString("html");
                 recyclerAdapter.setCampaignOrAdSlotData("adslot", null, htmlContent);
                 recyclerAdapter.notifyDataSetChanged();
             } catch (Exception e) {
@@ -536,7 +548,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
             isReuqestRunning = false;
             progressBar.setVisibility(View.GONE);
-            mLodingView.setVisibility(View.GONE);
+            lodingView.setVisibility(View.GONE);
             if (response.body() == null) {
                 return;
             }
@@ -546,7 +558,6 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                     processArticleListingResponse(responseData);
                     ashimmerFrameLayout.stopShimmerAnimation();
                     ashimmerFrameLayout.setVisibility(View.GONE);
-                } else {
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
@@ -556,7 +567,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
 
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            mLodingView.setVisibility(View.GONE);
+            lodingView.setVisibility(View.GONE);
             isReuqestRunning = false;
             progressBar.setVisibility(View.GONE);
             Crashlytics.logException(t);
@@ -565,9 +576,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
     };
 
     private void processArticleListingResponse(ArticleListingResponse responseData) {
-
         ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
-
         if (dataList.size() == 0) {
             isLastPageReached = false;
             if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
@@ -594,7 +603,6 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
             nextPageNumber = nextPageNumber + 1;
             recyclerAdapter.notifyDataSetChanged();
         }
-
     }
 
     private void processCampaignListingResponse(AllCampaignDataResponse responseData) {
@@ -606,21 +614,23 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
 
     @Override
     public void onRefresh() {
-        if (!ConnectivityUtils.isNetworkEnabled(mContext)) {
+        if (!ConnectivityUtils.isNetworkEnabled(activityContext)) {
             removeProgressDialog();
-            ToastUtils.showToast(mContext, getString(R.string.error_network));
+            ToastUtils.showToast(activityContext, getString(R.string.error_network));
             return;
         }
         isLastPageReached = false;
         chunks = "";
         nextPageNumber = 1;
-        hitArticleListingApi(nextPageNumber, sortType);
+        hitArticleListingApi(sortType);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                break;
+            default:
                 break;
         }
         return true;
@@ -637,7 +647,8 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                     mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
                     try {
                         JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("userId",
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                         mixpanel.track("FollowTopicCardClose", jsonObject);
                         Log.d("FollowUnfollowTopics", jsonObject.toString());
                     } catch (Exception e) {
@@ -654,10 +665,13 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 case R.id.cardView1:
                     try {
                         Utils.campaignEvent(getActivity(), "HomeScreen", "HomeScreenCarousel", "CTA_Campaign_Carousel",
-                                "" + campaignListDataModels.get(0).getName(), "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "CTA_Campaign_Carousel");
+                                "" + campaignListDataModels.get(0).getName(), "android",
+                                SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                                String.valueOf(System.currentTimeMillis()), "CTA_Campaign_Carousel");
                     } catch (Exception e) {
-
+                        Crashlytics.logException(e);
+                        Log.d("MC4KException", Log.getStackTraceString(e));
                     }
                     Intent campaignIntent = new Intent(getActivity(), CampaignContainerActivity.class);
                     campaignIntent.putExtra("campaign_id", campaignListDataModels.get(0).getId() + "");
@@ -675,11 +689,13 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                     int posSubListShortStory = position % limitShortStory;
                     int startIndexShortStory = pageShortStory * limitShortStory;
                     int endIndexShortStory = startIndexShortStory + limitShortStory;
-                    ArrayList<ArticleListingResult> articleDataModelsSubList1 = new ArrayList<>(articleDataModelsNew.subList(startIndexShortStory, endIndexShortStory));
+                    ArrayList<ArticleListingResult> articleDataModelsSubList1 = new ArrayList<>(
+                            articleDataModelsNew.subList(startIndexShortStory, endIndexShortStory));
                     if ("1".equals(articleDataModelsNew.get(position).getContentType())) {
-                        Intent pIntent = new Intent(getActivity(), UserProfileActivity.class);
-                        pIntent.putExtra(Constants.USER_ID, articleDataModelsSubList1.get(posSubListShortStory).getUserId());
-                        startActivity(pIntent);
+                        Intent pintent = new Intent(getActivity(), UserProfileActivity.class);
+                        pintent.putExtra(Constants.USER_ID,
+                                articleDataModelsSubList1.get(posSubListShortStory).getUserId());
+                        startActivity(pintent);
                     }
                     break;
                 case R.id.headerArticleView:
@@ -697,14 +713,13 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                     int posSubList = position % limit;
                     int startIndex = page * limit;
                     int endIndex = startIndex + limit;
-                    ArrayList<ArticleListingResult> articleDataModelsSubList = new ArrayList<>(articleDataModelsNew.subList(startIndex, endIndex));
+                    ArrayList<ArticleListingResult> articleDataModelsSubList = new ArrayList<>(
+                            articleDataModelsNew.subList(startIndex, endIndex));
                     if ("1".equals(articleDataModelsNew.get(position).getContentType())) {
                         Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
                         if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "ForYouScreen");
-                        } /*else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
-                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "EditorsPickScreen");
-                        }*/ else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
+                        } else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "RecentScreen");
                         } else if (Constants.KEY_TODAYS_BEST.equalsIgnoreCase(sortType)) {
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "TodaysBestScreen");
@@ -715,21 +730,26 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                         }
                         intent.putExtra(Constants.ARTICLE_ID, articleDataModelsSubList.get(posSubList).getId());
                         intent.putExtra(Constants.AUTHOR_ID, articleDataModelsSubList.get(posSubList).getUserId());
-                        intent.putExtra(Constants.BLOG_SLUG, articleDataModelsSubList.get(posSubList).getBlogPageSlug());
+                        intent.putExtra(Constants.BLOG_SLUG,
+                                articleDataModelsSubList.get(posSubList).getBlogPageSlug());
                         intent.putExtra(Constants.TITLE_SLUG, articleDataModelsSubList.get(posSubList).getTitleSlug());
                         intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
-                        intent.putExtra(Constants.AUTHOR, articleDataModelsSubList.get(posSubList).getUserId() + "~" + articleDataModelsSubList.get(posSubList).getUserName());
-                        ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(articleDataModelsSubList, AppConstants.CONTENT_TYPE_SHORT_STORY);
+                        intent.putExtra(Constants.AUTHOR,
+                                articleDataModelsSubList.get(posSubList).getUserId() + "~" + articleDataModelsSubList
+                                        .get(posSubList).getUserName());
+                        ArrayList<ArticleListingResult> filteredResult = AppUtils
+                                .getFilteredContentList(articleDataModelsSubList,
+                                        AppConstants.CONTENT_TYPE_SHORT_STORY);
                         intent.putParcelableArrayListExtra("pagerListData", filteredResult);
-                        intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(posSubList, articleDataModelsSubList, AppConstants.CONTENT_TYPE_SHORT_STORY));
+                        intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils
+                                .getFilteredPosition(posSubList, articleDataModelsSubList,
+                                        AppConstants.CONTENT_TYPE_SHORT_STORY));
                         startActivity(intent);
                     } else {
-                        Intent intent = new Intent(mContext, ArticleDetailsContainerActivity.class);
+                        Intent intent = new Intent(activityContext, ArticleDetailsContainerActivity.class);
                         if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "ForYouScreen");
-                        } /*else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
-                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "EditorsPickScreen");
-                        }*/ else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
+                        } else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "RecentScreen");
                         } else if (Constants.KEY_TODAYS_BEST.equalsIgnoreCase(sortType)) {
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "TodaysBestScreen");
@@ -740,13 +760,19 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                         }
                         intent.putExtra(Constants.ARTICLE_ID, articleDataModelsSubList.get(posSubList).getId());
                         intent.putExtra(Constants.AUTHOR_ID, articleDataModelsSubList.get(posSubList).getUserId());
-                        intent.putExtra(Constants.BLOG_SLUG, articleDataModelsSubList.get(posSubList).getBlogPageSlug());
+                        intent.putExtra(Constants.BLOG_SLUG,
+                                articleDataModelsSubList.get(posSubList).getBlogPageSlug());
                         intent.putExtra(Constants.TITLE_SLUG, articleDataModelsSubList.get(posSubList).getTitleSlug());
                         intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
-                        intent.putExtra(Constants.AUTHOR, articleDataModelsSubList.get(posSubList).getUserId() + "~" + articleDataModelsSubList.get(posSubList).getUserName());
-                        ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(articleDataModelsSubList, AppConstants.CONTENT_TYPE_ARTICLE);
+                        intent.putExtra(Constants.AUTHOR,
+                                articleDataModelsSubList.get(posSubList).getUserId() + "~" + articleDataModelsSubList
+                                        .get(posSubList).getUserName());
+                        ArrayList<ArticleListingResult> filteredResult = AppUtils
+                                .getFilteredContentList(articleDataModelsSubList, AppConstants.CONTENT_TYPE_ARTICLE);
                         intent.putParcelableArrayListExtra("pagerListData", filteredResult);
-                        intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(posSubList, articleDataModelsSubList, AppConstants.CONTENT_TYPE_ARTICLE));
+                        intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils
+                                .getFilteredPosition(posSubList, articleDataModelsSubList,
+                                        AppConstants.CONTENT_TYPE_ARTICLE));
                         startActivity(intent);
                     }
                     break;
@@ -755,7 +781,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 }
                 break;
                 case R.id.followAuthorTextView:
-                    followAPICall(articleDataModelsNew.get(position).getUserId(), position);
+                    followApiCall(articleDataModelsNew.get(position).getUserId(), position);
                     break;
                 case R.id.whatsappShareImageView:
                     getSharableViewForPosition(position, AppConstants.MEDIUM_WHATSAPP);
@@ -774,7 +800,8 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                     break;
                 case R.id.genericShareImageView: {
                     try {
-                        AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment = new AddCollectionAndCollectionItemDialogFragment();
+                        AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment =
+                                new AddCollectionAndCollectionItemDialogFragment();
                         Bundle bundle = new Bundle();
                         bundle.putString("articleId", articleDataModelsNew.get(position).getId());
                         bundle.putString("type", AppConstants.SHORT_STORY_COLLECTION_TYPE);
@@ -792,11 +819,12 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 }
                 case R.id.storyRecommendationContainer:
                     if (!isRecommendRequestRunning) {
-                        if (articleDataModelsNew.get(position).isLiked()) {
-                        } else {
+                        if (!articleDataModelsNew.get(position).isLiked()) {
                             likeStatus = "1";
                             currentShortStoryPosition = position;
-                            recommendUnrecommentArticleAPI("1", articleDataModelsNew.get(position).getId(), articleDataModelsNew.get(position).getUserId(), articleDataModelsNew.get(position).getUserName());
+                            recommendUnrecommentArticleApi("1", articleDataModelsNew.get(position).getId(),
+                                    articleDataModelsNew.get(position).getUserId(),
+                                    articleDataModelsNew.get(position).getUserName());
                         }
                     }
                     break;
@@ -820,81 +848,96 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
 
         String hashtags = AppUtils.getHasTagFromCategoryList(tagList);
         AppUtils.copyToClipboard(hashtags);
-        if (isAdded())
+        if (isAdded()) {
             ToastUtils.showToast(getActivity(), getActivity().getString(R.string.all_insta_share_clipboard_msg));
+        }
     }
 
-    private void recommendUnrecommentArticleAPI(String status, String articleId, String authorId, String author) {
-        Utils.pushLikeStoryEvent(getActivity(), "ArticleListingFragment", userDynamoId + "", articleId, authorId + "~" + author);
-        Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-
+    private void recommendUnrecommentArticleApi(String status, String articleId, String authorId, String author) {
+        Utils.pushLikeStoryEvent(getActivity(), "ArticleListingFragment", userDynamoId + "", articleId,
+                authorId + "~" + author);
         isRecommendRequestRunning = true;
-        RecommendUnrecommendArticleRequest recommendUnrecommendArticleRequest = new RecommendUnrecommendArticleRequest();
+        RecommendUnrecommendArticleRequest recommendUnrecommendArticleRequest =
+                new RecommendUnrecommendArticleRequest();
         recommendUnrecommendArticleRequest.setArticleId(articleId);
         recommendUnrecommendArticleRequest.setStatus(likeStatus);
-        Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle = articleDetailsAPI.recommendUnrecommendArticle(recommendUnrecommendArticleRequest);
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        ArticleDetailsAPI articleDetailsApi = retro.create(ArticleDetailsAPI.class);
+        Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle = articleDetailsApi
+                .recommendUnrecommendArticle(recommendUnrecommendArticleRequest);
         recommendUnrecommendArticle.enqueue(recommendUnrecommendArticleResponseCallback);
     }
 
-    private Callback<RecommendUnrecommendArticleResponse> recommendUnrecommendArticleResponseCallback = new Callback<RecommendUnrecommendArticleResponse>() {
-        @Override
-        public void onResponse(Call<RecommendUnrecommendArticleResponse> call, retrofit2.Response<RecommendUnrecommendArticleResponse> response) {
-            isRecommendRequestRunning = false;
-            if (response == null || null == response.body()) {
-                if (!isAdded()) {
-                    return;
-                }
-                ToastUtils.showToast(getActivity(), getString(R.string.server_went_wrong));
-                return;
-            }
-            try {
-                RecommendUnrecommendArticleResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    if (likeStatus.equals("1")) {
-                        if (!responseData.getData().isEmpty()) {
-                            articleDataModelsNew.get(currentShortStoryPosition).setLikesCount("" + (Integer.parseInt(articleDataModelsNew.get(currentShortStoryPosition).getLikesCount()) + 1));
+    private Callback<RecommendUnrecommendArticleResponse> recommendUnrecommendArticleResponseCallback =
+            new Callback<RecommendUnrecommendArticleResponse>() {
+                @Override
+                public void onResponse(Call<RecommendUnrecommendArticleResponse> call,
+                        retrofit2.Response<RecommendUnrecommendArticleResponse> response) {
+                    isRecommendRequestRunning = false;
+                    if (null == response.body()) {
+                        if (!isAdded()) {
+                            return;
                         }
-                        articleDataModelsNew.get(currentShortStoryPosition).setLiked(true);
-                    } else {
-                        if (!responseData.getData().isEmpty()) {
-                            articleDataModelsNew.get(currentShortStoryPosition).setLikesCount("" + (Integer.parseInt(articleDataModelsNew.get(currentShortStoryPosition).getLikesCount()) - 1));
-                        }
-                        articleDataModelsNew.get(currentShortStoryPosition).setLiked(false);
-                    }
-                    recyclerAdapter.notifyDataSetChanged();
-                    if (isAdded()) {
-                        ToastUtils.showToast(getActivity(), responseData.getReason());
-                    }
-                } else {
-                    if (isAdded())
                         ToastUtils.showToast(getActivity(), getString(R.string.server_went_wrong));
+                        return;
+                    }
+                    try {
+                        RecommendUnrecommendArticleResponse responseData = response.body();
+                        if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                            if (likeStatus.equals("1")) {
+                                if (!responseData.getData().isEmpty()) {
+                                    articleDataModelsNew.get(currentShortStoryPosition).setLikesCount("" + (Integer
+                                            .parseInt(
+                                                    articleDataModelsNew.get(currentShortStoryPosition).getLikesCount())
+                                            + 1));
+                                }
+                                articleDataModelsNew.get(currentShortStoryPosition).setLiked(true);
+                            } else {
+                                if (!responseData.getData().isEmpty()) {
+                                    articleDataModelsNew.get(currentShortStoryPosition).setLikesCount("" + (Integer
+                                            .parseInt(
+                                                    articleDataModelsNew.get(currentShortStoryPosition).getLikesCount())
+                                            - 1));
+                                }
+                                articleDataModelsNew.get(currentShortStoryPosition).setLiked(false);
+                            }
+                            recyclerAdapter.notifyDataSetChanged();
+                            if (isAdded()) {
+                                ToastUtils.showToast(getActivity(), responseData.getReason());
+                            }
+                        } else {
+                            if (isAdded()) {
+                                ToastUtils.showToast(getActivity(), getString(R.string.server_went_wrong));
+                            }
+                        }
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                        if (isAdded()) {
+                            ToastUtils.showToast(getActivity(), getString(R.string.went_wrong));
+                        }
+                    }
                 }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-                if (isAdded())
-                    ToastUtils.showToast(getActivity(), getString(R.string.went_wrong));
-            }
-        }
 
-        @Override
-        public void onFailure(Call<RecommendUnrecommendArticleResponse> call, Throwable t) {
-            isRecommendRequestRunning = false;
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
+                @Override
+                public void onFailure(Call<RecommendUnrecommendArticleResponse> call, Throwable t) {
+                    isRecommendRequestRunning = false;
+                    Crashlytics.logException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
+                }
+            };
 
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addTopicsLayout:
-                Intent intent1 = new Intent(mContext, ExploreArticleListingTypeActivity.class);
+                Intent intent1 = new Intent(activityContext, ExploreArticleListingTypeActivity.class);
                 intent1.putExtra("fragType", "search");
                 intent1.putExtra("source", "foryou");
                 startActivity(intent1);
+                break;
+            default:
                 break;
         }
     }
@@ -912,14 +955,16 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
 
     private void launchVideoDetailsActivity(int position, int videoIndex) {
         MixPanelUtils.pushMomVlogClickEvent(mixpanel, videoIndex, "TrendingAll");
-        if (articleDataModelsNew.get(position).getCarouselVideoList() != null && !articleDataModelsNew.get(position).getCarouselVideoList().isEmpty()) {
+        if (articleDataModelsNew.get(position).getCarouselVideoList() != null && !articleDataModelsNew.get(position)
+                .getCarouselVideoList().isEmpty()) {
             if (isAdded()) {
                 Utils.momVlogEvent(getActivity(), "Home Screen", "Vlog_card_home_feed",
                         "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                         String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
             }
-            VlogsListingAndDetailResult result = articleDataModelsNew.get(position).getCarouselVideoList().get(videoIndex);
+            VlogsListingAndDetailResult result = articleDataModelsNew.get(position).getCarouselVideoList()
+                    .get(videoIndex);
             Intent intent = new Intent(getActivity(), ParallelFeedActivity.class);
             intent.putExtra(Constants.VIDEO_ID, result.getId());
             intent.putExtra(Constants.STREAM_URL, result.getUrl());
@@ -927,7 +972,9 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
             intent.putExtra(Constants.FROM_SCREEN, "Home Screen");
             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
             intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-            intent.putExtra(Constants.AUTHOR, result.getAuthor().getId() + "~" + result.getAuthor().getFirstName() + " " + result.getAuthor().getLastName());
+            intent.putExtra(Constants.AUTHOR,
+                    result.getAuthor().getId() + "~" + result.getAuthor().getFirstName() + " " + result.getAuthor()
+                            .getLastName());
             startActivity(intent);
         }
     }
@@ -940,7 +987,8 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
 
     @SuppressLint("RestrictedApi")
     private void chooseMenuOptionsItem(View view, int position) {
-        final androidx.appcompat.widget.PopupMenu popupMenu = new androidx.appcompat.widget.PopupMenu(getActivity(), view);
+        final androidx.appcompat.widget.PopupMenu popupMenu = new androidx.appcompat.widget.PopupMenu(getActivity(),
+                view);
         popupMenu.getMenuInflater().inflate(R.menu.choose_short_story_menu, popupMenu.getMenu());
         for (int i = 0; i < popupMenu.getMenu().size(); i++) {
             Drawable drawable = popupMenu.getMenu().getItem(i).getIcon();
@@ -958,47 +1006,52 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
             } else if (item.getItemId() == R.id.bookmarkShortStory) {
                 return true;
             } else if (item.getItemId() == R.id.copyLink) {
-                AppUtils.copyToClipboard(AppUtils.getShortStoryShareUrl(articleDataModelsNew.get(position).getUserType(),
-                        articleDataModelsNew.get(position).getBlogPageSlug(), articleDataModelsNew.get(position).getTitleSlug()));
+                AppUtils.copyToClipboard(
+                        AppUtils.getShortStoryShareUrl(articleDataModelsNew.get(position).getUserType(),
+                                articleDataModelsNew.get(position).getBlogPageSlug(),
+                                articleDataModelsNew.get(position).getTitleSlug()));
                 if (isAdded()) {
-                    Toast.makeText(getActivity(), getActivity().getString(R.string.ss_story_link_copied), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getActivity().getString(R.string.ss_story_link_copied),
+                            Toast.LENGTH_SHORT).show();
                 }
                 return true;
             } else if (item.getItemId() == R.id.reportContentShortStory) {
                 ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
-                FragmentManager fm = getChildFragmentManager();
-                Bundle _args = new Bundle();
-                _args.putString("postId", articleDataModelsNew.get(position).getId());
-                _args.putInt("type", AppConstants.REPORT_TYPE_STORY);
-                reportContentDialogFragment.setArguments(_args);
+                Bundle args = new Bundle();
+                args.putString("postId", articleDataModelsNew.get(position).getId());
+                args.putInt("type", AppConstants.REPORT_TYPE_STORY);
+                reportContentDialogFragment.setArguments(args);
                 reportContentDialogFragment.setCancelable(true);
+                FragmentManager fm = getChildFragmentManager();
                 reportContentDialogFragment.show(fm, "Report Content");
                 return true;
             }
 
-
             return false;
         });
 
-        MenuPopupHelper menuPopupHelper = new MenuPopupHelper(view.getContext(), (MenuBuilder) popupMenu.getMenu(), view);
+        MenuPopupHelper menuPopupHelper = new MenuPopupHelper(view.getContext(), (MenuBuilder) popupMenu.getMenu(),
+                view);
         menuPopupHelper.setForceShowIcon(true);
         menuPopupHelper.show();
     }
 
 
-    private void followAPICall(String authorId, int position) {
+    private void followApiCall(String authorId, int position) {
         this.position = position;
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        FollowAPI followAPI = retrofit.create(FollowAPI.class);
+        FollowAPI followApi = retrofit.create(FollowAPI.class);
         FollowUnfollowUserRequest request = new FollowUnfollowUserRequest();
         request.setFollowerId(authorId);
         if (articleDataModelsNew.get(position).getIsfollowing().equals("1")) {
-            Utils.pushGenericEvent(getActivity(), "CTA_Unfollow_100WS_Detail", userDynamoId, "TopicsShortStoryTabFragment");
-            Call<ResponseBody> followUnfollowUserResponseCall = followAPI.unfollowUserInShortStoryListing(request);
+            Utils.pushGenericEvent(getActivity(), "CTA_Unfollow_100WS_Detail", userDynamoId,
+                    "TopicsShortStoryTabFragment");
+            Call<ResponseBody> followUnfollowUserResponseCall = followApi.unfollowUserInShortStoryListing(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
-            Utils.pushGenericEvent(getActivity(), "CTA_Follow_100WS_Detail", userDynamoId, "TopicsShortStoryTabFragment");
-            Call<ResponseBody> followUnfollowUserResponseCall = followAPI.followUserInShortStoryListing(request);
+            Utils.pushGenericEvent(getActivity(), "CTA_Follow_100WS_Detail", userDynamoId,
+                    "TopicsShortStoryTabFragment");
+            Call<ResponseBody> followUnfollowUserResponseCall = followApi.followUserInShortStoryListing(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }
     }
@@ -1007,16 +1060,17 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             if (response.body() == null) {
-                if (isAdded())
+                if (isAdded()) {
                     ToastUtils.showToast(getActivity(), "some thing went wrong ");
+                }
                 return;
             }
             try {
                 String resData = new String(response.body().bytes());
-                JSONObject jObject = new JSONObject(resData);
-                int code = jObject.getInt("code");
-                String status = jObject.getString("status");
-                String reason = jObject.getString("reason");
+                JSONObject jsonObject = new JSONObject(resData);
+                int code = jsonObject.getInt("code");
+                String status = jsonObject.getString("status");
+                String reason = jsonObject.getString("reason");
                 if (code == 200 && Constants.SUCCESS.equals(status)) {
                     articleDataModelsNew.get(position).setIsfollowing("0");
                     recyclerAdapter.notifyDataSetChanged();
@@ -1024,8 +1078,9 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                     ToastUtils.showToast(getActivity(), reason);
                 }
             } catch (Exception e) {
-                if (isAdded())
+                if (isAdded()) {
                     ToastUtils.showToast(getActivity(), "some thing went wrong at the server ");
+                }
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
@@ -1033,8 +1088,9 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-            if (isAdded())
+            if (isAdded()) {
                 ToastUtils.showToast(getActivity(), "some thing went wrong at the server ");
+            }
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
@@ -1044,16 +1100,17 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             if (response.body() == null) {
-                if (isAdded())
+                if (isAdded()) {
                     ToastUtils.showToast(getActivity(), "some thing went wrong ");
+                }
                 return;
             }
             try {
                 String resData = new String(response.body().bytes());
-                JSONObject jObject = new JSONObject(resData);
-                int code = jObject.getInt("code");
-                String status = jObject.getString("status");
-                String reason = jObject.getString("reason");
+                JSONObject jsonObject = new JSONObject(resData);
+                int code = jsonObject.getInt("code");
+                String status = jsonObject.getString("status");
+                String reason = jsonObject.getString("reason");
                 if (code == 200 && Constants.SUCCESS.equals(status)) {
                     articleDataModelsNew.get(position).setIsfollowing("1");
                     recyclerAdapter.notifyDataSetChanged();
@@ -1064,8 +1121,9 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                     ToastUtils.showToast(getActivity(), reason);
                 }
             } catch (Exception e) {
-                if (isAdded())
+                if (isAdded()) {
                     ToastUtils.showToast(getActivity(), "some thing went wrong at the server ");
+                }
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
@@ -1073,8 +1131,9 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-            if (isAdded())
+            if (isAdded()) {
                 ToastUtils.showToast(getActivity(), "some thing went wrong at the server ");
+            }
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
@@ -1140,7 +1199,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_INIT_PERMISSION) {
             if (PermissionUtil.verifyPermissions(grantResults)) {
                 Snackbar.make(rootLayout, R.string.permision_available_init,
@@ -1159,7 +1218,8 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
     }
 
     private void getSharableViewForPosition(int position, String medium) {
-        storyShareCardWidget = recyclerView.getLayoutManager().findViewByPosition(position).findViewById(R.id.storyShareCardWidget);
+        storyShareCardWidget = recyclerView.getLayoutManager().findViewByPosition(position)
+                .findViewById(R.id.storyShareCardWidget);
         shareStoryImageView = storyShareCardWidget.findViewById(R.id.storyImageView);
         shareMedium = medium;
         sharedStoryItem = articleDataModelsNew.get(position);
@@ -1170,18 +1230,20 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         if (isAdded()) {
             Bitmap bitmap1 = ((BitmapDrawable) shareStoryImageView.getDrawable()).getBitmap();
             shareStoryImageView.setImageBitmap(SharingUtils.getRoundCornerBitmap(bitmap1, AppUtils.dpTopx(4.0f)));
-            AppUtils.getBitmapFromView(storyShareCardWidget, AppConstants.STORY_SHARE_IMAGE_NAME);
-            shareStory();
+            //Bh**d**a facebook caches shareIntent. Need different name for all files
+            String tempName = "" + System.currentTimeMillis();
+            AppUtils.getBitmapFromView(storyShareCardWidget, AppConstants.STORY_SHARE_IMAGE_NAME + tempName);
+            shareStory(tempName);
         }
     }
 
-    private void shareStory() {
-        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() +
-                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg");
+    private void shareStory(String tempName) {
+        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory()
+                + "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + tempName + ".jpg");
         if (isAdded()) {
             switch (shareMedium) {
                 case AppConstants.MEDIUM_FACEBOOK: {
-                    SharingUtils.shareViaFacebook(getActivity());
+                    SharingUtils.shareViaFacebook(getActivity(), uri);
                     Utils.pushShareStoryEvent(getActivity(), "ArticleListingFragment",
                             userDynamoId + "", sharedStoryItem.getId(),
                             sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Facebook");
@@ -1189,7 +1251,8 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 break;
                 case AppConstants.MEDIUM_WHATSAPP: {
                     if (AppUtils.shareImageWithWhatsApp(getActivity(), uri, getString(R.string.ss_follow_author,
-                            sharedStoryItem.getUserName(), AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
+                            sharedStoryItem.getUserName(),
+                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
                         Utils.pushShareStoryEvent(getActivity(), "ArticleListingFragment",
                                 userDynamoId + "", sharedStoryItem.getId(),
                                 sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Whatsapp");
@@ -1206,13 +1269,16 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 break;
                 case AppConstants.MEDIUM_GENERIC: {
                     if (AppUtils.shareGenericImageAndOrLink(getActivity(), uri, getString(R.string.ss_follow_author,
-                            sharedStoryItem.getUserName(), AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
+                            sharedStoryItem.getUserName(),
+                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
                         Utils.pushShareStoryEvent(getActivity(), "ArticleListingFragment",
                                 userDynamoId + "", sharedStoryItem.getId(),
                                 sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Generic");
                     }
                 }
                 break;
+                default:
+                    break;
             }
         }
     }
