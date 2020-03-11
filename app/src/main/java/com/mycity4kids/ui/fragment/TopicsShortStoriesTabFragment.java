@@ -23,13 +23,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.view.menu.MenuBuilder;
@@ -39,18 +37,15 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
-import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
@@ -74,22 +69,21 @@ import com.mycity4kids.ui.activity.ShortStoryModerationOrShareActivity;
 import com.mycity4kids.ui.activity.TopicsListingFragment;
 import com.mycity4kids.ui.adapter.ShortStoriesRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.SharingUtils;
+import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.widget.StoryShareCardWidget;
 import com.mycity4kids.widget.TrackingData;
-
-import org.json.JSONObject;
-
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.ResponseBody;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -97,7 +91,8 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 29/5/17.
  */
-public class TopicsShortStoriesTabFragment extends BaseFragment implements View.OnClickListener, ShortStoriesRecyclerAdapter.RecyclerViewClickListener {
+public class TopicsShortStoriesTabFragment extends BaseFragment implements View.OnClickListener,
+        ShortStoriesRecyclerAdapter.RecyclerViewClickListener {
 
     private static final int REQUEST_INIT_PERMISSION = 2;
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -108,25 +103,27 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private boolean isReuqestRunning = false;
     private boolean isLastPageReached = false;
     private int sortType = 0;
-    private ArrayList<ArticleListingResult> mDatalist;
+    private ArrayList<ArticleListingResult> articleListingResults;
     private Topics currentSubTopic;
     private Topics selectedTopic;
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private int pastVisiblesItems;
+    private int visibleItemCount;
+    private int totalItemCount;
 
     private ShortStoriesRecyclerAdapter recyclerAdapter;
 
     private LinearLayoutManager llm;
-    private RelativeLayout mLodingView;
+    private RelativeLayout lodingView;
     private FrameLayout frameLayout;
     private FloatingActionsMenu fabMenu;
-    private FloatingActionButton popularSortFAB;
-    private FloatingActionButton recentSortFAB;
+    private FloatingActionButton popularSortFab;
+    private FloatingActionButton recentSortFab;
     private FloatingActionButton fabSort;
     private RecyclerView recyclerView;
     private RelativeLayout guideOverlay;
     private RelativeLayout writeArticleCell;
     private String userDynamoId;
-    private ShortStoryAPI shortStoryAPI;
+    private ShortStoryAPI shortStoryApi;
     Set<Integer> viewedStoriesSet = new HashSet<>();
     private boolean isRecommendRequestRunning;
     private String likeStatus;
@@ -137,7 +134,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private RelativeLayout rootLayout;
     private SimpleTooltip simpleTooltip;
     private Handler handler;
-    private String isFollowing;
     private int position;
     private StoryShareCardWidget storyShareCardWidget;
     private ImageView shareStoryImageView;
@@ -146,7 +142,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.topics_short_stories_tab_fragment, container, false);
 
@@ -155,7 +151,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 
         rootLayout = (RelativeLayout) view.findViewById(R.id.rootLayout);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
+        lodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         guideOverlay = (RelativeLayout) view.findViewById(R.id.guideOverlay);
         writeArticleCell = (RelativeLayout) view.findViewById(R.id.writeArticleCell);
         frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
@@ -164,24 +160,21 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 
         frameLayout.getBackground().setAlpha(0);
         fabMenu = (FloatingActionsMenu) view.findViewById(R.id.fab_menu);
-        popularSortFAB = (FloatingActionButton) view.findViewById(R.id.popularSortFAB);
-        recentSortFAB = (FloatingActionButton) view.findViewById(R.id.recentSortFAB);
+        popularSortFab = (FloatingActionButton) view.findViewById(R.id.popularSortFAB);
+        recentSortFab = (FloatingActionButton) view.findViewById(R.id.recentSortFAB);
         fabSort = (FloatingActionButton) view.findViewById(R.id.fabSort);
 
         guideOverlay.setOnClickListener(this);
         writeArticleCell.setOnClickListener(this);
         frameLayout.setVisibility(View.VISIBLE);
-        popularSortFAB.setOnClickListener(this);
-        recentSortFAB.setOnClickListener(this);
+        popularSortFab.setOnClickListener(this);
+        recentSortFab.setOnClickListener(this);
         fabMenu.setVisibility(View.GONE);
-        fabSort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (fabMenu.isExpanded()) {
-                    fabMenu.collapse();
-                } else {
-                    fabMenu.expand();
-                }
+        fabSort.setOnClickListener(v -> {
+            if (fabMenu.isExpanded()) {
+                fabMenu.collapse();
+            } else {
+                fabMenu.expand();
             }
         });
 
@@ -206,16 +199,16 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                     }
                 });
 
-        mDatalist = new ArrayList<>();
+        articleListingResults = new ArrayList<>();
         recyclerAdapter = new ShortStoriesRecyclerAdapter(getActivity(), this);
         llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        recyclerAdapter.setListData(mDatalist);
+        recyclerAdapter.setListData(articleListingResults);
         recyclerView.setAdapter(recyclerAdapter);
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        shortStoryAPI = retro.create(ShortStoryAPI.class);
+        shortStoryApi = retro.create(ShortStoryAPI.class);
 
         Bundle extras = getArguments();
         if (extras != null) {
@@ -226,21 +219,17 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         }
         hitFilteredTopicsArticleListingApi(sortType);
 
-        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mDatalist.clear();
-                recyclerAdapter.notifyDataSetChanged();
-                nextPageNumber = 1;
-                hitFilteredTopicsArticleListingApi(sortType);
-                pullToRefresh.setRefreshing(false);
-            }
+        pullToRefresh.setOnRefreshListener(() -> {
+            articleListingResults.clear();
+            recyclerAdapter.notifyDataSetChanged();
+            nextPageNumber = 1;
+            hitFilteredTopicsArticleListingApi(sortType);
+            pullToRefresh.setRefreshing(false);
         });
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0) //check for scroll down
-                {
+                if (dy > 0) {
                     visibleItemCount = llm.getChildCount();
                     totalItemCount = llm.getItemCount();
                     pastVisiblesItems = llm.findFirstVisibleItemPosition();
@@ -248,7 +237,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                     if (!isReuqestRunning && !isLastPageReached) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             isReuqestRunning = true;
-                            mLodingView.setVisibility(View.VISIBLE);
+                            lodingView.setVisibility(View.VISIBLE);
                             hitFilteredTopicsArticleListingApi(sortType);
                         }
                     }
@@ -271,11 +260,12 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         }
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+        TopicsCategoryAPI topicsApi = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
         if (selectedTopic != null) {
-            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopic.getId(), sortType, from, from + limit - 1, "0");
+            Call<ArticleListingResponse> filterCall = topicsApi
+                    .getArticlesForCategory(selectedTopic.getId(), sortType, from, from + limit - 1, "0");
             filterCall.enqueue(articleListingResponseCallback);
         }
     }
@@ -284,8 +274,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         @Override
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
             isReuqestRunning = false;
-            if (mLodingView.getVisibility() == View.VISIBLE) {
-                mLodingView.setVisibility(View.GONE);
+            if (lodingView.getVisibility() == View.VISIBLE) {
+                lodingView.setVisibility(View.GONE);
             }
             if (response.body() == null) {
                 return;
@@ -294,7 +284,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processArticleListingResponse(responseData);
-                } else {
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
@@ -304,8 +293,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            if (mLodingView.getVisibility() == View.VISIBLE) {
-                mLodingView.setVisibility(View.GONE);
+            if (lodingView.getVisibility() == View.VISIBLE) {
+                lodingView.setVisibility(View.GONE);
             }
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
@@ -316,30 +305,48 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
         if (dataList.size() == 0) {
             isLastPageReached = false;
-            if (null != mDatalist && !mDatalist.isEmpty()) {
+            if (null != articleListingResults && !articleListingResults.isEmpty()) {
                 //No more next results for search from pagination
                 isLastPageReached = true;
             } else {
                 writeArticleCell.setVisibility(View.VISIBLE);
-                mDatalist = dataList;
-                recyclerAdapter.setListData(mDatalist);
+                articleListingResults = dataList;
+                recyclerAdapter.setListData(articleListingResults);
                 recyclerAdapter.notifyDataSetChanged();
             }
         } else {
             writeArticleCell.setVisibility(View.GONE);
             if (nextPageNumber == 1) {
-                mDatalist = dataList;
+                articleListingResults = dataList;
 
             } else {
-                mDatalist.addAll(dataList);
+                articleListingResults.addAll(dataList);
             }
-            recyclerAdapter.setListData(mDatalist);
+            recyclerAdapter.setListData(articleListingResults);
             nextPageNumber = nextPageNumber + 1;
             recyclerAdapter.notifyDataSetChanged();
             if (nextPageNumber == 2) {
                 startTracking();
             }
         }
+    }
+
+    private void hitArticleListingSortByRecent() {
+        fabMenu.collapse();
+        articleListingResults.clear();
+        recyclerAdapter.notifyDataSetChanged();
+        sortType = 0;
+        nextPageNumber = 1;
+        hitFilteredTopicsArticleListingApi(0);
+    }
+
+    private void hitArticleListingSortByPopular() {
+        fabMenu.collapse();
+        articleListingResults.clear();
+        recyclerAdapter.notifyDataSetChanged();
+        sortType = 1;
+        nextPageNumber = 1;
+        hitFilteredTopicsArticleListingApi(sortType);
     }
 
     @Override
@@ -363,7 +370,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 break;
             case R.id.recentSortFAB:
                 fabMenu.collapse();
-                mDatalist.clear();
+                articleListingResults.clear();
                 recyclerAdapter.notifyDataSetChanged();
                 sortType = 0;
                 nextPageNumber = 1;
@@ -371,31 +378,15 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 break;
             case R.id.popularSortFAB:
                 fabMenu.collapse();
-                mDatalist.clear();
+                articleListingResults.clear();
                 recyclerAdapter.notifyDataSetChanged();
                 sortType = 1;
                 nextPageNumber = 1;
                 hitFilteredTopicsArticleListingApi(sortType);
                 break;
+            default:
+                break;
         }
-    }
-
-    private void hitArticleListingSortByRecent() {
-        fabMenu.collapse();
-        mDatalist.clear();
-        recyclerAdapter.notifyDataSetChanged();
-        sortType = 0;
-        nextPageNumber = 1;
-        hitFilteredTopicsArticleListingApi(0);
-    }
-
-    private void hitArticleListingSortByPopular() {
-        fabMenu.collapse();
-        mDatalist.clear();
-        recyclerAdapter.notifyDataSetChanged();
-        sortType = 1;
-        nextPageNumber = 1;
-        hitFilteredTopicsArticleListingApi(sortType);
     }
 
     @Override
@@ -407,35 +398,35 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             break;
             case R.id.storyImageView1:
                 Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
-                intent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
-                intent.putExtra(Constants.AUTHOR_ID, mDatalist.get(position).getUserId());
-                intent.putExtra(Constants.BLOG_SLUG, mDatalist.get(position).getBlogPageSlug());
-                intent.putExtra(Constants.TITLE_SLUG, mDatalist.get(position).getTitleSlug());
+                intent.putExtra(Constants.ARTICLE_ID, articleListingResults.get(position).getId());
+                intent.putExtra(Constants.AUTHOR_ID, articleListingResults.get(position).getUserId());
+                intent.putExtra(Constants.BLOG_SLUG, articleListingResults.get(position).getBlogPageSlug());
+                intent.putExtra(Constants.TITLE_SLUG, articleListingResults.get(position).getTitleSlug());
                 intent.putExtra(Constants.ARTICLE_OPENED_FROM,
                         "" + currentSubTopic.getParentName());
                 intent.putExtra(Constants.FROM_SCREEN, "TopicsShortStoryTabFragment");
                 intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                intent.putParcelableArrayListExtra("pagerListData", mDatalist);
+                intent.putParcelableArrayListExtra("pagerListData", articleListingResults);
                 intent.putExtra(Constants.AUTHOR,
-                        mDatalist.get(position).getUserId() + "~" + mDatalist.get(position)
+                        articleListingResults.get(position).getUserId() + "~" + articleListingResults.get(position)
                                 .getUserName());
                 startActivity(intent);
                 break;
             case R.id.storyRecommendationContainer:
                 if (!isRecommendRequestRunning) {
-                    if (mDatalist.get(position).isLiked()) {
+                    if (articleListingResults.get(position).isLiked()) {
                         likeStatus = "0";
                         currentShortStoryPosition = position;
-                        recommendUnrecommentArticleAPI(mDatalist.get(position).getId(),
-                                mDatalist.get(position).getUserId(),
-                                mDatalist.get(position).getUserName());
+                        recommendUnrecommentArticleApi(articleListingResults.get(position).getId(),
+                                articleListingResults.get(position).getUserId(),
+                                articleListingResults.get(position).getUserName());
                     } else {
                         tooltipForShare(shareImageView);
                         likeStatus = "1";
                         currentShortStoryPosition = position;
-                        recommendUnrecommentArticleAPI(mDatalist.get(position).getId(),
-                                mDatalist.get(position).getUserId(),
-                                mDatalist.get(position).getUserName());
+                        recommendUnrecommentArticleApi(articleListingResults.get(position).getId(),
+                                articleListingResults.get(position).getUserId(),
+                                articleListingResults.get(position).getUserName());
                     }
                 }
                 break;
@@ -449,7 +440,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             break;
             case R.id.instagramShareImageView: {
                 try {
-                    filterTags(mDatalist.get(position).getTags());
+                    filterTags(articleListingResults.get(position).getTags());
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
@@ -459,9 +450,10 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             break;
             case R.id.genericShareImageView: {
                 try {
-                    AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment = new AddCollectionAndCollectionItemDialogFragment();
+                    AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment =
+                            new AddCollectionAndCollectionItemDialogFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("articleId", mDatalist.get(position).getId());
+                    bundle.putString("articleId", articleListingResults.get(position).getId());
                     bundle.putString("type", AppConstants.SHORT_STORY_COLLECTION_TYPE);
                     addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
                     FragmentManager fm = getFragmentManager();
@@ -477,18 +469,20 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             break;
             case R.id.authorNameTextView:
                 if (BuildConfig.DEBUG) {
-                    Intent Tintent = new Intent(getActivity(), ShortStoryModerationOrShareActivity.class);
-                    Tintent.putExtra("shareUrl", mDatalist.get(position).getStoryImage());
-                    Tintent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
-                    startActivity(Tintent);
+                    Intent debugIntent = new Intent(getActivity(), ShortStoryModerationOrShareActivity.class);
+                    debugIntent.putExtra("shareUrl", articleListingResults.get(position).getStoryImage());
+                    debugIntent.putExtra(Constants.ARTICLE_ID, articleListingResults.get(position).getId());
+                    startActivity(debugIntent);
                 } else {
-                    Intent pIntent = new Intent(getActivity(), UserProfileActivity.class);
-                    pIntent.putExtra(Constants.USER_ID, mDatalist.get(position).getUserId());
-                    startActivity(pIntent);
+                    Intent pintent = new Intent(getActivity(), UserProfileActivity.class);
+                    pintent.putExtra(Constants.USER_ID, articleListingResults.get(position).getUserId());
+                    startActivity(pintent);
                 }
                 break;
             case R.id.followAuthorTextView:
-                followAPICall(mDatalist.get(position).getUserId(), position);
+                followApiCall(articleListingResults.get(position).getUserId(), position);
+                break;
+            default:
                 break;
 
         }
@@ -507,23 +501,26 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 
         String hashtags = AppUtils.getHasTagFromCategoryList(tagList);
         AppUtils.copyToClipboard(hashtags);
-        if (isAdded())
+        if (isAdded()) {
             ToastUtils.showToast(getActivity(), getActivity().getString(R.string.all_insta_share_clipboard_msg));
+        }
     }
 
-    private void followAPICall(String authorId, int position) {
+    private void followApiCall(String authorId, int position) {
         this.position = position;
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        FollowAPI followAPI = retrofit.create(FollowAPI.class);
+        FollowAPI followApi = retrofit.create(FollowAPI.class);
         FollowUnfollowUserRequest request = new FollowUnfollowUserRequest();
         request.setFollowerId(authorId);
-        if (mDatalist.get(position).getIsfollowing().equals("1")) {
-            Utils.pushGenericEvent(getActivity(), "CTA_Unfollow_100WS_Detail", userDynamoId, "TopicsShortStoryTabFragment");
-            Call<ResponseBody> followUnfollowUserResponseCall = followAPI.unfollowUserInShortStoryListing(request);
+        if (articleListingResults.get(position).getIsfollowing().equals("1")) {
+            Utils.pushGenericEvent(getActivity(), "CTA_Unfollow_100WS_Detail", userDynamoId,
+                    "TopicsShortStoryTabFragment");
+            Call<ResponseBody> followUnfollowUserResponseCall = followApi.unfollowUserInShortStoryListing(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
-            Utils.pushGenericEvent(getActivity(), "CTA_Follow_100WS_Detail", userDynamoId, "TopicsShortStoryTabFragment");
-            Call<ResponseBody> followUnfollowUserResponseCall = followAPI.followUserInShortStoryListing(request);
+            Utils.pushGenericEvent(getActivity(), "CTA_Follow_100WS_Detail", userDynamoId,
+                    "TopicsShortStoryTabFragment");
+            Call<ResponseBody> followUnfollowUserResponseCall = followApi.followUserInShortStoryListing(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }
     }
@@ -532,25 +529,27 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             if (response.body() == null) {
-                if (isAdded())
+                if (isAdded()) {
                     ToastUtils.showToast(getActivity(), "some thing went wrong ");
+                }
                 return;
             }
             try {
                 String resData = new String(response.body().bytes());
-                JSONObject jObject = new JSONObject(resData);
-                int code = jObject.getInt("code");
-                String status = jObject.getString("status");
-                String reason = jObject.getString("reason");
+                JSONObject jsonObject = new JSONObject(resData);
+                int code = jsonObject.getInt("code");
+                String status = jsonObject.getString("status");
+                String reason = jsonObject.getString("reason");
                 if (code == 200 && Constants.SUCCESS.equals(status)) {
-                    mDatalist.get(position).setIsfollowing("0");
+                    articleListingResults.get(position).setIsfollowing("0");
                     recyclerAdapter.notifyDataSetChanged();
                 } else {
                     ToastUtils.showToast(getActivity(), reason);
                 }
             } catch (Exception e) {
-                if (isAdded())
+                if (isAdded()) {
                     ToastUtils.showToast(getActivity(), "some thing went wrong at the server ");
+                }
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
@@ -558,8 +557,9 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-            if (isAdded())
+            if (isAdded()) {
                 ToastUtils.showToast(getActivity(), "some thing went wrong at the server ");
+            }
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
@@ -569,28 +569,30 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             if (response.body() == null) {
-                if (isAdded())
+                if (isAdded()) {
                     ToastUtils.showToast(getActivity(), "some thing went wrong ");
+                }
                 return;
             }
             try {
                 String resData = new String(response.body().bytes());
-                JSONObject jObject = new JSONObject(resData);
-                int code = jObject.getInt("code");
-                String status = jObject.getString("status");
-                String reason = jObject.getString("reason");
+                JSONObject jsonObject = new JSONObject(resData);
+                int code = jsonObject.getInt("code");
+                String status = jsonObject.getString("status");
+                String reason = jsonObject.getString("reason");
                 if (code == 200 && Constants.SUCCESS.equals(status)) {
-                    mDatalist.get(position).setIsfollowing("1");
+                    articleListingResults.get(position).setIsfollowing("1");
                     recyclerAdapter.notifyDataSetChanged();
                 } else if (code == 200 && "failure".equals(status) && "Already following!".equals(reason)) {
-                    mDatalist.get(position).setIsfollowing("1");
+                    articleListingResults.get(position).setIsfollowing("1");
                     recyclerAdapter.notifyDataSetChanged();
                 } else {
                     ToastUtils.showToast(getActivity(), reason);
                 }
             } catch (Exception e) {
-                if (isAdded())
+                if (isAdded()) {
                     ToastUtils.showToast(getActivity(), "some thing went wrong at the server ");
+                }
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
@@ -598,8 +600,9 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-            if (isAdded())
+            if (isAdded()) {
                 ToastUtils.showToast(getActivity(), "some thing went wrong at the server ");
+            }
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
@@ -633,10 +636,11 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     }
 
     private void getSharableViewForPosition(int position, String medium) {
-        storyShareCardWidget = recyclerView.getLayoutManager().findViewByPosition(position).findViewById(R.id.storyShareCardWidget);
+        storyShareCardWidget = recyclerView.getLayoutManager().findViewByPosition(position)
+                .findViewById(R.id.storyShareCardWidget);
         shareStoryImageView = storyShareCardWidget.findViewById(R.id.storyImageView);
         shareMedium = medium;
-        sharedStoryItem = mDatalist.get(position);
+        sharedStoryItem = articleListingResults.get(position);
         checkPermissionAndCreateShareableImage();
     }
 
@@ -644,18 +648,20 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         if (isAdded()) {
             Bitmap bitmap1 = ((BitmapDrawable) shareStoryImageView.getDrawable()).getBitmap();
             shareStoryImageView.setImageBitmap(SharingUtils.getRoundCornerBitmap(bitmap1, AppUtils.dpTopx(4.0f)));
-            AppUtils.getBitmapFromView(storyShareCardWidget, AppConstants.STORY_SHARE_IMAGE_NAME);
-            shareStory();
+            //Bh**d**a facebook caches shareIntent. Need different name for all files
+            String tempName = "" + System.currentTimeMillis();
+            AppUtils.getBitmapFromView(storyShareCardWidget, AppConstants.STORY_SHARE_IMAGE_NAME + tempName);
+            shareStory(tempName);
         }
     }
 
-    private void shareStory() {
-        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() +
-                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg");
+    private void shareStory(String tempName) {
+        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory()
+                + "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + tempName + ".jpg");
         if (isAdded()) {
             switch (shareMedium) {
                 case AppConstants.MEDIUM_FACEBOOK: {
-                    SharingUtils.shareViaFacebook(getActivity());
+                    SharingUtils.shareViaFacebook(getActivity(), uri);
                     Utils.pushShareStoryEvent(getActivity(), "TopicsShortStoriesTabFragment",
                             userDynamoId + "", sharedStoryItem.getId(),
                             sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Facebook");
@@ -663,7 +669,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 break;
                 case AppConstants.MEDIUM_WHATSAPP: {
                     if (AppUtils.shareImageWithWhatsApp(getActivity(), uri, getString(R.string.ss_follow_author,
-                            sharedStoryItem.getUserName(), AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
+                            sharedStoryItem.getUserName(),
+                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
                         Utils.pushShareStoryEvent(getActivity(), "TopicsShortStoriesTabFragment",
                                 userDynamoId + "", sharedStoryItem.getId(),
                                 sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Whatsapp");
@@ -680,95 +687,100 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 break;
                 case AppConstants.MEDIUM_GENERIC: {
                     if (AppUtils.shareGenericImageAndOrLink(getActivity(), uri, getString(R.string.ss_follow_author,
-                            sharedStoryItem.getUserName(), AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
+                            sharedStoryItem.getUserName(),
+                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.getUserId()))) {
                         Utils.pushShareStoryEvent(getActivity(), "TopicsShortStoriesTabFragment",
                                 userDynamoId + "", sharedStoryItem.getId(),
                                 sharedStoryItem.getUserId() + "~" + sharedStoryItem.getUserName(), "Generic");
                     }
                 }
                 break;
+                default:
+                    break;
             }
         }
     }
 
-    private void recommendUnrecommentArticleAPI(String articleId, String authorId,
-                                                String author) {
+    private void recommendUnrecommentArticleApi(String articleId, String authorId,
+            String author) {
         Utils.pushLikeStoryEvent(getActivity(), "ShortStoryListingScreen", userDynamoId + "",
                 articleId,
                 authorId + "~" + author);
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-
         isRecommendRequestRunning = true;
-        RecommendUnrecommendArticleRequest recommendUnrecommendArticleRequest = new RecommendUnrecommendArticleRequest();
+        RecommendUnrecommendArticleRequest recommendUnrecommendArticleRequest =
+                new RecommendUnrecommendArticleRequest();
         recommendUnrecommendArticleRequest.setArticleId(articleId);
         recommendUnrecommendArticleRequest.setStatus(likeStatus);
-        Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle = articleDetailsAPI
+        ArticleDetailsAPI articleDetailsApi = retro.create(ArticleDetailsAPI.class);
+        Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle = articleDetailsApi
                 .recommendUnrecommendArticle(recommendUnrecommendArticleRequest);
         recommendUnrecommendArticle.enqueue(recommendUnrecommendArticleResponseCallback);
     }
 
-    private Callback<RecommendUnrecommendArticleResponse> recommendUnrecommendArticleResponseCallback = new Callback<RecommendUnrecommendArticleResponse>() {
-        @Override
-        public void onResponse(Call<RecommendUnrecommendArticleResponse> call,
-                               retrofit2.Response<RecommendUnrecommendArticleResponse> response) {
-            isRecommendRequestRunning = false;
-            if (null == response.body()) {
-                if (!isAdded()) {
-                    return;
-                }
-                ((ShortStoriesListingContainerActivity) getActivity())
-                        .showToast(getString(R.string.server_went_wrong));
-                return;
-            }
-
-            try {
-                RecommendUnrecommendArticleResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS
-                        .equals(responseData.getStatus())) {
-                    if (likeStatus.equals("1")) {
-                        if (!responseData.getData().isEmpty()) {
-                            mDatalist.get(currentShortStoryPosition).setLikesCount(
-                                    "" + (Integer.parseInt(mDatalist.get(currentShortStoryPosition)
-                                            .getLikesCount())
-                                            + 1));
+    private Callback<RecommendUnrecommendArticleResponse> recommendUnrecommendArticleResponseCallback =
+            new Callback<RecommendUnrecommendArticleResponse>() {
+                @Override
+                public void onResponse(Call<RecommendUnrecommendArticleResponse> call,
+                        retrofit2.Response<RecommendUnrecommendArticleResponse> response) {
+                    isRecommendRequestRunning = false;
+                    if (null == response.body()) {
+                        if (!isAdded()) {
+                            return;
                         }
-                        mDatalist.get(currentShortStoryPosition).setLiked(true);
-                    } else {
-                        if (!responseData.getData().isEmpty()) {
-                            mDatalist.get(currentShortStoryPosition).setLikesCount(
-                                    "" + (Integer.parseInt(mDatalist.get(currentShortStoryPosition)
-                                            .getLikesCount())
-                                            - 1));
-                        }
-                        mDatalist.get(currentShortStoryPosition).setLiked(false);
-                    }
-                    recyclerAdapter.notifyDataSetChanged();
-                    if (isAdded())
-                        Toast.makeText(getActivity(), "" + responseData.getReason(), Toast.LENGTH_SHORT).show();
-                } else {
-                    if (isAdded()) {
                         ((ShortStoriesListingContainerActivity) getActivity())
                                 .showToast(getString(R.string.server_went_wrong));
+                        return;
+                    }
+
+                    try {
+                        RecommendUnrecommendArticleResponse responseData = response.body();
+                        if (responseData.getCode() == 200 && Constants.SUCCESS
+                                .equals(responseData.getStatus())) {
+                            if (likeStatus.equals("1")) {
+                                if (!responseData.getData().isEmpty()) {
+                                    articleListingResults.get(currentShortStoryPosition).setLikesCount(
+                                            "" + (Integer.parseInt(articleListingResults.get(currentShortStoryPosition)
+                                                    .getLikesCount())
+                                                    + 1));
+                                }
+                                articleListingResults.get(currentShortStoryPosition).setLiked(true);
+                            } else {
+                                if (!responseData.getData().isEmpty()) {
+                                    articleListingResults.get(currentShortStoryPosition).setLikesCount(
+                                            "" + (Integer.parseInt(articleListingResults.get(currentShortStoryPosition)
+                                                    .getLikesCount())
+                                                    - 1));
+                                }
+                                articleListingResults.get(currentShortStoryPosition).setLiked(false);
+                            }
+                            recyclerAdapter.notifyDataSetChanged();
+                            if (isAdded()) {
+                                Toast.makeText(getActivity(), "" + responseData.getReason(), Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            if (isAdded()) {
+                                ((ShortStoriesListingContainerActivity) getActivity())
+                                        .showToast(getString(R.string.server_went_wrong));
+                            }
+                        }
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                        if (isAdded()) {
+                            ((ShortStoriesListingContainerActivity) getActivity())
+                                    .showToast(getString(R.string.went_wrong));
+                        }
                     }
                 }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-                if (isAdded()) {
-                    ((ShortStoriesListingContainerActivity) getActivity())
-                            .showToast(getString(R.string.went_wrong));
-                }
-            }
-        }
 
-        @Override
-        public void onFailure(Call<RecommendUnrecommendArticleResponse> call, Throwable t) {
-            isRecommendRequestRunning = false;
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
+                @Override
+                public void onFailure(Call<RecommendUnrecommendArticleResponse> call, Throwable t) {
+                    isRecommendRequestRunning = false;
+                    Crashlytics.logException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
+                }
+            };
 
 
     // Time from which a particular view has been started viewing.
@@ -793,57 +805,36 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private double minimumVisibleHeightThreshold = 60;
 
     // Start the tracking process.
-    public void startTracking() {
+    private void startTracking() {
 
         // Track the views when the data is loaded into
         // recycler view for the first time.
         recyclerView.getViewTreeObserver()
-                .addOnGlobalLayoutListener(new ViewTreeObserver
-                        .OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-
-                        if (!firstTrackFlag) {
-
-                            startTime = System.currentTimeMillis();
-
-                            int firstVisibleItemPosition = ((LinearLayoutManager)
-                                    recyclerView.getLayoutManager())
-                                    .findFirstVisibleItemPosition();
-
-                            int lastVisibleItemPosition = ((LinearLayoutManager)
-                                    recyclerView.getLayoutManager())
-                                    .findLastVisibleItemPosition();
-
-                            analyzeAndAddViewData(firstVisibleItemPosition,
-                                    lastVisibleItemPosition);
-
-                            firstTrackFlag = true;
-                        }
+                .addOnGlobalLayoutListener(() -> {
+                    if (!firstTrackFlag) {
+                        startTime = System.currentTimeMillis();
+                        int firstVisibleItemPosition = ((LinearLayoutManager)
+                                recyclerView.getLayoutManager())
+                                .findFirstVisibleItemPosition();
+                        int lastVisibleItemPosition = ((LinearLayoutManager)
+                                recyclerView.getLayoutManager())
+                                .findLastVisibleItemPosition();
+                        analyzeAndAddViewData(firstVisibleItemPosition,
+                                lastVisibleItemPosition);
+                        firstTrackFlag = true;
                     }
                 });
 
         // Track the views when user scrolls through the recyclerview.
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView,
-                                             int newState) {
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-
-                // User is scrolling, calculate and store the tracking
-                // data of the views that were being viewed
-                // before the scroll.
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     endTime = System.currentTimeMillis();
-
                     for (int trackedViewsCount = 0;
-                         trackedViewsCount < viewsViewed.size();
-                         trackedViewsCount++) {
-
-//                        trackingData.add(prepareTrackingData(String
-//                                        .valueOf(viewsViewed
-//                                                .get(trackedViewsCount)),
-//                                (endTime - startTime) / 1000));
+                            trackedViewsCount < viewsViewed.size();
+                            trackedViewsCount++) {
                         if (((endTime - startTime) / 1000) >= MIN_TIME_VIEW) {
                             if (!viewedStoriesSet.contains(viewsViewed.get(trackedViewsCount))) {
                                 try {
@@ -857,28 +848,16 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                             }
                         }
                     }
-
-                    // We clear the list of current item positions.
-                    // If we don't do this, the items will be tracked
-                    // every time the new items are added.
                     viewsViewed.clear();
                 }
-
-                // Scrolling has ended, start the tracking
-                // process by assigning a start time
-                // and maintaining a list of views being viewed.
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-
                     startTime = System.currentTimeMillis();
-
                     int firstVisibleItemPosition = ((LinearLayoutManager)
                             recyclerView.getLayoutManager())
                             .findFirstVisibleItemPosition();
-
                     int lastVisibleItemPosition = ((LinearLayoutManager)
                             recyclerView.getLayoutManager())
                             .findLastVisibleItemPosition();
-
                     analyzeAndAddViewData(firstVisibleItemPosition,
                             lastVisibleItemPosition);
                 }
@@ -901,11 +880,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 lastVisibleItemPosition);
 
         for (int trackedViewsCount = 0; trackedViewsCount < viewsViewed.size();
-             trackedViewsCount++) {
-
-//            trackingData.add(prepareTrackingData(String.valueOf(viewsViewed
-//                            .get(trackedViewsCount)),
-//                    (endTime - startTime) / 1000));
+                trackedViewsCount++) {
             if (((endTime - startTime) / 1000) >= MIN_TIME_VIEW) {
                 if (!viewedStoriesSet.contains(viewsViewed.get(trackedViewsCount))) {
                     try {
@@ -922,21 +897,17 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     }
 
     private void analyzeAndAddViewData(int firstVisibleItemPosition,
-                                       int lastVisibleItemPosition) {
+            int lastVisibleItemPosition) {
 
         // Analyze all the views
         for (int viewPosition = firstVisibleItemPosition;
-             viewPosition <= lastVisibleItemPosition; viewPosition++) {
+                viewPosition <= lastVisibleItemPosition; viewPosition++) {
 
             Log.i("View being considered", String.valueOf(viewPosition));
 
             // Get the view from its position.
             View itemView = recyclerView.getLayoutManager()
                     .findViewByPosition(viewPosition);
-
-            // Check if the visibility of the view is more than or equal
-            // to the threshold provided. If it falls under the desired limit,
-            // add it to the tracking data.
             if (viewPosition >= 0) {
                 if (getVisibleHeightPercentage(itemView) >= minimumVisibleHeightThreshold) {
                     viewsViewed.add(viewPosition);
@@ -970,25 +941,11 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         return viewVisibleHeightPercentage;
     }
 
-    // Method to store the tracking data in an instance of "TrackingData" and
-    // then returning that instance.
-    // @param viewId
-    // @param viewDuration in seconds.
-    private TrackingData prepareTrackingData(String viewId, long viewDuration) {
-
-        TrackingData trackingData = new TrackingData();
-
-        trackingData.setViewId(viewId);
-        trackingData.setViewDuration(viewDuration);
-
-        return trackingData;
-    }
-
     private void updateViewCount(int position) {
         UpdateViewCountRequest updateViewCountRequest = new UpdateViewCountRequest();
         updateViewCountRequest.setUserId(
                 SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-        ArrayList<Map<String, String>> tagData = mDatalist.get(position).getTags();
+        ArrayList<Map<String, String>> tagData = articleListingResults.get(position).getTags();
         Map<String, String> tagMap = new HashMap<>();
         for (Map.Entry<String, String> entry : tagData.get(0).entrySet()) {
             if (entry.getKey().contains("category-")) {
@@ -1000,8 +957,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         requestTagList.add(tagMap);
         updateViewCountRequest.setTags(requestTagList);
         updateViewCountRequest.setContentType("1");
-        Call<ResponseBody> callUpdateViewCount = shortStoryAPI
-                .updateViewCount(mDatalist.get(position).getId(), updateViewCountRequest);
+        Call<ResponseBody> callUpdateViewCount = shortStoryApi
+                .updateViewCount(articleListingResults.get(position).getId(), updateViewCountRequest);
         callUpdateViewCount.enqueue(updateViewCountResponseCallback);
     }
 
@@ -1025,31 +982,17 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             dialog.setContentView(R.layout.dialog_sort_by);
             dialog.setCancelable(true);
             dialog.findViewById(R.id.linearSortByPopular)
-                    .setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            hitArticleListingSortByPopular();
-                            dialog.dismiss();
-                        }
+                    .setOnClickListener(view -> {
+                        hitArticleListingSortByPopular();
+                        dialog.dismiss();
                     });
-
             dialog.findViewById(R.id.linearSortByRecent)
-                    .setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            hitArticleListingSortByRecent();
-                            dialog.dismiss();
-                        }
+                    .setOnClickListener(view -> {
+                        hitArticleListingSortByRecent();
+                        dialog.dismiss();
                     });
-
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.findViewById(R.id.textUpdate).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
-
+            dialog.findViewById(R.id.textUpdate).setOnClickListener(view -> dialog.dismiss());
             dialog.show();
         }
     }
@@ -1061,12 +1004,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             Snackbar.make(rootLayout, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            requestUngrantedPermissions();
-                        }
-                    }).show();
+                    .setAction(R.string.ok, view -> requestUngrantedPermissions()).show();
         } else {
             requestUngrantedPermissions();
         }
@@ -1086,7 +1024,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_INIT_PERMISSION) {
             if (PermissionUtil.verifyPermissions(grantResults)) {
                 Snackbar.make(rootLayout, R.string.permision_available_init,
@@ -1119,12 +1057,9 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 .build();
         simpleTooltip.show();
         handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (simpleTooltip.isShowing()) {
-                    simpleTooltip.dismiss();
-                }
+        handler.postDelayed(() -> {
+            if (simpleTooltip.isShowing()) {
+                simpleTooltip.dismiss();
             }
         }, 3000);
 
@@ -1135,7 +1070,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         if (!isAdded()) {
             return;
         }
-        final androidx.appcompat.widget.PopupMenu popupMenu = new androidx.appcompat.widget.PopupMenu(getActivity(), view);
+        final androidx.appcompat.widget.PopupMenu popupMenu = new androidx.appcompat.widget.PopupMenu(getActivity(),
+                view);
         popupMenu.getMenuInflater().inflate(R.menu.choose_short_story_menu, popupMenu.getMenu());
         for (int i = 0; i < popupMenu.getMenu().size(); i++) {
             Drawable drawable = popupMenu.getMenu().getItem(i).getIcon();
@@ -1153,26 +1089,30 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             } else if (item.getItemId() == R.id.bookmarkShortStory) {
                 return true;
             } else if (item.getItemId() == R.id.copyLink) {
-                AppUtils.copyToClipboard(AppUtils.getShortStoryShareUrl(mDatalist.get(position).getUserType(),
-                        mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug()));
+                AppUtils.copyToClipboard(
+                        AppUtils.getShortStoryShareUrl(articleListingResults.get(position).getUserType(),
+                                articleListingResults.get(position).getBlogPageSlug(),
+                                articleListingResults.get(position).getTitleSlug()));
                 if (isAdded()) {
-                    Toast.makeText(getActivity(), getActivity().getString(R.string.ss_story_link_copied), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getActivity().getString(R.string.ss_story_link_copied),
+                            Toast.LENGTH_SHORT).show();
                 }
                 return true;
             } else if (item.getItemId() == R.id.reportContentShortStory) {
                 ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
-                FragmentManager fm = getChildFragmentManager();
-                Bundle _args = new Bundle();
-                _args.putString("postId", mDatalist.get(position).getId());
-                _args.putInt("type", AppConstants.REPORT_TYPE_STORY);
-                reportContentDialogFragment.setArguments(_args);
+                Bundle args = new Bundle();
+                args.putString("postId", articleListingResults.get(position).getId());
+                args.putInt("type", AppConstants.REPORT_TYPE_STORY);
+                reportContentDialogFragment.setArguments(args);
                 reportContentDialogFragment.setCancelable(true);
+                FragmentManager fm = getChildFragmentManager();
                 reportContentDialogFragment.show(fm, "Report Content");
                 return true;
             }
             return false;
         });
-        MenuPopupHelper menuPopupHelper = new MenuPopupHelper(view.getContext(), (MenuBuilder) popupMenu.getMenu(), view);
+        MenuPopupHelper menuPopupHelper = new MenuPopupHelper(view.getContext(), (MenuBuilder) popupMenu.getMenu(),
+                view);
         menuPopupHelper.setForceShowIcon(true);
         menuPopupHelper.show();
     }

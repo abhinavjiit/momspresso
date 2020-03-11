@@ -10,7 +10,7 @@ EXIT_STATUS=0
 
 ./gradlew checkStyleChanged --rerun-tasks || EXIT_STATUS=$?
 
-./gradlew lint --rerun-tasks || EXIT_STATUS=$?
+# ./gradlew lint --rerun-tasks || EXIT_STATUS=$?
 
 git stash pop -q
 
