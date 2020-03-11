@@ -11,41 +11,34 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.crashlytics.android.Crashlytics;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.plus.PlusShare;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
-import com.mycity4kids.utils.AppUtils;
-
+import com.mycity4kids.utils.StringUtils;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
-
-import static android.view.View.GONE;
 
 /**
  * Created by hemant on 2/8/17.
  */
 public class ArticleModerationOrShareActivity extends BaseActivity implements View.OnClickListener {
+
     private String shareUrl;
-    private String source;
-    private String authorId, authorName;
-    private String title, body;
-    private RelativeLayout shareContainerLayout;
+    private String authorId;
+    private String authorName;
     private RelativeLayout root;
 
     @Override
@@ -56,54 +49,36 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         ((BaseApplication) getApplication()).setActivity(this);
 
         shareUrl = getIntent().getStringExtra("shareUrl");
-        source = getIntent().getStringExtra("source");
-        title = getIntent().getStringExtra("title");
-        body = getIntent().getStringExtra("body");
-
         authorId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
-        authorName = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getFirst_name() +
-                " " + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getLast_name();
+        authorName = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getFirst_name()
+                + " "
+                + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getLast_name();
 
         LinearLayout moderationContainer = (LinearLayout) findViewById(R.id.moderationContainer);
         LinearLayout publishContainer = (LinearLayout) findViewById(R.id.publishContainer);
-        shareContainerLayout = (RelativeLayout) findViewById(R.id.shareContainerLayout);
-        ImageView fImageView = (ImageView) findViewById(R.id.facebookImageView);
-        ImageView gImageView = (ImageView) findViewById(R.id.googlePlusImageView);
+        ImageView facebookImageView = (ImageView) findViewById(R.id.facebookImageView);
+        facebookImageView.setOnClickListener(this);
+        ImageView gplusImageView = (ImageView) findViewById(R.id.googlePlusImageView);
+        gplusImageView.setOnClickListener(this);
         ImageView whatsappImageView = (ImageView) findViewById(R.id.whatsappImageView);
+        whatsappImageView.setOnClickListener(this);
         ImageView twitterImageView = (ImageView) findViewById(R.id.twitterImageView);
+        twitterImageView.setOnClickListener(this);
         ImageView instagramImageView = (ImageView) findViewById(R.id.instagramImageView);
+        instagramImageView.setOnClickListener(this);
         TextView laterTextView = (TextView) findViewById(R.id.laterTextView);
+        laterTextView.setOnClickListener(this);
         TextView okayTextView = (TextView) findViewById(R.id.okayTextView);
+        okayTextView.setOnClickListener(this);
 
         if (StringUtils.isNullOrEmpty(shareUrl)) {
             moderationContainer.setVisibility(View.VISIBLE);
-            publishContainer.setVisibility(GONE);
+            publishContainer.setVisibility(View.GONE);
         } else {
-            moderationContainer.setVisibility(GONE);
+            moderationContainer.setVisibility(View.GONE);
             publishContainer.setVisibility(View.VISIBLE);
         }
-
-        if ("addStory".equals(source)) {
-            if (shareUrl.equals("https://www.momspresso.com/parenting/topic/short-stories")) {
-                moderationContainer.setVisibility(View.VISIBLE);
-                publishContainer.setVisibility(GONE);
-                shareContainerLayout.setVisibility(GONE);
-            } else {
-                moderationContainer.setVisibility(GONE);
-                publishContainer.setVisibility(View.VISIBLE);
-            }
-            instagramImageView.setVisibility(View.VISIBLE);
-        } else {
-            instagramImageView.setVisibility(GONE);
-        }
-
-        fImageView.setOnClickListener(this);
-        gImageView.setOnClickListener(this);
-        whatsappImageView.setOnClickListener(this);
-        twitterImageView.setOnClickListener(this);
-        instagramImageView.setOnClickListener(this);
-        laterTextView.setOnClickListener(this);
-        okayTextView.setOnClickListener(this);
+        instagramImageView.setVisibility(View.GONE);
     }
 
     @Override
@@ -121,12 +96,9 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         switch (v.getId()) {
             case R.id.facebookImageView:
                 if (ShareDialog.canShow(ShareLinkContent.class)) {
-                    if ("addStory".equals(source)) {
-                        Utils.pushShareStoryEvent(this, "PublishSuccessScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "", shareUrl, authorId + "~" + authorName, "Facebook");
-                    } else {
-                        Utils.pushShareArticleEvent(this, "PublishSuccessScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "", shareUrl, authorId + "~" + authorName, "Facebook");
-                    }
-
+                    Utils.pushShareArticleEvent(this, "PublishSuccessScreen",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "",
+                            shareUrl, authorId + "~" + authorName, "Facebook");
                     ShareLinkContent content = new ShareLinkContent.Builder()
                             .setContentUrl(Uri.parse(shareUrl))
                             .build();
@@ -137,12 +109,8 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
                     Toast.makeText(this, getString(R.string.moderation_or_share_gplus_fail), Toast.LENGTH_SHORT).show();
                 } else {
-                    if ("addStory".equals(source)) {
-                        Utils.pushShareStoryEvent(this, "PublishSuccessScreen", authorId + "", shareUrl, authorId + "~" + authorName, "GPlus");
-                    } else {
-                        Utils.pushShareArticleEvent(this, "PublishSuccessScreen", authorId + "", shareUrl, authorId + "~" + authorName, "GPlus");
-                    }
-
+                    Utils.pushShareArticleEvent(this, "PublishSuccessScreen", authorId + "", shareUrl,
+                            authorId + "~" + authorName, "GPlus");
                     Intent shareIntent = new PlusShare.Builder(this)
                             .setType("text/plain")
                             .setText(getString(R.string.check_out_blog))
@@ -153,51 +121,35 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                 break;
             case R.id.whatsappImageView:
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    Toast.makeText(this, getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT)
+                            .show();
                 } else {
-                    if ("addStory".equals(source)) {
-                        AppUtils.shareStoryWithWhatsApp(ArticleModerationOrShareActivity.this, shareUrl, "PublishSuccessScreen", authorId,
-                                shareUrl, authorId, authorName);
-                    } else {
-                        Utils.pushShareArticleEvent(this, "PublishSuccessScreen", authorId + "", shareUrl, authorId + "~" + authorName, "Whatsapp");
-                        Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
-                        whatsappIntent.setType("text/plain");
-                        whatsappIntent.setPackage("com.whatsapp");
-                        whatsappIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.check_out_blog) + shareUrl);
-                        try {
-                            startActivity(whatsappIntent);
-                        } catch (android.content.ActivityNotFoundException ex) {
-                            Toast.makeText(this, getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show();
-                        }
+                    Utils.pushShareArticleEvent(this, "PublishSuccessScreen", authorId + "", shareUrl,
+                            authorId + "~" + authorName, "Whatsapp");
+                    Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
+                    whatsappIntent.setType("text/plain");
+                    whatsappIntent.setPackage("com.whatsapp");
+                    whatsappIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.check_out_blog) + shareUrl);
+                    try {
+                        startActivity(whatsappIntent);
+                    } catch (android.content.ActivityNotFoundException ex) {
+                        Toast.makeText(this, getString(R.string.moderation_or_share_whatsapp_not_installed),
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
-                break;
-            case R.id.instagramImageView:
-                try {
-                    AppUtils.drawMultilineTextToBitmap(title, body, authorName, false);
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Log.d("MC4kException", Log.getStackTraceString(e));
-                    return;
-                }
-                AppUtils.shareStoryWithInstagram(this, "PublishSuccessScreen", authorId, shareUrl, authorId, authorName);
                 break;
             case R.id.twitterImageView:
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    Toast.makeText(this, getString(R.string.moderation_or_share_twitter_fail), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.moderation_or_share_twitter_fail), Toast.LENGTH_SHORT)
+                            .show();
                 } else {
-                    if ("addStory".equals(source)) {
-                        Utils.pushShareStoryEvent(this, "PublishSuccessScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "", shareUrl, authorId + "~" + authorName, "Twitter");
-                    } else {
-                        Utils.pushShareArticleEvent(this, "PublishSuccessScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "", shareUrl, authorId + "~" + authorName, "Twitter");
-                    }
-
-                    // Create intent using ACTION_VIEW and a normal Twitter url:
+                    Utils.pushShareArticleEvent(this, "PublishSuccessScreen",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "",
+                            shareUrl, authorId + "~" + authorName, "Twitter");
                     String tweetUrl = String.format("https://twitter.com/intent/tweet?text=%s&url=%s",
                             urlEncode(getString(R.string.check_out_blog)),
                             urlEncode(shareUrl));
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(tweetUrl));
-                    // Narrow down to official Twitter app, if available:
                     List<ResolveInfo> matches = this.getPackageManager().queryIntentActivities(intent, 0);
                     for (ResolveInfo info : matches) {
                         if (info.activityInfo.packageName.toLowerCase().startsWith("com.twitter")) {
@@ -208,13 +160,15 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                 }
                 break;
             case R.id.laterTextView:
-            case R.id.okayTextView: {
+            case R.id.okayTextView:
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
-                Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                BloggerDashboardAPI bloggerDashboardApi = retrofit.create(BloggerDashboardAPI.class);
+                Call<UserDetailResponse> call = bloggerDashboardApi.getBloggerData(
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 call.enqueue(getUserDetailsResponseCallback);
-            }
-            break;
+                break;
+            default:
+                break;
         }
     }
 

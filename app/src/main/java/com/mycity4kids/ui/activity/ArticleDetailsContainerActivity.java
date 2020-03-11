@@ -13,19 +13,16 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.azuretts.Synthesizer;
 import com.mycity4kids.azuretts.Voice;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
@@ -37,11 +34,10 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.tts.ReadArticleService;
 import com.mycity4kids.ui.adapter.ArticleDetailsPagerAdapter;
 import com.mycity4kids.ui.fragment.ArticleDetailsFragment;
+import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.widget.CustomViewPager;
-
 import java.util.ArrayList;
 import java.util.HashSet;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -49,18 +45,17 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 6/6/17.
  */
-public class ArticleDetailsContainerActivity extends BaseActivity implements View.OnClickListener, ArticleDetailsFragment.ISwipeRelated {
+public class ArticleDetailsContainerActivity extends BaseActivity implements View.OnClickListener,
+        ArticleDetailsFragment.ISwipeRelated {
 
-    public static final String NEW_ARTICLE_DETAIL_FLAG = "new_article_detail_flag";
-
-    private FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+    private FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
     private boolean newArticleDetailFlag;
-    private ArticleDetailsAPI articleDetailsAPI;
-    private TopicsCategoryAPI topicsAPI;
+    private ArticleDetailsAPI articleDetailsApi;
+    private TopicsCategoryAPI topicsApi;
     private String parentId;
-    private CustomViewPager mViewPager;
-    private ArticleDetailsPagerAdapter mViewPagerAdapter;
-    private Toolbar mToolbar;
+    private CustomViewPager customViewPager;
+    private ArticleDetailsPagerAdapter articleDetailsPagerAdapter;
+    private Toolbar toolbar;
     private ImageView backNavigationImageView;
     private ImageView playTtsTextView;
     private boolean isAudioPlaying = false;
@@ -72,9 +67,10 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     private String userDynamoId;
     private String preferredLang;
     private long audioStartTime = 0;
-    private RelativeLayout guideOverlay, root;
+    private RelativeLayout guideOverlay;
+    private RelativeLayout root;
     private Toolbar guidetoolbar;
-    private Synthesizer m_syn;
+    private Synthesizer synthesizer;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -92,14 +88,14 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         preferredLang = SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext());
         Utils.pushOpenScreenEvent(this, "DetailArticleScreen", userDynamoId + "");
 
-        newArticleDetailFlag = mFirebaseRemoteConfig.getBoolean(NEW_ARTICLE_DETAIL_FLAG);
-        mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);
+        newArticleDetailFlag = firebaseRemoteConfig.getBoolean(AppConstants.NEW_ARTICLE_DETAIL_FLAG);
+        toolbar = (Toolbar) findViewById(R.id.anim_toolbar);
         backNavigationImageView = (ImageView) findViewById(R.id.backNavigationImageView);
         playTtsTextView = (ImageView) findViewById(R.id.playTtsTextView);
         guideOverlay = (RelativeLayout) findViewById(R.id.guideOverlay);
         guidetoolbar = (Toolbar) findViewById(R.id.guidetoolbar);
 
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -112,7 +108,8 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
         if (bundle.getBoolean("fromNotification")) {
             Utils.pushNotificationClickEvent(this, "article_details", userDynamoId, "ArticleDetailsContainerActivity");
-            Utils.pushViewArticleEvent(this, "Notification", userDynamoId + "", articleId, "Notification Popup", "-1" + "", author);
+            Utils.pushViewArticleEvent(this, "Notification", userDynamoId + "", articleId, "Notification Popup",
+                    "-1" + "", author);
         } else {
             String listingType = bundle.getString(Constants.ARTICLE_OPENED_FROM);
             String index = bundle.getString(Constants.ARTICLE_INDEX);
@@ -121,7 +118,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
             Utils.pushViewArticleEvent(this, screen, userDynamoId + "", articleId, listingType, index + "", author);
         }
 
-        mViewPager = (CustomViewPager) findViewById(R.id.pager);
+        customViewPager = (CustomViewPager) findViewById(R.id.pager);
 
         if (articleList == null || articleList.isEmpty()) {
             articleId = bundle.getString(Constants.ARTICLE_ID);
@@ -135,31 +132,38 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
             articleListingResult.setTitleSlug(titleSlug);
             articleList = new ArrayList<>();
             articleList.add(articleListingResult);
-            hitRelatedArticleAPI();
+            hitRelatedArticleApi();
 
         } else {
             final int pos = Integer.parseInt(bundle.getString(Constants.ARTICLE_INDEX));
 
-            mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, fromScreen, parentId, newArticleDetailFlag);
-            mViewPager.setAdapter(mViewPagerAdapter);
-            mViewPager.setCurrentItem(pos);
-            mViewPager.setOnPageChangeListener(new CustomViewPager.OnPageChangeListener() {
+            articleDetailsPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(),
+                    articleList, fromScreen, parentId, newArticleDetailFlag);
+            customViewPager.setAdapter(articleDetailsPagerAdapter);
+            customViewPager.setCurrentItem(pos);
+            customViewPager.setOnPageChangeListener(new CustomViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-                    Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this, ReadArticleService.class);
+                    Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this,
+                            ReadArticleService.class);
                     stopService(readArticleIntent);
                     Log.d("-----AZURE----", "STOPPING");
-                    if (m_syn != null) {
-                        m_syn.stopSound();
+                    if (synthesizer != null) {
+                        synthesizer.stopSound();
                     }
-                    playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
+                    playTtsTextView.setImageDrawable(
+                            ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
                     playTtsTextView.setColorFilter(getResources().getColor(R.color.app_red), PorterDuff.Mode.SRC_ATOP);
                     if (isAudioPlaying) {
-                        ArticleDetailsFragment articleDetailsFragment = ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem()));
+                        ArticleDetailsFragment articleDetailsFragment =
+                                ((ArticleDetailsFragment) articleDetailsPagerAdapter
+                                        .instantiateItem(customViewPager, customViewPager.getCurrentItem()));
                         long duration = (System.currentTimeMillis() - audioStartTime) / 1000;
-                        Utils.pushStopArticleAudioEvent(ArticleDetailsContainerActivity.this, "DetailArticleScreen", userDynamoId + "", articleDetailsFragment.getGTMArticleId(), articleDetailsFragment.getGTMAuthor(),
-                                articleDetailsFragment.getGTMLanguage(), "" + duration);
+                        Utils.pushStopArticleAudioEvent(ArticleDetailsContainerActivity.this, "DetailArticleScreen",
+                                userDynamoId + "", articleDetailsFragment.getGtmArticleId(),
+                                articleDetailsFragment.getGtmAuthor(),
+                                articleDetailsFragment.getGtmLanguage(), "" + duration);
                     }
                     isAudioPlaying = false;
                     currPos = position;
@@ -168,9 +172,11 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                 @Override
                 public void onPageSelected(int position) {
                     if (currPos == position) {
-                        Utils.pushArticleSwipeEvent(ArticleDetailsContainerActivity.this, "DetailArticleScreen", userDynamoId + "", articleId, "" + (currPos + 1), "" + position);
+                        Utils.pushArticleSwipeEvent(ArticleDetailsContainerActivity.this, "DetailArticleScreen",
+                                userDynamoId + "", articleId, "" + (currPos + 1), "" + position);
                     } else {
-                        Utils.pushArticleSwipeEvent(ArticleDetailsContainerActivity.this, "DetailArticleScreen", userDynamoId + "", articleId, "" + currPos, "" + position);
+                        Utils.pushArticleSwipeEvent(ArticleDetailsContainerActivity.this, "DetailArticleScreen",
+                                userDynamoId + "", articleId, "" + currPos, "" + position);
                     }
                 }
 
@@ -195,8 +201,8 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     }
 
     public void hideMainToolbar() {
-        mToolbar.animate()
-                .translationY(-mToolbar.getHeight())
+        toolbar.animate()
+                .translationY(-toolbar.getHeight())
                 .setInterpolator(new LinearInterpolator())
                 .setDuration(180)
                 .setListener(new AnimatorListenerAdapter() {
@@ -218,7 +224,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     }
 
     public void showMainToolbar() {
-        mToolbar.animate()
+        toolbar.animate()
                 .translationY(0)
                 .setInterpolator(new LinearInterpolator())
                 .setDuration(180)
@@ -259,10 +265,13 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         stopService(readArticleIntent);
         try {
             if (isAudioPlaying) {
-                ArticleDetailsFragment articleDetailsFragment = ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem()));
+                ArticleDetailsFragment articleDetailsFragment = ((ArticleDetailsFragment) articleDetailsPagerAdapter
+                        .instantiateItem(customViewPager, customViewPager.getCurrentItem()));
                 long duration = (System.currentTimeMillis() - audioStartTime) / 1000;
-                Utils.pushStopArticleAudioEvent(ArticleDetailsContainerActivity.this, "DetailArticleScreen", userDynamoId + "", articleDetailsFragment.getGTMArticleId(), articleDetailsFragment.getGTMAuthor(),
-                        articleDetailsFragment.getGTMLanguage(), "" + duration);
+                Utils.pushStopArticleAudioEvent(ArticleDetailsContainerActivity.this, "DetailArticleScreen",
+                        userDynamoId + "", articleDetailsFragment.getGtmArticleId(),
+                        articleDetailsFragment.getGtmAuthor(),
+                        articleDetailsFragment.getGtmLanguage(), "" + duration);
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -279,26 +288,33 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                 finish();
                 break;
             case R.id.playTtsTextView:
-                ArticleDetailsFragment articleDetailsFragment = ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem()));
+                ArticleDetailsFragment articleDetailsFragment = ((ArticleDetailsFragment) articleDetailsPagerAdapter
+                        .instantiateItem(customViewPager, customViewPager.getCurrentItem()));
                 if (!isAudioPlaying) {
                     if (AppConstants.TAMIL_CATEGORYID.equals(articleDetailsFragment.getArticleLanguageCategoryId())
-                            || AppConstants.TELUGU_CATEGORYID.equals(articleDetailsFragment.getArticleLanguageCategoryId())) {
-                        if (m_syn == null) {
-                            m_syn = new Synthesizer(getString(R.string.azure_api_key));
+                            || AppConstants.TELUGU_CATEGORYID
+                            .equals(articleDetailsFragment.getArticleLanguageCategoryId())) {
+                        if (synthesizer == null) {
+                            synthesizer = new Synthesizer(getString(R.string.azure_api_key));
                         }
-                        m_syn.SetServiceStrategy(Synthesizer.ServiceStrategy.AlwaysService);
+                        synthesizer.SetServiceStrategy(Synthesizer.ServiceStrategy.AlwaysService);
                         Voice voice;
-                        if (AppConstants.TAMIL_CATEGORYID.equals(articleDetailsFragment.getArticleLanguageCategoryId())) {
-                            voice = new Voice("ta-IN", "Microsoft Server Speech Text to Speech Voice (ta-IN, Valluvar)", Voice.Gender.Male, true);
+                        if (AppConstants.TAMIL_CATEGORYID
+                                .equals(articleDetailsFragment.getArticleLanguageCategoryId())) {
+                            voice = new Voice("ta-IN", "Microsoft Server Speech Text to Speech Voice (ta-IN, Valluvar)",
+                                    Voice.Gender.Male, true);
                         } else {
-                            voice = new Voice("te-IN", "Microsoft Server Speech Text to Speech Voice (te-IN, Chitra)", Voice.Gender.Female, true);
+                            voice = new Voice("te-IN", "Microsoft Server Speech Text to Speech Voice (te-IN, Chitra)",
+                                    Voice.Gender.Female, true);
                         }
-                        m_syn.SetVoice(voice, null);
+                        synthesizer.SetVoice(voice, null);
                         String playContent = articleDetailsFragment.getArticleContent();
-                        m_syn.SpeakToAudio(playContent);
-                        playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_stop_tts));
-                        Utils.pushPlayArticleAudioEvent(this, "DetailArticleScreen", userDynamoId + "", articleDetailsFragment.getGTMArticleId(), articleDetailsFragment.getGTMAuthor(),
-                                articleDetailsFragment.getGTMLanguage());
+                        synthesizer.SpeakToAudio(playContent);
+                        playTtsTextView.setImageDrawable(ContextCompat
+                                .getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_stop_tts));
+                        Utils.pushPlayArticleAudioEvent(this, "DetailArticleScreen", userDynamoId + "",
+                                articleDetailsFragment.getGtmArticleId(), articleDetailsFragment.getGtmAuthor(),
+                                articleDetailsFragment.getGtmLanguage());
                         audioStartTime = System.currentTimeMillis();
                         isAudioPlaying = true;
                         showToast(getString(R.string.audio_delay_msg));
@@ -306,15 +322,18 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                     }
                 } else {
                     if (AppConstants.TAMIL_CATEGORYID.equals(articleDetailsFragment.getArticleLanguageCategoryId())
-                            || AppConstants.TELUGU_CATEGORYID.equals(articleDetailsFragment.getArticleLanguageCategoryId())) {
-                        if (m_syn != null) {
-                            m_syn.stopSound();
+                            || AppConstants.TELUGU_CATEGORYID
+                            .equals(articleDetailsFragment.getArticleLanguageCategoryId())) {
+                        if (synthesizer != null) {
+                            synthesizer.stopSound();
                         }
-                        playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
+                        playTtsTextView.setImageDrawable(ContextCompat
+                                .getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
                         isAudioPlaying = false;
                         long duration = (System.currentTimeMillis() - audioStartTime) / 1000;
-                        Utils.pushStopArticleAudioEvent(this, "DetailArticleScreen", userDynamoId + "", articleDetailsFragment.getGTMArticleId(), articleDetailsFragment.getGTMAuthor(),
-                                articleDetailsFragment.getGTMLanguage(), "" + duration);
+                        Utils.pushStopArticleAudioEvent(this, "DetailArticleScreen", userDynamoId + "",
+                                articleDetailsFragment.getGtmArticleId(), articleDetailsFragment.getGtmAuthor(),
+                                articleDetailsFragment.getGtmLanguage(), "" + duration);
                         return;
                     }
                 }
@@ -327,25 +346,31 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                         return;
                     }
                     readArticleIntent.putExtra("content", playContent);
-                    readArticleIntent.putExtra("langCategoryId", "" + articleDetailsFragment.getArticleLanguageCategoryId());
+                    readArticleIntent
+                            .putExtra("langCategoryId", "" + articleDetailsFragment.getArticleLanguageCategoryId());
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         startForegroundService(readArticleIntent);
                     } else {
                         startService(readArticleIntent);
                     }
-                    playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_stop_tts));
-                    Utils.pushPlayArticleAudioEvent(this, "DetailArticleScreen", userDynamoId + "", articleDetailsFragment.getGTMArticleId(), articleDetailsFragment.getGTMAuthor(),
-                            articleDetailsFragment.getGTMLanguage());
+                    playTtsTextView.setImageDrawable(
+                            ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_stop_tts));
+                    Utils.pushPlayArticleAudioEvent(this, "DetailArticleScreen", userDynamoId + "",
+                            articleDetailsFragment.getGtmArticleId(), articleDetailsFragment.getGtmAuthor(),
+                            articleDetailsFragment.getGtmLanguage());
                     audioStartTime = System.currentTimeMillis();
                     isAudioPlaying = true;
                 } else {
-                    Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this, ReadArticleService.class);
+                    Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this,
+                            ReadArticleService.class);
                     stopService(readArticleIntent);
-                    playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
+                    playTtsTextView.setImageDrawable(
+                            ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
                     isAudioPlaying = false;
                     long duration = (System.currentTimeMillis() - audioStartTime) / 1000;
-                    Utils.pushStopArticleAudioEvent(this, "DetailArticleScreen", userDynamoId + "", articleDetailsFragment.getGTMArticleId(), articleDetailsFragment.getGTMAuthor(),
-                            articleDetailsFragment.getGTMLanguage(), "" + duration);
+                    Utils.pushStopArticleAudioEvent(this, "DetailArticleScreen", userDynamoId + "",
+                            articleDetailsFragment.getGtmArticleId(), articleDetailsFragment.getGtmAuthor(),
+                            articleDetailsFragment.getGtmLanguage(), "" + duration);
                 }
                 break;
             case R.id.guidetoolbar:
@@ -353,11 +378,13 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                 guideOverlay.setVisibility(View.GONE);
                 SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "article_details", true);
                 break;
+            default:
+                break;
         }
     }
 
     public void hideToolbarPerm() {
-        mToolbar.setVisibility(View.GONE);
+        toolbar.setVisibility(View.GONE);
         backNavigationImageView.setVisibility(View.GONE);
     }
 
@@ -368,22 +395,22 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         playTtsTextView.setVisibility(View.VISIBLE);
     }
 
-    public void addArticleForImpression(String a_id) {
-        impressionArticleList.add(a_id);
+    public void addArticleForImpression(String articleTitle) {
+        impressionArticleList.add(articleTitle);
     }
 
     @Override
     public void onRelatedSwipe(ArrayList<ArticleListingResult> articleList) {
-//        mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList);
-//        mViewPager.setAdapter(mViewPagerAdapter);
     }
 
-    private void hitRelatedArticleAPI() {
+    private void hitRelatedArticleApi() {
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-        topicsAPI = retro.create(TopicsCategoryAPI.class);
+        articleDetailsApi = retro.create(ArticleDetailsAPI.class);
+        topicsApi = retro.create(TopicsCategoryAPI.class);
 
-        Call<ArticleListingResponse> categoryRelatedArticlesCall = articleDetailsAPI.getCategoryRelatedArticles(articleId, 0, 5, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+        Call<ArticleListingResponse> categoryRelatedArticlesCall = articleDetailsApi
+                .getCategoryRelatedArticles(articleId, 0, 5,
+                        SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
         categoryRelatedArticlesCall.enqueue(categoryArticleResponseCallback);
     }
 
@@ -394,7 +421,8 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException("Category related Article API failure");
                 Crashlytics.logException(nee);
-                Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 6);
+                Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsApi
+                        .getPublishedArticles(authorId, 0, 1, 6);
                 callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
                 return;
             }
@@ -412,7 +440,8 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                         }
                     }
                     if (dataList.size() < 5) {
-                        Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 6);
+                        Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsApi
+                                .getPublishedArticles(authorId, 0, 1, 6);
                         callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
                     } else {
                         articleList.addAll(dataList);
@@ -421,13 +450,15 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                 } else {
                     NetworkErrorException nee = new NetworkErrorException("Category related Article Error Response");
                     Crashlytics.logException(nee);
-                    Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 6);
+                    Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsApi
+                            .getPublishedArticles(authorId, 0, 1, 6);
                     callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 6);
+                Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsApi
+                        .getPublishedArticles(authorId, 0, 1, 6);
                 callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
             }
         }
@@ -436,7 +467,8 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
-            Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 6);
+            Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsApi
+                    .getPublishedArticles(authorId, 0, 1, 6);
             callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
         }
     };
@@ -446,7 +478,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
 
             if (response.body() == null) {
-                Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(1, 6, preferredLang);
+                Call<ArticleListingResponse> filterCall = topicsApi.getTrendingArticles(1, 6, preferredLang);
                 filterCall.enqueue(articleListingResponseCallback);
                 return;
             }
@@ -462,20 +494,20 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                         }
                     }
                     if (dataList.size() < 5) {
-                        Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(1, 6, preferredLang);
+                        Call<ArticleListingResponse> filterCall = topicsApi.getTrendingArticles(1, 6, preferredLang);
                         filterCall.enqueue(articleListingResponseCallback);
                     } else {
                         articleList.addAll(dataList);
                         initializeViewPager();
                     }
                 } else {
-                    Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(1, 6, preferredLang);
+                    Call<ArticleListingResponse> filterCall = topicsApi.getTrendingArticles(1, 6, preferredLang);
                     filterCall.enqueue(articleListingResponseCallback);
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(1, 6, preferredLang);
+                Call<ArticleListingResponse> filterCall = topicsApi.getTrendingArticles(1, 6, preferredLang);
                 filterCall.enqueue(articleListingResponseCallback);
 
             }
@@ -483,7 +515,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(1, 6, preferredLang);
+            Call<ArticleListingResponse> filterCall = topicsApi.getTrendingArticles(1, 6, preferredLang);
             filterCall.enqueue(articleListingResponseCallback);
         }
     };
@@ -529,24 +561,30 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     };
 
     private void initializeViewPager() {
-        mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, "dw", parentId, newArticleDetailFlag);
-        mViewPager.setAdapter(mViewPagerAdapter);
+        articleDetailsPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(),
+                articleList,
+                "dw", parentId, newArticleDetailFlag);
+        customViewPager.setAdapter(articleDetailsPagerAdapter);
 
-        mViewPager.setOnPageChangeListener(new CustomViewPager.OnPageChangeListener() {
+        customViewPager.setOnPageChangeListener(new CustomViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this, ReadArticleService.class);
                 stopService(readArticleIntent);
                 Log.d("-----AZURE----", "STOPPING");
-                if (m_syn != null) {
-                    m_syn.stopSound();
+                if (synthesizer != null) {
+                    synthesizer.stopSound();
                 }
-                playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
+                playTtsTextView.setImageDrawable(
+                        ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
                 if (isAudioPlaying) {
-                    ArticleDetailsFragment articleDetailsFragment = ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem()));
+                    ArticleDetailsFragment articleDetailsFragment = ((ArticleDetailsFragment) articleDetailsPagerAdapter
+                            .instantiateItem(customViewPager, customViewPager.getCurrentItem()));
                     long duration = (System.currentTimeMillis() - audioStartTime) / 1000;
-                    Utils.pushStopArticleAudioEvent(ArticleDetailsContainerActivity.this, "DetailArticleScreen", userDynamoId + "", articleDetailsFragment.getGTMArticleId(), articleDetailsFragment.getGTMAuthor(),
-                            articleDetailsFragment.getGTMLanguage(), "" + duration);
+                    Utils.pushStopArticleAudioEvent(ArticleDetailsContainerActivity.this, "DetailArticleScreen",
+                            userDynamoId + "", articleDetailsFragment.getGtmArticleId(),
+                            articleDetailsFragment.getGtmAuthor(),
+                            articleDetailsFragment.getGtmLanguage(), "" + duration);
                 }
                 isAudioPlaying = false;
             }
@@ -575,12 +613,13 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
 
     public void checkAudioPlaying() {
-        if (m_syn != null) {
-            m_syn.stopSound();
+        if (synthesizer != null) {
+            synthesizer.stopSound();
         }
         Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this, ReadArticleService.class);
         stopService(readArticleIntent);
-        playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
+        playTtsTextView.setImageDrawable(
+                ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
         isAudioPlaying = false;
 
     }

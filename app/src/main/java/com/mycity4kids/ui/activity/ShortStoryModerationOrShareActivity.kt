@@ -55,6 +55,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
     private var userId: String? = null
     private var authorName: String? = null
     private val storyCategoriesList = ArrayList<String>()
+    private var tempName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -207,11 +208,11 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
     private fun shareStory() {
         val uri = Uri.parse(
             "file://" + Environment.getExternalStorageDirectory() +
-                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg"
+                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + tempName + ".jpg"
         )
         when (shareMedium) {
             AppConstants.MEDIUM_FACEBOOK -> {
-                SharingUtils.shareViaFacebook(this)
+                SharingUtils.shareViaFacebook(this, uri)
                 Utils.pushShareStoryEvent(
                     this, "ShortStoryModerationOrShareActivity",
                     userId + "", shareUrl, "$userId~$authorName", "Facebook"
@@ -286,7 +287,12 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
                     AppUtils.dpTopx(4.0f)
                 )
             )
-            AppUtils.getBitmapFromView(storyShareCardWidget, AppConstants.STORY_SHARE_IMAGE_NAME)
+            // Bh**d**a facebook caches shareIntent. Need different name for all files
+            tempName = "" + System.currentTimeMillis()
+            AppUtils.getBitmapFromView(
+                storyShareCardWidget,
+                AppConstants.STORY_SHARE_IMAGE_NAME + tempName
+            )
         } catch (e: Exception) {
             Crashlytics.logException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))

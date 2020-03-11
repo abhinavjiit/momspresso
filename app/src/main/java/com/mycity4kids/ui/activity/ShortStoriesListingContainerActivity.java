@@ -1,25 +1,25 @@
 package com.mycity4kids.ui.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
@@ -31,15 +31,9 @@ import com.mycity4kids.ui.fragment.ShortStoryChallengeListingTabFragment;
 import com.mycity4kids.ui.fragment.TopicsShortStoriesTabFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-
-import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,23 +44,18 @@ import retrofit2.Retrofit;
  */
 public class ShortStoriesListingContainerActivity extends BaseActivity implements View.OnClickListener {
 
-    //    private View view;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private FrameLayout tablayoutLayer;
-
     private TopicsShortStoriesPagerAdapter pagerAdapter;
-    private String comingFrom = "";
     private ArrayList<Topics> shortStoriesTopicList;
     private String parentTopicId;
     private ArrayList<Topics> subTopicsList;
     private Toolbar toolbar;
     private TextView toolbarTitleTextView;
-    private LinearLayout layoutBottomSheet, bottom_sheet;
-    private BottomSheetBehavior sheetBehavior;
-    private TextView textHeaderUpdate, textUpdate;
+    private LinearLayout layoutBottomSheet;
+    private LinearLayout bottomSheet;
     private ImageView imageSortBy;
-    private FloatingActionButton fabAdd, fabAddShortStory;
+    private FloatingActionButton fabAddShortStory;
     private CoordinatorLayout root;
     private String selectedTabCategoryId;
     private int selectedTab = 0;
@@ -80,27 +69,19 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
         ((BaseApplication) getApplication()).setActivity(this);
 
         layoutBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
-        sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
-        textHeaderUpdate = layoutBottomSheet.findViewById(R.id.textHeaderUpdate);
-        textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
-        bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
+        bottomSheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
         fabAddShortStory = findViewById(R.id.fabAddShortStory);
-        bottom_sheet.setVisibility(View.GONE);
+        bottomSheet.setVisibility(View.GONE);
         fabAddShortStory.setVisibility(View.VISIBLE);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tablayoutLayer = (FrameLayout) findViewById(R.id.topLayerGuideLayout);
         toolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitleTextView);
-
         imageSortBy = (ImageView) findViewById(R.id.imageSortBy);
 
-        imageSortBy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = pagerAdapter.getCurrentFragment();//.get(viewPager.getCurrentItem());
-                if (fragment != null && fragment instanceof TopicsShortStoriesTabFragment) {
-                    ((TopicsShortStoriesTabFragment) fragment).showSortedByDialog();
-                }
+        imageSortBy.setOnClickListener(view -> {
+            Fragment fragment = pagerAdapter.getCurrentFragment();
+            if (fragment != null && fragment instanceof TopicsShortStoriesTabFragment) {
+                ((TopicsShortStoriesTabFragment) fragment).showSortedByDialog();
             }
         });
 
@@ -110,13 +91,11 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        fabAddShortStory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ShortStoriesListingContainerActivity.this, ChooseShortStoryCategoryActivity.class);
-                intent.putExtra("source", "storyListingCard");
-                startActivity(intent);
-            }
+        fabAddShortStory.setOnClickListener(view -> {
+            Intent intent = new Intent(ShortStoriesListingContainerActivity.this,
+                    ChooseShortStoryCategoryActivity.class);
+            intent.putExtra("source", "storyListingCard");
+            startActivity(intent);
         });
 
         toolbarTitleTextView.setText(getString(R.string.article_listing_type_short_story_label));
@@ -124,7 +103,8 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
             shortStoriesTopicList = BaseApplication.getShortStoryTopicList();
 
             if (shortStoriesTopicList == null) {
-                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                FileInputStream fileInputStream = BaseApplication.getAppContext()
+                        .openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                 String fileContent = AppUtils.convertStreamToString(fileInputStream);
                 Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                 TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
@@ -136,16 +116,19 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
             Crashlytics.logException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
-            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
+            final TopicsCategoryAPI topicsApi = retro.create(TopicsCategoryAPI.class);
+            Call<ResponseBody> caller = topicsApi.downloadTopicsJSON();
             caller.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
+                    boolean writtenToDisk = AppUtils
+                            .writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE,
+                                    response.body());
                     Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
 
                     try {
-                        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                        FileInputStream fileInputStream = BaseApplication.getAppContext()
+                                .openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                         String fileContent = AppUtils.convertStreamToString(fileInputStream);
                         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                         TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
@@ -165,6 +148,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
                 }
             });
         }
+        AppUtils.deleteDirectoryContent("MyCity4Kids/videos");
     }
 
     private void initializeTabsAndPager() {
@@ -193,13 +177,12 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
                 selectedTab = i;
             }
         }
-        //  tabLayout.addTab(tabLayout.newTab().setText("Challenges"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         AppUtils.changeTabsFont(tabLayout);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
-        pagerAdapter = new TopicsShortStoriesPagerAdapter
-                (getSupportFragmentManager(), tabLayout.getTabCount(), subTopicsList);
+        pagerAdapter = new TopicsShortStoriesPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(),
+                subTopicsList);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -257,27 +240,33 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
                     allStoryModel.setShowInMenu("1");
                     responseData.getData().get(i).getChild().add(0, allStoryModel);
 
-
                     for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
-
-                        if ("1".equals(responseData.getData().get(i).getChild().get(k).getShowInMenu()) || AppConstants.SHORT_STORY_CHALLENGE_ID.equals(responseData.getData().get(i).getChild().get(k).getId())) {
+                        if ("1".equals(responseData.getData().get(i).getChild().get(k).getShowInMenu())
+                                || AppConstants.SHORT_STORY_CHALLENGE_ID
+                                .equals(responseData.getData().get(i).getChild().get(k).getId())) {
                             responseData.getData().get(i).getChild().get(k)
                                     .setParentId(responseData.getData().get(i).getId());
                             responseData.getData().get(i).getChild().get(k)
                                     .setParentName(responseData.getData().get(i).getTitle());
                             if (responseData.getData().get(i).getChild().get(k).getChild().isEmpty()) {
-                                ArrayList<Topics> duplicateEntry = new ArrayList<Topics>();
                                 Topics dupChildTopic = new Topics();
                                 dupChildTopic.setChild(new ArrayList<Topics>());
                                 dupChildTopic.setId(responseData.getData().get(i).getChild().get(k).getId());
-                                dupChildTopic.setIsSelected(responseData.getData().get(i).getChild().get(k).isSelected());
-                                dupChildTopic.setParentId(responseData.getData().get(i).getChild().get(k).getParentId());
-                                dupChildTopic.setDisplay_name(responseData.getData().get(i).getChild().get(k).getDisplay_name());
-                                dupChildTopic.setParentName(responseData.getData().get(i).getChild().get(k).getParentName());
-                                dupChildTopic.setPublicVisibility(responseData.getData().get(i).getChild().get(k).getPublicVisibility());
-                                dupChildTopic.setShowInMenu(responseData.getData().get(i).getChild().get(k).getShowInMenu());
+                                dupChildTopic
+                                        .setIsSelected(responseData.getData().get(i).getChild().get(k).isSelected());
+                                dupChildTopic
+                                        .setParentId(responseData.getData().get(i).getChild().get(k).getParentId());
+                                dupChildTopic.setDisplay_name(
+                                        responseData.getData().get(i).getChild().get(k).getDisplay_name());
+                                dupChildTopic
+                                        .setParentName(responseData.getData().get(i).getChild().get(k).getParentName());
+                                dupChildTopic.setPublicVisibility(
+                                        responseData.getData().get(i).getChild().get(k).getPublicVisibility());
+                                dupChildTopic
+                                        .setShowInMenu(responseData.getData().get(i).getChild().get(k).getShowInMenu());
                                 dupChildTopic.setSlug(responseData.getData().get(i).getChild().get(k).getSlug());
                                 dupChildTopic.setTitle(responseData.getData().get(i).getChild().get(k).getTitle());
+                                ArrayList<Topics> duplicateEntry = new ArrayList<Topics>();
                                 duplicateEntry.add(dupChildTopic);
                                 responseData.getData().get(i).getChild().get(k).setChild(duplicateEntry);
                             }
@@ -290,10 +279,8 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
             }
             BaseApplication.setShortStoryTopicList(shortStoriesTopicList);
         } catch (Exception e) {
-//            progressBar.setVisibility(View.GONE);
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
-//            showToast(getString(R.string.went_wrong));
         }
     }
 
@@ -303,8 +290,8 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
             //Selected topic is Main Category
             if (parentTopicId.equals(shortStoriesTopicList.get(i).getId())) {
                 subTopicsList.addAll(shortStoriesTopicList.get(i).getChild());
-//                ((DashboardActivity) getActivity()).setDynamicToolbarTitle(shortStoriesTopicList.get(i).getDisplay_name());
-                Utils.pushViewTopicArticlesEvent(this, "TopicShortStoryListingScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "",
+                Utils.pushViewTopicArticlesEvent(this, "TopicShortStoryListingScreen",
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "",
                         shortStoriesTopicList.get(i).getId() + "~" + shortStoriesTopicList.get(i).getDisplay_name());
                 return;
             }
@@ -316,10 +303,12 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
         super.onStop();
         Log.d("TopicListingFragment", "onStop");
         try {
-            TopicsShortStoriesTabFragment topicsShortStoriesTabFragment = ((TopicsShortStoriesTabFragment) pagerAdapter.instantiateItem(viewPager, viewPager.getCurrentItem()));
+            TopicsShortStoriesTabFragment topicsShortStoriesTabFragment = ((TopicsShortStoriesTabFragment) pagerAdapter
+                    .instantiateItem(viewPager, viewPager.getCurrentItem()));
             topicsShortStoriesTabFragment.stopTracking();
         } catch (Exception e) {
-
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
 
@@ -334,6 +323,8 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                break;
+            default:
                 break;
         }
         return true;
