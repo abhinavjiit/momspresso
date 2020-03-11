@@ -1778,18 +1778,23 @@ class UserProfileActivity : BaseActivity(),
                 AppUtils.dpTopx(4.0f)
             )
         )
-        AppUtils.getBitmapFromView(storyShareCardWidget, AppConstants.STORY_SHARE_IMAGE_NAME)
-        shareStory()
+        // Bh**d**a facebook caches shareIntent. Need different name for all files
+        val tempName = "" + System.currentTimeMillis()
+        AppUtils.getBitmapFromView(
+            storyShareCardWidget,
+            AppConstants.STORY_SHARE_IMAGE_NAME + tempName
+        )
+        shareStory(tempName)
     }
 
-    private fun shareStory() {
+    private fun shareStory(tempName: String) {
         val uri = Uri.parse(
             "file://" + Environment.getExternalStorageDirectory() +
-                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg"
+                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + tempName + ".jpg"
         )
         when (shareMedium) {
             AppConstants.MEDIUM_FACEBOOK -> {
-                SharingUtils.shareViaFacebook(this)
+                SharingUtils.shareViaFacebook(this, uri)
                 Utils.pushShareStoryEvent(
                     this@UserProfileActivity, "TopicsShortStoriesTabFragment",
                     authorId + "", sharedStoryItem.id,

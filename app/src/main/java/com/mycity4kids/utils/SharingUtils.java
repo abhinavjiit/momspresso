@@ -9,14 +9,10 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.Uri;
-import android.os.Environment;
-
 import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
-import com.mycity4kids.constants.AppConstants;
-
 import java.util.ArrayList;
 
 public class SharingUtils {
@@ -43,9 +39,9 @@ public class SharingUtils {
         return output;
     }
 
-    public static void shareViaFacebook(Activity activity) {
-        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() +
-                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg");
+    public static void shareViaFacebook(Activity activity, Uri uri) {
+//        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() +
+//                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg");
         ShareHashtag shareHashTag = new ShareHashtag.Builder().setHashtag("#Momspressoshortstories").build();
         SharePhoto sharePhoto = new SharePhoto.Builder().setImageUrl(uri).build();
         ArrayList<SharePhoto> photoList = new ArrayList<>();
