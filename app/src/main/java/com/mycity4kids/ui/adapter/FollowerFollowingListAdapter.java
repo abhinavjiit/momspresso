@@ -11,9 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
@@ -22,8 +20,8 @@ import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.FollowersFollowingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -73,6 +71,7 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
+
         ImageView authorImageView;
         TextView authorNameTextView;
         TextView followTextView;
@@ -101,11 +100,13 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
         }
         holder.imgLoader.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.rotate_indefinitely));
 
-        holder.authorNameTextView.setText(mDataList.get(position).getFirstName() + " " + mDataList.get(position).getLastName());
+        holder.authorNameTextView
+                .setText(mDataList.get(position).getFirstName() + " " + mDataList.get(position).getLastName());
         holder.position = position;
         if (!StringUtils.isNullOrEmpty(mDataList.get(position).getProfilePicUrl().getClientApp())) {
             Picasso.get().load(mDataList.get(position).getProfilePicUrl().getClientApp())
-                    .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(holder.authorImageView);
+                    .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img)
+                    .into(holder.authorImageView);
         } else {
             Picasso.get().load(R.drawable.default_commentor_img).into(holder.authorImageView);
         }
@@ -114,7 +115,7 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
             holder.followingTextView.setVisibility(View.INVISIBLE);
             holder.followTextView.setVisibility(View.INVISIBLE);
         } else {
-            if (mDataList.get(position).getIsFollowed() == 0) {
+            if (!mDataList.get(position).getIsFollowed()) {
                 holder.followingTextView.setVisibility(View.INVISIBLE);
                 holder.followTextView.setVisibility(View.VISIBLE);
             } else {
@@ -123,21 +124,15 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
             }
         }
 
-        holder.followingTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("Unfollow", "Unfollow");
-                followUserAPI(position, holder);
+        holder.followingTextView.setOnClickListener(v -> {
+            Log.d("Unfollow", "Unfollow");
+            followUserAPI(position, holder);
 
-            }
         });
 
-        holder.followTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("Follow", "Follow");
-                followUserAPI(position, holder);
-            }
+        holder.followTextView.setOnClickListener(v -> {
+            Log.d("Follow", "Follow");
+            followUserAPI(position, holder);
         });
         return view;
     }
@@ -145,13 +140,7 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
     private void followUserAPI(int position, ViewHolder holder) {
         FollowUnfollowUserRequest followUnfollowUserRequest = new FollowUnfollowUserRequest();
         followUnfollowUserRequest.setFollowerId(mDataList.get(position).getUserId());
-        String screenName = "";
-        if (AppConstants.FOLLOWER_LIST.equals(listType)) {
-            screenName = "FollowersListingScreen";
-        } else {
-            screenName = "FollowingListingScreen";
-        }
-        if (mDataList.get(position).getIsFollowed() == 0) {
+        if (!mDataList.get(position).getIsFollowed()) {
             holder.relativeLoadingView.setVisibility(View.VISIBLE);
             holder.followingTextView.setVisibility(View.INVISIBLE);
             holder.followTextView.setVisibility(View.INVISIBLE);
@@ -207,7 +196,8 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
                 urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setRequestProperty("Accept", "application/json");
                 urlConnection.addRequestProperty("id", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId());
-                urlConnection.addRequestProperty("mc4kToken", SharedPrefUtils.getUserDetailModel(mContext).getMc4kToken());
+                urlConnection
+                        .addRequestProperty("mc4kToken", SharedPrefUtils.getUserDetailModel(mContext).getMc4kToken());
 
 //set headers and method
                 Writer writer = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8"));
@@ -224,8 +214,9 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
                 reader = new BufferedReader(new InputStreamReader(inputStream));
 
                 String inputLine;
-                while ((inputLine = reader.readLine()) != null)
+                while ((inputLine = reader.readLine()) != null) {
                     buffer.append(inputLine + "\n");
+                }
                 if (buffer.length() == 0) {
                     // Stream was empty. No point in parsing.
                     return null;
@@ -265,12 +256,12 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
                     for (int i = 0; i < mDataList.size(); i++) {
                         if (mDataList.get(i).getUserId().equals(responseData.getData().getResult().getId())) {
                             if ("follow".equals(type)) {
-                                mDataList.get(i).setIsFollowed(1);
+                                mDataList.get(i).setIsFollowed(true);
                                 viewHolder.relativeLoadingView.setVisibility(View.GONE);
                                 viewHolder.followingTextView.setVisibility(View.VISIBLE);
                                 viewHolder.followTextView.setVisibility(View.INVISIBLE);
                             } else {
-                                mDataList.get(i).setIsFollowed(0);
+                                mDataList.get(i).setIsFollowed(false);
                                 viewHolder.relativeLoadingView.setVisibility(View.GONE);
                                 viewHolder.followTextView.setVisibility(View.VISIBLE);
                                 viewHolder.followingTextView.setVisibility(View.INVISIBLE);

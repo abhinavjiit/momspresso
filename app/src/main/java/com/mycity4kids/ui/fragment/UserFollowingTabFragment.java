@@ -77,7 +77,7 @@ public class UserFollowingTabFragment extends BaseFragment {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         FollowAPI followListAPI = retrofit.create(FollowAPI.class);
 
-        Call<FollowersFollowingResponse> callFollowingList = followListAPI.getFollowingList(userId);
+        Call<FollowersFollowingResponse> callFollowingList = followListAPI.getFollowingListV2(userId);
         callFollowingList.enqueue(getFollowersListResponseCallback);
     }
 

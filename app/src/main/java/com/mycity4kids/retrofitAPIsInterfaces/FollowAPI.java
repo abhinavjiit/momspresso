@@ -43,4 +43,22 @@ public interface FollowAPI {
 
     @POST("/v1/users/userfrdspoc/")
     Call<FacebookFriendsResponse> getFacebookFriends(@Body FacebookFriendsRequest body);
+
+    @POST("/follow/v2/users/follow/")
+    Call<FollowUnfollowUserResponse> followUserV2(@Body FollowUnfollowUserRequest body);
+
+    @POST("/follow/v2/users/unfollow/")
+    Call<FollowUnfollowUserResponse> unfollowUserV2(@Body FollowUnfollowUserRequest body);
+
+    @GET("/follow/v2/users/followers/{userId}")
+    Call<FollowersFollowingResponse> getFollowersListV2(@Path("userId") String userId);
+
+    @GET("/follow/v2/users/following/{userId}")
+    Call<FollowersFollowingResponse> getFollowingListV2(@Path("userId") String userId);
+
+    @POST("/follow/v2/users/follow/")
+    Call<ResponseBody> followUserInShortStoryListingV2(@Body FollowUnfollowUserRequest body);
+
+    @POST("/follow/v2/users/unfollow/")
+    Call<ResponseBody> unfollowUserInShortStoryListingV2(@Body FollowUnfollowUserRequest body);
 }

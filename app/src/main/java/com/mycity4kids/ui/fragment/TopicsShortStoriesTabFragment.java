@@ -502,12 +502,12 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         if (articleListingResults.get(position).getIsfollowing().equals("1")) {
             Utils.pushGenericEvent(getActivity(), "CTA_Unfollow_100WS_Detail", userDynamoId,
                     "TopicsShortStoryTabFragment");
-            Call<ResponseBody> followUnfollowUserResponseCall = followApi.unfollowUserInShortStoryListing(request);
+            Call<ResponseBody> followUnfollowUserResponseCall = followApi.unfollowUserInShortStoryListingV2(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
             Utils.pushGenericEvent(getActivity(), "CTA_Follow_100WS_Detail", userDynamoId,
                     "TopicsShortStoryTabFragment");
-            Call<ResponseBody> followUnfollowUserResponseCall = followApi.followUserInShortStoryListing(request);
+            Call<ResponseBody> followUnfollowUserResponseCall = followApi.followUserInShortStoryListingV2(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }
     }

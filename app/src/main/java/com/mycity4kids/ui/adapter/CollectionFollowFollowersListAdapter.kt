@@ -73,7 +73,7 @@ class CollectionFollowFollowersListAdapter(val mContext: Context, val listType: 
             holder.followingTextView.visibility = View.INVISIBLE
             holder.followTextView.visibility = View.INVISIBLE
         } else {
-            if (mDataList?.get(position)?.isFollowed == 0) {
+            if (!mDataList?.get(position)?.isFollowed!!) {
                 holder.followingTextView.visibility = View.INVISIBLE
                 holder.followTextView.visibility = View.VISIBLE
             } else {
@@ -111,7 +111,7 @@ class CollectionFollowFollowersListAdapter(val mContext: Context, val listType: 
         } else {
             screenName = "FollowingListingScreen"
         }
-        if (mDataList?.get(position)?.isFollowed == 0) {
+        if (!mDataList?.get(position)?.isFollowed!!) {
             holder.relativeLoadingView.visibility = View.VISIBLE
             holder.followingTextView.visibility = View.INVISIBLE
             holder.followTextView.visibility = View.INVISIBLE
@@ -231,12 +231,12 @@ class CollectionFollowFollowersListAdapter(val mContext: Context, val listType: 
                     for (i in mDataList?.indices!!) {
                         if (mDataList?.get(i)?.userId == responseData.data.result.id) {
                             if ("follow" == type) {
-                                mDataList?.get(i)?.isFollowed = 1
+                                mDataList?.get(i)?.isFollowed = true
                                 viewHolder.relativeLoadingView.visibility = View.GONE
                                 viewHolder.followingTextView.visibility = View.VISIBLE
                                 viewHolder.followTextView.visibility = View.INVISIBLE
                             } else {
-                                mDataList?.get(i)?.isFollowed = 0
+                                mDataList?.get(i)?.isFollowed = false
                                 viewHolder.relativeLoadingView.visibility = View.GONE
                                 viewHolder.followTextView.visibility = View.VISIBLE
                                 viewHolder.followingTextView.visibility = View.INVISIBLE
