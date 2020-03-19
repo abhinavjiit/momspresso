@@ -1,258 +1,257 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/white_color">
+
+  <RelativeLayout
+    android:id="@+id/rankContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white_color">
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_marginStart="20dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="20dp"
+    android:layout_marginEnd="20dp"
+    android:layout_marginRight="20dp"
+    android:background="@color/ranking.boxes_bg"
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp">
 
     <RelativeLayout
-        android:id="@+id/rankContainer"
-        android:layout_width="match_parent"
+      android:id="@+id/rankingContainer"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerHorizontal="true">
+
+      <ImageView
+        android:id="@+id/rankBgImageView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@color/ranking.boxes_bg"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp">
+        android:src="@drawable/ic_your_rank" />
 
-        <RelativeLayout
-            android:id="@+id/rankingContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true">
-
-            <ImageView
-                android:id="@+id/rankBgImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_your_rank" />
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/myRankTextView"
-                android:layout_width="54dp"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/yourRankLabel"
-                android:layout_marginTop="7dp"
-                android:layout_marginEnd="33dp"
-                android:layout_toStartOf="@+id/yourRankLabel"
-                android:gravity="center"
-                android:text="1"
-                android:textColor="@color/ranking.my_rank"
-                android:textSize="24sp"
-                app:fontName="oswald_regular.ttf" />
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/yourRankLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_toEndOf="@+id/rankBgImageView"
-                android:layout_toRightOf="@+id/rankBgImageView"
-                android:text="@string/ranking.tabs_your_rank_label"
-                android:textColor="@color/ranking.your_rank_label"
-                android:textSize="25sp"
-                android:visibility="invisible"
-                app:fontName="oswald_regular.ttf" />
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/languageTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="26dp"
-                android:layout_toEndOf="@+id/rankBgImageView"
-                android:gravity="center"
-                android:text=""
-                android:textColor="@color/ranking.language_selected"
-                android:textSize="21sp" />
-        </RelativeLayout>
-
-    </RelativeLayout>
-
-    <View
-        android:id="@+id/underline1"
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_below="@+id/rankContainer"
-        android:layout_alignStart="@+id/rankContainer"
-        android:layout_alignLeft="@+id/rankContainer"
-        android:layout_alignEnd="@+id/rankContainer"
-        android:layout_alignRight="@+id/rankContainer"
-        android:background="@color/common_underline" />
-
-    <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/improveRankTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_below="@+id/underline1"
-        android:layout_alignStart="@+id/rankContainer"
-        android:layout_alignLeft="@+id/rankContainer"
-        android:layout_alignEnd="@+id/rankContainer"
-        android:layout_alignRight="@+id/rankContainer"
-        android:background="@color/ranking.boxes_bg"
-        android:gravity="center_vertical"
-        android:paddingStart="20dp"
-        android:paddingLeft="20dp"
-        android:paddingEnd="20dp"
-        android:paddingRight="20dp"
-        android:text="@string/ranking.how_calculated"
-        android:textColor="@color/ranking.how_calculated"
-        android:textSize="15sp"
-        app:fontName="oswald.ttf"
-        app:paddingStart="10dp" />
-
-    <View
-        android:id="@+id/underline2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/improveRankTextView"
-        android:layout_marginTop="20dp"
-        android:background="@color/common_underline" />
-
-    <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/topBloggerLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_below="@+id/underline2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:drawableEnd="@drawable/ic_down_arrow"
-        android:drawableRight="@drawable/ic_down_arrow"
-        android:drawablePadding="10dp"
-        android:gravity="center_vertical"
-        android:text="@string/ranking.top_bloggers"
-        android:textColor="@color/ranking.top_bloggers"
-        android:textSize="22sp"
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/myRankTextView"
+        android:layout_width="54dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/yourRankLabel"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="33dp"
+        android:layout_toStartOf="@+id/yourRankLabel"
+        android:gravity="center"
+        android:text="1"
+        android:textColor="@color/ranking.my_rank"
+        android:textSize="24sp"
         app:fontName="oswald_regular.ttf" />
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/topBloggerRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/topBloggerLabel"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
-
-    <RelativeLayout
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/yourRankLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/topBloggerLabel"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone">
+        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@+id/rankBgImageView"
+        android:layout_toRightOf="@+id/rankBgImageView"
+        android:text="@string/ranking.tabs_your_rank_label"
+        android:textColor="@color/ranking.your_rank_label"
+        android:textSize="25sp"
+        android:visibility="invisible"
+        app:fontName="oswald_regular.ttf" />
 
-        <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/rank1BloggerImageView"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@drawable/default_article" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignEnd="@+id/rank1BloggerImageView"
-            android:layout_alignRight="@+id/rank1BloggerImageView"
-            android:layout_alignBottom="@+id/rank1BloggerImageView"
-            android:layout_marginEnd="2dp"
-            android:layout_marginRight="2dp"
-            android:layout_marginBottom="2dp"
-            android:background="@drawable/circular_textview_ranking"
-            android:elevation="4dp"
-            android:gravity="center"
-            android:text="1st"
-            android:textColor="@color/ranking.top_blogger_rank"
-            android:textSize="16sp"
-            app:fontName="oswald_regular.ttf" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/rank1BloggerNameTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/rank1BloggerImageView"
-            android:layout_alignStart="@+id/rank1BloggerImageView"
-            android:layout_alignLeft="@+id/rank1BloggerImageView"
-            android:layout_alignEnd="@+id/rank1BloggerImageView"
-            android:layout_alignRight="@+id/rank1BloggerImageView"
-            android:gravity="center"
-            android:text="Kainat Khan"
-            android:textColor="@color/ranking.author_name"
-            android:textSize="17sp"
-            app:fontName="oswald_regular.ttf" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/rank1FollowersCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/rank1BloggerNameTV"
-            android:layout_alignStart="@+id/rank1BloggerImageView"
-            android:layout_alignLeft="@+id/rank1BloggerImageView"
-            android:layout_alignEnd="@+id/rank1BloggerImageView"
-            android:layout_alignRight="@+id/rank1BloggerImageView"
-            android:gravity="center"
-            android:text="1000 followers"
-            android:textColor="@color/ranking.follower_count"
-            android:textSize="15sp"
-            app:fontName="oswald.ttf" />
-
-        <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/rank2BloggerImageView"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginLeft="50dp"
-            android:layout_toEndOf="@+id/rank1BloggerImageView"
-            android:layout_toRightOf="@+id/rank1BloggerImageView"
-            android:src="@drawable/default_article" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignEnd="@+id/rank2BloggerImageView"
-            android:layout_alignRight="@+id/rank2BloggerImageView"
-            android:layout_alignBottom="@+id/rank2BloggerImageView"
-            android:layout_marginEnd="2dp"
-            android:layout_marginRight="2dp"
-            android:layout_marginBottom="2dp"
-            android:background="@drawable/circular_textview_ranking"
-            android:elevation="4dp"
-            android:gravity="center"
-            android:text="2nd"
-            android:textColor="@color/ranking.top_blogger_rank"
-            android:textSize="16sp"
-            app:fontName="oswald_regular.ttf" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/rank2BloggerNameTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/rank2BloggerImageView"
-            android:layout_alignStart="@+id/rank2BloggerImageView"
-            android:layout_alignLeft="@+id/rank2BloggerImageView"
-            android:layout_alignEnd="@+id/rank2BloggerImageView"
-            android:layout_alignRight="@+id/rank2BloggerImageView"
-            android:gravity="center"
-            android:text="Kainat Khan"
-            android:textColor="@color/ranking.author_name"
-            android:textSize="17sp"
-            app:fontName="oswald_regular.ttf" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/rank2BloggerNameTV"
-            android:layout_alignStart="@+id/rank2BloggerImageView"
-            android:layout_alignLeft="@+id/rank2BloggerImageView"
-            android:layout_alignEnd="@+id/rank2BloggerImageView"
-            android:layout_alignRight="@+id/rank2BloggerImageView"
-            android:gravity="center"
-            android:text="1000 followers"
-            android:textColor="@color/ranking.follower_count"
-            android:textSize="15sp"
-            app:fontName="oswald.ttf" />
-
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/languageTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:layout_toEndOf="@+id/rankBgImageView"
+        android:gravity="center"
+        android:text=""
+        android:textColor="@color/ranking.language_selected"
+        android:textSize="21sp" />
     </RelativeLayout>
+
+  </RelativeLayout>
+
+  <View
+    android:id="@+id/underline1"
+    android:layout_width="wrap_content"
+    android:layout_height="1dp"
+    android:layout_below="@+id/rankContainer"
+    android:layout_alignStart="@+id/rankContainer"
+    android:layout_alignLeft="@+id/rankContainer"
+    android:layout_alignEnd="@+id/rankContainer"
+    android:layout_alignRight="@+id/rankContainer"
+    android:background="@color/common_underline" />
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/improveRankTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="40dp"
+    android:layout_below="@+id/underline1"
+    android:layout_alignStart="@+id/rankContainer"
+    android:layout_alignLeft="@+id/rankContainer"
+    android:layout_alignEnd="@+id/rankContainer"
+    android:layout_alignRight="@+id/rankContainer"
+    android:background="@color/ranking.boxes_bg"
+    android:gravity="center_vertical"
+    android:paddingStart="20dp"
+    android:paddingLeft="20dp"
+    android:paddingEnd="20dp"
+    android:paddingRight="20dp"
+    android:text="@string/ranking.how_calculated"
+    android:textColor="@color/ranking.how_calculated"
+    android:textSize="15sp"
+    app:fontName="oswald.ttf"
+    app:paddingStart="10dp" />
+
+  <View
+    android:id="@+id/underline2"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_below="@+id/improveRankTextView"
+    android:layout_marginTop="20dp"
+    android:background="@color/common_underline" />
+
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/topBloggerLabel"
+    android:layout_width="wrap_content"
+    android:layout_height="40dp"
+    android:layout_below="@+id/underline2"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:drawableEnd="@drawable/ic_down_arrow"
+    android:drawableRight="@drawable/ic_down_arrow"
+    android:drawablePadding="10dp"
+    android:gravity="center_vertical"
+    android:textColor="@color/ranking.top_bloggers"
+    android:textSize="22sp"
+    app:fontName="oswald_regular.ttf" />
+
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/topBloggerRecyclerView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/topBloggerLabel"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp" />
+
+  <RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/topBloggerLabel"
+    android:layout_centerHorizontal="true"
+    android:visibility="gone">
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+      android:id="@+id/rank1BloggerImageView"
+      android:layout_width="120dp"
+      android:layout_height="120dp"
+      android:src="@drawable/default_article" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:layout_alignEnd="@+id/rank1BloggerImageView"
+      android:layout_alignRight="@+id/rank1BloggerImageView"
+      android:layout_alignBottom="@+id/rank1BloggerImageView"
+      android:layout_marginEnd="2dp"
+      android:layout_marginRight="2dp"
+      android:layout_marginBottom="2dp"
+      android:background="@drawable/circular_textview_ranking"
+      android:elevation="4dp"
+      android:gravity="center"
+      android:text="1st"
+      android:textColor="@color/ranking.top_blogger_rank"
+      android:textSize="16sp"
+      app:fontName="oswald_regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/rank1BloggerNameTV"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/rank1BloggerImageView"
+      android:layout_alignStart="@+id/rank1BloggerImageView"
+      android:layout_alignLeft="@+id/rank1BloggerImageView"
+      android:layout_alignEnd="@+id/rank1BloggerImageView"
+      android:layout_alignRight="@+id/rank1BloggerImageView"
+      android:gravity="center"
+      android:text="Kainat Khan"
+      android:textColor="@color/ranking.author_name"
+      android:textSize="17sp"
+      app:fontName="oswald_regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/rank1FollowersCount"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/rank1BloggerNameTV"
+      android:layout_alignStart="@+id/rank1BloggerImageView"
+      android:layout_alignLeft="@+id/rank1BloggerImageView"
+      android:layout_alignEnd="@+id/rank1BloggerImageView"
+      android:layout_alignRight="@+id/rank1BloggerImageView"
+      android:gravity="center"
+      android:text="1000 followers"
+      android:textColor="@color/ranking.follower_count"
+      android:textSize="15sp"
+      app:fontName="oswald.ttf" />
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+      android:id="@+id/rank2BloggerImageView"
+      android:layout_width="120dp"
+      android:layout_height="120dp"
+      android:layout_marginStart="50dp"
+      android:layout_marginLeft="50dp"
+      android:layout_toEndOf="@+id/rank1BloggerImageView"
+      android:layout_toRightOf="@+id/rank1BloggerImageView"
+      android:src="@drawable/default_article" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:layout_alignEnd="@+id/rank2BloggerImageView"
+      android:layout_alignRight="@+id/rank2BloggerImageView"
+      android:layout_alignBottom="@+id/rank2BloggerImageView"
+      android:layout_marginEnd="2dp"
+      android:layout_marginRight="2dp"
+      android:layout_marginBottom="2dp"
+      android:background="@drawable/circular_textview_ranking"
+      android:elevation="4dp"
+      android:gravity="center"
+      android:text="2nd"
+      android:textColor="@color/ranking.top_blogger_rank"
+      android:textSize="16sp"
+      app:fontName="oswald_regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/rank2BloggerNameTV"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/rank2BloggerImageView"
+      android:layout_alignStart="@+id/rank2BloggerImageView"
+      android:layout_alignLeft="@+id/rank2BloggerImageView"
+      android:layout_alignEnd="@+id/rank2BloggerImageView"
+      android:layout_alignRight="@+id/rank2BloggerImageView"
+      android:gravity="center"
+      android:text="Kainat Khan"
+      android:textColor="@color/ranking.author_name"
+      android:textSize="17sp"
+      app:fontName="oswald_regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/rank2BloggerNameTV"
+      android:layout_alignStart="@+id/rank2BloggerImageView"
+      android:layout_alignLeft="@+id/rank2BloggerImageView"
+      android:layout_alignEnd="@+id/rank2BloggerImageView"
+      android:layout_alignRight="@+id/rank2BloggerImageView"
+      android:gravity="center"
+      android:text="1000 followers"
+      android:textColor="@color/ranking.follower_count"
+      android:textSize="15sp"
+      app:fontName="oswald.ttf" />
+
+  </RelativeLayout>
 </RelativeLayout>

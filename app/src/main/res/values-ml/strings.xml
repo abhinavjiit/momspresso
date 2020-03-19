@@ -477,7 +477,7 @@
     <string name="ranking.stats_shares">പങ്കിട്ടവർ</string>
     <string name="ranking.stats_comments">അഭിപ്രായങ്ങൾ</string>
     <string name="ranking.how_calculated">ഇതെങ്ങനെയാണ് കണക്കാക്കുന്നത്</string>
-    <string name="ranking.top_bloggers">ഇതിലെ ഏറ്റവും പ്രധാന ബ്ലോഗ്ഗർമാർ</string>
+    <string name="ranking.top_bloggers">ഇതിലെ ഏറ്റവും പ്രധാന ബ്ലോഗ്ഗർമാർ %1$s</string>
     <string name="ranking.followers_label">പിന്തുടരുന്നവർ</string>
     <string name="ranking.in">IN</string>
     <string name="ranking.toast_start_end_date">Start date must be less than end date</string>

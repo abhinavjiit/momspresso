@@ -464,7 +464,7 @@
     <string name="ranking.stats_shares">பகிர்வுகள் </string>
     <string name="ranking.stats_comments">கருத்துகள்</string>
     <string name="ranking.how_calculated">இது எப்படி கணக்கிடப்படுகிறது?</string>
-    <string name="ranking.top_bloggers">சிறந்த ப்ளாகர்கள்</string>
+    <string name="ranking.top_bloggers">சிறந்த ப்ளாகர்கள் %1$s</string>
     <string name="ranking.followers_label">பின்தொடர்பவர்கள்</string>
     <string name="ranking.in">உள்ளே </string>
     <string name="ranking.toast_start_end_date">தொடக்க தேதி முடிவு தேதிக்கு குறைவாக இருக்க வேண்டும்</string>

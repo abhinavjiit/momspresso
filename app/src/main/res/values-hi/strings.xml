@@ -466,7 +466,7 @@
     <string name="ranking.stats_shares">शेयर</string>
     <string name="ranking.stats_comments">कमैंट्स</string>
     <string name="ranking.how_calculated">इसकी किस तरह गणना की जा सकती है?</string>
-    <string name="ranking.top_bloggers">टॉप ब्लॉगर्स इन</string>
+    <string name="ranking.top_bloggers">टॉप ब्लॉगर्स इन %1$s</string>
     <string name="ranking.followers_label">फॉलोवर्स</string>
     <string name="ranking.in">इन</string>
     <string name="ranking.toast_start_end_date">शुरुआत की तिथि अंत तिथि से कम होनी चाहिए </string>
