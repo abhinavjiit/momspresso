@@ -545,7 +545,7 @@
     <string name="ranking.stats_shares">ਸ਼ੇਅਰਸ</string>
     <string name="ranking.stats_comments">ਕਮੈਂਟਸ</string>
     <string name="ranking.how_calculated">ਇਹ ਕਿਵੇਂ ਗਿਣਿਆ ਜਾਂਦਾ ਹੈ?</string>
-    <string name="ranking.top_bloggers">TOP BLOGGERS IN</string>
+    <string name="ranking.top_bloggers">TOP BLOGGERS IN %1$s</string>
     <string name="ranking.followers_label">ਫੋਲੋਵਰਸ</string>
     <string name="ranking.in">ਇਨ</string>
     <string name="ranking.toast_start_end_date">Start date must be less than end date</string>

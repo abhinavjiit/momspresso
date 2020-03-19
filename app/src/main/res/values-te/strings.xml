@@ -429,7 +429,7 @@
     <string name="ranking.stats_shares">షేర్లు</string>
     <string name="ranking.stats_comments">కామెంట్లు</string>
     <string name="ranking.how_calculated">దీనిని ఎలా లెక్కిస్తారు?</string>
-    <string name="ranking.top_bloggers">Tఅత్యుత్తమ బ్లాగర్లు</string>
+    <string name="ranking.top_bloggers">అత్యుత్తమ బ్లాగర్లు %1$s</string>
     <string name="ranking.followers_label">ఫాలోవర్లు</string>
     <string name="ranking.in">ఇన్</string>
     <string name="ranking.toast_start_end_date">మొదలు పెట్టిన డేట్ ఆఖరి రోజు కంటే తక్కువ ఉండాలి</string>
