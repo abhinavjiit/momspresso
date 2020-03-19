@@ -439,7 +439,7 @@
     <string name="ranking.stats_shares">ಷೇರುಗಳು</string>
     <string name="ranking.stats_comments">ಪ್ರತಿಕ್ರಿಯೆಗಳು</string>
     <string name="ranking.how_calculated">ಇದನ್ನು ಹೇಗೆ ಲೆಕ್ಕ ಹಾಕಲಾಗುತ್ತದೆ? </string>
-    <string name="ranking.top_bloggers">ಉತ್ತಮ ಬ್ಲಾಗಿಗರು ಒಳಗಿದ್ದಾರೆ</string>
+    <string name="ranking.top_bloggers">ಉತ್ತಮ ಬ್ಲಾಗಿಗರು ಒಳಗಿದ್ದಾರೆ %1$s</string>
     <string name="ranking.followers_label">ಅನುಸರಿಸುವವರು</string>
     <string name="ranking.in">IN</string>
     <string name="ranking.toast_start_end_date">Start date must be less than end date</string>

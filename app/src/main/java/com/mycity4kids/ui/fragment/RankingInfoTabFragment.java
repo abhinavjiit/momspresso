@@ -11,20 +11,16 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.animation.MyCityAnimationsUtil;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.ContributorListResponse;
@@ -39,14 +35,14 @@ import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI;
 import com.mycity4kids.ui.activity.RankingActivity;
 import com.mycity4kids.ui.adapter.RankingTopBloggerAdapter;
 import com.mycity4kids.utils.AppUtils;
-
+import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.utils.StringUtils;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -54,7 +50,8 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 28/7/17.
  */
-public class RankingInfoTabFragment extends BaseFragment implements View.OnClickListener, RankingTopBloggerAdapter.RecyclerViewClickListener {
+public class RankingInfoTabFragment extends BaseFragment implements View.OnClickListener,
+        RankingTopBloggerAdapter.RecyclerViewClickListener {
 
     private ArrayList<LanguageRanksModel> multipleRankList = new ArrayList<>();
     private ArrayList<String> list;
@@ -79,7 +76,8 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.ranking_info_tab_fragment, container, false);
 
         userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
@@ -99,6 +97,8 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
         topBloggerLabelTV.setOnClickListener(this);
         improveRankTextView.setOnClickListener(this);
 
+        //  String text=String.format(getResources().getString(R.string.ranking_top_bloggers),);
+
         contributorListResults = new ArrayList<>();
         topBloggerAdapter = new RankingTopBloggerAdapter(getActivity(), contributorListResults, this);
         LinearLayoutManager layoutManager
@@ -114,25 +114,25 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
     private void getUserDetails() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
             removeProgressDialog();
-//            showToast(getString(R.string.error_network));
             return;
         }
         showProgressDialog("please wait ...");
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         // prepare call in Retrofit 2.0
-        BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
-        Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(authorId);
+        BloggerDashboardAPI bloggerDashboardApi = retrofit.create(BloggerDashboardAPI.class);
+        Call<UserDetailResponse> call = bloggerDashboardApi.getBloggerData(authorId);
         call.enqueue(userDetailsResponseListener);
     }
 
-    public void getAllLanguages() {
+    private void getAllLanguages() {
         popup = new PopupMenu(getActivity(), topBloggerLabelTV);
         popup.getMenuInflater().inflate(R.menu.analytics_pageviews_custom_date_popup, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
                 for (int i = 0; i < list.size(); i++) {
                     if (list.get(i).equals(item.getTitle())) {
-                        topBloggerLabelTV.setText(getString(R.string.ranking_top_bloggers) + " " + list.get(i).toUpperCase());
+                        topBloggerLabelTV.setText(
+                                String.format(getString(R.string.ranking_top_bloggers), list.get(i).toUpperCase()));
                         langKey = languageConfigModelArrayList.get(i).getLangKey();
                         getTopBloggers(2, AppConstants.USER_TYPE_BLOGGER);
                     }
@@ -151,13 +151,13 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
         languageConfigModel.setName("English");
         languageConfigModel.setDisplay_name("English");
         languageConfigModel.setId(AppConstants.LANG_KEY_ENGLISH);
-        topBloggerLabelTV.setText(getString(R.string.ranking_top_bloggers) + " " + "ENGLISH");
+        topBloggerLabelTV.setText(String.format(getString(R.string.ranking_top_bloggers), "ENGLISH"));
 
         languageConfigModelArrayList.add(languageConfigModel);
         try {
-            FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.LANGUAGES_JSON_FILE);
+            FileInputStream fileInputStream = BaseApplication.getAppContext()
+                    .openFileInput(AppConstants.LANGUAGES_JSON_FILE);
             String fileContent = AppUtils.convertStreamToString(fileInputStream);
-//            ConfigResult res = new Gson().fromJson(fileContent, ConfigResult.class);
             LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(
                     fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {
                     }.getType()
@@ -182,13 +182,12 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
         showProgressDialog(getResources().getString(R.string.please_wait));
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         // prepare call in Retrofit 2.0
-        ContributorListAPI contributorListAPI = retrofit.create(ContributorListAPI.class);
+        ContributorListAPI contributorlistApi = retrofit.create(ContributorListAPI.class);
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
             removeProgressDialog();
-//            showToast(getString(R.string.error_network));
             return;
         }
-        Call<ContributorListResponse> call = contributorListAPI.getContributorList(5, sortType, type, langKey, "");
+        Call<ContributorListResponse> call = contributorlistApi.getContributorList(5, sortType, type, langKey, "");
         call.enqueue(contributorListResponseCallback);
 
     }
@@ -198,41 +197,45 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
             removeProgressDialog();
             if (response == null || null == response.body()) {
-//                showToast("Something went wrong from server");
                 return;
             }
             UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                if (responseData.getData().get(0).getResult().getRanks() == null || responseData.getData().get(0).getResult().getRanks().size() == 0) {
+                if (responseData.getData().get(0).getResult().getRanks() == null
+                        || responseData.getData().get(0).getResult().getRanks().size() == 0) {
                     myRankTextView.setText("--");
                     languageTextView.setText(getString(R.string.analytics_lang_rank, ""));
                 } else if (responseData.getData().get(0).getResult().getRanks().size() < 2) {
                     myRankTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(0).getRank());
                     if (isAdded()) {
-                        if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(0).getLangKey())) {
+                        if (AppConstants.LANG_KEY_ENGLISH
+                                .equals(responseData.getData().get(0).getResult().getRanks().get(0).getLangKey())) {
                             languageTextView.setText(getString(R.string.analytics_lang_rank, "ENGLISH"));
                         } else {
                             languageTextView.setText(getString(R.string.analytics_lang_rank,
-                                    responseData.getData().get(0).getResult().getRanks().get(0).getLangValue().toUpperCase()));
+                                    responseData.getData().get(0).getResult().getRanks().get(0).getLangValue()
+                                            .toUpperCase()));
                         }
                     }
                 } else {
                     for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
-                        if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
+                        if (AppConstants.LANG_KEY_ENGLISH
+                                .equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
                             multipleRankList.add(responseData.getData().get(0).getResult().getRanks().get(i));
                             break;
                         }
                     }
                     Collections.sort(responseData.getData().get(0).getResult().getRanks());
                     for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
-                        if (!AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
+                        if (!AppConstants.LANG_KEY_ENGLISH
+                                .equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
                             multipleRankList.add(responseData.getData().get(0).getResult().getRanks().get(i));
                         }
                     }
-                    if (isAdded())
+                    if (isAdded()) {
                         MyCityAnimationsUtil.animate(getActivity(), rankingContainer, multipleRankList, 0, true);
+                    }
                 }
-            } else {
             }
         }
 
@@ -242,29 +245,30 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
         }
     };
 
-    private Callback<ContributorListResponse> contributorListResponseCallback = new Callback<ContributorListResponse>() {
-        @Override
-        public void onResponse(Call<ContributorListResponse> call, retrofit2.Response<ContributorListResponse> response) {
-            try {
-                removeProgressDialog();
-                ContributorListResponse responseModel = response.body();
-                if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
-                    processResponse(responseModel);
-                } else {
+    private Callback<ContributorListResponse> contributorListResponseCallback =
+            new Callback<ContributorListResponse>() {
+                @Override
+                public void onResponse(Call<ContributorListResponse> call,
+                        retrofit2.Response<ContributorListResponse> response) {
+                    try {
+                        removeProgressDialog();
+                        ContributorListResponse responseModel = response.body();
+                        if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
+                            processResponse(responseModel);
+                        }
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                    }
                 }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        }
 
-        @Override
-        public void onFailure(Call<ContributorListResponse> call, Throwable t) {
-            removeProgressDialog();
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
+                @Override
+                public void onFailure(Call<ContributorListResponse> call, Throwable t) {
+                    removeProgressDialog();
+                    Crashlytics.logException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
+                }
+            };
 
     public void processResponse(ContributorListResponse responseModel) {
         ArrayList<ContributorListResult> dataList = responseModel.getData().getResult();
@@ -280,11 +284,14 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
                 popup.show();
                 break;
             case R.id.improveRankTextView:
-                ImproveRankPageViewsSocialFragment analyticsStatsDialogFragment = new ImproveRankPageViewsSocialFragment();
+                ImproveRankPageViewsSocialFragment analyticsStatsDialogFragment =
+                        new ImproveRankPageViewsSocialFragment();
                 Bundle b = new Bundle();
                 b.putString(AppConstants.ANALYTICS_INFO_TYPE, AppConstants.ANALYTICS_INFO_RANK_CALCULATION);
                 analyticsStatsDialogFragment.setArguments(b);
                 ((RankingActivity) getActivity()).addFragment(analyticsStatsDialogFragment, b);
+                break;
+            default:
                 break;
 
         }
