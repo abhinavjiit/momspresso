@@ -28,9 +28,7 @@ public class SharingUtils {
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(bitmap, null, rectF, paint);
 
-        /**
-         * here to define your corners, this is for left bottom and right bottom corners
-         */
+        //here to define your corners, this is for left bottom and right bottom corners
         final Rect clipRect = new Rect(0, radius, w, h);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
         canvas.drawRect(clipRect, paint);
@@ -40,8 +38,6 @@ public class SharingUtils {
     }
 
     public static void shareViaFacebook(Activity activity, Uri uri) {
-//        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() +
-//                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + ".jpg");
         ShareHashtag shareHashTag = new ShareHashtag.Builder().setHashtag("#Momspressoshortstories").build();
         SharePhoto sharePhoto = new SharePhoto.Builder().setImageUrl(uri).build();
         ArrayList<SharePhoto> photoList = new ArrayList<>();

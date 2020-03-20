@@ -706,12 +706,12 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         Utils.pushLikeStoryEvent(getActivity(), "ShortStoryListingScreen", userDynamoId + "",
                 articleId,
                 authorId + "~" + author);
-        Retrofit retro = BaseApplication.getInstance().getRetrofit();
         isRecommendRequestRunning = true;
         RecommendUnrecommendArticleRequest recommendUnrecommendArticleRequest =
                 new RecommendUnrecommendArticleRequest();
         recommendUnrecommendArticleRequest.setArticleId(articleId);
         recommendUnrecommendArticleRequest.setStatus(likeStatus);
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
         ArticleDetailsAPI articleDetailsApi = retro.create(ArticleDetailsAPI.class);
         Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle = articleDetailsApi
                 .recommendUnrecommendArticle(recommendUnrecommendArticleRequest);
