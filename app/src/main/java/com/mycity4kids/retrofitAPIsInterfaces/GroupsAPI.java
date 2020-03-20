@@ -35,10 +35,8 @@ import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.GroupsReportContentResponse;
 import com.mycity4kids.models.response.GroupsReportedContentResponse;
 import com.mycity4kids.models.response.UserPostSettingResponse;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -58,17 +56,17 @@ public interface GroupsAPI {
     // Basic Group Functionalities
     @GET("/api/v1/groups/group")
     Call<GroupsListingResponse> getGroupList(@Query("$skip") int skip,
-                                             @Query("$limit") int limit);
+            @Query("$limit") int limit);
 
     @GET("/api/v1/groups/members")
     Call<GroupsMembershipResponse> getJoinedGroupList(@Query("userId") String userId,
-                                                      @Query("status") String status,
-                                                      @Query("$skip") int skip,
-                                                      @Query("$limit") int limit);
+            @Query("status") String status,
+            @Query("$skip") int skip,
+            @Query("$limit") int limit);
 
     @GET("/api/v1/groups/members")
     Call<GroupsMembershipResponse> getTop4JoinedGroupList(@Query("userId") String userId,
-                                                          @Query("status") String status);
+            @Query("status") String status);
 
     @GET("/api/v1/groups/group")
     Call<GroupsListingResponse> getTop4SuggestedGroupsSingleExclusion(@Query("id[$nin]") String gp0);
@@ -81,34 +79,34 @@ public interface GroupsAPI {
 
     @PATCH("/api/v1/groups/group/{groupId}")
     Call<GroupDetailResponse> updateGroup(@Path("groupId") int groupId,
-                                          @Body CreateUpdateGroupRequest body);
+            @Body CreateUpdateGroupRequest body);
 
     @PATCH("/api/v1/groups/group/{groupId}")
     Call<GroupDetailResponse> updateGroupNotification(@Path("groupId") int groupId,
-                                                      @Body GroupNotificationToggleRequest body);
+            @Body GroupNotificationToggleRequest body);
 
     //Group Posts
     @GET("/api/v1/groups/post")
     Call<GroupPostResponse> getAllPostsForAGroup(@Query("groupId") int groupId,
-                                                 @Query("$skip") int skip,
-                                                 @Query("$limit") int limit);
+            @Query("$skip") int skip,
+            @Query("$limit") int limit);
 
     @GET("/api/v1/groups/post")
     Call<GroupPostResponse> getAllFilteredPostsForAGroup(@Query("groupId") int groupId,
-                                                         @Query("$skip") int skip,
-                                                         @Query("$limit") int limit,
-                                                         @Query("type") String type);
+            @Query("$skip") int skip,
+            @Query("$limit") int limit,
+            @Query("type") String type);
 
     @GET("/api/v1/groups/post")
     Call<GroupPostResponse> getAllMyFeedPosts(@Query("$skip") int skip,
-                                              @Query("$myFeed") int myFeed,
-                                              @Query("$limit") int limit);
+            @Query("$myFeed") int myFeed,
+            @Query("$limit") int limit);
 
     @GET("/api/v1/groups/post")
     Call<GroupPostResponse> getAllPollPosts(@Query("$skip") int skip,
-                                            @Query("$limit") int limit,
-                                            @Query("$myFeed") int myFeed,
-                                            @Query("type") String type);
+            @Query("$limit") int limit,
+            @Query("$myFeed") int myFeed,
+            @Query("type") String type);
 
     @GET("/api/v1/groups/post/{postId}")
     Call<GroupPostResponse> getSinglePost(@Path("postId") int postId);
@@ -118,36 +116,36 @@ public interface GroupsAPI {
 
     @PATCH("/api/v1/groups/post/{postId}")
     Call<GroupPostResponse> updatePost(@Path("postId") int postId,
-                                       @Body UpdatePostSettingsRequest updatePostSettingsRequest);
+            @Body UpdatePostSettingsRequest updatePostSettingsRequest);
 
     @PATCH("/api/v1/groups/post/{postId}")
     Call<GroupPostResponse> updatePostContent(@Path("postId") int postId,
-                                              @Body UpdatePostContentRequest updatePostContentRequest);
+            @Body UpdatePostContentRequest updatePostContentRequest);
 
     @PATCH("/api/v1/groups/post/{postId}")
     Call<GroupPostResponse> disablePostComment(@Path("postId") int postId,
-                                               @Body UpdateGroupPostRequest updateGroupPostRequest);
+            @Body UpdateGroupPostRequest updateGroupPostRequest);
 
     @GET("/api/v1/groups/members")
     Call<GroupsMembershipResponse> getGroupMembersByStatus(@Query("groupId") int groupId,
-                                                           @Query("status") String status,
-                                                           @Query("$skip") int skip,
-                                                           @Query("$limit") int limit);
+            @Query("status") String status,
+            @Query("$skip") int skip,
+            @Query("$limit") int limit);
 
     @GET("/api/v1/groups/members")
     Call<GroupsMembershipResponse> getUsersMembershipDetailsForGroup(@Query("groupId") int groupId,
-                                                                     @Query("userId") String userId);
+            @Query("userId") String userId);
 
     @POST("/api/v1/groups/members")
     Call<BaseResponse> createMember(@Body JoinGroupRequest joinGroupRequest);
 
     @PATCH("/api/v1/groups/members/{memberId}")
     Call<GroupsMembershipResponse> updateMember(@Path("memberId") int memberId,
-                                                @Body UpdateGroupMembershipRequest updateGroupMembershipRequest);
+            @Body UpdateGroupMembershipRequest updateGroupMembershipRequest);
 
     @PATCH("/api/v1/groups/members/{memberId}")
     Call<GroupsMembershipResponse> updateMemberRole(@Path("memberId") int memberId,
-                                                    @Body UpdateGroupMemberRoleRequest updateGroupMemberRoleRequest);
+            @Body UpdateGroupMemberRoleRequest updateGroupMemberRoleRequest);
 
     //User Settings
     @GET("/api/v1/groups/usersettings")
@@ -155,52 +153,54 @@ public interface GroupsAPI {
 
     @GET("/api/v1/groups/usersettings")
     Call<UserPostSettingResponse> getGroupNotificationSettingForUser(@Query("groupId") int groupId,
-                                                                     @Query("postId") int postId,
-                                                                     @Query("userId") String userId);
+            @Query("postId") int postId,
+            @Query("userId") String userId);
 
     @POST("/api/v1/groups/usersettings")
     Call<ResponseBody> createNewPostSettingsForUser(@Body UpdateUserPostSettingsRequest joinGroupRequest);
 
     @POST("/api/v1/groups/usersettings")
-    Call<ResponseBody> createNewGpSettingsForUser(@Body UpdateUsersGpLevelNotificationSettingRequest notificationSettingRequest);
+    Call<ResponseBody> createNewGpSettingsForUser(
+            @Body UpdateUsersGpLevelNotificationSettingRequest notificationSettingRequest);
 
     @PATCH("/api/v1/groups/usersettings/{userSettingId}")
     Call<UserPostSettingResponse> updatePostSettingsForUser(@Path("userSettingId") int userSettingId,
-                                                            @Body UpdateUserPostSettingsRequest joinGroupRequest);
+            @Body UpdateUserPostSettingsRequest joinGroupRequest);
 
     @PATCH("/api/v1/groups/usersettings/{userSettingId}")
     Call<UserPostSettingResponse> updateNotificationSettingsOfGpForUser(@Path("userSettingId") int userSettingId,
-                                                                        @Body UpdateUsersGpLevelNotificationSettingRequest joinGroupRequest);
+            @Body UpdateUsersGpLevelNotificationSettingRequest joinGroupRequest);
 
     //Post Comments
     @GET("/api/v1/groups/responsenested")
     Call<GroupPostCommentResponse> getPostComments(@Query("groupId") int groupId,
-                                                   @Query("postId") int postId,
-                                                   @Query("$skip") int skip,
-                                                   @Query("$limit") int limit);
+            @Query("postId") int postId,
+            @Query("$skip") int skip,
+            @Query("$limit") int limit);
 
     @GET("/api/v1/groups/responsenested")
     Call<GroupPostCommentResponse> getSinglePostComments(@Query("groupId") int groupId,
-                                                         @Query("postId") int postId,
-                                                         @Query("id") int responseId);
+            @Query("postId") int postId,
+            @Query("id") int responseId);
 
     @GET("/api/v1/groups/response")
     Call<GroupPostCommentResponse> getPostCommentReplies(@Query("groupId") int groupId,
-                                                         @Query("postId") int postId,
-                                                         @Query("parentId") int parentId,
-                                                         @Query("$skip") int skip,
-                                                         @Query("$limit") int limit);
+            @Query("postId") int postId,
+            @Query("parentId") int parentId,
+            @Query("$skip") int skip,
+            @Query("$limit") int limit);
 
     @POST("/api/v1/groups/response")
-    Call<AddGpPostCommentReplyResponse> addPostCommentOrReply(@Body AddGpPostCommentOrReplyRequest addGpPostCommentOrReplyRequest);
+    Call<AddGpPostCommentReplyResponse> addPostCommentOrReply(
+            @Body AddGpPostCommentOrReplyRequest addGpPostCommentOrReplyRequest);
 
     @PATCH("/api/v1/groups/response/{responseId}")
     Call<AddGpPostCommentReplyResponse> editPostCommentOrReply(@Path("responseId") int responseId,
-                                                               @Body EditGpPostCommentOrReplyRequest editGpPostCommentOrReplyRequest);
+            @Body EditGpPostCommentOrReplyRequest editGpPostCommentOrReplyRequest);
 
     @PATCH("/api/v1/groups/response/{responseId}")
     Call<AddGpPostCommentReplyResponse> deleteCommentOrReply(@Path("responseId") int responseId,
-                                                             @Body DeleteGpPostCommentOrReplyRequest deleteGpPostCommentOrReplyRequest);
+            @Body DeleteGpPostCommentOrReplyRequest deleteGpPostCommentOrReplyRequest);
 
     //Group Action Items
     @POST("/api/v1/groups/action")
@@ -215,14 +215,15 @@ public interface GroupsAPI {
 
     @PATCH("/api/v1/groups/action/{actionId}")
     Call<GroupsActionResponse> patchAction(@Path("actionId") int actionId,
-                                           @Body GroupActionsPatchRequest groupActionsRequest);
+            @Body GroupActionsPatchRequest groupActionsRequest);
 
     //Groups Category Mapping
     @GET("/api/v1/groups/categorygroupmap/")
     Call<GroupsCategoryMappingResponse> getGroupCategories(@Query("groupId") int groupId);
 
     @POST("/api/v1/groups/categorygroupmap")
-    Call<GroupsCategoryMappingResponse> addGroupCategory(@Body ArrayList<GroupsCategoryUpdateRequest> groupsCategoryUpdateRequest);
+    Call<GroupsCategoryMappingResponse> addGroupCategory(
+            @Body ArrayList<GroupsCategoryUpdateRequest> groupsCategoryUpdateRequest);
 
     @DELETE("/api/v1/groups/categorygroupmap/")
     Call<ResponseBody> removeGroupCategory(@Query("groupId") int groupId);
@@ -230,39 +231,48 @@ public interface GroupsAPI {
     //Report Content
     @GET("/api/v1/groups/moderation-view/")
     Call<GroupsReportedContentResponse> getReportedContent(@Query("groupId") int groupId,
-                                                           @Query("$skip") int skip,
-                                                           @Query("$limit") int limit);
+            @Query("$skip") int skip,
+            @Query("$limit") int limit);
 
     @POST("/api/v1/groups/report")
     Call<GroupsReportContentResponse> reportContent(@Body GroupReportContentRequest groupReportContentRequest);
 
     @PATCH("/api/v1/groups/moderation-view/{contentId}")
     Call<ResponseBody> moderateReportedContent(@Path("contentId") int contentId,
-                                               @Body ReportedContentModerationRequest reportedContentModerationRequest);
+            @Body ReportedContentModerationRequest reportedContentModerationRequest);
 
     //Groups Search
     @GET("/api/v1/groups/search/")
     Call<GroupPostResponse> searchWithinGroup(@Query("q") String query,
-                                              @Query("ofType") String ofType,
-                                              @Query("isActive") int isActive,
-                                              @Query("groupId") int groupId,
-                                              @Query("$skip") int skip,
-                                              @Query("$limit") int limit);
+            @Query("ofType") String ofType,
+            @Query("isActive") int isActive,
+            @Query("groupId") int groupId,
+            @Query("$skip") int skip,
+            @Query("$limit") int limit);
 
     @GET("/api/v1/groups/search/")
     Call<GroupsListingResponse> searchGroups(@Query("q") String query,
-                                             @Query("ofType") String ofType,
-                                             @Query("isActive") int isActive,
-                                             @Query("$skip") int skip,
-                                             @Query("$limit") int limit);
+            @Query("ofType") String ofType,
+            @Query("isActive") int isActive,
+            @Query("$skip") int skip,
+            @Query("$limit") int limit);
 
     @GET("/api/v1/groups/groups-banner/")
     Call<GroupIdCategoryIdMappingResponse> getGroupIdForSingleCategory(@Query("platform") String query,
-                                                                       @Query("categoryId") String ofType,
-                                                                       @Query("position") String position);
+            @Query("categoryId") String ofType,
+            @Query("position") String position);
 
     @GET("/api/v1/groups/groups-banner/")
     Call<GroupIdCategoryIdMappingResponse> getGroupIdForMultipleCategories(@Query("platform") String query,
-                                                                           @Query("categoryId[$in]") List<String> groupIdList,
-                                                                           @Query("position") String position);
+            @Query("categoryId[$in]") List<String> groupIdList,
+            @Query("position") String position);
+
+    @POST("/api/v1/groups/ban-user")
+    Call<GroupsMembershipResponse> blockUserWithMembershipId(@Query("membershipId") int membershipId);
+
+    @POST("/api/v1/groups/ban-user")
+    Call<GroupsMembershipResponse> blockUserWithPostId(@Query("postId") int postId);
+
+    @POST("/api/v1/groups/ban-user")
+    Call<GroupsMembershipResponse> blockUserWithResponseId(@Query("responseId") int responseId);
 }

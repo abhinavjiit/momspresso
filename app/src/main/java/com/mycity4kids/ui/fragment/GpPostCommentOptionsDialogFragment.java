@@ -4,13 +4,12 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
+import androidx.fragment.app.DialogFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -32,7 +31,7 @@ public class GpPostCommentOptionsDialogFragment extends DialogFragment implement
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.comment_options_dialog, container,
                 false);
@@ -45,27 +44,38 @@ public class GpPostCommentOptionsDialogFragment extends DialogFragment implement
         commentType = getArguments().getInt("commentType");
         memberType = getArguments().getString(AppConstants.GROUP_MEMBER_TYPE);
 
+        TextView blockUserTextView = (TextView) rootView.findViewById(R.id.blockUserTextView);
+        blockUserTextView.setOnClickListener(this);
         TextView deleteCommentTextView = (TextView) rootView.findViewById(R.id.deleteCommentTextView);
-        TextView editCommentTextView = (TextView) rootView.findViewById(R.id.editCommentTextView);
-        TextView reportCommentTextView = (TextView) rootView.findViewById(R.id.reportCommentTextView);
-
         deleteCommentTextView.setOnClickListener(this);
+        TextView editCommentTextView = (TextView) rootView.findViewById(R.id.editCommentTextView);
         editCommentTextView.setOnClickListener(this);
+        TextView reportCommentTextView = (TextView) rootView.findViewById(R.id.reportCommentTextView);
         reportCommentTextView.setOnClickListener(this);
 
         if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(authorId)
-                || AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)
                 || AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(memberType)) {
             deleteCommentTextView.setVisibility(View.VISIBLE);
-            if (commentType == AppConstants.COMMENT_TYPE_AUDIO){
+            if (commentType == AppConstants.COMMENT_TYPE_AUDIO) {
                 editCommentTextView.setVisibility(View.GONE);
             } else {
                 editCommentTextView.setVisibility(View.VISIBLE);
             }
             reportCommentTextView.setVisibility(View.VISIBLE);
+            blockUserTextView.setVisibility(View.GONE);
+        } else if (AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)) {
+            deleteCommentTextView.setVisibility(View.VISIBLE);
+            blockUserTextView.setVisibility(View.VISIBLE);
+            reportCommentTextView.setVisibility(View.VISIBLE);
+            if (commentType == AppConstants.COMMENT_TYPE_AUDIO) {
+                editCommentTextView.setVisibility(View.GONE);
+            } else {
+                editCommentTextView.setVisibility(View.VISIBLE);
+            }
         } else {
             deleteCommentTextView.setVisibility(View.GONE);
             editCommentTextView.setVisibility(View.GONE);
+            blockUserTextView.setVisibility(View.GONE);
             reportCommentTextView.setVisibility(View.VISIBLE);
         }
         return rootView;
@@ -79,33 +89,49 @@ public class GpPostCommentOptionsDialogFragment extends DialogFragment implement
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.blockUserTextView: {
+                if (getActivity() instanceof GroupPostDetailActivity) {
+                    ((GroupPostDetailActivity) getActivity())
+                            .blockUserWithResponseId(commentPosition, position, responseType);
+                } else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
+                    ((ViewGroupPostCommentsRepliesActivity) getActivity())
+                            .blockUserWithResponseId(commentPosition, position, responseType);
+                }
+                dismiss();
+            }
+            break;
             case R.id.deleteCommentTextView: {
-                if (getActivity() instanceof GroupPostDetailActivity)
+                if (getActivity() instanceof GroupPostDetailActivity) {
                     ((GroupPostDetailActivity) getActivity()).onResponseDelete(commentPosition, position, responseType);
-                else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
-                    ((ViewGroupPostCommentsRepliesActivity) getActivity()).onResponseDelete(commentPosition, position, responseType);
+                } else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
+                    ((ViewGroupPostCommentsRepliesActivity) getActivity())
+                            .onResponseDelete(commentPosition, position, responseType);
                 }
                 dismiss();
             }
             break;
             case R.id.editCommentTextView: {
-                if (getActivity() instanceof GroupPostDetailActivity)
+                if (getActivity() instanceof GroupPostDetailActivity) {
                     ((GroupPostDetailActivity) getActivity()).onResponseEdit(commentPosition, position, responseType);
-                else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
-                    ((ViewGroupPostCommentsRepliesActivity) getActivity()).onResponseEdit(commentPosition, position, responseType);
+                } else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
+                    ((ViewGroupPostCommentsRepliesActivity) getActivity())
+                            .onResponseEdit(commentPosition, position, responseType);
                 }
                 dismiss();
             }
             break;
             case R.id.reportCommentTextView: {
-                if (getActivity() instanceof GroupPostDetailActivity)
+                if (getActivity() instanceof GroupPostDetailActivity) {
                     ((GroupPostDetailActivity) getActivity()).onResponseReport(commentPosition, position, responseType);
-                else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
-                    ((ViewGroupPostCommentsRepliesActivity) getActivity()).onResponseReport(commentPosition, position, responseType);
+                } else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
+                    ((ViewGroupPostCommentsRepliesActivity) getActivity())
+                            .onResponseReport(commentPosition, position, responseType);
                 }
                 dismiss();
             }
             break;
+            default:
+                break;
         }
     }
 }
