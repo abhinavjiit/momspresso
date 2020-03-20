@@ -4,7 +4,6 @@ import android.accounts.NetworkErrorException;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -88,6 +87,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.TorcaiAdsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
@@ -117,10 +117,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import okhttp3.ResponseBody;
 import org.apmem.tools.layouts.FlowLayout;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import q.rorbin.badgeview.QBadgeView;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
@@ -203,10 +205,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private TextView articleRecommendationCountTextView;
     private TextView viewAllTagsTextView;
     private TextView swipeNextTextView;
-    private TextView writeArticleTextView;
     private ImageView coverImage;
     private ImageView floatingActionButton;
-    private ImageView writeArticleImageView;
     private RelativeLayout loadingView;
     private FlowLayout tagsLayout;
     private Rect scrollBounds;
@@ -231,6 +231,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private String webViewUrl;
     private ImageView crownImageView;
     private YouTubePlayerView youTubePlayerView;
+    private WebView bottomAdSlotWebView;
+    private WebView topAdSlotWebView;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -243,7 +245,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         layoutInflater = inflater;
         fragmentView = inflater.inflate(R.layout.article_details_fragment, container, false);
         Utils.pushOpenScreenEvent(getActivity(), "articleDetailFragment",
-                SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId());
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         userDynamoId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
         deepLinkUrl = "";// getIntent().getStringExtra(Constants.DEEPLINK_URL);
         try {
@@ -254,69 +256,47 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             mainWebView = (WebView) fragmentView.findViewById(R.id.articleWebView);
             viewAllTagsTextView = (TextView) fragmentView.findViewById(R.id.viewAllTagsTextView);
             bottomToolbarLL = (LinearLayout) fragmentView.findViewById(R.id.bottomToolbarLL);
-            facebookShareTextView = (CustomFontTextView) fragmentView
-                    .findViewById(R.id.facebookShareTextView);
-            whatsappShareTextView = (CustomFontTextView) fragmentView
-                    .findViewById(R.id.whatsappShareTextView);
-            emailShareTextView = (CustomFontTextView) fragmentView
-                    .findViewById(R.id.emailShareTextView);
+            facebookShareTextView = (CustomFontTextView) fragmentView.findViewById(R.id.facebookShareTextView);
+            whatsappShareTextView = (CustomFontTextView) fragmentView.findViewById(R.id.whatsappShareTextView);
+            emailShareTextView = (CustomFontTextView) fragmentView.findViewById(R.id.emailShareTextView);
             likeArticleTextView = (CustomFontTextView) fragmentView.findViewById(R.id.likeTextView);
-            bookmarkArticleTextView = (CustomFontTextView) fragmentView
-                    .findViewById(R.id.bookmarkTextView);
-            sponsoredViewContainer = (RelativeLayout) fragmentView
-                    .findViewById(R.id.sponseredLayoutContainer);
+            bookmarkArticleTextView = (CustomFontTextView) fragmentView.findViewById(R.id.bookmarkTextView);
+            sponsoredViewContainer = (RelativeLayout) fragmentView.findViewById(R.id.sponseredLayoutContainer);
             sponsoredImage = (ImageView) fragmentView.findViewById(R.id.sponseredImage);
             sponsoredTextView = (TextView) fragmentView.findViewById(R.id.sponseredText);
             badge = (ImageView) fragmentView.findViewById(R.id.badge);
-            progressBarContainer = (LinearLayout) fragmentView
-                    .findViewById(R.id.progressBarContainer);
+            progressBarContainer = (LinearLayout) fragmentView.findViewById(R.id.progressBarContainer);
             authorType = (TextView) fragmentView.findViewById(R.id.blogger_type);
             followClick = (TextView) fragmentView.findViewById(R.id.follow_click);
             articleTitle = (TextView) fragmentView.findViewById(R.id.article_title);
-            recentAuthorArticleHeading = (TextView) fragmentView
-                    .findViewById(R.id.recentAuthorArticleHeading);
-            relatedArticles1 = (RelatedArticlesView) fragmentView
-                    .findViewById(R.id.relatedArticles1);
-            relatedArticles2 = (RelatedArticlesView) fragmentView
-                    .findViewById(R.id.relatedArticles2);
-            relatedArticles3 = (RelatedArticlesView) fragmentView
-                    .findViewById(R.id.relatedArticles3);
-            trendingRelatedArticles1 = (RelatedArticlesView) fragmentView
-                    .findViewById(R.id.trendingRelatedArticles1);
-            trendingRelatedArticles2 = (RelatedArticlesView) fragmentView
-                    .findViewById(R.id.trendingRelatedArticles2);
-            trendingRelatedArticles3 = (RelatedArticlesView) fragmentView
-                    .findViewById(R.id.trendingRelatedArticles3);
+            recentAuthorArticleHeading = (TextView) fragmentView.findViewById(R.id.recentAuthorArticleHeading);
+            relatedArticles1 = (RelatedArticlesView) fragmentView.findViewById(R.id.relatedArticles1);
+            relatedArticles2 = (RelatedArticlesView) fragmentView.findViewById(R.id.relatedArticles2);
+            relatedArticles3 = (RelatedArticlesView) fragmentView.findViewById(R.id.relatedArticles3);
+            trendingRelatedArticles1 = (RelatedArticlesView) fragmentView.findViewById(R.id.trendingRelatedArticles1);
+            trendingRelatedArticles2 = (RelatedArticlesView) fragmentView.findViewById(R.id.trendingRelatedArticles2);
+            trendingRelatedArticles3 = (RelatedArticlesView) fragmentView.findViewById(R.id.trendingRelatedArticles3);
             trendingArticles = (LinearLayout) fragmentView.findViewById(R.id.trendingArticles);
-            recentAuthorArticles = (LinearLayout) fragmentView
-                    .findViewById(R.id.recentAuthorArticles);
-            relatedTrendingSeparator = (View) fragmentView
-                    .findViewById(R.id.relatedTrendingSeparator);
+            recentAuthorArticles = (LinearLayout) fragmentView.findViewById(R.id.recentAuthorArticles);
+            relatedTrendingSeparator = (View) fragmentView.findViewById(R.id.relatedTrendingSeparator);
             tagsLayout = (FlowLayout) fragmentView.findViewById(R.id.tagsLayout);
-            articleViewCountTextView = (TextView) fragmentView
-                    .findViewById(R.id.articleViewCountTextView);
-            articleCommentCountTextView = (TextView) fragmentView
-                    .findViewById(R.id.articleCommentCountTextView);
+            articleViewCountTextView = (TextView) fragmentView.findViewById(R.id.articleViewCountTextView);
+            articleCommentCountTextView = (TextView) fragmentView.findViewById(R.id.articleCommentCountTextView);
             articleRecommendationCountTextView = (TextView) fragmentView
                     .findViewById(R.id.articleRecommendationCountTextView);
-            coverImage = (ImageView) fragmentView.findViewById(R.id.cover_image);
-            swipeNextTextView = (TextView) fragmentView.findViewById(R.id.swipeNextTextView);
-            viewCommentsTextView = ((TextView) fragmentView
-                    .findViewById(R.id.viewCommentsTextView));
-            writeArticleTextView = ((TextView) fragmentView
-                    .findViewById(R.id.writeArticleTextView));
-            writeArticleImageView = ((ImageView) fragmentView
-                    .findViewById(R.id.writeArticleImageView));
-            groupHeaderView = (RelativeLayout) fragmentView.findViewById(R.id.groupHeaderView);
-            groupHeaderImageView = (ImageView) fragmentView.findViewById(R.id.groupHeaderImageView);
-            groupHeadingTextView = (TextView) fragmentView.findViewById(R.id.groupHeadingTextView);
-            groupSubHeadingTextView = (TextView) fragmentView
-                    .findViewById(R.id.groupSubHeadingTextView);
-            observableScrollView = (ObservableScrollView) fragmentView.findViewById(R.id.scroll_view);
-            loadingView = (RelativeLayout) fragmentView.findViewById(R.id.relativeLoadingView);
+            coverImage = fragmentView.findViewById(R.id.cover_image);
+            swipeNextTextView = fragmentView.findViewById(R.id.swipeNextTextView);
+            viewCommentsTextView = fragmentView.findViewById(R.id.viewCommentsTextView);
+            groupHeaderView = fragmentView.findViewById(R.id.groupHeaderView);
+            groupHeaderImageView = fragmentView.findViewById(R.id.groupHeaderImageView);
+            groupHeadingTextView = fragmentView.findViewById(R.id.groupHeadingTextView);
+            groupSubHeadingTextView = fragmentView.findViewById(R.id.groupSubHeadingTextView);
+            observableScrollView = fragmentView.findViewById(R.id.scroll_view);
+            loadingView = fragmentView.findViewById(R.id.relativeLoadingView);
             crownImageView = fragmentView.findViewById(R.id.crownImageView);
             youTubePlayerView = fragmentView.findViewById(R.id.youtube_player_view);
-            getLifecycle().addObserver(youTubePlayerView);
+            bottomAdSlotWebView = fragmentView.findViewById(R.id.bottomAdSlotWebView);
+            topAdSlotWebView = fragmentView.findViewById(R.id.topAdSlotWebView);
 
             fragmentView.findViewById(R.id.user_name).setOnClickListener(this);
             floatingActionButton.setOnClickListener(this);
@@ -333,11 +313,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             likeArticleTextView.setOnClickListener(this);
             bookmarkArticleTextView.setOnClickListener(this);
             viewCommentsTextView.setOnClickListener(this);
-            writeArticleImageView.setOnClickListener(this);
-            writeArticleTextView.setOnClickListener(this);
             groupHeaderView.setOnClickListener(this);
             followClick.setOnClickListener(this);
             followClick.setEnabled(false);
+
+            getLifecycle().addObserver(youTubePlayerView);
 
             startCollectionHandler = new Handler();
             startCollectionHandler.postDelayed(() -> {
@@ -352,10 +332,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                     try {
-                        // getDeepLinkData(request.getUrl());
-                        Intent i = new Intent(Intent.ACTION_VIEW, request.getUrl());
-                        startActivity(i);
-                    } catch (ActivityNotFoundException anfe) {
+                        getDeepLinkData(request.getUrl());
+                    } catch (Exception anfe) {
                         Crashlytics.logException(anfe);
                         Log.d("FileNotFoundException", Log.getStackTraceString(anfe));
                     }
@@ -519,6 +497,37 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 hitArticleDetailsRedisApi();
                 getViewCountApi();
                 hitRecommendedStatusApi();
+
+                TorcaiAdsAPI torcaiAdsApi = retro.create(TorcaiAdsAPI.class);
+                Call<ResponseBody> topAdsCall;
+                Call<ResponseBody> endAdsCall;
+                if (BuildConfig.DEBUG) {
+                    topAdsCall = torcaiAdsApi.getTorcaiAd();
+                    endAdsCall = torcaiAdsApi.getTorcaiAd();
+                } else {
+                    topAdsCall = torcaiAdsApi.getTorcaiAd(AppUtils.getAdSlotId("ART", "TOP"),
+                            "www.momspresso.com",
+                            AppUtils.getIpAddress(true),
+                            "1",
+                            "Momspresso",
+                            AppUtils.getAppVersion(BaseApplication.getAppContext()),
+                            "https://play.google.com/store/apps/details?id=com.mycity4kids&hl=en_IN",
+                            "mobile",
+                            SharedPrefUtils.getAdvertisementId(BaseApplication.getAppContext()),
+                            "" + System.getProperty("http.agent"));
+
+                    endAdsCall = torcaiAdsApi.getTorcaiAd(AppUtils.getAdSlotId("ART", "END"),
+                            "www.momspresso.com",
+                            AppUtils.getIpAddress(true),
+                            "1",
+                            "Momspresso",
+                            AppUtils.getAppVersion(BaseApplication.getAppContext()),
+                            "https://play.google.com/store/apps/details?id=com.mycity4kids&hl=en_IN", "mobile",
+                            SharedPrefUtils.getAdvertisementId(BaseApplication.getAppContext()),
+                            "" + System.getProperty("http.agent"));
+                }
+                topAdsCall.enqueue(torcaiTopAdResponseCallback);
+                endAdsCall.enqueue(torcaiEndAdResponseCallback);
             }
 
             scrollBounds = new Rect();
@@ -539,6 +548,70 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
         return fragmentView;
     }
+
+    private Callback<ResponseBody> torcaiTopAdResponseCallback = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            String resData = null;
+            try {
+                if (response.body() != null) {
+                    resData = new String(response.body().bytes());
+                    JSONObject jsonObject = new JSONObject(resData);
+                    JSONArray jsonArray = jsonObject.getJSONArray("response");
+                    String html = jsonArray.getJSONObject(0).getJSONObject("response").getString("adm")
+                            .replaceAll("\"//", "\"https://");
+                    Log.e("HTML CONTENT", "html == " + html);
+                    topAdSlotWebView
+                            .loadDataWithBaseURL("", html, "text/html", "utf-8", "");
+                } else {
+                    topAdSlotWebView.setVisibility(View.GONE);
+                }
+            } catch (Exception e) {
+                topAdSlotWebView.setVisibility(View.GONE);
+                Crashlytics.logException(e);
+                Log.d("FileNotFoundException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
+            topAdSlotWebView.setVisibility(View.GONE);
+            Crashlytics.logException(t);
+            Log.d("FileNotFoundException", Log.getStackTraceString(t));
+        }
+    };
+
+    private Callback<ResponseBody> torcaiEndAdResponseCallback = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            String resData = null;
+            try {
+                if (response.body() != null) {
+                    resData = new String(response.body().bytes());
+                    JSONObject jsonObject = new JSONObject(resData);
+                    JSONArray jsonArray = jsonObject.getJSONArray("response");
+                    String html = jsonArray.getJSONObject(0).getJSONObject("response").getString("adm")
+                            .replaceAll("\"//", "\"https://");
+                    Log.e("HTML CONTENT", "html == " + html);
+                    bottomAdSlotWebView
+                            .loadDataWithBaseURL("", html, "text/html", "utf-8", "");
+                } else {
+                    bottomAdSlotWebView.setVisibility(View.GONE);
+                }
+            } catch (Exception e) {
+                bottomAdSlotWebView.setVisibility(View.GONE);
+                Crashlytics.logException(e);
+                Log.d("FileNotFoundException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
+            bottomAdSlotWebView.setVisibility(View.GONE);
+            Crashlytics.logException(t);
+            Log.d("FileNotFoundException", Log.getStackTraceString(t));
+        }
+    };
 
     private void getDeepLinkData(Uri url) {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
@@ -567,6 +640,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                     responseData.getData().getResult().getAuthor_id() + "~" + responseData.getData()
                                             .getResult().getAuthor_name());
                             startActivity(intent);
+                        } else {
+                            Intent i = new Intent(Intent.ACTION_VIEW, url);
+                            startActivity(i);
                         }
                     }
                 } catch (Exception e) {
