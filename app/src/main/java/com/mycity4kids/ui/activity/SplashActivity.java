@@ -27,6 +27,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ForceUpdateAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.sync.CategorySyncService;
+import com.mycity4kids.sync.FetchAdvertisementInfoService;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
@@ -185,9 +186,13 @@ public class SplashActivity extends BaseActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Intent intent5 = new Intent(this, PushTokenService.class);
                 startForegroundService(intent5);
+                Intent adIntent = new Intent(this, FetchAdvertisementInfoService.class);
+                startForegroundService(adIntent);
             } else {
                 Intent intent5 = new Intent(this, PushTokenService.class);
                 startService(intent5);
+                Intent adIntent = new Intent(this, FetchAdvertisementInfoService.class);
+                startService(adIntent);
             }
             startSyncingUserInfo();
             try {

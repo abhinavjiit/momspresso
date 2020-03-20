@@ -405,7 +405,7 @@ public class BaseApplication extends Application {
 
     public Retrofit getRetrofit() {
         if (null == retrofit) {
-            createRetrofitInstance(SharedPrefUtils.getBaseURL(this));
+            createRetrofitInstance(SharedPrefUtils.getBaseUrl(this));
         }
         return retrofit;
     }
@@ -426,7 +426,7 @@ public class BaseApplication extends Application {
 
     public Retrofit getConfigurableTimeoutRetrofit(int timeout) {
         if (null == customTimeoutRetrofit) {
-            createCustomTimeoutRetrofitInstance(SharedPrefUtils.getBaseURL(this), timeout);
+            createCustomTimeoutRetrofitInstance(SharedPrefUtils.getBaseUrl(this), timeout);
         }
         return customTimeoutRetrofit;
     }
