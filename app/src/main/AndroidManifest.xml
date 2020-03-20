@@ -502,6 +502,7 @@
       android:theme="@style/ShareStoryTheme" />
 
     <service android:name=".sync.PushTokenService" />
+    <service android:name=".sync.FetchAdvertisementInfoService" />
     <service android:name=".sync.SyncUserInfoService" />
     <service android:name=".tts.ReadArticleService" />
 

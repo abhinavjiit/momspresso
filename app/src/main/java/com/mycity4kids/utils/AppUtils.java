@@ -56,10 +56,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -281,13 +284,15 @@ public class AppUtils {
     }
 
     public static String getAppVersion(Context context) {
+        String appVersion = "";
         PackageInfo packageInfo = null;
         try {
             packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            appVersion = packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        return packageInfo.versionName;
+        return appVersion;
     }
 
     private static Map<String, Object> toMap(JSONObject object) throws JSONException {
@@ -827,5 +832,76 @@ public class AppUtils {
         } else if ("9".equals(lang) || "pa".equals(lang)) {
             Picasso.get().load(R.drawable.app_logo_pa).into(logoImageView);
         }
+    }
+
+    public static String getAdSlotId(String screenName, String position) {
+        if (!StringUtils.isNullOrEmpty(position)) {
+            position = "_" + position;
+        }
+        if (AppConstants.LOCALE_ENGLISH
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "APP_" + screenName + position + "_ENG";
+        } else if (AppConstants.LOCALE_HINDI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "APP_" + screenName + position + "_HIN";
+        } else if (AppConstants.LOCALE_MARATHI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "APP_" + screenName + position + "_MAR";
+        } else if (AppConstants.LOCALE_BENGALI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "APP_" + screenName + position + "_BEN";
+        } else if (AppConstants.LOCALE_TAMIL
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "APP_" + screenName + position + "_TAM";
+        } else if (AppConstants.LOCALE_TELUGU
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "APP_" + screenName + position + "_TEL";
+        } else if (AppConstants.LOCALE_KANNADA
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "APP_" + screenName + position + "_KAN";
+        } else if (AppConstants.LOCALE_MALAYALAM
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "APP_" + screenName + position + "_MAL";
+        } else if (AppConstants.LOCALE_GUJARATI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "APP_" + screenName + position + "_GUJ";
+        } else if (AppConstants.LOCALE_PUNJABI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return "APP_" + screenName + position + "_PUN";
+        } else {
+            return "APP_" + screenName + position + "_ENG";
+        }
+    }
+
+    public static String getIpAddress(boolean useIPv4) {
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                for (InetAddress addr : addrs) {
+                    if (!addr.isLoopbackAddress()) {
+                        String hostAddress = addr.getHostAddress();
+                        //boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
+                        boolean isIPv4 = hostAddress.indexOf(':') < 0;
+
+                        if (useIPv4) {
+                            if (isIPv4) {
+                                return hostAddress;
+                            }
+                        } else {
+                            if (!isIPv4) {
+                                int delim = hostAddress.indexOf('%'); // drop ip6 zone suffix
+                                return delim < 0 ? hostAddress.toUpperCase()
+                                        : hostAddress.substring(0, delim).toUpperCase();
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4KException", Log.getStackTraceString(e));
+        }
+        return "";
     }
 }

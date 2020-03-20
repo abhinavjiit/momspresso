@@ -3,42 +3,27 @@ package com.mycity4kids.preference;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.version.RateVersion;
-
 import java.util.Locale;
 
-/**
- * To save the Preference for My City App
- *
- * @author deepanker.chaudhary
- */
 public class SharedPrefUtils {
+
     private SharedPrefUtils() {
     }
 
-    /**
-     * Preference Name
-     */
     private static final String COMMON_PREF_FILE = "my_city_prefs";
 
     private static final String CONFIG_CATEGORY_VERSION = "configCategoryVersion";
     private static final String POPULAR_CONFIG_CATEGORY_VERSION = "popularConfigCategoryVersion";
-    /**
-     * Selected City related prefs constants
-     */
+
     private static final String SELECTED_CITY_ID = "cityId";
     private static final String SELECTED_CITY_NAME = "city_name";
     private static final String SELECTED_NEW_CITY_ID = "newCityId";
 
-    /**
-     * Selected Profile Image URL prefs constants
-     */
     private static final String PROFILE_IMAGE_URL = "imgURL";
-
 
     private static final String APP_RATE = "appRate";
     private static final String IS_APP_RATE_COMPLETE = "isAppRateComplete";
@@ -80,8 +65,6 @@ public class SharedPrefUtils {
     private static final String COACHMARK_MOMVLOG = "coachmarkMomVlog";
     private static final String COACHMARK_STORY = "coachmarkStory";
 
-    private static final String CHANGE_CITY_FLAG = "changeCityFlag";
-
     private static final String LOCATION_LATITUDE = "latitude";
     private static final String LOCATION_LONGITUDE = "longitude";
 
@@ -107,568 +90,571 @@ public class SharedPrefUtils {
     private static final String DEFAULT_CAMPAIGN_SHOWN_FLAG = "defaultcampaignshownflag";
 
     private static final String HOME_AD_SLOT_URL = "homeAdSlotUrl";
+    private static final String ADVERTISEMENT_ID = "advertisementId";
 
-    public static void clearPrefrence(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.clear().commit();
+    public static void clearPrefrence(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.clear().commit();
     }
 
-    public static void setCurrentCityModel(Context pContext, MetroCity pModel) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putInt(SELECTED_CITY_ID, pModel.getId());
-        _editor.putString(SELECTED_CITY_NAME, pModel.getName());
-        _editor.putString(SELECTED_NEW_CITY_ID, pModel.getNewCityId());
-        _editor.commit();
+    public static void setCurrentCityModel(Context context, MetroCity model) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putInt(SELECTED_CITY_ID, model.getId());
+        editor.putString(SELECTED_CITY_NAME, model.getName());
+        editor.putString(SELECTED_NEW_CITY_ID, model.getNewCityId());
+        editor.commit();
     }
 
-    public static MetroCity getCurrentCityModel(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+    public static MetroCity getCurrentCityModel(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         MetroCity city = new MetroCity();
-        city.setId(_sharedPref.getInt(SELECTED_CITY_ID, 11));
-        city.setName(_sharedPref.getString(SELECTED_CITY_NAME, "Others"));
-        city.setNewCityId(_sharedPref.getString(SELECTED_NEW_CITY_ID, "city-11"));
+        city.setId(sharedPref.getInt(SELECTED_CITY_ID, 11));
+        city.setName(sharedPref.getString(SELECTED_CITY_NAME, "Others"));
+        city.setNewCityId(sharedPref.getString(SELECTED_NEW_CITY_ID, "city-11"));
         return city;
     }
 
-    public static void setConfigCategoryVersion(Context pContext, int id) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putInt(CONFIG_CATEGORY_VERSION, id);
-        _editor.commit();
+    public static void setConfigCategoryVersion(Context context, int id) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putInt(CONFIG_CATEGORY_VERSION, id);
+        editor.commit();
     }
 
-    public static int getConfigCategoryVersion(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+    public static int getConfigCategoryVersion(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         int id = 0;
-        id = (_sharedPref.getInt(CONFIG_CATEGORY_VERSION, 0));
+        id = (sharedPref.getInt(CONFIG_CATEGORY_VERSION, 0));
         return id;
     }
 
-    public static boolean getLogoutFlag(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        boolean flag = (_sharedPref.getBoolean(LOGOUT_FLAG, false));
+    public static boolean getLogoutFlag(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        boolean flag = (sharedPref.getBoolean(LOGOUT_FLAG, false));
         return flag;
     }
 
-    public static void setLogoutFlag(Context pContext, boolean flag) {
+    public static void setLogoutFlag(Context context, boolean flag) {
         // true means today screen
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putBoolean(LOGOUT_FLAG, flag);
-        _editor.commit();
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putBoolean(LOGOUT_FLAG, flag);
+        editor.commit();
     }
 
     // set userdeatil in prefrences model
     //added by khushboo
-    public static void setUserDetailModel(Context pContext, UserInfo pModel) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putString(USER_ID, pModel.getId());
-        _editor.putString(DYNAMO_USER_ID, pModel.getDynamoId());
-        _editor.putString(EMAIL, pModel.getEmail());
-        _editor.putString(MOBILE, pModel.getMobile_number());
-        _editor.putString(COLOR_CODE, pModel.getColor_code());
-        _editor.putInt(FAMILY_ID, pModel.getFamily_id());
-        _editor.putString(USER_NAME, pModel.getFirst_name() + pModel.getLast_name());
-        _editor.putString(FIRST_NAME, pModel.getFirst_name());
-        _editor.putString(LAST_NAME, pModel.getLast_name());
-        _editor.putString(SESSIONID, pModel.getSessionId());
-        _editor.putString(MC4KTOKEN, pModel.getMc4kToken());
-        _editor.putString(IS_USER_VALIDATED, pModel.getIsValidated());
-        _editor.putString(USER_CITY_ID, pModel.getCityId());
-        _editor.putString(USER_LANG_SELECTION, pModel.getIsLangSelection());
-        _editor.putString(SUBSCRIPTION_EMAIL, pModel.getSubscriptionEmail());
-        _editor.putString(USER_TYPE, pModel.getUserType());
-        _editor.putString(GENDER, pModel.getGender());
-        _editor.putString(NEW_USER_FLAG, pModel.getIsNewUser());
-        _editor.commit();
+    public static void setUserDetailModel(Context context, UserInfo model) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putString(USER_ID, model.getId());
+        editor.putString(DYNAMO_USER_ID, model.getDynamoId());
+        editor.putString(EMAIL, model.getEmail());
+        editor.putString(MOBILE, model.getMobile_number());
+        editor.putString(COLOR_CODE, model.getColor_code());
+        editor.putInt(FAMILY_ID, model.getFamily_id());
+        editor.putString(USER_NAME, model.getFirst_name() + model.getLast_name());
+        editor.putString(FIRST_NAME, model.getFirst_name());
+        editor.putString(LAST_NAME, model.getLast_name());
+        editor.putString(SESSIONID, model.getSessionId());
+        editor.putString(MC4KTOKEN, model.getMc4kToken());
+        editor.putString(IS_USER_VALIDATED, model.getIsValidated());
+        editor.putString(USER_CITY_ID, model.getCityId());
+        editor.putString(USER_LANG_SELECTION, model.getIsLangSelection());
+        editor.putString(SUBSCRIPTION_EMAIL, model.getSubscriptionEmail());
+        editor.putString(USER_TYPE, model.getUserType());
+        editor.putString(GENDER, model.getGender());
+        editor.putString(NEW_USER_FLAG, model.getIsNewUser());
+        editor.commit();
     }
 
-    public static UserInfo getUserDetailModel(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+    public static UserInfo getUserDetailModel(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         UserInfo user = new UserInfo();
         // Changed the userId from int to String when backend changed from sql to dyanoma.
         try {
-            user.setId(_sharedPref.getString(USER_ID, "0"));
+            user.setId(sharedPref.getString(USER_ID, "0"));
         } catch (ClassCastException cce) {
-            user.setId("" + (_sharedPref.getInt(USER_ID, 0)));
+            user.setId("" + (sharedPref.getInt(USER_ID, 0)));
         }
-        user.setDynamoId(_sharedPref.getString(DYNAMO_USER_ID, "0"));
-        user.setFamily_id(_sharedPref.getInt(FAMILY_ID, 0));
-        user.setEmail(_sharedPref.getString(EMAIL, ""));
-        user.setMobile_number(_sharedPref.getString(MOBILE, ""));
-        user.setColor_code(_sharedPref.getString(COLOR_CODE, ""));
-        user.setFirst_name(_sharedPref.getString(FIRST_NAME, ""));
-        user.setLast_name(_sharedPref.getString(LAST_NAME, ""));
-        user.setSessionId(_sharedPref.getString(SESSIONID, ""));
-        user.setMc4kToken(_sharedPref.getString(MC4KTOKEN, ""));
-        user.setIsValidated(_sharedPref.getString(IS_USER_VALIDATED, ""));
-        user.setCityId(_sharedPref.getString(USER_CITY_ID, "11"));
-        user.setIsLangSelection(_sharedPref.getString(USER_LANG_SELECTION, "0"));
-        user.setSubscriptionEmail(_sharedPref.getString(SUBSCRIPTION_EMAIL, _sharedPref.getString(EMAIL, "")));
-        user.setUserType(_sharedPref.getString(USER_TYPE, "0"));
-        user.setGender(_sharedPref.getString(GENDER, "0"));
-        user.setIsNewUser(_sharedPref.getString(NEW_USER_FLAG, "0"));
+        user.setDynamoId(sharedPref.getString(DYNAMO_USER_ID, "0"));
+        user.setFamily_id(sharedPref.getInt(FAMILY_ID, 0));
+        user.setEmail(sharedPref.getString(EMAIL, ""));
+        user.setMobile_number(sharedPref.getString(MOBILE, ""));
+        user.setColor_code(sharedPref.getString(COLOR_CODE, ""));
+        user.setFirst_name(sharedPref.getString(FIRST_NAME, ""));
+        user.setLast_name(sharedPref.getString(LAST_NAME, ""));
+        user.setSessionId(sharedPref.getString(SESSIONID, ""));
+        user.setMc4kToken(sharedPref.getString(MC4KTOKEN, ""));
+        user.setIsValidated(sharedPref.getString(IS_USER_VALIDATED, ""));
+        user.setCityId(sharedPref.getString(USER_CITY_ID, "11"));
+        user.setIsLangSelection(sharedPref.getString(USER_LANG_SELECTION, "0"));
+        user.setSubscriptionEmail(sharedPref.getString(SUBSCRIPTION_EMAIL, sharedPref.getString(EMAIL, "")));
+        user.setUserType(sharedPref.getString(USER_TYPE, "0"));
+        user.setGender(sharedPref.getString(GENDER, "0"));
+        user.setIsNewUser(sharedPref.getString(NEW_USER_FLAG, "0"));
         return user;
     }
 
-    public static void setProfileImgUrl(Context pContext, String imgUrl) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putString(PROFILE_IMAGE_URL, imgUrl);
-        _editor.commit();
+    public static void setProfileImgUrl(Context context, String imgUrl) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putString(PROFILE_IMAGE_URL, imgUrl);
+        editor.commit();
     }
 
-    public static String getProfileImgUrl(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        String profileImgUrl = _sharedPref.getString(PROFILE_IMAGE_URL, "");
+    public static String getProfileImgUrl(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        String profileImgUrl = sharedPref.getString(PROFILE_IMAGE_URL, "");
         return profileImgUrl;
     }
 
-    public static void setAppRateVersion(Context pContext, RateVersion rateVersion) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putInt(APP_RATE, rateVersion.getAppRateVersion());
-        _editor.putBoolean(IS_APP_RATE_COMPLETE, rateVersion.isAppRateComplete());
-        _editor.commit();
+    public static void setAppRateVersion(Context context, RateVersion rateVersion) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putInt(APP_RATE, rateVersion.getAppRateVersion());
+        editor.putBoolean(IS_APP_RATE_COMPLETE, rateVersion.isAppRateComplete());
+        editor.commit();
     }
 
-    public static RateVersion getRateVersion(Context pContext) {
+    public static RateVersion getRateVersion(Context context) {
         RateVersion rateVersion = new RateVersion();
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        rateVersion.setAppRateVersion(_sharedPref.getInt(APP_RATE, -7));
-        rateVersion.setAppRateComplete(_sharedPref.getBoolean(IS_APP_RATE_COMPLETE, false));
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        rateVersion.setAppRateVersion(sharedPref.getInt(APP_RATE, -7));
+        rateVersion.setAppRateComplete(sharedPref.getBoolean(IS_APP_RATE_COMPLETE, false));
         return rateVersion;
     }
 
     /**
-     * this flag comes from server in
-     * config api.if this flag is true then
-     * we will show dialog for App upgrade.
-     * This flag i am using in HomeCategoryActivity
-     *
-     * @param pContext
-     * @param isAppWantsUpgrade
+     * this flag comes from server in config api.if this flag is true then we will show dialog for App upgrade. This
+     * flag i am using in HomeCategoryActivity
      */
-    public static void setAppUgrade(Context pContext, boolean isAppWantsUpgrade) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putBoolean(IS_APP_WANT_UPGRADE, isAppWantsUpgrade);
-        _editor.commit();
+    public static void setAppUgrade(Context context, boolean isAppWantsUpgrade) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putBoolean(IS_APP_WANT_UPGRADE, isAppWantsUpgrade);
+        editor.commit();
     }
 
-    public static boolean getAppUpgrade(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return _sharedPref.getBoolean(IS_APP_WANT_UPGRADE, false);
+    public static boolean getAppUpgrade(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return sharedPref.getBoolean(IS_APP_WANT_UPGRADE, false);
     }
 
-    public static void setIsRewardsAdded(Context pContext, String isRewardAdded) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putString(IS_REWARDS_ADDED, isRewardAdded);
-        _editor.commit();
+    public static void setIsRewardsAdded(Context context, String isRewardAdded) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putString(IS_REWARDS_ADDED, isRewardAdded);
+        editor.commit();
     }
 
-    public static String getIsRewardsAdded(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return _sharedPref.getString(IS_REWARDS_ADDED, "");
+    public static String getIsRewardsAdded(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return sharedPref.getString(IS_REWARDS_ADDED, "");
     }
 
-    public static String getAppUgradeMessage(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return _sharedPref.getString(APP_UPGRADE_MESSAGE, "Please update your app to continue");
+    public static String getAppUgradeMessage(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return sharedPref.getString(APP_UPGRADE_MESSAGE, "Please update your app to continue");
     }
 
-    public static void setAppUgradeMessage(Context pContext, String appUpgradeMessage) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putString(APP_UPGRADE_MESSAGE, appUpgradeMessage);
-        _editor.commit();
+    public static void setAppUgradeMessage(Context context, String appUpgradeMessage) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putString(APP_UPGRADE_MESSAGE, appUpgradeMessage);
+        editor.commit();
     }
 
-    public static void setDeviceToken(Context pContext, String deviceToken) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putString(DEVICE_TOKEN, deviceToken);
-        _editor.commit();
+    public static void setDeviceToken(Context context, String deviceToken) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putString(DEVICE_TOKEN, deviceToken);
+        editor.commit();
     }
 
     public static String getDeviceToken(Context context) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return _sharedPref.getString(DEVICE_TOKEN, "");
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return sharedPref.getString(DEVICE_TOKEN, "");
     }
 
-    public static void setBaseURL(Context context, String baseURL) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putString("BASE_URL", baseURL);
-        _editor.commit();
+    public static void setBaseUrl(Context context, String baseurl) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putString("BASE_URL", baseurl);
+        editor.commit();
     }
 
-    public static String getBaseURL(Context context) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return _sharedPref.getString("BASE_URL", AppConstants.LIVE_URL);
-    }
-
-    public static String getRewardsBaseURL(Context context) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return _sharedPref.getString("BASE_URL", AppConstants.DEV_REWARDS_URL);
+    public static String getBaseUrl(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return sharedPref.getString("BASE_URL", AppConstants.LIVE_URL);
     }
 
     public static void setCoachmarksShownFlag(Context context, String screenName, boolean flag) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
         if ("home".equals(screenName)) {
-            _editor.putBoolean(COACHMARK_HOME, flag);
+            editor.putBoolean(COACHMARK_HOME, flag);
         } else if ("topics".equals(screenName)) {
-            _editor.putBoolean(COACHMARK_TOPICS, flag);
+            editor.putBoolean(COACHMARK_TOPICS, flag);
         } else if ("topics_article".equals(screenName)) {
-            _editor.putBoolean(COACHMARK_TOPICS_ARTICLE, flag);
+            editor.putBoolean(COACHMARK_TOPICS_ARTICLE, flag);
         } else if ("article_details".equals(screenName)) {
-            _editor.putBoolean(COACHMARK_ARTICLE_DETAILS, flag);
+            editor.putBoolean(COACHMARK_ARTICLE_DETAILS, flag);
         } else if ("groups".equals(screenName)) {
-            _editor.putBoolean(COACHMARK_GROUP, flag);
+            editor.putBoolean(COACHMARK_GROUP, flag);
         } else if ("Drawer".equals(screenName)) {
-            _editor.putBoolean(COACHMARK_DRAWER, flag);
+            editor.putBoolean(COACHMARK_DRAWER, flag);
         } else if ("HomeScreen".equals(screenName)) {
-            _editor.putBoolean(COACHMARK_HOME_SCREEN, flag);
+            editor.putBoolean(COACHMARK_HOME_SCREEN, flag);
         } else if ("Profile".equals(screenName)) {
-            _editor.putBoolean(COACHMARK_PROFILE, flag);
+            editor.putBoolean(COACHMARK_PROFILE, flag);
         } else if ("Mom_vlog".equals(screenName)) {
-            _editor.putBoolean(COACHMARK_MOMVLOG, flag);
-
+            editor.putBoolean(COACHMARK_MOMVLOG, flag);
         } else if ("storyCoachmark".equals(screenName)) {
-            _editor.putBoolean(COACHMARK_STORY, flag);
+            editor.putBoolean(COACHMARK_STORY, flag);
         }
-        _editor.commit();
+        editor.commit();
     }
 
     public static boolean isCoachmarksShownFlag(Context context, String screenName) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         if ("home".equals(screenName)) {
-            return _sharedPref.getBoolean(COACHMARK_HOME, false);
+            return sharedPref.getBoolean(COACHMARK_HOME, false);
         } else if ("topics".equals(screenName)) {
-            return _sharedPref.getBoolean(COACHMARK_TOPICS, false);
+            return sharedPref.getBoolean(COACHMARK_TOPICS, false);
         } else if ("topics_article".equals(screenName)) {
-            return _sharedPref.getBoolean(COACHMARK_TOPICS_ARTICLE, false);
+            return sharedPref.getBoolean(COACHMARK_TOPICS_ARTICLE, false);
         } else if ("article_details".equals(screenName)) {
-            return _sharedPref.getBoolean(COACHMARK_ARTICLE_DETAILS, false);
+            return sharedPref.getBoolean(COACHMARK_ARTICLE_DETAILS, false);
         } else if ("groups".equals(screenName)) {
-            return _sharedPref.getBoolean(COACHMARK_GROUP, false);
+            return sharedPref.getBoolean(COACHMARK_GROUP, false);
         } else if ("Drawer".equals(screenName)) {
-            return _sharedPref.getBoolean(COACHMARK_DRAWER, false);
+            return sharedPref.getBoolean(COACHMARK_DRAWER, false);
         } else if ("HomeScreen".equals(screenName)) {
-            return _sharedPref.getBoolean(COACHMARK_HOME_SCREEN, false);
+            return sharedPref.getBoolean(COACHMARK_HOME_SCREEN, false);
         } else if ("Profile".equals(screenName)) {
-            return _sharedPref.getBoolean(COACHMARK_PROFILE, false);
+            return sharedPref.getBoolean(COACHMARK_PROFILE, false);
         } else if ("Mom_vlog".equals(screenName)) {
-            return _sharedPref.getBoolean(COACHMARK_MOMVLOG, false);
+            return sharedPref.getBoolean(COACHMARK_MOMVLOG, false);
         } else if ("storyCoachmark".equals(screenName)) {
-            return _sharedPref.getBoolean(COACHMARK_STORY, false);
+            return sharedPref.getBoolean(COACHMARK_STORY, false);
         }
         return true;
     }
 
-    public static void setConfigPopularCategoryVersion(Context pContext, int id) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putInt(POPULAR_CONFIG_CATEGORY_VERSION, id);
-        _editor.commit();
+    public static void setConfigPopularCategoryVersion(Context context, int id) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putInt(POPULAR_CONFIG_CATEGORY_VERSION, id);
+        editor.commit();
     }
 
-    public static int getConfigPopularCategoryVersion(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+    public static int getConfigPopularCategoryVersion(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         int id = 0;
-        id = (_sharedPref.getInt(POPULAR_CONFIG_CATEGORY_VERSION, 0));
+        id = (sharedPref.getInt(POPULAR_CONFIG_CATEGORY_VERSION, 0));
         return id;
     }
 
-    public static void setUserLocationLatitude(Context pContext, double latitude) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putString(LOCATION_LATITUDE, "" + latitude);
-        _editor.commit();
+    public static void setUserLocationLatitude(Context context, double latitude) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putString(LOCATION_LATITUDE, "" + latitude);
+        editor.commit();
     }
 
     public static String getUserLocationLatitude(Context context) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return _sharedPref.getString(LOCATION_LATITUDE, "");
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return sharedPref.getString(LOCATION_LATITUDE, "");
     }
 
-    public static void setUserLocationLongitude(Context pContext, double longitude) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putString(LOCATION_LONGITUDE, "" + longitude);
-        _editor.commit();
+    public static void setUserLocationLongitude(Context context, double longitude) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putString(LOCATION_LONGITUDE, "" + longitude);
+        editor.commit();
     }
 
     public static String getUserLocationLongitude(Context context) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return _sharedPref.getString(LOCATION_LONGITUDE, "");
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return sharedPref.getString(LOCATION_LONGITUDE, "");
     }
 
-    public static void setNotificationConfig(Context pContext, String key, String value) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putString(key, value);
-        _editor.commit();
+    public static void setNotificationConfig(Context context, String key, String value) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putString(key, value);
+        editor.commit();
     }
 
     public static String getNotificationConfig(Context context, String key) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return _sharedPref.getString(key, "");
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return sharedPref.getString(key, "");
     }
 
-    public static void setFacebookConnectedFlag(Context pContext, String isExpired) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putString(IS_FB_CONNECTED, isExpired);
-        _editor.commit();
+    public static void setFacebookConnectedFlag(Context context, String isExpired) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putString(IS_FB_CONNECTED, isExpired);
+        editor.commit();
     }
 
     public static String getFacebookConnectedFlag(Context context) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return _sharedPref.getString(IS_FB_CONNECTED, "");
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return sharedPref.getString(IS_FB_CONNECTED, "");
     }
 
-    public static void setLanguageFilters(Context pContext, String languageFilters) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putString(LANGUAGE_FILTER, languageFilters);
-        _editor.commit();
+    public static void setLanguageFilters(Context context, String languageFilters) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putString(LANGUAGE_FILTER, languageFilters);
+        editor.commit();
     }
 
     public static String getLanguageFilters(Context context) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return _sharedPref.getString(LANGUAGE_FILTER, "");
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return sharedPref.getString(LANGUAGE_FILTER, "");
     }
 
-    public static void setFollowedTopicsCount(Context pContext, int topicCount) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putInt(FOLLOWED_TOPIC_COUNT, topicCount);
-        _editor.commit();
+    public static void setFollowedTopicsCount(Context context, int topicCount) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putInt(FOLLOWED_TOPIC_COUNT, topicCount);
+        editor.commit();
     }
 
     public static int getFollowedTopicsCount(Context context) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return _sharedPref.getInt(FOLLOWED_TOPIC_COUNT, 0);
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return sharedPref.getInt(FOLLOWED_TOPIC_COUNT, 0);
     }
 
-    public static void setBecomeBloggerFlag(Context pContext, boolean flag) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putBoolean(BECOME_BLOGGER_FLAG, flag);
-        _editor.commit();
+    public static void setBecomeBloggerFlag(Context context, boolean flag) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putBoolean(BECOME_BLOGGER_FLAG, flag);
+        editor.commit();
     }
 
     public static boolean getBecomeBloggerFlag(Context context) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        boolean flag = (_sharedPref.getBoolean(BECOME_BLOGGER_FLAG, false));
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        boolean flag = (sharedPref.getBoolean(BECOME_BLOGGER_FLAG, false));
         return flag;
     }
 
-    public static void setDemoVideoSeen(Context pContext, boolean flag) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putBoolean(DEMO_VIDEO_SEEN, flag);
-        _editor.commit();
+    public static void setDemoVideoSeen(Context context, boolean flag) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putBoolean(DEMO_VIDEO_SEEN, flag);
+        editor.commit();
     }
 
     public static boolean getDemoVideoSeen(Context context) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        boolean flag = (_sharedPref.getBoolean(DEMO_VIDEO_SEEN, false));
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        boolean flag = (sharedPref.getBoolean(DEMO_VIDEO_SEEN, false));
         return flag;
     }
 
-    public static void setAppLocale(Context pContext, String language) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putString(LOCALE_LANGUAGE_KEY, language);
-        _editor.commit();
+    public static void setAppLocale(Context context, String language) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putString(LOCALE_LANGUAGE_KEY, language);
+        editor.commit();
     }
 
     public static String getAppLocale(Context context) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        String language = (_sharedPref.getString(LOCALE_LANGUAGE_KEY, Locale.getDefault().getLanguage()));
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        String language = (sharedPref.getString(LOCALE_LANGUAGE_KEY, Locale.getDefault().getLanguage()));
         return language;
     }
 
-    public static boolean isUserAnonymous(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        boolean flag = (_sharedPref.getBoolean(ANONYMOUS_FLAG, false));
+    public static boolean isUserAnonymous(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        boolean flag = (sharedPref.getBoolean(ANONYMOUS_FLAG, false));
         return flag;
     }
 
-    public static void setUserAnonymous(Context pContext, boolean flag) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putBoolean(ANONYMOUS_FLAG, flag);
-        _editor.commit();
+    public static void setUserAnonymous(Context context, boolean flag) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putBoolean(ANONYMOUS_FLAG, flag);
+        editor.commit();
     }
 
-    public static void setLastNotificationIdForUnreadFlag(Context pContext, String flag) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putString(NOTIFICATION_CENTER_FLAG, flag);
-        _editor.commit();
+    public static void setLastNotificationIdForUnreadFlag(Context context, String flag) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putString(NOTIFICATION_CENTER_FLAG, flag);
+        editor.commit();
     }
 
     public static String getLastNotificationIdForUnreadFlag(Context context) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        String language = (_sharedPref.getString(NOTIFICATION_CENTER_FLAG, "0"));
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        String language = (sharedPref.getString(NOTIFICATION_CENTER_FLAG, "0"));
         return language;
     }
 
-    public static boolean getFollowTopicApproachChangeFlag(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        boolean flag = (_sharedPref.getBoolean(FOLLOW_TOPIC_APPROACH_FLAG, false));
+    public static boolean getFollowTopicApproachChangeFlag(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        boolean flag = (sharedPref.getBoolean(FOLLOW_TOPIC_APPROACH_FLAG, false));
         return flag;
     }
 
-    public static void setFollowTopicApproachChangeFlag(Context pContext, boolean flag) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putBoolean(FOLLOW_TOPIC_APPROACH_FLAG, flag);
-        _editor.commit();
+    public static void setFollowTopicApproachChangeFlag(Context context, boolean flag) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putBoolean(FOLLOW_TOPIC_APPROACH_FLAG, flag);
+        editor.commit();
     }
 
-    public static long getLastLoginTimestamp(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        long flag = (_sharedPref.getLong(LAST_LOGIN_TIMESTAMP, 0));
+    public static long getLastLoginTimestamp(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        long flag = (sharedPref.getLong(LAST_LOGIN_TIMESTAMP, 0));
         return flag;
     }
 
-    public static void setLastLoginTimestamp(Context pContext, long timestamp) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putLong(LAST_LOGIN_TIMESTAMP, timestamp);
-        _editor.commit();
+    public static void setLastLoginTimestamp(Context context, long timestamp) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putLong(LAST_LOGIN_TIMESTAMP, timestamp);
+        editor.commit();
     }
 
-    public static boolean getUserSkippedFollowTopicFlag(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        boolean flag = (_sharedPref.getBoolean(USER_SKIPPED_FOLLOW_TOPIC_FLAG, false));
+    public static boolean getUserSkippedFollowTopicFlag(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        boolean flag = (sharedPref.getBoolean(USER_SKIPPED_FOLLOW_TOPIC_FLAG, false));
         return flag;
     }
 
-    public static void setUserSkippedFollowTopicFlag(Context pContext, boolean flag) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putBoolean(USER_SKIPPED_FOLLOW_TOPIC_FLAG, flag);
-        _editor.commit();
+    public static void setUserSkippedFollowTopicFlag(Context context, boolean flag) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putBoolean(USER_SKIPPED_FOLLOW_TOPIC_FLAG, flag);
+        editor.commit();
     }
 
-    public static boolean isTopicSelectionChanged(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        boolean flag = (_sharedPref.getBoolean(HAS_TOPIC_SELECTION_CHANGED, false));
+    public static boolean isTopicSelectionChanged(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        boolean flag = (sharedPref.getBoolean(HAS_TOPIC_SELECTION_CHANGED, false));
         return flag;
     }
 
-    public static void setTopicSelectionChanged(Context pContext, boolean flag) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putBoolean(HAS_TOPIC_SELECTION_CHANGED, flag);
-        _editor.commit();
+    public static void setTopicSelectionChanged(Context context, boolean flag) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putBoolean(HAS_TOPIC_SELECTION_CHANGED, flag);
+        editor.commit();
     }
 
-    public static String getSavedPostData(Context pContext, int groupId) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return (_sharedPref.getString("groupId-" + groupId, ""));
+    public static String getSavedPostData(Context context, int groupId) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (sharedPref.getString("groupId-" + groupId, ""));
     }
 
-    public static void setSavedPostData(Context pContext, int groupId, String content) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putString("groupId-" + groupId, content);
-        _editor.commit();
+    public static void setSavedPostData(Context context, int groupId, String content) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putString("groupId-" + groupId, content);
+        editor.commit();
     }
 
-    public static void clearSavedPostData(Context pContext, int groupId) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.remove("groupId-" + groupId);
-        _editor.commit();
+    public static void clearSavedPostData(Context context, int groupId) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.remove("groupId-" + groupId);
+        editor.commit();
     }
 
-    public static String getSavedReplyData(Context pContext, int groupId, int postId, int parentId) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return (_sharedPref.getString("groupId-" + groupId + "~" + "postId-" + postId + "~" + "commentId" + parentId, ""));
+    public static String getSavedReplyData(Context context, int groupId, int postId, int parentId) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (sharedPref
+                .getString("groupId-" + groupId + "~" + "postId-" + postId + "~" + "commentId" + parentId, ""));
     }
 
-    public static void setSavedReplyData(Context pContext, int groupId, int postId, int parentId, String content) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putString("groupId-" + groupId + "~" + "postId-" + postId + "~" + "commentId" + parentId, content);
-        _editor.commit();
+    public static void setSavedReplyData(Context context, int groupId, int postId, int parentId, String content) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putString("groupId-" + groupId + "~" + "postId-" + postId + "~" + "commentId" + parentId, content);
+        editor.commit();
     }
 
-    public static void clearSavedReplyData(Context pContext, int groupId, int postId, int parentId) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.remove("groupId-" + groupId + "~" + "postId-" + postId + "~" + "commentId" + parentId);
-        _editor.commit();
+    public static void clearSavedReplyData(Context context, int groupId, int postId, int parentId) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.remove("groupId-" + groupId + "~" + "postId-" + postId + "~" + "commentId" + parentId);
+        editor.commit();
     }
 
-    public static void myMoneyCoachMark(Context pContext, int count) {
-        SharedPreferences _sharedPref1 = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref1.edit();
-        _editor.putInt("count", count);
-        _editor.apply();
+    public static void myMoneyCoachMark(Context context, int count) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putInt("count", count);
+        editor.apply();
     }
 
-    public static int getMyMoney(Context pContext) {
-        SharedPreferences _sharedPref1 = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return (_sharedPref1.getInt("count", 0));
+    public static int getMyMoney(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (sharedPref.getInt("count", 0));
     }
 
-    public static void setFrequencyForShowingAppUpdate(Context pContext, int versionCode) {
-        SharedPreferences _sharedPref1 = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref1.edit();
-        _editor.putInt("count", versionCode);
-        _editor.apply();
+    public static void setFrequencyForShowingAppUpdate(Context context, int versionCode) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putInt("count", versionCode);
+        editor.apply();
     }
 
-    public static int getFrequencyForShowingUpdateApp(Context pContext) {
-        SharedPreferences _sharedPref1 = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return (_sharedPref1.getInt("count", 0));
+    public static int getFrequencyForShowingUpdateApp(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (sharedPref.getInt("count", 0));
     }
 
-    public static void setFirebaseRemoteConfigUpdateFlag(Context pContext, boolean b) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putBoolean(FIREBASE_REMOTE_CONFIG_UPDATE_FLAG, b);
-        _editor.apply();
+    public static void setFirebaseRemoteConfigUpdateFlag(Context context, boolean b) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putBoolean(FIREBASE_REMOTE_CONFIG_UPDATE_FLAG, b);
+        editor.apply();
     }
 
-    public static boolean getFirebaseRemoteConfigUpdateFlag(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return _sharedPref.getBoolean(FIREBASE_REMOTE_CONFIG_UPDATE_FLAG, false);
+    public static boolean getFirebaseRemoteConfigUpdateFlag(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return sharedPref.getBoolean(FIREBASE_REMOTE_CONFIG_UPDATE_FLAG, false);
     }
 
-    public static boolean isDefaultCampaignShown(Context pContext) {
-        SharedPreferences _sharedPref1 = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return (_sharedPref1.getBoolean(DEFAULT_CAMPAIGN_SHOWN_FLAG, false));
+    public static boolean isDefaultCampaignShown(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (sharedPref.getBoolean(DEFAULT_CAMPAIGN_SHOWN_FLAG, false));
     }
 
-    public static void setDefaultCampaignShownFlag(Context pContext, boolean flag) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putBoolean(DEFAULT_CAMPAIGN_SHOWN_FLAG, flag);
-        _editor.commit();
+    public static void setDefaultCampaignShownFlag(Context context, boolean flag) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putBoolean(DEFAULT_CAMPAIGN_SHOWN_FLAG, flag);
+        editor.commit();
     }
 
-    public static String getHomeAdSlotUrl(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return (_sharedPref.getString(HOME_AD_SLOT_URL, ""));
+    public static String getHomeAdSlotUrl(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (sharedPref.getString(HOME_AD_SLOT_URL, ""));
     }
 
-    public static void setHomeAdSlotUrl(Context pContext, String adSlotUrl) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putString(HOME_AD_SLOT_URL, adSlotUrl);
-        _editor.commit();
+    public static void setHomeAdSlotUrl(Context context, String adSlotUrl) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putString(HOME_AD_SLOT_URL, adSlotUrl);
+        editor.commit();
+    }
+
+    public static String getAdvertisementId(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (sharedPref.getString(ADVERTISEMENT_ID, ""));
+    }
+
+    public static void setAdvertisementId(Context context, String advertisementId) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putString(ADVERTISEMENT_ID, advertisementId);
+        editor.commit();
     }
 }

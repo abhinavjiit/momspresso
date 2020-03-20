@@ -41,6 +41,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.material.snackbar.Snackbar;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
@@ -62,6 +63,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.RecommendationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.TorcaiAdsAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ExploreArticleListingTypeActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
@@ -82,9 +84,11 @@ import java.util.ArrayList;
 import java.util.Map;
 import okhttp3.ResponseBody;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class ArticleListingFragment extends BaseFragment implements GroupIdCategoryMap.GroupCategoryInterface,
@@ -134,7 +138,6 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
     private ArticleListingResult sharedStoryItem;
     private String shareMedium;
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -171,7 +174,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         campaignListDataModels = new ArrayList<>();
         nextPageNumber = 1;
         hitArticleListingApi(sortType);
-
+        loadTorcaiAd();
         if (tabPosition == 0) {
             long timeDiff =
                     System.currentTimeMillis() - SharedPrefUtils.getLastLoginTimestamp(BaseApplication.getAppContext())
@@ -196,19 +199,16 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         recyclerAdapter.setNewListData(articleDataModelsNew);
         recyclerView.setAdapter(recyclerAdapter);
 
-        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                articleDataModelsNew.clear();
-                recyclerAdapter.notifyDataSetChanged();
-                ashimmerFrameLayout.setVisibility(View.VISIBLE);
-                ashimmerFrameLayout.startShimmerAnimation();
-                sortType = getArguments().getString(Constants.SORT_TYPE);
-                nextPageNumber = 1;
-                fromPullToRefresh = true;
-                hitArticleListingApi(sortType);
-                pullToRefresh.setRefreshing(false);
-            }
+        pullToRefresh.setOnRefreshListener(() -> {
+            articleDataModelsNew.clear();
+            recyclerAdapter.notifyDataSetChanged();
+            ashimmerFrameLayout.setVisibility(View.VISIBLE);
+            ashimmerFrameLayout.startShimmerAnimation();
+            sortType = getArguments().getString(Constants.SORT_TYPE);
+            nextPageNumber = 1;
+            fromPullToRefresh = true;
+            hitArticleListingApi(sortType);
+            pullToRefresh.setRefreshing(false);
         });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -235,6 +235,60 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         }
         tracker = BaseApplication.getInstance().getTracker(BaseApplication.TrackerName.APP_TRACKER);
         return rootView;
+    }
+
+    private void loadTorcaiAd() {
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        TorcaiAdsAPI torcaiAdsApi = retro.create(TorcaiAdsAPI.class);
+        Call<ResponseBody> adsCall;
+        if (BuildConfig.DEBUG) {
+            adsCall = torcaiAdsApi.getTorcaiAd();
+        } else {
+            adsCall = torcaiAdsApi.getTorcaiAd(AppUtils.getAdSlotId("CAT", ""),
+                    "www.momspresso.com",
+                    AppUtils.getIpAddress(true),
+                    "1",
+                    "Momspresso",
+                    AppUtils.getAppVersion(BaseApplication.getAppContext()),
+                    "https://play.google.com/store/apps/details?id=com.mycity4kids&hl=en_IN",
+                    "mobile",
+                    SharedPrefUtils.getAdvertisementId(BaseApplication.getAppContext()),
+                    "" + System.getProperty("http.agent"));
+        }
+        adsCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                String resData = null;
+                try {
+                    if (response.body() != null) {
+                        resData = new String(response.body().bytes());
+                        JSONObject jsonObject = new JSONObject(resData);
+                        JSONArray jsonArray = jsonObject.getJSONArray("response");
+                        String html = jsonArray.getJSONObject(0).getJSONObject("response").getString("adm")
+                                .replaceAll("\"//", "\"https://");
+                        Log.e("HTML CONTENT", "html == " + html);
+                        recyclerAdapter.setTorcaiAdSlotData(true, html);
+                        recyclerAdapter.notifyDataSetChanged();
+                    } else {
+                        recyclerAdapter.setTorcaiAdSlotData(false, "");
+                        recyclerAdapter.notifyDataSetChanged();
+                    }
+                } catch (Exception e) {
+                    recyclerAdapter.setTorcaiAdSlotData(false, "");
+                    recyclerAdapter.notifyDataSetChanged();
+                    Crashlytics.logException(e);
+                    Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                recyclerAdapter.setTorcaiAdSlotData(false, "");
+                recyclerAdapter.notifyDataSetChanged();
+                Crashlytics.logException(t);
+                Log.d("FileNotFoundException", Log.getStackTraceString(t));
+            }
+        });
     }
 
     @Override
@@ -321,6 +375,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
             ToastUtils.showToast(activityContext, getString(R.string.error_network));
             return;
         }
+
         if (Constants.KEY_FOR_YOU.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             RecommendationAPI recommendationApi = retrofit.create(RecommendationAPI.class);
@@ -355,17 +410,10 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                             from, from + LIMIT - 1,
                             SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
-            if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getHomeAdSlotUrl(BaseApplication.getAppContext()))) {
-                Call<ResponseBody> adSlotCall = campaignApi
-                        .getAdSlotData(SharedPrefUtils.getHomeAdSlotUrl(BaseApplication.getAppContext()));
-                adSlotCall.enqueue(adSlotResponseCallback);
-            } else {
-                if (SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext()).equals("1")) {
-                    Call<AllCampaignDataResponse> campaignListCall = campaignApi.getCampaignList(
-                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), 0, 1,
-                            3.0);
-                    campaignListCall.enqueue(getCampaignList);
-                }
+            if (!SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext()).equals("1")) {
+                Call<AllCampaignDataResponse> campaignListCall = campaignApi.getCampaignList(
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), 0, 1, 3.0);
+                campaignListCall.enqueue(getCampaignList);
             }
         } else if (Constants.KEY_TRENDING.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
@@ -509,35 +557,6 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
 
         @Override
         public void onFailure(Call<AllCampaignDataResponse> call, Throwable e) {
-            Crashlytics.logException(e);
-            Log.d("MC4KException", Log.getStackTraceString(e));
-        }
-    };
-
-    private Callback<ResponseBody> adSlotResponseCallback = new Callback<ResponseBody>() {
-        @Override
-        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-            try {
-                if (response.body() == null) {
-                    return;
-                }
-                String resData = new String(response.body().bytes());
-                JSONObject jsonObject = new JSONObject(resData);
-                String htmlContent = jsonObject.getJSONObject("revive-0-0").getString("html");
-                recyclerAdapter.setCampaignOrAdSlotData("adslot", null, htmlContent);
-                recyclerAdapter.notifyDataSetChanged();
-            } catch (Exception e) {
-                recyclerAdapter.setCampaignOrAdSlotData("", null, "");
-                recyclerAdapter.notifyDataSetChanged();
-                Crashlytics.logException(e);
-                Log.d("MC4KException", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<ResponseBody> call, Throwable e) {
-            recyclerAdapter.setCampaignOrAdSlotData("", null, "");
-            recyclerAdapter.notifyDataSetChanged();
             Crashlytics.logException(e);
             Log.d("MC4KException", Log.getStackTraceString(e));
         }
