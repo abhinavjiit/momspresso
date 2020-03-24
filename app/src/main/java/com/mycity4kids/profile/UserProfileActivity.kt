@@ -1,6 +1,5 @@
 package com.mycity4kids.profile
 
-import android.Manifest
 import android.accounts.NetworkErrorException
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -92,11 +91,12 @@ import com.mycity4kids.widget.BadgesProfileWidget
 import com.mycity4kids.widget.ResizableTextView
 import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
+import android.Manifest
 
 class UserProfileActivity : BaseActivity(),
     UserContentAdapter.RecyclerViewClickListener, View.OnClickListener,
@@ -1048,23 +1048,7 @@ class UserProfileActivity : BaseActivity(),
                 getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM)
             }
             view.id == R.id.genericShareImageView -> {
-                try {
-                    val addCollectionAndCollectionitemDialogFragment =
-                        AddCollectionAndCollectionItemDialogFragment()
-                    val bundle = Bundle()
-                    bundle.putString("articleId", userContentList?.get(position)?.id)
-                    bundle.putString("type", AppConstants.SHORT_STORY_COLLECTION_TYPE)
-                    addCollectionAndCollectionitemDialogFragment.arguments = bundle
-                    val fm = supportFragmentManager
-                    addCollectionAndCollectionitemDialogFragment.show(fm!!, "collectionAdd")
-                    Utils.pushProfileEvents(
-                        this, "CTA_100WS_Add_To_Collection",
-                        "UserProfileActivity", "Add to Collection", "-"
-                    )
-                } catch (e: Exception) {
-                    Crashlytics.logException(e)
-                    Log.d("MC4kException", Log.getStackTraceString(e))
-                }
+                getSharableViewForPosition(position, AppConstants.MEDIUM_GENERIC)
             }
             view.id == R.id.storyImageView1 -> {
                 val intent = Intent(this, ShortStoryContainerActivity::class.java)
@@ -1374,8 +1358,24 @@ class UserProfileActivity : BaseActivity(),
         popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
             override fun onMenuItemClick(item: MenuItem?): Boolean {
                 var id = item?.itemId
-                if (id == R.id.shareShortStory) {
-                    getSharableViewForPosition(position, AppConstants.MEDIUM_GENERIC)
+                if (id == R.id.addCollection) {
+                    try {
+                        val addCollectionAndCollectionitemDialogFragment =
+                            AddCollectionAndCollectionItemDialogFragment()
+                        val bundle = Bundle()
+                        bundle.putString("articleId", userContentList?.get(position)?.id)
+                        bundle.putString("type", AppConstants.SHORT_STORY_COLLECTION_TYPE)
+                        addCollectionAndCollectionitemDialogFragment.arguments = bundle
+                        val fm = supportFragmentManager
+                        addCollectionAndCollectionitemDialogFragment.show(fm!!, "collectionAdd")
+                        Utils.pushProfileEvents(
+                            this@UserProfileActivity, "CTA_100WS_Add_To_Collection",
+                            "UserProfileActivity", "Add to Collection", "-"
+                        )
+                    } catch (e: Exception) {
+                        Crashlytics.logException(e)
+                        Log.d("MC4kException", Log.getStackTraceString(e))
+                    }
                     return true
                 } else if (id == R.id.copyLink) {
                     AppUtils.copyToClipboard(
