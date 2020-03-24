@@ -272,6 +272,7 @@
   <string name="onboarding.signin">સાઈન ઈન</string>
   <string name="onboarding.already_member">પેહલેથી મેમ્બેર છો ?</string>
   <string name="onboarding.get_started">શરુ કરો</string>
+
   <string name="sign_in.welcome_back">ભલે પધાર્યા</string>
   <string name="sign_in.desc">માતૃત્વ ના આનંદ ને શોધો. પ્રેરણા અને આશાઓ શોધવા અમારી મોમ કોમ્મુનીટી થી જોડાઓ.</string>
   <string name="sign_in.no_account">મેમ્બર નથી?</string>
@@ -622,6 +623,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="language_label.gujarati">ગુજરાતી </string>
   <string name="language_label.punjabi">ਪੰਜਾਬੀ</string>
   <string name="choose_pref_lang">તમારી પસંદગી ની ભાષા દર્શાઓ</string>
+
   <string name="choose_pref_lang.cancel">રદ્દ કરો</string>
   <string name="guide.language_tour">You can view this app in any \nlanguage of your choice</string>
 
@@ -890,6 +892,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="use_picture_word_to_write_one">નીચે આપેલ ફોટો, શબ્દ, શબ્દસમૂહ કાં તો વીડિઓ વાપરી લખો</string>
   <string name="challenge_write_story_for_this_picture">આ દૃશ્ય પર થી વાર્તા લખો</string>
   <string name="choose_challenge_label">ચેલેન્જ સ્વીકારો</string>
+
   <string name="start_writing">લખવાની શરૂઆત કરો</string>
   <string name="male">પુરુષ</string>
   <string name="female">સ્ત્રી</string>
@@ -1416,4 +1419,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="select_category">Select Category</string>
   <string name="app_settings_change_pass_toast_new_pass_min_length">Please enter minimum 6 characters</string>
   <string name="app_settings_change_pass_toast_same_pass">New password cannot be same as your old password.</string>
+  <string name="collection">COLLECTION</string>
 </resources>

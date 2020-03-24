@@ -449,21 +449,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             }
             break;
             case R.id.genericShareImageView: {
-                try {
-                    AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment =
-                            new AddCollectionAndCollectionItemDialogFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("articleId", articleListingResults.get(position).getId());
-                    bundle.putString("type", AppConstants.SHORT_STORY_COLLECTION_TYPE);
-                    addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
-                    FragmentManager fm = getFragmentManager();
-                    addCollectionAndCollectionitemDialogFragment.setTargetFragment(this, 0);
-                    addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
-                    Utils.pushProfileEvents(getActivity(), "CTA_100WS_Add_To_Collection",
-                            "TopicsShortStoriesTabFragment", "Add to Collection", "-");
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Log.d("MC4kException", Log.getStackTraceString(e));
+                if (isAdded()) {
+                    getSharableViewForPosition(position, AppConstants.MEDIUM_GENERIC);
                 }
             }
             break;
@@ -1081,9 +1068,22 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             }
         }
         popupMenu.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.shareShortStory) {
-                if (isAdded()) {
-                    getSharableViewForPosition(position, AppConstants.MEDIUM_GENERIC);
+            if (item.getItemId() == R.id.addCollection) {
+                try {
+                    AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment =
+                            new AddCollectionAndCollectionItemDialogFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("articleId", articleListingResults.get(position).getId());
+                    bundle.putString("type", AppConstants.SHORT_STORY_COLLECTION_TYPE);
+                    addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
+                    FragmentManager fm = getFragmentManager();
+                    addCollectionAndCollectionitemDialogFragment.setTargetFragment(this, 0);
+                    addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
+                    Utils.pushProfileEvents(getActivity(), "CTA_100WS_Add_To_Collection",
+                            "TopicsShortStoriesTabFragment", "Add to Collection", "-");
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
                 }
                 return true;
             } else if (item.getItemId() == R.id.bookmarkShortStory) {

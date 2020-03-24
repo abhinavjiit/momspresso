@@ -31,9 +31,10 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 class RewardsContainerActivity : BaseActivity(),
-        RewardsPersonalInfoFragment.SaveAndContinueListener,
-        ProfileInfoFragment.SaveAndContinueListener,
-        RewardsSocialInfoFragment.SubmitListener, CampaignPaymentModesFragment.SubmitListener, PanCardDetailsSubmissionFragment.SubmitListener, IFacebookEvent {
+    RewardsPersonalInfoFragment.SaveAndContinueListener,
+    ProfileInfoFragment.SaveAndContinueListener,
+    RewardsSocialInfoFragment.SubmitListener, CampaignPaymentModesFragment.SubmitListener,
+    PanCardDetailsSubmissionFragment.SubmitListener, IFacebookEvent {
     private var Id: Int = -1
     private var referralCode: String = " "
     override fun onPanCardDone() {
@@ -157,11 +158,17 @@ class RewardsContainerActivity : BaseActivity(),
 
     private fun addProfileFragment() {
         if (pageLimit!! >= 1) {
-            rewardsPersonalInfoFragment = RewardsPersonalInfoFragment.newInstance(isComingFromRewards = true, isComingfromCampaign = isComingfromCampaign, referralCode = referralCode)
+            rewardsPersonalInfoFragment = RewardsPersonalInfoFragment.newInstance(
+                isComingFromRewards = true,
+                isComingfromCampaign = isComingfromCampaign,
+                referralCode = referralCode
+            )
             val rewardFrag = rewardsPersonalInfoFragment as Fragment
-            supportFragmentManager.beginTransaction().replace(R.id.container, rewardFrag,
-                    RewardsPersonalInfoFragment::class.java.simpleName)
-                    .commit()
+            supportFragmentManager.beginTransaction().replace(
+                R.id.container, rewardFrag,
+                RewardsPersonalInfoFragment::class.java.simpleName
+            )
+                .commit()
         } else {
             finish()
         }
@@ -171,19 +178,24 @@ class RewardsContainerActivity : BaseActivity(),
         toolbarTitle.setText(resources.getString(R.string.personal_info))
         profileInfoFragment = ProfileInfoFragment()
         val rewardFrag = profileInfoFragment as Fragment
-        supportFragmentManager.beginTransaction().replace(R.id.container, rewardFrag,
-                ProfileInfoFragment::class.java.simpleName)
-                .commit()
+        supportFragmentManager.beginTransaction().replace(
+            R.id.container, rewardFrag,
+            ProfileInfoFragment::class.java.simpleName
+        )
+            .commit()
     }
 
     private fun addSocialFragment() {
         if (pageLimit!! >= 3) {
             toolbarTitle.setText(resources.getString(R.string.social_accounts))
-            rewardsSocialInfoFragment = RewardsSocialInfoFragment.newInstance(isComingFromRewards = true)
+            rewardsSocialInfoFragment =
+                RewardsSocialInfoFragment.newInstance(isComingFromRewards = true)
             val rewardFrag = rewardsSocialInfoFragment as Fragment
-            supportFragmentManager.beginTransaction().replace(R.id.container, rewardFrag,
-                    RewardsSocialInfoFragment::class.java.simpleName)
-                    .commit()
+            supportFragmentManager.beginTransaction().replace(
+                R.id.container, rewardFrag,
+                RewardsSocialInfoFragment::class.java.simpleName
+            )
+                .commit()
         } else if (isComingfromCampaign) {
             setResult(Activity.RESULT_OK)
             finish()
@@ -195,11 +207,14 @@ class RewardsContainerActivity : BaseActivity(),
     private fun addPaymentModesFragment() {
         if (pageLimit!! >= 4) {
             toolbarTitle.setText(resources.getString(R.string.payment_details))
-            paymentModesFragment = CampaignPaymentModesFragment.newInstance(isComingFromRewards = true)
+            paymentModesFragment =
+                CampaignPaymentModesFragment.newInstance(isComingFromRewards = true)
             val paymentFrag = paymentModesFragment as Fragment
-            supportFragmentManager.beginTransaction().replace(R.id.container, paymentFrag,
-                    CampaignPaymentModesFragment::class.java.simpleName)
-                    .commit()
+            supportFragmentManager.beginTransaction().replace(
+                R.id.container, paymentFrag,
+                CampaignPaymentModesFragment::class.java.simpleName
+            )
+                .commit()
         } else {
             finish()
         }
@@ -207,11 +222,14 @@ class RewardsContainerActivity : BaseActivity(),
 
     private fun addPancardDetailFragment() {
         if (pageLimit!! >= 5) {
-            panCardDetailsSubmissionFragment = PanCardDetailsSubmissionFragment.newInstance(isComingFromRewards = true)
+            panCardDetailsSubmissionFragment =
+                PanCardDetailsSubmissionFragment.newInstance(isComingFromRewards = true)
             val pancardFrag = panCardDetailsSubmissionFragment as Fragment
-            supportFragmentManager.beginTransaction().replace(R.id.container, pancardFrag,
-                    PanCardDetailsSubmissionFragment::class.java.simpleName)
-                    .commit()
+            supportFragmentManager.beginTransaction().replace(
+                R.id.container, pancardFrag,
+                PanCardDetailsSubmissionFragment::class.java.simpleName
+            )
+                .commit()
         } else {
             finish()
         }
@@ -229,7 +247,10 @@ class RewardsContainerActivity : BaseActivity(),
     private fun postApiForDefaultPaymantMode(paymentModeId: Int) {
         val proofPostModel = ProofPostModel(id = paymentModeId.toString())
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).postForDefaultAccount(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).postForDefaultAccount(
+            proofPostModel
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<ProofPostModel>> {
             override fun onComplete() {
             }
 
@@ -245,7 +266,11 @@ class RewardsContainerActivity : BaseActivity(),
                 } else {
                     removeProgressDialog()
 
-                    Toast.makeText(this@RewardsContainerActivity, t.reason.toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@RewardsContainerActivity,
+                        t.reason.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
