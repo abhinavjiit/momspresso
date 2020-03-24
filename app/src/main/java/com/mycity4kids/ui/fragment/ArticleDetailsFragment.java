@@ -15,7 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +36,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
@@ -119,7 +117,6 @@ import okhttp3.ResponseBody;
 import org.apmem.tools.layouts.FlowLayout;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import q.rorbin.badgeview.QBadgeView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -135,11 +132,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     private static final int ADD_BOOKMARK = 1;
     private SimpleTooltip simpleTooltip;
-    private SimpleTooltip collectionTooltip;
     private MixpanelAPI mixpanel;
     private Handler handler;
-    private Handler startCollectionHandler;
-    private Handler stopCollectionHandler;
     private ISwipeRelated swipeRelated;
     private ArticleDetailResult detailData;
     private Bitmap defaultBloggerBitmap;
@@ -233,6 +227,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private YouTubePlayerView youTubePlayerView;
     private WebView bottomAdSlotWebView;
     private WebView topAdSlotWebView;
+    private RelativeLayout followPopUpBottomContainer;
+    private ImageView cancelFollowPopUp;
+    private TextView authorNameFollowPopUp;
+    private ImageView authorImageViewFollowPopUp;
+    private TextView followText;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -252,6 +251,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             mixpanel = MixpanelAPI
                     .getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
+            followPopUpBottomContainer = (RelativeLayout) fragmentView.findViewById(R.id.followPopUpBottomContainer);
+            cancelFollowPopUp = (ImageView) fragmentView.findViewById(R.id.cancelFollowPopUp);
+            authorNameFollowPopUp = (TextView) fragmentView.findViewById(R.id.authorNameFollowPopUp);
+            authorImageViewFollowPopUp = (ImageView) fragmentView.findViewById(R.id.authorImageViewFollowPopUp);
+            followText = (TextView) fragmentView.findViewById(R.id.followText);
             floatingActionButton = (ImageView) fragmentView.findViewById(R.id.user_image);
             mainWebView = (WebView) fragmentView.findViewById(R.id.articleWebView);
             viewAllTagsTextView = (TextView) fragmentView.findViewById(R.id.viewAllTagsTextView);
@@ -316,15 +320,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             groupHeaderView.setOnClickListener(this);
             followClick.setOnClickListener(this);
             followClick.setEnabled(false);
-
-            getLifecycle().addObserver(youTubePlayerView);
-
-            startCollectionHandler = new Handler();
-            startCollectionHandler.postDelayed(() -> {
-                if (getActivity() != null) {
-                    tooltipForCollection();
-                }
-            }, 60000);
+            cancelFollowPopUp.setOnClickListener(this);
+            followText.setOnClickListener(this);
 
             mainWebChromeClient = new MyWebChromeClient();
             mainWebView.setWebChromeClient(mainWebChromeClient);
@@ -384,7 +381,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
                 try {
                     Drawable myDrawable = ContextCompat
-                            .getDrawable(getActivity(), R.drawable.ic_collection_add);
+                            .getDrawable(getActivity(), R.drawable.ic_share_icon_image);
                     myDrawable.setTint(getResources().getColor(R.color.app_red));
                     emailShareTextView
                             .setCompoundDrawablesWithIntrinsicBounds(null, myDrawable, null, null);
@@ -537,15 +534,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
-        new QBadgeView(getActivity())
-                .setBadgeText(" " + getString(R.string.new_label) + " ")
-                .setBadgeBackgroundColor(getResources().getColor(R.color.orange_new))
-                .setBadgeTextSize(7, true)
-                .setBadgePadding(3, true)
-                .setBadgeGravity(Gravity.TOP | Gravity.END)
-                .setGravityOffset(4, -2, true)
-                .bindTarget(emailShareTextView);
-
         return fragmentView;
     }
 
@@ -658,35 +646,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 Log.d("MC4kException", Log.getStackTraceString(t));
             }
         });
-    }
-
-    private void tooltipForCollection() {
-        collectionTooltip = new SimpleTooltip.Builder(getActivity())
-                .anchorView(emailShareTextView)
-                .backgroundColor(getResources().getColor(R.color.app_red))
-                .text(getResources().getString(R.string.add_to_collection))
-                .textColor(getResources().getColor(R.color.white_color))
-                .arrowColor(getResources().getColor(R.color.app_red))
-                .gravity(Gravity.TOP)
-                .arrowWidth(40)
-                .animated(true)
-                .transparentOverlay(true)
-                .dismissOnInsideTouch(false)
-                .dismissOnOutsideTouch(false)
-                .build();
-        collectionTooltip.show();
-        stopCollectionHandler = new Handler();
-        stopCollectionHandler.postDelayed(() -> {
-            if (collectionTooltip.isShowing()) {
-                try {
-                    collectionTooltip.dismiss();
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Log.d("MC4kException", Log.getStackTraceString(e));
-                }
-            }
-        }, 5000);
-
     }
 
     @Override
@@ -1278,6 +1237,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                     break;
                 case R.id.follow_click:
+                case R.id.followText:
                     followApiCall();
                     break;
                 case R.id.user_image:
@@ -1343,7 +1303,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 case R.id.likeTextView: {
                     if (recommendStatus == 0) {
                         recommendStatus = 1;
-                        tooltipForShare();
+                        if (!isFollowing && !userDynamoId.equals(articleId)) {
+                            setValuesInFollowPopUp();
+                        }
                         Drawable top = ContextCompat
                                 .getDrawable(getActivity(), R.drawable.ic_recommended);
                         likeArticleTextView
@@ -1399,23 +1361,18 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                     break;
                 case R.id.emailShareTextView:
-                    try {
-                        AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment =
-                                new AddCollectionAndCollectionItemDialogFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("articleId", articleId);
-                        bundle.putString("type", AppConstants.ARTICLE_COLLECTION_TYPE);
-                        addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
-                        FragmentManager fm = getFragmentManager();
-                        addCollectionAndCollectionitemDialogFragment.setTargetFragment(this, 0);
-                        addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
-                        Utils.pushProfileEvents(getActivity(), "CTA_Article_Add_To_Collection",
-                                "ArticleDetailsFragment", "Add to Collection", "-");
-                    } catch (Exception e) {
-                        Crashlytics.logException(e);
-                        Log.d("MC4kException", Log.getStackTraceString(e));
-                    }
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, AppUtils.stripHtml("" + detailData.getExcerpt()) + "\n\n"
+                            + BaseApplication.getAppContext()
+                            .getString(R.string.ad_share_follow_author, author) + "\n"
+                            + shareUrl);
+                    sendIntent.setType("text/plain");
+                    Intent shareIntent = Intent.createChooser(sendIntent, null);
+                    startActivity(shareIntent);
                     break;
+                case R.id.cancelFollowPopUp:
+                    followPopUpBottomContainer.setVisibility(View.GONE);
                 default:
                     break;
             }
@@ -1556,20 +1513,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         bottomToolbarLL.setVisibility(View.GONE);
-                        if (collectionTooltip != null && collectionTooltip.isShowing()) {
-                            startCollectionHandler.postAtTime(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (getActivity() != null) {
-                                        getActivity().runOnUiThread(() -> {
-                                            collectionTooltip.dismiss();
-                                            stopCollectionHandler.removeMessages(0);
-                                        });
-                                    }
-                                }
-                            }, 100);
-
-                        }
                     }
                 });
     }
@@ -1716,6 +1659,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     .unfollowUser(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
+            if (followPopUpBottomContainer.getVisibility() == View.VISIBLE) {
+                followPopUpBottomContainer.setVisibility(View.GONE);
+            }
             isFollowing = true;
             followClick.setText(getString(R.string.ad_following_author));
             Utils.pushGenericEvent(getActivity(), "CTA_Follow_Article_Detail", userDynamoId,
@@ -2968,25 +2914,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         void onRelatedSwipe(ArrayList<ArticleListingResult> articleList);
     }
 
-    private void tooltipForShare() {
-        simpleTooltip = new SimpleTooltip.Builder(getContext())
-                .anchorView(whatsappShareTextView)
-                .backgroundColor(getResources().getColor(R.color.app_blue))
-                .text(getResources().getString(R.string.ad_bottom_bar_generic_share))
-                .textColor(getResources().getColor(R.color.white_color))
-                .arrowColor(getResources().getColor(R.color.app_blue))
-                .gravity(Gravity.TOP)
-                .arrowWidth(60)
-                .arrowHeight(20)
-                .animated(false)
-                .transparentOverlay(true)
-                .build();
-        simpleTooltip.show();
-        handler = new Handler();
-        handler.postDelayed(() -> {
-            if (simpleTooltip.isShowing()) {
-                simpleTooltip.dismiss();
-            }
-        }, 3000);
+    private void setValuesInFollowPopUp() {
+        try {
+            Picasso.get().load(detailData.getProfilePic().getClientApp()).into(authorImageViewFollowPopUp);
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("FileNotFoundException", Log.getStackTraceString(e));
+        }
+        authorNameFollowPopUp.setText(detailData.getUserName());
+        followPopUpBottomContainer.setVisibility(View.VISIBLE);
     }
 }

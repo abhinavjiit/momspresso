@@ -1327,4 +1327,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="select_category">Select Category</string>
     <string name="app_settings_change_pass_toast_new_pass_min_length">Please enter minimum 6 characters</string>
     <string name="app_settings_change_pass_toast_same_pass">New password cannot be same as your old password.</string>
+  <string name="collection">COLLECTION</string>
 </resources>

@@ -54,7 +54,6 @@ import com.mycity4kids.utils.OnDragTouchListener
 import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.utils.ToastUtils
 import com.squareup.picasso.Picasso
-import java.io.File
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
@@ -63,6 +62,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
+import java.io.File
 
 class ShortStoriesCardActivity : BaseActivity() {
     private val REQUEST_INIT_PERMISSION = 1
