@@ -15,16 +15,11 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.NotificationCenterListResponse;
-import com.mycity4kids.models.response.TrendingListingResponse;
-import com.mycity4kids.models.response.TrendingListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.TrendingTopicsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
-import com.mycity4kids.utils.GroupIdCategoryMap;
-import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -32,8 +27,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 24/5/17.
  */
-public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickListener,
-        GroupIdCategoryMap.GroupCategoryInterface {
+public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickListener {
 
     private static final String HOME_PAGE_FEED_ORDER = "home_page_feed_order";
 
@@ -41,88 +35,20 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private TrendingTopicsPagerAdapter adapter;
-
-    private ArrayList<TrendingListingResult> trendingArraylist;
     private String userId;
-    private int lowerLimit = 1;
-    private int upperLimit = 3;
-    private int articleCount = 10;
-    private String gpHeading;
-    private String gpSubHeading;
-    private String gpImageUrl;
-    private int groupId;
     private String[] feedOrderArray;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.aa_mc4k_home_new, container, false);
-
         userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
         tabLayout = view.findViewById(R.id.tab_layout);
-        trendingArraylist = new ArrayList<>();
-        hitTrendingDataApi();
+        renderHomePageFeeds();
         return view;
     }
 
-    @Override
-    public void onGroupMappingResult(int groupId, String gpHeading, String gpSubHeading, String gpImageUrl) {
-        this.groupId = groupId;
-        this.gpHeading = gpHeading;
-        this.gpSubHeading = gpSubHeading;
-        this.gpImageUrl = gpImageUrl;
-    }
-
-    private void hitTrendingDataApi() {
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        TopicsCategoryAPI trendingApi = retrofit.create(TopicsCategoryAPI.class);
-
-        Call<TrendingListingResponse> trendingCall = trendingApi
-                .getTrendingTopicAndArticles("" + lowerLimit, "" + upperLimit, "" + articleCount,
-                        SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
-        trendingCall.enqueue(trendingResponseCallback);
-    }
-
-    private Callback<TrendingListingResponse> trendingResponseCallback = new Callback<TrendingListingResponse>() {
-        @Override
-        public void onResponse(Call<TrendingListingResponse> call,
-                retrofit2.Response<TrendingListingResponse> response) {
-            if (response.body() == null) {
-                if (isAdded()) {
-                    ((DashboardActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-                }
-                return;
-            }
-
-            try {
-                TrendingListingResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    processTrendingResponse(responseData);
-                } else {
-                    if (isAdded()) {
-                        ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
-                    }
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4KException", Log.getStackTraceString(e));
-                if (isAdded()) {
-                    ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
-                }
-            }
-        }
-
-        @Override
-        public void onFailure(Call<TrendingListingResponse> call, Throwable t) {
-            Crashlytics.logException(t);
-            Log.d("MC4KException", Log.getStackTraceString(t));
-            if (null != getActivity()) {
-                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
-            }
-        }
-    };
-
-    private void processTrendingResponse(TrendingListingResponse responseData) {
+    private void renderHomePageFeeds() {
         tabLayout.removeAllTabs();
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
@@ -154,9 +80,8 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         }
 
         AppUtils.changeTabsFont(tabLayout);
-        viewPager = (ViewPager) view.findViewById(R.id.pager);
+        viewPager = view.findViewById(R.id.pager);
         adapter = new TrendingTopicsPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount(), feedOrderArray);
-        adapter.setGroupInfo(gpHeading, gpSubHeading, gpImageUrl, groupId);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

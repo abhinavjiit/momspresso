@@ -1,8 +1,5 @@
 package com.mycity4kids.ui.fragment;
 
-import static android.app.Activity.RESULT_OK;
-
-
 import android.Manifest;
 import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
@@ -23,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -70,17 +66,18 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final int REQUEST_GALLERY_PERMISSION = 2;
-    private final static int VIDEO_PUBLISHED_STATUS = 3;
+    private static final int VIDEO_PUBLISHED_STATUS = 3;
+    private static final int RESULT_OK = -1;
 
     private static String[] PERMISSIONS_STORAGE_CAMERA = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
-    MyFunnyVideosListingAdapter articlesListingAdapter;
-    ArrayList<VlogsListingAndDetailResult> articleDataModelsNew;
+    private MyFunnyVideosListingAdapter articlesListingAdapter;
+    private ArrayList<VlogsListingAndDetailResult> articleDataModelsNew;
 
     private ProgressBar progressBar;
     private ListView listView;
-    private RelativeLayout mLodingView;
+    private RelativeLayout loadingView;
     private TextView noBlogsTextView;
     private View rootLayout;
     private RelativeLayout firstUploadLayout;
@@ -92,8 +89,6 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
     private boolean isLastPageReached = false;
     private boolean isReuqestRunning = false;
     private String authorId;
-    private String fromScreen;
-    private View view;
     private boolean isPrivateProfile;
 
     @Nullable
@@ -105,7 +100,7 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
 
         rootLayout = view.findViewById(R.id.rootLayout);
         listView = (ListView) view.findViewById(R.id.vlogsListView);
-        mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
+        loadingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         firstUploadLayout = (RelativeLayout) view.findViewById(R.id.firstUploadLayout);
@@ -142,66 +137,64 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
                 if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning
                         && !isLastPageReached) {
-                    mLodingView.setVisibility(View.VISIBLE);
+                    loadingView.setVisibility(View.VISIBLE);
                     hitArticleListingApi();
                     isReuqestRunning = true;
                 }
             }
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        listView.setOnItemClickListener((adapterView, view1, i, l) -> {
 
-                Intent intent = new Intent(getActivity(), ParallelFeedActivity.class);
-                if (adapterView.getAdapter() instanceof MyFunnyVideosListingAdapter) {
-                    VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) adapterView
-                            .getAdapter().getItem(i);
-                    switch (parentingListData.getPublication_status()) {
-                        case AppConstants.VIDEO_STATUS_DRAFT: {
-                            if (isAdded()) {
-                                ((UserPublishedContentActivity) getActivity()).showToast("This video is draft");
-                            }
-                            break;
+            Intent intent = new Intent(getActivity(), ParallelFeedActivity.class);
+            if (adapterView.getAdapter() instanceof MyFunnyVideosListingAdapter) {
+                VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) adapterView
+                        .getAdapter().getItem(i);
+                switch (parentingListData.getPublication_status()) {
+                    case AppConstants.VIDEO_STATUS_DRAFT: {
+                        if (isAdded()) {
+                            ((UserPublishedContentActivity) getActivity()).showToast("This video is draft");
                         }
-                        case AppConstants.VIDEO_STATUS_APPROVAL_PENDING: {
-                            if (isAdded()) {
-                                ((UserPublishedContentActivity) getActivity())
-                                        .showToast("This video is Pending For Approval. Playing is disabled");
-                            }
-                            break;
-                        }
-                        case AppConstants.VIDEO_STATUS_APPROVAL_CANCELLED: {
-                            if (isAdded()) {
-                                ((UserPublishedContentActivity) getActivity())
-                                        .showToast("This video's approval has been cancelled. Playing is disabled");
-                            }
-                            break;
-                        }
-                        case AppConstants.VIDEO_STATUS_PUBLISHED: {
-//                            showToast("This video is Published");
-                            intent.putExtra(Constants.VIDEO_ID, parentingListData.getId());
-                            intent.putExtra(Constants.STREAM_URL, parentingListData.getUrl());
-                            intent.putExtra(Constants.AUTHOR_ID, parentingListData.getAuthor().getId());
-                            intent.putExtra(Constants.FROM_SCREEN, "My Funny Videos Screen");
-                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "My Funny Videos");
-                            intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
-                            intent.putExtra(Constants.AUTHOR,
-                                    parentingListData.getAuthor().getId() + "~" + parentingListData.getAuthor()
-                                            .getFirstName() + " " + parentingListData.getAuthor().getLastName());
-                            startActivity(intent);
-                            break;
-                        }
-                        case AppConstants.VIDEO_STATUS_UNPUBLISHED: {
-                            if (isAdded()) {
-                                ((UserPublishedContentActivity) getActivity())
-                                        .showToast("This video has been unpublished");
-                            }
-                            break;
-                        }
+                        break;
                     }
-
+                    case AppConstants.VIDEO_STATUS_APPROVAL_PENDING: {
+                        if (isAdded()) {
+                            ((UserPublishedContentActivity) getActivity())
+                                    .showToast("This video is Pending For Approval. Playing is disabled");
+                        }
+                        break;
+                    }
+                    case AppConstants.VIDEO_STATUS_APPROVAL_CANCELLED: {
+                        if (isAdded()) {
+                            ((UserPublishedContentActivity) getActivity())
+                                    .showToast("This video's approval has been cancelled. Playing is disabled");
+                        }
+                        break;
+                    }
+                    case AppConstants.VIDEO_STATUS_PUBLISHED: {
+                        intent.putExtra(Constants.VIDEO_ID, parentingListData.getId());
+                        intent.putExtra(Constants.STREAM_URL, parentingListData.getUrl());
+                        intent.putExtra(Constants.AUTHOR_ID, parentingListData.getAuthor().getId());
+                        intent.putExtra(Constants.FROM_SCREEN, "My Funny Videos Screen");
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "My Funny Videos");
+                        intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
+                        intent.putExtra(Constants.AUTHOR,
+                                parentingListData.getAuthor().getId() + "~" + parentingListData.getAuthor()
+                                        .getFirstName() + " " + parentingListData.getAuthor().getLastName());
+                        startActivity(intent);
+                        break;
+                    }
+                    case AppConstants.VIDEO_STATUS_UNPUBLISHED: {
+                        if (isAdded()) {
+                            ((UserPublishedContentActivity) getActivity())
+                                    .showToast("This video has been unpublished");
+                        }
+                        break;
+                    }
+                    default:
+                        break;
                 }
+
             }
         });
         return view;
@@ -210,13 +203,13 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
     private void hitArticleListingApi() {
         int from = (nextPageNumber - 1) * limit;
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
+        VlogsListingAndDetailsAPI vlogsListingAndDetailsApi = retrofit.create(VlogsListingAndDetailsAPI.class);
         Call<VlogsListingResponse> callRecentVideoArticles;
         if (isPrivateProfile) {
-            callRecentVideoArticles = vlogsListingAndDetailsAPI
+            callRecentVideoArticles = vlogsListingAndDetailsApi
                     .getPublishedVlogs(authorId, from, from + limit - 1, sortType);
         } else {
-            callRecentVideoArticles = vlogsListingAndDetailsAPI
+            callRecentVideoArticles = vlogsListingAndDetailsApi
                     .getPublishedVlogsForPublicProfile(authorId, from, from + limit - 1, sortType,
                             VIDEO_PUBLISHED_STATUS);
         }
@@ -229,7 +222,7 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
         @Override
         public void onResponse(Call<VlogsListingResponse> call, retrofit2.Response<VlogsListingResponse> response) {
             progressBar.setVisibility(View.GONE);
-            mLodingView.setVisibility(View.GONE);
+            loadingView.setVisibility(View.GONE);
             isReuqestRunning = false;
             if (null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
@@ -259,8 +252,8 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
 
         @Override
         public void onFailure(Call<VlogsListingResponse> call, Throwable t) {
-            if (mLodingView.getVisibility() == View.VISIBLE) {
-                mLodingView.setVisibility(View.GONE);
+            if (loadingView.getVisibility() == View.VISIBLE) {
+                loadingView.setVisibility(View.GONE);
             }
             if (nextPageNumber == 1) {
                 firstUploadLayout.setVisibility(View.GONE);
@@ -339,22 +332,13 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
                 startActivity(searchIntent);
                 break;
             case R.id.getStartedTextView:
-<<<<<<< Updated upstream
                 if (isAdded()) {
                     Intent intent = new Intent(getActivity(), ChooseVideoCategoryActivity.class);
                     intent.putExtra("comingFrom", "createDashboardIcon");
                     getActivity().startActivity(intent);
                 }
-=======
-                ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                Bundle _args = new Bundle();
-                _args.putString("activity", "myfunnyvideos");
-                chooseVideoUploadOptionDialogFragment.setArguments(_args);
-                chooseVideoUploadOptionDialogFragment.setCancelable(true);
-                chooseVideoUploadOptionDialogFragment.setTargetFragment(this, 1111);
-                chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
->>>>>>> Stashed changes
+                break;
+            default:
                 break;
         }
     }
@@ -499,23 +483,21 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
                     Spanned.SPAN_INCLUSIVE_INCLUSIVE);
             menuItem.setTitle(spannableString);
         }
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                int i = item.getItemId();
-                if (i == R.id.edit_vlog) {
-                    EditVlogTitleDialogFragment editVlogTitleDialogFragment = new EditVlogTitleDialogFragment();
-                    FragmentManager fm = getChildFragmentManager();
-                    Bundle _args = new Bundle();
-                    _args.putInt("position", position);
-                    _args.putString("vlogTitle", articleDataModelsNew.get(position).getTitle());
-                    _args.putString("videoId", articleDataModelsNew.get(position).getId());
-                    editVlogTitleDialogFragment.setArguments(_args);
-                    editVlogTitleDialogFragment.setCancelable(true);
-                    editVlogTitleDialogFragment.show(fm, "Choose video option");
-                    return true;
-                } else {
-                    return true;
-                }
+        popup.setOnMenuItemClickListener(item -> {
+            int i = item.getItemId();
+            if (i == R.id.edit_vlog) {
+                Bundle args = new Bundle();
+                args.putInt("position", position);
+                args.putString("vlogTitle", articleDataModelsNew.get(position).getTitle());
+                args.putString("videoId", articleDataModelsNew.get(position).getId());
+                EditVlogTitleDialogFragment editVlogTitleDialogFragment = new EditVlogTitleDialogFragment();
+                editVlogTitleDialogFragment.setArguments(args);
+                editVlogTitleDialogFragment.setCancelable(true);
+                FragmentManager fm = getChildFragmentManager();
+                editVlogTitleDialogFragment.show(fm, "Choose video option");
+                return true;
+            } else {
+                return true;
             }
         });
 

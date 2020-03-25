@@ -1,5 +1,6 @@
 package com.mycity4kids.profile
 
+import android.Manifest
 import android.accounts.NetworkErrorException
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -68,6 +69,7 @@ import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity
 import com.mycity4kids.ui.activity.BadgeActivity
 import com.mycity4kids.ui.activity.FeaturedOnActivity
 import com.mycity4kids.ui.activity.FollowersAndFollowingListActivity
+import com.mycity4kids.ui.activity.FollowingListFBSuggestionActivity
 import com.mycity4kids.ui.activity.IdTokenLoginActivity
 import com.mycity4kids.ui.activity.ParallelFeedActivity
 import com.mycity4kids.ui.activity.ProfileSetting
@@ -91,12 +93,11 @@ import com.mycity4kids.widget.BadgesProfileWidget
 import com.mycity4kids.widget.ResizableTextView
 import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
-import android.Manifest
 
 class UserProfileActivity : BaseActivity(),
     UserContentAdapter.RecyclerViewClickListener, View.OnClickListener,
@@ -398,7 +399,7 @@ class UserProfileActivity : BaseActivity(),
                 }
                 val responseData = response.body()
                 if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-                    isFollowing = if ("0" == responseData.data.result.isFollowed) {
+                    isFollowing = if (!responseData.data.result.isFollowed) {
                         followAuthorTextView.setText(R.string.ad_follow_author)
                         false
                     } else {
@@ -928,8 +929,8 @@ class UserProfileActivity : BaseActivity(),
                 startActivity(intent)
             }
             view?.id == R.id.followingContainer -> {
-                //                val intent = Intent(this, FollowingListFBSuggestionActivity::class.java)
-                val intent = Intent(this, FollowersAndFollowingListActivity::class.java)
+                val intent = Intent(this, FollowingListFBSuggestionActivity::class.java)
+                //                val intent = Intent(this, FollowersAndFollowingListActivity::class.java)
                 intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWING_LIST)
                 intent.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, authorId)
                 startActivity(intent)

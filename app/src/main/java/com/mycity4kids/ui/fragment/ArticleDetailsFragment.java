@@ -150,7 +150,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private boolean isLoading = false;
     private boolean isArticleDetailLoaded = false;
     private boolean isSwipeNextAvailable;
-    private String bookmarkFlag = "0";
+    private boolean bookmarkFlag = false;
     private String recommendationFlag = "0";
     private String commentUrl = "";
     private String shareUrl = "";
@@ -2548,7 +2548,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             if (!isAdded()) {
                                 return;
                             }
-                            if ("0".equals(bookmarkFlag)) {
+                            if (!bookmarkFlag) {
                                 bookmarkStatus = 0;
                                 Drawable top = ContextCompat
                                         .getDrawable(getActivity(), R.drawable.ic_bookmark);
@@ -2566,7 +2566,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         if (userDynamoId.equals(authorId)) {
                             followClick.setVisibility(View.INVISIBLE);
                         } else {
-                            if ("0".equals(responseData.getData().getResult().getIsFollowed())) {
+                            if (!responseData.getData().getResult().getIsFollowed()) {
                                 followClick.setEnabled(true);
                                 followClick.setText(
                                         AppUtils.getString(getActivity(), R.string.ad_follow_author));
@@ -2612,7 +2612,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 if (!isAdded()) {
                     return;
                 }
-                if ("0".equals(bookmarkFlag)) {
+                if (!bookmarkFlag) {
                     bookmarkStatus = 0;
                     Drawable top = ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmark);
                     bookmarkArticleTextView

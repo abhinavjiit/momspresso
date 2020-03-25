@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:background="?attr/colorPrimary"
+    android:minHeight="?attr/actionBarSize"
+    app:theme="@style/ToolbarTheme"
+    app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+    <RelativeLayout
+      android:id="@+id/toolbarRelativeLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="@dimen/space_2"
+      android:visibility="visible">
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/toolbarTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:text="@string/myprofile.section.activity_label"
+        android:textColor="@color/user_activities.toolbar.title"
+        android:textSize="20sp"
+        app:fontName="oswald_regular.ttf" />
+
+    </RelativeLayout>
+  </androidx.appcompat.widget.Toolbar>
+
+  <View
+    android:id="@+id/toolbarUnderline"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_below="@+id/toolbar"
+    android:background="@color/light_underline" />
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/recyclerView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_above="@+id/sendInviteTextView"
+    android:layout_below="@+id/toolbarUnderline" />
+
+  <TextView
+    android:id="@+id/sendInviteTextView"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_alignParentBottom="true"
+    android:background="@color/app_red"
+    android:gravity="center"
+    android:text="Send Invite"
+    android:textColor="@color/white_color"
+    android:textSize="20sp" />
+</RelativeLayout>

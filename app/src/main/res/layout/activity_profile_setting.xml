@@ -154,6 +154,20 @@
                 android:textColor="@color/campaign_4A4A4A"
                 android:textSize="16sp" />
 
+            <com.mycity4kids.widget.CustomFontTextView
+              android:id="@+id/inviteContactTextView"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="@dimen/space_20"
+              android:layout_marginRight="@dimen/space_8"
+              android:drawableLeft="@drawable/ic_activity"
+              android:drawableRight="@drawable/arrow_right"
+              android:drawablePadding="@dimen/space_20"
+              android:inputType="textCapSentences"
+              android:text="Invite Contacts"
+              android:textColor="@color/campaign_4A4A4A"
+              android:textSize="16sp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

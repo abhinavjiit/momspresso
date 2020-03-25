@@ -2,7 +2,6 @@ package com.mycity4kids.models.response;
 
 import com.google.gson.annotations.SerializedName;
 import com.mycity4kids.models.parentingdetails.DetailsBody;
-
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -10,6 +9,7 @@ import java.util.Map;
  * Created by hemant on 29/7/16.
  */
 public class ArticleDetailResult {
+
     @SerializedName("id")
     private String id;
     @SerializedName("title")
@@ -37,9 +37,9 @@ public class ArticleDetailResult {
     @SerializedName("userName")
     private String userName;
     @SerializedName("isBookmarked")
-    private String isBookmarked;
+    private boolean isBookmarked;
     @SerializedName("isFollowed")
-    private String isFollowed;
+    private boolean isFollowed;
     @SerializedName("url")
     private String url;
     @SerializedName("author_image")
@@ -191,19 +191,19 @@ public class ArticleDetailResult {
         this.userName = userName;
     }
 
-    public String getBookmarkStatus() {
+    public boolean getBookmarkStatus() {
         return isBookmarked;
     }
 
-    public void setBookmarkStatus(String isBookmarked) {
+    public void setBookmarkStatus(boolean isBookmarked) {
         this.isBookmarked = isBookmarked;
     }
 
-    public String getIsFollowed() {
+    public boolean getIsFollowed() {
         return isFollowed;
     }
 
-    public void setIsFollowed(String isFollowed) {
+    public void setIsFollowed(boolean isFollowed) {
         this.isFollowed = isFollowed;
     }
 

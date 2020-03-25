@@ -1,42 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <RelativeLayout
+    android:id="@+id/fbFriendsContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:padding="20dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/facebookImageView"
+      android:layout_width="60dp"
+      android:layout_height="60dp"
+      android:layout_alignParentStart="true"
+      android:layout_centerVertical="true"
+      android:src="@drawable/ic_badge_facebook" />
 
     <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/getFBFriendsTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/light_grey1"
-        android:drawableStart="@drawable/icon_facebook"
-        android:drawablePadding="-80dp"
-        android:gravity="center"
-        android:padding="20dp"
-        android:text="Follow Facebook Friends"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+      android:id="@+id/getFBFriendsTextView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_toStartOf="@+id/arrowImageView"
+      android:layout_toEndOf="@+id/facebookImageView"
+      android:gravity="center"
+      android:paddingRight="16dp"
+      android:text="Follow Facebook Friends"
+      android:textSize="20sp"
+      android:textStyle="bold" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/arrowImageView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:layout_centerVertical="true"
+      android:src="@drawable/arrow_right" />
+  </RelativeLayout>
 
-    <TextView
-        android:id="@+id/emptyList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:textColor="@color/black_color"
-        android:visibility="visible" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:visibility="gone" />
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/recyclerView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:visibility="gone" />
+
+  <TextView
+    android:id="@+id/emptyList"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:textColor="@color/black_color"
+    android:visibility="visible" />
+  <ProgressBar
+    android:id="@+id/progressBar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_centerVertical="true"
+    android:visibility="gone" />
 
 </RelativeLayout>
