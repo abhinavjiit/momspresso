@@ -376,15 +376,15 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
     private fun fetchDeliverableName(deliverableTypeList: ArrayList<Int>): String {
         var deliverableName = ""
-        if (deliverableTypeList.get(0) == 0) {
+        if (deliverableTypeList.get(0) == 0 || deliverableTypeList.get(0) == 1) {
             deliverableName = getString(R.string.draft_instagram_submission)
-        } else if (deliverableTypeList.get(0) == 1) {
+        } else if (deliverableTypeList.get(0) == 2 || deliverableTypeList.get(0) == 3) {
             deliverableName = getString(R.string.draft_facebook_submission)
-        } else if (deliverableTypeList.get(0) == 2) {
+        } else if (deliverableTypeList.get(0) == 6) {
             deliverableName = getString(R.string.order_screenshot)
-        } else if (deliverableTypeList.get(0) == 3) {
+        } else if (deliverableTypeList.get(0) == 9) {
             deliverableName = getString(R.string.pre_meet_submission)
-        } else if (deliverableTypeList.get(0) == 4) {
+        } else if (deliverableTypeList.get(0) == 7) {
             deliverableName = getString(R.string.unlisted_video_link)
         }
         return deliverableName
