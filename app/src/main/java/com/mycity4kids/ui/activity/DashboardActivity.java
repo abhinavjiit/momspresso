@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -66,6 +65,7 @@ import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.BranchModel;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
+import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.request.VlogsEventRequest;
 import com.mycity4kids.models.response.AllDraftsResponse;
 import com.mycity4kids.models.response.BlogPageResponse;
@@ -83,6 +83,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
@@ -127,6 +128,7 @@ import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class DashboardActivity extends BaseActivity implements View.OnClickListener,
@@ -134,79 +136,97 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         GroupMembershipStatus.IMembershipStatus,
         UserAllDraftsRecyclerAdapter.DraftRecyclerViewClickListener {
 
-    private FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-    private int num_of_challeneges;
+    private static final String UPDATE_APP_POPUP_KEY = "latest_app_version";
+    private static final String UPDATE_APP_FREQUENCY_KEY = "app_update_frequency";
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final int REQUEST_GALLERY_PERMISSION = 2;
+    public static final String COMMON_PREF_FILE = "my_city_prefs";
     private static String[] PERMISSIONS_STORAGE_CAMERA = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
-    private String selectedrequest = "default";
-    private String shortstory = "ShortStory";
-    private String challenge = "ChallengeTake";
-    private String FromDeepLink = "FromDeepLink";
-    public static final String COMMON_PREF_FILE = "my_city_prefs";
-    String Display_Name;
-    private String challengeId;
-    private String ImageUrl;
+    private FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+    private int challengeCount;
     private String shortStoryChallengesList;
     private String deepLinkDisplayName;
     private String deepLinkImageUrl;
+    private String fromDeepLink = "FromDeepLink";
     private ArrayList<Topics> shortStoriesTopicList;
-    int groupId;
-    Map<String, String> image;
     public boolean filter = false;
-    Tracker t;
+    private Tracker tracker;
     private String deepLinkUrl;
-    private String mToolbarTitle = "";
+    private String mainToolbarTitle = "";
     private String fragmentToLoad = "";
     private Animation slideDownAnim;
-    private DrawerLayout mDrawerLayout;
-    private Toolbar mToolbar, toolbar0, toolbar1, toolbar2;
+    private DrawerLayout drawerLayout;
+    private Toolbar mainToolbar;
     private TextView toolbarTitleTextView;
-    private ImageView searchAllImageView, notificationImg;
+    private ImageView searchAllImageView;
+    private ImageView notificationImg;
     private BottomNavigationViewEx bottomNavigationView;
     private RelativeLayout toolbarRelativeLayout;
     private RelativeLayout rootLayout;
     private ImageView downArrowImageView;
     private TextView selectOptToolbarTitle;
     private Badge badge;
-    private View toolbarUnderline, langView;
+    private View toolbarUnderline;
+    private View langView;
     private TextView langTextView;
     private FrameLayout transparentLayerToolbar;
     private FrameLayout transparentLayerNavigation;
-    private RelativeLayout groupCoachmark, firstCoachmark, secondCoachmark;
+    private RelativeLayout groupCoachmark;
+    private RelativeLayout firstCoachmark;
+    private RelativeLayout secondCoachmark;
     private TextView selectedlangGuideTextView;
-    private MixpanelAPI mMixpanel;
+    private MixpanelAPI mixpanel;
     private RelativeLayout bookmarkInfoView;
     private TextView viewBookmarkedArticleTextView;
     private ImageView profileImageView;
-    private Animation slideAnim, fadeAnim;
-    private LinearLayout actionItemContainer, articleContainer, videoContainer, storyContainer;
+    private Animation slideAnim;
+    private Animation fadeAnim;
+    private LinearLayout actionItemContainer;
+    private LinearLayout articleContainer;
+    private LinearLayout videoContainer;
+    private LinearLayout storyContainer;
     private View overlayView;
     private RelativeLayout createContentContainer;
-    private TextView usernameTextView, coachUsernameTextView, videosTextView, shortStoryTextView,
-            momspressoTextView, groupsTextView, bookmarksTextView, settingTextView, referral;
-    private LinearLayout drawerTopContainer, drawerContainer, rewardsTextView;
+    private TextView usernameTextView;
+    private TextView coachUsernameTextView;
+    private TextView videosTextView;
+    private TextView shortStoryTextView;
+    private TextView momspressoTextView;
+    private TextView groupsTextView;
+    private TextView bookmarksTextView;
+    private TextView settingTextView;
+    private TextView referral;
+    private LinearLayout drawerTopContainer;
+    private LinearLayout drawerContainer;
+    private LinearLayout rewardsTextView;
     private RelativeLayout drawerSettingsContainer;
     private TextView homeTextView;
-    private RelativeLayout homeCoachmark, exploreCoachmark, createCoachmark, vlogsCoachmark, drawerProfileCoachmark,
-            drawerSettingsCoachmark, menuCoachmark, languageLayout, drawerMyMoneyCoachmark, drawerMyMoneyContainer;
+    private RelativeLayout homeCoachmark;
+    private RelativeLayout exploreCoachmark;
+    private RelativeLayout createCoachmark;
+    private RelativeLayout vlogsCoachmark;
+    private RelativeLayout drawerProfileCoachmark;
+    private RelativeLayout drawerSettingsCoachmark;
+    private RelativeLayout menuCoachmark;
+    private RelativeLayout languageLayout;
+    private RelativeLayout drawerMyMoneyCoachmark;
+    private RelativeLayout drawerMyMoneyContainer;
     private RecyclerView draftsRecyclerView;
     private ShimmerFrameLayout draftsShimmerLayout;
-    private TextView createLabelTextView, continueWritingLabelTV;
-    private ImageView createTextImageVIew, langImageRightArrow;
+    private TextView createLabelTextView;
+    private ImageView createTextImageVIew;
     private ArrayList<AllDraftsResponse.AllDraftsData.AllDraftsResult> allDraftsList = new ArrayList<>();
     private UserAllDraftsRecyclerAdapter userAllDraftsRecyclerAdapter;
 
     private TextView selectedLangTextView;
     private TopicsResponse res;
-    private int num_of_categorys;
-    private String branchVideoChallengeId, currentVersion, onlineVersionCode;
+    private int categoryCount;
+    private String currentVersion;
+    private String onlineVersionCode;
     private FrameLayout root;
     private Boolean rateNowDialog = false;
-    private String UPDATE_APP_POPUP_KEY = "latest_app_version";
-    private int frequecy;
-    private String UPDATE_APP_FREQUENCY_KEY = "app_update_frequency";
+    private int frequency;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -222,38 +242,37 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
                 .setMinimumFetchIntervalInSeconds(720).build();
-        mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
-        mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+        firebaseRemoteConfig.setConfigSettingsAsync(configSettings);
+        firebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
         if (SharedPrefUtils.getFirebaseRemoteConfigUpdateFlag(BaseApplication.getAppContext())) {
             showProgressDialog(getString(R.string.please_wait));
-            mFirebaseRemoteConfig.fetch(0).addOnCompleteListener(this, task -> {
+            firebaseRemoteConfig.fetch(0).addOnCompleteListener(this, task -> {
                 removeProgressDialog();
-                mFirebaseRemoteConfig.activate();
+                firebaseRemoteConfig.activate();
                 SharedPrefUtils
                         .setFirebaseRemoteConfigUpdateFlag(BaseApplication.getAppContext(), false);
             });
         } else {
-            mFirebaseRemoteConfig.fetchAndActivate()
+            firebaseRemoteConfig.fetchAndActivate()
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
                             boolean updated = task.getResult();
                             Log.d("FirebaseRemoteConfig", "Config params updated: " + updated);
-                        } else {
                         }
                     });
         }
         root = findViewById(R.id.dash_root);
         ((BaseApplication) getApplication()).setActivity(this);
 
-        t = ((BaseApplication) getApplication()).getTracker(
+        tracker = ((BaseApplication) getApplication()).getTracker(
                 BaseApplication.TrackerName.APP_TRACKER);
-        t.enableAdvertisingIdCollection(true);
-        t.setScreenName("DashBoard");
-        t.set("&uid", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-        t.send(new HitBuilders.EventBuilder().setCategory("UX").setAction("User Sign In").build());
-        t.send(new HitBuilders.ScreenViewBuilder().build());
+        tracker.enableAdvertisingIdCollection(true);
+        tracker.setScreenName("DashBoard");
+        tracker.set("&uid", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        tracker.send(new HitBuilders.EventBuilder().setCategory("UX").setAction("User Sign In").build());
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
 
-        mMixpanel = MixpanelAPI
+        mixpanel = MixpanelAPI
                 .getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
         Utils.pushGenericEvent(this, "Dashboard_event",
                 SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "DashboardActivity");
@@ -262,9 +281,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        onlineVersionCode = mFirebaseRemoteConfig.getString(UPDATE_APP_POPUP_KEY);
+        onlineVersionCode = firebaseRemoteConfig.getString(UPDATE_APP_POPUP_KEY);
         try {
-            frequecy = Integer.parseInt(mFirebaseRemoteConfig.getString(UPDATE_APP_FREQUENCY_KEY));
+            frequency = Integer.parseInt(firebaseRemoteConfig.getString(UPDATE_APP_FREQUENCY_KEY));
         } catch (NumberFormatException e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
@@ -277,20 +296,17 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         fragmentManager.addOnBackStackChangedListener(this);
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
         langTextView = (TextView) findViewById(R.id.langTextView);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar1 = (Toolbar) findViewById(R.id.toolbar1);
-        toolbar2 = (Toolbar) findViewById(R.id.toolbar2);
+        mainToolbar = (Toolbar) findViewById(R.id.toolbar);
         downArrowImageView = (ImageView) findViewById(R.id.downArrowImageView);
         toolbarUnderline = findViewById(R.id.toolbarUnderline);
         bottomNavigationView = (BottomNavigationViewEx) findViewById(R.id.navigation);
-        toolbarRelativeLayout = (RelativeLayout) mToolbar.findViewById(R.id.toolbarRelativeLayout);
-        toolbarTitleTextView = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
-        searchAllImageView = (ImageView) mToolbar.findViewById(R.id.searchAllImageView);
-        notificationImg = (ImageView) mToolbar.findViewById(R.id.notification);
+        toolbarRelativeLayout = (RelativeLayout) mainToolbar.findViewById(R.id.toolbarRelativeLayout);
+        toolbarTitleTextView = (TextView) mainToolbar.findViewById(R.id.toolbarTitle);
+        searchAllImageView = (ImageView) mainToolbar.findViewById(R.id.searchAllImageView);
+        notificationImg = (ImageView) mainToolbar.findViewById(R.id.notification);
         selectOptToolbarTitle = (TextView) findViewById(R.id.selectOptToolbarTitle);
         langTextView = (TextView) findViewById(R.id.langTextView);
         selectedLangTextView = (TextView) findViewById(R.id.selectedLangtext);
-        langImageRightArrow = (ImageView) findViewById(R.id.langImageRightArrow);
         selectedlangGuideTextView = (TextView) findViewById(R.id.selectedlangGuideTextView);
         groupCoachmark = (RelativeLayout) findViewById(R.id.groupCoachmark);
         firstCoachmark = (RelativeLayout) findViewById(R.id.firstCoachmark);
@@ -299,7 +315,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         transparentLayerNavigation = (FrameLayout) findViewById(R.id.transparentLayerNavigation);
         bookmarkInfoView = (RelativeLayout) findViewById(R.id.bookmarkInfoView);
         viewBookmarkedArticleTextView = (TextView) findViewById(R.id.viewBookmarkedArticleTextView);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         profileImageView = (ImageView) findViewById(R.id.profileImageView);
         actionItemContainer = (LinearLayout) findViewById(R.id.actionItemContainer);
         createContentContainer = (RelativeLayout) findViewById(R.id.createContentContainer);
@@ -332,7 +348,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         draftsRecyclerView = (RecyclerView) findViewById(R.id.draftsRecyclerView);
         draftsShimmerLayout = (ShimmerFrameLayout) findViewById(R.id.draftsShimmerLayout);
         createLabelTextView = (TextView) findViewById(R.id.createLabelTextView);
-        continueWritingLabelTV = (TextView) findViewById(R.id.continueWritingLabelTV);
         createTextImageVIew = (ImageView) findViewById(R.id.createTextImageVIew);
         languageLayout = (RelativeLayout) findViewById(R.id.languageLayout);
         referral = findViewById(R.id.referral);
@@ -367,7 +382,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         bottomNavigationView.enableShiftingMode(false);
         bottomNavigationView.enableItemShiftingMode(false);
         bottomNavigationView.setTextVisibility(true);
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(mainToolbar);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         final Drawable upArrow = getResources().getDrawable(R.drawable.hamburger_menu);
@@ -434,11 +449,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     // set item as selected to persist highlight
                     menuItem.setChecked(true);
                     // close drawer when item is tapped
-                    mDrawerLayout.closeDrawers();
+                    drawerLayout.closeDrawers();
                     return true;
                 });
 
-        mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 if (slideOffset < 1) {
@@ -581,7 +596,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils
                         .getUserDetailModel(this).getLast_name());
 
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(mainToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.hamburger_menu);
 
@@ -592,7 +607,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 item -> {
                     final Fragment topFragment = getSupportFragmentManager()
                             .findFragmentById(R.id.content_frame);
-                    Fragment selectedFragment = null;
                     switch (item.getItemId()) {
                         case R.id.action_profile:
                             hideCreateContentView();
@@ -600,12 +614,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 return true;
                             }
                             ExploreArticleListingTypeFragment fragment0 = new ExploreArticleListingTypeFragment();
-                            Bundle mBundle0 = new Bundle();
-                            fragment0.setArguments(mBundle0);
-                            addFragment(fragment0, mBundle0);
+                            Bundle bundle = new Bundle();
+                            fragment0.setArguments(bundle);
+                            addFragment(fragment0, bundle);
                             break;
                         case R.id.action_momVlog:
-                            MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
+                            MixPanelUtils.pushMomVlogsDrawerClickEvent(mixpanel);
                             Utils.momVlogEvent(DashboardActivity.this, "Home Screen",
                                     "Bottom_nav_videos",
                                     "", "android",
@@ -627,15 +641,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 return true;
                             }
                             FragmentMC4KHomeNew fragment1 = new FragmentMC4KHomeNew();
-                            Bundle mBundle1 = new Bundle();
-                            fragment1.setArguments(mBundle1);
-                            addFragment(fragment1, mBundle1);
+                            Bundle bundle1 = new Bundle();
+                            fragment1.setArguments(bundle1);
+                            addFragment(fragment1, bundle1);
                             break;
                         case R.id.action_write:
                             userAllDraftsRecyclerAdapter.notifyDataSetChanged();
-                            if (createContentContainer.getVisibility() == View.VISIBLE) {
-
-                            } else {
+                            if (createContentContainer.getVisibility() != View.VISIBLE) {
                                 allDraftsList.clear();
                                 loadAllDrafts();
                                 createContentContainer.setVisibility(View.VISIBLE);
@@ -659,39 +671,41 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                     String.valueOf(System.currentTimeMillis()), "Group_listing", "",
                                     "");
                             GroupsViewFragment groupsFragment = new GroupsViewFragment();
-                            Bundle eBundle = new Bundle();
-                            groupsFragment.setArguments(eBundle);
-                            addFragment(groupsFragment, eBundle);
+                            Bundle bundle2 = new Bundle();
+                            groupsFragment.setArguments(bundle2);
+                            addFragment(groupsFragment, bundle2);
+                            break;
+                        default:
                             break;
                     }
                     return true;
                 });
         if (Constants.PROFILE_FRAGMENT.equals(fragmentToLoad)) {
-            Intent pIntent = new Intent(this, UserProfileActivity.class);
+            Intent profileIntent = new Intent(this, UserProfileActivity.class);
             Bundle notificationExtras = getIntent().getParcelableExtra("notificationExtras");
-            pIntent.putExtra(Constants.USER_ID,
+            profileIntent.putExtra(Constants.USER_ID,
                     SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-            pIntent.putExtra(AppConstants.BADGE_ID,
+            profileIntent.putExtra(AppConstants.BADGE_ID,
                     notificationExtras.getString(AppConstants.BADGE_ID));
-            pIntent.putExtra(AppConstants.MILESTONE_ID,
+            profileIntent.putExtra(AppConstants.MILESTONE_ID,
                     notificationExtras.getString(AppConstants.MILESTONE_ID));
-            startActivity(pIntent);
+            startActivity(profileIntent);
         } else if (Constants.SUGGESTED_TOPICS_FRAGMENT.equals(fragmentToLoad)) {
             SuggestedTopicsFragment fragment0 = new SuggestedTopicsFragment();
-            Bundle mBundle0 = new Bundle();
-            fragment0.setArguments(mBundle0);
-            addFragment(fragment0, mBundle0);
+            Bundle bundle = new Bundle();
+            fragment0.setArguments(bundle);
+            addFragment(fragment0, bundle);
         } else if (Constants.SHORT_STOY_FRAGMENT.equals(fragmentToLoad)) {
             TopicsShortStoriesContainerFragment fragment1 = new TopicsShortStoriesContainerFragment();
-            Bundle mBundle1 = new Bundle();
-            mBundle1.putString("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
-            fragment1.setArguments(mBundle1);
-            addFragment(fragment1, mBundle1);
+            Bundle bundle = new Bundle();
+            bundle.putString("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
+            fragment1.setArguments(bundle);
+            addFragment(fragment1, bundle);
         } else if (Constants.GROUP_LISTING_FRAGMENT.equals(fragmentToLoad)) {
             GroupsViewFragment fragment1 = new GroupsViewFragment();
-            Bundle mBundle1 = new Bundle();
-            fragment1.setArguments(mBundle1);
-            addFragment(fragment1, mBundle1);
+            Bundle bundle = new Bundle();
+            fragment1.setArguments(bundle);
+            addFragment(fragment1, bundle);
         } else if (Constants.CREATE_CONTENT_PROMPT.equals(fragmentToLoad)) {
             replaceFragment(new FragmentMC4KHomeNew(), null);
             bottomNavigationView.setSelectedItemId(R.id.action_write);
@@ -725,14 +739,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         getUsersData();
     }
 
-    private void showMyMoneyRegistrationPrompt(Intent _intent) {
-        if (!_intent.hasExtra("branchLink") &&
-                !_intent.hasExtra(AppConstants.BRANCH_DEEPLINK_URL) &&
-                "1".equals(SharedPrefUtils.getUserDetailModel(this).getIsNewUser())) {
+    private void showMyMoneyRegistrationPrompt(Intent mymoneyIntent) {
+        if (!mymoneyIntent.hasExtra("branchLink")
+                && !mymoneyIntent.hasExtra(AppConstants.BRANCH_DEEPLINK_URL)
+                && "1".equals(SharedPrefUtils.getUserDetailModel(this).getIsNewUser())) {
             MyMoneyRegistrationDialogFragment mmRegistrationDialogFragment = new MyMoneyRegistrationDialogFragment();
             FragmentManager fm = getSupportFragmentManager();
-            Bundle _args = new Bundle();
-            mmRegistrationDialogFragment.setArguments(_args);
+            Bundle args = new Bundle();
+            mmRegistrationDialogFragment.setArguments(args);
             mmRegistrationDialogFragment.setCancelable(true);
             mmRegistrationDialogFragment.show(fm, "MyMoney");
         }
@@ -742,19 +756,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         draftsShimmerLayout.setVisibility(View.VISIBLE);
         draftsShimmerLayout.startShimmerAnimation();
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        ArticleDraftAPI draftAPI = retrofit.create(ArticleDraftAPI.class);
-        Call<ResponseBody> call = draftAPI.getAllDrafts("0");
-        //  Call<ResponseBody> call = draftAPI.getAllDrafts("0");
+        ArticleDraftAPI draftApi = retrofit.create(ArticleDraftAPI.class);
+        Call<ResponseBody> call = draftApi.getAllDrafts("0");
         call.enqueue(draftsResponseCallback);
     }
 
     private void getUsersData() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
+        BloggerDashboardAPI bloggerDashboardApi = retrofit.create(BloggerDashboardAPI.class);
         String userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
                 .getDynamoId();
         if (!userId.isEmpty()) {
-            Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(userId);
+            Call<UserDetailResponse> call = bloggerDashboardApi.getBloggerData(userId);
             call.enqueue(userDetailsResponseListener);
         }
     }
@@ -807,15 +820,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             try {
                 String resData = new String(response.body().bytes());
-                JSONObject jObject = new JSONObject(resData);
-                int code = jObject.getInt("code");
-                String status = jObject.getString("status");
+                JSONObject jsonObject = new JSONObject(resData);
+                int code = jsonObject.getInt("code");
+                String status = jsonObject.getString("status");
                 if (code == 200 && Constants.SUCCESS.equals(status)) {
                     AllDraftsResponse draftListResponse = new AllDraftsResponse();
                     AllDraftsResponse.AllDraftsData draftListData = new AllDraftsResponse.AllDraftsData();
-                    JSONArray dataObj = jObject.optJSONArray("data");
+                    JSONArray dataObj = jsonObject.optJSONArray("data");
                     if (null != dataObj) {
-                        //                     Empty Draft List Handling
                         ArrayList<AllDraftsResponse.AllDraftsData.AllDraftsResult> emptyDraftList = new ArrayList<>();
                         draftListData.setResult(emptyDraftList);
                         draftListResponse.setData(draftListData);
@@ -824,7 +836,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         return;
                     }
 
-                    JSONArray resultJsonObject = jObject.getJSONObject("data")
+                    JSONArray resultJsonObject = jsonObject.getJSONObject("data")
                             .optJSONArray("result");
                     ArrayList<AllDraftsResponse.AllDraftsData.AllDraftsResult> draftList = new ArrayList<>();
                     ArrayList<Map<String, String>> retMap;
@@ -875,7 +887,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     allDraftsList.addAll(draftListResponse.getData().getResult());
                     processDraftsResponse();
                 } else {
-                    showToast(jObject.getString("reason"));
+                    showToast(jsonObject.getString("reason"));
                 }
             } catch (JSONException jsonexception) {
                 Crashlytics.logException(jsonexception);
@@ -911,9 +923,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     //     The onNewIntent() is overridden to get and resolve the data for deep linking
     @Override
-    protected void onNewIntent(Intent _intent) {
-        super.onNewIntent(_intent);
-        Bundle notificationExtras = _intent.getParcelableExtra("notificationExtras");
+    protected void onNewIntent(Intent newIntent) {
+        super.onNewIntent(newIntent);
+        Bundle notificationExtras = newIntent.getParcelableExtra("notificationExtras");
         if (notificationExtras != null) {
             try {
                 for (String key : notificationExtras.keySet()) {
@@ -928,10 +940,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             String notificationType = notificationExtras.getString("type");
             if (AppConstants.NOTIFICATION_TYPE_REMOTE_CONFIG_SILENT_UPDATE.equalsIgnoreCase(notificationType)) {
                 showProgressDialog(getString(R.string.please_wait));
-                mFirebaseRemoteConfig.fetch(0)
+                firebaseRemoteConfig.fetch(0)
                         .addOnCompleteListener(this, task -> {
                             removeProgressDialog();
-                            mFirebaseRemoteConfig.activate();
+                            firebaseRemoteConfig.activate();
                             SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(
                                     BaseApplication.getAppContext(), false);
                         });
@@ -1093,11 +1105,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 launchEditor();
             } else if (AppConstants.NOTIFICATION_TYPE_PROFILE.equalsIgnoreCase(notificationType)) {
                 pushEvent("profile");
-                String u_id = notificationExtras.getString("userId");
-                if (!SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(u_id)) {
+                String userId = notificationExtras.getString("userId");
+                if (!SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(userId)) {
                     Intent intent = new Intent(this, UserProfileActivity.class);
                     intent.putExtra("fromNotification", true);
-                    intent.putExtra(Constants.USER_ID, u_id);
+                    intent.putExtra(Constants.USER_ID, userId);
                     intent.putExtra(AppConstants.BADGE_ID, notificationExtras.getString(AppConstants.BADGE_ID));
                     intent.putExtra(AppConstants.MILESTONE_ID, notificationExtras.getString(AppConstants.MILESTONE_ID));
                     intent.putExtra(Constants.FROM_SCREEN, "Notification");
@@ -1157,13 +1169,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent1.putExtra(Constants.ARTICLE_ID, notificationExtras.getString("id"));
                 startActivity(intent1);
             }
-        } else if (_intent.hasExtra("branchLink") ||
-                _intent.hasExtra(AppConstants.BRANCH_DEEPLINK_URL)) {
+        } else if (newIntent.hasExtra("branchLink")
+                || newIntent.hasExtra(AppConstants.BRANCH_DEEPLINK_URL)) {
             String branchdata = BaseApplication.getInstance().getBranchData();
             JsonParser parser = new JsonParser();
-            JsonElement mJson = parser.parse(branchdata);
+            JsonElement jsonElement = parser.parse(branchdata);
             Gson gson = new Gson();
-            BranchModel branchModel = gson.fromJson(mJson, BranchModel.class);
+            BranchModel branchModel = gson.fromJson(jsonElement, BranchModel.class);
 
             Log.i("MixFeedData", branchdata + ":");
             if (!StringUtils.isNullOrEmpty(branchdata)) {
@@ -1194,29 +1206,28 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             RewardsContainerActivity.class);
                     intent1.putExtra("showProfileInfo", true);
                     startActivity(intent1);
-                } else {
                 }
             }
         } else {
-            String tempDeepLinkURL = _intent.getStringExtra(AppConstants.DEEP_LINK_URL);
+            String tempDeepLinkUrl = newIntent.getStringExtra(AppConstants.DEEP_LINK_URL);
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId",
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
                                 .getDynamoId());
-                jsonObject.put("url", "" + tempDeepLinkURL);
-                mMixpanel.track("DeepLinking", jsonObject);
+                jsonObject.put("url", "" + tempDeepLinkUrl);
+                mixpanel.track("DeepLinking", jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (!StringUtils.isNullOrEmpty(tempDeepLinkURL)) {
-                if (matchRegex(tempDeepLinkURL)) {
+            if (!StringUtils.isNullOrEmpty(tempDeepLinkUrl)) {
+                if (matchRegex(tempDeepLinkUrl)) {
                     //////// need to optimize this code
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_EDITOR_URL)
-                        || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_EDITOR_URL)) {
-                    final String bloggerId = tempDeepLinkURL
-                            .substring(tempDeepLinkURL.lastIndexOf("/") + 1,
-                                    tempDeepLinkURL.length());
+                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_EDITOR_URL)
+                        || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_EDITOR_URL)) {
+                    final String bloggerId = tempDeepLinkUrl
+                            .substring(tempDeepLinkUrl.lastIndexOf("/") + 1,
+                                    tempDeepLinkUrl.length());
                     if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId
                             .equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
                         showAlertDialog("Message",
@@ -1240,12 +1251,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                         .getDynamoId() + "", "Mobile Deep Link");
                         launchEditor();
                     }
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_ADD_FUNNY_VIDEO_URL)
-                        || tempDeepLinkURL
+                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_ADD_FUNNY_VIDEO_URL)
+                        || tempDeepLinkUrl
                         .contains(AppConstants.DEEPLINK_MOMSPRESSO_ADD_FUNNY_VIDEO_URL)) {
-                    final String bloggerId = tempDeepLinkURL
-                            .substring(tempDeepLinkURL.lastIndexOf("/") + 1,
-                                    tempDeepLinkURL.length());
+                    final String bloggerId = tempDeepLinkUrl
+                            .substring(tempDeepLinkUrl.lastIndexOf("/") + 1,
+                                    tempDeepLinkUrl.length());
                     if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId
                             .equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
                         showAlertDialog("Message",
@@ -1261,14 +1272,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else {
                         launchAddVideoOptions();
                     }
-                } else if (tempDeepLinkURL.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_1)
-                        || tempDeepLinkURL.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_2)) {
+                } else if (tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_1)
+                        || tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_2)) {
                     fragmentToLoad = Constants.PROFILE_FRAGMENT;
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_PROFILE_URL)
-                        || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_PROFILE_URL)) {
-                    final String bloggerId = tempDeepLinkURL
-                            .substring(tempDeepLinkURL.lastIndexOf("/") + 1,
-                                    tempDeepLinkURL.length());
+                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_PROFILE_URL)
+                        || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_PROFILE_URL)) {
+                    final String bloggerId = tempDeepLinkUrl
+                            .substring(tempDeepLinkUrl.lastIndexOf("/") + 1,
+                                    tempDeepLinkUrl.length());
                     if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId
                             .equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
                         showAlertDialog("Message",
@@ -1284,11 +1295,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else {
                         fragmentToLoad = Constants.PROFILE_FRAGMENT;
                     }
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_ADD_SHORT_STORY_URL)) {
+                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_ADD_SHORT_STORY_URL)) {
                     //String temp = tempDeepLinkURL.concat("category-8220f60fd2f6432ba4417861a50f0587");
-                    final String deepLinkChallengeId = tempDeepLinkURL
-                            .substring(tempDeepLinkURL.lastIndexOf("/") + 1,
-                                    tempDeepLinkURL.length());
+                    final String deepLinkChallengeId = tempDeepLinkUrl
+                            .substring(tempDeepLinkUrl.lastIndexOf("/") + 1,
+                                    tempDeepLinkUrl.length());
                     if (StringUtils.isNullOrEmpty(deepLinkChallengeId)) {
                         Intent ssIntent = new Intent(this, AddShortStoryActivity.class);
                         startActivity(ssIntent);
@@ -1300,7 +1311,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 && !shortStoriesTopicList.isEmpty()) {
                             Intent deepLinkIntent = new Intent(this,
                                     ShortStoryChallengeDetailActivity.class);
-                            deepLinkIntent.putExtra("selectedrequest", FromDeepLink);
+                            deepLinkIntent.putExtra("selectedrequest", fromDeepLink);
                             deepLinkIntent.putExtra("Display_Name", deepLinkDisplayName);
                             deepLinkIntent.putExtra("challenge", shortStoryChallengesList);
                             deepLinkIntent.putExtra("position", 0);
@@ -1314,7 +1325,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             findValues(deepLinkChallengeId);
                             Intent deepLinkIntent = new Intent(this,
                                     ShortStoryChallengeDetailActivity.class);
-                            deepLinkIntent.putExtra("selectedrequest", FromDeepLink);
+                            deepLinkIntent.putExtra("selectedrequest", fromDeepLink);
                             deepLinkIntent.putExtra("Display_Name", deepLinkDisplayName);
                             deepLinkIntent.putExtra("challenge", shortStoryChallengesList);
                             deepLinkIntent.putExtra("position", 0);
@@ -1327,32 +1338,29 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             ToastUtils.showToast(this, "server problem, please try again later");
                         }
                     }
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_EDIT_SHORT_DRAFT_URL)) {
-                    final String draftId = tempDeepLinkURL
-                            .substring(tempDeepLinkURL.lastIndexOf("/") + 1,
-                                    tempDeepLinkURL.length());
+                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_EDIT_SHORT_DRAFT_URL)) {
                     Intent ssIntent = new Intent(this, UserDraftsContentActivity.class);
                     ssIntent.putExtra("isPrivateProfile", true);
                     ssIntent.putExtra("contentType", "shortStory");
                     ssIntent.putExtra(Constants.AUTHOR_ID,
                             SharedPrefUtils.getUserDetailModel(this).getDynamoId());
                     startActivity(ssIntent);
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_EDIT_SHORT_STORY_URL)) {
-                    final String storyId = tempDeepLinkURL
-                            .substring(tempDeepLinkURL.lastIndexOf("/") + 1,
-                                    tempDeepLinkURL.length());
+                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_EDIT_SHORT_STORY_URL)) {
+                    final String storyId = tempDeepLinkUrl
+                            .substring(tempDeepLinkUrl.lastIndexOf("/") + 1,
+                                    tempDeepLinkUrl.length());
                     Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                    ShortStoryAPI shortStoryAPI = retrofit.create(ShortStoryAPI.class);
-                    Call<ShortStoryDetailResult> call = shortStoryAPI
+                    ShortStoryAPI shortStoryApi = retrofit.create(ShortStoryAPI.class);
+                    Call<ShortStoryDetailResult> call = shortStoryApi
                             .getShortStoryDetails(storyId, "articleId");
                     call.enqueue(ssDetailResponseCallback);
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_SUGGESTED_TOPIC_URL)
-                        || tempDeepLinkURL
+                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_SUGGESTED_TOPIC_URL)
+                        || tempDeepLinkUrl
                         .contains(AppConstants.DEEPLINK_MOMSPRESSO_SUGGESTED_TOPIC_URL)) {
                     fragmentToLoad = Constants.SUGGESTED_TOPICS_FRAGMENT;
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_UPCOMING_EVENTS)) {
+                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_UPCOMING_EVENTS)) {
                     fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_SETUP_BLOG)) {
+                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_SETUP_BLOG)) {
                     SharedPreferences pref = getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
                     boolean blogSetup = pref.getBoolean("blogSetup", false);
                     if (!blogSetup) {
@@ -1360,24 +1368,24 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else {
                         launchEditor();
                     }
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_PAGE)) {
+                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_PAGE)) {
                     Intent rewardForm = new Intent(this, RewardsContainerActivity.class);
-                    final String referralCode = tempDeepLinkURL
-                            .substring(tempDeepLinkURL.lastIndexOf("=") + 1,
-                                    tempDeepLinkURL.length());
+                    final String referralCode = tempDeepLinkUrl
+                            .substring(tempDeepLinkUrl.lastIndexOf("=") + 1,
+                                    tempDeepLinkUrl.length());
                     rewardForm.putExtra("pageLimit", 1);
                     rewardForm.putExtra("pageNumber", 1);
                     rewardForm.putExtra("referral", referralCode);
                     startActivity(rewardForm);
-                } else if (tempDeepLinkURL
+                } else if (tempDeepLinkUrl
                         .contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_MYMONEY)) {
                     Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
                     startActivity(campaignIntent);
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_CAMPAIGN)) {
-                    if (tempDeepLinkURL.contains("?")) {
-                        final String campaignID = tempDeepLinkURL
-                                .substring(tempDeepLinkURL.lastIndexOf("/") + 1,
-                                        tempDeepLinkURL.indexOf("?"));
+                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_CAMPAIGN)) {
+                    if (tempDeepLinkUrl.contains("?")) {
+                        final String campaignID = tempDeepLinkUrl
+                                .substring(tempDeepLinkUrl.lastIndexOf("/") + 1,
+                                        tempDeepLinkUrl.indexOf("?"));
                         if (!StringUtils.isNullOrEmpty(campaignID)) {
                             Intent campaignIntent = new Intent(this,
                                     CampaignContainerActivity.class);
@@ -1385,8 +1393,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             startActivity(campaignIntent);
                         }
                     } else {
-                        final String campaignID = tempDeepLinkURL
-                                .substring(tempDeepLinkURL.lastIndexOf("/") + 1);
+                        final String campaignID = tempDeepLinkUrl
+                                .substring(tempDeepLinkUrl.lastIndexOf("/") + 1);
                         if (!StringUtils.isNullOrEmpty(campaignID)) {
                             Intent campaignIntent = new Intent(this,
                                     CampaignContainerActivity.class);
@@ -1394,8 +1402,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             startActivity(campaignIntent);
                         }
                     }
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_GROUPS)) {
-                    String[] separated = tempDeepLinkURL.split("/");
+                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_GROUPS)) {
+                    String[] separated = tempDeepLinkUrl.split("/");
                     if (separated[separated.length - 1].startsWith("comment-")) {
                         String[] commArray = separated[separated.length - 1].split("-");
                         long commentId = AppUtils.getIdFromHash(commArray[1]);
@@ -1445,15 +1453,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
                                         .getDynamoId());
                     }
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_REFERRAL)) {
+                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_REFERRAL)) {
                     Intent intent1 = new Intent(this, RewardsContainerActivity.class);
                     intent1.putExtra("pageNumber", 1);
                     startActivity(intent1);
                 } else {
-                    getDeepLinkData(tempDeepLinkURL);
+                    getDeepLinkData(tempDeepLinkUrl);
                 }
             }
-            deepLinkUrl = _intent.getStringExtra(AppConstants.DEEP_LINK_URL);
+            deepLinkUrl = newIntent.getStringExtra(AppConstants.DEEP_LINK_URL);
         }
     }
 
@@ -1465,22 +1473,21 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void findValues(String deepLinkChallengeId) {
         try {
-            // shortStoriesTopicList = BaseApplication.getShortStoryTopicList();
             if (shortStoriesTopicList != null && shortStoriesTopicList.size() != 0) {
-                num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
-                for (int j = 0; j < num_of_categorys; j++) {
+                categoryCount = shortStoriesTopicList.get(0).getChild().size();
+                for (int j = 0; j < categoryCount; j++) {
                     if (shortStoriesTopicList.get(0).getChild().get(j).getId()
                             .equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
-                        num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j)
+                        challengeCount = shortStoriesTopicList.get(0).getChild().get(j)
                                 .getChild().size();
-                        for (int k = 0; k < num_of_challeneges; k++) {
+                        for (int k = 0; k < challengeCount; k++) {
                             if (deepLinkChallengeId
                                     .equals(shortStoriesTopicList.get(0).getChild().get(j)
                                             .getChild().get(k).getId())) {
                                 if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k)
-                                        .getExtraData() != null &&
-                                        shortStoriesTopicList.get(0).getChild().get(j).getChild()
-                                                .get(k).getExtraData().size() != 0) {
+                                        .getExtraData() != null
+                                        && shortStoriesTopicList.get(0).getChild().get(j).getChild()
+                                        .get(k).getExtraData().size() != 0) {
                                     shortStoryChallengesList = shortStoriesTopicList.get(0)
                                             .getChild().get(j).getChild().get(k).getId();
                                     deepLinkDisplayName = shortStoriesTopicList.get(0).getChild()
@@ -1508,20 +1515,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         shortStoriesTopicList.add(res.getData().get(i));
                     }
                 }
-                num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
-                for (int j = 0; j < num_of_categorys; j++) {
+                categoryCount = shortStoriesTopicList.get(0).getChild().size();
+                for (int j = 0; j < categoryCount; j++) {
                     if (shortStoriesTopicList.get(0).getChild().get(j).getId()
                             .equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
-                        num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j)
+                        challengeCount = shortStoriesTopicList.get(0).getChild().get(j)
                                 .getChild().size();
-                        for (int k = 0; k < num_of_challeneges; k++) {
+                        for (int k = 0; k < challengeCount; k++) {
                             if (deepLinkChallengeId
                                     .equals(shortStoriesTopicList.get(0).getChild().get(j)
                                             .getChild().get(k).getId())) {
                                 if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k)
-                                        .getExtraData() != null &&
-                                        shortStoriesTopicList.get(0).getChild().get(j).getChild()
-                                                .get(k).getExtraData().size() != 0) {
+                                        .getExtraData() != null
+                                        && shortStoriesTopicList.get(0).getChild().get(j).getChild()
+                                        .get(k).getExtraData().size() != 0) {
                                     shortStoryChallengesList = shortStoriesTopicList.get(0)
                                             .getChild().get(j).getChild().get(k).getId();
                                     deepLinkDisplayName = shortStoriesTopicList.get(0).getChild()
@@ -1540,8 +1547,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Crashlytics.logException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
-            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
+            final TopicsCategoryAPI topicsApi = retro.create(TopicsCategoryAPI.class);
+            Call<ResponseBody> caller = topicsApi.downloadTopicsJSON();
             caller.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call,
@@ -1562,21 +1569,21 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 shortStoriesTopicList.add(res.getData().get(i));
                             }
                         }
-                        num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
-                        for (int j = 0; j < num_of_categorys; j++) {
+                        categoryCount = shortStoriesTopicList.get(0).getChild().size();
+                        for (int j = 0; j < categoryCount; j++) {
                             if (shortStoriesTopicList.get(0).getChild().get(j).getId()
                                     .equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
-                                num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j)
+                                challengeCount = shortStoriesTopicList.get(0).getChild().get(j)
                                         .getChild().size();
-                                for (int k = 0; k < num_of_challeneges; k++) {
+                                for (int k = 0; k < challengeCount; k++) {
                                     if (deepLinkChallengeId
                                             .equals(shortStoriesTopicList.get(0).getChild().get(j)
                                                     .getChild().get(k).getId())) {
                                         if (shortStoriesTopicList.get(0).getChild().get(j)
-                                                .getChild().get(k).getExtraData() != null &&
-                                                shortStoriesTopicList.get(0).getChild().get(j)
-                                                        .getChild().get(k).getExtraData().size()
-                                                        != 0) {
+                                                .getChild().get(k).getExtraData() != null
+                                                && shortStoriesTopicList.get(0).getChild().get(j)
+                                                .getChild().get(k).getExtraData().size()
+                                                != 0) {
                                             shortStoryChallengesList = shortStoriesTopicList.get(0)
                                                     .getChild().get(j).getChild().get(k).getId();
                                             deepLinkDisplayName = shortStoriesTopicList.get(0)
@@ -1646,9 +1653,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private void checkIsBlogSetup() {
         showProgressDialog(getResources().getString(R.string.please_wait));
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        BlogPageAPI getBlogPageAPI = retrofit.create(BlogPageAPI.class);
+        BlogPageAPI getBlogPageApi = retrofit.create(BlogPageAPI.class);
 
-        Call<BlogPageResponse> call = getBlogPageAPI
+        Call<BlogPageResponse> call = getBlogPageApi
                 .getUserBlogPage(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         call.enqueue(blogPageSetUpResponseListener);
     }
@@ -1658,12 +1665,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         public void onResponse(Call<BlogPageResponse> call,
                 retrofit2.Response<BlogPageResponse> response) {
             removeProgressDialog();
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(
-                            response.raw().toString());
-                    Crashlytics.logException(nee);
-                }
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException(
+                        response.raw().toString());
+                Crashlytics.logException(nee);
                 return;
             }
             BlogPageResponse responseModel = response.body();
@@ -1691,16 +1696,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     };
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-
-        View v = getCurrentFocus();
-        boolean ret = super.dispatchTouchEvent(event);
-        return ret;
-    }
-
-    @Override
     protected void onDestroy() {
-        mMixpanel.flush();
+        mixpanel.flush();
         super.onDestroy();
     }
 
@@ -1782,7 +1779,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         switch (item.getItemId()) {
             case android.R.id.home: {
-                mDrawerLayout.openDrawer(GravityCompat.START);
+                drawerLayout.openDrawer(GravityCompat.START);
                 return true;
             }
             case R.id.save:
@@ -1794,7 +1791,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void launchEditor() {
-        Intent intent1 = new Intent(DashboardActivity.this, EditorPostActivity.class);
         Bundle bundle5 = new Bundle();
         bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
         bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
@@ -1804,6 +1800,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 getString(R.string.example_post_content_placeholder));
         bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
         bundle5.putString("from", "dashboard");
+        Intent intent1 = new Intent(DashboardActivity.this, EditorPostActivity.class);
         intent1.putExtras(bundle5);
         startActivity(intent1);
     }
@@ -1848,21 +1845,21 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;
             case R.id.viewBookmarkedArticleTextView: {
-                mDrawerLayout.closeDrawers();
+                drawerLayout.closeDrawers();
                 Intent cityIntent = new Intent(this, UsersBookmarkListActivity.class);
                 startActivity(cityIntent);
             }
             break;
             case R.id.homeTextView:
-                mDrawerLayout.closeDrawers();
+                drawerLayout.closeDrawers();
                 hideCreateContentView();
                 if (topFragment instanceof FragmentMC4KHomeNew) {
                     return;
                 }
                 FragmentMC4KHomeNew fragment1 = new FragmentMC4KHomeNew();
-                Bundle mBundle1 = new Bundle();
-                fragment1.setArguments(mBundle1);
-                addFragment(fragment1, mBundle1);
+                Bundle bundle = new Bundle();
+                fragment1.setArguments(bundle);
+                addFragment(fragment1, bundle);
                 break;
             case R.id.articleContainer:
                 hideCreateContentView();
@@ -1886,13 +1883,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.videoContainer: {
                 hideCreateContentView();
-                mDrawerLayout.closeDrawers();
+                drawerLayout.closeDrawers();
                 Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Create_video", "",
                         "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
                                 .getDynamoId(), String.valueOf(System.currentTimeMillis()),
                         "Show_video_creation_categories", "", "");
-                MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
+                MixPanelUtils.pushMomVlogsDrawerClickEvent(mixpanel);
                 Intent cityIntent = new Intent(this, ChooseVideoCategoryActivity.class);
                 cityIntent.putExtra("comingFrom", "createDashboardIcon");
                 startActivity(cityIntent);
@@ -1904,31 +1901,28 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.topContainer:
             case R.id.profileImageView:
-                mDrawerLayout.closeDrawers();
+                drawerLayout.closeDrawers();
                 Utils.campaignEvent(this, "profile", "sidebar", "Update", "",
                         "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                         String.valueOf(System.currentTimeMillis()), "CTA_Update_Rewards");
-                Intent pIntent = new Intent(this, UserProfileActivity.class);
-                startActivity(pIntent);
+                Intent profileIntent = new Intent(this, UserProfileActivity.class);
+                startActivity(profileIntent);
                 break;
             case R.id.langTextView:
-            case R.id.langView: {
-                mDrawerLayout.closeDrawers();
+            case R.id.langView:
+                drawerLayout.closeDrawers();
                 ChangePreferredLanguageDialogFragment changePreferredLanguageDialogFragment =
                         new ChangePreferredLanguageDialogFragment();
-                FragmentManager fm = getSupportFragmentManager();
-                Bundle _args = new Bundle();
-                _args.putString("activity", "dashboard");
-                changePreferredLanguageDialogFragment.setArguments(_args);
+                Bundle args = new Bundle();
+                args.putString("activity", "dashboard");
+                changePreferredLanguageDialogFragment.setArguments(args);
                 changePreferredLanguageDialogFragment.setCancelable(true);
+                FragmentManager fm = getSupportFragmentManager();
                 changePreferredLanguageDialogFragment.show(fm, "Choose video option");
-            }
-            break;
-            case R.id.downArrowImageView:
-            case R.id.toolbarTitle:
                 break;
             case R.id.searchAllImageView:
+                unblockRenu();
                 if (topFragment instanceof GroupsViewFragment) {
                     Intent searchIntent = new Intent(this, GroupsSearchActivity.class);
                     startActivity(searchIntent);
@@ -1944,7 +1938,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Intent notificationIntent = new Intent(this, NotificationActivity.class);
                 startActivity(notificationIntent);
                 break;
-
             case R.id.firstCoachmark:
                 firstCoachmark.setVisibility(View.GONE);
                 secondCoachmark.setVisibility(View.VISIBLE);
@@ -1955,8 +1948,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         .setCoachmarksShownFlag(BaseApplication.getAppContext(), "home", true);
                 break;
             case R.id.videosTextView: {
-                mDrawerLayout.closeDrawers();
-                MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
+                drawerLayout.closeDrawers();
+                MixPanelUtils.pushMomVlogsDrawerClickEvent(mixpanel);
                 Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Sidebar_vlogs", "",
                         "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
@@ -1968,7 +1961,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;
             case R.id.momspressoTextView: {
-                mDrawerLayout.closeDrawers();
+                drawerLayout.closeDrawers();
                 Intent intent = new Intent(this, FilteredTopicsArticleListingActivity.class);
                 intent.putExtra("selectedTopics", AppConstants.MOMSPRESSO_CATEGORYID);
                 intent.putExtra("displayName",
@@ -1977,23 +1970,23 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;
             case R.id.shortStoryTextView: {
-                mDrawerLayout.closeDrawers();
+                drawerLayout.closeDrawers();
                 Intent intent = new Intent(this, ShortStoriesListingContainerActivity.class);
                 intent.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
                 startActivity(intent);
             }
             break;
             case R.id.groupsTextView: {
-                mDrawerLayout.closeDrawers();
+                drawerLayout.closeDrawers();
                 Utils.groupsEvent(DashboardActivity.this, "Home Screen", "Sidebar_groups",
                         "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
                                 .getDynamoId(), String.valueOf(System.currentTimeMillis()),
                         "Group_listing", "", "");
                 GroupsViewFragment groupsFragment = new GroupsViewFragment();
-                Bundle eBundle = new Bundle();
-                groupsFragment.setArguments(eBundle);
-                addFragment(groupsFragment, eBundle);
+                Bundle bundle1 = new Bundle();
+                groupsFragment.setArguments(bundle1);
+                addFragment(groupsFragment, bundle1);
             }
             break;
             case R.id.rewardsTextView: {
@@ -2001,7 +1994,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                         String.valueOf(System.currentTimeMillis()), "Show_Campaign_Listing");
-                mDrawerLayout.closeDrawers();
+                drawerLayout.closeDrawers();
                 Intent cityIntent = new Intent(this, CampaignContainerActivity.class);
                 startActivity(cityIntent);
             }
@@ -2019,7 +2012,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.settingTextView: {
-                mDrawerLayout.closeDrawers();
+                drawerLayout.closeDrawers();
                 Intent cityIntent = new Intent(this, AppSettingsActivity.class);
                 startActivity(cityIntent);
             }
@@ -2029,9 +2022,33 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
+    private void unblockRenu() {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
+
+        UpdateGroupMembershipRequest updateGroupMembershipRequest =
+                new UpdateGroupMembershipRequest();
+        updateGroupMembershipRequest.setUserId("68781899365048e7a77b7f39ff1094c6");
+        updateGroupMembershipRequest.setStatus("1");
+        Call<GroupsMembershipResponse> call1 = groupsApi
+                .updateMember(136246,
+                        updateGroupMembershipRequest);
+        call1.enqueue(new Callback<GroupsMembershipResponse>() {
+            @Override
+            public void onResponse(Call<GroupsMembershipResponse> call, Response<GroupsMembershipResponse> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
     private void fireEventForVideoCreationIntent() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit
+        VlogsListingAndDetailsAPI vlogsListingAndDetailsApi = retrofit
                 .create(VlogsListingAndDetailsAPI.class);
         VlogsEventRequest vlogsEventRequest = new VlogsEventRequest();
         vlogsEventRequest.setCreatedTime(System.currentTimeMillis());
@@ -2039,7 +2056,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 .getDynamoId());
         vlogsEventRequest.setTopic("create_video_fab");
         vlogsEventRequest.setPayload(vlogsEventRequest.getPayload());
-        Call<ResponseBody> call = vlogsListingAndDetailsAPI
+        Call<ResponseBody> call = vlogsListingAndDetailsApi
                 .addVlogsCreateIntentEvent(vlogsEventRequest);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -2064,19 +2081,19 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     public void launchAddVideoOptions() {
         ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment =
                 new ChooseVideoUploadOptionDialogFragment();
-        FragmentManager fm = getSupportFragmentManager();
-        Bundle _args = new Bundle();
-        _args.putString("activity", "dashboard");
-        chooseVideoUploadOptionDialogFragment.setArguments(_args);
+        Bundle args = new Bundle();
+        args.putString("activity", "dashboard");
+        chooseVideoUploadOptionDialogFragment.setArguments(args);
         chooseVideoUploadOptionDialogFragment.setCancelable(true);
+        FragmentManager fm = getSupportFragmentManager();
         chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
     }
 
     @Override
     public void onBackPressed() {
         try {
-            if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-                mDrawerLayout.closeDrawer(GravityCompat.START);
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START);
                 return;
             }
             if (createContentContainer.getVisibility() == View.VISIBLE) {
@@ -2129,17 +2146,17 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    private void getDeepLinkData(final String deepLinkURL) {
+    private void getDeepLinkData(final String deepLinkUrl) {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         // prepare call in Retrofit 2.0
         showProgressDialog("");
-        DeepLinkingAPI deepLinkingAPI = retrofit.create(DeepLinkingAPI.class);
+        DeepLinkingAPI deepLinkingApi = retrofit.create(DeepLinkingAPI.class);
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
             removeProgressDialog();
             showToast(getString(R.string.error_network));
             return;
         }
-        Call<DeepLinkingResposnse> call = deepLinkingAPI.getUrlDetails(deepLinkURL);
+        Call<DeepLinkingResposnse> call = deepLinkingApi.getUrlDetails(deepLinkUrl);
         call.enqueue(new Callback<DeepLinkingResposnse>() {
             @Override
             public void onResponse(Call<DeepLinkingResposnse> call,
@@ -2192,6 +2209,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case AppConstants.DEEP_LINK_STORY_DETAILS:
                 navigateToShortStory(data);
                 break;
+            default:
+                break;
         }
     }
 
@@ -2222,25 +2241,25 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderAuthorListingScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getAuthor_name())) {
-            Intent _authorListIntent = new Intent(DashboardActivity.this,
+            Intent authorListIntent = new Intent(DashboardActivity.this,
                     UserProfileActivity.class);
-            _authorListIntent.putExtra(Constants.USER_ID, data.getAuthor_id());
-            _authorListIntent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
-            _authorListIntent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
-            _authorListIntent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
-            startActivity(_authorListIntent);
+            authorListIntent.putExtra(Constants.USER_ID, data.getAuthor_id());
+            authorListIntent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
+            authorListIntent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
+            authorListIntent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
+            startActivity(authorListIntent);
         }
     }
 
     private void renderBloggerListingScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getBlog_title())) {
-            Intent _bloggerListIntent = new Intent(DashboardActivity.this,
+            Intent bloggerListIntent = new Intent(DashboardActivity.this,
                     UserProfileActivity.class);
-            _bloggerListIntent.putExtra(Constants.USER_ID, data.getAuthor_id());
-            _bloggerListIntent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
-            _bloggerListIntent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
-            _bloggerListIntent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
-            startActivity(_bloggerListIntent);
+            bloggerListIntent.putExtra(Constants.USER_ID, data.getAuthor_id());
+            bloggerListIntent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
+            bloggerListIntent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
+            bloggerListIntent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
+            startActivity(bloggerListIntent);
         }
     }
 
@@ -2345,8 +2364,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     }
 
     public void setDynamicToolbarTitle(String name) {
-        toolbarTitleTextView.setText(mToolbarTitle);
-        mToolbarTitle = name;
+        toolbarTitleTextView.setText(mainToolbarTitle);
+        mainToolbarTitle = name;
     }
 
     @Override
@@ -2397,8 +2416,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Utils.pushOpenScreenEvent(this, "HomeScreen",
                         SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 if (!SharedPrefUtils
-                        .isCoachmarksShownFlag(BaseApplication.getAppContext(), "HomeScreen") &&
-                        !BuildConfig.DEBUG) {
+                        .isCoachmarksShownFlag(BaseApplication.getAppContext(), "HomeScreen")
+                        && !BuildConfig.DEBUG) {
                     homeCoachmark.setVisibility(View.VISIBLE);
                 }
                 if (SharedPrefUtils.isTopicSelectionChanged(this)) {
@@ -2418,7 +2437,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     ((TopicsListingFragment) topFragment).showGuideView();
                 }
                 toolbarTitleTextView.setOnClickListener(this);
-                toolbarTitleTextView.setText(mToolbarTitle);
+                toolbarTitleTextView.setText(mainToolbarTitle);
                 toolbarTitleTextView.setTextColor(
                         ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
@@ -2485,9 +2504,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {
         String userType = null;
-        if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
-
-        } else {
+        if (body.getData().getResult() != null && !body.getData().getResult().isEmpty()) {
             if (body.getData().getResult().get(0).getIsAdmin() == 1) {
                 userType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
             } else if (body.getData().getResult().get(0).getIsModerator() == 1) {
@@ -2504,15 +2521,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
                                     .getGender())) {
                 Toast.makeText(this, getString(R.string.women_only), Toast.LENGTH_SHORT).show();
-                if (BuildConfig.DEBUG || AppConstants.DEBUGGING_USER_ID.contains(
+                if (!BuildConfig.DEBUG && !AppConstants.DEBUGGING_USER_ID.contains(
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
                                 .getDynamoId())) {
-
-                } else {
                     return;
                 }
-            } else {
-
             }
         }
 
@@ -2604,7 +2617,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 } else if (Integer.parseInt(v1[pos]) < Integer.parseInt(v2[pos])) {
                     if (SharedPrefUtils
                             .getFrequencyForShowingUpdateApp(BaseApplication.getAppContext())
-                            != frequecy) {
+                            != frequency) {
                         Dialog dialog = new Dialog(this);
                         dialog.setContentView(R.layout.update_app_pop_up_layout);
                         dialog.setCancelable(true);
@@ -2626,7 +2639,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         dialog.show();
                         SharedPrefUtils
                                 .setFrequencyForShowingAppUpdate(BaseApplication.getAppContext(),
-                                        frequecy);
+                                        frequency);
                         break;
                     } else {
                         rateNowDialog = true;
@@ -2638,9 +2651,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    private Boolean matchRegex(String tempDeepLinkURL) {
+    private Boolean matchRegex(String tempDeepLinkUrl) {
         try {
-            String urlWithNoParams = tempDeepLinkURL.split("\\?")[0];
+            String urlWithNoParams = tempDeepLinkUrl.split("\\?")[0];
             if (urlWithNoParams.endsWith("/")) {
                 urlWithNoParams = urlWithNoParams.substring(0, urlWithNoParams.length() - 1);
             }

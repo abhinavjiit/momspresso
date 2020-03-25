@@ -2,19 +2,15 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
-
 import com.google.android.material.tabs.TabLayout;
-import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.UsersFollowingPagerAdapter;
@@ -25,8 +21,7 @@ import com.mycity4kids.utils.AppUtils;
  */
 public class FollowingListFBSuggestionActivity extends BaseActivity {
 
-    ProgressBar progressBar;
-    Toolbar toolbar;
+    private Toolbar toolbar;
     private RelativeLayout root;
 
     private String userId;
@@ -42,9 +37,9 @@ public class FollowingListFBSuggestionActivity extends BaseActivity {
         ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        viewPager = (ViewPager) findViewById(R.id.pager);
+        toolbar = findViewById(R.id.toolbar);
+        tabLayout = findViewById(R.id.tab_layout);
+        viewPager = findViewById(R.id.pager);
 
         userId = getIntent().getStringExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS);
         if (null == userId) {
@@ -103,7 +98,5 @@ public class FollowingListFBSuggestionActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         adapter.refreshFacebookData(requestCode, resultCode, data);
-
-        Log.e("ONACTIVITUYRESULT", "ONACTIVITYRESULT");
     }
 }
