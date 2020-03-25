@@ -46,9 +46,9 @@ public interface ArticleDetailsAPI {
     @GET("/v1/articles/doc/")
     Call<ArticleDetailWebserviceResponse> getArticleDetailsFromWebservice(@Query("articleId") String articleId);
 
-    @GET("v1/users/checkFollowingBookmarkStatus/")
-    Call<ArticleDetailResponse> checkFollowingBookmarkStatus(@Query("articleId") String articleId,
-            @Query("authorId") String authorId);
+    @GET("v2/users/check_following_bookmark_status/")
+    Call<ArticleDetailResponse> checkFollowingBookmarkStatus(@Query("article_id") String articleId,
+            @Query("author_id") String authorId);
 
     @POST("/v1/users/isBookmarkVideo/")
     Call<ArticleDetailResponse> checkBookmarkVideoStatus(@Body ArticleDetailRequest body);

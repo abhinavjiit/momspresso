@@ -835,7 +835,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
             }
             try {
                 if (response.isSuccessful()) {
-                    GroupsMembershipResponse membershipResponse = response.body();
+                    showToast(getString(R.string.groups_user_block_success));
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);

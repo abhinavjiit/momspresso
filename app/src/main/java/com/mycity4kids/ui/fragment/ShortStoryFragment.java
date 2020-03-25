@@ -456,7 +456,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                             return;
                         }
                         if (!userDynamoId.equals(authorId)) {
-                            if ("0".equals(responseData.getData().getResult().getIsFollowed())) {
+                            if (!responseData.getData().getResult().getIsFollowed()) {
                                 adapter.setAuthorFollowingStatus(AppConstants.STATUS_NOT_FOLLOWING);
                                 adapter.notifyItemChanged(0);
                                 isFollowing = false;

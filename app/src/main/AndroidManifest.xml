@@ -24,6 +24,8 @@
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
   <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- Maps API needs OpenGL ES 2.0. -->
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+  <uses-permission android:name="android.permission.READ_CONTACTS" />
+
   <uses-feature
     android:glEsVersion="0x00020000"
     android:required="true" />
@@ -497,6 +499,7 @@
     <activity android:name=".ui.activity.phoneLogin.FacebookFriends" />
     <activity android:name=".ui.activity.collection.AddMultipleCollectionItemActivity" />
     <activity android:name=".ui.activity.ShortStoriesCardActivity" />
+    <activity android:name=".ui.activity.PhoneContactsActivity" />
     <activity
       android:name=".ui.activity.ShortStoryModerationOrShareActivity"
       android:theme="@style/ShareStoryTheme" />

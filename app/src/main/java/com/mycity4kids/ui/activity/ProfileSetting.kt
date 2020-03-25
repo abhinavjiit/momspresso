@@ -37,12 +37,14 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 
-class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListener,
+    View.OnClickListener {
 
     private var personal_info: TextView? = null
     private var payment_details: TextView? = null
     private var social_accounts: TextView? = null
     private var help: TextView? = null
+    private var inviteContactTextView: TextView? = null
     private var appSettingsTextView: TextView? = null
     private var report_spam: TextView? = null
     private var about: TextView? = null
@@ -56,41 +58,47 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
     private var isRewardAdded: String? = null
     private var toolbar: Toolbar? = null
 
-    internal var getTotalPayout: Callback<TotalPayoutResponse> = object : Callback<TotalPayoutResponse> {
-        override fun onResponse(call: Call<TotalPayoutResponse>, response: retrofit2.Response<TotalPayoutResponse>) {
-            removeProgressDialog()
-            if (response.body() == null) {
-                showToast(getString(R.string.went_wrong))
-                return
-            }
-            try {
-                val responseData = response.body()
-                if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-                    if (responseData.data.size > 0) {
-                        totalPayout = responseData.data[0].result[0].total_payout
-                    }
+    internal var getTotalPayout: Callback<TotalPayoutResponse> =
+        object : Callback<TotalPayoutResponse> {
+            override fun onResponse(
+                call: Call<TotalPayoutResponse>,
+                response: retrofit2.Response<TotalPayoutResponse>
+            ) {
+                removeProgressDialog()
+                if (response.body() == null) {
+                    showToast(getString(R.string.went_wrong))
+                    return
                 }
-            } catch (e: Exception) {
+                try {
+                    val responseData = response.body()
+                    if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                        if (responseData.data.size > 0) {
+                            totalPayout = responseData.data[0].result[0].total_payout
+                        }
+                    }
+                } catch (e: Exception) {
+                    showToast(getString(R.string.server_went_wrong))
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            }
+
+            override fun onFailure(call: Call<TotalPayoutResponse>, t: Throwable) {
                 showToast(getString(R.string.server_went_wrong))
-                Crashlytics.logException(e)
-                Log.d("MC4kException", Log.getStackTraceString(e))
+                Crashlytics.logException(t)
+                apiExceptions(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
-
-        override fun onFailure(call: Call<TotalPayoutResponse>, t: Throwable) {
-            showToast(getString(R.string.server_went_wrong))
-            Crashlytics.logException(t)
-            apiExceptions(t)
-            Log.d("MC4kException", Log.getStackTraceString(t))
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_setting)
 
-        Utils.pushGenericEvent(this, "Show_Settings_Detail", SharedPrefUtils.getUserDetailModel(this).dynamoId,
-                "ProfileSetting")
+        Utils.pushGenericEvent(
+            this, "Show_Settings_Detail", SharedPrefUtils.getUserDetailModel(this).dynamoId,
+            "ProfileSetting"
+        )
 
         toolbar = findViewById(R.id.toolbar)
         personal_info = findViewById(R.id.personal_info)
@@ -98,6 +106,7 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         payment_details = findViewById(R.id.payment_details)
         social_accounts = findViewById(R.id.social_accounts)
         appSettingsTextView = findViewById(R.id.appSettingsTextView)
+        inviteContactTextView = findViewById(R.id.inviteContactTextView)
         help = findViewById(R.id.help)
         report_spam = findViewById(R.id.report_spam)
         about = findViewById(R.id.about)
@@ -113,21 +122,23 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
             isRewardAdded = intent.getStringExtra("isRewardAdded")
         }
         fetchTotalEarning()
-        app_version!!.text = resources.getString(R.string.app_version) + " " + AppUtils.getAppVersion(BaseApplication.getAppContext())
+        app_version!!.text =
+            resources.getString(R.string.app_version) + " " + AppUtils.getAppVersion(BaseApplication.getAppContext())
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build()
+            .requestEmail()
+            .build()
         try {
             mGoogleApiClient = GoogleApiClient.Builder(this)
-                    .enableAutoManage(this, this)
-                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                    .build()
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build()
         } catch (e: Exception) {
         }
 
         readArticlesTextView?.text = getString(R.string.read_articles).toLowerCase().capitalize()
-        activityTextView?.text = getString(R.string.myprofile_section_activity_label).toLowerCase().capitalize()
+        activityTextView?.text =
+            getString(R.string.myprofile_section_activity_label).toLowerCase().capitalize()
 
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -144,6 +155,7 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         logout_layout!!.setOnClickListener(this)
         activityTextView!!.setOnClickListener(this)
         readArticlesTextView!!.setOnClickListener(this)
+        inviteContactTextView?.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
@@ -196,13 +208,23 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
             R.id.readArticlesTextView -> {
                 val readArticleIntent = Intent(this, UserReadArticlesContentActivity::class.java)
                 readArticleIntent.putExtra("isPrivateProfile", true)
-                readArticleIntent.putExtra(Constants.AUTHOR_ID, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId)
+                readArticleIntent.putExtra(
+                    Constants.AUTHOR_ID,
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
+                )
                 startActivity(readArticleIntent)
             }
             R.id.activityTextView -> {
                 val intent5 = Intent(this, UserActivitiesActivity::class.java)
-                intent5.putExtra(Constants.AUTHOR_ID, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId)
+                intent5.putExtra(
+                    Constants.AUTHOR_ID,
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
+                )
                 startActivity(intent5)
+            }
+            R.id.inviteContactTextView -> {
+                val searchIntent = Intent(this, PhoneContactsActivity::class.java)
+                startActivity(searchIntent)
             }
         }
     }
@@ -221,15 +243,28 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
             }.setIcon(android.R.drawable.ic_dialog_alert)
             val alert11 = dialog.create()
             alert11.show()
-            alert11.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.app_red))
-            alert11.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.canceltxt_color))
+            alert11.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.app_red
+                )
+            )
+            alert11.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.canceltxt_color
+                )
+            )
         } else {
             ToastUtils.showToast(this, getString(R.string.error_network))
         }
     }
 
     private val logoutUserResponseListener = object : Callback<ResponseBody> {
-        override fun onResponse(call: Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {
+        override fun onResponse(
+            call: Call<ResponseBody>,
+            response: retrofit2.Response<ResponseBody>
+        ) {
             clearUserDataPostLogout()
         }
 
@@ -240,10 +275,14 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
     }
 
     private fun clearUserDataPostLogout() {
-        val mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN)
+        val mixpanel =
+            MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN)
         try {
             val jsonObject = JSONObject()
-            jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId)
+            jsonObject.put(
+                "userId",
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
+            )
             mixpanel.track("UserLogout", jsonObject)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -253,20 +292,43 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
         gPlusSignOut()
 
         val pushToken = SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext())
-        val homeCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "home")
-        val topicsCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics")
-        val topicsArticleCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article")
-        val articleCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "article_details")
-        val groupsCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "groups")
+        val homeCoach =
+            SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "home")
+        val topicsCoach =
+            SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics")
+        val topicsArticleCoach =
+            SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article")
+        val articleCoach = SharedPrefUtils.isCoachmarksShownFlag(
+            BaseApplication.getAppContext(),
+            "article_details"
+        )
+        val groupsCoach =
+            SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "groups")
         val appLocale = SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())
 
         SharedPrefUtils.clearPrefrence(BaseApplication.getAppContext())
         SharedPrefUtils.setDeviceToken(BaseApplication.getAppContext(), pushToken)
         SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "home", homeCoach)
-        SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics", topicsCoach)
-        SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article", topicsArticleCoach)
-        SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "article_details", articleCoach)
-        SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "groups", groupsCoach)
+        SharedPrefUtils.setCoachmarksShownFlag(
+            BaseApplication.getAppContext(),
+            "topics",
+            topicsCoach
+        )
+        SharedPrefUtils.setCoachmarksShownFlag(
+            BaseApplication.getAppContext(),
+            "topics_article",
+            topicsArticleCoach
+        )
+        SharedPrefUtils.setCoachmarksShownFlag(
+            BaseApplication.getAppContext(),
+            "article_details",
+            articleCoach
+        )
+        SharedPrefUtils.setCoachmarksShownFlag(
+            BaseApplication.getAppContext(),
+            "groups",
+            groupsCoach
+        )
         SharedPrefUtils.setAppLocale(BaseApplication.getAppContext(), appLocale)
 
         BaseApplication.getInstance().branchData = null

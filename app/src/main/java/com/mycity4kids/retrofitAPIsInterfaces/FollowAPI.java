@@ -1,9 +1,10 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
+import com.mycity4kids.models.request.FacebookFriendsRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
+import com.mycity4kids.models.response.FacebookFriendsResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.FollowersFollowingResponse;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -37,7 +38,9 @@ public interface FollowAPI {
 
     @GET("/v1/collections/followers/{collectionId}")
     Call<FollowersFollowingResponse> getCollectionFollowingList(@Path("collectionId") String collectionId,
-                                                                @Query("start") int start,
-                                                                @Query("offset") int offset);
+            @Query("start") int start,
+            @Query("offset") int offset);
 
+    @POST("/v1/users/userfrdspoc/")
+    Call<FacebookFriendsResponse> getFacebookFriends(@Body FacebookFriendsRequest body);
 }
