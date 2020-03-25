@@ -1314,4 +1314,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="collection">COLLECTION</string>
   <string name="groups_user_block_success">User blocked successfully</string>
   <string name="permission_contact_rationale">This permission is needed to invite your contact via sms.</string>
+
 </resources>
