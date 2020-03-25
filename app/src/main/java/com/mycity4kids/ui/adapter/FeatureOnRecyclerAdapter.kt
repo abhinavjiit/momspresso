@@ -57,7 +57,7 @@ class FeatureOnRecyclerAdapter(private val mListener: RecyclerViewClickListener)
                 holder.itemView.context.resources.getString(R.string.ad_follow_author)
         }
         holder.follow_text.setOnClickListener {
-            (holder.itemView.context as FeaturedOnActivity).followAPICall(
+            (holder.itemView.context as FeaturedOnActivity).followApiCall(
                 featuredList?.get(position)?.userId,
                 featuredList?.get(position)?.userCollectionId,
                 featuredList?.get(position)?.sortOrder!!,

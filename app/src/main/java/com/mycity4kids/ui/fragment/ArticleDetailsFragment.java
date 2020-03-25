@@ -665,6 +665,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         if (handler != null) {
             handler.removeCallbacksAndMessages(null);
         }
+        if (youTubePlayerView != null) {
+            youTubePlayerView.release();
+        }
         super.onDestroy();
     }
 

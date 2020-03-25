@@ -104,16 +104,19 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
                 val indexOfDisplayNumber: Int =
                     phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
                 while (phones.moveToNext()) {
-                    val normalizedNumber: String = phones.getString(indexOfNormalizedNumber)
-                    if (normalizedNumbersAlreadyFound.add(normalizedNumber)) {
-                        val displayName: String = phones.getString(indexOfDisplayName)
-                        val displayNumber: String = phones.getString(indexOfDisplayNumber)
-                        val contactModel = ContactModel()
-                        contactModel.name = displayName
-                        contactModel.number = displayNumber
-                        contactModelArrayList!!.add(contactModel)
-                        allPhoneList!!.add(displayNumber)
-                    } else {
+                    val normalizedNumber: String? = phones.getString(indexOfNormalizedNumber)
+                    normalizedNumber?.let { normNumber ->
+                        if (normalizedNumbersAlreadyFound.add(normNumber)) {
+                            val displayName: String? = phones.getString(indexOfDisplayName)
+                            val displayNumber: String? = phones.getString(indexOfDisplayNumber)
+                            val contactModel = ContactModel()
+                            displayNumber?.let {
+                                contactModel.name = displayName
+                                contactModel.number = it
+                                contactModelArrayList!!.add(contactModel)
+                                allPhoneList!!.add(it)
+                            }
+                        }
                     }
                 }
             } finally {

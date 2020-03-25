@@ -498,7 +498,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         FollowAPI followApi = retrofit.create(FollowAPI.class);
         FollowUnfollowUserRequest request = new FollowUnfollowUserRequest();
-        request.setFollowerId(authorId);
+        request.setFollowee_id(authorId);
         if (articleListingResults.get(position).getIsfollowing().equals("1")) {
             Utils.pushGenericEvent(getActivity(), "CTA_Unfollow_100WS_Detail", userDynamoId,
                     "TopicsShortStoryTabFragment");

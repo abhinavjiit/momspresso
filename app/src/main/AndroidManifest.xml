@@ -499,7 +499,9 @@
     <activity android:name=".ui.activity.phoneLogin.FacebookFriends" />
     <activity android:name=".ui.activity.collection.AddMultipleCollectionItemActivity" />
     <activity android:name=".ui.activity.ShortStoriesCardActivity" />
-    <activity android:name=".ui.activity.PhoneContactsActivity" />
+    <activity
+      android:name=".ui.activity.PhoneContactsActivity"
+      android:theme="@style/PermissionDialogTheme" />
     <activity
       android:name=".ui.activity.ShortStoryModerationOrShareActivity"
       android:theme="@style/ShareStoryTheme" />

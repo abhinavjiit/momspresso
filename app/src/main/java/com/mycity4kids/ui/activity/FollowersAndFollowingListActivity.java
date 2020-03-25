@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -39,15 +39,20 @@ import retrofit2.Retrofit;
  */
 public class FollowersAndFollowingListActivity extends BaseActivity {
 
+    public static final int LIMIT = 15;
+
+    private int offset = 0;
     ListView followerFollowingListView;
     ProgressBar progressBar;
     TextView noResultTextView;
     Toolbar toolbar;
     private RelativeLayout root;
+    private boolean isLastPageReached = false;
+    private boolean isRequestRunning = false;
 
     FollowerFollowingListAdapter followerFollowingListAdapter;
 
-    ArrayList<FollowersFollowingResult> mDatalist;
+    ArrayList<FollowersFollowingResult> datalist;
     ArrayList<FollowersFollowingResult> collectionDatalist;
     private String userId;
     RecyclerView collectionFollowFollowingListView;
@@ -84,7 +89,7 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mDatalist = new ArrayList<>();
+        datalist = new ArrayList<>();
         collectionDatalist = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(collectionId)) {
@@ -106,9 +111,10 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
             }
             followerFollowingListView.setVisibility(View.VISIBLE);
             collectionFollowFollowingListView.setVisibility(View.GONE);
-            followerFollowingListAdapter = new FollowerFollowingListAdapter(this, followListType);
-            followerFollowingListAdapter.setData(mDatalist);
+            followerFollowingListAdapter = new FollowerFollowingListAdapter(this);
+            followerFollowingListAdapter.setData(datalist);
             followerFollowingListView.setAdapter(followerFollowingListAdapter);
+            getFollowerFollowingList();
         }
 
         collectionFollowFollowingListView.addOnScrollListener(new EndlessScrollListener(linearLayoutManager) {
@@ -118,12 +124,28 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
             }
         });
 
+        followerFollowingListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
+                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isRequestRunning
+                        && !isLastPageReached) {
+                    isRequestRunning = true;
+                    getFollowerFollowingList();
+                }
+            }
+        });
+
         followerFollowingListView.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(FollowersAndFollowingListActivity.this, UserProfileActivity.class);
             intent.putExtra(AppConstants.PUBLIC_PROFILE_FLAG, true);
-            intent.putExtra(Constants.USER_ID, mDatalist.get(position).getUserId());
+            intent.putExtra(Constants.USER_ID, datalist.get(position).getUserId());
             intent.putExtra(AppConstants.AUTHOR_NAME,
-                    mDatalist.get(position).getFirstName() + " " + mDatalist.get(position).getLastName());
+                    datalist.get(position).getFirstName() + " " + datalist.get(position).getLastName());
             intent.putExtra(Constants.FROM_SCREEN, "Followers/Following List");
             startActivity(intent);
         });
@@ -132,17 +154,21 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mDatalist.clear();
+    }
+
+    private void getFollowerFollowingList() {
         if (StringUtils.isNullOrEmpty(collectionId)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-            FollowAPI followListAPI = retrofit.create(FollowAPI.class);
+            FollowAPI followListApi = retrofit.create(FollowAPI.class);
             if (AppConstants.FOLLOWER_LIST.equals(followListType)) {
-                Call<FollowersFollowingResponse> callFollowerList = followListAPI.getFollowersListV2(userId);
+                Call<FollowersFollowingResponse> callFollowerList = followListApi
+                        .getFollowersListV2(userId, LIMIT, offset);
                 callFollowerList.enqueue(getFollowersListResponseCallback);
                 progressBar.setVisibility(View.VISIBLE);
                 toolbarTitle.setText(getString(R.string.myprofile_followers_label));
             } else {
-                Call<FollowersFollowingResponse> callFollowingList = followListAPI.getFollowingListV2(userId);
+                Call<FollowersFollowingResponse> callFollowingList = followListApi
+                        .getFollowingListV2(userId, LIMIT, offset);
                 callFollowingList.enqueue(getFollowersListResponseCallback);
                 progressBar.setVisibility(View.VISIBLE);
                 toolbarTitle.setText(getString(R.string.myprofile_following_label));
@@ -150,79 +176,91 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
         }
     }
 
-    private Callback<FollowersFollowingResponse> getCollectionFollowersList = new Callback<FollowersFollowingResponse>() {
-        @Override
-        public void onResponse(Call<FollowersFollowingResponse> call,
-                retrofit2.Response<FollowersFollowingResponse> response) {
-            progressBar.setVisibility(View.INVISIBLE);
-            if (response == null || response.body() == null) {
-                showToast(getString(R.string.went_wrong));
-                return;
-            }
-            try {
-                FollowersFollowingResponse responseData = response.body();
-                processCollectionFollowersListResponse(responseData);
-            } catch (Exception e) {
-                showToast(getString(R.string.server_went_wrong));
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
+    private Callback<FollowersFollowingResponse> getCollectionFollowersList =
+            new Callback<FollowersFollowingResponse>() {
+                @Override
+                public void onResponse(Call<FollowersFollowingResponse> call,
+                        retrofit2.Response<FollowersFollowingResponse> response) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    if (response.body() == null) {
+                        showToast(getString(R.string.went_wrong));
+                        return;
+                    }
+                    try {
+                        FollowersFollowingResponse responseData = response.body();
+                        processCollectionFollowersListResponse(responseData);
+                    } catch (Exception e) {
+                        showToast(getString(R.string.server_went_wrong));
+                        Crashlytics.logException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                    }
+                }
 
-        }
+                @Override
+                public void onFailure(Call<FollowersFollowingResponse> call, Throwable t) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    noResultTextView.setVisibility(View.VISIBLE);
+                    Crashlytics.logException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
+                }
+            };
 
-        @Override
-        public void onFailure(Call<FollowersFollowingResponse> call, Throwable t) {
-            progressBar.setVisibility(View.INVISIBLE);
-            noResultTextView.setVisibility(View.VISIBLE);
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
+    private Callback<FollowersFollowingResponse> getFollowersListResponseCallback =
+            new Callback<FollowersFollowingResponse>() {
+                @Override
+                public void onResponse(Call<FollowersFollowingResponse> call,
+                        retrofit2.Response<FollowersFollowingResponse> response) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    isRequestRunning = false;
+                    if (response.body() == null) {
+                        showToast(getString(R.string.went_wrong));
+                        return;
+                    }
+                    try {
+                        FollowersFollowingResponse responseData = response.body();
+                        processFollowersListResponse(responseData);
+                    } catch (Exception e) {
+                        showToast(getString(R.string.server_went_wrong));
+                        Crashlytics.logException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                    }
+                }
 
-
-    private Callback<FollowersFollowingResponse> getFollowersListResponseCallback = new Callback<FollowersFollowingResponse>() {
-        @Override
-        public void onResponse(Call<FollowersFollowingResponse> call,
-                retrofit2.Response<FollowersFollowingResponse> response) {
-            progressBar.setVisibility(View.INVISIBLE);
-            if (response.body() == null) {
-                showToast(getString(R.string.went_wrong));
-                return;
-            }
-            try {
-                FollowersFollowingResponse responseData = response.body();
-                processFollowersListResponse(responseData);
-            } catch (Exception e) {
-                showToast(getString(R.string.server_went_wrong));
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<FollowersFollowingResponse> call, Throwable t) {
-            progressBar.setVisibility(View.INVISIBLE);
-            noResultTextView.setVisibility(View.VISIBLE);
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
+                @Override
+                public void onFailure(Call<FollowersFollowingResponse> call, Throwable t) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    isRequestRunning = false;
+                    noResultTextView.setVisibility(View.VISIBLE);
+                    Crashlytics.logException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
+                }
+            };
 
     private void processFollowersListResponse(FollowersFollowingResponse responseData) {
         if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
             noResultTextView.setVisibility(View.GONE);
-            mDatalist = responseData.getData().getResult();
-
-            if (mDatalist.size() == 0) {
-                if (AppConstants.FOLLOWER_LIST.equals(followListType)) {
-                    noResultTextView.setText(getResources().getString(R.string.empty_followers_in_profile));
+            ArrayList<FollowersFollowingResult> datalist = responseData.getData().getResult();
+            if (datalist.size() == 0) {
+                isLastPageReached = false;
+                if (null != this.datalist && !this.datalist.isEmpty()) {
+                    //No more next results for search from pagination
+                    isLastPageReached = true;
                 } else {
-                    noResultTextView.setText(getResources().getString(R.string.profile_empty_following));
+                    // No results for search
+                    if (AppConstants.FOLLOWER_LIST.equals(followListType)) {
+                        noResultTextView.setText(getResources().getString(R.string.empty_followers_in_profile));
+                    } else {
+                        noResultTextView.setText(getResources().getString(R.string.profile_empty_following));
+                    }
+                    noResultTextView.setVisibility(View.VISIBLE);
+                    followerFollowingListView.setVisibility(View.GONE);
                 }
-                noResultTextView.setVisibility(View.VISIBLE);
-                followerFollowingListView.setVisibility(View.GONE);
             } else {
-                followerFollowingListAdapter.setData(mDatalist);
+                noResultTextView.setVisibility(View.GONE);
+                followerFollowingListView.setVisibility(View.VISIBLE);
+                this.datalist.addAll(datalist);
+                followerFollowingListAdapter.setData(this.datalist);
+                offset = offset + LIMIT;
                 followerFollowingListAdapter.notifyDataSetChanged();
             }
         } else {
@@ -235,8 +273,8 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
     private void processCollectionFollowersListResponse(FollowersFollowingResponse responseData) {
         if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
             noResultTextView.setVisibility(View.GONE);
-            mDatalist = responseData.getData().getResult();
-            collectionDatalist.addAll(mDatalist);
+            datalist = responseData.getData().getResult();
+            collectionDatalist.addAll(datalist);
             if (collectionDatalist.size() == 0) {
                 noResultTextView.setText(getResources().getString(R.string.empty_followers_in_collection));
                 noResultTextView.setVisibility(View.VISIBLE);
@@ -265,8 +303,8 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
 
     private void getCollectionFollowers(int start) {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        FollowAPI followListAPI = retrofit.create(FollowAPI.class);
-        Call<FollowersFollowingResponse> callCollectionFollowersList = followListAPI
+        FollowAPI followListApi = retrofit.create(FollowAPI.class);
+        Call<FollowersFollowingResponse> callCollectionFollowersList = followListApi
                 .getCollectionFollowingList(collectionId, start, 10);
         callCollectionFollowersList.enqueue(getCollectionFollowersList);
         progressBar.setVisibility(View.VISIBLE);

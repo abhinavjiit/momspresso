@@ -573,7 +573,7 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         FollowAPI followApi = retrofit.create(FollowAPI.class);
         FollowUnfollowUserRequest request = new FollowUnfollowUserRequest();
-        request.setFollowerId(authorId);
+        request.setFollowee_id(authorId);
         if (articleListingResults.get(position).getIsfollowing().equals("1")) {
             Utils.pushGenericEvent(this, "CTA_Unfollow_100WS_Detail", userDynamoId, "TopicsShortStoryTabFragment");
             Call<ResponseBody> followUnfollowUserResponseCall = followApi.unfollowUserInShortStoryListingV2(request);

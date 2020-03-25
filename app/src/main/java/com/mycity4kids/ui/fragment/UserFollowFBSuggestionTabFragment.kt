@@ -166,7 +166,7 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener,
         val retrofit = BaseApplication.getInstance().retrofit
         val followAPI = retrofit.create(FollowAPI::class.java)
         val request = FollowUnfollowUserRequest()
-        request.followerId = authorId
+        request.followee_id = authorId
         if ("0" == action) {
             val followUnfollowUserResponseCall = followAPI.unfollowUser(request)
             followUnfollowUserResponseCall.enqueue(followUnfollowUserResponseCallback)

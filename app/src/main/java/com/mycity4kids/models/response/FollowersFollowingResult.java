@@ -19,7 +19,7 @@ public class FollowersFollowingResult {
     private String lastName;
     @SerializedName("profilePicUrl")
     private ProfilePic profilePicUrl;
-    @SerializedName("isFollowed")
+    @SerializedName("followBack")
     private boolean isFollowed;
 
     public String getUserId() {

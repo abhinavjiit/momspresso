@@ -104,7 +104,7 @@ class CollectionFollowFollowersListAdapter(val mContext: Context, val listType: 
 
     private fun followUserAPI(position: Int, holder: ViewHolder) {
         val followUnfollowUserRequest = FollowUnfollowUserRequest()
-        followUnfollowUserRequest.followerId = mDataList?.get(position)?.userId
+        followUnfollowUserRequest.followee_id = mDataList?.get(position)?.userId
         var screenName = ""
         if (AppConstants.FOLLOWER_LIST == listType) {
             screenName = "FollowersListingScreen"
@@ -156,9 +156,9 @@ class CollectionFollowFollowersListAdapter(val mContext: Context, val listType: 
             try {
                 val url: URL
                 if ("follow" == strings[1]) {
-                    url = URL(AppConstants.BASE_URL + "/v1/users/followers/")
+                    url = URL(AppConstants.BASE_URL + "follow/v2/users/follow")
                 } else {
-                    url = URL(AppConstants.BASE_URL + "/v1/users/unfollow/")
+                    url = URL(AppConstants.BASE_URL + "follow/v2/users/unfollow")
                 }
 
                 urlConnection = url.openConnection() as HttpURLConnection
@@ -229,7 +229,7 @@ class CollectionFollowFollowersListAdapter(val mContext: Context, val listType: 
                 val responseData = Gson().fromJson(result, FollowUnfollowUserResponse::class.java)
                 if ((responseData.code == 200) and (Constants.SUCCESS == responseData.status)) {
                     for (i in mDataList?.indices!!) {
-                        if (mDataList?.get(i)?.userId == responseData.data.result.id) {
+                        if (mDataList?.get(i)?.userId == responseData.data.result) {
                             if ("follow" == type) {
                                 mDataList?.get(i)?.isFollowed = true
                                 viewHolder.relativeLoadingView.visibility = View.GONE
