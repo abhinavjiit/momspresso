@@ -1419,4 +1419,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="collection">COLLECTION</string>
   <string name="groups_user_block_success">User blocked successfully</string>
   <string name="permission_contact_rationale">This permission is needed to invite your contact via sms.</string>
+  <string name="draft_instagram_submission">Draft Instagram submission</string>
+    <string name="draft_facebook_submission">Draft Facebook submission</string>
+    <string name="order_screenshot">Order screenshot</string>
+    <string name="pre_meet_submission">Pre-meet submission</string>
+    <string name="unlisted_video_link">Unlisted video link</string>
 </resources>

@@ -45,12 +45,12 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import retrofit2.Call
+import retrofit2.Callback
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.Date
-import retrofit2.Call
-import retrofit2.Callback
 
 const val SELECT_IMAGE = 1005
 
@@ -183,6 +183,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     private var campaignUrlProofList: ArrayList<CampaignProofResponse> = arrayListOf()
     private var campaignId: Int = 60
     private var status: Int = 0
+    private var approval_status: Int = -1
     private lateinit var textSubmit: TextView
     private lateinit var textInstruction: TextView
     private lateinit var deliverableTypeList: ArrayList<Int>
@@ -200,15 +201,22 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     private lateinit var addlinkTextView1: TextView
     private lateinit var headerTextViewContainer: RelativeLayout
     private lateinit var headerTextViewContainer1: RelativeLayout
+    private lateinit var preproofApprovalTextView: TextView
 
     companion object {
         @JvmStatic
-        fun newInstance(id: Int, deliverableTypeList: ArrayList<Int>, status: Int) =
+        fun newInstance(
+            id: Int,
+            deliverableTypeList: ArrayList<Int>,
+            status: Int,
+            approval_status: Int
+        ) =
             CampaignAddProofFragment().apply {
                 arguments = Bundle().apply {
                     this.putInt("id", id)
                     this.putIntegerArrayList("deliverableTypeList", deliverableTypeList)
                     this.putInt("status", status)
+                    this.putInt("approval_status", approval_status)
                 }
             }
     }
@@ -232,6 +240,12 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 0
             }
 
+            approval_status = if (arguments!!.containsKey("approval_status")) {
+                arguments!!.getInt("approval_status")
+            } else {
+                -1
+            }
+
             deliverableTypeList = if (arguments!!.containsKey("deliverableTypeList")) {
                 arguments!!.getIntegerArrayList("deliverableTypeList")!!
             } else {
@@ -252,6 +266,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         headerTextViewContainer1 = view.findViewById(R.id.headerTextViewContainer1)
         linearInstruction = view.findViewById(R.id.linearInstruction)
         textAddUrlProof = view.findViewById(R.id.textAddUrlProof)
+        preproofApprovalTextView = view.findViewById(R.id.preproofapprovalText)
         textAddUrlProof.setOnClickListener {
             var isEmpty = false
             for (i in 0..campaignUrlProofList.size - 1) {
@@ -290,6 +305,13 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             (activity as CampaignContainerActivity).onBackPressed()
         }
 
+        if (approval_status == 0 || approval_status == 1 || approval_status == 2) {
+            preproofApprovalTextView.visibility = View.VISIBLE
+            preproofApprovalTextView.text =
+                fetchDeliverableName(deliverableTypeList) + " is approved. Make your final submission."
+        } else {
+            preproofApprovalTextView.visibility = View.GONE
+        }
         relativeMediaProof = view.findViewById(R.id.relativeMediaProof)
         relativeMediaProof.setOnClickListener {
         }
@@ -350,6 +372,22 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             removeProgressDialog()
         }
         return view
+    }
+
+    private fun fetchDeliverableName(deliverableTypeList: ArrayList<Int>): String {
+        var deliverableName = ""
+        if (deliverableTypeList.get(0) == 0) {
+            deliverableName = getString(R.string.draft_instagram_submission)
+        } else if (deliverableTypeList.get(0) == 1) {
+            deliverableName = getString(R.string.draft_facebook_submission)
+        } else if (deliverableTypeList.get(0) == 2) {
+            deliverableName = getString(R.string.order_screenshot)
+        } else if (deliverableTypeList.get(0) == 3) {
+            deliverableName = getString(R.string.pre_meet_submission)
+        } else if (deliverableTypeList.get(0) == 4) {
+            deliverableName = getString(R.string.unlisted_video_link)
+        }
+        return deliverableName
     }
 
     val preProof = object : Callback<PreProofResponse> {
