@@ -382,8 +382,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
                 try {
                     Drawable myDrawable = ContextCompat
-                            .getDrawable(getActivity(), R.drawable.ic_share_icon_image);
-                    myDrawable.setTint(getResources().getColor(R.color.app_red));
+                            .getDrawable(getActivity(), R.drawable.ic_collection_add);
+                    myDrawable.setTint(ContextCompat.getColor(emailShareTextView.getContext(), R.color.app_red));
                     emailShareTextView
                             .setCompoundDrawablesWithIntrinsicBounds(null, myDrawable, null, null);
                 } catch (NullPointerException e) {
@@ -1381,7 +1381,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         Crashlytics.logException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
-                  /*  Intent sendIntent = new Intent();
+                    /*  Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
                     sendIntent.putExtra(Intent.EXTRA_TEXT, AppUtils.stripHtml("" + detailData.getExcerpt()) + "\n\n"
                             + BaseApplication.getAppContext()
