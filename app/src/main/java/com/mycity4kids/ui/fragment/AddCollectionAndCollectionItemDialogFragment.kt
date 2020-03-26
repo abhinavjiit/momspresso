@@ -37,10 +37,11 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.io.InputStreamReader
 import retrofit2.HttpException
+import java.io.InputStreamReader
 
-class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollectionAdapter.RecyclerViewClickListener {
+class AddCollectionAndCollectionItemDialogFragment : DialogFragment(),
+    AddCollectionAdapter.RecyclerViewClickListener {
     override fun onClick(position: Int) {
         addCollectionItem(position)
     }
@@ -56,9 +57,15 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
     private lateinit var noItemAddedTextView: TextView
     var type: String? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.add_collection_activity, container,
-                false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val rootView = inflater.inflate(
+            R.layout.add_collection_activity, container,
+            false
+        )
         addCollectionRecyclerView = rootView.findViewById(R.id.addCollectionRecyclerView)
         addNewTextView = rootView.findViewById(R.id.addNewTextView)
         shimmer1 = rootView.findViewById(R.id.shimmer1)
@@ -80,14 +87,17 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
                 val fm = fragmentManager
                 addCollectionPopUpDialogFragment.setTargetFragment(this, 100)
                 addCollectionPopUpDialogFragment.show(fm!!, "collectionAddPopUp")
-                Utils.pushProfileEvents(activity, "CTA_Add_Collection_From_Content",
-                        "AddCollectionAndCollectionItemDialogFragment", "New collection", "-")
+                Utils.pushProfileEvents(
+                    activity, "CTA_Add_Collection_From_Content",
+                    "AddCollectionAndCollectionItemDialogFragment", "New collection", "-"
+                )
             } catch (e: Exception) {
                 Crashlytics.logException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
-        addCollectionRecyclerView.addOnScrollListener(object : EndlessScrollListener(linearLayoutManager) {
+        addCollectionRecyclerView.addOnScrollListener(object :
+            EndlessScrollListener(linearLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
                 getUserCreatedCollections(totalItemsCount)
             }
@@ -109,7 +119,10 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
         super.onStart()
         val dialog = dialog
         if (dialog != null) {
-            dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            dialog.window!!.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
             dialog.window!!.setWindowAnimations(R.style.CollectionDialogAnimation)
             dialog.window!!.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.transparent)))
         }
@@ -117,7 +130,13 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
     }
 
     private fun getUserCreatedCollections(start: Int) {
-        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getUserCollectionList(userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, start = start, offset = 20, collectionType = "0").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getUserCollectionList(
+            userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+            start = start,
+            offset = 20,
+            collectionType = "0"
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<UserCollectionsListModel>> {
             override fun onComplete() {
             }
 
@@ -158,13 +177,17 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
 
     private fun addCollectionItem(position: Int) {
         val addCollectionRequestModel1 = UpdateCollectionRequestModel()
-        addCollectionRequestModel1.userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
+        addCollectionRequestModel1.userId =
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
         addCollectionRequestModel1.itemType = type
         val list = ArrayList<String>()
         list.add(dataList[position].userCollectionId)
         addCollectionRequestModel1.userCollectionId = list
         addCollectionRequestModel1.item = articleId
-        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).addCollectionItem(addCollectionRequestModel1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).addCollectionItem(
+            addCollectionRequestModel1
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
             override fun onComplete() {
             }
 
@@ -192,7 +215,8 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(), AddCollec
                     var data = (e as HttpException).response()?.errorBody()!!.byteStream()
                     var jsonParser = JsonParser()
                     var jsonObject = jsonParser.parse(
-                            InputStreamReader(data, "UTF-8")) as JsonObject
+                        InputStreamReader(data, "UTF-8")
+                    ) as JsonObject
                     var reason = jsonObject.get("reason")
                     Toast.makeText(activity, reason.asString, Toast.LENGTH_SHORT).show()
                 } catch (e: Exception) {

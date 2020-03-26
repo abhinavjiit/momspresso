@@ -12,9 +12,9 @@ import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -25,16 +25,13 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -44,12 +41,10 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.BaseViewHolder;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.fragment.AddCollectionAndCollectionItemDialogFragment;
+import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import q.rorbin.badgeview.QBadgeView;
 
 public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
@@ -63,14 +58,17 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     private boolean isRecommendRequestRunning;
     private String userDynamoId;
     private String bookmarkStatus;
+    private VideoFeedRecyclerViewClick videoFeedRecyclerViewClick;
     FragmentManager fm;
 
     //    private List<VideoInfo> mInfoList;
     private ArrayList<VlogsListingAndDetailResult> mInfoList;
 
-    public VideoRecyclerViewAdapter(Context mContext, FragmentManager fm) {
+    public VideoRecyclerViewAdapter(VideoFeedRecyclerViewClick videoFeedRecyclerViewClick, Context mContext,
+            FragmentManager fm) {
         this.fm = fm;
         this.mContext = mContext;
+        this.videoFeedRecyclerViewClick = videoFeedRecyclerViewClick;
         userDynamoId = SharedPrefUtils.getUserDetailModel(mContext).getDynamoId();
     }
 
@@ -110,9 +108,11 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case VIEW_TYPE_NORMAL:
-                return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout, parent, false));
+                return new ViewHolder(
+                        LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout, parent, false));
             case VIEW_TYPE_EMPTY:
-                return new EmptyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_empty_view, parent, false));
+                return new EmptyViewHolder(
+                        LayoutInflater.from(parent.getContext()).inflate(R.layout.item_empty_view, parent, false));
             default:
                 return null;
         }
@@ -127,15 +127,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position, List<Object> payload) {
         mHolder = (ViewHolder) holder;
-        new QBadgeView(mContext)
-                .setBadgeText(" " + mContext.getString(R.string.new_label) + " ")
-                .setBadgeBackgroundColor(mContext.getResources().getColor(R.color.orange_new))
-                .setBadgeTextSize(7, true)
-                .setBadgePadding(3, true)
-                .setBadgeGravity(Gravity.TOP | Gravity.END)
-                .setGravityOffset(4, -2, true)
-                .bindTarget(mHolder.collectionAdd);
-        holder.onBind(position);
     }
 
     @Override
@@ -202,6 +193,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             three_dot = itemView.findViewById(R.id.three_dot);
             mImgBookmark = itemView.findViewById(R.id.bookmark);
             parent = itemView;
+
         }
 
         protected void clear() {
@@ -220,11 +212,11 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 heart.setImageResource(R.drawable.ic_likevideo);
             }
 
-            if (responseData.getIs_bookmark() != null && responseData.getIs_bookmark().equals("1")) {
+           /* if (responseData.getIs_bookmark() != null && responseData.getIs_bookmark().equals("1")) {
                 mImgBookmark.setImageResource(R.drawable.ic_bookmarked);
             } else {
                 mImgBookmark.setImageResource(R.drawable.ic_bookmark);
-            }
+            }*/
 
             if (responseData.isFollowed()) {
                 followText.setText("Following");
@@ -252,7 +244,10 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             followText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Utils.momVlogEvent(mContext, "Video Detail", "Follow", "", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
+                    Utils.momVlogEvent(mContext, "Video Detail", "Follow", "", "android",
+                            SharedPrefUtils.getAppLocale(mContext),
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                            String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
 
                     ((ParallelFeedActivity) mContext).followAPICall(responseData.getAuthor().getId(), position);
                 }
@@ -261,13 +256,17 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             userImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((ParallelFeedActivity) mContext).openPublicProfile(responseData.getAuthor().getUserType(), responseData.getAuthor().getId(), responseData.getAuthor().getFirstName() + responseData.getAuthor().getLastName());
+                    ((ParallelFeedActivity) mContext)
+                            .openPublicProfile(responseData.getAuthor().getUserType(), responseData.getAuthor().getId(),
+                                    responseData.getAuthor().getFirstName() + responseData.getAuthor().getLastName());
                 }
             });
             userHandle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((ParallelFeedActivity) mContext).openPublicProfile(responseData.getAuthor().getUserType(), responseData.getAuthor().getId(), responseData.getAuthor().getFirstName() + responseData.getAuthor().getLastName());
+                    ((ParallelFeedActivity) mContext)
+                            .openPublicProfile(responseData.getAuthor().getUserType(), responseData.getAuthor().getId(),
+                                    responseData.getAuthor().getFirstName() + responseData.getAuthor().getLastName());
                 }
             });
             heart.setOnClickListener(new View.OnClickListener() {
@@ -275,17 +274,32 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 public void onClick(View view) {
                     if (responseData.getIs_liked() != null && responseData.getIs_liked().equals("1")) {
                         likeStatus = "0";
-                        ((ParallelFeedActivity) mContext).recommendUnrecommentArticleAPI(responseData.getId(), likeStatus, position);
-                        Utils.momVlogEvent(mContext, "Video Detail", "DisLike", "", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
+                        ((ParallelFeedActivity) mContext)
+                                .recommendUnrecommentArticleAPI(responseData.getId(), likeStatus, position);
+                        Utils.momVlogEvent(mContext, "Video Detail", "DisLike", "", "android",
+                                SharedPrefUtils.getAppLocale(mContext),
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                                String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
                     } else {
                         likeStatus = "1";
-                        ((ParallelFeedActivity) mContext).recommendUnrecommentArticleAPI(responseData.getId(), likeStatus, position);
-                        Utils.momVlogEvent(mContext, "Video Detail", "Like", "", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
+                        ((ParallelFeedActivity) mContext)
+                                .recommendUnrecommentArticleAPI(responseData.getId(), likeStatus, position);
+                        Utils.momVlogEvent(mContext, "Video Detail", "Like", "", "android",
+                                SharedPrefUtils.getAppLocale(mContext),
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                                String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
                     }
                 }
             });
 
-            mImgBookmark.setOnClickListener(new View.OnClickListener() {
+            mImgBookmark.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    videoFeedRecyclerViewClick.onClick(getAdapterPosition(), view);
+                }
+            });
+            /*mImgBookmark.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (responseData.getIs_bookmark() != null && responseData.getIs_bookmark().equals("0")) {
@@ -297,7 +311,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                     ((ParallelFeedActivity) mContext).addRemoveBookmark(bookmarkStatus, position, responseData.getAuthor().getId(), responseData.getId());
 
                 }
-            });
+            });*/
 
             share.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -311,10 +325,16 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                     } else {
                         shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, getShareUrl(responseData));
                         mContext.startActivity(Intent.createChooser(shareIntent, "Momspresso"));
-                        Utils.pushShareArticleEvent(mContext, "DetailVideoScreen", userDynamoId + "", responseData.getId(), responseData.getAuthor().getId() + "~" + responseData.getAuthor().getFirstName() + " " + responseData.getAuthor().getLastName(), "CommonShare");
+                        Utils.pushShareArticleEvent(mContext, "DetailVideoScreen", userDynamoId + "",
+                                responseData.getId(),
+                                responseData.getAuthor().getId() + "~" + responseData.getAuthor().getFirstName() + " "
+                                        + responseData.getAuthor().getLastName(), "CommonShare");
                     }
 
-                    Utils.momVlogEvent(mContext, "Video Detail", "Share", "", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
+                    Utils.momVlogEvent(mContext, "Video Detail", "Share", "", "android",
+                            SharedPrefUtils.getAppLocale(mContext),
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                            String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
 
                 }
             });
@@ -343,19 +363,29 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 @Override
                 public void onClick(View v) {
                     if (StringUtils.isNullOrEmpty(getShareUrl(responseData))) {
-                        Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_fail),
+                                Toast.LENGTH_SHORT).show();
                     } else {
                         Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
                         whatsappIntent.setType("text/plain");
                         whatsappIntent.setPackage("com.whatsapp");
-                        whatsappIntent.putExtra(Intent.EXTRA_TEXT, mContext.getString(R.string.check_out_momvlog) + getShareUrl(responseData));
+                        whatsappIntent.putExtra(Intent.EXTRA_TEXT,
+                                mContext.getString(R.string.check_out_momvlog) + getShareUrl(responseData));
                         try {
                             mContext.startActivity(whatsappIntent);
-                            Utils.pushShareArticleEvent(mContext, "DetailVideoScreen", userDynamoId + "", responseData.getId(), responseData.getAuthor().getId() + "~" + responseData.getAuthor().getFirstName() + " " + responseData.getAuthor().getLastName(), "Whatsapp");
+                            Utils.pushShareArticleEvent(mContext, "DetailVideoScreen", userDynamoId + "",
+                                    responseData.getId(),
+                                    responseData.getAuthor().getId() + "~" + responseData.getAuthor().getFirstName()
+                                            + " " + responseData.getAuthor().getLastName(), "Whatsapp");
                         } catch (android.content.ActivityNotFoundException ex) {
-                            Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext,
+                                    mContext.getString(R.string.moderation_or_share_whatsapp_not_installed),
+                                    Toast.LENGTH_SHORT).show();
                         }
-                        Utils.momVlogEvent(mContext, "Video Detail", "Whatsapp", "", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
+                        Utils.momVlogEvent(mContext, "Video Detail", "Whatsapp", "", "android",
+                                SharedPrefUtils.getAppLocale(mContext),
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                                String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
 
                     }
                 }
@@ -363,16 +393,27 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             commentCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((ParallelFeedActivity) mContext).openViewCommentDialog(responseData.getCommentUri(), getShareUrl(responseData), responseData.getAuthor().getId(), responseData.getAuthor().getFirstName() + " " + responseData.getAuthor().getLastName(), responseData.getId());
+                    ((ParallelFeedActivity) mContext)
+                            .openViewCommentDialog(responseData.getCommentUri(), getShareUrl(responseData),
+                                    responseData.getAuthor().getId(),
+                                    responseData.getAuthor().getFirstName() + " " + responseData.getAuthor()
+                                            .getLastName(), responseData.getId());
                 }
             });
 
             comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Utils.momVlogEvent(mContext, "Video Detail", "Add comment", "", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
+                    Utils.momVlogEvent(mContext, "Video Detail", "Add comment", "", "android",
+                            SharedPrefUtils.getAppLocale(mContext),
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                            String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
 
-                    ((ParallelFeedActivity) mContext).openViewCommentDialog(responseData.getCommentUri(), getShareUrl(responseData), responseData.getAuthor().getId(), responseData.getAuthor().getFirstName() + " " + responseData.getAuthor().getLastName(), responseData.getId());
+                    ((ParallelFeedActivity) mContext)
+                            .openViewCommentDialog(responseData.getCommentUri(), getShareUrl(responseData),
+                                    responseData.getAuthor().getId(),
+                                    responseData.getAuthor().getFirstName() + " " + responseData.getAuthor()
+                                            .getLastName(), responseData.getId());
                 }
             });
 
@@ -396,7 +437,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap bitmap,
-                                                    Transition<? super Bitmap> transition) {
+                                Transition<? super Bitmap> transition) {
                             int w = bitmap.getWidth();
                             int h = bitmap.getHeight();
                             Log.e("width and height", w + " * " + h);
@@ -404,14 +445,17 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                             float ratio = ((float) h / (float) w);
 //                            mCover.getLayoutParams().height = heightInDp;
 //                            mCover.getLayoutParams().width = widthInDp;
-                            videoLayout.getLayoutParams().height = Math.round(ratio * mContext.getResources().getDisplayMetrics().widthPixels);
-                            videoLayout.getLayoutParams().width = Math.round(mContext.getResources().getDisplayMetrics().widthPixels);
+                            videoLayout.getLayoutParams().height = Math
+                                    .round(ratio * mContext.getResources().getDisplayMetrics().widthPixels);
+                            videoLayout.getLayoutParams().width = Math
+                                    .round(mContext.getResources().getDisplayMetrics().widthPixels);
 
                             mCover.setImageBitmap(bitmap);
-                            Log.e("from ratio", w + "   " + h + "   " + videoLayout.getLayoutParams().height + " * " + videoLayout.getLayoutParams().width);
+                            Log.e("from ratio",
+                                    w + "   " + h + "   " + videoLayout.getLayoutParams().height + " * " + videoLayout
+                                            .getLayoutParams().width);
                         }
                     });
-
 
 //            Glide.with(itemView.getContext().getApplicationContext())
 //                    .asBitmap()
@@ -441,7 +485,8 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
 
         final PopupWindow popupWindow = new PopupWindow(mContext);
 
-        LayoutInflater inflater = (LayoutInflater) ((ParallelFeedActivity) mContext).getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) ((ParallelFeedActivity) mContext)
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View view = inflater.inflate(R.layout.parallel_feed_popup, null);
 
@@ -463,7 +508,8 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         return popupWindow;
     }
 
-    public void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore, final String userBio) {
+    public void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText,
+            final boolean viewMore, final String userBio) {
 
         if (tv.getTag() == null) {
             tv.setTag(tv.getText());
@@ -498,20 +544,24 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
 
                 if (maxLine == 0) {
                     int lineEndIndex = tv.getLayout().getLineEnd(0);
-                    String text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
+                    String text =
+                            tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
                     tv.setText(text);
                     tv.setMovementMethod(LinkMovementMethod.getInstance());
                     tv.setText(
-                            addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
+                            addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine,
+                                    expandText,
                                     viewMore, userBio), TextView.BufferType.SPANNABLE);
                 } else if (maxLine > 0 && tv.getLineCount() > maxLine) {
                     int lineEndIndex = tv.getLayout().getLineEnd(maxLine - 1);
                     if ((lineEndIndex - expandText.length() + 1) > 10) {
-                        String text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
+                        String text =
+                                tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
                         tv.setText(text);
                         tv.setMovementMethod(LinkMovementMethod.getInstance());
                         tv.setText(
-                                addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
+                                addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine,
+                                        expandText,
                                         viewMore, userBio), TextView.BufferType.SPANNABLE);
                     } else {
                         // int lineEndIndex1 = tv.getLayout().getLineEnd(maxLine-1);
@@ -519,7 +569,8 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         tv.setText(text);
                         tv.setMovementMethod(LinkMovementMethod.getInstance());
                         tv.setText(
-                                addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
+                                addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine,
+                                        expandText,
                                         viewMore, userBio), TextView.BufferType.SPANNABLE);
                     }
                 } else {
@@ -531,12 +582,11 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     }
 
     private SpannableStringBuilder addClickablePartTextViewResizable(final Spanned strSpanned, final TextView tv,
-                                                                     final int maxLine, final String spanableText, final boolean viewMore, final String userBio) {
+            final int maxLine, final String spanableText, final boolean viewMore, final String userBio) {
         String str = strSpanned.toString();
         SpannableStringBuilder ssb = new SpannableStringBuilder(strSpanned);
 
         if (str.contains(spanableText)) {
-
 
             ssb.setSpan(new MySpannable(false) {
                 @Override
@@ -583,7 +633,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         @Override
         public void onClick(View widget) {
 
-
         }
     }
 
@@ -601,7 +650,8 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         if (StringUtils.isNullOrEmpty(bSlug)) {
                             shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + responseData.getTitleSlug();
                         } else {
-                            shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + bSlug + "/video/" + responseData.getTitleSlug();
+                            shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + bSlug + "/video/" + responseData
+                                    .getTitleSlug();
                         }
                     } else {
                         shareUrl = deepLinkURL;
@@ -636,7 +686,8 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         if (StringUtils.isNullOrEmpty(bSlug)) {
                             shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + responseData.getTitleSlug();
                         } else {
-                            shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + bSlug + "/video/" + responseData.getTitleSlug();
+                            shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + bSlug + "/video/" + responseData
+                                    .getTitleSlug();
                         }
                     } else {
                         shareUrl = deepLinkURL;
@@ -645,7 +696,8 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             } else {
                 // Default Author type set to Blogger
                 if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                    shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + responseData.getAuthor().getBlogTitleSlug() + "/video/" + titleSlug;
+                    shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + responseData.getAuthor().getBlogTitleSlug()
+                            + "/video/" + titleSlug;
                 } else {
                     shareUrl = deepLinkURL;
                 }
@@ -680,5 +732,11 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         public void onClick(View v) {
 
         }
+    }
+
+
+    public interface VideoFeedRecyclerViewClick {
+
+        void onClick(int position, View view);
     }
 }

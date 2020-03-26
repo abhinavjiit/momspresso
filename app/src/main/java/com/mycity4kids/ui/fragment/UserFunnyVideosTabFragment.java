@@ -332,11 +332,14 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
                 startActivity(searchIntent);
                 break;
             case R.id.getStartedTextView:
-                if (isAdded()) {
-                    Intent intent = new Intent(getActivity(), ChooseVideoCategoryActivity.class);
-                    intent.putExtra("comingFrom", "createDashboardIcon");
-                    getActivity().startActivity(intent);
-                }
+                ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                Bundle _args = new Bundle();
+                _args.putString("activity", "myfunnyvideos");
+                chooseVideoUploadOptionDialogFragment.setArguments(_args);
+                chooseVideoUploadOptionDialogFragment.setCancelable(true);
+                chooseVideoUploadOptionDialogFragment.setTargetFragment(this, 1111);
+                chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
                 break;
             default:
                 break;
