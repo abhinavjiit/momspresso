@@ -766,7 +766,7 @@
           android:layout_width="0dp"
           android:layout_height="40dp"
           android:layout_weight="1"
-          android:drawableTop="@drawable/ic_share_icon_image"
+          android:drawableTop="@drawable/ic_collection_add"
           android:drawablePadding="2dp"
           android:drawableTint="@color/app_red"
           android:gravity="center"

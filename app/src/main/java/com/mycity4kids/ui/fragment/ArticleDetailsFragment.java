@@ -36,6 +36,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
@@ -1364,7 +1365,23 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                     break;
                 case R.id.emailShareTextView:
-                    Intent sendIntent = new Intent();
+                    try {
+                        AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment =
+                                new AddCollectionAndCollectionItemDialogFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("articleId", articleId);
+                        bundle.putString("type", AppConstants.ARTICLE_COLLECTION_TYPE);
+                        addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
+                        FragmentManager fm = getFragmentManager();
+                        addCollectionAndCollectionitemDialogFragment.setTargetFragment(this, 0);
+                        addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
+                        Utils.pushProfileEvents(getActivity(), "CTA_Article_Add_To_Collection",
+                                "ArticleDetailsFragment", "Add to Collection", "-");
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                    }
+                  /*  Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
                     sendIntent.putExtra(Intent.EXTRA_TEXT, AppUtils.stripHtml("" + detailData.getExcerpt()) + "\n\n"
                             + BaseApplication.getAppContext()
@@ -1372,7 +1389,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             + shareUrl);
                     sendIntent.setType("text/plain");
                     Intent shareIntent = Intent.createChooser(sendIntent, null);
-                    startActivity(shareIntent);
+                    startActivity(shareIntent);*/
                     break;
                 case R.id.cancelFollowPopUp:
                     followPopUpBottomContainer.setVisibility(View.GONE);
