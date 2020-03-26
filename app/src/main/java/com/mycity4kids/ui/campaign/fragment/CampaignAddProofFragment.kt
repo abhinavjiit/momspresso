@@ -49,6 +49,8 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.Date
+import retrofit2.Call
+import retrofit2.Callback
 
 const val SELECT_IMAGE = 1005
 
@@ -372,8 +374,11 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         return view
     }
 
-    private fun fetchDeliverableName(deliverableTypeList: ArrayList<Int>): String {
+    private fun fetchDeliverableName(deliverableTypeList: ArrayList<Int>?): String {
         var deliverableName = ""
+        if (deliverableTypeList.isNullOrEmpty()) {
+            return ""
+        }
         if (deliverableTypeList.get(0) == 0 || deliverableTypeList.get(0) == 1) {
             deliverableName = getString(R.string.draft_instagram_submission)
         } else if (deliverableTypeList.get(0) == 2 || deliverableTypeList.get(0) == 3) {

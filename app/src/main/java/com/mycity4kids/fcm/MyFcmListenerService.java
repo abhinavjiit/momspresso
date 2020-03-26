@@ -304,24 +304,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     handleNotificationAccordingToStructure(remoteMessage, pushNotificationModel, contentIntent,
                             "campaign_listing ----- Notification Message --- ",
                             "campaign_listing ----- Notification MixFeedData");
-                } else if (AppConstants.NOTIFICATION_TYPE_CAMPAIGN_PANCARD.equalsIgnoreCase(type)) {
-                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
-                        contentIntent = handleForcedUpdate();
-                    } else {
-                        intent = new Intent(getApplicationContext(), RewardsContainerActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("isComingFromRewards", true);
-                        intent.putExtra("pageLimit", 5);
-                        intent.putExtra("pageNumber", 5);
-                        intent.putExtra("fromNotification", true);
-                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                        stackBuilder.addParentStack(RewardsContainerActivity.class);
-                        stackBuilder.addNextIntent(intent);
-                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-                    }
-                    handleNotificationAccordingToStructure(remoteMessage, pushNotificationModel, contentIntent,
-                            "mymoney_pancard ----- Notification Message --- ",
-                            "mymoney_pancard ----- Notification MixFeedData");
                 } else if (AppConstants.NOTIFICATION_TYPE_CATEGORY_LISTING.equalsIgnoreCase(type)) {
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         contentIntent = handleForcedUpdate();
@@ -365,7 +347,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         intent.putExtra("pageNumber", 4);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("fromNotification", true);
-                        intent.putExtra("campaign_id", pushNotificationModel.getCampaign_id());
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         stackBuilder.addParentStack(RewardsContainerActivity.class);
                         stackBuilder.addNextIntent(intent);
@@ -432,7 +413,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         intent.putExtra("challenge", pushNotificationModel.getCategoryId());
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         stackBuilder.addNextIntentWithParentStack(intent);
-                        stackBuilder.editIntentAt(1).putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
+                        stackBuilder.editIntentAt(0).putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                     }
                     handleNotificationAccordingToStructure(remoteMessage, pushNotificationModel, contentIntent,
@@ -457,9 +438,9 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                 } else if (type.equalsIgnoreCase("group_membership") || type.equalsIgnoreCase("group_new_post")
                         || type.equalsIgnoreCase("group_admin_group_edit") || type.equalsIgnoreCase("group_admin")
                         || type.equalsIgnoreCase("group_new_response") || type.equalsIgnoreCase("group_new_reply")
-                        || type.equalsIgnoreCase("group_admin_membership") || type
-                        .equalsIgnoreCase("group_admin_reported") || "write_blog".equalsIgnoreCase(type) ||
-                        "suggested_topics".equalsIgnoreCase(type) || "group_listing".equalsIgnoreCase(type)) {
+                        || type.equalsIgnoreCase("group_admin_membership")
+                        || type.equalsIgnoreCase("group_admin_reported") || "write_blog".equalsIgnoreCase(type)
+                        || "suggested_topics".equalsIgnoreCase(type) || "group_listing".equalsIgnoreCase(type)) {
                     //No notification pop for these type when app is open.
                 } else if (AppConstants.NOTIFICATION_TYPE_REMOTE_CONFIG_SILENT_UPDATE.equalsIgnoreCase(type)) {
                     SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(BaseApplication.getAppContext(), true);
@@ -489,8 +470,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                 } else {
                     Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT,
                             SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "default");
-                    String message = pushNotificationModel.getMessage_id();
-                    String title = pushNotificationModel.getTitle();
+                    final String message = pushNotificationModel.getMessage_id();
+                    final String title = pushNotificationModel.getTitle();
                     intent = new Intent(getApplicationContext(), SplashActivity.class);
                     intent.putExtra("fromNotification", true);
                     contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -531,8 +512,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
         } else {
             Log.e("NOTIFICATION_TYPE", s2);
             prepareNotification(pushNotificationModel.getTitle(), pushNotificationModel.getBody(),
-                    pushNotificationModel.getRich_image_url()
-                    , contentIntent, pushNotificationModel.getSound());
+                    pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
         }
     }
 
@@ -540,14 +520,15 @@ public class MyFcmListenerService extends FirebaseMessagingService {
         try {
             URL url = new URL(imageUrl);
             bitmap = BitmapFactory.decodeStream((InputStream) url.getContent());
-        } catch (Exception ex) {
-
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4KException", Log.getStackTraceString(e));
         }
 
         Uri soundUri = Uri
                 .parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/"
                         + R.raw.coin);
-        NotificationManager mNotificationManager =
+        NotificationManager notificationManager1 =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("YOUR_CHANNEL_ID",
@@ -559,11 +540,11 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     .setUsage(AudioAttributes.USAGE_NOTIFICATION)
                     .build();
             channel.setSound(soundUri, audioAttributes);
-            mNotificationManager.createNotificationChannel(channel);
+            notificationManager1.createNotificationChannel(channel);
         }
-        NotificationCompat.Builder mBuilder;
+        NotificationCompat.Builder builder;
         if (imageUrl != null && !imageUrl.isEmpty()) {
-            mBuilder = new NotificationCompat.Builder(getApplicationContext(), "YOUR_CHANNEL_ID")
+            builder = new NotificationCompat.Builder(getApplicationContext(), "YOUR_CHANNEL_ID")
                     .setSmallIcon(R.drawable.icon_notify) // notification icon
                     .setContentTitle(title) // title for notification
                     .setContentText(message)// message for notification
@@ -572,7 +553,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap))
                     .setContentIntent(pendingIntent);
         } else {
-            mBuilder = new NotificationCompat.Builder(getApplicationContext(), "YOUR_CHANNEL_ID")
+            builder = new NotificationCompat.Builder(getApplicationContext(), "YOUR_CHANNEL_ID")
                     .setSmallIcon(R.drawable.icon_notify) // notification icon
                     .setContentTitle(title) // title for notification
                     .setContentText(message)// message for notification
@@ -581,6 +562,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     .setContentIntent(pendingIntent);
         }
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(0, mBuilder.build());
+        notificationManager.notify(0, builder.build());
     }
 }

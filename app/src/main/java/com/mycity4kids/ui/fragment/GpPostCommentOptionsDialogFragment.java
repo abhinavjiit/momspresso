@@ -45,6 +45,7 @@ public class GpPostCommentOptionsDialogFragment extends DialogFragment implement
         memberType = getArguments().getString(AppConstants.GROUP_MEMBER_TYPE);
 
         TextView blockUserTextView = (TextView) rootView.findViewById(R.id.blockUserTextView);
+        blockUserTextView.setVisibility(View.VISIBLE);
         blockUserTextView.setOnClickListener(this);
         TextView deleteCommentTextView = (TextView) rootView.findViewById(R.id.deleteCommentTextView);
         deleteCommentTextView.setOnClickListener(this);

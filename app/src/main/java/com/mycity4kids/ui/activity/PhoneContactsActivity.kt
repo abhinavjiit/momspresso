@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.activity
 
 import android.Manifest
+import android.accounts.NetworkErrorException
 import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
@@ -205,9 +206,27 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
                     call: Call<ResponseBody>,
                     response: Response<ResponseBody>
                 ) {
+                    if (response.body() == null) {
+                        val nee =
+                            NetworkErrorException(response.raw().toString())
+                        Crashlytics.logException(nee)
+                        showToast(getString(R.string.error_network))
+                        return
+                    }
+                    try {
+                        if (response.isSuccessful) {
+                            showToast(getString(R.string.invite_contact_invitation_sent))
+                            finish()
+                        }
+                    } catch (e: Exception) {
+                        showToast(getString(R.string.toast_response_error))
+                        Crashlytics.logException(e)
+                        Log.d("MC4kException", Log.getStackTraceString(e))
+                    }
                 }
 
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    showToast(getString(R.string.toast_response_error))
                     Crashlytics.logException(t)
                     Log.d(
                         "FileNotFoundException",

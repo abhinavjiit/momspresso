@@ -98,7 +98,6 @@ import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
 import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
 import com.mycity4kids.ui.fragment.GroupsViewFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
-import com.mycity4kids.ui.fragment.SuggestedTopicsFragment;
 import com.mycity4kids.ui.fragment.UploadVideoInfoFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.ui.rewards.activity.RewardsShareReferralCodeActivity;
@@ -691,10 +690,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     notificationExtras.getString(AppConstants.MILESTONE_ID));
             startActivity(profileIntent);
         } else if (Constants.SUGGESTED_TOPICS_FRAGMENT.equals(fragmentToLoad)) {
-            SuggestedTopicsFragment fragment0 = new SuggestedTopicsFragment();
-            Bundle bundle = new Bundle();
-            fragment0.setArguments(bundle);
-            addFragment(fragment0, bundle);
+            Intent suggestedIntent = new Intent(this, SuggestedTopicsActivity.class);
+            startActivity(suggestedIntent);
         } else if (Constants.SHORT_STOY_FRAGMENT.equals(fragmentToLoad)) {
             TopicsShortStoriesContainerFragment fragment1 = new TopicsShortStoriesContainerFragment();
             Bundle bundle = new Bundle();
@@ -1013,17 +1010,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 campaignIntent.putExtra("isComingfromCampaign", true);
                 campaignIntent.putExtra("pageLimit", 4);
                 campaignIntent.putExtra("pageNumber", 4);
-                campaignIntent.putExtra("campaign_Id", notificationExtras.getString("campaign_id"));
                 campaignIntent.putExtra("mymoney_bankdetails", "mymoney_bankdetails");
-                startActivity(campaignIntent);
-            } else if (AppConstants.NOTIFICATION_TYPE_CAMPAIGN_PANCARD.equalsIgnoreCase(notificationType)) {
-                pushEvent("mymoney_pancard");
-                Intent campaignIntent = new Intent(this, RewardsContainerActivity.class);
-                campaignIntent.putExtra("isComingFromRewards", true);
-                campaignIntent.putExtra("pageLimit", 5);
-                campaignIntent.putExtra("pageNumber", 5);
-                campaignIntent.putExtra("panCardFormNotification", "mymoney_pancard");
-                campaignIntent.putExtra("mymoney_pancard", "mymoney_pancard");
                 startActivity(campaignIntent);
             } else if (AppConstants.NOTIFICATION_TYPE_SHORT_STORY_DETAILS.equalsIgnoreCase(notificationType)) {
                 pushEvent("shortStoryDetails");
@@ -2404,14 +2391,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 selectOptToolbarTitle
                         .setText(getString(R.string.home_screen_select_an_option_title));
-            } else if (topFragment instanceof SuggestedTopicsFragment) {
-                Utils.pushOpenScreenEvent(this, "SuggestedTopicScreen",
-                        SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                toolbarTitleTextView.setText(getString(R.string.home_screen_suggested_topic_title));
-                toolbarTitleTextView.setTextColor(
-                        ContextCompat.getColor(this, R.color.notification_toolbar_title));
-                menu.findItem(R.id.action_write).setChecked(true);
-                toolbarRelativeLayout.setVisibility(View.VISIBLE);
             } else if (topFragment instanceof FragmentMC4KHomeNew) {
                 Utils.pushOpenScreenEvent(this, "HomeScreen",
                         SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");

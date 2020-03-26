@@ -1,5 +1,6 @@
 package com.mycity4kids.profile
 
+import android.Manifest
 import android.accounts.NetworkErrorException
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -92,12 +93,11 @@ import com.mycity4kids.widget.BadgesProfileWidget
 import com.mycity4kids.widget.ResizableTextView
 import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
-import android.Manifest
 
 class UserProfileActivity : BaseActivity(),
     UserContentAdapter.RecyclerViewClickListener, View.OnClickListener,

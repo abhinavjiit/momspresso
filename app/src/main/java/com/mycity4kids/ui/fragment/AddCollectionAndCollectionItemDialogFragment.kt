@@ -37,8 +37,8 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.HttpException
 import java.io.InputStreamReader
+import retrofit2.HttpException
 
 class AddCollectionAndCollectionItemDialogFragment : DialogFragment(),
     AddCollectionAdapter.RecyclerViewClickListener {
