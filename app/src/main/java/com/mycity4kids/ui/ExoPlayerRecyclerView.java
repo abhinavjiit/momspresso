@@ -177,8 +177,8 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             return;
         }
         videoCell = holder.videoCell;
-        coverImage = holder.mCover;
-        progressBar = holder.mProgressBar;
+        coverImage = holder.coverImageView;
+        progressBar = holder.progressBar;
         frameLayout = holder.itemView.findViewById(R.id.video_layout);
         Glide.with(appContext)
                 .asBitmap()

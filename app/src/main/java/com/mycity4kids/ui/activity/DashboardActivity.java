@@ -1909,7 +1909,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 changePreferredLanguageDialogFragment.show(fm, "Choose video option");
                 break;
             case R.id.searchAllImageView:
-                unblockRenu();
+                // unblockRenu();
                 if (topFragment instanceof GroupsViewFragment) {
                     Intent searchIntent = new Intent(this, GroupsSearchActivity.class);
                     startActivity(searchIntent);
