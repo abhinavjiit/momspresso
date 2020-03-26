@@ -106,10 +106,10 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener,
                             facebookFriendList.addAll(it)
                             if (it.isNotEmpty()) {
                                 recyclerView?.visibility = View.VISIBLE
-                                emptyList?.visibility = View.GONE
+                                fbFriendsContainer?.visibility = View.GONE
                             } else {
                                 recyclerView?.visibility = View.GONE
-                                emptyList?.visibility = View.VISIBLE
+                                fbFriendsContainer?.visibility = View.VISIBLE
                                 emptyList?.text =
                                     "None of your friends are logged into momspresso using facebook"
                             }
