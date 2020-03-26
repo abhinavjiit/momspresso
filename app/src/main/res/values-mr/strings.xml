@@ -980,200 +980,200 @@
   <string name="moderation_message">100WordStory under moderation.\n
 Thank you! We will be reviewing your story. You can expect to hear from us within the next 48 working hours. Meanwhile, you can still share your story with your friends!</string>
 
-  <string name="rewards_pancard_details">Pan details</string>
-  <string name="drawer_referra_mymoney">माझे पैसे संदर्भित करा</string>
-  <string name="referral_screen_text">Invite a friend to join MyMoney by sharing your referral code. Both of you will earn Rs. 25 once she has successfully completed a MyMoney campaign.</string>
-  <string name="share_referral_screen">Share your referral code and start earning</string>
-  <string name="referral_screen_whatsapp">WhatsApp</string>
-  <string name="referral_screen_facebook">Facebook</string>
-  <string name="rewards_tab_fragment_personalInfo_text">PERSONAL INFO</string>
-  <string name="rewards_tab_fragment_socialLink_text">SOCIAL LINKS</string>
-  <string name="rewards_tab_fragment_paymentMode">PAYMENT MODE</string>
-  <string name="rewards_tab_fragment_panCard">PAN CARD DETAILS</string>
-  <string name="rewards_tab_fragment_myEarning">MY EARNING</string>
-  <string name="rewards_tab_fragment_referrer_myMoney">refer mymoney</string>
-  <string name="rewards_pancard_toolbar_text">PAN CARD DETAIL</string>
-  <string name="reawrds_pancard_detail_text">Please enter your PAN card details</string>
-  <string name="rewards_pancard_note_detail">In case of Invalid/No Pan card attached, 20% tax will be deducted from the payment.</string>
-  <string name="rewards_pancard_Note_textview">NOTE :</string>
-  <string name="rewards_payment_submission_enter_bank_detail_text">PLEASE ENTER YOUR BANK DETAILS</string>
-  <string name="rewards_bank_detail_holder_nmae_text">Account Holder’s Name</string>
-  <string name="rewards_bank_detail_select_bank_text">Select Bank Name</string>
-  <string name="rewards_bank_detail_account_number">Account Number</string>
-  <string name="rewards_bank_detail_confirm_account_number">Confirm Account Number</string>
-  <string name="rewards_bank_detail_ifsc_text">IFSC Code</string>
-  <string name="rewards_add_detail">ADD DETAILS</string>
-  <string name="rewards_payment_history">Payment History</string>
-  <string name="participate_on_this_campaign">Please participate in ongoing campaigns to start earning</string>
-  <string name="participate_now">Participate now</string>
-  <string name="campaign_details_applied">APPLIED</string>
+    <string name="rewards_pancard_details">Pan details</string>
+    <string name="drawer_referra_mymoney">माझे पैसे संदर्भित करा</string>
+    <string name="referral_screen_text">Invite a friend to join MyMoney by sharing your referral code. Both of you will earn Rs. 25 once she has successfully completed a MyMoney campaign.</string>
+    <string name="share_referral_screen">Share your referral code and start earning</string>
+    <string name="referral_screen_whatsapp">WhatsApp</string>
+    <string name="referral_screen_facebook">Facebook</string>
+    <string name="rewards_tab_fragment_personalInfo_text">PERSONAL INFO</string>
+    <string name="rewards_tab_fragment_socialLink_text">SOCIAL LINKS</string>
+    <string name="rewards_tab_fragment_paymentMode">PAYMENT MODE</string>
+    <string name="rewards_tab_fragment_panCard">PAN CARD DETAILS</string>
+    <string name="rewards_tab_fragment_myEarning">MY EARNING</string>
+    <string name="rewards_tab_fragment_referrer_myMoney">refer mymoney</string>
+    <string name="rewards_pancard_toolbar_text">PAN CARD DETAIL</string>
+    <string name="reawrds_pancard_detail_text">Please enter your PAN card details</string>
+    <string name="rewards_pancard_note_detail">In case of Invalid/No Pan card attached, 20% tax will be deducted from the payment.</string>
+    <string name="rewards_pancard_Note_textview">NOTE :</string>
+    <string name="rewards_payment_submission_enter_bank_detail_text">PLEASE ENTER YOUR BANK DETAILS</string>
+    <string name="rewards_bank_detail_holder_nmae_text">Account Holder’s Name</string>
+    <string name="rewards_bank_detail_select_bank_text">Select Bank Name</string>
+    <string name="rewards_bank_detail_account_number">Account Number</string>
+    <string name="rewards_bank_detail_confirm_account_number">Confirm Account Number</string>
+    <string name="rewards_bank_detail_ifsc_text">IFSC Code</string>
+    <string name="rewards_add_detail">ADD DETAILS</string>
+    <string name="rewards_payment_history">Payment History</string>
+    <string name="participate_on_this_campaign">Please participate in ongoing campaigns to start earning</string>
+    <string name="participate_now">Participate now</string>
+    <string name="campaign_details_applied">APPLIED</string>
 
 
-  <string name="congratulation_text">CONGRATULATIONS!</string>
-  <string name="thanks_for_submitting">Thanks for submitting the proofs</string>
-  <string name="be_in_touch_text">We will review and be in touch in next <font fgcolor="#D54058">7 working days</font> till then you can take part in other interesting campaigns</string>
-  <string name="share_joy">SHARE THE JOY</string>
-  <string name="continue_browsing_campaign">CONTINUE BROWSING CAMPAIGNS</string>
+    <string name="congratulation_text">CONGRATULATIONS!</string>
+    <string name="thanks_for_submitting">Thanks for submitting the proofs</string>
+    <string name="be_in_touch_text">We will review and be in touch in next <font fgcolor="#D54058">7 working days</font> till then you can take part in other interesting campaigns</string>
+    <string name="share_joy">SHARE THE JOY</string>
+    <string name="continue_browsing_campaign">CONTINUE BROWSING CAMPAIGNS</string>
 
 
-  //campaigndetails
-  <string name="campaign_proofs_approved">PROOFS APPROVED</string>
-  <string name="campaign_detail_toolbar_text">CAMPAIGN DETAILS</string>
-  <string name="campaign_read_this_first">READ THIS FIRST"</string>
-  <string name="campaign_discription">DESCRIPTION</string>
-  <string name="deliverable_types">DELIVERABLE TERMS</string>
-  <string name="referral_code_option">REFERRAL CODE(Optional)</string>
-  <string name="campaign_details_apply_now">APPLY NOW</string>
-  <string name="campaign_details_submission_open">SUBMIT PROOF</string>
-  <string name="campaign_details_application_full">APPLICATION FULL</string>
-  <string name="campaign_details_approved">APPROVED</string>
-  <string name="campaign_details_expired">EXPIRED</string>
-  <string name="campaign_details_completed">COMPLETED</string>
-  <string name="campaign_details_invite_only">INVITATION ONLY</string>
-  <string name="campaign_details_rejected">REJECTED</string>
-  <string name="campaign_list_proof_moderation">PROOF SUBMITTED</string>
-  <string name="campaign_list_proof_reject">PROOF REJECTED</string>
-  <string name="end_date">End Date</string>
-  <string name="start_date">Start Date</string>
-  <string name="campaign_details_not_eligible">Not Eligible</string>
+    //campaigndetails
+    <string name="campaign_proofs_approved">PROOFS APPROVED</string>
+    <string name="campaign_detail_toolbar_text">CAMPAIGN DETAILS</string>
+    <string name="campaign_read_this_first">READ THIS FIRST"</string>
+    <string name="campaign_discription">DESCRIPTION</string>
+    <string name="deliverable_types">DELIVERABLE TERMS</string>
+    <string name="referral_code_option">REFERRAL CODE(Optional)</string>
+    <string name="campaign_details_apply_now">APPLY NOW</string>
+    <string name="campaign_details_submission_open">SUBMIT PROOF</string>
+    <string name="campaign_details_application_full">APPLICATION FULL</string>
+    <string name="campaign_details_approved">APPROVED</string>
+    <string name="campaign_details_expired">EXPIRED</string>
+    <string name="campaign_details_completed">COMPLETED</string>
+    <string name="campaign_details_invite_only">INVITATION ONLY</string>
+    <string name="campaign_details_rejected">REJECTED</string>
+    <string name="campaign_list_proof_moderation">PROOF SUBMITTED</string>
+    <string name="campaign_list_proof_reject">PROOF REJECTED</string>
+    <string name="end_date">End Date</string>
+    <string name="start_date">Start Date</string>
+    <string name="campaign_details_not_eligible">Not Eligible</string>
 
-  <string name="label_campaign_expired">This campaign is now closed.</string>
-  <string name="label_campaign_not_eligible">Share the campaign with your friends.</string>
-  <string name="label_campaign_checking_eligiblity">We are checking for your eligibility. Please try again after sometime</string>
-  <string name="label_campaign_full">Share Momspresso MyMoney with your friends.</string>
-  <string name="label_campaign_open">By clicking on Apply Now, you agree to the Terms &amp; Conditions.</string>
-  <string name="label_campaign_applied">We will notify you within 7 days on the status of your application.</string>
-  <string name="label_campaign_apply"><![CDATA[By clicking on Apply Now, you agree to the <a href="https://www.momspresso.com/home/terms">Terms &amp; Conditions</a>.]]></string>
-  <string name="label_campaign_completed">Congratulations! Your submission is approved. Your payment will be processed within 14 days.</string>
-
-
-  <string name="label_campaign_not_started">Campaign starts on </string>
-  <string name="label_campaign_reject">Please explore other campaigns to participate and earn.</string>
-  <string name="label_campaign_proof_moderation">We will check your submitted proofs within 7 days. To add more, you can click below.</string>
-  <string name="label_campaign_proof_reject">Your proofs were rejected. Please check email for details.To resubmit after corrections, click below.</string>
-
-  <string name="toast_not_elegible">Sorry, you are not eligible for this campaign.</string>
-  <string name="checking_elegiblity">We are checking your eligiblity</string>
-
-  <string name="toast_campaign_full">Oops! Entries to this campaign are now closed.</string>
-  <string name="toast_campaign_open">Thank you for applying to the campaign.</string>
-  <string name="toast_campaign_applied">Thank you for applying. We will notify you within 7 days on the status of your application.</string>
-  <string name="toast_campaign_not_started">Congratulations! Your application is approved. Please wait for campaign to start to submit proofs.</string>
-  <string name="toast_campaign_started">Congratulations! Your application is approved.</string>
-  <string name="toast_campaign_reject">Sorry, we have not been able to approve your application.</string>
-  <string name="toast_campaign_invite">Sorry, this campaign is by invitation only.</string>
-  <string name="toast_campaign_invite_thankyou">Thank you, we will get in touch with you.</string>
-  <string name="toast_campaign_proof_moderation">We will check your submitted proofs within 7 days. </string>
-  <string name="toast_campaign_proof_reject">Your proof was rejected!</string>
-
-  <string name="detail_bottom_apply_now">APPLY NOW</string>
-  <string name="detail_bottom_applied">APPLIED</string>
-  <string name="application_under_review">APPLICATION UNDER REVIEW</string>
-  <string name="proofs_under_review">PROOFS UNDER REVIEW</string>
-  <string name="detail_bottom_share">SHARE</string>
-  <string name="payment_in_progress">PAYMENT IN PROCESS</string>
-  <string name="detail_bottom_share_momspresso_reward">Share MyMoney</string>
-  <string name="detail_bottom_view_other">VIEW OTHER CAMPAIGNS</string>
-  <string name="payment_done">PAYMENT DONE</string>
-  <string name="proof_sublitted">"PROOFS SUBMITTED"</string>
-  <string name="detail_bottom_submit_proof">SUBMIT PROOF</string>
+    <string name="label_campaign_expired">This campaign is now closed.</string>
+    <string name="label_campaign_not_eligible">Share the campaign with your friends.</string>
+    <string name="label_campaign_checking_eligiblity">We are checking for your eligibility. Please try again after sometime</string>
+    <string name="label_campaign_full">Share Momspresso MyMoney with your friends.</string>
+    <string name="label_campaign_open">By clicking on Apply Now, you agree to the Terms &amp; Conditions.</string>
+    <string name="label_campaign_applied">We will notify you within 7 days on the status of your application.</string>
+    <string name="label_campaign_apply"><![CDATA[By clicking on Apply Now, you agree to the <a href="https://www.momspresso.com/home/terms">Terms &amp; Conditions</a>.]]></string>
+    <string name="label_campaign_completed">Congratulations! Your submission is approved. Your payment will be processed within 14 days.</string>
 
 
-  //campaigndetaildialog
-  <string name="dialog_based_on_profile">Based on your Profile</string>
-  <string name="dialog_you_can_get_reward_of">You can get reward of</string>
-  <string name="campaign_starts_on">Starts On</string>
-  <string name="campaign_ends_on">Ends On</string>
-  <string name="view_mymoney">View MyMoney for this campaign</string>
-  <string name="dialog_thanks_for_interest">Thanks for your interest!</string>
-  <string name="dialog_proof_submitted_congo_text">Congratulations!</string>
-  <string name="dialog_register_for_mymoney">For applying to the campaign, you first need to register for Momspresso MyMoney.</string>
-  <string name="register_now">REGISTER NOW</string>
-  <string name="dialog_continue">CONTINUE</string>
-  <string name="dialog_share_your_campaign_detail_text">Please share your payment details so that we can process your payment faster.</string>
-  <string name="dialog_register_proof_submitted_text">Your proofs have been submitted.</string>
-  <string name="apply_refer_code">HAVE A REFERRAL CODE?</string>
-  <string name="get_help">Get Help</string>
-  <string name="refer_code">REFERRAL CODE</string>
-  <string name="apply_code_error">Code already used. Please enter a different one</string>
-  <string name="dialog_congratulations">Congratulations!</string>
-  <string name="dialog_you_can_earn">You can earn upto Rs.</string>
-  <string name="invite_only_header">This campaign is by invite only.</string>
-  <string name="invite_only_interested">I\'M INTERESTED</string>
-  <string name="dialog_invite_only_subtext">Click below to apply for future ‘invite only’ campaigns.</string>
-  <string name="title_activity_tracker">TrackerActivity</string>
-  <string name="action_settings">Settings</string>
-  <string name="my_money_dashboard">MY MONEY DASHBOARD</string>
-  <string name="total_earning">Total Earnings</string>
+    <string name="label_campaign_not_started">Campaign starts on </string>
+    <string name="label_campaign_reject">Please explore other campaigns to participate and earn.</string>
+    <string name="label_campaign_proof_moderation">We will check your submitted proofs within 7 days. To add more, you can click below.</string>
+    <string name="label_campaign_proof_reject">Your proofs were rejected. Please check email for details.To resubmit after corrections, click below.</string>
+
+    <string name="toast_not_elegible">Sorry, you are not eligible for this campaign.</string>
+    <string name="checking_elegiblity">We are checking your eligiblity</string>
+
+    <string name="toast_campaign_full">Oops! Entries to this campaign are now closed.</string>
+    <string name="toast_campaign_open">Thank you for applying to the campaign.</string>
+    <string name="toast_campaign_applied">Thank you for applying. We will notify you within 7 days on the status of your application.</string>
+    <string name="toast_campaign_not_started">Congratulations! Your application is approved. Please wait for campaign to start to submit proofs.</string>
+    <string name="toast_campaign_started">Congratulations! Your application is approved.</string>
+    <string name="toast_campaign_reject">Sorry, we have not been able to approve your application.</string>
+    <string name="toast_campaign_invite">Sorry, this campaign is by invitation only.</string>
+    <string name="toast_campaign_invite_thankyou">Thank you, we will get in touch with you.</string>
+    <string name="toast_campaign_proof_moderation">We will check your submitted proofs within 7 days. </string>
+    <string name="toast_campaign_proof_reject">Your proof was rejected!</string>
+
+    <string name="detail_bottom_apply_now">APPLY NOW</string>
+    <string name="detail_bottom_applied">APPLIED</string>
+    <string name="application_under_review">APPLICATION UNDER REVIEW</string>
+    <string name="proofs_under_review">PROOFS UNDER REVIEW</string>
+    <string name="detail_bottom_share">SHARE</string>
+    <string name="payment_in_progress">PAYMENT IN PROCESS</string>
+    <string name="detail_bottom_share_momspresso_reward">Share MyMoney</string>
+    <string name="detail_bottom_view_other">VIEW OTHER CAMPAIGNS</string>
+    <string name="payment_done">PAYMENT DONE</string>
+    <string name="proof_sublitted">"PROOFS SUBMITTED"</string>
+    <string name="detail_bottom_submit_proof">SUBMIT PROOF</string>
 
 
-  <string name="social_page_add_social_accounts">ADD SOCIAL ACCOUNTS</string>
-  <string name="social_page_add_website_hint">www.momvlogger.com/sheetal</string>
-  <string name="social_page_add_website">ADD WEBSITE</string>
+    //campaigndetaildialog
+    <string name="dialog_based_on_profile">Based on your Profile</string>
+    <string name="dialog_you_can_get_reward_of">You can get reward of</string>
+    <string name="campaign_starts_on">Starts On</string>
+    <string name="campaign_ends_on">Ends On</string>
+    <string name="view_mymoney">View MyMoney for this campaign</string>
+    <string name="dialog_thanks_for_interest">Thanks for your interest!</string>
+    <string name="dialog_proof_submitted_congo_text">Congratulations!</string>
+    <string name="dialog_register_for_mymoney">For applying to the campaign, you first need to register for Momspresso MyMoney.</string>
+    <string name="register_now">REGISTER NOW</string>
+    <string name="dialog_continue">CONTINUE</string>
+    <string name="dialog_share_your_campaign_detail_text">Please share your payment details so that we can process your payment faster.</string>
+    <string name="dialog_register_proof_submitted_text">Your proofs have been submitted.</string>
+    <string name="apply_refer_code">HAVE A REFERRAL CODE?</string>
+    <string name="get_help">Get Help</string>
+    <string name="refer_code">REFERRAL CODE</string>
+    <string name="apply_code_error">Code already used. Please enter a different one</string>
+    <string name="dialog_congratulations">Congratulations!</string>
+    <string name="dialog_you_can_earn">You can earn upto Rs.</string>
+    <string name="invite_only_header">This campaign is by invite only.</string>
+    <string name="invite_only_interested">I\'M INTERESTED</string>
+    <string name="dialog_invite_only_subtext">Click below to apply for future ‘invite only’ campaigns.</string>
+    <string name="title_activity_tracker">TrackerActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="my_money_dashboard">MY MONEY DASHBOARD</string>
+    <string name="total_earning">Total Earnings</string>
 
 
-  //campaignListing
-  <string name="campaign_listing_mymoney_campaign_toolbar_text">MYMONEY CAMPAIGNS</string>
-  <string name="brows_participate_earn_text">Browse. Participate. Earn</string>
-  <string name="participate_text">REGISTER</string>
-  <string name="total_payout">Total Payout</string>
+    <string name="social_page_add_social_accounts">ADD SOCIAL ACCOUNTS</string>
+    <string name="social_page_add_website_hint">www.momvlogger.com/sheetal</string>
+    <string name="social_page_add_website">ADD WEBSITE</string>
 
 
-  //addProof
-  <string name="add_proof">ADD PROOF</string>
-  <string name="please_add_image_proof">Please add image proofs</string>
-  <string name="please_submit">Please submit</string>
-  <string name="please_add_link">Please add a link</string>
-  <string name="proof_instructions">Proof Instructions</string>
-  <string name="faq">FAQS</string>
-
-  //trackerActivity
-  <string name="tracker_Activity_submit_corrected_proof">Please submit corrected proofs again.</string>
-  <string name="tracker_Activity_expected_date">Expected Date</string>
-  <string name="tracker_activity_proof_submitted_rejected">PROOFS SUBMITTED REJECTED</string>
+    //campaignListing
+    <string name="campaign_listing_mymoney_campaign_toolbar_text">MYMONEY CAMPAIGNS</string>
+    <string name="brows_participate_earn_text">Browse. Participate. Earn</string>
+    <string name="participate_text">REGISTER</string>
+    <string name="total_payout">Total Payout</string>
 
 
-  //rewardsCampaignString
-  <string name="reward_campaign_add_proof">ADD PROOF</string>
-  <string name="select_payment_method">PREFERRED METHOD OF PAYMENT</string>
+    //addProof
+    <string name="add_proof">ADD PROOF</string>
+    <string name="please_add_image_proof">Please add image proofs</string>
+    <string name="please_submit">Please submit</string>
+    <string name="please_add_link">Please add a link</string>
+    <string name="proof_instructions">Proof Instructions</string>
+    <string name="faq">FAQS</string>
+
+    //trackerActivity
+    <string name="tracker_Activity_submit_corrected_proof">Please submit corrected proofs again.</string>
+    <string name="tracker_Activity_expected_date">Expected Date</string>
+    <string name="tracker_activity_proof_submitted_rejected">PROOFS SUBMITTED REJECTED</string>
 
 
-  <string name="rewards_link_social">Link Account</string>
-  <string name="submit_video_text">SUBMIT YOUR VIDEO </string>
-  <string name="no_video.be_first">Be the first one to upload videos in this category!</string>
-  <string name="your_mom_vlog">WHAT\'S YOUR MOMVLOG</string>
-  <string name="use_picture_word_to_upload_one">Use The Picture ,Word, Phrase Or Video Given Below To Upload One</string>
+    //rewardsCampaignString
+    <string name="reward_campaign_add_proof">ADD PROOF</string>
+    <string name="select_payment_method">PREFERRED METHOD OF PAYMENT</string>
 
-  <string name="last_name">LAST NAME</string>
-  <string name="first_name">FIRST NAME</string>
-  <string name="phone">PHONE</string>
-  <string name="not_working">Not Working</string>
-  <string name="working">Working</string>
 
-  <string name="voise_post_group">आपला आवाज वापरा\nआपले विचार रेकॉर्ड करा किंवा आपल्या आवाजात प्रश्न विचारा. </string>
-  <string name="poll_post_group">मतदान करा\nआपल्यासाठी काय महत्त्वाचे आहे यावर समुदायाचे मत मिळवा </string>
-  <string name="blog_post_group">काहीतरी लिहा \nएक प्रश्न विचारा किंवा आपला विचार सामायिक करा. </string>
+    <string name="rewards_link_social">Link Account</string>
+    <string name="submit_video_text">SUBMIT YOUR VIDEO </string>
+    <string name="no_video.be_first">Be the first one to upload videos in this category!</string>
+    <string name="your_mom_vlog">WHAT\'S YOUR MOMVLOG</string>
+    <string name="use_picture_word_to_upload_one">Use The Picture ,Word, Phrase Or Video Given Below To Upload One</string>
 
-  <string name="mom_vlog_banner_title">या आठवड्याचे आव्हान घ्या.</string>
-  <string name="mom_vlog_banner_subtitle">आणि जिंका रु. १०,०००/_ ची बक्षीसे!</string>
-  <string name="mom_vlog_banner_button">अपलोड तुमचा व्हिडिओ</string>
+    <string name="last_name">LAST NAME</string>
+    <string name="first_name">FIRST NAME</string>
+    <string name="phone">PHONE</string>
+    <string name="not_working">Not Working</string>
+    <string name="working">Working</string>
 
-  //Join group dialog screen
-  <string name="join_dialog_heading">तुमची पहिली पोस्ट लिहा.</string>
-  <string name="join_dialog_ask_question">प्रश्न विचारा किंवा तुमचे विचार शेअर करा.</string>
+    <string name="voise_post_group">आपला आवाज वापरा\nआपले विचार रेकॉर्ड करा किंवा आपल्या आवाजात प्रश्न विचारा. </string>
+    <string name="poll_post_group">मतदान करा\nआपल्यासाठी काय महत्त्वाचे आहे यावर समुदायाचे मत मिळवा </string>
+    <string name="blog_post_group">काहीतरी लिहा \nएक प्रश्न विचारा किंवा आपला विचार सामायिक करा. </string>
 
-  <string name="join_group">Join Group</string>
-  <string name="user_funny_video.edit_title">टायटल संपादित  करा</string>
-  <string name="user_funny_video.vlog_title_hint">तुमच्या व्हिलॉग चे टायटल येथे आहे.</string>
-  <string name="editor_saving">सेव्हिंग &#8230;</string>
-  <string name="select_thumbnail">व्हिलॉग साठी छोटी प्रतिमा निवडा.</string>
-  <string name="audio_delay_msg">Playing your audio might take afew seconds</string>
-  <string name="write_something">काहीतरी लिहा.</string>
-  <string name="join_dialog_post">प्रकाशित करा</string>
-  <string name="spell_check_error">We found a few errors in the article</string>
-  <string name="application_end_date">Application End Date</string>
-  <string name="submission_end_date">Submission End Date</string>
-  <string name="submit_article">Submit Your Article</string>
+    <string name="mom_vlog_banner_title">या आठवड्याचे आव्हान घ्या.</string>
+    <string name="mom_vlog_banner_subtitle">आणि जिंका रु. १०,०००/_ ची बक्षीसे!</string>
+    <string name="mom_vlog_banner_button">अपलोड तुमचा व्हिडिओ</string>
+
+    //Join group dialog screen
+    <string name="join_dialog_heading">तुमची पहिली पोस्ट लिहा.</string>
+    <string name="join_dialog_ask_question">प्रश्न विचारा किंवा तुमचे विचार शेअर करा.</string>
+
+    <string name="join_group">Join Group</string>
+    <string name="user_funny_video.edit_title">टायटल संपादित  करा</string>
+    <string name="user_funny_video.vlog_title_hint">तुमच्या व्हिलॉग चे टायटल येथे आहे.</string>
+    <string name="editor_saving">सेव्हिंग &#8230;</string>
+    <string name="select_thumbnail">व्हिलॉग साठी छोटी प्रतिमा निवडा.</string>
+    <string name="audio_delay_msg">Playing your audio might take afew seconds</string>
+    <string name="write_something">काहीतरी लिहा.</string>
+    <string name="join_dialog_post">प्रकाशित करा</string>
+    <string name="spell_check_error">We found a few errors in the article</string>
+    <string name="application_end_date">Application End Date</string>
+    <string name="submission_end_date">Submission End Date</string>
+    <string name="submit_article">Submit Your Article</string>
 
   <!--pending-->
   <string name="participate_earn_mymoney">मायमनी मोहिमांमध्ये भाग घ्या आणि कमवा</string>
@@ -1307,4 +1307,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="collection">COLLECTION</string>
   <string name="groups_user_block_success">User blocked successfully</string>
   <string name="permission_contact_rationale">This permission is needed to invite your contact via sms.</string>
+  <string name="draft_instagram_submission">Draft Instagram submission</string>
+  <string name="draft_facebook_submission">Draft Facebook submission</string>
+  <string name="order_screenshot">Order screenshot</string>
+  <string name="pre_meet_submission">Pre-meet submission</string>
+  <string name="unlisted_video_link">Unlisted video link</string>
 </resources>

@@ -1158,15 +1158,15 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="voise_post_group">আপনার নিজস্ব স্বর ব্যবহার করুন\nআপনার নিজস্ব স্বরে প্রশ্ন করুন বা আপনার ভাবনা রেকর্ড করে জানান</string>
   <string name="poll_post_group">পোল করুন\nআপনার পছন্দের বিষয়গুলি সম্পর্কে আপনার কম্যুনিটির মতামত নিন
 </string>
-  <string name="blog_post_group">এখানে লিখুন\nআপনার ভাবনা ভাগ করে নিন বা কোনো প্রশ্ন থাকলে করুন </string>
+    <string name="blog_post_group">এখানে লিখুন\nআপনার ভাবনা ভাগ করে নিন বা কোনো প্রশ্ন থাকলে করুন </string>
 
-  <string name="mom_vlog_banner_title">এসে গেলো নতুন মম-ভিলগ চ্যালেঞ্জ</string>
-  <string name="mom_vlog_banner_subtitle">পুরস্কার মূল্য- ১০,০০০ টাকা</string>
-  <string name="mom_vlog_banner_button">ভিডিও আপলোড করুন</string>
+    <string name="mom_vlog_banner_title">এসে গেলো নতুন মম-ভিলগ চ্যালেঞ্জ</string>
+    <string name="mom_vlog_banner_subtitle">পুরস্কার মূল্য- ১০,০০০ টাকা</string>
+    <string name="mom_vlog_banner_button">ভিডিও আপলোড করুন</string>
 
-  //Join group dialog screen
-  <string name="join_dialog_heading">আপনার প্রথম পোস্টটি লিখুন</string>
-  <string name="join_dialog_ask_question">এখানে প্রশ্ন করুন বা আপনার ভাবনা ভাগ করে নিন</string>
+    //Join group dialog screen
+    <string name="join_dialog_heading">আপনার প্রথম পোস্টটি লিখুন</string>
+    <string name="join_dialog_ask_question">এখানে প্রশ্ন করুন বা আপনার ভাবনা ভাগ করে নিন</string>
 
   <string name="join_group">গ্রুপে যোগদান করুন</string>
   <string name="user_funny_video.edit_title">টাইটেল এডিট করুন</string>
@@ -1314,4 +1314,10 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="collection">COLLECTION</string>
   <string name="groups_user_block_success">User blocked successfully</string>
   <string name="permission_contact_rationale">This permission is needed to invite your contact via sms.</string>
+  <string name="draft_instagram_submission">Draft Instagram submission</string>
+  <string name="draft_facebook_submission">Draft Facebook submission</string>
+  <string name="order_screenshot">Order screenshot</string>
+  <string name="pre_meet_submission">Pre-meet submission</string>
+  <string name="unlisted_video_link">Unlisted video link</string>
+
 </resources>

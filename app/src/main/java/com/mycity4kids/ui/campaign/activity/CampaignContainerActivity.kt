@@ -118,7 +118,9 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
             override fun onNext(response: BaseResponseGeneric<CampaignDetailResult>) {
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.result != null) {
-                    addAddProofFragment(deeplinkCampaignId, arrayList as ArrayList<Int>, response.data!!.result.campaignStatus!!)
+                    addAddProofFragment(deeplinkCampaignId, arrayList as ArrayList<Int>, response.data!!.result.campaignStatus!!,
+                        response.data!!.result.approvalStatus!!
+                    )
                 } else {
                 }
             }
@@ -152,8 +154,8 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
                 .commit()
     }
 
-    fun addAddProofFragment(id: Int, deliverableTypeList: ArrayList<Int>, status: Int) {
-        var campaignAddProofFragment = CampaignAddProofFragment.newInstance(id, deliverableTypeList, status)
+    fun addAddProofFragment(id: Int, deliverableTypeList: ArrayList<Int>, status: Int, approval_status: Int) {
+        var campaignAddProofFragment = CampaignAddProofFragment.newInstance(id, deliverableTypeList, status, approval_status)
         supportFragmentManager.beginTransaction().replace(R.id.container, campaignAddProofFragment,
                 CampaignAddProofFragment::class.java.simpleName).addToBackStack("campaignAddProofFragment")
                 .commit()
