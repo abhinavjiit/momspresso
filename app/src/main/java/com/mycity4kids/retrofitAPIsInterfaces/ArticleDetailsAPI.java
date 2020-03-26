@@ -46,7 +46,7 @@ public interface ArticleDetailsAPI {
     @GET("/v1/articles/doc/")
     Call<ArticleDetailWebserviceResponse> getArticleDetailsFromWebservice(@Query("articleId") String articleId);
 
-    @GET("v2/users/check_following_bookmark_status/")
+    @GET("follow/v2/users/check_following_bookmark_status/")
     Call<ArticleDetailResponse> checkFollowingBookmarkStatus(@Query("article_id") String articleId,
             @Query("author_id") String authorId);
 

@@ -427,11 +427,11 @@ class UserProfileActivity : BaseActivity(),
         val retrofit = BaseApplication.getInstance().retrofit
         val followAPI = retrofit.create(FollowAPI::class.java)
         val request = FollowUnfollowUserRequest()
-        request.followerId = authorId
+        request.followee_id = authorId
         if (isFollowing) {
             isFollowing = false
             followAuthorTextView.setText(R.string.ad_follow_author)
-            val followUnfollowUserResponseCall = followAPI.unfollowUser(request)
+            val followUnfollowUserResponseCall = followAPI.unfollowUserV2(request)
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback)
             Utils.pushProfileEvents(
                 this, "CTA_Unfollow_Profile", "UserProfileActivity",
@@ -440,7 +440,7 @@ class UserProfileActivity : BaseActivity(),
         } else {
             isFollowing = true
             followAuthorTextView.setText(R.string.ad_following_author)
-            val followUnfollowUserResponseCall = followAPI.followUser(request)
+            val followUnfollowUserResponseCall = followAPI.followUserV2(request)
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback)
             Utils.pushProfileEvents(
                 this, "CTA_Follow_Profile", "UserProfileActivity",

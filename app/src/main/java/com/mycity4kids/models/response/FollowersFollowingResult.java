@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by hemant on 1/8/16.
  */
 public class FollowersFollowingResult {
+
     @SerializedName(value = "userId", alternate = {"id"})
     private String userId;
     @SerializedName("followerId")
@@ -18,8 +19,8 @@ public class FollowersFollowingResult {
     private String lastName;
     @SerializedName("profilePicUrl")
     private ProfilePic profilePicUrl;
-    @SerializedName("isFollowed")
-    private int isFollowed;
+    @SerializedName("followBack")
+    private boolean isFollowed;
 
     public String getUserId() {
         return userId;
@@ -69,11 +70,11 @@ public class FollowersFollowingResult {
         this.profilePicUrl = profilePicUrl;
     }
 
-    public int getIsFollowed() {
+    public boolean getIsFollowed() {
         return isFollowed;
     }
 
-    public void setIsFollowed(int isFollowed) {
+    public void setIsFollowed(boolean isFollowed) {
         this.isFollowed = isFollowed;
     }
 }

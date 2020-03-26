@@ -333,22 +333,20 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     public void followAPICall(String id, int pos) {
         authorId = id;
         updateFollowPos = pos;
-//        changeFollowUnfollowTextPos = pos;
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         FollowAPI followAPI = retrofit.create(FollowAPI.class);
         FollowUnfollowUserRequest request = new FollowUnfollowUserRequest();
-        request.setFollowerId(authorId);
-
+        request.setFollowee_id(authorId);
         if (finalList.get(updateFollowPos).isFollowed()) {
             finalList.get(updateFollowPos).setFollowed(false);
             Utils.pushGenericEvent(this, "CTA_Unfollow_Vlog", userDynamoId, "ParallelFeedActivity");
-            Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
+            Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUserV2(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
             mAdapter.setListUpdate(updateFollowPos, finalList);
         } else {
             finalList.get(updateFollowPos).setFollowed(true);
             Utils.pushGenericEvent(this, "CTA_Follow_Vlog", userDynamoId, "ParallelFeedActivity");
-            Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
+            Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUserV2(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
             mAdapter.setListUpdate(updateFollowPos, finalList);
         }

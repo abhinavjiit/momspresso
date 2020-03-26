@@ -665,6 +665,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         if (handler != null) {
             handler.removeCallbacksAndMessages(null);
         }
+        if (youTubePlayerView != null) {
+            youTubePlayerView.release();
+        }
         super.onDestroy();
     }
 
@@ -1649,14 +1652,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         FollowAPI followApi = retrofit.create(FollowAPI.class);
         FollowUnfollowUserRequest request = new FollowUnfollowUserRequest();
-        request.setFollowerId(authorId);
+        request.setFollowee_id(authorId);
         if (isFollowing) {
             isFollowing = false;
             followClick.setText(getString(R.string.ad_follow_author));
             Utils.pushGenericEvent(getActivity(), "CTA_Unfollow_Article_Detail", userDynamoId,
                     "ArticleDetailsFragment");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followApi
-                    .unfollowUser(request);
+                    .unfollowUserV2(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
             if (followPopUpBottomContainer.getVisibility() == View.VISIBLE) {
@@ -1667,7 +1670,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             Utils.pushGenericEvent(getActivity(), "CTA_Follow_Article_Detail", userDynamoId,
                     "ArticleDetailsFragment");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followApi
-                    .followUser(request);
+                    .followUserV2(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }
     }

@@ -6,10 +6,11 @@ import com.google.gson.annotations.SerializedName;
  * Created by hemant on 2/8/16.
  */
 public class FollowUnfollowUserData {
+
     @SerializedName("msg")
     private String msg;
     @SerializedName("result")
-    private FollowUnfollowUserResult result;
+    private String result;
 
     public String getMsg() {
         return msg;
@@ -19,11 +20,11 @@ public class FollowUnfollowUserData {
         this.msg = msg;
     }
 
-    public FollowUnfollowUserResult getResult() {
+    public String getResult() {
         return result;
     }
 
-    public void setResult(FollowUnfollowUserResult result) {
+    public void setResult(String result) {
         this.result = result;
     }
 }

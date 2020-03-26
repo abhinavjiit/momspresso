@@ -1349,20 +1349,20 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         FollowAPI followApi = retrofit.create(FollowAPI.class);
         FollowUnfollowUserRequest request = new FollowUnfollowUserRequest();
-        request.setFollowerId(authorId);
+        request.setFollowee_id(authorId);
         if (isFollowing) {
             isFollowing = false;
             adapter.setAuthorFollowingStatus(AppConstants.STATUS_NOT_FOLLOWING);
             adapter.notifyItemChanged(0);
             Utils.pushGenericEvent(getActivity(), "CTA_Unfollow_100WS_Detail", userDynamoId, "ShortStoryFragment");
-            Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followApi.unfollowUser(request);
+            Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followApi.unfollowUserV2(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
             isFollowing = true;
             adapter.setAuthorFollowingStatus(AppConstants.STATUS_FOLLOWING);
             adapter.notifyItemChanged(0);
             Utils.pushGenericEvent(getActivity(), "CTA_Follow_100WS_Detail", userDynamoId, "ShortStoryFragment");
-            Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followApi.followUser(request);
+            Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followApi.followUserV2(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }
     }

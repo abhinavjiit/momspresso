@@ -15,25 +15,20 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.mycity4kids.base.BaseActivity;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
@@ -41,10 +36,8 @@ import com.mycity4kids.models.request.UploadVideoRequest;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.utils.MixPanelUtils;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -87,7 +80,8 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
-        Utils.pushOpenScreenEvent(this, "VideoUploadScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(this, "VideoUploadScreen",
+                SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mAuth = FirebaseAuth.getInstance();
 
@@ -98,9 +92,8 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         thumbnailTime = getIntent().getStringExtra("thumbnailTime");
         extension = getIntent().getStringExtra("extension");
 
-
         comingFrom = getIntent().getStringExtra("comingFrom");
-        if (comingFrom.equals("Challenge")) {
+        if ("Challenge".equals(comingFrom)) {
             challengeId = getIntent().getStringExtra("ChallengeId");
             challengeName = getIntent().getStringExtra("ChallengeName");
         }
@@ -131,23 +124,20 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         mAuth.signInAnonymously()
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("VideoUpload", "signInAnonymously:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            if (contentURI != null && AppConstants.VIDEO_UPLOAD_NOT_STARTED.equals(uploadStatus)) {
-                                uploadToFirebase(contentURI);
-                            }
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("VideoUpload", "signInAnonymously:failure", task.getException());
-                            Toast.makeText(VideoUploadProgressActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("VideoUpload", "signInAnonymously:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (contentURI != null && AppConstants.VIDEO_UPLOAD_NOT_STARTED.equals(uploadStatus)) {
+                            uploadToFirebase(contentURI);
                         }
+
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w("VideoUpload", "signInAnonymously:failure", task.getException());
+                        Toast.makeText(VideoUploadProgressActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -158,56 +148,42 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         uploadStatus = AppConstants.VIDEO_UPLOAD_IN_PROGRESS;
         final StorageReference storageRef = storage.getReference();
         suffixName = System.currentTimeMillis();
-        final StorageReference riversRef = storageRef.child("user/" + SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "/path/to/" + file2.getLastPathSegment() + "_" + suffixName);
+        final StorageReference riversRef = storageRef
+                .child("user/" + SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "/path/to/" + file2
+                        .getLastPathSegment() + "_" + suffixName);
         uploadTask = riversRef.putFile(file2);
 
 // Register observers to listen for when the download is done or if it fails
-        uploadTask.addOnFailureListener(new OnFailureListener() {
+        uploadTask.addOnFailureListener(exception -> {
+            // Handle unsuccessful uploads
+            isUploading = false;
+            uploadStatus = AppConstants.VIDEO_UPLOAD_FAILED;
+            MixPanelUtils.pushVideoUploadFailureEvent(mixpanel, title);
+            createRowForFailedAttempt(exception.getMessage());
 
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
+        }).addOnSuccessListener(taskSnapshot -> {
+            MixPanelUtils.pushVideoUploadSuccessEvent(mixpanel, title);
+            riversRef.getDownloadUrl().addOnSuccessListener(uri -> {
                 isUploading = false;
-                uploadStatus = AppConstants.VIDEO_UPLOAD_FAILED;
-                MixPanelUtils.pushVideoUploadFailureEvent(mixpanel, title);
-                createRowForFailedAttempt(exception.getMessage());
-
-            }
-        }).addOnSuccessListener(new OnSuccessListener<com.google.firebase.storage.UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
-                MixPanelUtils.pushVideoUploadSuccessEvent(mixpanel, title);
-                riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        isUploading = false;
-                        uploadStatus = AppConstants.VIDEO_UPLOAD_SUCCESS;
-                        Uri downloadUri = uri;
-                        publishVideo(uri);
-                    }
-                });
-            }
+                uploadStatus = AppConstants.VIDEO_UPLOAD_SUCCESS;
+                Uri downloadUri = uri;
+                publishVideo(uri);
+            });
         });
 
-        uploadTask.addOnProgressListener(new OnProgressListener<com.google.firebase.storage.UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
-                Log.e("video uplo to firebase=", "Bytes uploaded: " + taskSnapshot.getBytesTransferred());
-                isUploading = true;
-                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-
-                double mb = (double) taskSnapshot.getTotalByteCount() / (1024 * 1024);
-                DecimalFormat df = new DecimalFormat();
-                df.setMaximumFractionDigits(2);
-                int currentprogress = (int) progress;
-                mTxtVideoSize.setText("(" + df.format(mb) + "MB)");
-                mTxtVideoName.setText("UPLOADING " + contentURI.getLastPathSegment() + "_" + suffixName + "." + extension);
-//                mTxtVideoExtension.setText("." + extension);
-
-                mTxtPercentage.setText(currentprogress + "%");
-                mProgressBar.setProgress(currentprogress);
-//                progressBar.setProgress(currentprogress);
-            }
+        uploadTask.addOnProgressListener(taskSnapshot -> {
+            Log.e("video uplo to firebase=", "Bytes uploaded: " + taskSnapshot.getBytesTransferred());
+            isUploading = true;
+            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+            double mb = (double) taskSnapshot.getTotalByteCount() / (1024 * 1024);
+            DecimalFormat df = new DecimalFormat();
+            df.setMaximumFractionDigits(2);
+            int currentprogress = (int) progress;
+            mTxtVideoSize.setText("(" + df.format(mb) + "MB)");
+            mTxtVideoName
+                    .setText("UPLOADING " + contentURI.getLastPathSegment() + "_" + suffixName + "." + extension);
+            mTxtPercentage.setText(currentprogress + "%");
+            mProgressBar.setProgress(currentprogress);
         });
     }
 
@@ -221,8 +197,6 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         uploadVideoRequest.setTitle(title);
         uploadVideoRequest.setCategory_id(catList);
         uploadVideoRequest.setReason("" + message);
-//        uploadVideoRequest.setThumbnail_milliseconds(thumbnailTime);
-
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI api = retrofit.create(VlogsListingAndDetailsAPI.class);
         Call<ResponseBody> call = api.publishHomeVideo(uploadVideoRequest);
@@ -239,7 +213,8 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         uploadVideoRequest.setTitle(title);
         uploadVideoRequest.setFilename(contentURI.getLastPathSegment() + "_" + suffixName);
         uploadVideoRequest.setCategory_id(catList);
-        uploadVideoRequest.setFile_location("user/" + SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "/path/to/");
+        uploadVideoRequest
+                .setFile_location("user/" + SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "/path/to/");
         uploadVideoRequest.setUploaded_url(uri.toString());
         uploadVideoRequest.setThumbnail_milliseconds(thumbnailTime);
         uploadVideoRequest.setUser_agent("Android");
@@ -279,7 +254,6 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -297,7 +271,6 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                 @Override
                 public void onButtonCLick(int buttonId) {
                     if (uploadTask != null && isUploading) {
-//                        uploadTask.cancel(true);
                         uploadTask.cancel();
                         finish();
                     }
@@ -332,16 +305,13 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
 
             case R.id.cancel_upload:
                 if (isUploading) {
-                    showAlertDialog("Momspresso", getString(R.string.video_progress_progress_lost_msg), new OnButtonClicked() {
-                        @Override
-                        public void onButtonCLick(int buttonId) {
-                            if (uploadTask != null && isUploading) {
-//                                uploadTask.cancel(true);
-                                uploadTask.cancel();
-                                finish();
-                            }
-                        }
-                    });
+                    showAlertDialog("Momspresso", getString(R.string.video_progress_progress_lost_msg),
+                            buttonId -> {
+                                if (uploadTask != null && isUploading) {
+                                    uploadTask.cancel();
+                                    finish();
+                                }
+                            });
                 }
                 break;
         }

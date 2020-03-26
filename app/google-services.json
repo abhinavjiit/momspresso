@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "3577377239-p7f6c509d62shn6ilrlk27b8jt4adevj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycity4kids",
+            "certificate_hash": "a282d0c38dcfd9b0e19455c489d6e2f1b4d32316"
+          }
+        },
+        {
           "client_id": "3577377239-jhfcopvfbh1bt9ecbv2krjmu2107krjp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -11,19 +11,16 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.SearchAuthorResult;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -41,39 +38,37 @@ import java.util.List;
  */
 public class SearchAuthorsListingAdapter extends BaseAdapter {
 
-    private LayoutInflater mLayoutInflater;
-    private Context mContext;
-    private List<SearchAuthorResult> mDatalist;
-    Boolean newChanges = false;
+    private LayoutInflater layoutInflater;
+    private Context context;
+    private List<SearchAuthorResult> datalist;
 
     public SearchAuthorsListingAdapter(Context context) {
-        mContext = context;
-        mLayoutInflater = LayoutInflater.from(context);
+        this.context = context;
+        layoutInflater = LayoutInflater.from(context);
     }
 
-    public void setNewListData(ArrayList<SearchAuthorResult> mDatalist) {
-        this.mDatalist = mDatalist;
+    public void setNewListData(ArrayList<SearchAuthorResult> datalist) {
+        this.datalist = datalist;
     }
 
     static class Viewholder {
+
         TextView authorNameTextView;
         ImageView authorImageView;
-        TextView followAuthorTextView;
         TextView followTextView;
         TextView followingTextView;
-        ImageView imgLoader;
         RelativeLayout relativeLoadingView;
         int position;
     }
 
     @Override
     public int getCount() {
-        return mDatalist == null ? 0 : mDatalist.size();
+        return datalist == null ? 0 : datalist.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mDatalist.get(position);
+        return datalist.get(position);
     }
 
     @Override
@@ -86,7 +81,7 @@ public class SearchAuthorsListingAdapter extends BaseAdapter {
 
         final Viewholder viewholder;
         if (convertView == null) {
-            convertView = mLayoutInflater.inflate(R.layout.search_author_list_item, null);
+            convertView = layoutInflater.inflate(R.layout.search_author_list_item, null);
             viewholder = new Viewholder();
             viewholder.authorImageView = (ImageView) convertView.findViewById(R.id.authorImageView);
             viewholder.authorNameTextView = (TextView) convertView.findViewById(R.id.authorNameTextView);
@@ -97,9 +92,11 @@ public class SearchAuthorsListingAdapter extends BaseAdapter {
             viewholder = (Viewholder) convertView.getTag();
         }
 
-        if (null != mDatalist.get(position).getProfile_image() && !StringUtils.isNullOrEmpty(mDatalist.get(position).getProfile_image().getClientApp())) {
+        if (null != datalist.get(position).getProfile_image() && !StringUtils
+                .isNullOrEmpty(datalist.get(position).getProfile_image().getClientApp())) {
             try {
-                Picasso.get().load(mDatalist.get(position).getProfile_image().getClientApp()).placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img)
+                Picasso.get().load(datalist.get(position).getProfile_image().getClientApp())
+                        .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img)
                         .into(viewholder.authorImageView);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -109,28 +106,18 @@ public class SearchAuthorsListingAdapter extends BaseAdapter {
             Picasso.get().load(R.drawable.default_commentor_img).into(viewholder.authorImageView);
         }
 
-        viewholder.followTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                followUserAPI(position, viewholder);
-            }
-        });
+        viewholder.followTextView.setOnClickListener(v -> followUserApi(position, viewholder));
 
-        viewholder.followingTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                followUserAPI(position, viewholder);
-            }
-        });
-        viewholder.authorNameTextView.setText(Html.fromHtml(mDatalist.get(position).getFirst_name() + " " + mDatalist.get(position).getLast_name()));
+        viewholder.followingTextView.setOnClickListener(view -> followUserApi(position, viewholder));
+        viewholder.authorNameTextView.setText(
+                Html.fromHtml(datalist.get(position).getFirst_name() + " " + datalist.get(position).getLast_name()));
         return convertView;
     }
 
-    private void followUserAPI(int position, Viewholder holder) {
+    private void followUserApi(int position, Viewholder holder) {
         FollowUnfollowUserRequest followUnfollowUserRequest = new FollowUnfollowUserRequest();
-        followUnfollowUserRequest.setFollowerId(mDatalist.get(position).getUserId());
-        String screenName = "";
-        if (mDatalist.get(position).getIsFollowed() == 0) {
+        followUnfollowUserRequest.setFollowee_id(datalist.get(position).getUserId());
+        if (datalist.get(position).getIsFollowed() == 0) {
             holder.relativeLoadingView.setVisibility(View.VISIBLE);
             holder.followingTextView.setVisibility(View.INVISIBLE);
             holder.followTextView.setVisibility(View.INVISIBLE);
@@ -162,54 +149,49 @@ public class SearchAuthorsListingAdapter extends BaseAdapter {
         @Override
         protected String doInBackground(String... strings) {
 
-            String JsonResponse = null;
-            String JsonDATA = strings[0];
+            String jsonResponse = null;
+            String jsonData = strings[0];
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
             try {
                 URL url;
                 if ("follow".equals(strings[1])) {
-                    url = new URL(AppConstants.BASE_URL + "/v1/users/followers/");
+                    url = new URL(AppConstants.BASE_URL + "follow/v2/users/follow");
                 } else {
-                    url = new URL(AppConstants.BASE_URL + "/v1/users/unfollow/");
+                    url = new URL(AppConstants.BASE_URL + "follow/v2/users/unfollow");
                 }
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
-                // is output buffer writter
                 urlConnection.setRequestMethod("POST");
                 urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setRequestProperty("Accept", "application/json");
-                urlConnection.addRequestProperty("id", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId());
-                urlConnection.addRequestProperty("mc4kToken", SharedPrefUtils.getUserDetailModel(mContext).getMc4kToken());
+                urlConnection.addRequestProperty("id", SharedPrefUtils.getUserDetailModel(context).getDynamoId());
+                urlConnection
+                        .addRequestProperty("mc4kToken", SharedPrefUtils.getUserDetailModel(context).getMc4kToken());
 
-//set headers and method
                 Writer writer = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8"));
-                writer.write(JsonDATA);
-// json data
+                writer.write(jsonData);
                 writer.close();
                 InputStream inputStream = urlConnection.getInputStream();
-//input stream
                 StringBuffer buffer = new StringBuffer();
                 if (inputStream == null) {
-                    // Nothing to do.
                     return null;
                 }
                 reader = new BufferedReader(new InputStreamReader(inputStream));
 
                 String inputLine;
-                while ((inputLine = reader.readLine()) != null)
+                while ((inputLine = reader.readLine()) != null) {
                     buffer.append(inputLine + "\n");
+                }
                 if (buffer.length() == 0) {
-                    // Stream was empty. No point in parsing.
                     return null;
                 }
-                JsonResponse = buffer.toString();
+                jsonResponse = buffer.toString();
 
-                Log.i("RESPONSE " + type, JsonResponse);
-//send to post execute
-                return JsonResponse;
+                Log.i("RESPONSE " + type, jsonResponse);
+                return jsonResponse;
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -236,15 +218,15 @@ public class SearchAuthorsListingAdapter extends BaseAdapter {
             try {
                 FollowUnfollowUserResponse responseData = new Gson().fromJson(result, FollowUnfollowUserResponse.class);
                 if (responseData.getCode() == 200 & Constants.SUCCESS.equals(responseData.getStatus())) {
-                    for (int i = 0; i < mDatalist.size(); i++) {
-                        if (mDatalist.get(i).getUserId().equals(responseData.getData().getResult().getId())) {
+                    for (int i = 0; i < datalist.size(); i++) {
+                        if (datalist.get(i).getUserId().equals(responseData.getData().getResult())) {
                             if ("follow".equals(type)) {
-                                mDatalist.get(i).setIsFollowed(1);
+                                datalist.get(i).setIsFollowed(1);
                                 viewHolder.relativeLoadingView.setVisibility(View.GONE);
                                 viewHolder.followingTextView.setVisibility(View.VISIBLE);
                                 viewHolder.followTextView.setVisibility(View.INVISIBLE);
                             } else {
-                                mDatalist.get(i).setIsFollowed(0);
+                                datalist.get(i).setIsFollowed(0);
                                 viewHolder.relativeLoadingView.setVisibility(View.GONE);
                                 viewHolder.followTextView.setVisibility(View.VISIBLE);
                                 viewHolder.followingTextView.setVisibility(View.INVISIBLE);
