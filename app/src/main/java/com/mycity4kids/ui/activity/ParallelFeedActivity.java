@@ -710,7 +710,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                                 new AddCollectionAndCollectionItemDialogFragment();
                         Bundle bundle = new Bundle();
                         bundle.putString("articleId", finalList.get(position).getId());
-                        bundle.putString("type", AppConstants.SHORT_STORY_COLLECTION_TYPE);
+                        bundle.putString("type", AppConstants.VIDEO_COLLECTION_TYPE);
                         addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
                         FragmentManager fm = getSupportFragmentManager();
                         addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");

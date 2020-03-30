@@ -223,7 +223,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 if (responseData.getIs_liked() != null && responseData.getIs_liked().equals("1")) {
                     likeStatus = "0";
                     vlogsListingAndDetailResults.get(position).setIs_liked(likeStatus);
-                    notifyDataSetChanged();
+                    notifyItemChanged(position, this);
                     ((ParallelFeedActivity) context)
                             .recommendUnrecommentArticleApi(responseData.getId(), likeStatus, position);
                     Utils.momVlogEvent(context, "Video Detail", "DisLike", "", "android",
@@ -233,7 +233,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 } else {
                     likeStatus = "1";
                     vlogsListingAndDetailResults.get(position).setIs_liked(likeStatus);
-                    notifyDataSetChanged();
+                    notifyItemChanged(position, this);
                     ((ParallelFeedActivity) context)
                             .recommendUnrecommentArticleApi(responseData.getId(), likeStatus, position);
                     Utils.momVlogEvent(context, "Video Detail", "Like", "", "android",

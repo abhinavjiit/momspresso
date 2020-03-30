@@ -18,24 +18,6 @@ import retrofit2.http.Query;
  */
 public interface FollowAPI {
 
-    @GET("/v1/users/followingList/{userId}")
-    Call<FollowersFollowingResponse> getFollowingList(@Path("userId") String userId);
-
-    @GET("/v1/users/followersList/{userId}")
-    Call<FollowersFollowingResponse> getFollowersList(@Path("userId") String userId);
-
-    @POST("/v1/users/followers/")
-    Call<FollowUnfollowUserResponse> followUser(@Body FollowUnfollowUserRequest body);
-
-    @POST("/v1/users/followers/")
-    Call<ResponseBody> followUserInShortStoryListing(@Body FollowUnfollowUserRequest body);
-
-    @POST("/v1/users/unfollow/")
-    Call<FollowUnfollowUserResponse> unfollowUser(@Body FollowUnfollowUserRequest body);
-
-    @POST("/v1/users/unfollow/")
-    Call<ResponseBody> unfollowUserInShortStoryListing(@Body FollowUnfollowUserRequest body);
-
     @GET("/v1/collections/followers/{collectionId}")
     Call<FollowersFollowingResponse> getCollectionFollowingList(@Path("collectionId") String collectionId,
             @Query("start") int start,

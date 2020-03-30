@@ -2,7 +2,6 @@ package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +9,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.mycity4kids.R;
@@ -21,12 +18,11 @@ import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.StoryShareCardWidget;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 
-import q.rorbin.badgeview.QBadgeView;
+public class ChallengeListingRecycleAdapter extends
+        RecyclerView.Adapter<ChallengeListingRecycleAdapter.ChallengeListingViewHolder> {
 
-public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<ChallengeListingRecycleAdapter.ChallengeListingViewHolder> {
     private Context mContext;
     private LayoutInflater mInflator;
     ArrayList<ArticleListingResult> articleDataModelsNew;
@@ -34,7 +30,8 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
     private String selected_Name;
     private String ActiveUrl;
 
-    public ChallengeListingRecycleAdapter(RecyclerViewClickListener recyclerViewClickListener, Context mContext, int pos, String selected_Name, String ActiveUrl) {
+    public ChallengeListingRecycleAdapter(RecyclerViewClickListener recyclerViewClickListener, Context mContext,
+            int pos, String selected_Name, String ActiveUrl) {
         mInflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.selected_Name = selected_Name;
         this.mContext = mContext;
@@ -56,14 +53,6 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
 
     @Override
     public void onBindViewHolder(ChallengeListingViewHolder holder, int position) {
-        new QBadgeView(mContext)
-                .setBadgeText(" " + mContext.getString(R.string.new_label) + " ")
-                .setBadgeBackgroundColor(mContext.getResources().getColor(R.color.orange_new))
-                .setBadgeTextSize(7, true)
-                .setBadgePadding(3, true)
-                .setBadgeGravity(Gravity.TOP | Gravity.END)
-                .setGravityOffset(4, -2, true)
-                .bindTarget(holder.genericShareImageView);
         if (position == 0) {
             holder.rootview.setVisibility(View.GONE);
             holder.challengeHeaderText.setVisibility(View.VISIBLE);
@@ -72,7 +61,8 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
                 try {
                     Glide.with(mContext).load(ActiveUrl).into(holder.challengeNameImage);
                 } catch (Exception e) {
-                    holder.challengeNameImage.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_article));
+                    holder.challengeNameImage
+                            .setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_article));
                 }
             } else {
                 holder.ChallengeNameText.setVisibility(View.VISIBLE);
@@ -86,19 +76,22 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
     }
 
     private void viewListingResult(ChallengeListingViewHolder holder, int position) {
-        if (articleDataModelsNew.get(position).getIsfollowing().equals("1"))
+        if (articleDataModelsNew.get(position).getIsfollowing().equals("1")) {
             holder.followAuthorTextView.setText(mContext.getResources().getString(R.string.ad_following_author));
-        else
+        } else {
             holder.followAuthorTextView.setText(mContext.getResources().getString(R.string.ad_follow_author));
+        }
         try {
-            Picasso.get().load(articleDataModelsNew.get(position).getStoryImage().trim()).placeholder(R.drawable.default_article).into(holder.storyImage);
+            Picasso.get().load(articleDataModelsNew.get(position).getStoryImage().trim())
+                    .placeholder(R.drawable.default_article).into(holder.storyImage);
         } catch (Exception e) {
             holder.storyImage.setImageResource(R.drawable.default_article);
         }
         try {
             Picasso.get().load(articleDataModelsNew.get(position).getStoryImage()).into(holder.shareStoryImageView);
             holder.storyAuthorTextView.setText(articleDataModelsNew.get(position).getUserName());
-            AppUtils.populateLogoImageLanguageWise(holder.itemView.getContext(), holder.logoImageView, articleDataModelsNew.get(position).getLang());
+            AppUtils.populateLogoImageLanguageWise(holder.itemView.getContext(), holder.logoImageView,
+                    articleDataModelsNew.get(position).getLang());
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
@@ -127,6 +120,7 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
     }
 
     public class ChallengeListingViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
         private RelativeLayout rootview;
         private RelativeLayout challengeHeaderText;
         private TextView ChallengeNameText;
@@ -191,6 +185,7 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
     }
 
     public interface RecyclerViewClickListener {
+
         void onClick(View view, int position, String activeUrl);
     }
 }

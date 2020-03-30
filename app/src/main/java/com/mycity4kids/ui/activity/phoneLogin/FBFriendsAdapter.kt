@@ -72,8 +72,7 @@ class FBFriendsAdapter(private val mListener: RecyclerViewClickListener) :
             Crashlytics.logException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
-
-        if (list?.get(position)?.followStatus == "1") {
+        if (list?.get(position)?.isFollowing == "1") {
             holder.followTextView.visibility = View.GONE
             holder.followingTextView.visibility = View.VISIBLE
         } else {

@@ -143,12 +143,12 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener,
     override fun onClick(view: View, position: Int) {
         when {
             view.id == R.id.followTextView -> {
-                facebookFriendList.get(position).followStatus = "1"
+                facebookFriendList.get(position).isFollowing = "1"
                 adapter?.notifyDataSetChanged()
                 facebookFriendList.get(position).id?.let { hitFollowUnfollowAPI(it, "1") }
             }
             view.id == R.id.followingTextView -> {
-                facebookFriendList.get(position).followStatus = "0"
+                facebookFriendList.get(position).isFollowing = "0"
                 adapter?.notifyDataSetChanged()
                 facebookFriendList.get(position).id?.let { hitFollowUnfollowAPI(it, "0") }
             }
@@ -168,7 +168,7 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener,
         val request = FollowUnfollowUserRequest()
         request.followee_id = authorId
         if ("0" == action) {
-            val followUnfollowUserResponseCall = followAPI.unfollowUser(request)
+            val followUnfollowUserResponseCall = followAPI.unfollowUserV2(request)
             followUnfollowUserResponseCall.enqueue(followUnfollowUserResponseCallback)
             activity?.let {
                 Utils.pushProfileEvents(
@@ -176,7 +176,7 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener,
                 )
             }
         } else {
-            val followUnfollowUserResponseCall = followAPI.followUser(request)
+            val followUnfollowUserResponseCall = followAPI.followUserV2(request)
             followUnfollowUserResponseCall.enqueue(followUnfollowUserResponseCallback)
             activity?.let {
                 Utils.pushProfileEvents(

@@ -2,33 +2,28 @@ package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.crashlytics.android.Crashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.StoryShareCardWidget;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
-
-import q.rorbin.badgeview.QBadgeView;
 
 /**
  * Created by hemant on 30/5/18.
  */
 
-public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStoriesRecyclerAdapter.ShortStoriesViewHolder> {
+public class ShortStoriesRecyclerAdapter extends
+        RecyclerView.Adapter<ShortStoriesRecyclerAdapter.ShortStoriesViewHolder> {
 
     private Context mContext;
     private LayoutInflater mInflator;
@@ -63,13 +58,15 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
         try {
             Picasso.get().load(articleDataModelsNew.get(position).getStoryImage()).into(holder.shareStoryImageView);
             holder.storyAuthorTextView.setText(articleDataModelsNew.get(position).getUserName());
-            AppUtils.populateLogoImageLanguageWise(holder.itemView.getContext(), holder.logoImageView, articleDataModelsNew.get(position).getLang());
+            AppUtils.populateLogoImageLanguageWise(holder.itemView.getContext(), holder.logoImageView,
+                    articleDataModelsNew.get(position).getLang());
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         try {
-            Picasso.get().load(articleDataModelsNew.get(position).getStoryImage().trim()).placeholder(R.drawable.default_article).into(holder.storyImage);
+            Picasso.get().load(articleDataModelsNew.get(position).getStoryImage().trim())
+                    .placeholder(R.drawable.default_article).into(holder.storyImage);
         } catch (Exception e) {
             holder.storyImage.setImageResource(R.drawable.default_article);
             Crashlytics.logException(e);
@@ -101,15 +98,6 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
         } else {
             holder.followAuthorTextView.setText(mContext.getResources().getString(R.string.ad_follow_author));
         }
-
-        new QBadgeView(mContext)
-                .setBadgeText(" " + mContext.getString(R.string.new_label) + " ")
-                .setBadgeBackgroundColor(mContext.getResources().getColor(R.color.orange_new))
-                .setBadgeTextSize(7, true)
-                .setBadgePadding(3, true)
-                .setBadgeGravity(Gravity.TOP | Gravity.END)
-                .setGravityOffset(4, -2, true)
-                .bindTarget(holder.genericShareImageView);
     }
 
     @Override
@@ -118,6 +106,7 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
     }
 
     public class ShortStoriesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
         TextView authorNameTextView, followAuthorTextView;
         TextView storyCommentCountTextView;
         LinearLayout storyRecommendationContainer, storyCommentContainer;
@@ -170,6 +159,7 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
     }
 
     public interface RecyclerViewClickListener {
+
         void onClick(View view, int position, View shareImageView);
     }
 
