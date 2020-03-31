@@ -443,7 +443,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    mEditorFragment.appendMediaFile(mediaFile, imageUri.toString(), null);
+//                    mEditorFragment.appendMediaFile(mediaFile, imageUri.toString(), null);
                 }
                 break;
             case ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE:
@@ -513,7 +513,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    mEditorFragment.appendMediaFile(mediaFile, imageUri.toString(), null);
+//                    mEditorFragment.appendMediaFile(mediaFile, imageUri.toString(), null);
                 }
                 break;
         }

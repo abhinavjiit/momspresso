@@ -1,0 +1,67 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            all {
+                if (project.hasProperty('testsMaxHeapSize')) {
+                    // maxHeapSize for tests is not limited unless we give an explicit value
+                    // See https://docs.gradle.org/current/dsl/org.gradle.api.tasks.testing.Test.html
+                    maxHeapSize project.properties.get('testsMaxHeapSize')
+                }
+            }
+        }
+    }
+
+    // Gradle automatically adds 'android.test.runner' as a dependency.
+    useLibrary 'android.test.runner'
+
+    useLibrary 'android.test.base'
+    useLibrary 'android.test.mock'
+}
+
+dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.11'
+    implementation 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
+    implementation 'org.jsoup:jsoup:1.11.3'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'org.wordpress:utils:1.21'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.robolectric:robolectric:4.3.1'
+    testImplementation 'androidx.test:core:1.2.0'
+    androidTestImplementation 'androidx.test:core:1.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.0'
+//    implementation 'org.apache.commons:commons-lang3:3.8.1'
+//    implementation files('libs/commons-lang3-3.5.jar')
+}

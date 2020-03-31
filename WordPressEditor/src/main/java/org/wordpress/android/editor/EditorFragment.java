@@ -1393,55 +1393,55 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         // Replace style tags with their proper HTML tags
         String htmlTag;
-        if (tag.equals(getString(R.string.format_bar_tag_bold))) {
-            htmlTag = "b";
-        } else if (tag.equals(getString(R.string.format_bar_tag_italic))) {
-            htmlTag = "i";
-        } else if (tag.equals(getString(R.string.format_bar_tag_strikethrough))) {
-            htmlTag = "del";
-        } else if (tag.equals(getString(R.string.format_bar_tag_unorderedList))) {
-            htmlTag = "ul";
-        } else if (tag.equals(getString(R.string.format_bar_tag_orderedList))) {
-            htmlTag = "ol";
-        } else {
-            htmlTag = tag;
-        }
+            if (tag.equals(getString(R.string.format_bar_tag_bold))) {
+                htmlTag = "b";
+            } else if (tag.equals(getString(R.string.format_bar_tag_italic))) {
+                htmlTag = "i";
+            } else if (tag.equals(getString(R.string.format_bar_tag_strikethrough))) {
+                htmlTag = "del";
+            } else if (tag.equals(getString(R.string.format_bar_tag_unorderedList))) {
+                htmlTag = "ul";
+            } else if (tag.equals(getString(R.string.format_bar_tag_orderedList))) {
+                htmlTag = "ol";
+            } else {
+                htmlTag = tag;
+            }
 
-        int selectionStart = mSourceViewContent.getSelectionStart();
-        int selectionEnd = mSourceViewContent.getSelectionEnd();
+            int selectionStart = mSourceViewContent.getSelectionStart();
+            int selectionEnd = mSourceViewContent.getSelectionEnd();
 
-        if (selectionStart > selectionEnd) {
-            int temp = selectionEnd;
-            selectionEnd = selectionStart;
-            selectionStart = temp;
-        }
+            if (selectionStart > selectionEnd) {
+                int temp = selectionEnd;
+                selectionEnd = selectionStart;
+                selectionStart = temp;
+            }
 
-        boolean textIsSelected = selectionEnd > selectionStart;
+            boolean textIsSelected = selectionEnd > selectionStart;
 
-        String startTag = "<" + htmlTag + ">";
-        String endTag = "</" + htmlTag + ">";
+            String startTag = "<" + htmlTag + ">";
+            String endTag = "</" + htmlTag + ">";
 
-        // Add li tags together with ul and ol tags
-        if (htmlTag.equals("ul") || htmlTag.equals("ol")) {
-            startTag = startTag + "\n\t<li>";
-            endTag = "</li>\n" + endTag;
-        }
+            // Add li tags together with ul and ol tags
+            if (htmlTag.equals("ul") || htmlTag.equals("ol")) {
+                startTag = startTag + "\n\t<li>";
+                endTag = "</li>\n" + endTag;
+            }
 
-        Editable content = mSourceViewContent.getText();
-        if (textIsSelected) {
-            // Surround selected text with opening and closing tags
-            content.insert(selectionStart, startTag);
-            content.insert(selectionEnd + startTag.length(), endTag);
-            toggleButton.setChecked(false);
-            mSourceViewContent.setSelection(selectionEnd + startTag.length() + endTag.length());
-        } else if (toggleButton.isChecked()) {
-            // Insert opening tag
-            content.insert(selectionStart, startTag);
-            mSourceViewContent.setSelection(selectionEnd + startTag.length());
-        } else {
-            // Insert closing tag
-            content.insert(selectionEnd, endTag);
-            mSourceViewContent.setSelection(selectionEnd + endTag.length());
+            Editable content = mSourceViewContent.getText();
+            if (textIsSelected) {
+                // Surround selected text with opening and closing tags
+                content.insert(selectionStart, startTag);
+                content.insert(selectionEnd + startTag.length(), endTag);
+                toggleButton.setChecked(false);
+                mSourceViewContent.setSelection(selectionEnd + startTag.length() + endTag.length());
+            } else if (toggleButton.isChecked()) {
+                // Insert opening tag
+                content.insert(selectionStart, startTag);
+                mSourceViewContent.setSelection(selectionEnd + startTag.length());
+            } else {
+                // Insert closing tag
+                content.insert(selectionEnd, endTag);
+                mSourceViewContent.setSelection(selectionEnd + endTag.length());
         }
     }
 

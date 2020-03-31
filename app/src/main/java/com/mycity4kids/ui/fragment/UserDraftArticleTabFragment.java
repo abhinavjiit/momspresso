@@ -21,6 +21,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mycity4kids.base.BaseFragment;
+import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
@@ -270,7 +271,7 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
 //                } else {
                 if (Build.VERSION.SDK_INT > 15) {
                     Utils.pushEditDraftEvent(getActivity(), "DraftList", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), draftList.get(position).getId());
-                    Intent intent = new Intent(getActivity(), EditorPostActivity.class);
+                    Intent intent = new Intent(getActivity(), NewEditor.class);
                     intent.putExtra("draftItem", draftList.get(position));
                     intent.putExtra("from", "draftList");
                     startActivity(intent);

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.editor.EditorPostActivity;
+import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.SuggestedTopicsAdapter;
@@ -65,15 +66,15 @@ public class SuggestedTopicsTabFragment extends BaseFragment implements Suggeste
             case R.id.startWritingTextView:
 
                 Utils.pushSuggestedTopicClickEvent(getActivity(), "SuggestedTopicScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), languageName);
-                Intent intent = new Intent(getActivity(), EditorPostActivity.class);
+                Intent intent = new Intent(getActivity(), NewEditor.class);
                 Bundle bundle = new Bundle();
-                bundle.putString(EditorPostActivity.TITLE_PARAM, "");
-                bundle.putString(EditorPostActivity.CONTENT_PARAM, "");
-                bundle.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                bundle.putString("TITLE_PARAM", "");
+                bundle.putString("CONTENT_PARAM", "");
+                bundle.putString("TITLE_PLACEHOLDER_PARAM",
                         getString(R.string.example_post_title_placeholder));
-                bundle.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                bundle.putString("CONTENT_PLACEHOLDER_PARAM",
                         getString(R.string.example_post_content_placeholder));
-                bundle.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+                bundle.putInt("EDITOR_PARAM", NewEditor.USE_NEW_EDITOR);
                 bundle.putString("from", "dashboard");
                 intent.putExtras(bundle);
                 startActivity(intent);

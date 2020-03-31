@@ -16,6 +16,7 @@ import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.editor.EditorPostActivity;
+import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.models.response.TrendingListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 
@@ -51,15 +52,15 @@ public class BecomeBloggerFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 SharedPrefUtils.setBecomeBloggerFlag(BaseApplication.getAppContext(), true);
-                Intent intent = new Intent(getActivity(), EditorPostActivity.class);
+                Intent intent = new Intent(getActivity(), NewEditor.class);
                 Bundle bundle = new Bundle();
-                bundle.putString(EditorPostActivity.TITLE_PARAM, "");
-                bundle.putString(EditorPostActivity.CONTENT_PARAM, "");
-                bundle.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                bundle.putString("TITLE_PARAM", "");
+                bundle.putString("CONTENT_PARAM", "");
+                bundle.putString("TITLE_PLACEHOLDER_PARAM",
                         getString(R.string.example_post_title_placeholder));
-                bundle.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                bundle.putString("CONTENT_PLACEHOLDER_PARAM",
                         getString(R.string.example_post_content_placeholder));
-                bundle.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+                bundle.putInt("EDITOR_PARAM", NewEditor.USE_NEW_EDITOR);
                 bundle.putString("from", "DraftListViewActivity");
                 intent.putExtras(bundle);
                 FragmentManager fm = getActivity().getSupportFragmentManager();
