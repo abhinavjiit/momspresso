@@ -311,6 +311,8 @@
         <item name="android:textColorPrimary">@color/app_light_black</item>
         <item name="android:textColorSecondary">@color/app_light_black</item>
         <item name="android:itemTextAppearance">@style/myCustomMenuTextApearance</item>
+        <item name="android:editTextColor">@color/app_light_black</item>
+        <item name="android:textColorHint">@color/app_light_black</item>
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">

@@ -505,7 +505,15 @@
         <activity android:name=".ui.activity.ShortStoriesCardActivity" />
         <activity
             android:name=".ui.activity.PhoneContactsActivity"
-            android:theme="@style/PermissionDialogTheme" />
+            android:theme="@style/PermissionDialogTheme">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.activity.ShortStoryModerationOrShareActivity"
             android:theme="@style/ShareStoryTheme" />
