@@ -43,6 +43,7 @@ import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.editor.EditorPostActivity
+import com.mycity4kids.editor.NewEditor
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.collectionsModels.FeaturedOnModel
 import com.mycity4kids.models.request.ArticleDetailRequest
@@ -1212,7 +1213,7 @@ class UserProfileActivity : BaseActivity(),
             val bodyImgTxt = "<html><head></head><body>$bodyDesc</body></html>"
             content = bodyImgTxt
         }
-        val intent = Intent(this, EditorPostActivity::class.java)
+        val intent = Intent(this, NewEditor::class.java)
         intent.putExtra("from", "publishedList")
         intent.putExtra("title", detailsResponse.title)
         intent.putExtra("content", content)

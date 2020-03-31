@@ -12,7 +12,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.core.content.ContextCompat;
+
 import com.crashlytics.android.Crashlytics;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.BuildConfig;
@@ -20,7 +22,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.editor.EditorPostActivity;
+import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.NotificationReadRequest;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
@@ -54,7 +56,9 @@ import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity
 import com.mycity4kids.utils.DateTimeUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -433,17 +437,18 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
     }
 
     private void launchEditor() {
-        Intent intent1 = new Intent(mContext, EditorPostActivity.class);
+        Intent intent1 = new Intent(mContext, NewEditor.class);
         Bundle bundle5 = new Bundle();
-        bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
-        bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
-        bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+        bundle5.putString("TITLE_PARAM", "");
+        bundle5.putString("CONTENT_PARAM", "");
+        bundle5.putString("TITLE_PLACEHOLDER_PARAM",
                 mContext.getString(R.string.example_post_title_placeholder));
-        bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+        bundle5.putString("CONTENT_PLACEHOLDER_PARAM",
                 mContext.getString(R.string.example_post_content_placeholder));
-        bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+        bundle5.putInt("EDITOR_PARAM", NewEditor.USE_NEW_EDITOR);
         bundle5.putString("from", "dashboard");
         intent1.putExtras(bundle5);
+
         mContext.startActivity(intent1);
     }
 
@@ -532,7 +537,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
     private Callback<NotificationCenterListResponse> markNotificationReadResponseCallback = new Callback<NotificationCenterListResponse>() {
         @Override
         public void onResponse(Call<NotificationCenterListResponse> call,
-                retrofit2.Response<NotificationCenterListResponse> response) {
+                               retrofit2.Response<NotificationCenterListResponse> response) {
             if (response == null || response.body() == null) {
                 return;
             }

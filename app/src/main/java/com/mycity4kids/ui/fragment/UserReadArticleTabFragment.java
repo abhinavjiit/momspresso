@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.mycity4kids.base.BaseFragment;
+import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
@@ -398,7 +399,7 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
 //            intent.putExtra("cities", new Gson().toJson(detailData.getCities()));
 //            startActivity(intent);
 //        } else {
-        Intent intent = new Intent(getActivity(), EditorPostActivity.class);
+        Intent intent = new Intent(getActivity(), NewEditor.class);
         intent.putExtra("from", "publishedList");
         intent.putExtra("title", detailData.getTitle());
         intent.putExtra("content", content);

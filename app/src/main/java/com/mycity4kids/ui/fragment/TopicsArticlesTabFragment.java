@@ -31,6 +31,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.gson.Gson;
 import com.mycity4kids.base.BaseFragment;
+import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.ToastUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -482,15 +483,15 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         switch (view.getId()) {
             case R.id.writeArticleCell:
                 if (isAdded()) {
-                    Intent intent1 = new Intent(getActivity(), EditorPostActivity.class);
+                    Intent intent1 = new Intent(getActivity(), NewEditor.class);
                     Bundle bundle5 = new Bundle();
-                    bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
-                    bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
-                    bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                    bundle5.putString("TITLE_PARAM", "");
+                    bundle5.putString("CONTENT_PARAM", "");
+                    bundle5.putString("TITLE_PLACEHOLDER_PARAM",
                             getString(R.string.example_post_title_placeholder));
-                    bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                    bundle5.putString("CONTENT_PLACEHOLDER_PARAM",
                             getString(R.string.example_post_content_placeholder));
-                    bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+                    bundle5.putInt("EDITOR_PARAM", NewEditor.USE_NEW_EDITOR);
                     bundle5.putString("from", "TopicArticlesListingScreen");
                     intent1.putExtras(bundle5);
                     startActivity(intent1);

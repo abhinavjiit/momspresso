@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.mycity4kids.base.BaseFragment;
+import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
@@ -386,7 +387,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
             content = bodyImgTxt;
         }
 
-        Intent intent = new Intent(getActivity(), EditorPostActivity.class);
+        Intent intent = new Intent(getActivity(), NewEditor.class);
         intent.putExtra("from", "publishedList");
         intent.putExtra("title", detailData.getTitle());
         intent.putExtra("content", content);

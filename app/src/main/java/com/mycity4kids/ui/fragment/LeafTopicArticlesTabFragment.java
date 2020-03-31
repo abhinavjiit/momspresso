@@ -29,6 +29,7 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.EditorPostActivity;
+import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
@@ -282,15 +283,15 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
         switch (view.getId()) {
             case R.id.writeArticleCell:
                 if (isAdded()) {
-                    Intent intent1 = new Intent(getActivity(), EditorPostActivity.class);
+                    Intent intent1 = new Intent(getActivity(), NewEditor.class);
                     Bundle bundle5 = new Bundle();
-                    bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
-                    bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
-                    bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                    bundle5.putString("TITLE_PARAM", "");
+                    bundle5.putString("CONTENT_PARAM", "");
+                    bundle5.putString("TITLE_PLACEHOLDER_PARAM",
                             getString(R.string.example_post_title_placeholder));
-                    bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                    bundle5.putString("CONTENT_PLACEHOLDER_PARAM",
                             getString(R.string.example_post_content_placeholder));
-                    bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+                    bundle5.putInt("EDITOR_PARAM", NewEditor.USE_NEW_EDITOR);
                     bundle5.putString("from", "TopicArticlesListingScreen");
                     intent1.putExtras(bundle5);
                     startActivity(intent1);

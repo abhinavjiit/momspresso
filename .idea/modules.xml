@@ -2,9 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Momspresso.iml" filepath="$PROJECT_DIR$/Momspresso.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Momspresso.iml" filepath="$PROJECT_DIR$/.idea/Momspresso.iml" />
       <module fileurl="file://$PROJECT_DIR$/WordPressEditor/WordPressEditor.iml" filepath="$PROJECT_DIR$/WordPressEditor/WordPressEditor.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/aztec/aztec.iml" filepath="$PROJECT_DIR$/aztec/aztec.iml" />
+      <module fileurl="file://$PROJECT_DIR$/glide-loader/glide-loader.iml" filepath="$PROJECT_DIR$/glide-loader/glide-loader.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wordpress-comments/wordpress-comments.iml" filepath="$PROJECT_DIR$/wordpress-comments/wordpress-comments.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wordpress-shortcodes/wordpress-shortcodes.iml" filepath="$PROJECT_DIR$/wordpress-shortcodes/wordpress-shortcodes.iml" />
     </modules>
   </component>
 </project>

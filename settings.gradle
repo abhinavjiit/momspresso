@@ -1,2 +1,2 @@
-include ':app', ':WordPressEditor'
+include ':app', ':WordPressEditor', ':aztec', ':wordpress-comments', ':wordpress-shortcodes', ':glide-loader'
 rootProject.name='Momspresso'

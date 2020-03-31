@@ -59,6 +59,7 @@ import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.EditorPostActivity;
+import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
@@ -1778,17 +1779,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void launchEditor() {
+        Intent intent1 = new Intent(DashboardActivity.this, NewEditor.class);
         Bundle bundle5 = new Bundle();
-        bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
-        bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
-        bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+        bundle5.putString("TITLE_PARAM", "");
+        bundle5.putString("CONTENT_PARAM", "");
+        bundle5.putString("TITLE_PLACEHOLDER_PARAM",
                 getString(R.string.example_post_title_placeholder));
-        bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+        bundle5.putString("CONTENT_PLACEHOLDER_PARAM",
                 getString(R.string.example_post_content_placeholder));
-        bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+        bundle5.putInt("EDITOR_PARAM", NewEditor.USE_NEW_EDITOR);
         bundle5.putString("from", "dashboard");
-        Intent intent1 = new Intent(DashboardActivity.this, EditorPostActivity.class);
-        intent1.putExtras(bundle5);
         startActivity(intent1);
     }
 
@@ -2572,7 +2572,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             draftListResult.setTitle(allDraftsList.get(position).getTitle());
             draftListResult.setCreatedTime(allDraftsList.get(position).getCreatedTime());
             draftListResult.setUpdatedTime((allDraftsList.get(position).getUpdatedTime()));
-            Intent intent = new Intent(this, EditorPostActivity.class);
+            Intent intent = new Intent(this, NewEditor.class);
             intent.putExtra("draftItem", draftListResult);
             intent.putExtra("from", "draftList");
             startActivity(intent);
