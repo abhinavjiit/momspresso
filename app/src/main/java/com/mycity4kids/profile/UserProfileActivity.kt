@@ -42,7 +42,6 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
-import com.mycity4kids.editor.EditorPostActivity
 import com.mycity4kids.editor.NewEditor
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.collectionsModels.FeaturedOnModel

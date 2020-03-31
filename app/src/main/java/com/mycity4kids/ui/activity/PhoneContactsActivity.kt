@@ -2,14 +2,18 @@ package com.mycity4kids.ui.activity
 
 import android.Manifest
 import android.accounts.NetworkErrorException
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -38,6 +42,7 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
     private var toolbar: Toolbar? = null
     private var sendInviteTextView: TextView? = null
     private lateinit var adapter: PhoneContactsAdapter
+    private lateinit var searchView: SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -237,13 +242,49 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                onBackPressed()
-                super.onOptionsItemSelected(item)
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_search, menu)
+
+        // Associate searchable configuration with the SearchView
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        searchView = menu?.findItem(R.id.search)?.actionView as SearchView
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        searchView.maxWidth = Integer.MAX_VALUE
+
+        // listening to search query text change
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                adapter.filter.filter(query)
+                return false
             }
-            else -> super.onOptionsItemSelected(item)
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.filter.filter(newText)
+                return false
+            }
+        })
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.search) {
+            return true
         }
+        if (id == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        // close search view on back button pressed
+        if (!searchView.isIconified) {
+            searchView.isIconified = true
+            return
+        }
+        super.onBackPressed()
     }
 }
