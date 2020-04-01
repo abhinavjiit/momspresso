@@ -577,6 +577,7 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
+        <receiver android:name="com.mycity4kids.receiver.CancelNotification" />
     </application>
 
 </manifest>

@@ -20,14 +20,24 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
-
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 import com.afollestad.easyvideoplayer.EasyVideoCallback;
 import com.afollestad.easyvideoplayer.EasyVideoPlayer;
 import com.coremedia.iso.boxes.Container;
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.googlecode.mp4parser.FileDataSourceImpl;
 import com.googlecode.mp4parser.authoring.Movie;
 import com.googlecode.mp4parser.authoring.Track;
@@ -35,24 +45,23 @@ import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
 import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
 import com.googlecode.mp4parser.authoring.tracks.AACTrackImpl;
 import com.googlecode.mp4parser.authoring.tracks.CroppedTrack;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
+import com.mycity4kids.ui.NotificationWorker;
 import com.mycity4kids.utils.AppUtils;
-
+import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.utils.StringUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -84,6 +93,13 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     private SharedPreferences pref;
     private String comingFrom, challengeId, challengeName, extension;
     private RelativeLayout root;
+    private FirebaseAuth auth;
+    private WorkManager workManager;
+    private Boolean signIn = false;
+    private OneTimeWorkRequest request;
+    private RelativeLayout popup;
+    private TextView okay;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,13 +109,17 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
-        Utils.pushOpenScreenEvent(this, "CreateVideoScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(this, "CreateVideoScreen",
+                SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        popup = (RelativeLayout) findViewById(R.id.popup);
+        okay = (TextView) findViewById(R.id.okay);
         videoTitleEditText = (EditText) findViewById(R.id.videoTitleEditText);
         muteSwitch = (SwitchCompat) findViewById(R.id.muteVideoSwitch);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         player = (EasyVideoPlayer) findViewById(R.id.player);
         saveUploadTextView = (TextView) findViewById(R.id.saveUploadTextView);
-
+        auth = FirebaseAuth.getInstance();
+        workManager = WorkManager.getInstance(this);
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/oswald_regular.ttf");
         muteSwitch.setTypeface(font);
 
@@ -111,24 +131,26 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         duration = getIntent().getStringExtra("duration");
         thumbnailTime = getIntent().getStringExtra("thumbnailTime");
         comingFrom = getIntent().getStringExtra("comingFrom");
-        if (comingFrom.equals("Challenge")) {
+        if ("Challenge".equals(comingFrom)) {
             challengeId = getIntent().getStringExtra("ChallengeId");
             challengeName = getIntent().getStringExtra("ChallengeName");
         }
 
         muteSwitch.setOnClickListener(this);
-
-
-        originalPath = getIntent().getStringExtra("uriPath");
+        if (getIntent().hasExtra("uriPath")) {
+            originalPath = getIntent().getStringExtra("uriPath");
+        } else if (getIntent().hasExtra("originalPath")) {
+            originalPath = getIntent().getStringExtra("originalPath");
+        }
 
         saveUploadTextView.setOnClickListener(this);
 
         ColorStateList thumbStates = new ColorStateList(
-                new int[][]{
-                        new int[]{android.R.attr.state_checked},
-                        new int[]{}
+                new int[][] {
+                        new int[] {android.R.attr.state_checked},
+                        new int[] {}
                 },
-                new int[]{
+                new int[] {
 
                         getResources().getColor(R.color.app_red),
                         getResources().getColor(R.color.add_video_details_mute_label)
@@ -137,11 +159,11 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         muteSwitch.setThumbTintList(thumbStates);
         if (Build.VERSION.SDK_INT >= 24) {
             ColorStateList trackStates = new ColorStateList(
-                    new int[][]{
-                            new int[]{android.R.attr.state_checked},
-                            new int[]{}
+                    new int[][] {
+                            new int[] {android.R.attr.state_checked},
+                            new int[] {}
                     },
-                    new int[]{
+                    new int[] {
 
                             getColor(R.color.app_red_50_opacity),
                             getColor(R.color.add_video_details_mute_label_50_percent_opacity)
@@ -160,6 +182,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         originalUri = Uri.parse(originalPath);
         // Starts or resumes playback.
         player.start();
+        okay.setOnClickListener(this);
     }
 
     @Override
@@ -200,6 +223,16 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                     uploadVideo();
                 }
                 break;
+            case R.id.okay:
+                popup.setVisibility(View.GONE);
+                Intent intent = new Intent(AddVideoDetailsActivity.this, DashboardActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+                break;
+            default:
+                break;
+
         }
     }
 
@@ -220,10 +253,8 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
             videoExtractor.selectTrack(0);
             MediaFormat videoFormat = videoExtractor.getTrackFormat(0);
             int videoTrack = muxer.addTrack(videoFormat);
-
             Log.d("TAG", "Video Format " + videoFormat.toString());
-
-            boolean sawEOS = false;
+            boolean sawEos = false;
             int frameCount = 0;
             int offset = 100;
             int sampleSize = 256 * 1024;
@@ -233,13 +264,12 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
             videoExtractor.seekTo(0, MediaExtractor.SEEK_TO_CLOSEST_SYNC);
             muxer.setOrientationHint(Integer.parseInt(vRotation));
             muxer.start();
-
-            while (!sawEOS) {
+            while (!sawEos) {
                 videoBufferInfo.offset = offset;
                 videoBufferInfo.size = videoExtractor.readSampleData(videoBuf, offset);
                 if (videoBufferInfo.size < 0) {
                     Log.d("TAG", "saw input EOS.");
-                    sawEOS = true;
+                    sawEos = true;
                     videoBufferInfo.size = 0;
                 } else {
                     videoBufferInfo.presentationTimeUs = videoExtractor.getSampleTime();
@@ -247,7 +277,9 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                     muxer.writeSampleData(videoTrack, videoBuf, videoBufferInfo);
                     videoExtractor.advance();
                     frameCount++;
-                    Log.d("TAG", "Frame (" + frameCount + ") Video PresentationTimeUs:" + videoBufferInfo.presentationTimeUs + " Flags:" + videoBufferInfo.flags + " Size(KB) " + videoBufferInfo.size / 1024);
+                    Log.d("TAG",
+                            "Frame (" + frameCount + ") Video PresentationTimeUs:" + videoBufferInfo.presentationTimeUs
+                                    + " Flags:" + videoBufferInfo.flags + " Size(KB) " + videoBufferInfo.size / 1024);
                 }
             }
 
@@ -304,30 +336,40 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     }
 
     private void launchUploadActivity() {
-        Intent intt = new Intent(this, VideoUploadProgressActivity.class);
-        intt.putExtra("uri", contentURI);
-        intt.putExtra("title", videoTitleEditText.getText().toString());
-        intt.putExtra("categoryId", categoryId);
-        intt.putExtra("duration", duration);
-        intt.putExtra("thumbnailTime", thumbnailTime);
-        intt.putExtra("extension", originalUri.getPath().substring(originalUri.getPath().lastIndexOf(".")));
-        if (comingFrom.equals("Challenge")) {
-            intt.putExtra("ChallengeId", challengeId);
-            intt.putExtra("ChallengeName", challengeName);
-            intt.putExtra("comingFrom", "Challenge");
+        if (contentURI != null && signIn) {
+            Data uriData = new Data.Builder()
+                    .putString("ContentUrl", contentURI.toString())
+                    .putString("categoryId", categoryId)
+                    .putString("duration", duration)
+                    .putString("thumbnailTime", thumbnailTime)
+                    .putString("title", videoTitleEditText.getText().toString())
+                    .putString("comingFrom", comingFrom)
+                    .putString("challengeId", challengeId)
+                    .putString("originalPath", originalPath)
+                    // .putString("workRequestId", mRequest.getId().toString())
+                    .build();
+            Constraints constraints = new Constraints.Builder().setRequiredNetworkType(
+                    NetworkType.CONNECTED).build();
 
-        } else {
-            intt.putExtra("comingFrom", "notFromChallenge");
+            request = new OneTimeWorkRequest.Builder(NotificationWorker.class)
+                    .setConstraints(constraints)
+                    .addTag("VideoUploading")
+                    .setInputData(uriData)
+                    .build();
+
+            workManager.enqueue(request);
+            removeProgressDialog();
+            popup.setVisibility(View.VISIBLE);
+
         }
-        startActivity(intt);
-        removeProgressDialog();
     }
 
     private void getBlogPage() {
         showProgressDialog(getResources().getString(R.string.please_wait));
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
-        Call<UserDetailResponse> call = loginRegistrationAPI.getUserDetails(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        LoginRegistrationAPI loginRegistrationApi = retrofit.create(LoginRegistrationAPI.class);
+        Call<UserDetailResponse> call = loginRegistrationApi
+                .getUserDetails(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         call.enqueue(onLoginResponseReceivedListener);
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
             removeProgressDialog();
@@ -348,13 +390,15 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
             }
             UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                if (responseData.getData().get(0).getResult().getBlogTitleSlug() == null || responseData.getData().get(0).getResult().getBlogTitleSlug().isEmpty()) {
+                if (responseData.getData().get(0).getResult().getBlogTitleSlug() == null || responseData.getData()
+                        .get(0).getResult().getBlogTitleSlug().isEmpty()) {
                     Intent intent = new Intent(AddVideoDetailsActivity.this, BlogSetupActivity.class);
                     intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
                     intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
                     intent.putExtra("comingFrom", "Videos");
                     startActivity(intent);
-                } else if (responseData.getData().get(0).getResult().getBlogTitleSlug() != null || !responseData.getData().get(0).getResult().getBlogTitleSlug().isEmpty()) {
+                } else if (responseData.getData().get(0).getResult().getBlogTitleSlug() != null || !responseData
+                        .getData().get(0).getResult().getBlogTitleSlug().isEmpty()) {
                     showProgressDialog(getResources().getString(R.string.please_wait));
                     pref = getApplicationContext().getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
                     SharedPreferences.Editor editor = pref.edit();
@@ -425,25 +469,26 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
             String fname = AppUtils.getFileNameFromUri(this, originalUri);
             Movie movie = new Movie();
             Movie m = MovieCreator.build(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/" + fname);
-            Track vTrack = null;
+            Track vtrack = null;
             for (Track track : m.getTracks()) {
                 if ("soun".equals(track.getHandler())) {
                     System.err.println("Adding audio track to new movie");
                 } else if ("vide".equals(track.getHandler())) {
                     System.err.println("Adding video track to new movie");
-                    vTrack = track;
+                    vtrack = track;
                     movie.addTrack(track);
                 } else {
                     System.err.println("Adding " + track.getHandler() + " track to new movie");
                 }
             }
 
-            AACTrackImpl audioTrack = new AACTrackImpl(new FileDataSourceImpl(Environment.getExternalStorageDirectory() + "/MyCity4Kids/" + audioFileName));
+            AACTrackImpl audioTrack = new AACTrackImpl(new FileDataSourceImpl(
+                    Environment.getExternalStorageDirectory() + "/MyCity4Kids/" + audioFileName));
             int audioDuration = (int) Math.ceil(trackDuration(audioTrack));
-            int videoDuration = (int) Math.ceil(trackDuration(vTrack));
+            int videoDuration = (int) Math.ceil(trackDuration(vtrack));
             System.out.println("videoduration:" + videoDuration);
             System.out.println("audioDuration:" + audioDuration);
-            System.out.println("video Samples:" + vTrack.getSamples().size());
+            System.out.println("video Samples:" + vtrack.getSamples().size());
             System.out.println("audio Samples:" + audioTrack.getSamples().size());
             if (audioDuration > videoDuration) {
                 int factor = audioDuration / videoDuration;
@@ -460,7 +505,9 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
             }
 
             Container mp4file = new DefaultMp4Builder().build(movie);
-            FileChannel fc = new FileOutputStream(new File(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/modifiedVideo.mp4")).getChannel();
+            FileChannel fc = new FileOutputStream(
+                    new File(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/modifiedVideo.mp4"))
+                    .getChannel();
             mp4file.writeContainer(fc);
             fc.close();
 
@@ -471,5 +518,29 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 
     private double trackDuration(Track track) {
         return (double) track.getDuration() / track.getTrackMetaData().getTimescale();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = auth.getCurrentUser();
+        auth.signInAnonymously()
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("VideoUpload", "signInAnonymously:success");
+                            signIn = true;
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("VideoUpload", "signInAnonymously:failure", task.getException());
+                            Toast.makeText(AddVideoDetailsActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
     }
 }
