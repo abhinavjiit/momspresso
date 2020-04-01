@@ -62,7 +62,6 @@ import org.wordpress.aztec.*
 import org.wordpress.aztec.demo.MediaToolbarCameraButton
 import org.wordpress.aztec.demo.MediaToolbarGalleryButton
 import org.wordpress.aztec.glideloader.GlideImageLoader
-import org.wordpress.aztec.plugins.CssUnderlinePlugin
 import org.wordpress.aztec.plugins.IMediaToolbarButton
 import org.wordpress.aztec.plugins.shortcodes.AudioShortcodePlugin
 import org.wordpress.aztec.plugins.shortcodes.extensions.ATTRIBUTE_VIDEOPRESS_HIDDEN_ID
@@ -1452,7 +1451,8 @@ class NewEditor : BaseActivity(),
             } else if (aztec.visualEditor.text.toString().replace(
                     "&nbsp;",
                     " "
-                ).split("\\s+".toRegex()).size < 299) {
+                ).split("\\s+".toRegex()).size < 299
+            ) {
                 showCustomToast(
                     aztec.visualEditor.text.toString().replace(
                         "&nbsp;",
