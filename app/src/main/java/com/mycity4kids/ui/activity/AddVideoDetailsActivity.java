@@ -72,26 +72,26 @@ import retrofit2.Retrofit;
 public class AddVideoDetailsActivity extends BaseActivity implements View.OnClickListener, EasyVideoCallback {
 
     public static final String COMMON_PREF_FILE = "my_city_prefs";
-    private final static int MAX_VOLUME = 100;
-    private boolean blogSetup = false;
+    private static final int MAX_VOLUME = 100;
 
     private EditText videoTitleEditText;
     private SwitchCompat muteSwitch;
-    private Toolbar mToolbar;
+    private Toolbar toolbar;
     private TextView saveUploadTextView;
 
     private Uri originalUri;
-    private String vRotation;
+    private String vrotation;
 
     private String originalPath;
-    Uri contentURI;
+    private Uri contentUri;
     private Uri mutedUri;
     private EasyVideoPlayer player;
     private String categoryId;
     private String duration;
     private String thumbnailTime;
     private SharedPreferences pref;
-    private String comingFrom, challengeId, challengeName, extension;
+    private String comingFrom;
+    private String challengeId;
     private RelativeLayout root;
     private FirebaseAuth auth;
     private WorkManager workManager;
@@ -115,7 +115,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         okay = (TextView) findViewById(R.id.okay);
         videoTitleEditText = (EditText) findViewById(R.id.videoTitleEditText);
         muteSwitch = (SwitchCompat) findViewById(R.id.muteVideoSwitch);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         player = (EasyVideoPlayer) findViewById(R.id.player);
         saveUploadTextView = (TextView) findViewById(R.id.saveUploadTextView);
         auth = FirebaseAuth.getInstance();
@@ -123,7 +123,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/oswald_regular.ttf");
         muteSwitch.setTypeface(font);
 
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Upload Video");
 
@@ -133,7 +133,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         comingFrom = getIntent().getStringExtra("comingFrom");
         if ("Challenge".equals(comingFrom)) {
             challengeId = getIntent().getStringExtra("ChallengeId");
-            challengeName = getIntent().getStringExtra("ChallengeName");
         }
 
         muteSwitch.setOnClickListener(this);
@@ -219,6 +218,10 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                     videoTitleEditText.setFocusableInTouchMode(true);
                     videoTitleEditText.setError(getString(R.string.add_video_details_error_empty_title));
                     videoTitleEditText.requestFocus();
+                } else if (videoTitleEditText.getText().toString().length() > 150) {
+                    videoTitleEditText.setFocusableInTouchMode(true);
+                    videoTitleEditText.setError(getString(R.string.add_video_details_title_length_error));
+                    videoTitleEditText.requestFocus();
                 } else {
                     uploadVideo();
                 }
@@ -254,7 +257,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
             MediaFormat videoFormat = videoExtractor.getTrackFormat(0);
             int videoTrack = muxer.addTrack(videoFormat);
             Log.d("TAG", "Video Format " + videoFormat.toString());
-            boolean sawEos = false;
             int frameCount = 0;
             int offset = 100;
             int sampleSize = 256 * 1024;
@@ -262,8 +264,9 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
             ByteBuffer audioBuf = ByteBuffer.allocate(sampleSize);
             MediaCodec.BufferInfo videoBufferInfo = new MediaCodec.BufferInfo();
             videoExtractor.seekTo(0, MediaExtractor.SEEK_TO_CLOSEST_SYNC);
-            muxer.setOrientationHint(Integer.parseInt(vRotation));
+            muxer.setOrientationHint(Integer.parseInt(vrotation));
             muxer.start();
+            boolean sawEos = false;
             while (!sawEos) {
                 videoBufferInfo.offset = offset;
                 videoBufferInfo.size = videoExtractor.readSampleData(videoBuf, offset);
@@ -311,20 +314,20 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
             MediaMetadataRetriever m = new MediaMetadataRetriever();
             m.setDataSource(originalUri.getPath());
             if (Build.VERSION.SDK_INT >= 17) {
-                vRotation = m.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
-                Log.e("Before Upload Rotation", "" + vRotation);
+                vrotation = m.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
+                Log.e("Before Upload Rotation", "" + vrotation);
             }
 
             muteVideo();
             if (null == mutedUri) {
                 showToast(getString(R.string.video_upload_fail));
             } else {
-                contentURI = AppUtils.exportToGallery(mutedUri.getPath(), getContentResolver(), this);
-                contentURI = AppUtils.getVideoUriFromMediaProvider(mutedUri.getPath(), getContentResolver());
+                contentUri = AppUtils.exportToGallery(mutedUri.getPath(), getContentResolver(), this);
+                contentUri = AppUtils.getVideoUriFromMediaProvider(mutedUri.getPath(), getContentResolver());
             }
         } else {
-            contentURI = AppUtils.exportToGallery(originalUri.getPath(), getContentResolver(), this);
-            contentURI = AppUtils.getVideoUriFromMediaProvider(originalUri.getPath(), getContentResolver());
+            contentUri = AppUtils.exportToGallery(originalUri.getPath(), getContentResolver(), this);
+            contentUri = AppUtils.getVideoUriFromMediaProvider(originalUri.getPath(), getContentResolver());
         }
         removeProgressDialog();
         resumeUpload();
@@ -336,9 +339,9 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     }
 
     private void launchUploadActivity() {
-        if (contentURI != null && signIn) {
+        if (contentUri != null && signIn) {
             Data uriData = new Data.Builder()
-                    .putString("ContentUrl", contentURI.toString())
+                    .putString("ContentUrl", contentUri.toString())
                     .putString("categoryId", categoryId)
                     .putString("duration", duration)
                     .putString("thumbnailTime", thumbnailTime)

@@ -504,7 +504,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="complete_blogger_profile.paid_eligibility">Be eligible for paid writing assignments.\n All this information is safe with us.</string>
     <string name="complete_blogger_profile.save">SAVE</string>
     <string name="complete_blogger_profile.incorrect_date">Please choose correct date for date of birth.</string>
-    <string name="add_video_details.title_hint">ENTER A TITLE FOR THE VIDEO</string>
+    <string name="add_video_details.title_hint">VIDEO TITLE(MAX 150 CHARACTERS)</string>
 
     <string name="add_video_details.mute_label">MUTE SOUND</string>
     <string name="add_video_details.add_music">ADD MUSIC</string>
@@ -1486,5 +1486,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="permission_required_media_camera">Camera and storage permissions required to access camera</string>
     <string name="permission_required_media_photos">Storage permission required to access photos</string>
     <string name="permission_required_media_videos">Storage permission required to access videos</string>
+    <string name="add_video_details_title_length_error">Title length should be less than 150 characters</string>
 </resources>
 

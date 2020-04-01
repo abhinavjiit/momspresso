@@ -1320,4 +1320,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="pre_meet_submission">Pre-meet submission</string>
   <string name="unlisted_video_link">Unlisted video link</string>
   <string name="invite_contact_invitation_sent">Your invite has been sent!</string>
+    <string name="add_video_details_title_length_error">Title length should be less than 150 characters</string>
 </resources>
