@@ -5,8 +5,14 @@
 5
 6    <uses-sdk
 7        android:minSdkVersion="16"
+<<<<<<< HEAD
 7-->/Users/mac/Documents/workspace/gitlab_newProject/gitlab/android/aztec/src/main/AndroidManifest.xml
 8        android:targetSdkVersion="28" />
 8-->/Users/mac/Documents/workspace/gitlab_newProject/gitlab/android/aztec/src/main/AndroidManifest.xml
+=======
+7-->/Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml
+8        android:targetSdkVersion="28" />
+8-->/Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml
+>>>>>>> editor word check, empty body
 9
 10</manifest>

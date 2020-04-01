@@ -1,5 +1,6 @@
 -- Merging decision tree log ---
 manifest
+<<<<<<< HEAD
 ADDED from /Users/mac/Documents/workspace/gitlab_newProject/gitlab/android/aztec/src/main/AndroidManifest.xml:3:1-42
 INJECTED from /Users/mac/Documents/workspace/gitlab_newProject/gitlab/android/aztec/src/main/AndroidManifest.xml:3:1-42
 INJECTED from /Users/mac/Documents/workspace/gitlab_newProject/gitlab/android/aztec/src/main/AndroidManifest.xml:3:1-42
@@ -29,3 +30,34 @@ INJECTED from /Users/mac/Documents/workspace/gitlab_newProject/gitlab/android/az
 		INJECTED from /Users/mac/Documents/workspace/gitlab_newProject/gitlab/android/aztec/src/main/AndroidManifest.xml
 		ADDED from /Users/mac/Documents/workspace/gitlab_newProject/gitlab/android/aztec/src/main/AndroidManifest.xml
 		INJECTED from /Users/mac/Documents/workspace/gitlab_newProject/gitlab/android/aztec/src/main/AndroidManifest.xml
+=======
+ADDED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml:3:1-42
+INJECTED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml:3:1-42
+INJECTED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml:3:1-42
+INJECTED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml:3:1-42
+INJECTED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml:3:1-42
+	package
+		ADDED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml:3:11-40
+		INJECTED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml
+		INJECTED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml
+		ADDED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml:3:1-42
+		INJECTED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml:3:1-42
+uses-sdk
+INJECTED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml
+INJECTED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml
+INJECTED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml
+INJECTED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml
+		ADDED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml
+		INJECTED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml
+		ADDED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml
+		INJECTED from /Users/asdinformatics/Documents/gitlab_momspresso_master/android/aztec/src/main/AndroidManifest.xml
+>>>>>>> editor word check, empty body
