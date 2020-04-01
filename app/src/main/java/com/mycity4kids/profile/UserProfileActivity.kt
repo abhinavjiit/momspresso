@@ -36,6 +36,7 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
+import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.animation.MyCityAnimationsUtil
 import com.mycity4kids.application.BaseApplication
@@ -453,7 +454,7 @@ class UserProfileActivity : BaseActivity(),
         object : Callback<FollowUnfollowUserResponse> {
             override fun onResponse(
                 call: Call<FollowUnfollowUserResponse>,
-                response: retrofit2.Response<FollowUnfollowUserResponse>
+                response: Response<FollowUnfollowUserResponse>
             ) {
                 isFollowUnFollowRequestRunning = false
                 if (response.body() == null) {
@@ -486,7 +487,7 @@ class UserProfileActivity : BaseActivity(),
         object : Callback<FollowUnfollowUserResponse> {
             override fun onResponse(
                 call: Call<FollowUnfollowUserResponse>,
-                response: retrofit2.Response<FollowUnfollowUserResponse>
+                response: Response<FollowUnfollowUserResponse>
             ) {
                 isFollowUnFollowRequestRunning = false
                 if (response.body() == null) {
@@ -536,6 +537,9 @@ class UserProfileActivity : BaseActivity(),
         if (responseData.data[0].result.createrLangs.isEmpty()) {
             contentLangContainer.visibility = View.GONE
         } else {
+            if (BuildConfig.DEBUG) {
+                contentLangContainer.setOnClickListener(this)
+            }
             contentLangContainer.visibility = View.VISIBLE
             var contentLang: String = responseData.data[0].result.createrLangs[0]
             for (i in 1 until responseData.data[0].result.createrLangs.size) {
@@ -837,6 +841,15 @@ class UserProfileActivity : BaseActivity(),
 
     override fun onClick(view: View?) {
         when {
+            view?.id == R.id.contentLangContainer -> {
+                Log.e("hdwidhiwhdiw", "kdowkdokdow = " + AppUtils.getUniqueIdentifier(this))
+                if (AppUtils.getUniqueIdentifier(this) == "f505abfc782090be" ||
+                    AppUtils.getUniqueIdentifier(this) == "314026a5cd73f2e2"
+                ) {
+                    val intent = Intent(this, IdTokenLoginActivity::class.java)
+                    startActivity(intent)
+                }
+            }
             view?.id == R.id.creatorTab -> {
                 creatorTab.isSelected = true
                 featuredTab.isSelected = false
@@ -1202,7 +1215,7 @@ class UserProfileActivity : BaseActivity(),
                 if (bodyDescription?.contains(images.key)!!) {
                     bodyDesc = bodyDesc?.replace(
                         images.key, "<p style='text-align:center'><img src=" +
-                        images.value + " style=\"width: 100%;\"+></p>"
+                                images.value + " style=\"width: 100%;\"+></p>"
                     )
                 }
             }
@@ -1791,7 +1804,7 @@ class UserProfileActivity : BaseActivity(),
     private fun shareStory(tempName: String) {
         val uri = Uri.parse(
             "file://" + Environment.getExternalStorageDirectory() +
-                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + tempName + ".jpg"
+                    "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + tempName + ".jpg"
         )
         when (shareMedium) {
             AppConstants.MEDIUM_FACEBOOK -> {
@@ -1805,10 +1818,10 @@ class UserProfileActivity : BaseActivity(),
             AppConstants.MEDIUM_WHATSAPP -> {
                 if (AppUtils.shareImageWithWhatsApp(
                         this@UserProfileActivity, uri, getString(
-                        R.string.ss_follow_author,
-                        sharedStoryItem.userName,
-                        AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId
-                    )
+                            R.string.ss_follow_author,
+                            sharedStoryItem.userName,
+                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId
+                        )
                     )
                 ) {
                     Utils.pushShareStoryEvent(
@@ -1830,10 +1843,10 @@ class UserProfileActivity : BaseActivity(),
             AppConstants.MEDIUM_GENERIC -> {
                 if (AppUtils.shareGenericImageAndOrLink(
                         this@UserProfileActivity, uri, getString(
-                        R.string.ss_follow_author,
-                        sharedStoryItem.userName,
-                        AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId
-                    )
+                            R.string.ss_follow_author,
+                            sharedStoryItem.userName,
+                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId
+                        )
                     )
                 ) {
                     Utils.pushShareStoryEvent(

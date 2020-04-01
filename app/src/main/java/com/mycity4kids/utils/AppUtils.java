@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.Spanned;
@@ -335,7 +336,11 @@ public class AppUtils {
         } catch (Exception se) {
             return "";
         }
+    }
 
+    public static String getUniqueIdentifier(Context context) {
+        return Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
     }
 
     public static boolean writeJsonStringToFile(Context context, String jsonString, String fileName) {
@@ -575,8 +580,8 @@ public class AppUtils {
                 authorName);
     }
 
-    public static void shareStoryWithWhatsApp(Context context, String shareUrl, String screenName,
-            String userDynamoId, String articleId, String authorId, String authorName) {
+    private static void shareStoryWithWhatsApp(Context context, String shareUrl, String screenName, String userDynamoId,
+            String articleId, String authorId, String authorName) {
         Uri uri = Uri.parse(
                 "file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
         if (shareImageWithWhatsApp(context, uri, shareUrl)) {
@@ -608,8 +613,8 @@ public class AppUtils {
         }
     }
 
-    public static void shareStoryWithInstagram(Context context, String screenName,
-            String userDynamoId, String articleId, String authorId, String authorName) {
+    public static void shareStoryWithInstagram(Context context, String screenName, String userDynamoId,
+            String articleId, String authorId, String authorName) {
         Uri uri = Uri.parse(
                 "file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
         if (shareImageWithInstagram(context, uri)) {
@@ -663,7 +668,8 @@ public class AppUtils {
     }
 
     public static void shareCampaignWithWhatsApp(Context context, String shareUrl, String screenName,
-            String userDynamoId, String articleId, String authorId, String authorName) {
+            String userDynamoId, String articleId, String authorId,
+            String authorName) {
         if (StringUtils.isNullOrEmpty(shareUrl)) {
             Toast.makeText(context, context.getString(R.string.moderation_or_share_whatsapp_fail),
                     Toast.LENGTH_SHORT).show();
