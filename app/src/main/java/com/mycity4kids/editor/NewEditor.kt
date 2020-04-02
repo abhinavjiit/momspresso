@@ -278,11 +278,11 @@ class NewEditor : BaseActivity(),
                             )
                             when (orientation) {
                                 ExifInterface.ORIENTATION_ROTATE_90 -> imageBitmap =
-                                    EditorPostActivity.rotateImage(imageBitmap, 90f)
+                                    rotateImage(imageBitmap, 90f)
                                 ExifInterface.ORIENTATION_ROTATE_180 -> imageBitmap =
-                                    EditorPostActivity.rotateImage(imageBitmap, 180f)
+                                    rotateImage(imageBitmap, 180f)
                                 ExifInterface.ORIENTATION_ROTATE_270 -> imageBitmap =
-                                    EditorPostActivity.rotateImage(imageBitmap, 270f)
+                                    rotateImage(imageBitmap, 270f)
                                 ExifInterface.ORIENTATION_NORMAL -> {
                                 }
                                 else -> {
@@ -464,7 +464,7 @@ class NewEditor : BaseActivity(),
             titleTxt!!.setText(title)
         } else {
             titleTxt!!.setText(title)
-            titleTxt!!.setHint(intent.getStringExtra(EditorPostActivity.TITLE_PLACEHOLDER_PARAM))
+            titleTxt!!.setHint(intent.getStringExtra(title_placeholder_param))
             Log.e("postContent", content)
             initiatePeriodicDraftSave()
         }
