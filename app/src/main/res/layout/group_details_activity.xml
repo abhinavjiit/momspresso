@@ -91,7 +91,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:padding="7dp"
-                        android:text="@string/group_invite_text"
+                        android:text="@string/all_invite"
                         android:textColor="@color/white_color"
                         android:textSize="14sp"
                         app:fontName="oswald.ttf" />

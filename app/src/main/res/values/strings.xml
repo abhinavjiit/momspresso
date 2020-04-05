@@ -1001,7 +1001,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="reply_groups">Reply</string>
     <string name="group_detail_activity_toast_text">You can also post anonymously </string>
     <string name="group_add_comment_text">ADD COMMENT</string>
-    <string name="group_invite_text">Invite</string>
     <string name="group_comment_type_here_text">Type here</string>
     <string name="group_comment_start_type_here_text">Start typing</string>
     <string name="group_comment_be_the_first_text">Be the first one to comment</string>
@@ -1487,5 +1486,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="permission_required_media_photos">Storage permission required to access photos</string>
     <string name="permission_required_media_videos">Storage permission required to access videos</string>
     <string name="add_video_details_title_length_error">Title length should be less than 150 characters</string>
+    <string name="all_search">Search</string>
+    <string name="all_send_invite">Send Invite</string>
+    <string name="phone_contact_toolbar_title">Phonebook Contacts</string>
+    <string name="all_invite">Invite</string>
 </resources>
 

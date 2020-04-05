@@ -2,19 +2,15 @@ package com.mycity4kids.ui.activity
 
 import android.Manifest
 import android.accounts.NetworkErrorException
-import android.app.SearchManager
-import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
-import androidx.appcompat.widget.SearchView
-import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
@@ -25,6 +21,7 @@ import com.mycity4kids.models.ContactModel
 import com.mycity4kids.models.request.PhoneContactRequest
 import com.mycity4kids.retrofitAPIsInterfaces.ContactSyncAPI
 import com.mycity4kids.ui.adapter.PhoneContactsAdapter
+import kotlinx.android.synthetic.main.phone_contact_activity.*
 import okhttp3.ResponseBody
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
@@ -38,42 +35,59 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
     private val RC_CONTACT_PERMISSION = 123
     private var contactModelArrayList: ArrayList<ContactModel>? = null
     private var allPhoneList: ArrayList<String>? = null
-    private var recyclerView: RecyclerView? = null
-    private var toolbar: Toolbar? = null
-    private var sendInviteTextView: TextView? = null
     private lateinit var adapter: PhoneContactsAdapter
-    private lateinit var searchView: SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.phone_contact_activity)
 
-        recyclerView = findViewById(R.id.recyclerView)
-        sendInviteTextView = findViewById(R.id.sendInviteTextView)
-        toolbar = findViewById<View>(R.id.toolbar) as Toolbar
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-        sendInviteTextView?.setOnClickListener(this)
+        try {
+            setSupportActionBar(toolbar)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.setDisplayShowHomeEnabled(true)
+            sendInviteTextView?.setOnClickListener(this)
 
-        contactModelArrayList = ArrayList()
-        allPhoneList = ArrayList()
-        adapter = PhoneContactsAdapter(this)
-        val llm = LinearLayoutManager(this)
-        llm.orientation = RecyclerView.VERTICAL
-        recyclerView?.layoutManager = llm
-        recyclerView?.adapter = adapter
+            contactModelArrayList = ArrayList()
+            allPhoneList = ArrayList()
+            adapter = PhoneContactsAdapter(this)
+            val llm = LinearLayoutManager(this)
+            llm.orientation = RecyclerView.VERTICAL
+            recyclerView?.layoutManager = llm
+            recyclerView?.adapter = adapter
 
-        if (hasContactPermission()) {
-            getAllContacts()
-        } else {
-            EasyPermissions.requestPermissions(
-                this,
-                getString(R.string.permission_contact_rationale),
-                RC_CONTACT_PERMISSION,
-                Manifest.permission.READ_CONTACTS
+            setUpFilterView()
+
+            if (hasContactPermission()) {
+                getAllContacts()
+            } else {
+                EasyPermissions.requestPermissions(
+                    this,
+                    getString(R.string.permission_contact_rationale),
+                    RC_CONTACT_PERMISSION,
+                    Manifest.permission.READ_CONTACTS
+                )
+            }
+        } catch (e: Exception) {
+            Crashlytics.logException(e)
+            Log.d(
+                "FileNotFoundException",
+                Log.getStackTraceString(e)
             )
         }
+    }
+
+    private fun setUpFilterView() {
+        filterEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(query: Editable?) {
+            }
+
+            override fun beforeTextChanged(query: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(query: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                adapter.filter.filter(query)
+            }
+        })
     }
 
     private fun hasContactPermission(): Boolean {
@@ -81,81 +95,88 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
     }
 
     private fun getAllContacts() {
-
-        val projection = arrayOf(
-            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-            ContactsContract.CommonDataKinds.Phone.NUMBER,
-            ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER
-        )
-
-        var phone: Cursor? = null
         try {
-            phone = getContentResolver().query(
-                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                projection,
-                null,
-                null,
-                null
+            val projection = arrayOf(
+                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                ContactsContract.CommonDataKinds.Phone.NUMBER,
+                ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER
             )
-        } catch (e: SecurityException) {
-        }
 
-        phone?.let { phones ->
+            var phone: Cursor? = null
             try {
-                val normalizedNumbersAlreadyFound: HashSet<String> = HashSet()
-                val indexOfNormalizedNumber: Int =
-                    phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER)
-                val indexOfDisplayName: Int =
-                    phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
-                val indexOfDisplayNumber: Int =
-                    phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
-                while (phones.moveToNext()) {
-                    val normalizedNumber: String? = phones.getString(indexOfNormalizedNumber)
-                    normalizedNumber?.let { normNumber ->
-                        if (normalizedNumbersAlreadyFound.add(normNumber)) {
-                            val displayName: String? = phones.getString(indexOfDisplayName)
-                            val displayNumber: String? = phones.getString(indexOfDisplayNumber)
-                            val contactModel = ContactModel()
-                            displayNumber?.let {
-                                contactModel.name = displayName
-                                contactModel.number = it
-                                contactModelArrayList!!.add(contactModel)
-                                allPhoneList!!.add(it)
+                phone = getContentResolver().query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    projection,
+                    null,
+                    null,
+                    null
+                )
+            } catch (e: SecurityException) {
+            }
+
+            phone?.let { phones ->
+                try {
+                    val normalizedNumbersAlreadyFound: HashSet<String> = HashSet()
+                    val indexOfNormalizedNumber: Int =
+                        phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER)
+                    val indexOfDisplayName: Int =
+                        phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
+                    val indexOfDisplayNumber: Int =
+                        phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                    while (phones.moveToNext()) {
+                        val normalizedNumber: String? = phones.getString(indexOfNormalizedNumber)
+                        normalizedNumber?.let { normNumber ->
+                            if (normalizedNumbersAlreadyFound.add(normNumber)) {
+                                val displayName: String? = phones.getString(indexOfDisplayName)
+                                val displayNumber: String? = phones.getString(indexOfDisplayNumber)
+                                val contactModel = ContactModel()
+                                displayNumber?.let {
+                                    contactModel.name = displayName
+                                    contactModel.number = it
+                                    contactModelArrayList!!.add(contactModel)
+                                    allPhoneList!!.add(it)
+                                }
                             }
                         }
                     }
+                } finally {
+                    phones.close()
                 }
-            } finally {
                 phones.close()
             }
-            phones.close()
-        }
 
-        allPhoneList?.let {
-            val contactSynRequest = PhoneContactRequest()
-            contactSynRequest.contactList = it
-            val retro = BaseApplication.getInstance().retrofit
-            val contactSyncAPI = retro.create(ContactSyncAPI::class.java)
-            val contactSyncCall = contactSyncAPI.syncContacts(contactSynRequest)
-            contactSyncCall.enqueue(object : Callback<ResponseBody> {
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    Crashlytics.logException(t)
-                    Log.d(
-                        "FileNotFoundException",
-                        Log.getStackTraceString(t)
-                    )
-                }
+            allPhoneList?.let {
+                val contactSynRequest = PhoneContactRequest()
+                contactSynRequest.contactList = it
+                val retro = BaseApplication.getInstance().retrofit
+                val contactSyncAPI = retro.create(ContactSyncAPI::class.java)
+                val contactSyncCall = contactSyncAPI.syncContacts(contactSynRequest)
+                contactSyncCall.enqueue(object : Callback<ResponseBody> {
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        Crashlytics.logException(t)
+                        Log.d(
+                            "FileNotFoundException",
+                            Log.getStackTraceString(t)
+                        )
+                    }
 
-                override fun onResponse(
-                    call: Call<ResponseBody>,
-                    response: Response<ResponseBody>
-                ) {
-                }
-            })
+                    override fun onResponse(
+                        call: Call<ResponseBody>,
+                        response: Response<ResponseBody>
+                    ) {
+                    }
+                })
+            }
+            contactModelArrayList?.sortBy { it.name }
+            adapter.setListData(contactModelArrayList)
+            adapter.notifyDataSetChanged()
+        } catch (e: Exception) {
+            Crashlytics.logException(e)
+            Log.d(
+                "FileNotFoundException",
+                Log.getStackTraceString(e)
+            )
         }
-        contactModelArrayList?.sortBy { it.name }
-        adapter.setListData(contactModelArrayList)
-        adapter.notifyDataSetChanged()
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
@@ -242,49 +263,12 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_search, menu)
-
-        // Associate searchable configuration with the SearchView
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        searchView = menu?.findItem(R.id.search)?.actionView as SearchView
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        searchView.maxWidth = Integer.MAX_VALUE
-
-        // listening to search query text change
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                adapter.filter.filter(query)
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                adapter.filter.filter(newText)
-                return false
-            }
-        })
-        return true
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.search) {
-            return true
-        }
         if (id == android.R.id.home) {
             onBackPressed()
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onBackPressed() {
-        // close search view on back button pressed
-        if (!searchView.isIconified) {
-            searchView.isIconified = true
-            return
-        }
-        super.onBackPressed()
     }
 }

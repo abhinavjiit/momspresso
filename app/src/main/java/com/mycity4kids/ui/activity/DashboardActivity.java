@@ -58,7 +58,6 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.editor.NewEditor;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
@@ -66,7 +65,6 @@ import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.BranchModel;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
-import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.request.VlogsEventRequest;
 import com.mycity4kids.models.response.AllDraftsResponse;
 import com.mycity4kids.models.response.BlogPageResponse;
@@ -84,7 +82,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
@@ -128,7 +125,6 @@ import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class DashboardActivity extends BaseActivity implements View.OnClickListener,
@@ -1779,17 +1775,17 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void launchEditor() {
-        Intent intent1 = new Intent(DashboardActivity.this, NewEditor.class);
-        Bundle bundle5 = new Bundle();
-        bundle5.putString("TITLE_PARAM", "");
-        bundle5.putString("CONTENT_PARAM", "");
-        bundle5.putString("TITLE_PLACEHOLDER_PARAM",
-                getString(R.string.example_post_title_placeholder));
-        bundle5.putString("CONTENT_PLACEHOLDER_PARAM",
-                getString(R.string.example_post_content_placeholder));
-        bundle5.putInt("EDITOR_PARAM", NewEditor.USE_NEW_EDITOR);
-        bundle5.putString("from", "dashboard");
-        startActivity(intent1);
+        //Bundle bundle = new Bundle();
+        //bundle.putString("TITLE_PARAM", "");
+        //bundle.putString("CONTENT_PARAM", "");
+        //bundle.putString("TITLE_PLACEHOLDER_PARAM",
+        //getString(R.string.example_post_title_placeholder));
+        //bundle.putString("CONTENT_PLACEHOLDER_PARAM",
+        //getString(R.string.example_post_content_placeholder));
+        //bundle.putInt("EDITOR_PARAM", NewEditor.USE_NEW_EDITOR);
+        //bundle.putString("from", "dashboard");
+        Intent intent = new Intent(DashboardActivity.this, NewEditor.class);
+        startActivity(intent);
     }
 
     @Override
@@ -1909,7 +1905,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 changePreferredLanguageDialogFragment.show(fm, "Choose video option");
                 break;
             case R.id.searchAllImageView:
-                // unblockRenu();
                 if (topFragment instanceof GroupsViewFragment) {
                     Intent searchIntent = new Intent(this, GroupsSearchActivity.class);
                     startActivity(searchIntent);
@@ -2007,30 +2002,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             default:
                 break;
         }
-    }
-
-    private void unblockRenu() {
-        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
-
-        UpdateGroupMembershipRequest updateGroupMembershipRequest =
-                new UpdateGroupMembershipRequest();
-        updateGroupMembershipRequest.setUserId("68781899365048e7a77b7f39ff1094c6");
-        updateGroupMembershipRequest.setStatus("1");
-        Call<GroupsMembershipResponse> call1 = groupsApi
-                .updateMember(136246,
-                        updateGroupMembershipRequest);
-        call1.enqueue(new Callback<GroupsMembershipResponse>() {
-            @Override
-            public void onResponse(Call<GroupsMembershipResponse> call, Response<GroupsMembershipResponse> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
-
-            }
-        });
     }
 
     private void fireEventForVideoCreationIntent() {
