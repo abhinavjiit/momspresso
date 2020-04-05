@@ -1,221 +1,225 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorPrimary"
+    android:elevation="8dp"
+    android:minHeight="?attr/actionBarSize"
+    app:layout_constraintTop_toTopOf="parent"
+    app:theme="@style/ToolbarTheme"
+    app:titleTextAppearance="@style/ToolbarTheme.Title" />
+
+  <RelativeLayout
+    android:id="@+id/moderationContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true">
+
+    <ImageView
+      android:id="@+id/headerImageView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerHorizontal="true"
+      android:src="@drawable/ic_moderation" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/wayToGoTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/headerImageView"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="30dp"
+      android:text="@string/moderation_or_share.way_to_go"
+      android:textColor="@color/app_light_black"
+      android:textSize="18sp"
+      app:fontName="oswald_regular.ttf" />
+
+    <View
+      android:id="@+id/underline1"
+      android:layout_width="40dp"
+      android:layout_height="1dp"
+      android:layout_below="@+id/wayToGoTextView"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="5dp"
+      android:background="@color/app_blue" />
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/underline1"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="18dp"
+      android:gravity="center"
+      android:orientation="vertical"
+      android:visibility="visible">
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingLeft="60dp"
+        android:paddingRight="60dp"
+        android:text="@string/moderation_or_share_story_moderation_message"
+        android:textColor="@color/app_grey"
+        android:textSize="18sp"
+        app:fontName="oswald.ttf" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/okayTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/unfollow_topic_author_bg"
+        android:gravity="center"
+        android:paddingLeft="60dp"
+        android:paddingTop="14dp"
+        android:paddingRight="60dp"
+        android:paddingBottom="14dp"
+        android:text="@string/moderation_or_share.okay"
+        android:textColor="@color/white_color"
+        android:textSize="18sp"
+        app:fontName="oswald.ttf" />
+    </LinearLayout>
+  </RelativeLayout>
+
+  <ScrollView
+    android:id="@+id/publishedContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_below="@+id/toolbar"
+    android:visibility="visible">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+      <com.mycity4kids.widget.StoryShareCardWidget
+        android:id="@+id/storyShareCardWidget"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:elevation="8dp"
-        android:minHeight="?attr/actionBarSize"
-        app:layout_constraintTop_toTopOf="parent"
-        app:theme="@style/ToolbarTheme"
-        app:titleTextAppearance="@style/ToolbarTheme.Title" />
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <RelativeLayout
-        android:id="@+id/moderationContainer"
+      <include
+        android:id="@+id/includeShareLayout"
+        layout="@layout/layout_story_share_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
+        android:layout_margin="16dp"
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/headerImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_moderation" />
+      <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@color/white_color"
+        android:elevation="4dp"
+        android:paddingBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/includeShareLayout">
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/wayToGoTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/headerImageView"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp"
-            android:text="@string/moderation_or_share.way_to_go"
-            android:textColor="@color/app_light_black"
-            android:textSize="18sp"
-            app:fontName="oswald_regular.ttf" />
+        <androidx.appcompat.widget.AppCompatTextView
+          android:id="@+id/shareLabelTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="10dp"
+          android:text="@string/ss_share_with_friends"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
 
         <View
-            android:id="@+id/underline1"
-            android:layout_width="40dp"
-            android:layout_height="1dp"
-            android:layout_below="@+id/wayToGoTextView"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:background="@color/app_blue" />
+          android:layout_width="80dp"
+          android:layout_height="1dp"
+          android:layout_marginTop="20dp"
+          android:background="@color/light_underline"
+          app:layout_constraintEnd_toStartOf="@+id/shareLabelTextView"
+          app:layout_constraintHorizontal_bias="0.8"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/underline1"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="18dp"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="visible">
+        <View
+          android:layout_width="80dp"
+          android:layout_height="1dp"
+          android:layout_marginTop="20dp"
+          android:background="@color/light_underline"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintHorizontal_bias="0.2"
+          app:layout_constraintStart_toEndOf="@+id/shareLabelTextView"
+          app:layout_constraintTop_toTopOf="parent" />
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingLeft="60dp"
-                android:paddingRight="60dp"
-                android:text="@string/moderation_or_share_story_moderation_message"
-                android:textColor="@color/app_grey"
-                android:textSize="18sp"
-                app:fontName="oswald.ttf" />
+        <com.mycity4kids.widget.ShareButtonWidget
+          android:id="@+id/facebookShareWidget"
+          android:layout_width="0dp"
+          android:layout_height="50dp"
+          android:layout_marginStart="24dp"
+          android:layout_marginTop="20dp"
+          android:layout_marginEnd="8dp"
+          app:layout_constraintEnd_toStartOf="@+id/whatsAppShareWidget"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/shareLabelTextView"
+          app:radius="2dp"
+          app:shareBgColor="@color/all_facebook_share"
+          app:shareImage="@drawable/ic_ss_facebook"
+          app:shareText="@string/ad.bottom_bar.facebook"
+          app:textStyle="bold" />
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/okayTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:background="@drawable/unfollow_topic_author_bg"
-                android:gravity="center"
-                android:paddingLeft="60dp"
-                android:paddingTop="14dp"
-                android:paddingRight="60dp"
-                android:paddingBottom="14dp"
-                android:text="@string/moderation_or_share.okay"
-                android:textColor="@color/white_color"
-                android:textSize="18sp"
-                app:fontName="oswald.ttf" />
-        </LinearLayout>
-    </RelativeLayout>
+        <com.mycity4kids.widget.ShareButtonWidget
+          android:id="@+id/whatsAppShareWidget"
+          android:layout_width="0dp"
+          android:layout_height="50dp"
+          android:layout_marginStart="8dp"
+          android:layout_marginTop="20dp"
+          android:layout_marginEnd="24dp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toEndOf="@+id/facebookShareWidget"
+          app:layout_constraintTop_toBottomOf="@+id/shareLabelTextView"
+          app:radius="2dp"
+          app:shareBgColor="@color/all_whatsapp_share"
+          app:shareImage="@drawable/ic_ss_whatsapp"
+          app:shareText="@string/ad.bottom_bar.whatsapp"
+          app:textStyle="bold" />
 
-    <ScrollView
-        android:id="@+id/publishedContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:visibility="gone">
+        <com.mycity4kids.widget.ShareButtonWidget
+          android:id="@+id/instagramShareWidget"
+          android:layout_width="0dp"
+          android:layout_height="50dp"
+          android:layout_marginStart="24dp"
+          android:layout_marginTop="16dp"
+          android:layout_marginEnd="8dp"
+          app:layout_constraintEnd_toStartOf="@+id/genericShareWidget"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/facebookShareWidget"
+          app:radius="2dp"
+          app:shareBgDrawable="@drawable/instagram_gradient_bg"
+          app:shareImage="@drawable/ic_ss_instagram"
+          app:shareText="@string/ad.bottom_bar.instagram"
+          app:textStyle="bold" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.mycity4kids.widget.StoryShareCardWidget
-                android:id="@+id/storyShareCardWidget"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="invisible"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <include
-                android:id="@+id/includeShareLayout"
-                layout="@layout/layout_story_share_card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:visibility="visible"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@color/white_color"
-                android:elevation="4dp"
-                android:paddingBottom="20dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/includeShareLayout">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/shareLabelTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/ss_share_with_friends"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <View
-                    android:layout_width="80dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="20dp"
-                    android:background="@color/light_underline"
-                    app:layout_constraintEnd_toStartOf="@+id/shareLabelTextView"
-                    app:layout_constraintHorizontal_bias="0.8"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <View
-                    android:layout_width="80dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="20dp"
-                    android:background="@color/light_underline"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.2"
-                    app:layout_constraintStart_toEndOf="@+id/shareLabelTextView"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.mycity4kids.widget.ShareButtonWidget
-                    android:id="@+id/facebookShareWidget"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@color/transparent"
-                    app:layout_constraintEnd_toStartOf="@+id/whatsAppShareWidget"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/shareLabelTextView"
-                    app:shareBgColor="@color/all_facebook_share"
-                    app:shareImage="@drawable/ic_ss_facebook"
-                    app:shareText="@string/ad.bottom_bar.facebook" />
-
-                <com.mycity4kids.widget.ShareButtonWidget
-                    android:id="@+id/whatsAppShareWidget"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="24dp"
-                    android:background="@color/transparent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/facebookShareWidget"
-                    app:layout_constraintTop_toBottomOf="@+id/shareLabelTextView"
-                    app:shareBgColor="@color/all_whatsapp_share"
-                    app:shareImage="@drawable/ic_ss_whatsapp"
-                    app:shareText="@string/ad.bottom_bar.whatsapp" />
-
-                <com.mycity4kids.widget.ShareButtonWidget
-                    android:id="@+id/instagramShareWidget"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@color/transparent"
-                    app:layout_constraintEnd_toStartOf="@+id/genericShareWidget"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/facebookShareWidget"
-                    app:shareBgDrawable="@drawable/instagram_gradient_bg"
-                    app:shareImage="@drawable/ic_ss_instagram"
-                    app:shareText="@string/ad.bottom_bar.instagram" />
-
-                <com.mycity4kids.widget.ShareButtonWidget
-                    android:id="@+id/genericShareWidget"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="24dp"
-                    android:background="@color/transparent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/instagramShareWidget"
-                    app:layout_constraintTop_toBottomOf="@+id/facebookShareWidget"
-                    app:shareBgColor="@color/all_generic_share"
-                    app:shareImage="@drawable/ic_ss_generic"
-                    app:shareText="@string/ad.bottom_bar.generic_share" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+        <com.mycity4kids.widget.ShareButtonWidget
+          android:id="@+id/genericShareWidget"
+          android:layout_width="0dp"
+          android:layout_height="50dp"
+          android:layout_marginStart="8dp"
+          android:layout_marginTop="16dp"
+          android:layout_marginEnd="24dp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toEndOf="@+id/instagramShareWidget"
+          app:layout_constraintTop_toBottomOf="@+id/facebookShareWidget"
+          app:radius="2dp"
+          app:shareBgColor="@color/all_generic_share"
+          app:shareImage="@drawable/ic_ss_generic"
+          app:shareText="@string/ad.bottom_bar.generic_share"
+          app:textStyle="bold" />
+      </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+  </ScrollView>
 </RelativeLayout>

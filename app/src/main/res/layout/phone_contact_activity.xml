@@ -1,60 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/white_color">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:background="?attr/colorPrimary"
+    android:minHeight="?attr/actionBarSize">
+
+    <RelativeLayout
+      android:id="@+id/toolbarRelativeLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="@dimen/space_2"
+      android:visibility="visible">
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/toolbarTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:text="@string/phone_contact_toolbar_title"
+        android:textColor="@color/user_activities.toolbar.title"
+        android:textSize="20sp"
+        app:fontName="oswald_regular.ttf" />
+
+    </RelativeLayout>
+  </androidx.appcompat.widget.Toolbar>
+
+  <View
+    android:id="@+id/toolbarUnderline"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_below="@+id/toolbar"
+    android:background="@color/light_underline" />
+
+  <EditText
+    android:id="@+id/filterEditText"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/toolbarUnderline"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:drawableStart="@drawable/ic_search"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:drawablePadding="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:hint="@string/all_search"
+    android:background="@drawable/search_view_bg" />
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/recyclerView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_above="@+id/sendInviteTextView"
+    android:layout_below="@+id/filterEditText" />
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize">
-
-        <RelativeLayout
-            android:id="@+id/toolbarRelativeLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/space_2"
-            android:visibility="visible">
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/toolbarTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="@string/myprofile.section.activity_label"
-                android:textColor="@color/user_activities.toolbar.title"
-                android:textSize="20sp"
-                app:fontName="oswald_regular.ttf" />
-
-        </RelativeLayout>
-    </androidx.appcompat.widget.Toolbar>
-
-    <View
-        android:id="@+id/toolbarUnderline"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/toolbar"
-        android:background="@color/light_underline" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/sendInviteTextView"
-        android:layout_below="@+id/toolbarUnderline" />
-
-    <TextView
-        android:id="@+id/sendInviteTextView"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/app_red"
-        android:gravity="center"
-        android:text="Send Invite"
-        android:textColor="@color/white_color"
-        android:textSize="20sp" />
+  <TextView
+    android:id="@+id/sendInviteTextView"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:layout_alignParentBottom="true"
+    android:background="@color/app_red"
+    android:gravity="center"
+    android:text="@string/all_send_invite"
+    android:textColor="@color/white_color"
+    android:textSize="20sp" />
 </RelativeLayout>

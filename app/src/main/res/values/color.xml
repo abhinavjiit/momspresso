@@ -14,7 +14,8 @@
     <color name="all_whatsapp_share">#4CAF50</color>
     <color name="all_instagram_share">#C837AB</color>
     <color name="all_generic_share">#38C5A5</color>
-
+    <color name="all_phonebook">#40CF9A</color>
+    <color name="all_invite_link">#636363</color>
     <color name="all_toolbar_title">#545454</color>
     <color name="short_story_author_name">#465391</color>
 

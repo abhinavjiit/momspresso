@@ -894,7 +894,6 @@
   <string name="groups.other_groups">மற்ற குழுக்கள்</string>
   <string name="group_detail_activity_toast_text">అనామకులుగా కూడా పోస్ట్ చేయొచ్చు</string>
   <string name="group_add_comment_text">వ్యాఖ్యలను జోడించండి</string>
-  <string name="group_invite_text">ఆహ్వానించండి </string>
   <string name="group_comment_type_here_text">ఇక్కడ టైప్ చేయండి</string>
   <string name="group_comment_be_the_first_text">వ్యాఖ్యానించిన మొదటి వ్యక్తి అవ్వండి</string>
 
@@ -1316,4 +1315,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="unlisted_video_link">Unlisted video link</string>
   <string name="invite_contact_invitation_sent">Your invite has been sent!</string>
     <string name="add_video_details_title_length_error">Title length should be less than 150 characters</string>
+  <string name="all_search">Search</string>
+  <string name="all_send_invite">Send Invite</string>
+  <string name="phone_contact_toolbar_title">Phonebook Contacts</string>
+  <string name="all_invite">ఆహ్వానించండి </string>
 </resources>

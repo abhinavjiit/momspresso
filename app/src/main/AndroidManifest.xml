@@ -1,583 +1,575 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.mycity4kids">
+  xmlns:tools="http://schemas.android.com/tools"
+  package="com.mycity4kids">
 
-    <uses-sdk tools:overrideLibrary="io.branch.referral, com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
-    <!-- So that we can get the account name -->
-    <uses-permission android:name="android.permission.CAMERA" /> <!-- Used to request data from the Google+ APIs in the SignInActivity -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- <uses-permission android:name="android.permission.GET_ACCOUNTS" /> -->
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" /> <!-- Required if we need to invalidate access tokens -->
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" /> <!-- External storage for caching. -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- My Location -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.READ_CALENDAR" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- Maps API needs OpenGL ES 2.0. -->
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+  <uses-sdk tools:overrideLibrary="io.branch.referral, com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
+  <!-- So that we can get the account name -->
+  <uses-permission android:name="android.permission.CAMERA" /> <!-- Used to request data from the Google+ APIs in the SignInActivity -->
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- <uses-permission android:name="android.permission.GET_ACCOUNTS" /> -->
+  <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+  <uses-permission android:name="android.permission.USE_CREDENTIALS" /> <!-- Required if we need to invalidate access tokens -->
+  <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" /> <!-- External storage for caching. -->
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- My Location -->
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+  <uses-permission android:name="android.permission.READ_CALENDAR" />
+  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+  <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.VIBRATE" />
+  <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+  <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- Maps API needs OpenGL ES 2.0. -->
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+  <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-    <uses-feature
-        android:glEsVersion="0x00020000"
-        android:required="true" />
+  <uses-feature
+    android:glEsVersion="0x00020000"
+    android:required="true" />
 
-    <application
-        android:name=".application.BaseApplication"
-        android:allowBackup="false"
-        android:hardwareAccelerated="true"
-        android:icon="@drawable/myicon"
-        android:label="@string/app_name"
-        android:largeHeap="true"
-        android:requestLegacyExternalStorage="true"
-        android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true"
-        tools:replace="android:allowBackup">
-        <activity
-            android:name=".ui.rewards.activity.RewardsShareReferralCodeActivity"
+  <application
+    android:name=".application.BaseApplication"
+    android:allowBackup="false"
+    android:hardwareAccelerated="true"
+    android:icon="@drawable/myicon"
+    android:label="@string/app_name"
+    android:largeHeap="true"
+    android:requestLegacyExternalStorage="true"
+    android:theme="@style/AppTheme"
+    android:usesCleartextTraffic="true"
+    tools:replace="android:allowBackup">
+    <activity
+      android:name=".ui.rewards.activity.RewardsShareReferralCodeActivity"
 
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.mymoneytracker.activity.TrackerActivity"
-            android:label="@string/title_activity_tracker"
-            android:theme="@style/AppTheme.NoActionBar" />
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.mymoneytracker.activity.TrackerActivity"
+      android:label="@string/title_activity_tracker"
+      android:theme="@style/AppTheme.NoActionBar" />
 
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        <meta-data
-            android:name="com.facebook.accountkit.ApplicationName"
-            android:value="@string/app_name" />
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
-        <meta-data
-            android:name="com.facebook.accountkit.ClientToken"
-            android:value="@string/ACCOUNT_KIT_CLIENT_TOKEN" />
+    <meta-data
+      android:name="com.google.android.gms.version"
+      android:value="@integer/google_play_services_version" />
+    <meta-data
+      android:name="com.facebook.accountkit.ApplicationName"
+      android:value="@string/app_name" />
+    <meta-data
+      android:name="com.facebook.sdk.ApplicationId"
+      android:value="@string/facebook_app_id" />
+    <meta-data
+      android:name="com.facebook.accountkit.ClientToken"
+      android:value="@string/ACCOUNT_KIT_CLIENT_TOKEN" />
 
-        <receiver
-            android:name=".receiver.InstallReferrerReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
-            </intent-filter>
-        </receiver>
+    <receiver
+      android:name=".receiver.InstallReferrerReceiver"
+      android:exported="true">
+      <intent-filter>
+        <action android:name="com.android.vending.INSTALL_REFERRER" />
+      </intent-filter>
+    </receiver>
 
-        <activity
-            android:name=".filechooser.com.ipaulpro.afilechooser.FileChooserActivity"
-            android:enabled="@bool/use_activity"
-            android:exported="true"
-            android:icon="@drawable/ic_chooser"
-            android:label="@string/choose_file">
-            <intent-filter>
-                <action android:name="android.intent.action.GET_CONTENT" />
+    <activity
+      android:name=".filechooser.com.ipaulpro.afilechooser.FileChooserActivity"
+      android:enabled="@bool/use_activity"
+      android:exported="true"
+      android:icon="@drawable/ic_chooser"
+      android:label="@string/choose_file">
+      <intent-filter>
+        <action android:name="android.intent.action.GET_CONTENT" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.OPENABLE" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.OPENABLE" />
 
-                <data android:mimeType="*/*" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.activity.SplashActivity"
-            android:icon="@drawable/myicon"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/transparent_status">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <data android:mimeType="*/*" />
+      </intent-filter>
+    </activity>
+    <activity
+      android:name=".ui.activity.SplashActivity"
+      android:icon="@drawable/myicon"
+      android:label="@string/app_name"
+      android:screenOrientation="portrait"
+      android:theme="@style/transparent_status">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
 
-            <!-- The following intent filter is added to provide deep linking to the MC4K app -->
-            <intent-filter android:autoVerify="true">
-                <data android:scheme="mc4k" />
-                <data android:scheme="mck" />
-                <data android:scheme="mycity4kids" />
-                <data android:scheme="momspresso" />
-                <data
-                    android:host="www.mycity4kids.com"
-                    android:scheme="http" />
-                <data
-                    android:host="www.momspresso.com"
-                    android:scheme="http" />
-                <data
-                    android:host="*.momspresso.com"
-                    android:scheme="http" />
-                <data
-                    android:host="mycity4kids.com"
-                    android:scheme="http" />
-                <data
-                    android:host="momspresso.com"
-                    android:scheme="http" />
-                <data
-                    android:host="momspresso.com"
-                    android:scheme="https" />
-                <data
-                    android:host="www.mycity4kids.com"
-                    android:scheme="https" />
-                <data
-                    android:host="www.momspresso.com"
-                    android:scheme="https" />
-                <data
-                    android:host="*.momspresso.com"
-                    android:scheme="https" />
-                <data
-                    android:host="mycity4kids.app.link"
-                    android:scheme="https" />
-                <data
-                    android:host="mycity4kids-alternate.app.link"
-                    android:scheme="https" />
+      <!-- The following intent filter is added to provide deep linking to the MC4K app -->
+      <intent-filter android:autoVerify="true">
+        <data android:scheme="mc4k" />
+        <data android:scheme="mck" />
+        <data android:scheme="mycity4kids" />
+        <data android:scheme="momspresso" />
+        <data
+          android:host="www.mycity4kids.com"
+          android:scheme="http" />
+        <data
+          android:host="www.momspresso.com"
+          android:scheme="http" />
+        <data
+          android:host="*.momspresso.com"
+          android:scheme="http" />
+        <data
+          android:host="mycity4kids.com"
+          android:scheme="http" />
+        <data
+          android:host="momspresso.com"
+          android:scheme="http" />
+        <data
+          android:host="momspresso.com"
+          android:scheme="https" />
+        <data
+          android:host="www.mycity4kids.com"
+          android:scheme="https" />
+        <data
+          android:host="www.momspresso.com"
+          android:scheme="https" />
+        <data
+          android:host="*.momspresso.com"
+          android:scheme="https" />
+        <data
+          android:host="mycity4kids.app.link"
+          android:scheme="https" />
+        <data
+          android:host="mycity4kids-alternate.app.link"
+          android:scheme="https" />
 
-                <action android:name="android.intent.action.VIEW" />
+        <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity> <!-- Login Activity for facebook & app id -->
-        <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
-        <activity
-            android:name="com.facebook.CustomTabActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <category android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
+    </activity> <!-- Login Activity for facebook & app id -->
+    <activity
+      android:name="com.facebook.FacebookActivity"
+      android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+      android:label="@string/app_name" />
+    <activity
+      android:name="com.facebook.CustomTabActivity"
+      android:exported="true">
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
 
-                <data
-                    android:scheme="@string/fb_login_protocol_scheme"
-                    tools:ignore="ManifestResource" />
-            </intent-filter>
-        </activity>
+        <data
+          android:scheme="@string/fb_login_protocol_scheme"
+          tools:ignore="ManifestResource" />
+      </intent-filter>
+    </activity>
 
-        <provider
-            android:name="com.facebook.FacebookContentProvider"
-            android:authorities="com.facebook.app.FacebookContentProvider206155642763202"
-            android:exported="true" />
+    <provider
+      android:name="com.facebook.FacebookContentProvider"
+      android:authorities="com.facebook.app.FacebookContentProvider206155642763202"
+      android:exported="true" />
 
-        <activity
-            android:name=".editor.NewEditor"
-            android:screenOrientation="portrait"
-            android:theme="@style/EditorTheme" />
-        <activity
-            android:name=".ui.activity.BlogFilterActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Transparent" />
-        <activity
-            android:name=".ui.activity.NewsLetterWebviewActivity"
-            android:configChanges="keyboardHidden|screenSize|orientation"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ui.activity.LoadWebViewActivity"
-            android:configChanges="keyboardHidden|screenSize|orientation"
-            android:label="@string/app_name"
-            android:parentActivityName=".ui.activity.DashboardActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ui.activity.ActivityLogin"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".ui.activity.ForgotPasswordActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ui.activity.LoadingActivity"
-            android:screenOrientation="unspecified"
-            android:theme="@style/Theme.Transparent"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ui.activity.DashboardActivity"
-            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
-            android:label="@string/app_name"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.rankingTheme" />
-        <activity
-            android:name=".ui.activity.TutorialActivity"
-            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/transparent_status"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".editor.EditorPostActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/EditorTheme" />
-        <activity
-            android:name=".editor.ArticleImageTagUploadActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.ContributorListActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.google.android.gms.tagmanager.PreviewActivity"
-            android:label="@string/app_name"
-            android:noHistory="true"> <!-- optional, removes the previewActivity from the activity stack. -->
-            <intent-filter>
-                <data android:scheme="tagmanager.c.com.mycity4kids" />
+    <activity
+      android:name=".editor.NewEditor"
+      android:screenOrientation="portrait"
+      android:theme="@style/EditorTheme" />
+    <activity
+      android:name=".ui.activity.BlogFilterActivity"
+      android:label="@string/app_name"
+      android:screenOrientation="portrait"
+      android:theme="@style/Theme.Transparent" />
+    <activity
+      android:name=".ui.activity.NewsLetterWebviewActivity"
+      android:configChanges="keyboardHidden|screenSize|orientation"
+      android:label="@string/app_name"
+      android:screenOrientation="portrait"
+      android:windowSoftInputMode="adjustPan" />
+    <activity
+      android:name=".ui.activity.LoadWebViewActivity"
+      android:configChanges="keyboardHidden|screenSize|orientation"
+      android:label="@string/app_name"
+      android:parentActivityName=".ui.activity.DashboardActivity"
+      android:screenOrientation="portrait"
+      android:windowSoftInputMode="adjustPan" />
+    <activity
+      android:name=".ui.activity.ActivityLogin"
+      android:label="@string/app_name"
+      android:screenOrientation="portrait"
+      android:windowSoftInputMode="adjustResize" />
+    <activity
+      android:name=".ui.activity.ForgotPasswordActivity"
+      android:screenOrientation="portrait"
+      android:windowSoftInputMode="adjustPan" />
+    <activity
+      android:name=".ui.activity.LoadingActivity"
+      android:screenOrientation="unspecified"
+      android:theme="@style/Theme.Transparent"
+      android:windowSoftInputMode="adjustPan" />
+    <activity
+      android:name=".ui.activity.DashboardActivity"
+      android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
+      android:label="@string/app_name"
+      android:launchMode="singleTop"
+      android:screenOrientation="portrait"
+      android:theme="@style/Theme.rankingTheme" />
+    <activity
+      android:name=".ui.activity.TutorialActivity"
+      android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
+      android:label="@string/app_name"
+      android:screenOrientation="portrait"
+      android:theme="@style/transparent_status"
+      android:windowSoftInputMode="adjustPan" />
+    <activity
+      android:name=".editor.EditorPostActivity"
+      android:screenOrientation="portrait"
+      android:theme="@style/EditorTheme" />
+    <activity
+      android:name=".editor.ArticleImageTagUploadActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.ContributorListActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name="com.google.android.gms.tagmanager.PreviewActivity"
+      android:label="@string/app_name"
+      android:noHistory="true"> <!-- optional, removes the previewActivity from the activity stack. -->
+      <intent-filter>
+        <data android:scheme="tagmanager.c.com.mycity4kids" />
 
-                <action android:name="android.intent.action.VIEW" />
+        <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.activity.ArticleListingActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.ArticleDetailsContainerActivity"
-            android:configChanges="uiMode"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.CityBestArticleListingActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.FilteredTopicsArticleListingActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.FollowersAndFollowingListActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.VideoTrimmerActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.AddVideoDetailsActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.VideoUploadProgressActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.IdTokenLoginActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.SearchAllActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.SubscribeTopicsActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.AppSettingsActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.rewards.activity.RewardsContainerActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize|layoutDirection"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.nnn"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ui.activity.RankingActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.rankingTheme" />
-        <activity
-            android:name=".ui.activity.BlogSetupActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.nnn" />
-        <activity
-            android:name=".ui.activity.AddArticleTopicsActivityNew"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.ArticleModerationOrShareActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.UserActivitiesActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.LanguageSelectionActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.GroupsSummaryActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.GroupsQuestionnaireActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.GroupDetailsActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.GroupPostDetailActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.AddPollGroupPostActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity
-            android:name=".ui.activity.AddTextOrMediaGroupPostActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.AddAudioGroupPostActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.GroupsListingActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.GroupSettingsActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.activity.LeaveGroupActivity" />
-        <activity android:name=".ui.activity.EditGroupActivity" />
-        <activity
-            android:name=".ui.activity.AddShortStoryActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".ui.activity.ShortStoryContainerActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/EditorTheme" />
-        <activity
-            android:name=".ui.activity.GroupCategoriesSelectionActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.GroupsReportedContentActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.GroupMembershipActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.GroupsSearchActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.GroupsEditPostActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.ViewGroupPostCommentsRepliesActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.ExploreArticleListingTypeActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.ShortStoriesListingContainerActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/EditorTheme" />
-        <activity
-            android:name=".ui.activity.TopicsListingActivity"
-            android:parentActivityName=".ui.activity.DashboardActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.UserPublishedContentActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/EditorTheme" />
-        <activity
-            android:name=".ui.activity.UserDraftsContentActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.LeafNodeTopicArticlesActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.NotificationActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.UsersBookmarkListActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.ChangePasswordActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.SuggestedTopicsActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.PhoneLoginUserDetailActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/EditorTheme" />
-        <activity
-            android:name=".ui.activity.CategoryVideosListingActivity"
-            android:parentActivityName=".ui.activity.DashboardActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.ShortStoryChallengeDetailActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/EditorTheme" />
-        <activity
-            android:name=".ui.activity.ChooseVideoCategoryActivity"
-            android:parentActivityName=".ui.activity.DashboardActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.ChooseShortStoryCategoryActivity"
-            android:parentActivityName=".ui.activity.DashboardActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.videochallengenewui.activity.NewVideoChallengeActivity"
-            android:parentActivityName=".ui.activity.CategoryVideosListingActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.UserReadArticlesContentActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.MyTotalEarningActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.ParallelFeedActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.rankingTheme" />
-        <activity
-            android:name=".ui.activity.SpellCheckActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/EditorTheme" />
-        <activity
-            android:name=".ui.campaign.activity.CampaignContainerActivity"
-            android:parentActivityName=".ui.activity.DashboardActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ui.activity.ArticleChallengesActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.CustomSignUpActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.campaign.activity.CampaignHowToVideoActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Transparent" />
-        <activity
-            android:name=".ui.activity.ProfileSetting"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".profile.UserProfileActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/EditorTheme" />
-        <activity
-            android:name=".ui.activity.FeaturedOnActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.ReportSpamActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.ProfileWebViewActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.FollowingListFBSuggestionActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.OTPActivity"
-            android:screenOrientation="portrait" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+      </intent-filter>
+    </activity>
+    <activity
+      android:name=".ui.activity.ArticleListingActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.ArticleDetailsContainerActivity"
+      android:configChanges="uiMode"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.CityBestArticleListingActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.FilteredTopicsArticleListingActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.FollowersAndFollowingListActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.VideoTrimmerActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.AddVideoDetailsActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.VideoUploadProgressActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.IdTokenLoginActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.SearchAllActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.SubscribeTopicsActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.AppSettingsActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.rewards.activity.RewardsContainerActivity"
+      android:configChanges="orientation|keyboardHidden|screenSize|layoutDirection"
+      android:screenOrientation="portrait"
+      android:theme="@style/Theme.nnn"
+      android:windowSoftInputMode="adjustPan" />
+    <activity
+      android:name=".ui.activity.RankingActivity"
+      android:screenOrientation="portrait"
+      android:theme="@style/Theme.rankingTheme" />
+    <activity
+      android:name=".ui.activity.BlogSetupActivity"
+      android:screenOrientation="portrait"
+      android:theme="@style/Theme.nnn" />
+    <activity
+      android:name=".ui.activity.AddArticleTopicsActivityNew"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.ArticleModerationOrShareActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.UserActivitiesActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.LanguageSelectionActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.GroupsSummaryActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.GroupsQuestionnaireActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.GroupDetailsActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.GroupPostDetailActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.AddPollGroupPostActivity"
+      android:screenOrientation="portrait"
+      android:windowSoftInputMode="stateHidden|adjustPan" />
+    <activity
+      android:name=".ui.activity.AddTextOrMediaGroupPostActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.AddAudioGroupPostActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.GroupsListingActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.GroupSettingsActivity"
+      android:screenOrientation="portrait" />
+    <activity android:name=".ui.activity.LeaveGroupActivity" />
+    <activity android:name=".ui.activity.EditGroupActivity" />
+    <activity
+      android:name=".ui.activity.AddShortStoryActivity"
+      android:screenOrientation="portrait"
+      android:windowSoftInputMode="stateHidden" />
+    <activity
+      android:name=".ui.activity.ShortStoryContainerActivity"
+      android:screenOrientation="portrait"
+      android:theme="@style/EditorTheme" />
+    <activity
+      android:name=".ui.activity.GroupCategoriesSelectionActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.GroupsReportedContentActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.GroupMembershipActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.GroupsSearchActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.GroupsEditPostActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.ViewGroupPostCommentsRepliesActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.ExploreArticleListingTypeActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.ShortStoriesListingContainerActivity"
+      android:screenOrientation="portrait"
+      android:theme="@style/EditorTheme" />
+    <activity
+      android:name=".ui.activity.TopicsListingActivity"
+      android:parentActivityName=".ui.activity.DashboardActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.UserPublishedContentActivity"
+      android:screenOrientation="portrait"
+      android:theme="@style/EditorTheme" />
+    <activity
+      android:name=".ui.activity.UserDraftsContentActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.LeafNodeTopicArticlesActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.NotificationActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.UsersBookmarkListActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.ChangePasswordActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.SuggestedTopicsActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.PhoneLoginUserDetailActivity"
+      android:screenOrientation="portrait"
+      android:theme="@style/EditorTheme" />
+    <activity
+      android:name=".ui.activity.CategoryVideosListingActivity"
+      android:parentActivityName=".ui.activity.DashboardActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.ShortStoryChallengeDetailActivity"
+      android:screenOrientation="portrait"
+      android:theme="@style/EditorTheme" />
+    <activity
+      android:name=".ui.activity.ChooseVideoCategoryActivity"
+      android:parentActivityName=".ui.activity.DashboardActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.ChooseShortStoryCategoryActivity"
+      android:parentActivityName=".ui.activity.DashboardActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.videochallengenewui.activity.NewVideoChallengeActivity"
+      android:parentActivityName=".ui.activity.CategoryVideosListingActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.UserReadArticlesContentActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.MyTotalEarningActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.ParallelFeedActivity"
+      android:screenOrientation="portrait"
+      android:theme="@style/Theme.rankingTheme" />
+    <activity
+      android:name=".ui.activity.SpellCheckActivity"
+      android:screenOrientation="portrait"
+      android:theme="@style/EditorTheme" />
+    <activity
+      android:name=".ui.campaign.activity.CampaignContainerActivity"
+      android:parentActivityName=".ui.activity.DashboardActivity"
+      android:screenOrientation="portrait"
+      android:windowSoftInputMode="adjustPan" />
+    <activity
+      android:name=".ui.activity.ArticleChallengesActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.CustomSignUpActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.campaign.activity.CampaignHowToVideoActivity"
+      android:screenOrientation="portrait"
+      android:theme="@style/Theme.Transparent" />
+    <activity
+      android:name=".ui.activity.ProfileSetting"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".profile.UserProfileActivity"
+      android:screenOrientation="portrait"
+      android:theme="@style/EditorTheme" />
+    <activity
+      android:name=".ui.activity.FeaturedOnActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.ReportSpamActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.ProfileWebViewActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.FollowingListFBSuggestionActivity"
+      android:screenOrientation="portrait" />
+    <activity
+      android:name=".ui.activity.OTPActivity"
+      android:screenOrientation="portrait" />
 
-        <meta-data
-            android:name="io.branch.sdk.BranchKey"
-            android:value="key_live_kdGnDu8Q4xxqJJoBNp8prlpeAAndQfuJ" />
-        <meta-data
-            android:name="io.branch.sdk.BranchKey.test"
-            android:value="secret_live_CyBjdCPAJs7GDqcbXx7sYg6fGmcNIRS6" />
-        <meta-data
-            android:name="io.branch.sdk.TestMode"
-            android:value="false" /> <!-- Set to true to use Branch_Test_Key -->
-        <!-- Branch install referrer tracking (optional) -->
-        <receiver
-            android:name="io.branch.referral.InstallListener"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
-            </intent-filter>
-        </receiver>
+    <meta-data
+      android:name="io.branch.sdk.BranchKey"
+      android:value="key_live_kdGnDu8Q4xxqJJoBNp8prlpeAAndQfuJ" />
+    <meta-data
+      android:name="io.branch.sdk.BranchKey.test"
+      android:value="secret_live_CyBjdCPAJs7GDqcbXx7sYg6fGmcNIRS6" />
+    <meta-data
+      android:name="io.branch.sdk.TestMode"
+      android:value="false" /> <!-- Set to true to use Branch_Test_Key -->
+    <!-- Branch install referrer tracking (optional) -->
+    <receiver
+      android:name="io.branch.referral.InstallListener"
+      android:exported="true">
+      <intent-filter>
+        <action android:name="com.android.vending.INSTALL_REFERRER" />
+      </intent-filter>
+    </receiver>
 
-        <activity
-            android:name="com.yalantis.ucrop.UCropActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ui.videochallengenewui.activity.ExoplayerVideoChallengePlayViewActivity" />
-        <activity android:name=".ui.activity.collection.CollectionsActivity" />
-        <activity
-            android:name=".ui.activity.collection.UserCollectionItemListActivity"
-            android:theme="@style/EditorTheme" />
-        <activity
-            android:name=".ui.activity.collection.EditCollectionActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".ui.activity.BadgeActivity" />
-        <activity android:name=".ui.activity.phoneLogin.FacebookFriends" />
-        <activity android:name=".ui.activity.collection.AddMultipleCollectionItemActivity" />
-        <activity android:name=".ui.activity.ShortStoriesCardActivity" />
-        <activity
-            android:name=".ui.activity.PhoneContactsActivity"
-            android:theme="@style/PermissionDialogTheme">
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+    <activity
+      android:name="com.yalantis.ucrop.UCropActivity"
+      android:screenOrientation="portrait"
+      android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+    <activity android:name=".ui.videochallengenewui.activity.ExoplayerVideoChallengePlayViewActivity" />
+    <activity android:name=".ui.activity.collection.CollectionsActivity" />
+    <activity
+      android:name=".ui.activity.collection.UserCollectionItemListActivity"
+      android:theme="@style/EditorTheme" />
+    <activity
+      android:name=".ui.activity.collection.EditCollectionActivity"
+      android:windowSoftInputMode="adjustPan" />
+    <activity android:name=".ui.activity.BadgeActivity" />
+    <activity android:name=".ui.activity.phoneLogin.FacebookFriends" />
+    <activity android:name=".ui.activity.collection.AddMultipleCollectionItemActivity" />
+    <activity android:name=".ui.activity.ShortStoriesCardActivity" />
+    <activity
+      android:name=".ui.activity.PhoneContactsActivity"
+      android:theme="@style/PermissionDialogTheme" />
+    <activity
+      android:name=".ui.activity.ShortStoryModerationOrShareActivity"
+      android:theme="@style/ShareStoryTheme" />
 
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.activity.ShortStoryModerationOrShareActivity"
-            android:theme="@style/ShareStoryTheme" />
+    <service android:name=".sync.PushTokenService" />
+    <service android:name=".sync.FetchAdvertisementInfoService" />
+    <service android:name=".sync.SyncUserInfoService" />
+    <service android:name=".tts.ReadArticleService" />
 
-        <service android:name=".sync.PushTokenService" />
-        <service android:name=".sync.FetchAdvertisementInfoService" />
-        <service android:name=".sync.SyncUserInfoService" />
-        <service android:name=".tts.ReadArticleService" />
+    <receiver
+      android:name="com.google.android.gms.analytics.AnalyticsReceiver"
+      android:enabled="true">
+      <intent-filter>
+        <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
+      </intent-filter>
+    </receiver>
 
-        <receiver
-            android:name="com.google.android.gms.analytics.AnalyticsReceiver"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
-            </intent-filter>
-        </receiver>
+    <service
+      android:name="com.google.android.gms.analytics.AnalyticsService"
+      android:enabled="true"
+      android:exported="false" />
 
-        <service
-            android:name="com.google.android.gms.analytics.AnalyticsService"
-            android:enabled="true"
-            android:exported="false" />
+    <provider
+      android:name=".utils.GenericFileProvider"
+      android:authorities="${applicationId}.my.package.name.provider"
+      android:exported="false"
+      android:grantUriPermissions="true">
+      <meta-data
+        android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/provider_paths" />
+    </provider>
 
-        <provider
-            android:name=".utils.GenericFileProvider"
-            android:authorities="${applicationId}.my.package.name.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
-        </provider>
+    <meta-data
+      android:name="com.google.android.gms.ads.APPLICATION_ID"
+      android:value="@string/admob_id" />
+    <meta-data
+      android:name="io.fabric.ApiKey"
+      android:value="0955a2855f4c5641b7994b98f58aef7eadbf4cd5" />
 
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/admob_id" />
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="0955a2855f4c5641b7994b98f58aef7eadbf4cd5" />
+    <service android:name=".fcm.MyFcmListenerService">
+      <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT" />
+      </intent-filter>
+    </service>
+    <service
+      android:name=".sync.CategorySyncService"
+      android:exported="false" />
 
-        <service android:name=".fcm.MyFcmListenerService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".sync.CategorySyncService"
-            android:exported="false" />
+    <meta-data
+      android:name="com.google.firebase.messaging.default_notification_icon"
+      android:resource="@drawable/notification_icon"
+      tools:ignore="ManifestResource" />
+    <meta-data
+      android:name="com.google.firebase.messaging.default_notification_color"
+      android:resource="@color/blue_bg" />
 
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/notification_icon"
-            tools:ignore="ManifestResource" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/blue_bg" />
-
-        <receiver
-            android:name="com.mixpanel.android.mpmetrics.InstallReferrerReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
-            </intent-filter>
-        </receiver>
-        <receiver android:name="com.mycity4kids.receiver.CancelNotification" />
-    </application>
+    <receiver
+      android:name="com.mixpanel.android.mpmetrics.InstallReferrerReceiver"
+      android:exported="true">
+      <intent-filter>
+        <action android:name="com.android.vending.INSTALL_REFERRER" />
+      </intent-filter>
+    </receiver>
+    <receiver android:name="com.mycity4kids.receiver.CancelNotification" />
+  </application>
 
 </manifest>

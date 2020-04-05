@@ -81,6 +81,7 @@ import com.mycity4kids.ui.activity.UserPublishedContentActivity
 import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity
 import com.mycity4kids.ui.fragment.AddCollectionAndCollectionItemDialogFragment
 import com.mycity4kids.ui.fragment.AddCollectionPopUpDialogFragment
+import com.mycity4kids.ui.fragment.InviteFriendsDialogFragment
 import com.mycity4kids.ui.fragment.ReportContentDialogFragment
 import com.mycity4kids.ui.fragment.UserBioDialogFragment
 import com.mycity4kids.utils.AppUtils
@@ -912,12 +913,11 @@ class UserProfileActivity : BaseActivity(),
                     hitFollowUnfollowAPI()
                 }
             }
-            view?.id == R.id.sharePrivateTextView || view?.id == R.id.sharePublicTextView -> {
-                shareCardType = "profile"
-                if (createSharableImageWhileCheckingPermissions()) {
-                    return
-                }
-                shareGenericImage()
+            view?.id == R.id.sharePublicTextView -> {
+                shareProfile()
+            }
+            view?.id == R.id.sharePrivateTextView -> {
+                launchInviteFriendsDialog()
             }
             view?.id == R.id.analyticsTextView -> {
                 if (AppConstants.DEBUGGING_USER_ID.contains("" + authorId)) {
@@ -968,6 +968,24 @@ class UserProfileActivity : BaseActivity(),
                 )
             }
         }
+    }
+
+    private fun launchInviteFriendsDialog() {
+        val inviteFriendsDialogFragment =
+            InviteFriendsDialogFragment()
+        val args = Bundle()
+        inviteFriendsDialogFragment.arguments = args
+        inviteFriendsDialogFragment.isCancelable = true
+        val fm = supportFragmentManager
+        inviteFriendsDialogFragment.show(fm, "Invite Friends")
+    }
+
+    fun shareProfile() {
+        shareCardType = "profile"
+        if (createSharableImageWhileCheckingPermissions()) {
+            return
+        }
+        shareGenericImage()
     }
 
     private fun shareGenericImage() {
@@ -1215,7 +1233,7 @@ class UserProfileActivity : BaseActivity(),
                 if (bodyDescription?.contains(images.key)!!) {
                     bodyDesc = bodyDesc?.replace(
                         images.key, "<p style='text-align:center'><img src=" +
-                                images.value + " style=\"width: 100%;\"+></p>"
+                        images.value + " style=\"width: 100%;\"+></p>"
                     )
                 }
             }
@@ -1804,7 +1822,7 @@ class UserProfileActivity : BaseActivity(),
     private fun shareStory(tempName: String) {
         val uri = Uri.parse(
             "file://" + Environment.getExternalStorageDirectory() +
-                    "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + tempName + ".jpg"
+                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + tempName + ".jpg"
         )
         when (shareMedium) {
             AppConstants.MEDIUM_FACEBOOK -> {
@@ -1818,10 +1836,10 @@ class UserProfileActivity : BaseActivity(),
             AppConstants.MEDIUM_WHATSAPP -> {
                 if (AppUtils.shareImageWithWhatsApp(
                         this@UserProfileActivity, uri, getString(
-                            R.string.ss_follow_author,
-                            sharedStoryItem.userName,
-                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId
-                        )
+                        R.string.ss_follow_author,
+                        sharedStoryItem.userName,
+                        AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId
+                    )
                     )
                 ) {
                     Utils.pushShareStoryEvent(
@@ -1843,10 +1861,10 @@ class UserProfileActivity : BaseActivity(),
             AppConstants.MEDIUM_GENERIC -> {
                 if (AppUtils.shareGenericImageAndOrLink(
                         this@UserProfileActivity, uri, getString(
-                            R.string.ss_follow_author,
-                            sharedStoryItem.userName,
-                            AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId
-                        )
+                        R.string.ss_follow_author,
+                        sharedStoryItem.userName,
+                        AppConstants.USER_PROFILE_SHARE_BASE_URL + sharedStoryItem.userId
+                    )
                     )
                 ) {
                     Utils.pushShareStoryEvent(

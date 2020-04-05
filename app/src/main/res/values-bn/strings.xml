@@ -962,7 +962,6 @@
   //groupdetail Activity toast String
   <string name="group_detail_activity_toast_text">আপনি অজ্ঞাতনামা হয়েও পোস্ট করতে পারেন</string>
   <string name="group_add_comment_text">কমেন্টস লিখুন</string>
-  <string name="group_invite_text">আমন্ত্রণ</string>
   <string name="group_comment_type_here_text">Type here</string>
   <string name="group_comment_be_the_first_text">আপনি প্রথম কমেন্টটি লিখুন</string>
 
@@ -1321,4 +1320,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="unlisted_video_link">Unlisted video link</string>
   <string name="invite_contact_invitation_sent">Your invite has been sent!</string>
     <string name="add_video_details_title_length_error">Title length should be less than 150 characters</string>
+  <string name="all_search">Search</string>
+  <string name="all_send_invite">Send Invite</string>
+  <string name="phone_contact_toolbar_title">Phonebook Contacts</string>
+  <string name="all_invite">আমন্ত্রণ</string>
 </resources>
