@@ -1340,4 +1340,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_send_invite">Send Invite</string>
   <string name="phone_contact_toolbar_title">Phonebook Contacts</string>
   <string name="all_invite">आमंत्रित करें</string>
+  <string name="detail_scroll_survey">Scroll to see survey link</string>
 </resources>

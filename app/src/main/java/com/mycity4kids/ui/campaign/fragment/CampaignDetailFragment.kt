@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.Html
 import android.text.SpannableString
@@ -68,16 +69,16 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Calendar
-import java.util.regex.Pattern
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
+import java.text.SimpleDateFormat
+import java.util.ArrayList
+import java.util.Calendar
+import java.util.regex.Pattern
 
 const val REWARDS_FILL_FORM_REQUEST = 1000
 
@@ -836,12 +837,16 @@ class CampaignDetailFragment : BaseFragment() {
             context?.let {
                 applicationStatus.text =
                     it.resources.getString(R.string.campaign_details_submission_open)
-                submitBtn.text = it.resources.getString(R.string.detail_bottom_submit_proof)
-                Toast.makeText(
-                    it,
-                    it.resources.getString(R.string.toast_campaign_started),
-                    Toast.LENGTH_SHORT
-                ).show()
+                if (apiGetResponse!!.deliverableTypes!!.get(0) == 5) {
+                    submitBtn.text = resources.getString(R.string.detail_scroll_survey)
+                } else {
+                    submitBtn.text = it.resources.getString(R.string.detail_bottom_submit_proof)
+                    Toast.makeText(
+                        it,
+                        it.resources.getString(R.string.toast_campaign_started),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
             labelText.visibility = View.GONE
             unapplyCampaign.visibility = View.VISIBLE
@@ -1175,13 +1180,24 @@ class CampaignDetailFragment : BaseFragment() {
                                 showInstPopUpFlag = true
                             } else if (it.platform_name == AppConstants.MEDIUM_INSTAGRAM && !it.acc_link.isNullOrBlank()) {
                                 txtTrackerStatus.visibility = View.VISIBLE
-                                submitBtn.setText(resources.getString(R.string.detail_bottom_applied))
-                                Toast.makeText(
-                                    context,
-                                    resources.getString(R.string.toast_campaign_applied),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                labelText.setText(resources.getString(R.string.label_campaign_applied))
+                                if (apiGetResponse!!.deliverableTypes!!.get(0) == 5) {
+                                    //                                    submitBtn.text = resources.getString(R.string.detail_scroll_survey
+                                    showProgressDialog(resources.getString(R.string.please_wait))
+                                    val handler = Handler()
+                                    handler.postDelayed({
+                                        removeProgressDialog()
+                                        fetchCampaignDetail()
+                                    }, 5000)
+
+                                } else {
+                                    submitBtn.setText(resources.getString(R.string.detail_bottom_applied))
+                                    Toast.makeText(
+                                        context,
+                                        resources.getString(R.string.toast_campaign_applied),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    labelText.setText(resources.getString(R.string.label_campaign_applied))
+                                }
                                 unapplyCampaign.visibility = View.VISIBLE
                                 showInstPopUpFlag = false
                             } else {
