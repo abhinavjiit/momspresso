@@ -651,7 +651,9 @@ class NewEditor : BaseActivity(),
         if (fragment != null && fragment.isVisible) {
             (fragment as ImageSettingsDialogFragment).dismissFragment()
         } else {
-            if (titleTxt?.text.toString().isEmpty() && aztec.visualEditor.text.isEmpty() || intent.getStringExtra(
+            if (StringUtils.isNullOrEmpty(titleTxt?.text.toString().trim()) && StringUtils.isNullOrEmpty(
+                    aztec.visualEditor.toFormattedHtml().trim()
+                ) || intent.getStringExtra(
                     "from"
                 ) != null && intent.getStringExtra(
                     "from"
