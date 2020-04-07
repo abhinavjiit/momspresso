@@ -486,9 +486,9 @@
 
   <string name="video_progress.uploading_label">అప్లోడ్ అవుతోంది ...</string>
   <string name="video_progress.uploading_msg">ఆప్ ని మధ్యలో మూసివేయకండి, అప్లోడ్ ని అది సొంతంగా ఆపివేస్తుంది. అప్లోడ్ చేయడానికి ఆప్ ఉపయోగించండి.</string>
-  <string name="video_progress.way_to_go">అభినందనలు!</string>
-  <string name="video_progress.success_msg">మీ వీడియో విజయవంతంగా అప్లోడ్ చెయ్యబడింది మరియు 2 రోజులలోపు మోడరేట్ అవుతుంది. మోడరేట్ చేసిన తర్వాత మేము మీకు తెలియజేస్తాము.</string>
-  <string name="video_progress.okay">సరే, తెలుసుకున్నాను.  </string>
+  <string name="video_progress.way_to_go">ధన్యవాదాలు!</string>
+  <string name="video_progress.success_msg">మీ వీడియో విజయవంతంగా అప్లోడ్ చెయ్యబడింది మరియు 2 రోజుల లోపు మోడరేట్ అవుతుంది. మోడరేట్ చేసిన తర్వాత మేము మీకు తెలియజేస్తాము.</string>
+  <string name="video_progress.okay">సరే, తెలుసుకున్నాను.</string>
   <string name="video_progress.uploading_failed">అప్లోడ్ విఫలమైనది</string>
   <string name="video_progress.uploading_error">మీ వీడియో అప్లోడ్ అవుతున్నప్పుడు లోపం వచ్చింది. దయచేసి మళ్ళీ ప్రయత్నించండి</string>
   <string name="video_progress.progress_lost_msg">మీరు అప్లోడ్ చేస్తుంది ఆగిపోతుంది. మీరు ఎగ్జిట్ అవ్వాలి అనుకుంటున్నారా?</string>

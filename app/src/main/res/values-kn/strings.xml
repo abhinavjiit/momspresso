@@ -498,8 +498,8 @@
   <string name="audio_post">ಆಡಿಯೋ</string>
   <string name="video_progress.uploading_msg">ದಯವಿಟ್ಟು ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ನಿರ್ಗಮಿಸಲು ಅಥವಾ ಹೊರಹೋಗಬೇಡ, ಅಪ್ಲೋಡ್ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ರದ್ದುಗೊಳ್ಳುತ್ತದೆ. ಅಪ್ಲೋಡ್ ಮಾಡುವಾಗ ನೀವು ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ಬಳಸಬಹುದು</string>
   <string name="video_progress.way_to_go">ಹೋಗಲು ದಾರಿ</string>
-  <string name="video_progress.success_msg">ವೀಡಿಯೊವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್ ಮಾಡಲಾಗಿದೆ ಮತ್ತು ಮಿತಗೊಳಿಸಲು ಕಳುಹಿಸಲಾಗಿದೆ. ಒಮ್ಮೆ ಪೂರ್ಣವಾದ ನಂತರ  ನಾವು ನಿಮಗೆ ತಿಳಿಸುತ್ತೇವೆ.</string>
-  <string name="video_progress.okay">ಸರಿ</string>
+  <string name="video_progress.success_msg">ನಿಮ್ಮ ವಿಡಿಯೋ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್‌ ಆಗಿದೆ. ಇದನ್ನು ಎರಡು ದಿನಗಳೊಳಗೆ ಪರಿಶೀಲಿಸಲಾಗುವುದು. ಪರಿಶೀಲನೆಯ ನಂತರ ನಿಮಗೆ ತಿಳಿಸುತ್ತೇವೆ.</string>
+  <string name="video_progress.okay">ಸರಿ, ತಿಳಿಯಿತು.</string>
   <string name="video_progress.uploading_failed">Uploading Failed.</string>
   <string name="video_progress.uploading_error">Error occurred while uploading your video. Please try again.</string>
 
