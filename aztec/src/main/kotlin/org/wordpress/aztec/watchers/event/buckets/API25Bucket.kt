@@ -5,7 +5,7 @@ import org.wordpress.aztec.watchers.event.sequence.known.space.API25InWordSpaceI
 class API25Bucket : Bucket() {
     init {
         // constructor - here add all identified sequences for this bucket
-        userOperations.add(API25InWordSpaceInsertionEvent())
+//        userOperations.add(API25InWordSpaceInsertionEvent())
         //mUserOperations.add(new ...);
         //mUserOperations.add(new ...);
         //mUserOperations.add(new ...);

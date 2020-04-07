@@ -1200,7 +1200,7 @@ class NewEditor : BaseActivity(),
     override fun onContinuePublish() {
         mHandler.removeCallbacksAndMessages(null)
         val publishObject = PublishDraftObject()
-        publishObject.body = contentFormatting(aztec.visualEditor.text.toString())
+        publishObject.body = contentFormatting(aztec.visualEditor.toFormattedHtml())
         publishObject.title =
             titleFormatting(titleTxt?.text.toString())
         Log.d("draftId = ", draftId + "")

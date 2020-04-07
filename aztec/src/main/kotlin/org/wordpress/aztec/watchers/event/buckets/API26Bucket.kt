@@ -7,9 +7,9 @@ import org.wordpress.aztec.watchers.event.sequence.known.space.API26PrependNewLi
 class API26Bucket : Bucket() {
     init {
         // constructor - here add all identified sequences for this bucket
-        userOperations.add(API25InWordSpaceInsertionEvent())
-        userOperations.add(API26PrependNewLineOnStyledTextEvent())
-        userOperations.add(API26PrependNewLineOnStyledSpecialTextEvent())
+//        userOperations.add(API25InWordSpaceInsertionEvent())
+//        userOperations.add(API26PrependNewLineOnStyledTextEvent())
+//        userOperations.add(API26PrependNewLineOnStyledSpecialTextEvent())
         //mUserOperations.add(new ...);
         //mUserOperations.add(new ...);
         //mUserOperations.add(new ...);
