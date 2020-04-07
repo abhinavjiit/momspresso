@@ -618,10 +618,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
   <string name="video_progress.uploading_label">UPLOADING ...</string>
   <string name="video_progress.uploading_msg">ਕਿਰਪਾ ਕਰਕੇ ਐਪ ਨੂੰ ਬੰਦ ਜਾਂ ਖਤਮ ਨਾ ਕਰੋ, ਇਹ ਅਪਲੋਡ ਆਟੋਮੈਟਿਕਲੀ ਰੱਦ ਕਰ ਦੇਵੇਗਾ.</string>
-  <string name="video_progress.way_to_go">ਜਾਣ ਦਾ ਰਾਹ!</string>
-  <string name="video_progress.success_msg">ਵੀਡੀਓ ਸਫਲਤਾਪੂਰਵਕ ਅਪਲੋਡ ਕੀਤਾ ਗਿਆ ਹੈ ਅਤੇ ਮੋਡਰੇਸ਼ਨ ਲਈ ਭੇਜਿਆ ਗਿਆ ਹੈ। ਮੋਡਰੇਟ ਹੋਣ ਤੇ ਅਸੀਂ ਤੁਹਾਨੂੰ ਸੂਚਿਤ ਕਰਾਂਗੇ
-</string>
-  <string name="video_progress.okay">ਠੀਕ ਹੈ, ਮਿਲ ਗਿਆ.</string>
+  <string name="video_progress.way_to_go">ਧੰਨਵਾਦ</string>
+  <string name="video_progress.success_msg">ਤੁਹਾਡਾ ਵੀਡੀਓ ਸਫਲਤਾਪੂਰਵਕ ਅਪਲੋਡ ਹੋ ਗਿਆ ਹੈ। 2 ਕੰਮਕਾਜੀ ਦਿਨਾਂ ਦੇ ਅੰਦਰ ਇਸਨੂੰ ਮੋਡਰੇਟ ਕਰਨ ਤੋਂ ਬਾਅਦ ਤੁਹਾਨੂੰ ਸੂਚਿਤ ਕੀਤਾ ਜਾਵੇਗਾ।</string>
+  <string name="video_progress.okay">ਠੀਕ ਹੈ</string>
   <string name="video_progress.uploading_failed">Uploading Failed.</string>
   <string name="video_progress.uploading_error">Error occurred while uploading your video. Please try again.</string>
   <string name="video_progress.progress_lost_msg">Your upload progress will be lost. Are you sure you want to exit?</string>

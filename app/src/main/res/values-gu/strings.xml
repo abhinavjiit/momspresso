@@ -502,10 +502,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="video_progress.uploading_label">અપલોડ કરી રહ્યું છે ...</string>
   <string name="video_progress.uploading_msg">કૃપા કરી એપ છોડશો કે બંધ કરશો નહિ, એનાથી આપમેળે અપલોડ અટકી જશે .</string>
 
-  <string name="video_progress.way_to_go">જવા માટે તૈયાર!</string>
-  <string name="video_progress.success_msg">વીડિઓ અપલોડ થઇ  નિયમન માટે મોકલાયો છે. નિયમન પત્યે અમે જણાવીશું.
-</string>
-  <string name="video_progress.okay">સમજાયું </string>
+  <string name="video_progress.way_to_go">ધન્યવાદ!</string>
+  <string name="video_progress.success_msg">વિડીયો અપલોડ થયી નિયમન માટે મોકલાયો છે જેમાં ૨ કામકાજી દિવસ લાગશે. નિયમન પત્યે અમે જણાવીશું.</string>
+  <string name="video_progress.okay">આભાર.</string>
   <string name="video_progress.uploading_failed">Uploading Failed.</string>
 
   <string name="video_progress.uploading_error">Error occurred while uploading your video. Please try again.</string>
