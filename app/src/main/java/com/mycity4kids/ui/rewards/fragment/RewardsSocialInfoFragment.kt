@@ -24,7 +24,6 @@ import com.google.android.gms.common.api.Scope
 import com.google.gson.Gson
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
-import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.facebook.FacebookUtils
@@ -37,15 +36,14 @@ import com.mycity4kids.models.rewardsmodels.SocialAccountObject
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
-import com.mycity4kids.utils.ConnectivityUtils
 import com.mycity4kids.utils.ToastUtils
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import org.json.JSONObject
 import java.util.HashMap
 import java.util.regex.Pattern
-import org.json.JSONObject
 
 /**
  * A simple [Fragment] subclass.
@@ -205,7 +203,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser,
                 when (it.platform_name) {
                     Constants.SocialPlatformName.facebook.name -> {
                         if (!it.acc_link.isNullOrEmpty()) {
-                            editFacebook.setText(getString(R.string.rewards_social_facebook_connected))
+                            editFacebook.setText(it.acc_link)
                         }
                     }
 
@@ -297,13 +295,13 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser,
 
     private fun initializeXMLComponents() {
         layoutInstagram = containerView.findViewById(R.id.layoutInstagram)
-        layoutFacebook = containerView.findViewById(R.id.layoutFacebook)
+        layoutFacebook = containerView.findViewById(R.id.layout_facebook)
         layoutYoutube = containerView.findViewById(R.id.layoutYoutube)
         layoutTwitter = containerView.findViewById(R.id.layoutTwitter)
         spinnerProfession = containerView.findViewById(R.id.spinnerProfession)
         spinnerHouseHold = containerView.findViewById(R.id.spinnerHouseHold)
         editInstagram = containerView.findViewById(R.id.editInstagram)
-        editFacebook = containerView.findViewById(R.id.editFacebook)
+        editFacebook = containerView.findViewById(R.id.edit_facebook)
         editTwitter = containerView.findViewById(R.id.editTwitter)
         editWebsite = containerView.findViewById(R.id.editWebsite)
         editYoutube = containerView.findViewById(R.id.editYoutube)
@@ -327,23 +325,23 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser,
             // AuthenticateWithInstagram()
         }
 
-        layoutFacebook.setOnClickListener {
+        /*layoutFacebook.setOnClickListener {
             if (ConnectivityUtils.isNetworkEnabled(activity)) {
                 (activity as RewardsContainerActivity).showProgressDialog(getString(R.string.please_wait))
                 FacebookUtils.facebookLogin(activity, this)
             } else {
                 (activity as BaseActivity).showToast(getString(R.string.error_network))
             }
-        }
+        }*/
 
-        editFacebook.setOnClickListener {
+        /*editFacebook.setOnClickListener {
             if (ConnectivityUtils.isNetworkEnabled(activity)) {
                 (activity as RewardsContainerActivity).showProgressDialog(getString(R.string.please_wait))
                 FacebookUtils.facebookLogin(activity, this)
             } else {
                 (activity as RewardsContainerActivity).showToast(getString(R.string.error_network))
             }
-        }
+        }*/
 
         var houseHoldIncomeArray = resources.getStringArray(R.array.household_income)
         houseHoldIncomeArray.forEach { str ->
@@ -409,6 +407,16 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser,
 
     private fun prepareDataForPosting(): Boolean {
         //        if (!editInstagram.text.isNullOrEmpty()) {
+        if (isvalid(editFacebook.text.toString(), 0)) {
+            setValuesForSocial(
+                Constants.SocialPlatformName.facebook,
+                editFacebook.text.toString().trim()
+            )
+        } else {
+            ToastUtils.showToast(context, "Not a valid facebook profile")
+            return false
+        }
+
         if (isvalid(editInstagram.text.toString(), 1)) {
             setValuesForSocial(
                 Constants.SocialPlatformName.instagram,
@@ -459,6 +467,12 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser,
     private fun isvalid(handle: String, accountType: Int): Boolean {
 
         when (accountType) {
+
+            0 -> {
+                if (handle.startsWith("https://www.facebook.com/") || handle.startsWith("http://www.facebook.com/") || handle.isEmpty()) {
+                    return true
+                }
+            }
 
             2 -> {
                 val pattern = Pattern.compile("^@?([a-zA-Z0-9_]){1,15}\$")
