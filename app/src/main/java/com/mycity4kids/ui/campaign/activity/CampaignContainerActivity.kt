@@ -27,7 +27,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.SubmitListener, CampaignCongratulationFragment.SubmitListener, CampaignPaymentModesFragment.SubmitListener {
+class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.SubmitListener,
+    CampaignCongratulationFragment.SubmitListener, CampaignPaymentModesFragment.SubmitListener {
     override fun onPanCardDone() {
     }
 
@@ -107,7 +108,11 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     }
 
     private fun fetchCampaignDetail() {
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getCampaignDetail(deeplinkCampaignId, 2.0).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CampaignDetailResult>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getCampaignDetail(
+            deeplinkCampaignId,
+            2.0
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<CampaignDetailResult>> {
 
             override fun onComplete() {
                 removeProgressDialog()
@@ -118,7 +123,10 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
             override fun onNext(response: BaseResponseGeneric<CampaignDetailResult>) {
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.result != null) {
-                    addAddProofFragment(deeplinkCampaignId, arrayList as ArrayList<Int>, response.data!!.result.campaignStatus!!,
+                    addAddProofFragment(
+                        deeplinkCampaignId,
+                        arrayList as ArrayList<Int>,
+                        response.data!!.result.campaignStatus!!,
                         response.data!!.result.approvalStatus!!
                     )
                 } else {
@@ -140,32 +148,48 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     private fun campaignListFragment() {
         campaignListFragment = CampaignListFragment.newInstance()
         val campaignFrag = campaignListFragment as Fragment
-        supportFragmentManager.beginTransaction().add(R.id.container, campaignFrag,
-                CampaignListFragment::class.java.simpleName).addToBackStack("campaignListFragment")
-                .commit()
+        supportFragmentManager.beginTransaction().add(
+            R.id.container, campaignFrag,
+            CampaignListFragment::class.java.simpleName
+        ).addToBackStack("campaignListFragment")
+            .commit()
     }
 
     fun addCampaginDetailFragment(id: Int, comingFrom: String) {
 
-        campaignDetailFragment = CampaignDetailFragment.newInstance(id, fromNotification, comingFrom)
+        campaignDetailFragment =
+            CampaignDetailFragment.newInstance(id, fromNotification, comingFrom)
         val campaignFrag = campaignDetailFragment as Fragment
-        supportFragmentManager.beginTransaction().replace(R.id.container, campaignFrag,
-                CampaignDetailFragment::class.java.simpleName).addToBackStack("campaignDetailFragment")
-                .commit()
+        supportFragmentManager.beginTransaction().replace(
+            R.id.container, campaignFrag,
+            CampaignDetailFragment::class.java.simpleName
+        ).addToBackStack("campaignDetailFragment")
+            .commit()
     }
 
-    fun addAddProofFragment(id: Int, deliverableTypeList: ArrayList<Int>, status: Int, approval_status: Int) {
-        var campaignAddProofFragment = CampaignAddProofFragment.newInstance(id, deliverableTypeList, status, approval_status)
-        supportFragmentManager.beginTransaction().replace(R.id.container, campaignAddProofFragment,
-                CampaignAddProofFragment::class.java.simpleName).addToBackStack("campaignAddProofFragment")
-                .commit()
+    fun addAddProofFragment(
+        id: Int,
+        deliverableTypeList: ArrayList<Int>,
+        status: Int,
+        submission_status: Int
+    ) {
+        var campaignAddProofFragment =
+            CampaignAddProofFragment.newInstance(id, deliverableTypeList, status, submission_status)
+        supportFragmentManager.beginTransaction().replace(
+            R.id.container, campaignAddProofFragment,
+            CampaignAddProofFragment::class.java.simpleName
+        ).addToBackStack("campaignAddProofFragment")
+            .commit()
     }
 
     private fun addPaymantMode() {
-        var campaignPaymentModesFragment = CampaignPaymentModesFragment.newInstance(isComingFromRewards = false)
-        supportFragmentManager.beginTransaction().replace(R.id.container, campaignPaymentModesFragment,
-                CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("CampaignPaymentModesFragment")
-                .commit()
+        var campaignPaymentModesFragment =
+            CampaignPaymentModesFragment.newInstance(isComingFromRewards = false)
+        supportFragmentManager.beginTransaction().replace(
+            R.id.container, campaignPaymentModesFragment,
+            CampaignPaymentModesFragment::class.java.simpleName
+        ).addToBackStack("CampaignPaymentModesFragment")
+            .commit()
     }
 
     override fun onBackPressed() {
@@ -184,9 +208,11 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
                     campaignListFragment = CampaignListFragment.newInstance()
                     val campaignFrag = campaignListFragment as Fragment
-                    supportFragmentManager.beginTransaction().add(R.id.container, campaignFrag,
-                            CampaignListFragment::class.java.simpleName).addToBackStack("campaignListFragment")
-                            .commit()
+                    supportFragmentManager.beginTransaction().add(
+                        R.id.container, campaignFrag,
+                        CampaignListFragment::class.java.simpleName
+                    ).addToBackStack("campaignListFragment")
+                        .commit()
                 } else {
                     for (i in fragmentManager.backStackEntryCount downTo 2) {
                         supportFragmentManager.popBackStack()
@@ -233,7 +259,10 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
     fun fetchPaymentModes() {
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getPaymentModes().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<PaymentModeListModal>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getPaymentModes().subscribeOn(
+            Schedulers.io()
+        ).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<PaymentModeListModal>> {
             override fun onComplete() {
                 removeProgressDialog()
             }
@@ -245,10 +274,13 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
                 if (response.data!!.result.default != null) {
 
-                    var campaignCongratulationFragment = CampaignCongratulationFragment.newInstance()
-                    supportFragmentManager.beginTransaction().replace(R.id.container, campaignCongratulationFragment,
-                            CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
-                            .commit()
+                    var campaignCongratulationFragment =
+                        CampaignCongratulationFragment.newInstance()
+                    supportFragmentManager.beginTransaction().replace(
+                        R.id.container, campaignCongratulationFragment,
+                        CampaignCongratulationFragment::class.java.simpleName
+                    ).addToBackStack("CampaignCongratulationFragment")
+                        .commit()
                 } else {
                     showRewardDialog()
                 }

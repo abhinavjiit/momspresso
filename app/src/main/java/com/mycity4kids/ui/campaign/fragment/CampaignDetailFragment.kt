@@ -627,7 +627,7 @@ class CampaignDetailFragment : BaseFragment() {
             (activity as CampaignContainerActivity).addAddProofFragment(
                 apiGetResponse!!.id!!,
                 (apiGetResponse!!.deliverableTypes as ArrayList<Int>?)!!,
-                status, apiGetResponse!!.approvalStatus!!
+                status, apiGetResponse!!.submissionStatus!!
             )
             if (apiGetResponse != null && apiGetResponse!!.totalPayout != null && apiGetResponse!!.id != null && apiGetResponse!!.nameSlug != null) {
                 (activity as CampaignContainerActivity).setTotalPayOut(apiGetResponse!!.totalPayout!!)
