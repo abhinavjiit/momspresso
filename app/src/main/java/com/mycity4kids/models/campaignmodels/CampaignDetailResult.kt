@@ -62,6 +62,9 @@ class CampaignDetailResult {
     @SerializedName("max_slots")
     @Expose
     var maxSlots: Int? = null
+    @SerializedName("slot_available")
+    @Expose
+    var slotAvailable: Int? = null
     @SerializedName("min_amount")
     @Expose
     var minAmount: Double? = null

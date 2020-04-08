@@ -1360,4 +1360,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="phone_contact_toolbar_title">Phonebook Contacts</string>
   <string name="all_invite">ಆಮಂತ್ರಿಸಿ</string>
   <string name="detail_scroll_survey">Scroll to see survey link</string>
+  <string name="editor_help_mail">Mail Us</string>
+  <string name="editor_help_header_text">ಸಹಾಯ ಬೇಕೇ?</string>
+  <string name="get_help_bottom_text">ಸಮಸ್ಯೆಗಳಿದ್ದರೆ ಇ ಮೇಲ್‌ ಮಾಡಿ. ಆ ಮೂಲಕ ನಿಮ್ಮ ಸಮಸ್ಯೆಗಳಿಗೆ ಸ್ಪಂದಿಸುತ್ತೇವೆ</string>
+  <string name="detail_take_survey">Take survey</string>
 </resources>

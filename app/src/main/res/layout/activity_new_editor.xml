@@ -1,185 +1,198 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:aztec="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rootLayout"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:aztec="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/rootLayout"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".editor.NewEditor">
+
+  <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".editor.NewEditor">
+    android:layout_height="wrap_content"
+    android:elevation="6dp"
+    android:visibility="gone">
+
+    <ImageView
+      android:id="@+id/suggestionImageView"
+      android:layout_width="match_parent"
+      android:layout_height="140dp"
+      android:layout_centerInParent="true"
+      android:layout_marginTop="2dp"
+      android:scaleType="fitXY"
+      android:src="@drawable/editor_bg" />
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignTop="@+id/suggestionImageView"
+      android:layout_centerHorizontal="true"
+      android:paddingTop="18dp"
+      android:text="@string/editor.banner.message"
+      android:textColor="@color/black_color"
+      android:textSize="20sp" />
+
+    <TextView
+      android:layout_width="300dp"
+      android:layout_height="wrap_content"
+      android:layout_centerHorizontal="true"
+      android:layout_centerVertical="true"
+      android:gravity="center"
+      android:lineSpacingExtra="4dp"
+      android:paddingTop="10dp"
+      android:text="language"
+      android:textColor="@color/black_color"
+      android:textSize="18sp" />
+  </RelativeLayout>
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:background="?attr/colorPrimary"
+    android:contentInsetStart="0dp"
+    android:contentInsetLeft="0dp"
+    android:contentInsetEnd="0dp"
+    android:contentInsetRight="0dp"
+    android:elevation="5dp"
+    android:minHeight="?attr/actionBarSize"
+    app:contentInsetEnd="0dp"
+    app:contentInsetLeft="0dp"
+    app:contentInsetRight="0dp"
+    app:contentInsetStart="0dp"
+    app:theme="@style/ToolbarTheme"
+    app:titleTextAppearance="@style/Toolbar.TitleText">
 
     <RelativeLayout
-        android:layout_width="match_parent"
+      android:id="@+id/toolbarRelativeLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:visibility="visible">
+
+      <ImageView
+        android:id="@+id/closeEditorImageView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:elevation="6dp"
-        android:visibility="gone">
+        android:paddingLeft="20dp"
+        android:paddingTop="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="20dp"
+        android:src="@drawable/cross_icon_back" />
 
-        <ImageView
-            android:id="@+id/suggestionImageView"
-            android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="2dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/editor_bg" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/suggestionImageView"
-            android:layout_centerHorizontal="true"
-            android:paddingTop="18dp"
-            android:text="@string/editor.banner.message"
-            android:textColor="@color/black_color"
-            android:textSize="20sp" />
-
-        <TextView
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:lineSpacingExtra="4dp"
-            android:paddingTop="10dp"
-            android:text="language"
-            android:textColor="@color/black_color"
-            android:textSize="18sp" />
-    </RelativeLayout>
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/lastSavedTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="?attr/colorPrimary"
-        android:contentInsetStart="0dp"
-        android:contentInsetLeft="0dp"
-        android:contentInsetEnd="0dp"
-        android:contentInsetRight="0dp"
-        android:elevation="5dp"
-        android:minHeight="?attr/actionBarSize"
-        app:contentInsetEnd="0dp"
-        app:contentInsetLeft="0dp"
-        app:contentInsetRight="0dp"
-        app:contentInsetStart="0dp"
-        app:theme="@style/ToolbarTheme"
-        app:titleTextAppearance="@style/Toolbar.TitleText">
+        android:layout_centerInParent="true"
+        android:text="last saved by 20 sec ago"
+        android:textColor="@color/editor.last_saved"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:fontName="oswald.ttf" />
 
-        <RelativeLayout
-            android:id="@+id/toolbarRelativeLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible">
-
-            <ImageView
-                android:id="@+id/closeEditorImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingTop="20dp"
-                android:paddingRight="20dp"
-                android:paddingBottom="20dp"
-                android:src="@drawable/cross_icon_back" />
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/lastSavedTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="last saved by 20 sec ago"
-                android:textColor="@color/editor.last_saved"
-                android:textSize="14sp"
-                android:visibility="gone"
-                app:fontName="oswald.ttf" />
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/publishTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:padding="12dp"
-                android:text="@string/editor.publish"
-                android:textColor="@color/app_red"
-                android:textSize="20sp"
-                app:fontName="oswald_regular.ttf" />
-        </RelativeLayout>
-    </androidx.appcompat.widget.Toolbar>
-
-    <!--<fragment
-        android:id="@+id/postEditor"
-        android:name="org.wordpress.android.editor.EditorFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar" />-->
-
-    <org.wordpress.aztec.toolbar.AztecToolbar
-        android:id="@+id/aztoolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/aztec_format_bar_height"
-        android:layout_alignParentBottom="true" />
-
-    <com.mycity4kids.widget.CustomFontEditText
-        android:id="@+id/title"
-        android:layout_width="match_parent"
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/publishTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="@string/example_post_title_placeholder"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:padding="12dp"
+        android:text="@string/editor.publish"
+        android:textColor="@color/app_red"
         android:textSize="20sp"
-        android:layout_marginLeft="@dimen/space_10"
-        android:paddingTop="@dimen/space_10"
-        android:paddingBottom="@dimen/space_10"
-        android:background="@null"
-        android:textColor="@color/black"
-        android:layout_below="@+id/toolbar"
         app:fontName="oswald_regular.ttf" />
+    </RelativeLayout>
+  </androidx.appcompat.widget.Toolbar>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_below="@id/title"
-        android:layout_marginTop="@dimen/space_5"
-        android:background="@drawable/campaign_expired"/>
+  <!--<fragment
+      android:id="@+id/postEditor"
+      android:name="org.wordpress.android.editor.EditorFragment"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@+id/toolbar" />-->
 
-    <FrameLayout
-        android:id="@+id/content_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/title"
-        android:layout_above="@id/aztoolbar">
+  <org.wordpress.aztec.toolbar.AztecToolbar
+    android:id="@+id/aztoolbar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/aztec_format_bar_height"
+    android:layout_alignParentBottom="true" />
 
-        <org.wordpress.aztec.AztecText
-            android:id="@+id/visualEditor"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="top|start"
-            android:hint="@string/example_post_content_placeholder"
-            android:imeOptions="flagNoExtractUi"
-            android:paddingLeft="16dp"
-            android:paddingTop="16dp"
-            android:paddingEnd="16dp"
-            android:paddingRight="16dp"
-            android:scrollbars="vertical"
-            aztec:codeTextColor="@android:color/black"
-            aztec:historyEnable="true"
-            aztec:historySize="10" />
+  <com.mycity4kids.widget.CustomFontEditText
+    android:id="@+id/title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/toolbar"
+    android:layout_marginLeft="@dimen/space_10"
+    android:background="@null"
+    android:hint="@string/example_post_title_placeholder"
+    android:paddingTop="@dimen/space_10"
+    android:paddingBottom="@dimen/space_10"
+    android:textColor="@color/black"
+    android:textSize="20sp"
+    app:fontName="oswald_regular.ttf" />
 
-        <org.wordpress.aztec.source.SourceViewEditText
-            android:id="@+id/source"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="top|start"
-            android:hint="hiiiinnnnnnnntt"
-            android:imeOptions="flagNoExtractUi"
-            android:inputType="textNoSuggestions|textMultiLine"
-            android:paddingLeft="16dp"
-            android:paddingTop="16dp"
-            android:paddingEnd="16dp"
-            android:paddingRight="16dp"
-            android:scrollbars="vertical"
-            android:textSize="14sp"
-            android:visibility="gone"
-            aztec:codeTextColor="@android:color/black" />
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="0.5dp"
+    android:layout_below="@id/title"
+    android:layout_marginTop="@dimen/space_5"
+    android:background="@drawable/campaign_expired" />
 
-    </FrameLayout>
+  <FrameLayout
+    android:id="@+id/content_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_above="@id/aztoolbar"
+    android:layout_below="@+id/title">
+
+    <org.wordpress.aztec.AztecText
+      android:id="@+id/visualEditor"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:gravity="top|start"
+      android:hint="@string/example_post_content_placeholder"
+      android:imeOptions="flagNoExtractUi"
+      android:paddingLeft="16dp"
+      android:paddingTop="16dp"
+      android:paddingEnd="16dp"
+      android:paddingRight="16dp"
+      android:scrollbars="vertical"
+      aztec:codeTextColor="@android:color/black"
+      aztec:historyEnable="true"
+      aztec:historySize="10" />
+
+    <org.wordpress.aztec.source.SourceViewEditText
+      android:id="@+id/source"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:gravity="top|start"
+      android:hint="hiiiinnnnnnnntt"
+      android:imeOptions="flagNoExtractUi"
+      android:inputType="textNoSuggestions|textMultiLine"
+      android:paddingLeft="16dp"
+      android:paddingTop="16dp"
+      android:paddingEnd="16dp"
+      android:paddingRight="16dp"
+      android:scrollbars="vertical"
+      android:textSize="14sp"
+      android:visibility="gone"
+      aztec:codeTextColor="@android:color/black" />
+
+  </FrameLayout>
+
+  <com.getbase.floatingactionbutton.FloatingActionButton
+    android:id="@+id/editor_get_help"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignBottom="@id/content_frame"
+    android:layout_alignParentRight="true"
+    android:layout_marginRight="@dimen/space_20"
+    android:layout_marginBottom="@dimen/space_20"
+    app:fab_colorNormal="@color/fab.pink"
+    app:fab_colorPressed="@color/fab.pink"
+    app:fab_icon="@drawable/ic_editor_help"
+    app:fab_size="mini" />
 
 </RelativeLayout>

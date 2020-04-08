@@ -27,13 +27,13 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.campaign_list_recycler_adapter.view.*
+import retrofit2.Call
+import retrofit2.Callback
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import kotlinx.android.synthetic.main.campaign_list_recycler_adapter.view.*
-import retrofit2.Call
-import retrofit2.Callback
 
 class RewardCampaignAdapter(
     private var campaignList: List<CampaignDataListResult>,
@@ -83,7 +83,7 @@ class RewardCampaignAdapter(
                 .into(view.brand_img)
             (view.brand_name).setText(campaignList.brandDetails.name)
             (view.campaign_name).setText(campaignList.name)
-            (view.amount).setText("" + (campaignList.maxSlots - campaignList.totalUsedSlots))
+            (view.amount).setText("" + campaignList.slotAvailable)
             setTextAndColor(campaignList.campaignStatus)
             compareDate(campaignList.campaignStatus)
         }
@@ -155,13 +155,21 @@ class RewardCampaignAdapter(
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             } else if (status == 2) {
-                (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_submission_open))
+                if (campaignList?.deliverableTypes?.get(0) == 5) {
+                    (view.submission_status).setText(context!!.resources.getString(R.string.detail_take_survey))
+                } else {
+                    (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_submission_open))
+                }
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_subscription_open)
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             } else if (status == 22) {
-                (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_submission_open))
+                if (campaignList?.deliverableTypes?.get(0) == 5) {
+                    (view.submission_status).setText(context!!.resources.getString(R.string.detail_take_survey))
+                } else {
+                    (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_submission_open))
+                }
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_subscription_open)
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
