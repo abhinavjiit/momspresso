@@ -9,28 +9,12 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.text.Editable
-import android.text.Html
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.TextWatcher
+import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
-import android.view.WindowManager
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.MediaController
-import android.widget.PopupWindow
-import android.widget.RelativeLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.view.*
+import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ShareCompat
@@ -76,8 +60,7 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Calendar
+import java.util.*
 import java.util.regex.Pattern
 
 const val REWARDS_FILL_FORM_REQUEST = 1000
@@ -136,8 +119,8 @@ class CampaignDetailFragment : BaseFragment() {
     private var defaultCampaignShow: Boolean = false
     private val urlPattern = Pattern.compile(
         "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)" +
-            "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*" +
-            "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
+                "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*" +
+                "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
         Pattern.CASE_INSENSITIVE or Pattern.MULTILINE or Pattern.DOTALL
     )
     private var spannable: SpannableString? = null
@@ -240,8 +223,8 @@ class CampaignDetailFragment : BaseFragment() {
         getHelp.setOnClickListener {
             val emailIntent = Intent(
                 Intent.ACTION_SENDTO, Uri.fromParts(
-                "mailto", "support@momspresso-mymoney.com", null
-            )
+                    "mailto", "support@momspresso-mymoney.com", null
+                )
             )
             startActivity(Intent.createChooser(emailIntent, "Send email..."))
         }
@@ -399,9 +382,10 @@ class CampaignDetailFragment : BaseFragment() {
         Picasso.get().load(apiGetResponse!!.imageUrl).placeholder(R.drawable.default_article).error(
             R.drawable.default_article
         ).into(bannerImg)
-        Picasso.get().load(apiGetResponse!!.brandDetails!!.imageUrl).placeholder(R.drawable.default_article).error(
-            R.drawable.default_article
-        ).into(brandImg)
+        Picasso.get().load(apiGetResponse!!.brandDetails!!.imageUrl)
+            .placeholder(R.drawable.default_article).error(
+                R.drawable.default_article
+            ).into(brandImg)
         brandName.setText(apiGetResponse!!.brandDetails!!.name)
         campaignName.setText(apiGetResponse!!.name)
         amount.setText("" + apiGetResponse!!.slotAvailable)
@@ -651,8 +635,20 @@ class CampaignDetailFragment : BaseFragment() {
             try {
                 val responseData = response.body()
                 if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        checkInstaHandle()
+                    if (apiGetResponse?.deliverableTypes?.get(0) == 0) {
+                        CoroutineScope(Dispatchers.Main).launch {
+                            checkInstaHandle()
+                        }
+                    } else {
+                        txtTrackerStatus.visibility = View.VISIBLE
+                        submitBtn.setText(resources.getString(R.string.detail_bottom_applied))
+                        Toast.makeText(
+                            context,
+                            resources.getString(R.string.toast_campaign_applied),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        labelText.setText(resources.getString(R.string.label_campaign_applied))
+                        unapplyCampaign.visibility = View.VISIBLE
                     }
                 } else {
                     if (!SharedPrefUtils.isDefaultCampaignShown(BaseApplication.getAppContext()))
@@ -687,49 +683,52 @@ class CampaignDetailFragment : BaseFragment() {
 
     private fun fetchDefaultCampaign() {
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getDefaultCampaignDetail().subscribeOn(
-            Schedulers.io()
-        ).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
-            Observer<BaseResponseGeneric<CampaignDetailResult>> {
-            override fun onComplete() {
-                removeProgressDialog()
-            }
-
-            override fun onSubscribe(d: Disposable) {
-            }
-
-            override fun onNext(response: BaseResponseGeneric<CampaignDetailResult>) {
-                if (response == null) {
-                    val nee = NetworkErrorException(response.toString())
-                    Crashlytics.logException(nee)
-                    return
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java)
+            .getDefaultCampaignDetail().subscribeOn(
+                Schedulers.io()
+            ).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+                Observer<BaseResponseGeneric<CampaignDetailResult>> {
+                override fun onComplete() {
+                    removeProgressDialog()
                 }
-                if (response != null && response.code == 200 && response.status == Constants.SUCCESS && response.data?.result != null) {
-                    defaultapigetResponse = response.data!!.result
-                    defaultCampaignPopUp.visibility = View.VISIBLE
-                    setDefaultCampaignValues()
-                } else if (response != null && response.code == 200 && response.status == Constants.SUCCESS && response.data?.result == null) {
-                    defaultCampaignPopUp.visibility = View.GONE
-                }
-            }
 
-            override fun onError(e: Throwable) {
-                removeProgressDialog()
-                Crashlytics.logException(e)
-                Log.d("MC4kException", Log.getStackTraceString(e))
-            }
-        })
+                override fun onSubscribe(d: Disposable) {
+                }
+
+                override fun onNext(response: BaseResponseGeneric<CampaignDetailResult>) {
+                    if (response == null) {
+                        val nee = NetworkErrorException(response.toString())
+                        Crashlytics.logException(nee)
+                        return
+                    }
+                    if (response != null && response.code == 200 && response.status == Constants.SUCCESS && response.data?.result != null) {
+                        defaultapigetResponse = response.data!!.result
+                        defaultCampaignPopUp.visibility = View.VISIBLE
+                        setDefaultCampaignValues()
+                    } else if (response != null && response.code == 200 && response.status == Constants.SUCCESS && response.data?.result == null) {
+                        defaultCampaignPopUp.visibility = View.GONE
+                    }
+                }
+
+                override fun onError(e: Throwable) {
+                    removeProgressDialog()
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            })
     }
 
     fun setDefaultCampaignValues() {
         upperTextHeader.text = resources.getString(R.string.sorry_not_eligible)
         lowerTextHeader.text = resources.getString(R.string.try_following_campaign)
-        Picasso.get().load(defaultapigetResponse!!.imageUrl).placeholder(R.drawable.default_article).error(
-            R.drawable.default_article
-        ).into(default_campaign_header)
-        Picasso.get().load(defaultapigetResponse!!.brandDetails!!.imageUrl).placeholder(R.drawable.default_article).error(
-            R.drawable.default_article
-        ).into(default_brand_img)
+        Picasso.get().load(defaultapigetResponse!!.imageUrl).placeholder(R.drawable.default_article)
+            .error(
+                R.drawable.default_article
+            ).into(default_campaign_header)
+        Picasso.get().load(defaultapigetResponse!!.brandDetails!!.imageUrl)
+            .placeholder(R.drawable.default_article).error(
+                R.drawable.default_article
+            ).into(default_brand_img)
         default_brand_name.setText(defaultapigetResponse!!.brandDetails!!.name)
         default_campaign_name.setText(defaultapigetResponse!!.name)
         default_submission_status.text = resources.getString(R.string.campaign_details_apply_now)
@@ -1168,28 +1167,22 @@ class CampaignDetailFragment : BaseFragment() {
         val job = CoroutineScope(Dispatchers.Main + handler).launch {
             userId?.let {
                 val socialAccountsDetailData =
-                    BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getInstagramHandle(
-                        it,
-                        3
-                    )
+                    BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java)
+                        .getInstagramHandle(
+                            it,
+                            3
+                        )
                 socialAccountsDetailData.data?.result?.let { it1 ->
                     socialAccountsDetail = it1
                     if (socialAccountsDetailData.code == 200 && socialAccountsDetailData.status == Constants.SUCCESS) {
-                        socialAccountsDetailData.data?.result?.socialAccounts?.forEach {
-                            if (it.platform_name == AppConstants.MEDIUM_INSTAGRAM && it.acc_link.isNullOrBlank()) {
-                                showInstPopUpFlag = true
-                            } else if (it.platform_name == AppConstants.MEDIUM_INSTAGRAM && !it.acc_link.isNullOrBlank()) {
-                                txtTrackerStatus.visibility = View.VISIBLE
-                                if (apiGetResponse!!.deliverableTypes!!.get(0) == 5) {
-                                    //                                    submitBtn.text = resources.getString(R.string.detail_scroll_survey
-                                    showProgressDialog(resources.getString(R.string.please_wait))
-                                    val handler = Handler()
-                                    handler.postDelayed({
-                                        removeProgressDialog()
-                                        fetchCampaignDetail()
-                                    }, 5000)
-
-                                } else {
+                        if (socialAccountsDetailData.data?.result?.socialAccounts.isNullOrEmpty()) {
+                            showInstPopUpFlag = true
+                        } else {
+                            socialAccountsDetailData.data?.result?.socialAccounts?.forEach {
+                                if (it.platform_name == AppConstants.MEDIUM_INSTAGRAM && it.acc_link.isNullOrBlank()) {
+                                    showInstPopUpFlag = true
+                                } else if (it.platform_name == AppConstants.MEDIUM_INSTAGRAM && !it.acc_link.isNullOrBlank()) {
+                                    txtTrackerStatus.visibility = View.VISIBLE
                                     submitBtn.setText(resources.getString(R.string.detail_bottom_applied))
                                     Toast.makeText(
                                         context,
@@ -1197,11 +1190,11 @@ class CampaignDetailFragment : BaseFragment() {
                                         Toast.LENGTH_SHORT
                                     ).show()
                                     labelText.setText(resources.getString(R.string.label_campaign_applied))
+                                    unapplyCampaign.visibility = View.VISIBLE
+                                    showInstPopUpFlag = false
+                                } else {
+                                    return@forEach
                                 }
-                                unapplyCampaign.visibility = View.VISIBLE
-                                showInstPopUpFlag = false
-                            } else {
-                                return@forEach
                             }
                         }
                     }
@@ -1238,18 +1231,21 @@ class CampaignDetailFragment : BaseFragment() {
                 socialAccountsDetail.socialAccounts?.forEach {
                     if (it.platform_name == AppConstants.MEDIUM_INSTAGRAM) {
                         it.acc_link =
-                            containerView.findViewById<EditText>(R.id.instaHandleEditTextView).text.toString()
+                            containerView.findViewById<EditText>(R.id.instaHandleEditTextView)
+                                .text.toString()
                     }
                 }
                 instaHandlePopUpView.visibility = View.GONE
                 CoroutineScope(Dispatchers.Main + handler).launch {
                     userId?.let {
                         val response =
-                            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendInstageamHandle(
-                                it,
-                                socialAccountsDetail,
-                                3
-                            )
+                            BaseApplication.getInstance()
+                                .retrofit.create(RewardsAPI::class.java)
+                                .sendInstageamHandle(
+                                    it,
+                                    socialAccountsDetail,
+                                    3
+                                )
                         if (response.code == 200 && response.status == Constants.SUCCESS) {
                             txtTrackerStatus.visibility = View.VISIBLE
                             submitBtn.setText(resources.getString(R.string.detail_bottom_applied))
