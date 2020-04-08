@@ -219,9 +219,9 @@ class InlineFormatter(editor: AztecText, val codeStyle: CodeStyle) : AztecFormat
     fun spanToTextFormat(span: IAztecInlineSpan): ITextFormat? {
         when (span::class.java) {
             AztecStyleBoldSpan::class.java -> return AztecTextFormat.FORMAT_BOLD
-            AztecStyleStrongSpan::class.java -> return AztecTextFormat.FORMAT_STRONG
+            AztecStyleBoldSpan::class.java -> return AztecTextFormat.FORMAT_BOLD
             AztecStyleItalicSpan::class.java -> return AztecTextFormat.FORMAT_ITALIC
-            AztecStyleEmphasisSpan::class.java -> return AztecTextFormat.FORMAT_EMPHASIS
+            AztecStyleItalicSpan::class.java -> return AztecTextFormat.FORMAT_ITALIC
             AztecStyleCiteSpan::class.java -> return AztecTextFormat.FORMAT_CITE
             AztecStrikethroughSpan::class.java -> return AztecTextFormat.FORMAT_STRIKETHROUGH
             AztecUnderlineSpan::class.java -> return AztecTextFormat.FORMAT_UNDERLINE
@@ -363,9 +363,9 @@ class InlineFormatter(editor: AztecText, val codeStyle: CodeStyle) : AztecFormat
     fun makeInlineSpan(textFormat: ITextFormat): IAztecInlineSpan {
         when (textFormat) {
             AztecTextFormat.FORMAT_BOLD -> return AztecStyleBoldSpan()
-            AztecTextFormat.FORMAT_STRONG -> return AztecStyleStrongSpan()
+            AztecTextFormat.FORMAT_STRONG -> return AztecStyleBoldSpan()
             AztecTextFormat.FORMAT_ITALIC -> return AztecStyleItalicSpan()
-            AztecTextFormat.FORMAT_EMPHASIS -> return AztecStyleEmphasisSpan()
+            AztecTextFormat.FORMAT_EMPHASIS -> return AztecStyleItalicSpan()
             AztecTextFormat.FORMAT_CITE -> return AztecStyleCiteSpan()
             AztecTextFormat.FORMAT_STRIKETHROUGH -> return AztecStrikethroughSpan()
             AztecTextFormat.FORMAT_UNDERLINE -> return AztecUnderlineSpan()

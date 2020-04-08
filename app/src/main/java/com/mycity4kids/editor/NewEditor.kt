@@ -13,14 +13,24 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.BitmapDrawable
 import android.media.ExifInterface
 import android.net.Uri
-import android.os.*
+import android.os.Build
+import android.os.Bundle
+import android.os.Environment
+import android.os.Handler
+import android.os.Message
 import android.provider.MediaStore
 import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
-import android.widget.*
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.PopupMenu
+import android.widget.TextView
+import android.widget.Toast
+import android.widget.ToggleButton
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
@@ -48,7 +58,11 @@ import com.mycity4kids.ui.activity.AddArticleTopicsActivityNew
 import com.mycity4kids.ui.activity.SpellCheckActivity
 import com.mycity4kids.ui.fragment.SpellCheckDialogFragment
 import com.mycity4kids.ui.fragment.SpellCheckDialogFragment.ISpellcheckResult
-import com.mycity4kids.utils.*
+import com.mycity4kids.utils.ConnectivityUtils
+import com.mycity4kids.utils.DateTimeUtils
+import com.mycity4kids.utils.GenericFileProvider
+import com.mycity4kids.utils.PermissionUtil
+import com.mycity4kids.utils.StringUtils
 import kotlinx.android.synthetic.main.activity_new_editor.*
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -58,7 +72,12 @@ import org.wordpress.android.editor.ImageSettingsDialogFragment
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.helpers.MediaFile
-import org.wordpress.aztec.*
+import org.wordpress.aztec.Aztec
+import org.wordpress.aztec.AztecAttributes
+import org.wordpress.aztec.AztecExceptionHandler
+import org.wordpress.aztec.AztecText
+import org.wordpress.aztec.IHistoryListener
+import org.wordpress.aztec.ITextFormat
 import org.wordpress.aztec.demo.MediaToolbarCameraButton
 import org.wordpress.aztec.demo.MediaToolbarGalleryButton
 import org.wordpress.aztec.glideloader.GlideImageLoader
@@ -82,7 +101,12 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.ArrayList
+import java.util.Calendar
+import java.util.Date
+import java.util.HashMap
+import java.util.Locale
+import java.util.Random
 
 class NewEditor : BaseActivity(),
     AztecText.OnImeBackListener,
@@ -133,7 +157,7 @@ class NewEditor : BaseActivity(),
     private val mHandler = MyHandler(this@NewEditor)
     private var titleTxt: EditText? = null
 
-/*-----------*/
+    /*-----------*/
 
     private val mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
 
@@ -240,8 +264,8 @@ class NewEditor : BaseActivity(),
                             val stream = ByteArrayOutputStream()
                             finalBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream)
 
-//                            val (id, attrs) = generateAttributesForMedia(imageUri.toString(), isVideo = false)
-//                            aztec.visualEditor.insertImage(BitmapDrawable(resources, finalBitmap), attrs)
+                            //                            val (id, attrs) = generateAttributesForMedia(imageUri.toString(), isVideo = false)
+                            //                            aztec.visualEditor.insertImage(BitmapDrawable(resources, finalBitmap), attrs)
                             val path =
                                 MediaStore.Images.Media.insertImage(
                                     this@NewEditor.getContentResolver(),
@@ -278,11 +302,11 @@ class NewEditor : BaseActivity(),
                             )
                             when (orientation) {
                                 ExifInterface.ORIENTATION_ROTATE_90 -> imageBitmap =
-                                    EditorPostActivity.rotateImage(imageBitmap, 90f)
+                                    rotateImage(imageBitmap, 90f)
                                 ExifInterface.ORIENTATION_ROTATE_180 -> imageBitmap =
-                                    EditorPostActivity.rotateImage(imageBitmap, 180f)
+                                    rotateImage(imageBitmap, 180f)
                                 ExifInterface.ORIENTATION_ROTATE_270 -> imageBitmap =
-                                    EditorPostActivity.rotateImage(imageBitmap, 270f)
+                                    rotateImage(imageBitmap, 270f)
                                 ExifInterface.ORIENTATION_NORMAL -> {
                                 }
                                 else -> {
@@ -455,7 +479,7 @@ class NewEditor : BaseActivity(),
             initiatePeriodicDraftSave()
         } else if (intent.getStringExtra("from") != null && intent.getStringExtra("from") == "publishedList") {
             title = intent.getStringExtra("title")
-//            title = title.trim { it <= ' ' }
+            //            title = title.trim { it <= ' ' }
             content = intent.getStringExtra("content")
             tag = intent.getStringExtra("tag")
             cities = intent.getStringExtra("cities")
@@ -464,7 +488,7 @@ class NewEditor : BaseActivity(),
             titleTxt!!.setText(title)
         } else {
             titleTxt!!.setText(title)
-            titleTxt!!.setHint(intent.getStringExtra(EditorPostActivity.TITLE_PLACEHOLDER_PARAM))
+            titleTxt!!.setHint(title_placeholder_param)
             Log.e("postContent", content)
             initiatePeriodicDraftSave()
         }
@@ -556,7 +580,7 @@ class NewEditor : BaseActivity(),
 
             aztec.sourceEditor?.displayStyledAndFormattedHtml(content.toString())
 
-//            aztec.addPlugin(CssUnderlinePlugin())
+            //            aztec.addPlugin(CssUnderlinePlugin())
         }
 
         if (savedInstanceState == null) {
@@ -627,7 +651,9 @@ class NewEditor : BaseActivity(),
         if (fragment != null && fragment.isVisible) {
             (fragment as ImageSettingsDialogFragment).dismissFragment()
         } else {
-            if (titleTxt?.text.toString().isEmpty() && aztec.visualEditor.text.isEmpty() || intent.getStringExtra(
+            if (StringUtils.isEmpty(titleTxt?.text.toString().trim()) && StringUtils.isEmpty(
+                    aztec.visualEditor.toFormattedHtml().trim()
+                ) || intent.getStringExtra(
                     "from"
                 ) != null && intent.getStringExtra(
                     "from"
@@ -759,7 +785,7 @@ class NewEditor : BaseActivity(),
     }
 
     override fun onToolbarFormatButtonClicked(format: ITextFormat, isKeyboardShortcut: Boolean) {
-//        ToastUtils.showToast(this, format.toString())
+        //        ToastUtils.showToast(this, format.toString())
     }
 
     override fun onToolbarHeadingButtonClicked() {
@@ -800,15 +826,15 @@ class NewEditor : BaseActivity(),
                             this@NewEditor,
                             Manifest.permission.CAMERA
                         )
-                                != PackageManager.PERMISSION_GRANTED) || (ActivityCompat.checkSelfPermission(
+                            != PackageManager.PERMISSION_GRANTED) || (ActivityCompat.checkSelfPermission(
                             this@NewEditor,
                             Manifest.permission.READ_EXTERNAL_STORAGE
                         )
-                                != PackageManager.PERMISSION_GRANTED) || (ActivityCompat.checkSelfPermission(
+                            != PackageManager.PERMISSION_GRANTED) || (ActivityCompat.checkSelfPermission(
                             this@NewEditor,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE
                         )
-                                != PackageManager.PERMISSION_GRANTED)
+                            != PackageManager.PERMISSION_GRANTED)
                     ) {
                         requestPermissions()
                     } else {
@@ -833,15 +859,15 @@ class NewEditor : BaseActivity(),
                             this@NewEditor,
                             Manifest.permission.CAMERA
                         )
-                                != PackageManager.PERMISSION_GRANTED) || (ActivityCompat.checkSelfPermission(
+                            != PackageManager.PERMISSION_GRANTED) || (ActivityCompat.checkSelfPermission(
                             this@NewEditor,
                             Manifest.permission.READ_EXTERNAL_STORAGE
                         )
-                                != PackageManager.PERMISSION_GRANTED) || (ActivityCompat.checkSelfPermission(
+                            != PackageManager.PERMISSION_GRANTED) || (ActivityCompat.checkSelfPermission(
                             this@NewEditor,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE
                         )
-                                != PackageManager.PERMISSION_GRANTED)
+                            != PackageManager.PERMISSION_GRANTED)
                     ) {
                         requestPermissions()
                     } else {
@@ -1100,7 +1126,7 @@ class NewEditor : BaseActivity(),
     }
 
     override fun onImageTapped(attrs: AztecAttributes, naturalWidth: Int, naturalHeight: Int) {
-//        ToastUtils.showToast(this, "Image tapped!")
+        //        ToastUtils.showToast(this, "Image tapped!")
     }
 
     override fun onVideoTapped(attrs: AztecAttributes) {
@@ -1121,7 +1147,7 @@ class NewEditor : BaseActivity(),
                     val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     startActivity(browserIntent)
                 } catch (e: ActivityNotFoundException) {
-//                    ToastUtils.showToast(this, "Video tapped!")
+                    //                    ToastUtils.showToast(this, "Video tapped!")
                 }
             }
         }
@@ -1131,8 +1157,8 @@ class NewEditor : BaseActivity(),
         if (attrs.hasAttribute(ATTRIBUTE_VIDEOPRESS_HIDDEN_ID)) {
             AppLog.d(
                 AppLog.T.EDITOR, "Video Info Requested for shortcode " + attrs.getValue(
-                    ATTRIBUTE_VIDEOPRESS_HIDDEN_ID
-                )
+                ATTRIBUTE_VIDEOPRESS_HIDDEN_ID
+            )
             )
             /*
             Here should go the Network request that retrieves additional info about the video.
@@ -1162,7 +1188,7 @@ class NewEditor : BaseActivity(),
                     val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     startActivity(browserIntent)
                 } catch (e: ActivityNotFoundException) {
-//                    ToastUtils.showToast(this, "Audio tapped!")
+                    //                    ToastUtils.showToast(this, "Audio tapped!")
                 }
             }
         }
@@ -1170,13 +1196,13 @@ class NewEditor : BaseActivity(),
 
     override fun onMediaDeleted(attrs: AztecAttributes) {
         val url = attrs.getValue("src")
-//        ToastUtils.showToast(this, "Media Deleted! " + url)
+        //        ToastUtils.showToast(this, "Media Deleted! " + url)
     }
 
     override fun onContinuePublish() {
         mHandler.removeCallbacksAndMessages(null)
         val publishObject = PublishDraftObject()
-        publishObject.body = contentFormatting(aztec.visualEditor.text.toString())
+        publishObject.body = contentFormatting(aztec.visualEditor.toFormattedHtml())
         publishObject.title =
             titleFormatting(titleTxt?.text.toString())
         Log.d("draftId = ", draftId + "")
@@ -1416,8 +1442,8 @@ class NewEditor : BaseActivity(),
     private fun showCustomToast(bodyWordCount: Int) {
         val toast = Toast.makeText(
             this, getString(
-                com.mycity4kids.R.string.article_editor_min_words_body, bodyWordCount
-            ), Toast.LENGTH_SHORT
+            com.mycity4kids.R.string.article_editor_min_words_body, bodyWordCount
+        ), Toast.LENGTH_SHORT
         )
         toast.setGravity(Gravity.CENTER, 0, 0)
         val toastLayout =

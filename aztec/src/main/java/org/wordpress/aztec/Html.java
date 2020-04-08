@@ -315,11 +315,11 @@ class HtmlToSpannedConverter implements org.xml.sax.ContentHandler, LexicalHandl
         } else if (tag.equalsIgnoreCase("aztec_cursor")) {
             handleCursor(spannableStringBuilder);
         } else if (tag.equalsIgnoreCase("strong")) {
-            start(spannableStringBuilder, AztecTextFormat.FORMAT_STRONG, attributes);
+            start(spannableStringBuilder, AztecTextFormat.FORMAT_BOLD, attributes);
         } else if (tag.equalsIgnoreCase("b")) {
             start(spannableStringBuilder, AztecTextFormat.FORMAT_BOLD, attributes);
         } else if (tag.equalsIgnoreCase("em")) {
-            start(spannableStringBuilder, AztecTextFormat.FORMAT_EMPHASIS, attributes);
+            start(spannableStringBuilder, AztecTextFormat.FORMAT_ITALIC, attributes);
         } else if (tag.equalsIgnoreCase("cite")) {
             start(spannableStringBuilder, AztecTextFormat.FORMAT_CITE, attributes);
         } else if (tag.equalsIgnoreCase("dfn")) {
@@ -408,11 +408,11 @@ class HtmlToSpannedConverter implements org.xml.sax.ContentHandler, LexicalHandl
         if (tag.equalsIgnoreCase("br")) {
             handleBr(spannableStringBuilder);
         } else if (tag.equalsIgnoreCase("strong")) {
-            end(spannableStringBuilder, AztecTextFormat.FORMAT_STRONG);
+            end(spannableStringBuilder, AztecTextFormat.FORMAT_BOLD);
         } else if (tag.equalsIgnoreCase("b")) {
             end(spannableStringBuilder, AztecTextFormat.FORMAT_BOLD);
         } else if (tag.equalsIgnoreCase("em")) {
-            end(spannableStringBuilder, AztecTextFormat.FORMAT_EMPHASIS);
+            end(spannableStringBuilder, AztecTextFormat.FORMAT_ITALIC);
         } else if (tag.equalsIgnoreCase("cite")) {
             end(spannableStringBuilder, AztecTextFormat.FORMAT_CITE);
         } else if (tag.equalsIgnoreCase("dfn")) {
@@ -494,13 +494,13 @@ class HtmlToSpannedConverter implements org.xml.sax.ContentHandler, LexicalHandl
                 newSpan = new AztecStyleBoldSpan(attributes);
                 break;
             case FORMAT_STRONG:
-                newSpan = new AztecStyleStrongSpan(attributes);
+                newSpan = new AztecStyleBoldSpan(attributes);
                 break;
             case FORMAT_ITALIC:
                 newSpan = new AztecStyleItalicSpan(attributes);
                 break;
             case FORMAT_EMPHASIS:
-                newSpan = new AztecStyleEmphasisSpan(attributes);
+                newSpan = new AztecStyleItalicSpan(attributes);
                 break;
             case FORMAT_CITE:
                 newSpan = new AztecStyleCiteSpan(attributes);
@@ -549,13 +549,13 @@ class HtmlToSpannedConverter implements org.xml.sax.ContentHandler, LexicalHandl
                 span = (AztecStyleBoldSpan) getLast(text, AztecStyleBoldSpan.class);
                 break;
             case FORMAT_STRONG:
-                span = (AztecStyleStrongSpan) getLast(text, AztecStyleStrongSpan.class);
+                span = (AztecStyleBoldSpan) getLast(text, AztecStyleBoldSpan.class);
                 break;
             case FORMAT_ITALIC:
                 span = (AztecStyleItalicSpan) getLast(text, AztecStyleItalicSpan.class);
                 break;
             case FORMAT_EMPHASIS:
-                span = (AztecStyleEmphasisSpan) getLast(text, AztecStyleEmphasisSpan.class);
+                span = (AztecStyleItalicSpan) getLast(text, AztecStyleItalicSpan.class);
                 break;
             case FORMAT_CITE:
                 span = (AztecStyleCiteSpan) getLast(text, AztecStyleCiteSpan.class);
