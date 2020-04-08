@@ -11,6 +11,9 @@ class CampaignDetailResult {
     @SerializedName("approval_status")
     @Expose
     var approvalStatus: Int? = null
+    @SerializedName("submission_status")
+    @Expose
+    var submissionStatus: Int? = -1
     @SerializedName("brand_details")
     @Expose
     var brandDetails: CampaignDetailBrandDetails? = null
