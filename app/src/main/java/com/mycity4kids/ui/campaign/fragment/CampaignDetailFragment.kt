@@ -404,7 +404,7 @@ class CampaignDetailFragment : BaseFragment() {
         ).into(brandImg)
         brandName.setText(apiGetResponse!!.brandDetails!!.name)
         campaignName.setText(apiGetResponse!!.name)
-        amount.setText("" + (apiGetResponse!!.maxSlots?.minus(apiGetResponse!!.totalUsedSlots!!)))
+        amount.setText("" + apiGetResponse!!.slotAvailable)
         startDateText.setText(getDate(apiGetResponse!!.startTime!!, "dd MMM yyyy"))
         endDateText.setText(getDate(apiGetResponse!!.endTime!!, "dd MMM yyyy"))
 
@@ -627,7 +627,7 @@ class CampaignDetailFragment : BaseFragment() {
             (activity as CampaignContainerActivity).addAddProofFragment(
                 apiGetResponse!!.id!!,
                 (apiGetResponse!!.deliverableTypes as ArrayList<Int>?)!!,
-                status, apiGetResponse!!.approvalStatus!!
+                status, apiGetResponse!!.submissionStatus!!
             )
             if (apiGetResponse != null && apiGetResponse!!.totalPayout != null && apiGetResponse!!.id != null && apiGetResponse!!.nameSlug != null) {
                 (activity as CampaignContainerActivity).setTotalPayOut(apiGetResponse!!.totalPayout!!)

@@ -1325,4 +1325,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="phone_contact_toolbar_title">Phonebook Contacts</string>
   <string name="all_invite">আমন্ত্রণ</string>
   <string name="detail_scroll_survey">Scroll to see survey link</string>
+  <string name="editor_help_mail">Mail Us</string>
+  <string name="editor_help_header_text">সাহায্যের প্রয়োজন?</string>
+  <string name="get_help_bottom_text">কোনো সমস্যা হলে অনুগ্রহ করে মেইল করুন যাতে আমরা সহায়তা করে পারি </string>
+  <string name="detail_take_survey">Take survey</string>
 </resources>

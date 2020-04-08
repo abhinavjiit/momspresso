@@ -11,6 +11,9 @@ class CampaignDetailResult {
     @SerializedName("approval_status")
     @Expose
     var approvalStatus: Int? = null
+    @SerializedName("submission_status")
+    @Expose
+    var submissionStatus: Int? = -1
     @SerializedName("brand_details")
     @Expose
     var brandDetails: CampaignDetailBrandDetails? = null
@@ -59,6 +62,9 @@ class CampaignDetailResult {
     @SerializedName("max_slots")
     @Expose
     var maxSlots: Int? = null
+    @SerializedName("slot_available")
+    @Expose
+    var slotAvailable: Int? = null
     @SerializedName("min_amount")
     @Expose
     var minAmount: Double? = null

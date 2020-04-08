@@ -45,12 +45,12 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import retrofit2.Call
+import retrofit2.Callback
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.Date
-import retrofit2.Call
-import retrofit2.Callback
 
 const val SELECT_IMAGE = 1005
 
@@ -183,7 +183,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     private var campaignUrlProofList: ArrayList<CampaignProofResponse> = arrayListOf()
     private var campaignId: Int = 60
     private var status: Int = 0
-    private var approval_status: Int = -1
+    private var submission_status: Int = -1
     private lateinit var textSubmit: TextView
     private lateinit var textInstruction: TextView
     private lateinit var deliverableTypeList: ArrayList<Int>
@@ -209,14 +209,14 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             id: Int,
             deliverableTypeList: ArrayList<Int>,
             status: Int,
-            approval_status: Int
+            submission_status: Int
         ) =
             CampaignAddProofFragment().apply {
                 arguments = Bundle().apply {
                     this.putInt("id", id)
                     this.putIntegerArrayList("deliverableTypeList", deliverableTypeList)
                     this.putInt("status", status)
-                    this.putInt("approval_status", approval_status)
+                    this.putInt("submission_status", submission_status)
                 }
             }
     }
@@ -240,8 +240,8 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 0
             }
 
-            approval_status = if (arguments!!.containsKey("approval_status")) {
-                arguments!!.getInt("approval_status")
+            submission_status = if (arguments!!.containsKey("submission_status")) {
+                arguments!!.getInt("submission_status")
             } else {
                 -1
             }
@@ -305,7 +305,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             (activity as CampaignContainerActivity).onBackPressed()
         }
 
-        if (approval_status == 0 || approval_status == 1 || approval_status == 2) {
+        if (submission_status == 0 || submission_status == 1 || submission_status == 2 || submission_status == 3) {
             preproofApprovalTextView.visibility = View.VISIBLE
             preproofApprovalTextView.text =
                 fetchDeliverableName(deliverableTypeList) + " is approved. Make your final submission."

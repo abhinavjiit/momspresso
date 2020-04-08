@@ -3,14 +3,17 @@ package com.mycity4kids.editor
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.PorterDuff
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
@@ -24,6 +27,7 @@ import android.view.Gravity
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import android.view.Window
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -36,6 +40,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.crashlytics.android.Crashlytics
+import com.getbase.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.mycity4kids.R
@@ -156,6 +161,8 @@ class NewEditor : BaseActivity(),
     private var mHideActionBarOnSoftKeyboardUp = false
     private val mHandler = MyHandler(this@NewEditor)
     private var titleTxt: EditText? = null
+    private lateinit var editorGetHelp: FloatingActionButton
+
 
     /*-----------*/
 
@@ -460,8 +467,10 @@ class NewEditor : BaseActivity(),
         publishTextView = findViewById<View>(R.id.publishTextView) as TextView
         val sourceEditor = findViewById<SourceViewEditText>(R.id.source)
         titleTxt = findViewById<View>(com.mycity4kids.R.id.title) as EditText
+        editorGetHelp = findViewById(R.id.editor_get_help)
 
 
+        editor_get_help.setOnClickListener(this)
         closeEditorImageView!!.setOnClickListener(this)
         publishTextView!!.setOnClickListener(this)
 
@@ -1468,6 +1477,11 @@ class NewEditor : BaseActivity(),
     override fun onClick(v: View) {
         when (v.id) {
             R.id.closeEditorImageView -> onBackPressed()
+            R.id.editor_get_help -> {
+                editorGetHelpDialog()
+                closeEditorImageView?.setEnabled(false)
+                publishTextView?.isEnabled = false
+            }
             R.id.publishTextView -> if (StringUtils.isNullOrEmpty(titleTxt?.text.toString())) {
                 showToast(getString(R.string.editor_title_empty))
             } else if (titleTxt?.text.toString().length > 150) {
@@ -1502,6 +1516,31 @@ class NewEditor : BaseActivity(),
                 }
             }
         }
+    }
+
+    fun editorGetHelpDialog() {
+        val dialog = Dialog(this)
+        dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.editor_get_help)
+        dialog.setCancelable(false)
+        val mailBtn = dialog.findViewById<TextView>(R.id.editor_help_mail)
+        mailBtn.setOnClickListener {
+            val emailIntent = Intent(
+                Intent.ACTION_SENDTO, Uri.fromParts(
+                "mailto", "support@momspresso.com", null
+            )
+            )
+            startActivity(Intent.createChooser(emailIntent, "Send email..."))
+            dialog.cancel()
+        }
+        val cancelBtnx = dialog.findViewById<TextView>(R.id.editor_help_cancel)
+        cancelBtnx.setOnClickListener {
+            closeEditorImageView?.setEnabled(true)
+            publishTextView?.isEnabled = true
+            dialog.dismiss()
+        }
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
     }
 
     private fun saveDraftBeforePublishRequest(
