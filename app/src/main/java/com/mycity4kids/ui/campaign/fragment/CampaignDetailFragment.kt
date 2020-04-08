@@ -404,7 +404,7 @@ class CampaignDetailFragment : BaseFragment() {
         ).into(brandImg)
         brandName.setText(apiGetResponse!!.brandDetails!!.name)
         campaignName.setText(apiGetResponse!!.name)
-        amount.setText("" + (apiGetResponse!!.maxSlots?.minus(apiGetResponse!!.totalUsedSlots!!)))
+        amount.setText("" + apiGetResponse!!.slotAvailable)
         startDateText.setText(getDate(apiGetResponse!!.startTime!!, "dd MMM yyyy"))
         endDateText.setText(getDate(apiGetResponse!!.endTime!!, "dd MMM yyyy"))
 

@@ -52,6 +52,9 @@ public class CampaignDataListResult {
     @SerializedName("total_used_slots")
     @Expose
     private int totalUsedSlots;
+    @SerializedName("slot_available")
+    @Expose
+    private int slotAvailable;
 
     public BrandDetails getBrandDetails() {
         return brandDetails;
@@ -172,4 +175,13 @@ public class CampaignDataListResult {
     public void setTotalUsedSlots(int totalUsedSlots) {
         this.totalUsedSlots = totalUsedSlots;
     }
+
+    public int getSlotAvailable() {
+        return slotAvailable;
+    }
+
+    public void setSlotAvailable(int slotAvailable) {
+        this.slotAvailable = slotAvailable;
+    }
+
 }
