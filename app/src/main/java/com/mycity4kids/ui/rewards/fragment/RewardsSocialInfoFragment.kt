@@ -48,7 +48,7 @@ import java.util.regex.Pattern
 /**
  * A simple [Fragment] subclass.
  */
-class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser,
+class RewardsSocialInfoFragment : BaseFragment(),
     GoogleApiClient.OnConnectionFailedListener, InstagramApp.OAuthAuthenticationListener {
     override fun onSuccess() {
         //        if (mApp!!.hasAccessToken()) {
@@ -62,22 +62,6 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser,
     }
 
     override fun onConnectionFailed(p0: ConnectionResult) {
-    }
-
-    override fun getFacebookUser(jObject: JSONObject?, user: String?) {
-        try {
-            if (user != null) {
-                activity
-                facebookAuthToken = user
-                editFacebook.setText(getString(R.string.rewards_social_facebook_connected))
-                setValuesForSocial(Constants.SocialPlatformName.facebook, facebookAuthToken!!)
-            }
-            removeProgressDialog()
-        } catch (e: Exception) {
-            // e.printStackTrace();
-            removeProgressDialog()
-            (activity as RewardsContainerActivity).showToast(getString(R.string.toast_response_error))
-        }
     }
 
     private lateinit var containerView: View
@@ -244,53 +228,27 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser,
                 apiGetResponse.socialAccounts!!.filter { it -> it.platform_name.equals(platformName.name) }
             if (socialAccountsListByGivenPlatform.isNotEmpty()) {
                 var localSocialAccout = SocialAccountObject()
-                if (socialAccountsListByGivenPlatform.get(0).platform_name.equals(
-                        Constants.SocialPlatformName.facebook.name,
-                        true
-                    )) {
-                    //                    SocialAccountsListByGivenPlatform.get(0).access_token = token
-                    //                    SocialAccountsListByGivenPlatform.get(0).platform_name = platformName.name
-
-                    localSocialAccout.platform_name = platformName.name
-                    localSocialAccout.access_token = token
-                    localSocialAccout.id = socialAccountsListByGivenPlatform.get(0).id
-                } else {
-                    localSocialAccout.platform_name = platformName.name
-                    localSocialAccout.acc_link = token
-                    localSocialAccout.id = socialAccountsListByGivenPlatform.get(0).id
-                }
+                localSocialAccout.platform_name = platformName.name
+                localSocialAccout.acc_link = token
+                localSocialAccout.id = socialAccountsListByGivenPlatform.get(0).id
                 socialAccountsListNotContainsGivenPlatform.add(localSocialAccout)
             } else {
                 var localSocialAccout = SocialAccountObject()
-                if (platformName.name.equals(Constants.SocialPlatformName.facebook.name, true)) {
-                    localSocialAccout.access_token = token
-                    localSocialAccout.platform_name = platformName.name
-                    apiGetResponse.socialAccounts!!.add(localSocialAccout)
-                } else {
-                    localSocialAccout.acc_link = token
-                    localSocialAccout.platform_name = platformName.name
-                    apiGetResponse.socialAccounts!!.add(localSocialAccout)
-                }
+                localSocialAccout.acc_link = token
+                localSocialAccout.platform_name = platformName.name
+                apiGetResponse.socialAccounts!!.add(localSocialAccout)
                 socialAccountsListNotContainsGivenPlatform.add(localSocialAccout)
             }
             apiGetResponse.socialAccounts = socialAccountsListNotContainsGivenPlatform
         } else {
             var localSocialAccout = SocialAccountObject()
-            if (platformName.name.equals(Constants.SocialPlatformName.facebook.name, true)) {
-                localSocialAccout.access_token = token
-                localSocialAccout.platform_name = platformName.name
-                apiGetResponse.socialAccounts!!.add(localSocialAccout)
-            } else {
-                localSocialAccout.acc_link = token
-                localSocialAccout.platform_name = platformName.name
-                apiGetResponse.socialAccounts!!.add(localSocialAccout)
-            }
+            localSocialAccout.acc_link = token
+            localSocialAccout.platform_name = platformName.name
+            apiGetResponse.socialAccounts!!.add(localSocialAccout)
             var localListSocialAccount = ArrayList<SocialAccountObject>()
             localListSocialAccount.add(localSocialAccout)
             apiGetResponse.socialAccounts = localListSocialAccount
         }
-
-        // Log.e("apiGetResponse is ", Gson().toJson(apiGetResponse))
     }
 
     private fun initializeXMLComponents() {
@@ -324,24 +282,6 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser,
         editInstagram.setOnClickListener {
             // AuthenticateWithInstagram()
         }
-
-        /*layoutFacebook.setOnClickListener {
-            if (ConnectivityUtils.isNetworkEnabled(activity)) {
-                (activity as RewardsContainerActivity).showProgressDialog(getString(R.string.please_wait))
-                FacebookUtils.facebookLogin(activity, this)
-            } else {
-                (activity as BaseActivity).showToast(getString(R.string.error_network))
-            }
-        }*/
-
-        /*editFacebook.setOnClickListener {
-            if (ConnectivityUtils.isNetworkEnabled(activity)) {
-                (activity as RewardsContainerActivity).showProgressDialog(getString(R.string.please_wait))
-                FacebookUtils.facebookLogin(activity, this)
-            } else {
-                (activity as RewardsContainerActivity).showToast(getString(R.string.error_network))
-            }
-        }*/
 
         var houseHoldIncomeArray = resources.getStringArray(R.array.household_income)
         houseHoldIncomeArray.forEach { str ->

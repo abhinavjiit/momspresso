@@ -9,12 +9,28 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.text.*
+import android.os.Handler
+import android.text.Editable
+import android.text.Html
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Log
-import android.view.*
-import android.widget.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.MediaController
+import android.widget.PopupWindow
+import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ShareCompat
@@ -60,7 +76,8 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.ArrayList
+import java.util.Calendar
 import java.util.regex.Pattern
 
 const val REWARDS_FILL_FORM_REQUEST = 1000
@@ -119,8 +136,8 @@ class CampaignDetailFragment : BaseFragment() {
     private var defaultCampaignShow: Boolean = false
     private val urlPattern = Pattern.compile(
         "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)" +
-                "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*" +
-                "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
+            "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*" +
+            "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
         Pattern.CASE_INSENSITIVE or Pattern.MULTILINE or Pattern.DOTALL
     )
     private var spannable: SpannableString? = null
@@ -140,6 +157,16 @@ class CampaignDetailFragment : BaseFragment() {
     private var socialAccountsDetail: RewardsDetailsResultResonse = RewardsDetailsResultResonse()
     private var showInstPopUpFlag: Boolean = false
     private var instaHandlePostFlag: Boolean = false
+    val TIME_DELAY: Long = 1500
+    //the default update interval for your text, this is in your hand , just run this sample
+    //the default update interval for your text, this is in your hand , just run this sample
+    var updateLoaderTextHandler = Handler()
+    var count = 0
+    private val updateLoaderTextArray = arrayOf(
+        "Thanks for applying!",
+        "We are generating the survey link.",
+        "It should be visible in a few moments..."
+    )
 
     val handler = CoroutineExceptionHandler { _, exception ->
         Crashlytics.logException(exception)
@@ -223,8 +250,8 @@ class CampaignDetailFragment : BaseFragment() {
         getHelp.setOnClickListener {
             val emailIntent = Intent(
                 Intent.ACTION_SENDTO, Uri.fromParts(
-                    "mailto", "support@momspresso-mymoney.com", null
-                )
+                "mailto", "support@momspresso-mymoney.com", null
+            )
             )
             startActivity(Intent.createChooser(emailIntent, "Send email..."))
         }
@@ -641,13 +668,28 @@ class CampaignDetailFragment : BaseFragment() {
                         }
                     } else {
                         txtTrackerStatus.visibility = View.VISIBLE
-                        submitBtn.setText(resources.getString(R.string.detail_bottom_applied))
-                        Toast.makeText(
-                            context,
-                            resources.getString(R.string.toast_campaign_applied),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        labelText.setText(resources.getString(R.string.label_campaign_applied))
+                        if (apiGetResponse!!.deliverableTypes!!.get(0) == 5) {
+                            //                                    submitBtn.text = resources.getString(R.string.detail_scroll_survey
+                            updateLoaderTextHandler.post(updateLoaderTextRunnable);
+                            //                            showProgressDialog(resources.getString(R.string.please_wait))
+                            val handler = Handler()
+                            handler.postDelayed({
+                                updateLoaderTextHandler.removeCallbacks(
+                                    updateLoaderTextRunnable
+                                )
+                                removeProgressDialog()
+                                fetchCampaignDetail()
+                            }, 5000)
+
+                        } else {
+                            submitBtn.setText(resources.getString(R.string.detail_bottom_applied))
+                            Toast.makeText(
+                                context,
+                                resources.getString(R.string.toast_campaign_applied),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            labelText.setText(resources.getString(R.string.label_campaign_applied))
+                        }
                         unapplyCampaign.visibility = View.VISIBLE
                     }
                 } else {
@@ -1076,6 +1118,7 @@ class CampaignDetailFragment : BaseFragment() {
                 val campaignAPI = retro.create(CampaignAPI::class.java)
                 val call = campaignAPI.unapplyCampaign(participateRequest)
                 call.enqueue(withdrawParticipateCampaign)
+                count = 0
                 dialog.dismiss()
             }
 
@@ -1183,13 +1226,28 @@ class CampaignDetailFragment : BaseFragment() {
                                     showInstPopUpFlag = true
                                 } else if (it.platform_name == AppConstants.MEDIUM_INSTAGRAM && !it.acc_link.isNullOrBlank()) {
                                     txtTrackerStatus.visibility = View.VISIBLE
-                                    submitBtn.setText(resources.getString(R.string.detail_bottom_applied))
-                                    Toast.makeText(
-                                        context,
-                                        resources.getString(R.string.toast_campaign_applied),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    labelText.setText(resources.getString(R.string.label_campaign_applied))
+                                    if (apiGetResponse!!.deliverableTypes!!.get(0) == 5) {
+                                        //                                    submitBtn.text = resources.getString(R.string.detail_scroll_survey
+                                        updateLoaderTextHandler.post(updateLoaderTextRunnable);
+                                        //                                        showProgressDialog(resources.getString(R.string.please_wait))
+                                        val handler = Handler()
+                                        handler.postDelayed({
+                                            updateLoaderTextHandler.removeCallbacks(
+                                                updateLoaderTextRunnable
+                                            )
+                                            removeProgressDialog()
+                                            fetchCampaignDetail()
+                                        }, 5000)
+
+                                    } else {
+                                        submitBtn.setText(resources.getString(R.string.detail_bottom_applied))
+                                        Toast.makeText(
+                                            context,
+                                            resources.getString(R.string.toast_campaign_applied),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        labelText.setText(resources.getString(R.string.label_campaign_applied))
+                                    }
                                     unapplyCampaign.visibility = View.VISIBLE
                                     showInstPopUpFlag = false
                                 } else {
@@ -1203,6 +1261,16 @@ class CampaignDetailFragment : BaseFragment() {
         }
         job.join()
         return showInstPopUpFlag
+    }
+
+    var updateLoaderTextRunnable: Runnable = object : Runnable {
+        override fun run() {
+            showProgressDialog(updateLoaderTextArray.get(count))
+            System.out.println("count bahar-------- " + count)
+            if (count < 2)
+                count++
+            updateLoaderTextHandler.postDelayed(this, TIME_DELAY)
+        }
     }
 
     private suspend fun showInstaHandlePopUp() {
