@@ -13,6 +13,7 @@ import android.view.View
 import android.view.accessibility.AccessibilityEvent
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
@@ -630,6 +631,10 @@ class AztecToolbar : FrameLayout, IAztecToolbar, OnMenuItemClickListener {
         if (!editor!!.isTextSelected() && action.actionType == ToolbarActionType.INLINE_STYLE) {
             val actions = getSelectedActions()
             val textFormats = ArrayList<ITextFormat>()
+
+            val imm: InputMethodManager =
+                context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(editor, InputMethodManager.SHOW_IMPLICIT)
 
             actions.filter { it.isStylingAction() }
                 .forEach { textFormats.add(it.textFormats.first()) }

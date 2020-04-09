@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -28,6 +29,7 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.Window
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -61,6 +63,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI
 import com.mycity4kids.ui.activity.AddArticleTopicsActivityNew
 import com.mycity4kids.ui.activity.SpellCheckActivity
+import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment
 import com.mycity4kids.ui.fragment.SpellCheckDialogFragment
 import com.mycity4kids.ui.fragment.SpellCheckDialogFragment.ISpellcheckResult
 import com.mycity4kids.utils.ConnectivityUtils
@@ -795,6 +798,10 @@ class NewEditor : BaseActivity(),
 
     override fun onToolbarFormatButtonClicked(format: ITextFormat, isKeyboardShortcut: Boolean) {
         //        ToastUtils.showToast(this, format.toString())
+
+        val imm: InputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(aztec.visualEditor, InputMethodManager.SHOW_IMPLICIT)
     }
 
     override fun onToolbarHeadingButtonClicked() {
