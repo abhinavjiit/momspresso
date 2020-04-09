@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
@@ -51,7 +50,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
     private void renderHomePageFeeds() {
         tabLayout.removeAllTabs();
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
-        FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        // FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         // feedOrderArray = mFirebaseRemoteConfig.getString(HOME_PAGE_FEED_ORDER).split(",");
         feedOrderArray = new String[] {"todaysBest", "trending", "following", "recent"};
         for (String s : feedOrderArray) {

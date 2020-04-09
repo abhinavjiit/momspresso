@@ -40,6 +40,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -909,5 +913,21 @@ public class AppUtils {
             Log.d("MC4KException", Log.getStackTraceString(e));
         }
         return "";
+    }
+
+    public static boolean isUserBucketedInNewEditor(FirebaseRemoteConfig firebaseRemoteConfig) {
+        try {
+            String object = firebaseRemoteConfig.getString("editor_user_json");
+            Gson gson = new GsonBuilder().create();
+            List<String> userList = gson.fromJson(object, new TypeToken<List<String>>() {
+            }.getType());
+            if (userList.contains(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
+                return true;
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4KException", Log.getStackTraceString(e));
+        }
+        return false;
     }
 }

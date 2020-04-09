@@ -20,4 +20,12 @@
         <key>home_page_feed_order</key>
         <value>trending,todaysBest,editorPicks,foryou,recent</value>
     </entry>
+    <entry>
+        <key>editor_type</key>
+        <value>0</value>
+    </entry>
+    <entry>
+        <key>editor_user_json</key>
+        <value>["6fbdd0c3b8284b17a8992f8f91d9fe62"]</value>
+    </entry>
 </defaultsMap>

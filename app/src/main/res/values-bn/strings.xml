@@ -521,7 +521,7 @@
   <string name="complete_blogger_profile.save">সংরক্ষিত</string>
   <string name="complete_blogger_profile.incorrect_date">Please choose correct date for date of birth.</string>
 
-  <string name="add_video_details.title_hint">ENTER A TITLE FOR THE VIDEO</string>
+  <string name="add_video_details.title_hint">ভিডিও টাইটেল (সর্বাধিক ১৫০ বর্ণের মধ্যে )</string>
   <string name="add_video_details.mute_label">MUTE SOUND</string>
   <string name="add_video_details.add_music">ADD MUSIC</string>
   <string name="add_video_details.remove">বাতিল করুন</string>
@@ -1319,14 +1319,19 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="pre_meet_submission">Pre-meet submission</string>
   <string name="unlisted_video_link">Unlisted video link</string>
   <string name="invite_contact_invitation_sent">Your invite has been sent!</string>
-    <string name="add_video_details_title_length_error">Title length should be less than 150 characters</string>
+  <string name="add_video_details_title_length_error">Title length should be less than 150 characters</string>
   <string name="all_search">Search</string>
   <string name="all_send_invite">Send Invite</string>
-  <string name="phone_contact_toolbar_title">Phonebook Contacts</string>
+  <string name="all_phone_contact">ফোনবুক কন্ট্যাক্টস</string>
   <string name="all_invite">আমন্ত্রণ</string>
   <string name="detail_scroll_survey">Scroll to see survey link</string>
   <string name="editor_help_mail">Mail Us</string>
   <string name="editor_help_header_text">সাহায্যের প্রয়োজন?</string>
   <string name="get_help_bottom_text">কোনো সমস্যা হলে অনুগ্রহ করে মেইল করুন যাতে আমরা সহায়তা করে পারি </string>
   <string name="detail_take_survey">Take survey</string>
+  <string name="all_follow">Follow</string>
+  <string name="invite_friends_follow_you">আপনাকে অনুসরণ করার জন্য বন্ধুদের আমন্ত্রণ জানান</string>
+  <string name="invite_friends_facebook">ফেসবুকের বন্ধুরা</string>
+  <string name="invite_friends_link">আমন্ত্রণের লিঙ্ক শেয়ার করুন</string>
+  <string name="invite_friends_show_creation">ওদের দেখান যে আপনি কি বানিয়েছেন!</string>
 </resources>

@@ -36,6 +36,7 @@
     <color name="a_bg_blue">#F0F4FF</color>
     <color name="white_color">#ffffff</color>
     <color name="black_color">#000000</color>
+    <color name="video_feed_bg">#212121</color>
     <color name="color_control_activated">#78dcfa</color>
     <color name="grey_faded">#9b9b9b</color>
     <color name="grey">#878787</color>

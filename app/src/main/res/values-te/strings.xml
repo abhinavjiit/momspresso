@@ -1314,14 +1314,19 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="pre_meet_submission">Pre-meet submission</string>
   <string name="unlisted_video_link">Unlisted video link</string>
   <string name="invite_contact_invitation_sent">Your invite has been sent!</string>
-    <string name="add_video_details_title_length_error">Title length should be less than 150 characters</string>
+  <string name="add_video_details_title_length_error">Title length should be less than 150 characters</string>
   <string name="all_search">Search</string>
   <string name="all_send_invite">Send Invite</string>
-  <string name="phone_contact_toolbar_title">Phonebook Contacts</string>
+  <string name="all_phone_contact">Phonebook Contacts</string>
   <string name="all_invite">ఆహ్వానించండి </string>
   <string name="detail_scroll_survey">Scroll to see survey link</string>
   <string name="editor_help_mail">Mail Us</string>
   <string name="editor_help_header_text">Need Help?</string>
   <string name="get_help_bottom_text">Please mail us your issue so we can help you out.</string>
   <string name="detail_take_survey">Take survey</string>
+  <string name="all_follow">Follow</string>
+  <string name="invite_friends_follow_you">మిమ్మల్ని అనుసరించడానికి స్నేహితులను ఆహ్వానించండి</string>
+  <string name="invite_friends_facebook">Facebook Friends</string>
+  <string name="invite_friends_link">Share Invite Link</string>
+  <string name="invite_friends_show_creation">మీరు క్రియేట్ చేసిన వాటిని వారికి చూపించండి!</string>
 </resources>

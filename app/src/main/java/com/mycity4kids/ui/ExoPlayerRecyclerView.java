@@ -358,7 +358,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                         Log.e(TAG, "onPlayerStateChanged: Buffering ");
                         if (progressBar != null) {
                             progressBar.setVisibility(VISIBLE);
-                            videoCell.setBackgroundColor(getResources().getColor(R.color.black_color));
+                            videoCell.setBackgroundColor(getResources().getColor(R.color.video_feed_bg));
                         }
 
                         break;
@@ -380,7 +380,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                         if (progressBar != null) {
                             progressBar.setVisibility(GONE);
                         }
-                        videoCell.setBackgroundColor(getResources().getColor(R.color.black_color));
+                        videoCell.setBackgroundColor(getResources().getColor(R.color.video_feed_bg));
                         videoSurfaceView.setVisibility(VISIBLE);
                         videoSurfaceView.setAlpha(1);
                         coverImage.setVisibility(GONE);

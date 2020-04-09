@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
-import com.google.android.gms.plus.PlusShare;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
@@ -58,8 +57,6 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         LinearLayout publishContainer = (LinearLayout) findViewById(R.id.publishContainer);
         ImageView facebookImageView = (ImageView) findViewById(R.id.facebookImageView);
         facebookImageView.setOnClickListener(this);
-        ImageView gplusImageView = (ImageView) findViewById(R.id.googlePlusImageView);
-        gplusImageView.setOnClickListener(this);
         ImageView whatsappImageView = (ImageView) findViewById(R.id.whatsappImageView);
         whatsappImageView.setOnClickListener(this);
         ImageView twitterImageView = (ImageView) findViewById(R.id.twitterImageView);
@@ -103,20 +100,6 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                             .setContentUrl(Uri.parse(shareUrl))
                             .build();
                     new ShareDialog(this).show(content);
-                }
-                break;
-            case R.id.googlePlusImageView:
-                if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    Toast.makeText(this, getString(R.string.moderation_or_share_gplus_fail), Toast.LENGTH_SHORT).show();
-                } else {
-                    Utils.pushShareArticleEvent(this, "PublishSuccessScreen", authorId + "", shareUrl,
-                            authorId + "~" + authorName, "GPlus");
-                    Intent shareIntent = new PlusShare.Builder(this)
-                            .setType("text/plain")
-                            .setText(getString(R.string.check_out_blog))
-                            .setContentUrl(Uri.parse(shareUrl))
-                            .getIntent();
-                    startActivityForResult(shareIntent, 0);
                 }
                 break;
             case R.id.whatsappImageView:

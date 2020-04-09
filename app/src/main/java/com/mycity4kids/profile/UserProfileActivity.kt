@@ -35,6 +35,7 @@ import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.Gson
 import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
@@ -43,6 +44,7 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.editor.EditorPostActivity
 import com.mycity4kids.editor.NewEditor
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.collectionsModels.FeaturedOnModel
@@ -108,6 +110,8 @@ class UserProfileActivity : BaseActivity(),
     UsersBookmarksAdapter.RecyclerViewClickListener,
     ResizableTextView.SeeMore {
 
+    private val EDITOR_TYPE = "editor_type"
+    private val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
     val REQUEST_GALLERY_PERMISSION = 1
     val PERMISSIONS_INIT = arrayOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -1243,7 +1247,16 @@ class UserProfileActivity : BaseActivity(),
             val bodyImgTxt = "<html><head></head><body>$bodyDesc</body></html>"
             content = bodyImgTxt
         }
-        val intent = Intent(this, NewEditor::class.java)
+        val editorType = firebaseRemoteConfig.getString(EDITOR_TYPE)
+        val intent: Intent
+        intent =
+            if ((!editorType.isNullOrBlank() && "1" == editorType) || AppUtils.isUserBucketedInNewEditor(
+                    firebaseRemoteConfig
+                )) {
+                Intent(this, NewEditor::class.java)
+            } else {
+                Intent(this, EditorPostActivity::class.java)
+            }
         intent.putExtra("from", "publishedList")
         intent.putExtra("title", detailsResponse.title)
         intent.putExtra("content", content)

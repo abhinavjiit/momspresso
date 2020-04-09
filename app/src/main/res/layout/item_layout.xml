@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/video_cell"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:background="@color/black_color">
+  android:background="@color/video_feed_bg">
 
   <RelativeLayout
     android:id="@+id/item_top_layout"
@@ -13,7 +12,6 @@
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
     android:layout_marginStart="18dp"
-    android:layout_marginLeft="16dp"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp">
 
@@ -21,9 +19,9 @@
       android:id="@+id/user_image"
       android:layout_width="50dp"
       android:layout_height="50dp"
-      android:layout_below="@+id/main_media_frame"
       android:layout_centerVertical="true"
       android:clickable="true"
+      android:focusable="true"
       android:src="@drawable/default_commentor_img"
       app:civ_border="true"
       app:civ_border_color="@color/white_color"
@@ -37,10 +35,10 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
-      android:layout_toRightOf="@+id/user_image"
+      android:layout_toEndOf="@+id/user_image"
       android:letterSpacing="-0.02"
       android:padding="10dp"
-      android:text="jshdkhskdhkk"
+      android:text=""
       android:textColor="#E6FFFFFF"
       android:textSize="14sp"
       android:textStyle="bold"
@@ -51,27 +49,26 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
-      android:layout_marginRight="8dp"
-      android:layout_toLeftOf="@+id/bookmark"
-      android:alpha="0.8"
-      android:background="@drawable/rounded_corner"
-      android:paddingLeft="10dp"
+      android:layout_marginEnd="8dp"
+      android:layout_toStartOf="@+id/bookmark"
+      android:background="@drawable/update_profile_bg"
+      android:paddingStart="16dp"
       android:paddingTop="5dp"
-      android:paddingRight="10dp"
+      android:paddingEnd="16dp"
       android:paddingBottom="5dp"
-      android:text="Follow"
+      android:text="@string/all_follow"
       android:textAllCaps="false"
-      android:textColor="#FFFFFF"
-      android:textSize="11sp"
-      app:fontName="open_sans.ttf" />
+      android:textColor="@color/white_color"
+      android:textSize="12sp"
+      android:textStyle="bold" />
 
     <ImageView
       android:id="@+id/bookmark"
       android:layout_width="40dp"
       android:layout_height="40dp"
-      android:layout_alignParentRight="true"
+      android:layout_alignParentEnd="true"
       android:layout_centerVertical="true"
-      android:layout_marginRight="4dp"
+      android:layout_marginEnd="4dp"
       android:padding="12dp"
       android:src="@drawable/ic_more_vert_black_24dp"
       android:tint="#FFFFFF"
@@ -81,7 +78,7 @@
       android:id="@+id/three_dot"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_alignParentRight="true"
+      android:layout_alignParentEnd="true"
       android:layout_centerVertical="true"
       android:padding="5dp"
       android:src="@drawable/ic_more_vert_black_24dp"
@@ -89,42 +86,22 @@
       android:visibility="gone" />
   </RelativeLayout>
 
-  <com.mycity4kids.widget.CustomFontTextView
-    android:id="@+id/textViewTitle"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/item_top_layout"
-    android:letterSpacing="-0.02"
-    android:lineSpacingExtra="5sp"
-    android:paddingStart="18dp"
-    android:paddingTop="8dp"
-    android:paddingEnd="18dp"
-    android:paddingBottom="8dp"
-    android:textColor="#CCFFFFFF"
-    android:textSize="14sp"
-    android:textStyle="bold"
-    app:fontName="oswald_regular.ttf"
-    tools:text="Was india better then south africa in current serise?" />
-
   <RelativeLayout
     android:id="@+id/video_layout"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:layout_below="@+id/textViewTitle"
+    android:layout_below="@+id/item_top_layout"
     android:layout_marginBottom="16dp"
     android:adjustViewBounds="true"
     android:background="@android:color/black"
     android:gravity="center"
-    android:scaleType="center"
-    app:layout_constraintTop_toBottomOf="@+id/textViewTitle">
+    android:scaleType="center">
 
     <ImageView
       android:id="@+id/cover"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_above="@id/title"
       android:layout_alignParentEnd="true"
-      android:layout_alignParentRight="true"
       android:layout_marginStart="0dp"
       android:layout_marginLeft="0dp"
       android:layout_marginEnd="0dp"
@@ -143,12 +120,28 @@
       android:visibility="gone" />
   </RelativeLayout>
 
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/textViewTitle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/video_layout"
+    android:letterSpacing="-0.02"
+    android:lineSpacingExtra="5sp"
+    android:paddingStart="18dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="18dp"
+    android:paddingBottom="8dp"
+    android:textColor="#CCFFFFFF"
+    android:textSize="14sp"
+    android:textStyle="bold"
+    app:fontName="oswald_regular.ttf" />
+
   <RelativeLayout
     android:id="@+id/countlikecontainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@+id/video_layout"
-    android:layout_marginLeft="18dp"
+    android:layout_below="@+id/textViewTitle"
+    android:layout_marginStart="18dp"
     android:layout_marginBottom="6dp"
     android:alpha="0.65">
 
@@ -157,7 +150,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
-      android:layout_marginRight="10dp"
+      android:layout_marginEnd="10dp"
       android:textColor="#FFFFFF"
       android:textSize="14sp" />
 
@@ -166,7 +159,7 @@
       android:layout_width="4dp"
       android:layout_height="4dp"
       android:layout_centerVertical="true"
-      android:layout_toRightOf="@+id/viewsCount"
+      android:layout_toEndOf="@+id/viewsCount"
       android:background="@drawable/dot" />
 
     <com.mycity4kids.widget.CustomFontTextView
@@ -174,8 +167,8 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
-      android:layout_marginLeft="10dp"
-      android:layout_toRightOf="@+id/countlikeseparator"
+      android:layout_marginStart="10dp"
+      android:layout_toEndOf="@+id/countlikeseparator"
       android:textColor="#FFFFFF" />
   </RelativeLayout>
 
@@ -191,7 +184,7 @@
       android:layout_width="46dp"
       android:layout_height="46dp"
       android:layout_centerVertical="true"
-      android:layout_marginLeft="6dp"
+      android:layout_marginStart="6dp"
       android:padding="12dp"
       android:tint="@color/white_color"
       app:srcCompat="@drawable/ic_likevideo" />
@@ -201,7 +194,7 @@
       android:layout_width="46dp"
       android:layout_height="46dp"
       android:layout_centerVertical="true"
-      android:layout_toRightOf="@+id/heart"
+      android:layout_toEndOf="@+id/heart"
       android:padding="12dp"
       android:tint="@color/white_color"
       app:srcCompat="@drawable/ic_sharevideo" />
@@ -211,8 +204,8 @@
       android:layout_width="46dp"
       android:layout_height="46dp"
       android:layout_centerVertical="true"
-      android:layout_marginLeft="5dp"
-      android:layout_toRightOf="@+id/share"
+      android:layout_marginStart="5dp"
+      android:layout_toEndOf="@+id/share"
       android:alpha="0.85"
       android:padding="12dp"
       android:src="@drawable/ic_whats_app"
@@ -223,8 +216,8 @@
       android:layout_width="46dp"
       android:layout_height="46dp"
       android:layout_centerVertical="true"
-      android:layout_marginLeft="5dp"
-      android:layout_toRightOf="@+id/whatsapp"
+      android:layout_marginStart="5dp"
+      android:layout_toEndOf="@+id/whatsapp"
       android:alpha="0.85"
       android:padding="12dp"
       android:src="@drawable/collectionadd"
@@ -236,7 +229,7 @@
       android:layout_width="50dp"
       android:layout_height="50dp"
       android:layout_centerVertical="true"
-      android:layout_toLeftOf="@+id/commentCount"
+      android:layout_toStartOf="@+id/commentCount"
       android:alpha="0.9"
       android:padding="12dp"
       android:src="@drawable/ic_comments"
@@ -247,9 +240,9 @@
       android:id="@+id/commentCount"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_alignParentRight="true"
+      android:layout_alignParentEnd="true"
       android:layout_centerVertical="true"
-      android:layout_marginRight="18dp"
+      android:layout_marginEnd="18dp"
       android:drawablePadding="@dimen/space_10"
       android:textColor="@color/white_color"
       android:tint="@color/white_color" />

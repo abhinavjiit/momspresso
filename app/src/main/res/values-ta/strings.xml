@@ -523,7 +523,7 @@
   <string name="complete_blogger_profile.save">சேமிக்க</string>
   <string name="complete_blogger_profile.incorrect_date">சரியாக பிறந்த தேதியைத் தேர்வு செய்யவும். </string>
 
-  <string name="add_video_details.title_hint">வீடியோவுக்கு ஒரு தலைப்பு சேர்க்கவும்</string>
+  <string name="add_video_details.title_hint">வீடியோ தலைப்பு (அதிக பட்சம் 150 எழுத்துக்கள்)</string>
   <string name="add_video_details.mute_label">ஒலியை இல்லாமை செய்</string>
   <string name="add_video_details.add_music">இசை சேர்க்கவும்</string>
   <string name="add_video_details.remove">நீக்க</string>
@@ -1310,14 +1310,19 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="pre_meet_submission">Pre-meet submission</string>
   <string name="unlisted_video_link">Unlisted video link</string>
   <string name="invite_contact_invitation_sent">Your invite has been sent!</string>
-    <string name="add_video_details_title_length_error">Title length should be less than 150 characters</string>
+  <string name="add_video_details_title_length_error">Title length should be less than 150 characters</string>
   <string name="all_search">Search</string>
   <string name="all_send_invite">Send Invite</string>
-  <string name="phone_contact_toolbar_title">Phonebook Contacts</string>
+  <string name="all_phone_contact">கைப்பேசி தொடர்புகள்</string>
   <string name="all_invite">அழைக்கவும்</string>
   <string name="detail_scroll_survey">Scroll to see survey link</string>
   <string name="editor_help_mail">Mail Us</string>
   <string name="editor_help_header_text">உதவி பெற</string>
   <string name="get_help_bottom_text">"ஏதாவது பிரச்சனையா?"\nஎங்களிடம் பகிருங்கள். உங்களுக்கு உதவ நாங்கள் காத்துக் கொண்டிருக்கிறோம். </string>
   <string name="detail_take_survey">Take survey</string>
+  <string name="all_follow">Follow</string>
+  <string name="invite_friends_follow_you">உங்களைப் பின்தொடர நண்பர்களை அழையுங்கள்</string>
+  <string name="invite_friends_facebook">முகநூல் நண்பர்கள்</string>
+  <string name="invite_friends_link">அழைப்பு உரலியை பகிர்</string>
+  <string name="invite_friends_show_creation">உங்களின் படைப்புக்களை அவர்களுக்கு  காண்பியுங்கள்</string>
 </resources>

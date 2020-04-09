@@ -149,7 +149,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getIntent().getIntExtra(EDITOR_PARAM, USE_NEW_EDITOR) == USE_NEW_EDITOR) {
-            setContentView(R.layout.activity_new_editor);
+            setContentView(R.layout.activity_old_editor);
             Utils.pushOpenScreenEvent(EditorPostActivity.this, "CreateArticleScreen",
                     SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         }

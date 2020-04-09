@@ -27,13 +27,13 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.campaign_list_recycler_adapter.view.*
-import retrofit2.Call
-import retrofit2.Callback
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlinx.android.synthetic.main.campaign_list_recycler_adapter.view.*
+import retrofit2.Call
+import retrofit2.Callback
 
 class RewardCampaignAdapter(
     private var campaignList: List<CampaignDataListResult>,

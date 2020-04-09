@@ -39,8 +39,8 @@ android {
         applicationId "com.mycity4kids"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 190
-        versionName "13.0.42"
+        versionCode 191
+        versionName "13.0.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

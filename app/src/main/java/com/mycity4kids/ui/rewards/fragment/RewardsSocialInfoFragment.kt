@@ -28,7 +28,6 @@ import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.facebook.FacebookUtils
 import com.mycity4kids.instagram.InstagramApp
-import com.mycity4kids.interfaces.IFacebookUser
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.models.rewardsmodels.RewardsPersonalResponse
@@ -41,7 +40,6 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import org.json.JSONObject
 import java.util.HashMap
 import java.util.regex.Pattern
 

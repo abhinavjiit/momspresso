@@ -69,16 +69,16 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.text.SimpleDateFormat
+import java.util.ArrayList
+import java.util.Calendar
+import java.util.regex.Pattern
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
-import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Calendar
-import java.util.regex.Pattern
 
 const val REWARDS_FILL_FORM_REQUEST = 1000
 
@@ -158,8 +158,8 @@ class CampaignDetailFragment : BaseFragment() {
     private var showInstPopUpFlag: Boolean = false
     private var instaHandlePostFlag: Boolean = false
     val TIME_DELAY: Long = 1500
-    //the default update interval for your text, this is in your hand , just run this sample
-    //the default update interval for your text, this is in your hand , just run this sample
+    // the default update interval for your text, this is in your hand , just run this sample
+    // the default update interval for your text, this is in your hand , just run this sample
     var updateLoaderTextHandler = Handler()
     var count = 0
     private val updateLoaderTextArray = arrayOf(
@@ -189,115 +189,160 @@ class CampaignDetailFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        containerView = inflater.inflate(R.layout.campaign_detail_activity, container, false)
-        id = arguments!!.getInt("id")
-        comingFrom = arguments!!.getString("comingFrom")
-        userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        isRewardAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
-        defaultCampaignPopUp = containerView.findViewById(R.id.include)
-        instaHandlePopUpView = containerView.findViewById(R.id.includeInstaPopUp)
+        try {
+            containerView = inflater.inflate(R.layout.campaign_detail_activity, container, false)
+            id = arguments!!.getInt("id")
+            comingFrom = arguments!!.getString("comingFrom")
+            userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+            isRewardAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
+            defaultCampaignPopUp = containerView.findViewById(R.id.include)
+            instaHandlePopUpView = containerView.findViewById(R.id.includeInstaPopUp)
 
-        if (isRewardAdded.equals("1", true)) {
-            fetchForYou()
-        } else {
-            fetchCampaignDetail()
-        }
-        initializeXml()
-        backIcon = containerView.findViewById(R.id.back)
-        linearLayoutManager =
-            LinearLayoutManager(activity as Context?, RecyclerView.VERTICAL, false)
-        if (SharedPrefUtils.getDemoVideoSeen(BaseApplication.getAppContext())) {
-            demoUploadLayout.visibility = View.GONE
-            playDemoIcon.visibility = View.VISIBLE
-        }
-        backIcon.setOnClickListener {
-            Utils.campaignEvent(
-                activity,
-                "Campaign Listing",
-                "Campaign Detail",
-                "Back",
-                "",
-                "android",
-                SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                System.currentTimeMillis().toString(),
-                "Show_Campaign_Listing"
-            )
-            activity!!.onBackPressed()
-        }
-        shareText.setOnClickListener {
-            activity?.let {
-                val shareIntent = ShareCompat.IntentBuilder
-                    .from(it)
-                    .setType("text/plain")
-                    .setChooserTitle("Share URL")
-                    .setText("https://www.momspresso.com/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
-                    .intent
-
-                if (shareIntent.resolveActivity(activity!!.packageManager) != null) {
-                    it.startActivity(shareIntent)
+            if (isRewardAdded.equals("1", true)) {
+                fetchForYou()
+            } else {
+                fetchCampaignDetail()
+            }
+            initializeXml()
+            backIcon = containerView.findViewById(R.id.back)
+            linearLayoutManager =
+                LinearLayoutManager(activity as Context?, RecyclerView.VERTICAL, false)
+            if (SharedPrefUtils.getDemoVideoSeen(BaseApplication.getAppContext())) {
+                demoUploadLayout.visibility = View.GONE
+                playDemoIcon.visibility = View.VISIBLE
+            }
+            backIcon.setOnClickListener {
+                try {
+                    Utils.campaignEvent(
+                        activity,
+                        "Campaign Listing",
+                        "Campaign Detail",
+                        "Back",
+                        "",
+                        "android",
+                        SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                        System.currentTimeMillis().toString(),
+                        "Show_Campaign_Listing"
+                    )
+                    activity!!.onBackPressed()
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
-        }
 
-        mainLinearLayout.setOnClickListener {
-            (activity as CampaignContainerActivity).addCampaginDetailFragment(
-                defaultapigetResponse?.id!!,
-                "defaultCampaign"
-            )
-        }
+            shareText.setOnClickListener {
+                try {
+                    activity?.let {
+                        val shareIntent = ShareCompat.IntentBuilder
+                            .from(it)
+                            .setType("text/plain")
+                            .setChooserTitle("Share URL")
+                            .setText("https://www.momspresso.com/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
+                            .intent
 
-        getHelp.setOnClickListener {
-            val emailIntent = Intent(
-                Intent.ACTION_SENDTO, Uri.fromParts(
-                "mailto", "support@momspresso-mymoney.com", null
-            )
-            )
-            startActivity(Intent.createChooser(emailIntent, "Send email..."))
-        }
-
-        txtTrackerStatus.setOnClickListener {
-            try {
-                val intent = Intent(activity, TrackerActivity::class.java)
-                intent.putExtra("campaign_id", id!!)
-                intent.putExtra("brand_name", apiGetResponse?.brandDetails?.name)
-                intent.putExtra("campaign_name", apiGetResponse?.name)
-                intent.putExtra("total_payout", apiGetResponse?.totalPayout?.toInt())
-                intent.putExtra("image_url", apiGetResponse?.brandDetails?.imageUrl)
-                startActivity(intent)
-            } catch (e: Exception) {
-                Crashlytics.logException(e)
-                Log.d("MC4kException", Log.getStackTraceString(e))
+                        if (shareIntent.resolveActivity(activity!!.packageManager) != null) {
+                            it.startActivity(shareIntent)
+                        }
+                    }
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
             }
-        }
-
-        referCodeApply.setOnClickListener {
-            applyCode()
-        }
-
-        cancel.setOnClickListener {
-            defaultCampaignPopUp.visibility = View.GONE
-        }
-
-        demoUpload.setOnClickListener {
-            SharedPrefUtils.setDemoVideoSeen(BaseApplication.getAppContext(), true)
-            playVideo()
-        }
-
-        playDemoIcon.setOnClickListener {
-            playVideo()
-        }
-        referCode.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
+            mainLinearLayout.setOnClickListener {
+                try {
+                    (activity as CampaignContainerActivity).addCampaginDetailFragment(
+                        defaultapigetResponse?.id!!,
+                        "defaultCampaign"
+                    )
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
             }
 
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            getHelp.setOnClickListener {
+                try {
+                    val emailIntent = Intent(
+                        Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", "support@momspresso-mymoney.com", null
+                    )
+                    )
+                    startActivity(Intent.createChooser(emailIntent, "Send email..."))
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
             }
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                referCodeError.visibility = View.GONE
+            txtTrackerStatus.setOnClickListener {
+                try {
+                    val intent = Intent(activity, TrackerActivity::class.java)
+                    intent.putExtra("campaign_id", id!!)
+                    intent.putExtra("brand_name", apiGetResponse?.brandDetails?.name)
+                    intent.putExtra("campaign_name", apiGetResponse?.name)
+                    intent.putExtra("total_payout", apiGetResponse?.totalPayout?.toInt())
+                    intent.putExtra("image_url", apiGetResponse?.brandDetails?.imageUrl)
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
             }
-        })
+
+            referCodeApply.setOnClickListener {
+                try {
+                    applyCode()
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            }
+
+            cancel.setOnClickListener {
+                try {
+                    defaultCampaignPopUp.visibility = View.GONE
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            }
+
+            demoUpload.setOnClickListener {
+                try {
+                    SharedPrefUtils.setDemoVideoSeen(BaseApplication.getAppContext(), true)
+                    playVideo()
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            }
+
+            playDemoIcon.setOnClickListener {
+                try {
+                    playVideo()
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            }
+            referCode.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(p0: Editable?) {
+                }
+
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    referCodeError.visibility = View.GONE
+                }
+            })
+        } catch (e: Exception) {
+            Crashlytics.logException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
+        }
         return containerView
     }
 
@@ -669,18 +714,20 @@ class CampaignDetailFragment : BaseFragment() {
                     } else {
                         txtTrackerStatus.visibility = View.VISIBLE
                         if (apiGetResponse!!.deliverableTypes!!.get(0) == 5) {
-                            //                                    submitBtn.text = resources.getString(R.string.detail_scroll_survey
-                            updateLoaderTextHandler.post(updateLoaderTextRunnable);
-                            //                            showProgressDialog(resources.getString(R.string.please_wait))
+                            updateLoaderTextHandler.post(updateLoaderTextRunnable)
                             val handler = Handler()
                             handler.postDelayed({
-                                updateLoaderTextHandler.removeCallbacks(
-                                    updateLoaderTextRunnable
-                                )
-                                removeProgressDialog()
-                                fetchCampaignDetail()
+                                try {
+                                    updateLoaderTextHandler.removeCallbacks(
+                                        updateLoaderTextRunnable
+                                    )
+                                    removeProgressDialog()
+                                    fetchCampaignDetail()
+                                } catch (e: Exception) {
+                                    Crashlytics.logException(e)
+                                    Log.d("MC4kException", Log.getStackTraceString(e))
+                                }
                             }, 5000)
-
                         } else {
                             submitBtn.setText(resources.getString(R.string.detail_bottom_applied))
                             Toast.makeText(
@@ -700,7 +747,7 @@ class CampaignDetailFragment : BaseFragment() {
                         context,
                         responseData.reason,
                         Toast.LENGTH_SHORT
-                    ).show() // //////////////////////////////////////////////
+                    ).show()
                 }
             } catch (e: Exception) {
                 Crashlytics.logException(e)
@@ -1228,7 +1275,7 @@ class CampaignDetailFragment : BaseFragment() {
                                     txtTrackerStatus.visibility = View.VISIBLE
                                     if (apiGetResponse!!.deliverableTypes!!.get(0) == 5) {
                                         //                                    submitBtn.text = resources.getString(R.string.detail_scroll_survey
-                                        updateLoaderTextHandler.post(updateLoaderTextRunnable);
+                                        updateLoaderTextHandler.post(updateLoaderTextRunnable)
                                         //                                        showProgressDialog(resources.getString(R.string.please_wait))
                                         val handler = Handler()
                                         handler.postDelayed({
@@ -1238,7 +1285,6 @@ class CampaignDetailFragment : BaseFragment() {
                                             removeProgressDialog()
                                             fetchCampaignDetail()
                                         }, 5000)
-
                                     } else {
                                         submitBtn.setText(resources.getString(R.string.detail_bottom_applied))
                                         Toast.makeText(
@@ -1265,11 +1311,16 @@ class CampaignDetailFragment : BaseFragment() {
 
     var updateLoaderTextRunnable: Runnable = object : Runnable {
         override fun run() {
-            showProgressDialog(updateLoaderTextArray.get(count))
-            System.out.println("count bahar-------- " + count)
-            if (count < 2)
-                count++
-            updateLoaderTextHandler.postDelayed(this, TIME_DELAY)
+            try {
+                showProgressDialog(updateLoaderTextArray.get(count))
+                System.out.println("count bahar-------- " + count)
+                if (count < 2)
+                    count++
+                updateLoaderTextHandler.postDelayed(this, TIME_DELAY)
+            } catch (e: Exception) {
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+            }
         }
     }
 

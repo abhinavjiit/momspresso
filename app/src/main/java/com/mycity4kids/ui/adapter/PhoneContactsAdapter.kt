@@ -119,8 +119,13 @@ class PhoneContactsAdapter(private val mListener: RecyclerViewClickListener) :
                 charSequence: CharSequence,
                 filterResults: FilterResults
             ) {
-                filteredList = filterResults.values as List<ContactModel>
-                notifyDataSetChanged()
+                try {
+                    filteredList = filterResults.values as List<ContactModel>
+                    notifyDataSetChanged()
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
             }
         }
     }

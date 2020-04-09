@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.editor.EditorPostActivity;
@@ -18,15 +19,21 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.SuggestedTopicsAdapter;
 
+import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.StringUtils;
 import java.util.ArrayList;
 
 /**
  * Created by hemant on 1/11/17.
  */
 
-public class SuggestedTopicsTabFragment extends BaseFragment implements SuggestedTopicsAdapter.RecyclerViewClickListener, View.OnClickListener {
-    private String languageName;
+public class SuggestedTopicsTabFragment extends BaseFragment implements
+        SuggestedTopicsAdapter.RecyclerViewClickListener, View.OnClickListener {
 
+    private static final String EDITOR_TYPE = "editor_type";
+    private FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+
+    private String languageName;
     private RecyclerView recyclerView;
     private SuggestedTopicsAdapter adapter;
     private TextView textView;
@@ -34,7 +41,8 @@ public class SuggestedTopicsTabFragment extends BaseFragment implements Suggeste
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.suggested_topics_tab_fragment, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -64,21 +72,38 @@ public class SuggestedTopicsTabFragment extends BaseFragment implements Suggeste
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.startWritingTextView:
-
-                Utils.pushSuggestedTopicClickEvent(getActivity(), "SuggestedTopicScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), languageName);
-                Intent intent = new Intent(getActivity(), NewEditor.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("TITLE_PARAM", "");
-                bundle.putString("CONTENT_PARAM", "");
-                bundle.putString("TITLE_PLACEHOLDER_PARAM",
-                        getString(R.string.example_post_title_placeholder));
-                bundle.putString("CONTENT_PLACEHOLDER_PARAM",
-                        getString(R.string.example_post_content_placeholder));
-                bundle.putInt("EDITOR_PARAM", NewEditor.USE_NEW_EDITOR);
-                bundle.putString("from", "dashboard");
-                intent.putExtras(bundle);
-                startActivity(intent);
-                break;
+                Utils.pushSuggestedTopicClickEvent(getActivity(), "SuggestedTopicScreen",
+                        SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), languageName);
+                String editorType = firebaseRemoteConfig.getString(EDITOR_TYPE);
+                if ((!StringUtils.isNullOrEmpty(editorType) && "1".equals(editorType)) || AppUtils
+                        .isUserBucketedInNewEditor(firebaseRemoteConfig)) {
+                    Intent intent = new Intent(getActivity(), NewEditor.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("TITLE_PARAM", "");
+                    bundle.putString("CONTENT_PARAM", "");
+                    bundle.putString("TITLE_PLACEHOLDER_PARAM",
+                            getString(R.string.example_post_title_placeholder));
+                    bundle.putString("CONTENT_PLACEHOLDER_PARAM",
+                            getString(R.string.example_post_content_placeholder));
+                    bundle.putInt("EDITOR_PARAM", NewEditor.USE_NEW_EDITOR);
+                    bundle.putString("from", "dashboard");
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    break;
+                } else {
+                    Intent intent = new Intent(getActivity(), EditorPostActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(EditorPostActivity.TITLE_PARAM, "");
+                    bundle.putString(EditorPostActivity.CONTENT_PARAM, "");
+                    bundle.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                            getString(R.string.example_post_title_placeholder));
+                    bundle.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                            getString(R.string.example_post_content_placeholder));
+                    bundle.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+                    bundle.putString("from", "dashboard");
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
         }
     }
 }

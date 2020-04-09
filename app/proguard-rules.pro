@@ -69,3 +69,4 @@
     volatile <fields>;
 }
 -keep class org.json.** { *; }
+-keep class org.ccil.cowan.tagsoup** { *; }

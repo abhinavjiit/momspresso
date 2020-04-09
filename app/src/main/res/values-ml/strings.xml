@@ -536,7 +536,7 @@
   <string name="complete_blogger_profile.save">സേവ്</string>
   <string name="complete_blogger_profile.incorrect_date">Please choose correct date for date of birth.</string>
 
-  <string name="add_video_details.title_hint">ഈ വീഡിയോക്ക് ഒരു തലക്കെട്ട് നൽകൂ</string>
+  <string name="add_video_details.title_hint">വീഡിയോ ശീർഷകം (പരമാവധി 150  അക്ഷരങ്ങൾ)</string>
   <string name="add_video_details.mute_label">മൂകമാക്കുക</string>
   <string name="add_video_details.add_music">ADD MUSIC</string>
   <string name="add_video_details.remove">നീക്കം ചെയ്യുക</string>
@@ -1358,14 +1358,19 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="pre_meet_submission">Pre-meet submission</string>
   <string name="unlisted_video_link">Unlisted video link</string>
   <string name="invite_contact_invitation_sent">Your invite has been sent!</string>
-    <string name="add_video_details_title_length_error">Title length should be less than 150 characters</string>
+  <string name="add_video_details_title_length_error">Title length should be less than 150 characters</string>
   <string name="all_search">Search</string>
   <string name="all_send_invite">Send Invite</string>
-  <string name="phone_contact_toolbar_title">Phonebook Contacts</string>
+  <string name="all_phone_contact">ഫോൺബുക്ക് കോൺടാക്റ്റുകൾ</string>
   <string name="all_invite">ക്ഷണിക്കൂ</string>
   <string name="detail_scroll_survey">Scroll to see survey link</string>
   <string name="editor_help_mail">Mail Us</string>
   <string name="editor_help_header_text">സഹായം വേണോ?</string>
   <string name="get_help_bottom_text">നിങ്ങളുടെ പ്രശ്നം ഞങ്ങൾക്ക് മെയിൽ ചെയ്യുക, അതുവഴി ഞങ്ങൾക്ക് നിങ്ങളെ സഹായിക്കാനാകും.</string>
   <string name="detail_take_survey">Take survey</string>
+  <string name="all_follow">Follow</string>
+  <string name="invite_friends_follow_you">നിങ്ങളെ പിന്തുടരാൻ സുഹൃത്തുക്കളെ ക്ഷണിക്കുക</string>
+  <string name="invite_friends_facebook">ഫേസ്ബുക്ക് സുഹൃത്തുക്കൾ</string>
+  <string name="invite_friends_link">ക്ഷണിക്കുന്നതിനുള്ള ലിങ്ക് പങ്കിടുക</string>
+  <string name="invite_friends_show_creation">നിങ്ങൾ സൃഷ്ടിച്ചതെന്താണെന്ന് അവരെ കാണിക്കുക!</string>
 </resources>
