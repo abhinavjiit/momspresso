@@ -63,7 +63,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI
 import com.mycity4kids.ui.activity.AddArticleTopicsActivityNew
 import com.mycity4kids.ui.activity.SpellCheckActivity
-import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment
 import com.mycity4kids.ui.fragment.SpellCheckDialogFragment
 import com.mycity4kids.ui.fragment.SpellCheckDialogFragment.ISpellcheckResult
 import com.mycity4kids.utils.ConnectivityUtils
@@ -1218,7 +1217,7 @@ class NewEditor : BaseActivity(),
     override fun onContinuePublish() {
         mHandler.removeCallbacksAndMessages(null)
         val publishObject = PublishDraftObject()
-        publishObject.body = aztec.visualEditor.toFormattedHtml()
+        publishObject.body = contentFormatting(aztec.visualEditor.toFormattedHtml())
         publishObject.title =
             titleFormatting(titleTxt?.text.toString())
         Log.d("draftId = ", draftId + "")
