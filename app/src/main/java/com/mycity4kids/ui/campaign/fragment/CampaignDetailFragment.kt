@@ -425,17 +425,23 @@ class CampaignDetailFragment : BaseFragment() {
             }
 
             override fun onNext(response: BaseResponseGeneric<CampaignDetailResult>) {
-                if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.result != null) {
-                    parentConstraint.visibility = View.VISIBLE
-                    apiGetResponse = response.data!!.result
-                    setResponseData(apiGetResponse)
-                    shimmer1.visibility = View.GONE
-                    shimmer1.stopShimmerAnimation()
-                    toolbar.visibility = View.VISIBLE
-                    scrollView2.visibility = View.VISIBLE
-                    labelText.visibility = View.VISIBLE
-                    bottomLayout.visibility = View.VISIBLE
-                } else {
+                try {
+                    if (response != null && response.code == 200 &&
+                        Constants.SUCCESS == response.status &&
+                        response.data != null && response.data!!.result != null) {
+                        parentConstraint.visibility = View.VISIBLE
+                        apiGetResponse = response.data!!.result
+                        setResponseData(apiGetResponse)
+                        shimmer1.visibility = View.GONE
+                        shimmer1.stopShimmerAnimation()
+                        toolbar.visibility = View.VISIBLE
+                        scrollView2.visibility = View.VISIBLE
+                        labelText.visibility = View.VISIBLE
+                        bottomLayout.visibility = View.VISIBLE
+                    }
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
 
@@ -506,17 +512,23 @@ class CampaignDetailFragment : BaseFragment() {
             showRewardText.visibility = View.GONE
         }
 
-        /*showRewardText.setOnClickListener {
-            showDialog()
-        }*/
-
         unapplyCampaign.setOnClickListener {
-            val popupwindow_obj = popupDisplay()
-            popupwindow_obj.showAsDropDown(unapplyCampaign, -140, -140)
+            try {
+                val popupwindow_obj = popupDisplay()
+                popupwindow_obj.showAsDropDown(unapplyCampaign, -140, -140)
+            } catch (e: Exception) {
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+            }
         }
 
         bottomLayout.setOnClickListener {
-            setClickAction()
+            try {
+                setClickAction()
+            } catch (e: Exception) {
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+            }
         }
         setLabels()
     }
@@ -569,15 +581,7 @@ class CampaignDetailFragment : BaseFragment() {
         }
         textView.text = Html.fromHtml(spannable.toString())
         textView.movementMethod = LinkMovementMethod.getInstance()
-        //        textView.highlightColor = Color.TRANSPARENT
     }
-
-    //    fun demoVideoLayout(): FrameLayout {
-    //        videoView.stopPlayback()
-    //        videoView.setMediaController(null)
-    //        mediaController = null
-    //        return demoVideoLayout
-    //    }
 
     private fun setClickAction() {
         if (submitBtn.text == resources.getString(R.string.check_ypur_eligibility)) {
