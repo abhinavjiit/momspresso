@@ -26,39 +26,51 @@ object Format {
         var html = replaceAll(content, "iframe", iframePlaceholder)
         html = html.replace("<aztec_cursor>", "")
 
-        val doc = Jsoup.parseBodyFragment(html).outputSettings(Document.OutputSettings().prettyPrint(!isCalypsoFormat))
+        val doc =
+            Jsoup.parseBodyFragment(html).outputSettings(Document.OutputSettings().prettyPrint(!isCalypsoFormat))
         CleaningUtils.cleanNestedBoldTags(doc)
         if (isCalypsoFormat) {
             // remove empty span tags
             doc.select("*")
-                    .filter { !it.hasText() && it.tagName() == "span" && it.childNodes().size == 0 }
-                    .forEach { it.remove() }
+                .filter { !it.hasText() && it.tagName() == "span" && it.childNodes().size == 0 }
+                .forEach { it.remove() }
 
             html = replaceAll(doc.body().html(), iframePlaceholder, "iframe")
 
             html = replaceAll(html, "<p>(?:<br ?/?>|\u00a0|\uFEFF| )*</p>", "<p>&nbsp;</p>")
-//            html = toCalypsoSourceEditorFormat(html)
+            html = toCalypsoSourceEditorFormat(html)
         } else {
             html = replaceAll(doc.body().html(), iframePlaceholder, "iframe")
 
-            val newlineToTheLeft = replaceAll(html, "(?<!</?($block)>)\n<((?!/?($block)).*?)>", "<$2>")
-            val newlineToTheRight = replaceAll(newlineToTheLeft, "<(/?(?!$block).)>\n(?!</?($block)>)", "<$1>")
+            val newlineToTheLeft =
+                replaceAll(html, "(?<!</?($block)>)\n<((?!/?($block)).*?)>", "<$2>")
+            val newlineToTheRight =
+                replaceAll(newlineToTheLeft, "<(/?(?!$block).)>\n(?!</?($block)>)", "<$1>")
             html = replaceAll(newlineToTheRight, "([\t ]*)(<br>)(?!\n)", "$1$2\n$1")
-//            html = replaceAll(fixBrNewlines, ">([\t ]*)(<br>)", ">\n$1$2")
+            //            html = replaceAll(fixBrNewlines, ">([\t ]*)(<br>)", ">\n$1$2")
+            //            val fixBrNewlines = replaceAll(newlineToTheRight, "([\t ]*)(<br>)(?!\n)", "$1$2\n$1")
+            //            html = replaceAll(fixBrNewlines, ">([\t ]*)(<br>)", ">\n$1$2")
         }
 
         return html.trim()
     }
 
     @JvmStatic
-    fun removeSourceEditorFormatting(html: String, isCalypsoFormat: Boolean = false, isGutenbergMode: Boolean = false): String {
+    fun removeSourceEditorFormatting(
+        html: String,
+        isCalypsoFormat: Boolean = false,
+        isGutenbergMode: Boolean = false
+    ): String {
         if (isCalypsoFormat) {
             val htmlWithoutSourceFormatting = toCalypsoHtml(html)
-            val doc = Jsoup.parseBodyFragment(htmlWithoutSourceFormatting).outputSettings(Document.OutputSettings().prettyPrint(false))
+            val doc = Jsoup.parseBodyFragment(htmlWithoutSourceFormatting).outputSettings(
+                Document.OutputSettings().prettyPrint(false)
+            )
             return doc.body().html()
         } else {
-            return if (isGutenbergMode) { html }
-            else {
+            return if (isGutenbergMode) {
+                html
+            } else {
                 replaceAll(html, "\\s*<(/?($block)(.*?))>\\s*", "<$1>")
             }
         }
@@ -90,11 +102,17 @@ object Format {
         if (content.contains("<pre") || content.contains("<script")) {
             preserve_linebreaks = true
 
-            content = content.replace(Regex("<(pre|script)[^>]*>[\\s\\S]+?</\\1>"), { matchResult: MatchResult ->
-                var value = replaceAll(matchResult.groupValues[0], "<br ?/?>(\\r\\n|\\n)?", "<wp-line-break>")
-                value = replaceAll(value, "</?p( [^>]*)?>(\\r\\n|\\n)?", "<wp-line-break>")
-                replaceAll(value, "\\r?\\n", "<wp-line-break>")
-            })
+            content = content.replace(
+                Regex("<(pre|script)[^>]*>[\\s\\S]+?</\\1>"),
+                { matchResult: MatchResult ->
+                    var value = replaceAll(
+                        matchResult.groupValues[0],
+                        "<br ?/?>(\\r\\n|\\n)?",
+                        "<wp-line-break>"
+                    )
+                    value = replaceAll(value, "</?p( [^>]*)?>(\\r\\n|\\n)?", "<wp-line-break>")
+                    replaceAll(value, "\\r?\\n", "<wp-line-break>")
+                })
         }
 
         // keep <br> tags inside captions and remove line breaks
@@ -104,8 +122,15 @@ object Format {
             m = p.matcher(content)
             sb = StringBuffer()
             if (m.find()) {
-                val result = replaceAll(content.substring(m.start(), m.end()), "<br([^>]*)>", "<wp-temp-br$1>")
-                m.appendReplacement(sb, Matcher.quoteReplacement(replace(result, "[\\r\\n\\t]+", "")))
+                val result = replaceAll(
+                    content.substring(m.start(), m.end()),
+                    "<br([^>]*)>",
+                    "<wp-temp-br$1>"
+                )
+                m.appendReplacement(
+                    sb,
+                    Matcher.quoteReplacement(replace(result, "[\\r\\n\\t]+", ""))
+                )
             }
             m.appendTail(sb)
             content = sb.toString()
@@ -137,7 +162,11 @@ object Format {
         // Fix some block element newline issues
         content = replaceAll(content, "\n\n<div", "\n<div")
         content = replaceAll(content, "</div>\n\n", "</div>\n")
-        content = replaceAll(content, "(?i)\\s*\\[caption([^\\[]+)\\[/caption\\]\\s*", "\n\n[caption$1[/caption]\n\n")
+        content = replaceAll(
+            content,
+            "(?i)\\s*\\[caption([^\\[]+)\\[/caption\\]\\s*",
+            "\n\n[caption$1[/caption]\n\n"
+        )
         content = replaceAll(content, "caption\\]\\n\\n+\\[caption", "caption]\n\n[caption")
 
         content = replaceAll(content, "<li([^>]*)>", "\t<li$1>")
@@ -152,7 +181,16 @@ object Format {
             m = p.matcher(content)
             sb = StringBuffer()
             if (m.find()) {
-                m.appendReplacement(sb, Matcher.quoteReplacement(replace(content.substring(m.start(), m.end()), "[\\r\\n]+", "")))
+                m.appendReplacement(
+                    sb,
+                    Matcher.quoteReplacement(
+                        replace(
+                            content.substring(m.start(), m.end()),
+                            "[\\r\\n]+",
+                            ""
+                        )
+                    )
+                )
             }
             m.appendTail(sb)
             content = sb.toString()
@@ -163,10 +201,10 @@ object Format {
         content = replaceAll(content, "\\s*(<p [^>]+>[\\s\\S]*?</p>)", "\n$1")
 
         // Trim whitespace
-//        content = replaceAll(content, "^\\s+", "")
-//        content = replaceAll(content, "[\\s\\u00a0]+$", "")
+        content = replaceAll(content, "^\\s+", "")
+        content = replaceAll(content, "[\\s\\u00a0]+$", "")
 
-//        content = replaceAll(content, "&nbsp;", " ")
+        //        content = replaceAll(content, "&nbsp;", " ")
 
         // put back the line breaks in pre|script
         if (preserve_linebreaks) {
@@ -198,7 +236,8 @@ object Format {
         var m: Matcher
         var sb: StringBuffer
 
-        val blocklist = "table|thead|tfoot|caption|col|colgroup|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre" +
+        val blocklist =
+            "table|thead|tfoot|caption|col|colgroup|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre" +
                 "|form|map|area|blockquote|address|math|style|p|h[1-6]|hr|fieldset|legend|section" +
                 "|article|aside|hgroup|header|footer|nav|figure|details|menu|summary"
 
@@ -207,7 +246,16 @@ object Format {
             m = p.matcher(html)
             sb = StringBuffer()
             while (m.find()) {
-                m.appendReplacement(sb, Matcher.quoteReplacement(replaceAll(html.substring(m.start(), m.end()), "[\\r\\n]+", "")))
+                m.appendReplacement(
+                    sb,
+                    Matcher.quoteReplacement(
+                        replaceAll(
+                            html.substring(m.start(), m.end()),
+                            "[\\r\\n]+",
+                            ""
+                        )
+                    )
+                )
             }
             m.appendTail(sb)
             html = sb.toString()
@@ -217,7 +265,16 @@ object Format {
         m = p.matcher(html)
         sb = StringBuffer()
         while (m.find()) {
-            m.appendReplacement(sb, Matcher.quoteReplacement(replaceAll(html.substring(m.start(), m.end()), "[\\r\\n]+", "")))
+            m.appendReplacement(
+                sb,
+                Matcher.quoteReplacement(
+                    replaceAll(
+                        html.substring(m.start(), m.end()),
+                        "[\\r\\n]+",
+                        ""
+                    )
+                )
+            )
         }
         m.appendTail(sb)
         html = sb.toString()
@@ -226,9 +283,11 @@ object Format {
         if (html.contains("<pre") || html.contains("<script")) {
             preserve_linebreaks = true
 
-            html = html.replace(Regex("<(pre|script)[^>]*>[\\s\\S]+?</\\1>"), { matchResult: MatchResult ->
-                replaceAll(matchResult.groupValues[0], "(\\r\\n|\\n)", "<wp-line-break>")
-            })
+            html = html.replace(
+                Regex("<(pre|script)[^>]*>[\\s\\S]+?</\\1>"),
+                { matchResult: MatchResult ->
+                    replaceAll(matchResult.groupValues[0], "(\\r\\n|\\n)", "<wp-line-break>")
+                })
         }
 
         // keep <br> tags inside captions and convert line breaks
@@ -240,7 +299,16 @@ object Format {
             sb = StringBuffer()
             while (m.find()) {
                 // keep existing <br>
-                m.appendReplacement(sb, Matcher.quoteReplacement(replaceAll(html.substring(m.start(), m.end()), "<br([^>]*)>", "<wp-temp-br$1>")))
+                m.appendReplacement(
+                    sb,
+                    Matcher.quoteReplacement(
+                        replaceAll(
+                            html.substring(m.start(), m.end()),
+                            "<br([^>]*)>",
+                            "<wp-temp-br$1>"
+                        )
+                    )
+                )
 
                 // no line breaks inside HTML tags
                 val p2 = Pattern.compile("<[a-zA-Z0-9]+( [^<>]+)?>")
@@ -248,13 +316,31 @@ object Format {
                 val m2 = p2.matcher(content)
                 val sb2 = StringBuffer()
                 while (m2.find()) {
-                    m2.appendReplacement(sb2, Matcher.quoteReplacement(replace(content.substring(m2.start(), m2.end()), "[\\r\\n\\t]+", " ")))
+                    m2.appendReplacement(
+                        sb2,
+                        Matcher.quoteReplacement(
+                            replace(
+                                content.substring(m2.start(), m2.end()),
+                                "[\\r\\n\\t]+",
+                                " "
+                            )
+                        )
+                    )
                 }
                 m2.appendTail(sb2)
                 m.appendReplacement(sb, Matcher.quoteReplacement(sb2.toString()))
 
                 // convert remaining line breaks to <br>
-                m.appendReplacement(sb, Matcher.quoteReplacement(replaceAll(html.substring(m.start(), m.end()), "\\s*\\n\\s*", "<wp-temp-br />")))
+                m.appendReplacement(
+                    sb,
+                    Matcher.quoteReplacement(
+                        replaceAll(
+                            html.substring(m.start(), m.end()),
+                            "\\s*\\n\\s*",
+                            "<wp-temp-br />"
+                        )
+                    )
+                )
             }
             m.appendTail(sb)
             html = sb.toString()
@@ -287,7 +373,11 @@ object Format {
         html = replaceAll(html, "(?i)(</?(?:$blocklist)[^>]*>)\\s*<br ?/?>", "$1")
 
         html = replaceAll(html, "(?i)<br ?/?>(\\s*</?(?:p|li|div|dl|dd|dt|th|pre|td|ul|ol)>)", "$1")
-        html = replaceAll(html, "(?i)(?:<p>|<br ?/?>)*\\s*\\[caption([^\\[]+)\\[/caption\\]\\s*(?:</p>|<br ?/?>)*", "[caption$1[/caption]")
+        html = replaceAll(
+            html,
+            "(?i)(?:<p>|<br ?/?>)*\\s*\\[caption([^\\[]+)\\[/caption\\]\\s*(?:</p>|<br ?/?>)*",
+            "[caption$1[/caption]"
+        )
 
         // put back the line breaks in pre|script
         if (preserve_linebreaks) {
@@ -309,16 +399,21 @@ object Format {
                 val spanEnd = text.getSpanEnd(it)
 
                 if (text.getSpans(spanStart, spanEnd, ParagraphSpan::class.java).isNotEmpty()) {
-                    text.setSpan(EndOfParagraphMarker(), spanEnd, spanEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    text.setSpan(
+                        EndOfParagraphMarker(),
+                        spanEnd,
+                        spanEnd + 1,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                 }
             }
 
             // we don't need paragraph spans in calypso at this point
             text.getSpans(0, text.length, ParagraphSpan::class.java)
-                    .filter { it.attributes.isEmpty() }
-                    .forEach {
-                        text.removeSpan(it)
-                    }
+                .filter { it.attributes.isEmpty() }
+                .forEach {
+                    text.removeSpan(it)
+                }
         }
     }
 
@@ -333,41 +428,58 @@ object Format {
                 val spanStart = text.getSpanStart(it)
                 val spanEnd = text.getSpanEnd(it)
 
-                if (text[spanStart] == '\n' && text.getSpans(spanEnd, spanEnd + 1, IAztecParagraphStyle::class.java)
-                        .filter { (it !is ParagraphSpan || !it.attributes.isEmpty()) && text.getSpanStart(it) == spanEnd }.isEmpty()) {
+                if (text[spanStart] == '\n' && text.getSpans(
+                        spanEnd,
+                        spanEnd + 1,
+                        IAztecParagraphStyle::class.java
+                    )
+                        .filter {
+                            (it !is ParagraphSpan || !it.attributes.isEmpty()) && text.getSpanStart(
+                                it
+                            ) == spanEnd
+                        }.isEmpty()) {
                     text.insert(spanEnd, "\n")
                 }
 
                 if (text.getSpans(spanStart, spanEnd, AztecQuoteSpan::class.java)
                         .filter { text.getSpanEnd(it) == spanEnd }.isEmpty() &&
                     text.getSpans(spanStart, spanEnd, ParagraphSpan::class.java)
-                            .filter { !it.attributes.isEmpty() }.isEmpty()) {
-                    text.getSpans(spanStart, spanEnd, AztecVisualLinebreak::class.java).forEach { text.removeSpan(it) }
+                        .filter { !it.attributes.isEmpty() }.isEmpty()) {
+                    text.getSpans(
+                        spanStart,
+                        spanEnd,
+                        AztecVisualLinebreak::class.java
+                    ).forEach { text.removeSpan(it) }
                 }
             }
 
             // split up paragraphs that contain double newlines
             text.getSpans(0, text.length, ParagraphSpan::class.java)
-                    .forEach {
-                        val start = text.getSpanStart(it)
-                        val end = text.getSpanEnd(it)
-                        val double = text.indexOf("\n\n", start)
-                        if (double != -1 && double < end) {
-                            text.setSpan(it, start, double + 1, text.getSpanFlags(it))
-                            text.setSpan(AztecVisualLinebreak(), double + 1, double + 2, text.getSpanFlags(it))
-                        }
+                .forEach {
+                    val start = text.getSpanStart(it)
+                    val end = text.getSpanEnd(it)
+                    val double = text.indexOf("\n\n", start)
+                    if (double != -1 && double < end) {
+                        text.setSpan(it, start, double + 1, text.getSpanFlags(it))
+                        text.setSpan(
+                            AztecVisualLinebreak(),
+                            double + 1,
+                            double + 2,
+                            text.getSpanFlags(it)
+                        )
                     }
+                }
 
             // we don't care about actual ParagraphSpan in calypso that don't have attributes or are empty (paragraphs are made from double newline)
             text.getSpans(0, text.length, ParagraphSpan::class.java)
-                    .filter {
-                        val hasNoAttributes = it.attributes.isEmpty()
-                        val isAligned = it is IAztecAlignmentSpan && it.align != null
-                        val isEmpty = text.getSpanStart(it) == text.getSpanEnd(it) - 1
-                        (hasNoAttributes && !isAligned) || isEmpty
-                    }.forEach {
-                        text.removeSpan(it)
-                    }
+                .filter {
+                    val hasNoAttributes = it.attributes.isEmpty()
+                    val isAligned = it is IAztecAlignmentSpan && it.align != null
+                    val isEmpty = text.getSpanStart(it) == text.getSpanEnd(it) - 1
+                    (hasNoAttributes && !isAligned) || isEmpty
+                }.forEach {
+                    text.removeSpan(it)
+                }
         }
     }
 
