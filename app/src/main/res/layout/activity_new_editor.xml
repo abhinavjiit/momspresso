@@ -88,8 +88,17 @@
         android:text="last saved by 20 sec ago"
         android:textColor="@color/editor.last_saved"
         android:textSize="14sp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:fontName="oswald.ttf" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/editor_get_help"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/publishTextView"
+        android:background="@drawable/ic_editor_help" />
+
 
       <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/publishTextView"
@@ -181,18 +190,4 @@
       aztec:codeTextColor="@android:color/black" />
 
   </FrameLayout>
-
-  <com.getbase.floatingactionbutton.FloatingActionButton
-    android:id="@+id/editor_get_help"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignBottom="@id/content_frame"
-    android:layout_alignParentRight="true"
-    android:layout_marginRight="@dimen/space_20"
-    android:layout_marginBottom="@dimen/space_20"
-    app:fab_colorNormal="@color/fab.pink"
-    app:fab_colorPressed="@color/fab.pink"
-    app:fab_icon="@drawable/ic_editor_help"
-    app:fab_size="mini" />
-
 </RelativeLayout>

@@ -42,7 +42,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.crashlytics.android.Crashlytics
-import com.getbase.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.mycity4kids.R
@@ -163,7 +162,7 @@ class NewEditor : BaseActivity(),
     private var mHideActionBarOnSoftKeyboardUp = false
     private val mHandler = MyHandler(this@NewEditor)
     private var titleTxt: EditText? = null
-    private lateinit var editorGetHelp: FloatingActionButton
+    private lateinit var editorGetHelp: TextView
 
 
     /*-----------*/
