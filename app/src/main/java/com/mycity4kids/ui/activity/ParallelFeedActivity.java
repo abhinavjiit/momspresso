@@ -346,7 +346,6 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         public void onResponse(Call<FollowUnfollowUserResponse> call,
                 retrofit2.Response<FollowUnfollowUserResponse> response) {
             if (response.body() == null) {
-                showToast(getString(R.string.went_wrong));
                 return;
             }
             try {
@@ -362,7 +361,6 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
         @Override
         public void onFailure(Call<FollowUnfollowUserResponse> call, Throwable t) {
-            showToast(getString(R.string.server_went_wrong));
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
@@ -373,7 +371,6 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         public void onResponse(Call<FollowUnfollowUserResponse> call,
                 retrofit2.Response<FollowUnfollowUserResponse> response) {
             if (response.body() == null) {
-                showToast(getString(R.string.went_wrong));
                 return;
             }
             try {
@@ -389,7 +386,6 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
         @Override
         public void onFailure(Call<FollowUnfollowUserResponse> call, Throwable t) {
-            showToast(getString(R.string.server_went_wrong));
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }

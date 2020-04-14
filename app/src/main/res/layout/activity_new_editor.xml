@@ -88,7 +88,7 @@
         android:text="last saved by 20 sec ago"
         android:textColor="@color/editor.last_saved"
         android:textSize="14sp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:fontName="oswald.ttf" />
 
       <com.mycity4kids.widget.CustomFontTextView
@@ -177,7 +177,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:gravity="top|start"
-      android:hint="hiiiinnnnnnnntt"
+      android:hint=""
       android:imeOptions="flagNoExtractUi"
       android:inputType="textNoSuggestions|textMultiLine"
       android:paddingLeft="16dp"
