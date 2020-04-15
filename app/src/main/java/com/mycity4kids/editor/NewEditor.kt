@@ -219,7 +219,7 @@ class NewEditor : BaseActivity(),
     private var spellCheckFlag = false
     /*-----------*/
 
-    val HTML_PATTERN = "<(\"[^\"]*\"|'[^']*'|[^'\">])*>"
+    val HTML_PATTERN = "(?i)<p.*?>.*?</p>"
     var pattern: Pattern = Pattern.compile(HTML_PATTERN)
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
