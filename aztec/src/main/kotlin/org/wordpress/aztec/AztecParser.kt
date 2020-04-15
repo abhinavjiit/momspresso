@@ -638,7 +638,7 @@ class AztecParser @JvmOverloads constructor(
                 continue
             }
 
-            out.append("<p>" + " " + "</p>")
+            out.append("<br>")
             consumeCursorIfInInput(out, text, end + z)
         }
     }
