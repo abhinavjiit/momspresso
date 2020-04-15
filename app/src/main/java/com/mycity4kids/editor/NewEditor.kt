@@ -113,6 +113,8 @@ import java.util.Date
 import java.util.HashMap
 import java.util.Locale
 import java.util.Random
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 class NewEditor : BaseActivity(),
     AztecText.OnImeBackListener,
@@ -216,6 +218,9 @@ class NewEditor : BaseActivity(),
     private var lastUpdatedTime: Long = 0
     private var spellCheckFlag = false
     /*-----------*/
+
+    val HTML_PATTERN = "<(\"[^\"]*\"|'[^']*'|[^'\">])*>"
+    var pattern: Pattern = Pattern.compile(HTML_PATTERN)
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -1249,11 +1254,20 @@ class NewEditor : BaseActivity(),
 
 
     fun contentFormatting(content: String): String? {
-        val pTag = "<p>"
-        val newString = pTag + content
-        var formattedString = newString.replace("\n\n", "</p><p>")
-        formattedString = "$formattedString</p>"
-        return formattedString
+        if (hasHTMLTags(content)) {
+            return content
+        } else {
+            val pTag = "<p>"
+            val newString = pTag + content
+            var formattedString = newString.replace("\n\n", "</p><p>")
+            formattedString = "$formattedString</p>"
+            return formattedString
+        }
+    }
+
+    fun hasHTMLTags(text: String): Boolean {
+        val matcher: Matcher = pattern.matcher(text)
+        return matcher.find()
     }
 
     fun titleFormatting(title: String?): String? {
