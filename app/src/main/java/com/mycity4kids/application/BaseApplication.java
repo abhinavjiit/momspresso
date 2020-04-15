@@ -253,6 +253,7 @@ public class BaseApplication extends Application {
                 requestBuilder.addHeader("model", Build.MODEL);
                 requestBuilder.addHeader("source", "2");
                 requestBuilder.addHeader("appVersion", appVersion);
+                requestBuilder.addHeader("adId", SharedPrefUtils.getAdvertisementId(getApplicationContext()));
                 requestBuilder.addHeader("latitude", SharedPrefUtils.getUserLocationLatitude(getApplicationContext()));
                 requestBuilder
                         .addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
@@ -277,7 +278,6 @@ public class BaseApplication extends Application {
             client = new OkHttpClient
                     .Builder()
                     .addInterceptor(mainInterceptor)
-                    .addInterceptor(logging)
                     .connectTimeout(60, TimeUnit.SECONDS)
                     .readTimeout(60, TimeUnit.SECONDS)
                     .writeTimeout(60, TimeUnit.SECONDS)
