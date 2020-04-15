@@ -1221,7 +1221,8 @@ class NewEditor : BaseActivity(),
     override fun onContinuePublish() {
         mHandler.removeCallbacksAndMessages(null)
         val publishObject = PublishDraftObject()
-        publishObject.body = contentFormatting(aztec.visualEditor.toFormattedHtml())
+        val finalContent = aztec.visualEditor.toFormattedHtml().replace("\n<br>", "<br>")
+        publishObject.body = contentFormatting(finalContent)
         publishObject.title =
             titleFormatting(titleTxt?.text.toString())
         Log.d("draftId = ", draftId + "")
@@ -1254,7 +1255,7 @@ class NewEditor : BaseActivity(),
 
 
     fun contentFormatting(content: String): String? {
-        if (hasHTMLTags(content)) {
+        if (content.startsWith("<p>") && content.endsWith("</p>")) {
             return content
         } else {
             val pTag = "<p>"
