@@ -46,7 +46,7 @@ object Format {
                 replaceAll(html, "(?<!</?($block)>)\n<((?!/?($block)).*?)>", "<$2>")
             val newlineToTheRight =
                 replaceAll(newlineToTheLeft, "<(/?(?!$block).)>\n(?!</?($block)>)", "<$1>")
-            html = replaceAll(newlineToTheRight, "([\t ]*)(<br>)(?!\n)", "$1$2\n$1")
+            html = replaceAll(newlineToTheRight, "([\t ]*)(<br>)(?!\n)", "$1$2")
             //            html = replaceAll(fixBrNewlines, ">([\t ]*)(<br>)", ">\n$1$2")
             //            val fixBrNewlines = replaceAll(newlineToTheRight, "([\t ]*)(<br>)(?!\n)", "$1$2\n$1")
             //            html = replaceAll(fixBrNewlines, ">([\t ]*)(<br>)", ">\n$1$2")
