@@ -1330,4 +1330,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="invite_friends_link">Share Invite Link</string>
   <string name="invite_friends_show_creation">మీరు క్రియేట్ చేసిన వాటిని వారికి చూపించండి!</string>
   <string name="video_upload_thankyou_msg">ధన్యవాదాలు! మీ వీడియో అప్‌లోడ్ అయిన తర్వాత మేము మీకు తెలియజేస్తాము.</string>
+  <string name="video_upload_success">విజయవంతంగా అప్‌లోడ్ చేయబడింది</string>
+  <string name="all_open"> ఓపెన్</string>
 </resources>

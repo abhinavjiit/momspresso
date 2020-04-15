@@ -1501,5 +1501,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="invite_friends_link">Share Invite Link</string>
   <string name="invite_friends_show_creation">Show them what you’ve created!</string>
   <string name="video_upload_thankyou_msg">Thank you! We will notify you once your video is uploaded.</string>
+  <string name="video_upload_success">Successfully Uploaded</string>
+  <string name="all_open">Open</string>
 </resources>
 

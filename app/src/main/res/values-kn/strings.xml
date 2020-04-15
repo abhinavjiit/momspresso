@@ -1370,4 +1370,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="invite_friends_link">ಆಹ್ವಾನಿಸಲು ಇರುವ ಲಿಂಕ್‌ ಹಂಚಿಕೊಳ್ಳಿ</string>
   <string name="invite_friends_show_creation">ನಿಮ್ಮ ಬರವಣಿಗೆಯನ್ನು ಅವರಿಗೂ ತೋರಿಸಿ</string>
   <string name="video_upload_thankyou_msg">ಧನ್ಯವಾದಗಳು. ನಿಮ್ಮ ವಿಡಿಯೋ ಅಪ್ಲೋಡ್ ಆದ ಕೂಡಲೇ ತಿಳಿಸುತ್ತೇವೆ.</string>
+  <string name="video_upload_success">ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್ ಆಗಿದೆ</string>
+  <string name="all_open">ತೆರೆಯಿರಿ</string>
 </resources>

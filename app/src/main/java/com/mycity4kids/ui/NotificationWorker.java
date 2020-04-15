@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationCompat.Builder;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.work.WorkManager;
@@ -256,23 +257,21 @@ public class NotificationWorker extends Worker {
                     .setSmallIcon(R.drawable.icon_notify) // notification icon
                     .setProgress(100, progress, false)
                     .setContentIntent(intent);
-
-
         } else if ("Successfully Uploaded".equals(contentTitle)) {
-            notification = new NotificationCompat.Builder(context, channelId)
-                    .setContentTitle(contentTitle)
+            notification = new Builder(context, channelId)
+                    .setContentTitle(context.getString(R.string.video_upload_success))
                     .setContentText(title)
                     .setAutoCancel(true)
                     .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher))
                     .setSmallIcon(R.drawable.icon_notify) // notification icon
                     .setProgress(100, progress, false)
-                    .addAction(R.drawable.myicon, "Open", contentIntent)
+                    .addAction(R.drawable.myicon, context.getString(R.string.all_open), contentIntent)
                     .setColor(ContextCompat.getColor(context, R.color.app_red))
                     .setContentIntent(contentIntent);
         } else {
             if (notification == null) {
                 notification = new NotificationCompat.Builder(context, channelId)
-                        .setContentTitle(contentTitle)
+                        .setContentTitle(context.getString(R.string.video_progress_uploading_label))
                         .setContentText(title)
                         .setOngoing(true)
                         .setAutoCancel(false)
@@ -288,8 +287,6 @@ public class NotificationWorker extends Worker {
             }
         }
         manager.notify(notificationId, notification.build());
-
-
     }
 
     @Override

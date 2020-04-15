@@ -1328,4 +1328,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="invite_friends_link">आमंत्रित करण्यासाठी लिंक शेअर करा</string>
   <string name="invite_friends_show_creation">तुमची कलाकृती/ लेख त्यांना दाखवा! </string>
   <string name="video_upload_thankyou_msg">धन्यवाद!आपला व्हिडिओ अपलोड झाल्यावर तुम्हाला नोटिफिकेशन पाठवू</string>
+  <string name="video_upload_success">यशस्वीरीत्या अपलोड</string>
+  <string name="all_open">उघडा</string>
 </resources>

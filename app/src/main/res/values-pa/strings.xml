@@ -1391,4 +1391,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="invite_friends_link">ਸੱਦਾ ਲਿੰਕ ਸ਼ੇਅਰ ਕਰੋ</string>
   <string name="invite_friends_show_creation">ਉਹਨਾਂ ਨੂੰ ਦਿਖਾਓ ਕਿ ਤੁਸੀਂ ਕੀ ਬਣਾਇਆ ਹੈ!</string>
   <string name="video_upload_thankyou_msg">ਧੰਨਵਾਦ ! ਵੀਡੀਓ ਅਪਲੋਡ ਹੋਣ ਤੋਂ ਬਾਅਦ ਅਸੀਂ ਤੁਹਾਨੂੰ ਸੂਚਿਤ ਕਰਾਂਗੇ.।</string>
+  <string name="video_upload_success">ਤੁਹਾਡਾ ਵੀਡੀਓ ਸਫਲਤਾਪੂਰਵਕ ਅਪਲੋਡ ਹੋ ਗਿਆ ਹੈ।</string>
+  <string name="all_open">ਵੀਡੀਓ ਦੇਖੋ</string>
 </resources>

@@ -1335,4 +1335,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="invite_friends_link">আমন্ত্রণের লিঙ্ক শেয়ার করুন</string>
   <string name="invite_friends_show_creation">ওদের দেখান যে আপনি কি বানিয়েছেন!</string>
   <string name="video_upload_thankyou_msg">ধন্যবাদ! আপনার ভিডিওটি আপলোড হলেই আমরা আপনাকে নোটিফিকেশন পাঠাবো|</string>
+  <string name="video_upload_success">ভিডিওটি সফলভাবে আপলোড হয়েছে</string>
+  <string name="all_open">দেখুন</string>
 </resources>
