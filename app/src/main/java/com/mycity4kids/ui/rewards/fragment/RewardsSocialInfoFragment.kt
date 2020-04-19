@@ -13,7 +13,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatSpinner
-import androidx.fragment.app.Fragment
+import com.crashlytics.android.Crashlytics
 import com.facebook.CallbackManager
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -32,6 +32,7 @@ import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.models.rewardsmodels.RewardsPersonalResponse
 import com.mycity4kids.models.rewardsmodels.SocialAccountObject
+import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
@@ -43,17 +44,9 @@ import io.reactivex.schedulers.Schedulers
 import java.util.HashMap
 import java.util.regex.Pattern
 
-/**
- * A simple [Fragment] subclass.
- */
 class RewardsSocialInfoFragment : BaseFragment(),
     GoogleApiClient.OnConnectionFailedListener, InstagramApp.OAuthAuthenticationListener {
     override fun onSuccess() {
-        //        if (mApp!!.hasAccessToken()) {
-        //            editInstagram.setText(getString(R.string.rewards_social_instagram_connected))
-        //            instagramAuthToken = mApp!!.accessToken
-        //            setValuesForSocial(Constants.SocialPlatformName.instagram, instagramAuthToken!!)
-        //        }
     }
 
     override fun onFail(error: String?) {
@@ -131,26 +124,18 @@ class RewardsSocialInfoFragment : BaseFragment(),
             .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
             .build()
         callbackManager = CallbackManager.Factory.create()
-
-        /*initialize XML components*/
         initializeXMLComponents()
-
-        /*fetch data from server*/
         fetchRewardsData()
-
-        /**/
         return containerView
     }
 
-    /*fetch data from server*/
     private fun fetchRewardsData() {
-        var userId =
-            com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        //        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
+        val userId =
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
         if (!userId.isNullOrEmpty()) {
             showProgressDialog(resources.getString(R.string.please_wait))
             BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData(
-                userId!!,
+                userId,
                 3
             ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                 object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
@@ -162,12 +147,9 @@ class RewardsSocialInfoFragment : BaseFragment(),
                     }
 
                     override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
-                        if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
+                        if (response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
                             apiGetResponse = response.data!!.result
-
-                            /*setting values to components*/
                             setValuesToComponents()
-                        } else {
                         }
                     }
 
@@ -217,35 +199,44 @@ class RewardsSocialInfoFragment : BaseFragment(),
     }
 
     private fun setValuesForSocial(platformName: Constants.SocialPlatformName, token: String) {
-        if (apiGetResponse.socialAccounts != null && apiGetResponse.socialAccounts!!.isNotEmpty()) {
-            var socialAccountsListNotContainsGivenPlatform =
-                ArrayList<SocialAccountObject>(apiGetResponse.socialAccounts!!.filter { it ->
-                    !it.platform_name.equals(platformName.name)
-                })
-            var socialAccountsListByGivenPlatform =
-                apiGetResponse.socialAccounts!!.filter { it -> it.platform_name.equals(platformName.name) }
-            if (socialAccountsListByGivenPlatform.isNotEmpty()) {
-                var localSocialAccout = SocialAccountObject()
-                localSocialAccout.platform_name = platformName.name
-                localSocialAccout.acc_link = token
-                localSocialAccout.id = socialAccountsListByGivenPlatform.get(0).id
-                socialAccountsListNotContainsGivenPlatform.add(localSocialAccout)
+        try {
+            if (apiGetResponse.socialAccounts != null && apiGetResponse.socialAccounts!!.isNotEmpty()) {
+                val socialAccountsListNotContainsGivenPlatform =
+                    ArrayList<SocialAccountObject>(apiGetResponse.socialAccounts!!.filter { it ->
+                        !it.platform_name.equals(platformName.name)
+                    })
+                val socialAccountsListByGivenPlatform =
+                    apiGetResponse.socialAccounts!!.filter { it ->
+                        it.platform_name.equals(
+                            platformName.name
+                        )
+                    }
+                if (socialAccountsListByGivenPlatform.isNotEmpty()) {
+                    val localSocialAccout = SocialAccountObject()
+                    localSocialAccout.platform_name = platformName.name
+                    localSocialAccout.acc_link = token
+                    localSocialAccout.id = socialAccountsListByGivenPlatform.get(0).id
+                    socialAccountsListNotContainsGivenPlatform.add(localSocialAccout)
+                } else {
+                    val localSocialAccout = SocialAccountObject()
+                    localSocialAccout.acc_link = token
+                    localSocialAccout.platform_name = platformName.name
+                    apiGetResponse.socialAccounts!!.add(localSocialAccout)
+                    socialAccountsListNotContainsGivenPlatform.add(localSocialAccout)
+                }
+                apiGetResponse.socialAccounts = socialAccountsListNotContainsGivenPlatform
             } else {
-                var localSocialAccout = SocialAccountObject()
+                val localSocialAccout = SocialAccountObject()
                 localSocialAccout.acc_link = token
                 localSocialAccout.platform_name = platformName.name
                 apiGetResponse.socialAccounts!!.add(localSocialAccout)
-                socialAccountsListNotContainsGivenPlatform.add(localSocialAccout)
+                val localListSocialAccount = ArrayList<SocialAccountObject>()
+                localListSocialAccount.add(localSocialAccout)
+                apiGetResponse.socialAccounts = localListSocialAccount
             }
-            apiGetResponse.socialAccounts = socialAccountsListNotContainsGivenPlatform
-        } else {
-            var localSocialAccout = SocialAccountObject()
-            localSocialAccout.acc_link = token
-            localSocialAccout.platform_name = platformName.name
-            apiGetResponse.socialAccounts!!.add(localSocialAccout)
-            var localListSocialAccount = ArrayList<SocialAccountObject>()
-            localListSocialAccount.add(localSocialAccout)
-            apiGetResponse.socialAccounts = localListSocialAccount
+        } catch (e: Exception) {
+            Crashlytics.logException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
 
@@ -281,7 +272,7 @@ class RewardsSocialInfoFragment : BaseFragment(),
             // AuthenticateWithInstagram()
         }
 
-        var houseHoldIncomeArray = resources.getStringArray(R.array.household_income)
+        val houseHoldIncomeArray = resources.getStringArray(R.array.household_income)
         houseHoldIncomeArray.forEach { str ->
             householdList.add(str)
         }
@@ -301,7 +292,7 @@ class RewardsSocialInfoFragment : BaseFragment(),
             }
         }
 
-        var professionArray = resources.getStringArray(R.array.profession)
+        val professionArray = resources.getStringArray(R.array.profession)
         professionArray.forEach { str ->
             professionList.add(str)
         }
@@ -344,7 +335,6 @@ class RewardsSocialInfoFragment : BaseFragment(),
     }
 
     private fun prepareDataForPosting(): Boolean {
-        //        if (!editInstagram.text.isNullOrEmpty()) {
         if (isvalid(editFacebook.text.toString(), 0)) {
             setValuesForSocial(
                 Constants.SocialPlatformName.facebook,
@@ -354,7 +344,6 @@ class RewardsSocialInfoFragment : BaseFragment(),
             ToastUtils.showToast(context, "Not a valid facebook profile")
             return false
         }
-
         if (isvalid(editInstagram.text.toString(), 1)) {
             setValuesForSocial(
                 Constants.SocialPlatformName.instagram,
@@ -364,8 +353,6 @@ class RewardsSocialInfoFragment : BaseFragment(),
             ToastUtils.showToast(context, "space is not allowed")
             return false
         }
-        //        }
-        //        if (!editTwitter.text.isNullOrEmpty()) {
         if (isvalid(editTwitter.text.toString().trim(), 2)) {
             setValuesForSocial(
                 Constants.SocialPlatformName.twitter,
@@ -375,8 +362,6 @@ class RewardsSocialInfoFragment : BaseFragment(),
             ToastUtils.showToast(context, "not valid Twitter handle")
             return false
         }
-        //        }
-        //        if (!editWebsite.text.isNullOrEmpty()) {
         if (isvalid(editWebsite.text.toString(), 3)) {
             setValuesForSocial(
                 Constants.SocialPlatformName.website,
@@ -386,8 +371,6 @@ class RewardsSocialInfoFragment : BaseFragment(),
             ToastUtils.showToast(context, "space is not allowed")
             return false
         }
-        //        }
-        //        if (!editYoutube.text.isNullOrEmpty()) {
         if (isvalid(editYoutube.text.toString().trim(), 4)) {
             setValuesForSocial(
                 Constants.SocialPlatformName.youtube,
@@ -397,8 +380,6 @@ class RewardsSocialInfoFragment : BaseFragment(),
             ToastUtils.showToast(context, "space is not allowed")
             return false
         }
-        //        }
-
         return true
     }
 
@@ -443,11 +424,9 @@ class RewardsSocialInfoFragment : BaseFragment(),
         return false
     }
 
-    /*fetch data from server*/
     private fun postDataofRewardsToServer() {
         val userId =
-            com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        //        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
+            SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         if (!userId.isNullOrEmpty()) {
             Log.e("body to api ", Gson().toJson(apiGetResponse))
             showProgressDialog(resources.getString(R.string.please_wait))
@@ -466,7 +445,7 @@ class RewardsSocialInfoFragment : BaseFragment(),
                     }
 
                     override fun onNext(response: RewardsPersonalResponse) {
-                        if (response != null && response.code == 200) {
+                        if (response.code == 200) {
                             if (Constants.SUCCESS == response.status) {
                                 submitListener.socialOnSubmitListener()
                             } else if (Constants.FAILURE == response.status) {

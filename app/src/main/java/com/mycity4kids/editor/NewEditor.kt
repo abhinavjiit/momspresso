@@ -69,6 +69,20 @@ import com.mycity4kids.utils.DateTimeUtils
 import com.mycity4kids.utils.GenericFileProvider
 import com.mycity4kids.utils.PermissionUtil
 import com.mycity4kids.utils.StringUtils
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.lang.ref.WeakReference
+import java.text.SimpleDateFormat
+import java.util.ArrayList
+import java.util.Calendar
+import java.util.Date
+import java.util.HashMap
+import java.util.Locale
+import java.util.Random
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 import kotlinx.android.synthetic.main.activity_new_editor.*
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -101,20 +115,6 @@ import org.xml.sax.Attributes
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.lang.ref.WeakReference
-import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Calendar
-import java.util.Date
-import java.util.HashMap
-import java.util.Locale
-import java.util.Random
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 class NewEditor : BaseActivity(),
     AztecText.OnImeBackListener,
@@ -130,8 +130,6 @@ class NewEditor : BaseActivity(),
     View.OnTouchListener, View.OnClickListener, ISpellcheckResult {
 
     companion object {
-
-
         const val USE_NEW_EDITOR = 1
 
         private val isRunningTest: Boolean by lazy {
@@ -166,9 +164,6 @@ class NewEditor : BaseActivity(),
     private var titleTxt: EditText? = null
     private lateinit var editorGetHelp: TextView
 
-
-    /*-----------*/
-
     private val mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
 
     private val SPELL_CHECK_FLAG = "show_spell_check_flag"
@@ -185,17 +180,15 @@ class NewEditor : BaseActivity(),
     private var thumbnailUrl: String? = null
     private var moderation_status: String? = null
     var mCurrentPhotoPath: String? = null
-    var absoluteImagePath: kotlin.String? = null
+    var absoluteImagePath: String? = null
     var photoFile: File? = null
 
     var draftObject: DraftListResult? = null
     var mediaId: String? = null
     var draftId = ""
 
-
     val ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111
     val ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE = 1113
-
 
     private var mFailedUploads: Map<String, String>? = null
     var title: String? = null
@@ -206,7 +199,7 @@ class NewEditor : BaseActivity(),
     var content_placeholder_param: String? = null
 
     private var tag: String? = null
-    private var cities: kotlin.String? = null
+    private var cities: String? = null
     private var mToolbar: Toolbar? = null
     private var mLayout: View? = null
     private var imageSelectorType: String? = null
@@ -217,7 +210,6 @@ class NewEditor : BaseActivity(),
     var periodicUpdate: Runnable? = null
     private var lastUpdatedTime: Long = 0
     private var spellCheckFlag = false
-    /*-----------*/
 
     val HTML_PATTERN = "(?i)<p.*?>.*?</p>"
     var pattern: Pattern = Pattern.compile(HTML_PATTERN)
@@ -255,11 +247,11 @@ class NewEditor : BaseActivity(),
                             var imgRatio = actualWidth / actualHeight
                             val maxRatio = maxWidth / maxHeight
                             if (actualHeight > maxHeight || actualWidth > maxWidth) {
-                                if (imgRatio < maxRatio) { //adjust width according to maxHeight
+                                if (imgRatio < maxRatio) { // adjust width according to maxHeight
                                     imgRatio = maxHeight / actualHeight
                                     actualWidth = imgRatio * actualWidth
                                     actualHeight = maxHeight
-                                } else if (imgRatio > maxRatio) { //adjust height according to maxWidth
+                                } else if (imgRatio > maxRatio) { // adjust height according to maxWidth
                                     imgRatio = maxWidth / actualWidth
                                     actualHeight = imgRatio * actualHeight
                                     actualWidth = maxWidth
@@ -276,9 +268,6 @@ class NewEditor : BaseActivity(),
                             )
                             val stream = ByteArrayOutputStream()
                             finalBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream)
-
-                            //                            val (id, attrs) = generateAttributesForMedia(imageUri.toString(), isVideo = false)
-                            //                            aztec.visualEditor.insertImage(BitmapDrawable(resources, finalBitmap), attrs)
                             val path =
                                 MediaStore.Images.Media.insertImage(
                                     this@NewEditor.getContentResolver(),
@@ -290,13 +279,10 @@ class NewEditor : BaseActivity(),
                             EditorFragmentAbstract.imageUploading = 0
                             val file2 = FileUtils.getFile(this, imageUriTemp)
                             sendUploadProfileImageRequest(file2)
-                        } catch (e: java.lang.Exception) {
+                        } catch (e: Exception) {
                             e.printStackTrace()
                         }
-                        // mEditorFragment.appendMediaFile(mediaFile, imageUri.toString(), null);
                     }
-
-
                 }
                 ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE -> {
 
@@ -337,11 +323,11 @@ class NewEditor : BaseActivity(),
                                 return
                             }
                             if (actualHeight > maxHeight || actualWidth > maxWidth) {
-                                if (imgRatio < maxRatio) { //adjust width according to maxHeight
+                                if (imgRatio < maxRatio) { // adjust width according to maxHeight
                                     imgRatio = maxHeight / actualHeight
                                     actualWidth = imgRatio * actualWidth
                                     actualHeight = maxHeight
-                                } else if (imgRatio > maxRatio) { //adjust height according to maxWidth
+                                } else if (imgRatio > maxRatio) { // adjust height according to maxWidth
                                     imgRatio = maxWidth / actualWidth
                                     actualHeight = imgRatio * actualHeight
                                     actualWidth = maxWidth
@@ -377,47 +363,18 @@ class NewEditor : BaseActivity(),
                                     imageUri
                                 )
                             sendUploadProfileImageRequest(file2)
-                        } catch (e: java.lang.Exception) {
+                        } catch (e: Exception) {
                             e.printStackTrace()
                         }
                     }
-
                 }
                 REQUEST_MEDIA_CAMERA_VIDEO -> {
                     mediaPath = data?.data.toString()
                 }
                 REQUEST_MEDIA_VIDEO -> {
-                    /*mediaPath = data?.data.toString()
-
-                    aztec.visualEditor.videoThumbnailGetter?.loadVideoThumbnail(
-                        mediaPath,
-                        object : Html.VideoThumbnailGetter.Callbacks {
-                            override fun onThumbnailFailed() {
-                            }
-
-                            override fun onThumbnailLoaded(drawable: Drawable?) {
-                                val conf = Bitmap.Config.ARGB_8888 // see other conf types
-                                bitmap = Bitmap.createBitmap(
-                                    drawable!!.intrinsicWidth,
-                                    drawable.intrinsicHeight,
-                                    conf
-                                )
-                                val canvas = Canvas(bitmap)
-                                drawable.setBounds(0, 0, canvas.width, canvas.height)
-                                drawable.draw(canvas)
-
-                                insertVideoAndSimulateUpload(bitmap, mediaPath)
-                            }
-
-                            override fun onThumbnailLoading(drawable: Drawable?) {
-                            }
-                        },
-                        this.resources.displayMetrics.widthPixels
-                    )*/
                 }
             }
         }
-
     }
 
     private fun generateAttributesForMedia(
@@ -443,7 +400,6 @@ class NewEditor : BaseActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         if (intent.getIntExtra(
                 editor_param,
                 USE_NEW_EDITOR
@@ -465,7 +421,6 @@ class NewEditor : BaseActivity(),
         title_placeholder_param = intent.getStringExtra("TITLE_PLACEHOLDER_PARAM")
         content_placeholder_param = intent.getStringExtra("CONTENT_PLACEHOLDER_PARAM")
 
-
         mToolbar = findViewById<View>(com.mycity4kids.R.id.toolbar) as Toolbar
         closeEditorImageView =
             findViewById<View>(com.mycity4kids.R.id.closeEditorImageView) as ImageView
@@ -474,7 +429,6 @@ class NewEditor : BaseActivity(),
         val sourceEditor = findViewById<SourceViewEditText>(R.id.source)
         titleTxt = findViewById<View>(com.mycity4kids.R.id.title) as EditText
         editorGetHelp = findViewById(R.id.editor_get_help)
-
 
         editor_get_help.setOnClickListener(this)
         closeEditorImageView!!.setOnClickListener(this)
@@ -504,11 +458,8 @@ class NewEditor : BaseActivity(),
         } else {
             titleTxt!!.setText(title)
             titleTxt!!.setHint(title_placeholder_param)
-            Log.e("postContent", content)
             initiatePeriodicDraftSave()
         }
-
-
 
         if (null != draftObject) {
             try {
@@ -520,10 +471,8 @@ class NewEditor : BaseActivity(),
         }
         spellCheckFlag = mFirebaseRemoteConfig.getBoolean(SPELL_CHECK_FLAG)
 
-        mLayout = findViewById(com.mycity4kids.R.id.rootLayout)
+        mLayout = findViewById(R.id.rootLayout)
         mFailedUploads = HashMap()
-
-
 
         visualEditor.externalLogger = object : AztecLog.ExternalLogger {
             override fun log(message: String) {
@@ -592,10 +541,7 @@ class NewEditor : BaseActivity(),
             })
             aztec.visualEditor.setCalypsoMode(false)
             aztec.sourceEditor?.setCalypsoMode(false)
-
             aztec.sourceEditor?.displayStyledAndFormattedHtml(content.toString())
-
-            //            aztec.addPlugin(CssUnderlinePlugin())
         }
 
         if (savedInstanceState == null) {
@@ -608,7 +554,6 @@ class NewEditor : BaseActivity(),
         invalidateOptionsHandler = Handler()
         invalidateOptionsRunnable = Runnable { invalidateOptionsMenu() }
     }
-
 
     var focusListener: View.OnFocusChangeListener = object : View.OnFocusChangeListener {
         override fun onFocusChange(v: View, hasFocus: Boolean) {
@@ -632,7 +577,6 @@ class NewEditor : BaseActivity(),
         mHandler.postDelayed(periodicUpdate, 5000)
     }
 
-
     private fun showDraftSaveStatus(lastUpdatedTime: Long) {
         val calendar1 = Calendar.getInstance()
         val sdf =
@@ -646,12 +590,12 @@ class NewEditor : BaseActivity(),
             )
         ) {
             lastSavedTextView!!.text = getString(
-                com.mycity4kids.R.string.editor_last_saved_on,
+                R.string.editor_last_saved_on,
                 DateTimeUtils.getDateFromTimestamp(draftObject!!.updatedTime)
             )
         } else {
             lastSavedTextView!!.text = getString(
-                com.mycity4kids.R.string.editor_last_saved_at,
+                R.string.editor_last_saved_at,
                 sdf1.format(calendar1.time)
             )
         }
@@ -660,8 +604,7 @@ class NewEditor : BaseActivity(),
 
     override fun onBackPressed() {
         mHandler.removeCallbacksAndMessages(null)
-        Log.e("title", titleTxt?.text.toString())
-        val fragment = fragmentManager
+        val fragment = supportFragmentManager
             .findFragmentByTag(ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG)
         if (fragment != null && fragment.isVisible) {
             (fragment as ImageSettingsDialogFragment).dismissFragment()
@@ -678,7 +621,7 @@ class NewEditor : BaseActivity(),
                 finish()
             } else {
                 if (!ConnectivityUtils.isNetworkEnabled(this)) {
-                    showToast(getString(com.mycity4kids.R.string.error_network))
+                    showToast(getString(R.string.error_network))
                     return
                 }
                 saveDraftRequest(
@@ -733,11 +676,11 @@ class NewEditor : BaseActivity(),
     private fun hideActionBarIfNeeded() {
 
         val actionBar = supportActionBar
-        if (actionBar != null
-            && !isHardwareKeyboardPresent()
-            && mHideActionBarOnSoftKeyboardUp
-            && mIsKeyboardOpen
-            && actionBar.isShowing
+        if (actionBar != null &&
+            !isHardwareKeyboardPresent() &&
+            mHideActionBarOnSoftKeyboardUp &&
+            mIsKeyboardOpen &&
+            actionBar.isShowing
         ) {
             actionBar.hide()
         }
@@ -800,8 +743,6 @@ class NewEditor : BaseActivity(),
     }
 
     override fun onToolbarFormatButtonClicked(format: ITextFormat, isKeyboardShortcut: Boolean) {
-        //        ToastUtils.showToast(this, format.toString())
-
         val imm: InputMethodManager =
             getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(aztec.visualEditor, InputMethodManager.SHOW_IMPLICIT)
@@ -910,13 +851,12 @@ class NewEditor : BaseActivity(),
         }
     }
 
-
     private fun requestPermissions() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
                 Manifest.permission.READ_EXTERNAL_STORAGE
-            )
-            || ActivityCompat.shouldShowRequestPermissionRationale(
+            ) ||
+            ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
@@ -969,7 +909,8 @@ class NewEditor : BaseActivity(),
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<String?>,
+        requestCode: Int,
+        permissions: Array<String?>,
         grantResults: IntArray
     ) {
         if (requestCode == REQUEST_INIT_PERMISSION) {
@@ -1001,7 +942,6 @@ class NewEditor : BaseActivity(),
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
     }
-
 
     private fun loadImageFromCamera() {
         val cameraIntent =
@@ -1042,8 +982,8 @@ class NewEditor : BaseActivity(),
         val dir =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
         val image = File.createTempFile(
-            imageFileName,  // prefix
-            ".jpg",  // suffix
+            imageFileName, // prefix
+            ".jpg", // suffix
             dir // directory
         )
         mCurrentPhotoPath = "file:" + image.absolutePath
@@ -1051,8 +991,7 @@ class NewEditor : BaseActivity(),
         return image
     }
 
-
-    fun rotateImage(
+    private fun rotateImage(
         source: Bitmap,
         angle: Float
     ): Bitmap {
@@ -1063,7 +1002,6 @@ class NewEditor : BaseActivity(),
             true
         )
     }
-
 
     fun sendUploadProfileImageRequest(file: File?) {
         showProgressDialog(getString(R.string.please_wait))
@@ -1077,41 +1015,48 @@ class NewEditor : BaseActivity(),
         val imageUploadAPI = retro.create(
             ImageUploadAPI::class.java
         )
-        val call = imageUploadAPI.uploadImage( //userId,
+        val call = imageUploadAPI.uploadImage(
             imageType,
             requestBodyFile
         )
-        //asynchronous call
         call.enqueue(object : Callback<ImageUploadResponse?> {
             override fun onResponse(
                 call: Call<ImageUploadResponse?>,
                 response: Response<ImageUploadResponse?>
             ) {
-                removeProgressDialog()
-                if (response == null || response.body() == null) {
-                    showToast(getString(R.string.went_wrong))
-                    return
-                }
-                val responseModel = response.body()
-                Log.e("responseURL", responseModel!!.data.result.url)
-                if (responseModel.code != 200) {
-                    showToast(getString(R.string.toast_response_error))
+                try {
                     removeProgressDialog()
-                    return
-                } else {
-                    if (!StringUtils.isNullOrEmpty(responseModel.data.result.url)) {
-                        Log.i(
-                            "Uploaded Image URL",
-                            responseModel.data.result.url
-                        )
+                    if (response.body() == null) {
+                        showToast(getString(R.string.went_wrong))
+                        return
                     }
-                    mediaFile!!.fileURL = responseModel.data.result.url
-                    val (id, attrs) = generateAttributesForMedia(
-                        mediaFile!!.fileURL,
-                        isVideo = false
-                    )
-                    aztec.visualEditor.insertImage(BitmapDrawable(mediaFile!!.fileURL), attrs)
-                    aztec.visualEditor.loadImages()
+                    val responseModel = response.body()
+                    if (responseModel != null) {
+                        if (responseModel.code != 200) {
+                            showToast(getString(R.string.toast_response_error))
+                            removeProgressDialog()
+                            return
+                        } else {
+                            mediaFile!!.fileURL = responseModel.data.result.url
+                            val (id, attrs) = generateAttributesForMedia(
+                                mediaFile!!.fileURL,
+                                isVideo = false
+                            )
+                            aztec.visualEditor.insertImage(
+                                BitmapDrawable(mediaFile!!.fileURL),
+                                attrs
+                            )
+                            aztec.visualEditor.loadImages()
+                        }
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        this@NewEditor,
+                        "Error while uploading image",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
 
@@ -1131,7 +1076,6 @@ class NewEditor : BaseActivity(),
         }
         )
     }
-
 
     private fun showMediaUploadDialog() {
         val builder = AlertDialog.Builder(this)
@@ -1215,7 +1159,6 @@ class NewEditor : BaseActivity(),
 
     override fun onMediaDeleted(attrs: AztecAttributes) {
         val url = attrs.getValue("src")
-        //        ToastUtils.showToast(this, "Media Deleted! " + url)
     }
 
     override fun onContinuePublish() {
@@ -1253,7 +1196,6 @@ class NewEditor : BaseActivity(),
         }
     }
 
-
     fun contentFormatting(content: String): String? {
         if (content.startsWith("<p>") && content.endsWith("</p>")) {
             return content
@@ -1275,19 +1217,18 @@ class NewEditor : BaseActivity(),
         return android.text.Html.fromHtml(title).toString()
     }
 
-
     fun saveDraftRequest(
         title: String?,
         body: String?,
         draftId1: String
     ) {
         var body = body
-        showProgressDialog(resources.getString(com.mycity4kids.R.string.please_wait))
+        showProgressDialog(resources.getString(R.string.please_wait))
         val retrofit = BaseApplication.getInstance().retrofit
         val articleDraftAPI = retrofit.create(
             ArticleDraftAPI::class.java
         )
-        if (StringUtils.isNullOrEmpty(body)) { //dynamoDB can't handle empty spaces
+        if (StringUtils.isNullOrEmpty(body)) { // dynamoDB can't handle empty spaces
             body = " "
         }
         if (draftId1.isEmpty()) {
@@ -1300,10 +1241,10 @@ class NewEditor : BaseActivity(),
                 ) {
                     removeProgressDialog()
                     if (response == null || response.body() == null) {
-                        showToast(getString(com.mycity4kids.R.string.server_went_wrong))
+                        showToast(getString(R.string.server_went_wrong))
                         showAlertDialog(
-                            getString(com.mycity4kids.R.string.draft_oops),
-                            getString(com.mycity4kids.R.string.draft_not_saved),
+                            getString(R.string.draft_oops),
+                            getString(R.string.draft_not_saved),
                             OnButtonClicked { finish() })
                         return
                     }
@@ -1311,20 +1252,20 @@ class NewEditor : BaseActivity(),
                         val responseModel = response.body()
                         if (responseModel!!.code == 200 && Constants.SUCCESS == responseModel.status) {
                             draftId = responseModel.data[0].result.id + ""
-                            showToast(getString(com.mycity4kids.R.string.draft_save_success))
-                            //onBackPressed();
+                            showToast(getString(R.string.draft_save_success))
+                            // onBackPressed();
                             finish()
                         } else {
                             if (StringUtils.isNullOrEmpty(responseModel.reason)) {
-                                showToast(getString(com.mycity4kids.R.string.toast_response_error))
+                                showToast(getString(R.string.toast_response_error))
                             } else {
                                 showToast(responseModel.reason)
                             }
                         }
-                    } catch (e: java.lang.Exception) {
+                    } catch (e: Exception) {
                         Crashlytics.logException(e)
                         Log.d("MC4kException", Log.getStackTraceString(e))
-                        showToast(getString(com.mycity4kids.R.string.went_wrong))
+                        showToast(getString(R.string.went_wrong))
                     }
                 }
 
@@ -1334,7 +1275,7 @@ class NewEditor : BaseActivity(),
                 ) {
                     Crashlytics.logException(t)
                     Log.d("MC4kException", Log.getStackTraceString(t))
-                    showToast(getString(com.mycity4kids.R.string.went_wrong))
+                    showToast(getString(R.string.went_wrong))
                 }
             })
         } else {
@@ -1353,26 +1294,26 @@ class NewEditor : BaseActivity(),
                 ) {
                     removeProgressDialog()
                     if (response == null || response.body() == null) {
-                        showToast(getString(com.mycity4kids.R.string.went_wrong))
+                        showToast(getString(R.string.went_wrong))
                         return
                     }
                     try {
                         val responseModel = response.body()
                         if (responseModel!!.code == 200 && Constants.SUCCESS == responseModel.status) {
                             draftId = responseModel.data[0].result.id + ""
-                            showToast(getString(com.mycity4kids.R.string.draft_save_success))
+                            showToast(getString(R.string.draft_save_success))
                             finish()
                         } else {
                             if (StringUtils.isNullOrEmpty(responseModel.reason)) {
-                                showToast(getString(com.mycity4kids.R.string.toast_response_error))
+                                showToast(getString(R.string.toast_response_error))
                             } else {
                                 showToast(responseModel.reason)
                             }
                         }
-                    } catch (e: java.lang.Exception) {
+                    } catch (e: Exception) {
                         Crashlytics.logException(e)
                         Log.d("MC4kException", Log.getStackTraceString(e))
-                        showToast(getString(com.mycity4kids.R.string.went_wrong))
+                        showToast(getString(R.string.went_wrong))
                     }
                 }
 
@@ -1382,14 +1323,13 @@ class NewEditor : BaseActivity(),
                 ) {
                     Crashlytics.logException(t)
                     Log.d("MC4kException", Log.getStackTraceString(t))
-                    showToast(getString(com.mycity4kids.R.string.went_wrong))
+                    showToast(getString(R.string.went_wrong))
                 }
             })
         }
     }
 
-
-    fun saveDraftsAsync(
+    private fun saveDraftsAsync(
         title: String?,
         body: String?,
         draftId1: String
@@ -1400,12 +1340,12 @@ class NewEditor : BaseActivity(),
         }
         lastUpdatedTime = System.currentTimeMillis()
         lastSavedTextView!!.visibility = View.VISIBLE
-        lastSavedTextView!!.text = getString(com.mycity4kids.R.string.editor_saving)
+        lastSavedTextView!!.text = getString(R.string.editor_saving)
         val retrofit = BaseApplication.getInstance().retrofit
         val articleDraftAPI = retrofit.create(
             ArticleDraftAPI::class.java
         )
-        if (StringUtils.isNullOrEmpty(body)) { //dynamoDB can't handle empty spaces
+        if (StringUtils.isNullOrEmpty(body)) { // dynamoDB can't handle empty spaces
             body = " "
         }
         if (draftId1.isEmpty()) {
@@ -1467,11 +1407,10 @@ class NewEditor : BaseActivity(),
         }
     }
 
-
     private fun showCustomToast(bodyWordCount: Int) {
         val toast = Toast.makeText(
             this, getString(
-            com.mycity4kids.R.string.article_editor_min_words_body, bodyWordCount
+            R.string.article_editor_min_words_body, bodyWordCount
         ), Toast.LENGTH_SHORT
         )
         toast.setGravity(Gravity.CENTER, 0, 0)
@@ -1505,9 +1444,9 @@ class NewEditor : BaseActivity(),
             R.id.publishTextView -> if (StringUtils.isNullOrEmpty(titleTxt?.text.toString())) {
                 showToast(getString(R.string.editor_title_empty))
             } else if (titleTxt?.text.toString().length > 150) {
-                showToast(getString(com.mycity4kids.R.string.editor_title_char_limit))
+                showToast(getString(R.string.editor_title_char_limit))
             } else if (aztec.visualEditor.text.isEmpty()) {
-                showToast(getString(com.mycity4kids.R.string.editor_body_empty))
+                showToast(getString(R.string.editor_body_empty))
             } else if (aztec.visualEditor.text.toString().replace(
                     "&nbsp;",
                     " "
@@ -1519,13 +1458,7 @@ class NewEditor : BaseActivity(),
                         " "
                     ).split("\\s+".toRegex()).size
                 )
-            } /*else if (EditorFragmentAbstract.imageUploading == 0) {
-                Log.e(
-                    "imageuploading",
-                    EditorFragmentAbstract.imageUploading.toString() + ""
-                )
-                showToast(getString(com.mycity4kids.R.string.image_upload_wait))
-            }*/ else {
+            } else {
                 if (intent.getStringExtra("from") != null && intent.getStringExtra("from") == "publishedList") {
                     launchSpellCheckDialog()
                 } else {
@@ -1568,7 +1501,7 @@ class NewEditor : BaseActivity(),
         body: String,
         draftId1: String
     ) {
-        showProgressDialog(resources.getString(com.mycity4kids.R.string.please_wait))
+        showProgressDialog(resources.getString(R.string.please_wait))
         val retrofit = BaseApplication.getInstance().retrofit
         // prepare call in Retrofit 2.0
         val articleDraftAPI =
@@ -1604,7 +1537,7 @@ class NewEditor : BaseActivity(),
             ) {
                 removeProgressDialog()
                 if (response.body() == null) {
-                    showToast(getString(com.mycity4kids.R.string.server_went_wrong))
+                    showToast(getString(R.string.server_went_wrong))
                     return
                 }
                 try {
@@ -1632,15 +1565,15 @@ class NewEditor : BaseActivity(),
                         }
                     } else {
                         if (StringUtils.isNullOrEmpty(responseModel.reason)) {
-                            showToast(getString(com.mycity4kids.R.string.toast_response_error))
+                            showToast(getString(R.string.toast_response_error))
                         } else {
                             showToast(responseModel.reason)
                         }
                     }
-                } catch (e: java.lang.Exception) {
+                } catch (e: Exception) {
                     Crashlytics.logException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
-                    showToast(getString(com.mycity4kids.R.string.went_wrong))
+                    showToast(getString(R.string.went_wrong))
                 }
             }
 
@@ -1650,7 +1583,7 @@ class NewEditor : BaseActivity(),
             ) {
                 Crashlytics.logException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
-                showToast(getString(com.mycity4kids.R.string.went_wrong))
+                showToast(getString(R.string.went_wrong))
             }
         }
 
@@ -1663,7 +1596,6 @@ class NewEditor : BaseActivity(),
         spellCheckDialogFragment.isCancelable = true
         spellCheckDialogFragment.show(fm, "Spell Check")
     }
-
 
     private class MyHandler internal constructor(activity: NewEditor) :
         Handler() {
