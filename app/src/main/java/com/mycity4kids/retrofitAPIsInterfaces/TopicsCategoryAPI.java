@@ -1,5 +1,6 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.SuggestedTopicsResponse;
@@ -27,8 +28,11 @@ public interface TopicsCategoryAPI {
     @GET("/v1/categories/")
     Call<ResponseBody> downloadTopicsJSON();
 
-    @GET("http://192.168.1.12/remote/response.json")
-    Call<ResponseBody> TopicsJSON();
+    @GET("http://192.168.29.66/momVlogData/abc.json")
+    Call<Topics> TopicsJSON();
+
+    @GET("/v2/categories/")
+    Call<Topics> MomVlogTopics(@Query("id") String id);
 
     @GET("/v1/articles/topics/{categoryId}")
     Call<ArticleListingResponse> getArticlesForCategory(@Path("categoryId") String categoryId,

@@ -37,6 +37,24 @@ public class Topics implements Parcelable {
     private String is_live;
     @SerializedName("mapped_category")
     private String mapped_category;
+    private MomVlogsSubCategoryModel momVlogsSubCategoryModel;
+    private Boolean isSelectedSubCategory = false;
+
+    public Boolean getSelectedSubCategory() {
+        return isSelectedSubCategory;
+    }
+
+    public void setSelectedSubCategory(Boolean selectedSubCategory) {
+        isSelectedSubCategory = selectedSubCategory;
+    }
+
+    public MomVlogsSubCategoryModel getMomVlogsSubCategoryModel() {
+        return momVlogsSubCategoryModel;
+    }
+
+    public void setMomVlogsSubCategoryModel(MomVlogsSubCategoryModel momVlogsSubCategoryModel) {
+        this.momVlogsSubCategoryModel = momVlogsSubCategoryModel;
+    }
 
     public static class ExtraData implements Parcelable {
         @SerializedName("challenge")
@@ -324,6 +342,7 @@ public class Topics implements Parcelable {
         is_live = in.readString();
         prevKey = in.readByte() != 0;
         mapped_category = in.readString();
+        isSelectedSubCategory = in.readByte() != 0;
     }
 
     public List<ExtraData> getExtraData() {
@@ -440,6 +459,7 @@ public class Topics implements Parcelable {
         return showInMenu;
     }
 
+
     public void setShowInMenu(String showInMenu) {
         this.showInMenu = showInMenu;
     }
@@ -474,5 +494,6 @@ public class Topics implements Parcelable {
         dest.writeString(is_live);
         dest.writeByte((byte) (prevKey ? 1 : 0));
         dest.writeString(mapped_category);
+        dest.writeByte((byte) (isSelectedSubCategory ? 1 : 0));
     }
 }

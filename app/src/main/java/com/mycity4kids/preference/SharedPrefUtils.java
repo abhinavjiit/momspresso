@@ -657,4 +657,16 @@ public class SharedPrefUtils {
         editor.putString(ADVERTISEMENT_ID, advertisementId);
         editor.commit();
     }
+
+    public static Boolean getFollowClickCountInMomVlog(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (sharedPref.getBoolean("isFiveClickDone", false));
+    }
+
+    public static void setFollowClickCountInMomVlog(Context context, Boolean isFiveClickDone) {
+        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = sharedPref.edit();
+        editor.putBoolean("isFiveClickDone", isFiveClickDone);
+        editor.commit();
+    }
 }

@@ -46,7 +46,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/article_listing.article_image"
                     android:layout_alignParentTop="true"
-                    android:layout_centerInParent="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="-2dp"
+                    android:layout_marginEnd="0dp"
                     android:contentDescription="@string/author_img" />
 
                 <RelativeLayout

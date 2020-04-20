@@ -138,7 +138,7 @@ public class ChallengeListingRecycleAdapter extends
         ImageView logoImageView;
 
 
-        public ChallengeListingViewHolder(View itemView, RecyclerViewClickListener recyclerViewClickListener) {
+         ChallengeListingViewHolder(View itemView, RecyclerViewClickListener recyclerViewClickListener) {
             super(itemView);
             challengeNameImage = (ImageView) itemView.findViewById(R.id.ChallengeNameImage);
             challengeHeaderText = (RelativeLayout) itemView.findViewById(R.id.challenge_header_text);

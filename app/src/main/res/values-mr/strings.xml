@@ -1330,4 +1330,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="video_upload_thankyou_msg">धन्यवाद!आपला व्हिडिओ अपलोड झाल्यावर तुम्हाला नोटिफिकेशन पाठवू</string>
   <string name="video_upload_success">यशस्वीरीत्या अपलोड</string>
   <string name="all_open">उघडा</string>
+  <string name="watch_other_videos_text_in_mom_vlog_following_feed">Watch other awesome videos while we create your personalized feed</string>
+  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">Follow creators to create you own following feed</string>
+  <string name="follow_the_best_vloggers_on_momspresso">Follow the best vloggers on Momspresso</string>
 </resources>

@@ -103,6 +103,8 @@ public class UserDetailResult implements Parcelable {
     private String blogTitleSlug;
     @SerializedName("isNewUser")
     private String isNewUser;
+    @SerializedName("following")
+    private Boolean following;
 
     protected UserDetailResult(Parcel in) {
         id = in.readString();
@@ -499,6 +501,14 @@ public class UserDetailResult implements Parcelable {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public Boolean getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(Boolean following) {
+        this.following = following;
     }
 
     public ArrayList<String> getCreaterLangs() {

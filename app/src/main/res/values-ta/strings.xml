@@ -1328,4 +1328,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="video_upload_thankyou_msg">நன்றி! உங்கள் வீடியோ பதிவேற்றப்பட்டதும் நாங்கள் உங்களுக்கு தெரியப்படுத்துகிறோம்.</string>
   <string name="video_upload_success">வெற்றிகரமாக பதிவேற்றப்பட்டது</string>
   <string name="all_open">திற</string>
+  <string name="watch_other_videos_text_in_mom_vlog_following_feed">Watch other awesome videos while we create your personalized feed</string>
+  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">Follow creators to create you own following feed</string>
+  <string name="follow_the_best_vloggers_on_momspresso">Follow the best vloggers on Momspresso</string>
 </resources>

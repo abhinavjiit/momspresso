@@ -58,6 +58,56 @@ public class VlogsListingAndDetailResult {
     private boolean is_gold = false;
     @SerializedName("winner")
     private int winner = 0;
+    private int itemType = 0;
+    private ArrayList<UserDetailResult> carouselVideoList;
+    private boolean responseReceived = false;
+    private boolean isCarouselRequestRunning = false;
+    private int start = 0;
+    private int index = 0;
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public VlogsListingAndDetailResult(int itemType) {
+        this.itemType = itemType;
+    }
+
+    public int getStart() {
+        return start;
+    }
+
+    public void setStart(int start) {
+        this.start = start;
+    }
+
+    public boolean isResponseReceived() {
+        return responseReceived;
+    }
+
+    public void setResponseReceived(boolean responseReceived) {
+        this.responseReceived = responseReceived;
+    }
+
+    public boolean isCarouselRequestRunning() {
+        return isCarouselRequestRunning;
+    }
+
+    public void setCarouselRequestRunning(boolean carouselRequestRunning) {
+        isCarouselRequestRunning = carouselRequestRunning;
+    }
+
+    public ArrayList<UserDetailResult> getCarouselVideoList() {
+        return carouselVideoList;
+    }
+
+    public void setCarouselVideoList(ArrayList<UserDetailResult> carouselVideoList) {
+        this.carouselVideoList = carouselVideoList;
+    }
 
     public String getSharing_url() {
         return sharing_url;
@@ -243,4 +293,11 @@ public class VlogsListingAndDetailResult {
         this.is_bookmark = is_bookmark;
     }
 
+    public int getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(int itemType) {
+        this.itemType = itemType;
+    }
 }

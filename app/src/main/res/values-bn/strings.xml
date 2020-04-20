@@ -1337,4 +1337,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="video_upload_thankyou_msg">ধন্যবাদ! আপনার ভিডিওটি আপলোড হলেই আমরা আপনাকে নোটিফিকেশন পাঠাবো|</string>
   <string name="video_upload_success">ভিডিওটি সফলভাবে আপলোড হয়েছে</string>
   <string name="all_open">দেখুন</string>
+  <string name="watch_other_videos_text_in_mom_vlog_following_feed">Watch other awesome videos while we create your personalized feed</string>
+  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">Follow creators to create you own following feed</string>
 </resources>
