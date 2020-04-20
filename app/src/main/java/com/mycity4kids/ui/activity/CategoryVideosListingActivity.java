@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
@@ -15,8 +16,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
@@ -32,15 +31,13 @@ import com.mycity4kids.ui.adapter.VideoTopicsPagerAdapter;
 import com.mycity4kids.ui.fragment.CategoryVideosTabFragment;
 import com.mycity4kids.ui.fragment.ChallengeCategoryVideoTabFragment;
 import com.mycity4kids.utils.AppUtils;
-import com.mycity4kids.utils.ArrayAdapterFactory;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
@@ -62,6 +59,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
     private FloatingActionButton fabAdd;
     private CoordinatorLayout root;
     private View momVlogCoachMark;
+    private ArrayList<Topics> categoriesList;
 
 
     @Override
@@ -72,6 +70,8 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         ((BaseApplication) getApplication()).setActivity(this);
         fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
         momVlogCoachMark = (CoordinatorLayout) findViewById(R.id.momVlogRootLayout);
+        subTopicsList = new ArrayList<>();
+        getAllMomVlolgCategries();
         momVlogCoachMark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -131,65 +131,49 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         toolbarTitleTextView.setText(getString(R.string.myprofile_section_videos_label));
         Utils.pushOpenScreenEvent(this, "TopicArticlesListingScreen",
                 SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-        try {
 
-            FileInputStream fileInputStream = BaseApplication.getAppContext()
-                    .openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-            String fileContent = AppUtils.convertStreamToString(fileInputStream);
-            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-            TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
-            createTopicsData(res);
-            getCurrentParentTopicCategoriesAndSubCategories();
-            initializeUI();
-        } catch (FileNotFoundException e) {
-            Crashlytics.logException(e);
-            Log.d("FileNotFoundException", Log.getStackTraceString(e));
-            Retrofit retro = BaseApplication.getInstance().getRetrofit();
-            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
+    }
 
-            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
-            caller.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    boolean writtenToDisk = AppUtils
-                            .writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE,
-                                    response.body());
-                    Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
-                    try {
-                        FileInputStream fileInputStream = BaseApplication.getAppContext()
-                                .openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                        String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-                        TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
-                        createTopicsData(res);
-                        getCurrentParentTopicCategoriesAndSubCategories();
-                        initializeUI();
-                    } catch (FileNotFoundException e) {
-                        Crashlytics.logException(e);
-                        Log.d("FileNotFoundException", Log.getStackTraceString(e));
+    private void getAllMomVlolgCategries() {
+        showProgressDialog("Please wait");
+        Retrofit retrofit = BaseApplication.getInstance().getVlogsRetrofit();
+        TopicsCategoryAPI topicsCategoryApi = retrofit.create(TopicsCategoryAPI.class);
+        Call<Topics> call = topicsCategoryApi.MomVlogTopics("category-d4379f58f7b24846adcefc82dc22a86b");
+        call.enqueue(new Callback<Topics>() {
+
+            @Override
+            public void onResponse(@NonNull Call<Topics> call, @NonNull Response<Topics> response) {
+                removeProgressDialog();
+                if (response.isSuccessful() && response.body() != null) {
+                    categoriesList = response.body().getChild();
+                    for (int i = 0; i < categoriesList.size(); i++) {
+                        if ("true".equals(categoriesList.get(i).getShowInMenu())) {
+                            subTopicsList.add(categoriesList.get(i));
+                        }
                     }
+                    initializeUI();
                 }
+            }
 
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Crashlytics.logException(t);
-                    Log.d("MC4KException", Log.getStackTraceString(t));
-                }
-            });
-        }
+            @Override
+            public void onFailure(@NonNull Call<Topics> call, @NonNull Throwable t) {
+                Crashlytics.logException(t);
+                Log.d("MC4KException", Log.getStackTraceString(t));
+            }
+        });
 
 
     }
 
     private void fireEventForVideoCreationIntent() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
+        VlogsListingAndDetailsAPI vlogsListingAndDetailsApi = retrofit.create(VlogsListingAndDetailsAPI.class);
         VlogsEventRequest vlogsEventRequest = new VlogsEventRequest();
         vlogsEventRequest.setCreatedTime(System.currentTimeMillis());
         vlogsEventRequest.setKey(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         vlogsEventRequest.setTopic("create_video_fab");
         vlogsEventRequest.setPayload(vlogsEventRequest.getPayload());
-        Call<ResponseBody> call = vlogsListingAndDetailsAPI.addVlogsCreateIntentEvent(vlogsEventRequest);
+        Call<ResponseBody> call = vlogsListingAndDetailsApi.addVlogsCreateIntentEvent(vlogsEventRequest);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
@@ -210,20 +194,20 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
     }
 
     private void initializeUI() {
-        Topics mainTopic = new Topics();
-        mainTopic.setId(null);
-        String allCategoryLabel = "";
-        allCategoryLabel = getString(R.string.article_listing_type_trending_label);
-        mainTopic.setDisplay_name(allCategoryLabel);
-        mainTopic.setTitle(allCategoryLabel);
+        Topics following = new Topics();
+        following.setId(null);
+        String followingLabel = "";
+        followingLabel = "Following";
+        following.setDisplay_name(followingLabel);
+        following.setTitle(followingLabel);
+        subTopicsList.add(0, following);
 
-        subTopicsList.add(0, mainTopic);
         for (int i = 0; i < subTopicsList.size(); i++) {
             Log.d("VIDEO TOPIC", subTopicsList.get(i).getDisplay_name() + "  --  " + subTopicsList.get(i).getId());
             tabLayout.addTab(tabLayout.newTab().setText(subTopicsList.get(i).getDisplay_name()));
         }
 
-        AppUtils.changeTabsFont(tabLayout);
+        AppUtils.changeTabsFontInMomVlog(tabLayout, this);
 
         pagerAdapter = new VideoTopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), subTopicsList);
         viewPager.setAdapter(pagerAdapter);
@@ -294,9 +278,8 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
 
                         // create duplicate entry for subcategories with no child
                         if (responseData.getData().get(i).getChild().get(k).getChild().isEmpty()) {
-                            ArrayList<Topics> duplicateEntry = new ArrayList<Topics>();
-                            //adding exact same object adds the object recursively producing stackoverflow exception when writing for Parcel.
-                            //So need to create different object with same params
+                            //adding exact same object adds the object recursively producing stackoverflow exception
+                            // when writing for Parcel. So need to create different object with same params
                             Topics dupChildTopic = new Topics();
                             dupChildTopic.setChild(new ArrayList<Topics>());
                             dupChildTopic.setId(responseData.getData().get(i).getChild().get(k).getId());
@@ -312,6 +295,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                                     .setShowInMenu(responseData.getData().get(i).getChild().get(k).getShowInMenu());
                             dupChildTopic.setSlug(responseData.getData().get(i).getChild().get(k).getSlug());
                             dupChildTopic.setTitle(responseData.getData().get(i).getChild().get(k).getTitle());
+                            ArrayList<Topics> duplicateEntry = new ArrayList<Topics>();
                             duplicateEntry.add(dupChildTopic);
                             responseData.getData().get(i).getChild().get(k).setChild(duplicateEntry);
                         }
@@ -334,7 +318,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             subTopicsList = new ArrayList<>();
             //Selected topic is Main Category
             if (parentTopicId.equals(allTopicsList.get(i).getId())) {
-//                subTopicsList.addAll(allTopicsList.get(i).getChild());
+                // subTopicsList.addAll(allTopicsList.get(i).getChild());
                 for (int j = 0; j < allTopicsList.get(i).getChild().size(); j++) {
                     if ("1".equals(allTopicsList.get(i).getChild().get(j).getShowInMenu())) {
                         subTopicsList.add(allTopicsList.get(i).getChild().get(j));
@@ -365,16 +349,9 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-
-        }
-
     }
-
-
 }

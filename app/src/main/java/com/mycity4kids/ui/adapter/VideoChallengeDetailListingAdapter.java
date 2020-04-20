@@ -1,40 +1,32 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
-import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
-import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
-import com.mycity4kids.utils.MixPanelUtils;
-import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
 
 import java.io.FileInputStream;
@@ -46,7 +38,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class VideoChallengeDetailListingAdapter extends BaseAdapter {
+public class VideoChallengeDetailListingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
     private LayoutInflater mInflator;
@@ -64,11 +56,13 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
     private int num_of_categorys;
     private int screenWidth;
     private String imageUrl;
+    RecyclerViewClickListner recyclerViewClickListner;
 
 
-    public VideoChallengeDetailListingAdapter(Context pContext, String selectedId, Topics topics) {
+    public VideoChallengeDetailListingAdapter(RecyclerViewClickListner recyclerViewClickListner, Context pContext, String selectedId, Topics topics) {
         float density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.recyclerViewClickListner = recyclerViewClickListner;
         mContext = pContext;
         this.topics = topics;
         String selectedId1 = selectedId;
@@ -85,6 +79,71 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
         articleDataModelsNew = mParentingLists_new;
     }
 
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        //  if (viewType == 1) {
+        ViewHolderChallenge viewHolderChallenge = null;
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.mom_vlog_listing_adapter, parent, false);
+        viewHolderChallenge = new ViewHolderChallenge(view, recyclerViewClickListner);
+        return viewHolderChallenge;
+//        } else {
+//            AddVlogViewHolderChallenge addVlogViewHolderChallenge = null;
+//            View view = LayoutInflater.from(parent.getContext())
+//                    .inflate(R.layout.add_momvlog_list_item, parent, false);
+//
+//            addVlogViewHolderChallenge = new AddVlogViewHolderChallenge(view);
+//            return addVlogViewHolderChallenge;
+//        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof ViewHolderChallenge) {
+            Picasso.get().load(articleDataModelsNew.get(position).getThumbnail()).fit().into(((ViewHolderChallenge) holder).articleImageView);
+            ((ViewHolderChallenge) holder).articleTitleTextView.setText(articleDataModelsNew.get(position).getTitle());
+            ((ViewHolderChallenge) holder).author_name.setText(articleDataModelsNew.get(position).getAuthor().getFirstName().trim() + " " + articleDataModelsNew.get(position).getAuthor().getLastName().trim());
+            ((ViewHolderChallenge) holder).viewCountTextView.setText(articleDataModelsNew.get(position).getView_count());
+            ((ViewHolderChallenge) holder).recommendCountTextView1.setText(articleDataModelsNew.get(position).getLike_count());
+            if (articleDataModelsNew.get(position).isIs_gold()) {
+                ((ViewHolderChallenge) holder).imageWinner.setImageResource(R.drawable.ic_star_yellow);
+            } else if (articleDataModelsNew.get(position).getWinner() == 1) {
+                ((ViewHolderChallenge) holder).imageWinner.setImageResource(R.drawable.ic_trophy);
+
+            } else {
+                ((ViewHolderChallenge) holder).imageWinner.setVisibility(View.GONE);
+            }
+
+
+     /*       String userName = articleDataModelsNew.get(position).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position).getAuthor().getLastName();
+            if (StringUtils.isNullOrEmpty(userName) || userName.trim().equalsIgnoreCase("")) {
+                holder.txvAuthorName.setText("NA");
+            } else {
+                holder.txvAuthorName.setText(userName);
+            }
+        } catch (Exception e) {
+            holder.txvAuthorName.setText("NA");
+        }
+        try {
+            imageUrl = articleDataModelsNew.get(position).getThumbnail() + "/tr:w-" + screenWidth + ",h-" + screenWidth / 2 + ",fo-auto";
+            Picasso.get().load(imageUrl)
+                    .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
+        } catch (Exception e) {
+            holder.articleImageView.setImageResource(R.drawable.default_article);
+        }
+        if (articleDataModelsNew.get(position).isIs_gold()) {
+            holder.goldLogo.setVisibility(View.VISIBLE);
+        } else {
+            holder.goldLogo.setVisibility(View.GONE);
+        }
+        if (article*/
+
+        }
+
+
+    }
+
     @Override
     public int getItemViewType(int position) {
         if (position != 0 && position % 5 == 0) {
@@ -94,6 +153,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
         }
     }
 
+/*
     @Override
     public int getCount() {
         return articleDataModelsNew == null ? 0 : articleDataModelsNew.size();
@@ -102,7 +162,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
     @Override
     public Object getItem(int position) {
         return articleDataModelsNew.get(position);
-    }
+    }*/
 
     @Override
     public long getItemId(int position) {
@@ -111,12 +171,18 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
 
 
     @Override
-    public int getViewTypeCount() {
-        return 2;
+    public int getItemCount() {
+        return articleDataModelsNew == null ? 0 : articleDataModelsNew.size();
     }
 
+   /* @Override
+    public int getViewTypeCount() {
+        return 2;
+    }*/
 
-    @Override
+
+    //  @Override
+/*
     public View getView(final int position, View view, ViewGroup parent) {
         if (getItemViewType(position) == 2) {
             VideoChallengeHeaderView videoChallengeHeaderView;
@@ -296,6 +362,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
 
 
     }
+*/
 
     private void findActiveVideoChallenge() {
         try {
@@ -399,19 +466,36 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
     }
 
 
-    class ViewHolderChallenge {
-        RelativeLayout winnerLayout;
-        TextView goldLogo;
-        TextView txvArticleTitle;
-        TextView txvAuthorName;
+    private class ViewHolderChallenge extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView articleTitleTextView;
+        TextView author_name;
+        ImageView imageWinner;
         ImageView articleImageView;
-        ImageView authorImageView;
         TextView viewCountTextView;
-        TextView commentCountTextView;
-        TextView recommendCountTextView;
+        TextView recommendCountTextView1;
+        RelativeLayout container;
+
+        ViewHolderChallenge(@NonNull View itemView, RecyclerViewClickListner recyclerViewClickListner) {
+            super(itemView);
+
+            articleTitleTextView = itemView.findViewById(R.id.articleTitleTextView);
+            articleImageView = itemView.findViewById(R.id.articleImageView);
+            author_name = itemView.findViewById(R.id.author_name);
+            recommendCountTextView1 = itemView.findViewById(R.id.recommendCountTextView1);
+            viewCountTextView = itemView.findViewById(R.id.viewCountTextView1);
+            imageWinner = itemView.findViewById(R.id.imageWinner);
+            container = itemView.findViewById(R.id.container);
+            container.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            recyclerViewClickListner.onRecyclerClick(view, getAdapterPosition());
+        }
     }
 
-    class AddVlogViewHolderChallenge {
+
+    class AddVlogViewHolderChallenge extends RecyclerView.ViewHolder {
         RelativeLayout winnerLayout, momVlogLayout;
         TextView goldLogo;
         ImageView addMomVlogImageView;
@@ -426,6 +510,26 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
         TextView videoLogBanner;
         TextView sub_title;
         LinearLayout buttonsLayout;
+
+        public AddVlogViewHolderChallenge(@NonNull View itemView) {
+            super(itemView);
+            goldLogo = (TextView) itemView.findViewById(R.id.goldLogo);
+            winnerLayout = (RelativeLayout) itemView.findViewById(R.id.winnerLayout);
+            momVlogLayout = (RelativeLayout) itemView.findViewById(R.id.momVlogLayout);
+            title = (TextView) itemView.findViewById(R.id.title);
+
+            sub_title = (TextView) itemView.findViewById(R.id.sub_title);
+            videoLogBanner = (TextView) itemView.findViewById(R.id.videoLogBanner);
+            buttonsLayout = (LinearLayout) itemView.findViewById(R.id.buttonsLayout);
+            txvArticleTitle = (TextView) itemView.findViewById(R.id.txvArticleTitle);
+            txvAuthorName = (TextView) itemView.findViewById(R.id.txvAuthorName);
+            articleImageView = (ImageView) itemView.findViewById(R.id.articleImageView);
+            authorImageView = (ImageView) itemView.findViewById(R.id.authorImageView);
+            viewCountTextView = (TextView) itemView.findViewById(R.id.viewCountTextView);
+            commentCountTextView = (TextView) itemView.findViewById(R.id.commentCountTextView);
+            recommendCountTextView = (TextView) itemView.findViewById(R.id.recommendCountTextView);
+            addMomVlogImageView = (ImageView) itemView.findViewById(R.id.addMomVlogImageView);
+        }
     }
 
     class VideoChallengeHeaderView {
@@ -434,6 +538,10 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
         TextView challengeNameText;
         PlayerView mExoPlayerView;
 
+    }
+
+    public interface RecyclerViewClickListner {
+        void onRecyclerClick(View v, int pos);
     }
 }
 

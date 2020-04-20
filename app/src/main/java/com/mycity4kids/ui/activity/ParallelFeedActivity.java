@@ -237,9 +237,13 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                     if (!fromLoadMore) {
                         dataList.addAll(0, dataListHeader);
                         finalList = dataList;
+                        finalList.add(new VlogsListingAndDetailResult(1));
                         setRecycler();
                     } else {
                         finalList.addAll(dataList);
+                        if (dataList.size() > 10) {
+                            finalList.add(new VlogsListingAndDetailResult(1));
+                        }
                     }
                     recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);
                     videoRecyclerViewAdapter.updateList(finalList);

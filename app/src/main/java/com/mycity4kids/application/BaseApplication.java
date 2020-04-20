@@ -59,6 +59,7 @@ public class BaseApplication extends Application {
     String data = "";
     private static BaseApplication applicationInstance;
     private static Retrofit retrofit;
+    private static Retrofit vlogRetrofit;
     private static Retrofit customTimeoutRetrofit;
     private static Retrofit groupsRetrofit;
     private static Retrofit azureRetrofit;
@@ -236,6 +237,64 @@ public class BaseApplication extends Application {
         }
     };
 
+    public Retrofit createMomVlogRetrofitInstance(String baseUrl) {
+        Interceptor mainInterceptor = new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+                HttpUrl originalHttpUrl = original.url();
+                Request.Builder requestBuilder = original.newBuilder();
+                requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
+                requestBuilder
+                        .addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+                requestBuilder.addHeader("mc4kToken",
+                        SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
+                requestBuilder.addHeader("agent", "android");
+                requestBuilder.addHeader("manufacturer", Build.MANUFACTURER);
+                requestBuilder.addHeader("model", Build.MODEL);
+                requestBuilder.addHeader("source", "2");
+                requestBuilder.addHeader("appVersion", appVersion);
+                requestBuilder.addHeader("latitude", SharedPrefUtils.getUserLocationLatitude(getApplicationContext()));
+                requestBuilder
+                        .addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
+                requestBuilder.addHeader("userPrint", "" + AppUtils.getDeviceId(getApplicationContext()));
+                Request request = requestBuilder.build();
+                return chain.proceed(request);
+            }
+        };
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        if (BuildConfig.DEBUG) {
+            client = new OkHttpClient
+                    .Builder()
+                    .addInterceptor(mainInterceptor)
+                    .addInterceptor(logging)
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)
+                    .build();
+        } else {
+            client = new OkHttpClient
+                    .Builder()
+                    .addInterceptor(mainInterceptor)
+                    .addInterceptor(logging)
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)
+                    .build();
+        }
+
+        vlogRetrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(buildGsonConverter())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(client)
+                .build();
+        return vlogRetrofit;
+    }
+
+
     public Retrofit createRetrofitInstance(String baseUrl) {
         Interceptor mainInterceptor = new Interceptor() {
             @Override
@@ -408,6 +467,13 @@ public class BaseApplication extends Application {
             createRetrofitInstance(SharedPrefUtils.getBaseUrl(this));
         }
         return retrofit;
+    }
+
+    public Retrofit getVlogsRetrofit() {
+        if (null == vlogRetrofit) {
+            createMomVlogRetrofitInstance("https://stagingapi.momspresso.com/");
+        }
+        return vlogRetrofit;
     }
 
     public Retrofit getAzureRetrofit() {

@@ -4,11 +4,12 @@ import android.app.Dialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
 import androidx.core.content.ContextCompat;
+
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -21,7 +22,7 @@ import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.PlaybackControlView;
+import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
@@ -72,7 +73,7 @@ public class ExoplayerVideoChallengePlayViewActivity extends BaseActivity {
                     httpDataSourceFactory);
             Uri daUri = Uri.parse(url);
 
-            videoSource = new HlsMediaSource(daUri, dataSourceFactory, 1, null, null);
+            videoSource = new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(daUri);
         }
         initExoPlayer();
         openFullscreenDialog();
@@ -118,7 +119,7 @@ public class ExoplayerVideoChallengePlayViewActivity extends BaseActivity {
     }
 
     private void initFullscreenButton() {
-        PlaybackControlView controlView = exoPlayerView.findViewById(R.id.exo_controller);
+        PlayerControlView controlView = exoPlayerView.findViewById(R.id.exo_controller);
         fullScreenIcon = controlView.findViewById(R.id.exo_fullscreen_icon);
         fullScreenButton = controlView.findViewById(R.id.exo_fullscreen_button);
         fullScreenButton.setOnClickListener(v -> {

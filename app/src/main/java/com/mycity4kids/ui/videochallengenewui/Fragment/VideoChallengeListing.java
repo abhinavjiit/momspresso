@@ -4,6 +4,7 @@ import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,26 +12,26 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.mycity4kids.base.BaseFragment;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
@@ -50,7 +51,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class VideoChallengeListing extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class VideoChallengeListing extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, VideoChallengeDetailListingAdapter.RecyclerViewClickListner {
     private RelativeLayout mLodingView;
     private ProgressDialog mProgressDialog;
     private MixpanelAPI mixpanel;
@@ -59,7 +60,7 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
     private com.mycity4kids.models.Topics topic;
     private ArrayList<VlogsListingAndDetailResult> articleDataModelsNew;
     FloatingActionsMenu fabMenu;
-    ListView listView;
+    RecyclerView listView;
     TextView noBlogsTextView;
     FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
     FrameLayout frameLayout;
@@ -71,13 +72,17 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
     private ProgressBar progressBar;
     private ShimmerFrameLayout funnyvideosshimmer;
     private String videoCategory;
+    private GridLayoutManager gridLayoutManager;
+    private int firstVisibleItem;
+    private int visibleItemCount;
+    private int totalItemCount;
 
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.video_challenge_detail_listing, container, false);
-        listView = (ListView) view.findViewById(R.id.vlogsListView);
+        listView = (RecyclerView) view.findViewById(R.id.vlogsListView);
 
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
@@ -154,14 +159,43 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
         showProgressDialog("Fetching Data");
         nextPageNumber = 1;
         hitArticleListingApi();
-
-        articlesListingAdapter = new VideoChallengeDetailListingAdapter(getActivity(), selectedId, topic);
+        gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+        articlesListingAdapter = new VideoChallengeDetailListingAdapter(this, getActivity(), selectedId, topic);
+        listView.setLayoutManager(gridLayoutManager);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();
+        listView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                int position = parent.getChildAdapterPosition(view); // item position
+                int spanCount = 2;
+                int spacing = 10;//spacing between views in grid
 
+                if (position % 2 == 0) {
+                    int column = position % spanCount; // item column
 
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                    //  outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
+                    outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
+
+                    //           if (position < spanCount) { // top edge
+                    //             outRect.top = spacing;
+                    //       }
+                    //     outRect.bottom = spacing; // item bottom
+                } else if (position % 2 == 1) {
+                    int column = position % spanCount;
+                    outRect.left = spacing - column * spacing / spanCount;
+                    //    outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
+                } else {
+                    outRect.left = 0;
+                    outRect.right = 0;
+                    outRect.top = 0;
+                    outRect.bottom = 0;
+                }
+            }
+        });
+
+    /*    listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
 
@@ -172,13 +206,13 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (firstVisibleItem != 0) {
 
-                  /*  articlesListingAdapter.player.setPlayWhenReady(false);
-                    articlesListingAdapter.isPaused = true;*/
-                }/* else {
+                  *//*  articlesListingAdapter.player.setPlayWhenReady(false);
+                    articlesListingAdapter.isPaused = true;*//*
+                }*//* else {
 
                     articlesListingAdapter.player.setPlayWhenReady(true);
                     articlesListingAdapter.isPaused = false;
-                }*/
+                }*//*
 
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
                 if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
@@ -205,6 +239,30 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
                     intent.putExtra(Constants.AUTHOR, parentingListData.getAuthor().getId() + "~" + parentingListData.getAuthor().getFirstName() + " " + parentingListData.getAuthor().getLastName());
                     startActivity(intent);
                     Utils.momVlogEvent(getActivity(), "Challenge detail", "Video", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Detail", parentingListData.getId(), "");
+
+                }
+            }
+        });*/
+
+        listView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) {
+                    firstVisibleItem = gridLayoutManager.findFirstVisibleItemPosition();
+                    visibleItemCount = gridLayoutManager.getChildCount();
+                    totalItemCount = gridLayoutManager.getItemCount();
+
+                    boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
+                    if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
+                        mLodingView.setVisibility(View.VISIBLE);
+                        hitArticleListingApi();
+                        isReuqestRunning = true;
+                    }
 
                 }
             }
@@ -334,6 +392,22 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
 
 
         }
+
+    }
+
+    @Override
+    public void onRecyclerClick(View v, int adapterPosition) {
+        Intent intent = new Intent(getActivity(), ParallelFeedActivity.class);
+        MixPanelUtils.pushMomVlogClickEvent(mixpanel, adapterPosition, "" + videoCategory);
+        intent.putExtra(Constants.VIDEO_ID, articleDataModelsNew.get(adapterPosition).getId());
+        intent.putExtra(Constants.STREAM_URL, articleDataModelsNew.get(adapterPosition).getUrl());
+        intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(adapterPosition).getAuthor().getId());
+        intent.putExtra(Constants.FROM_SCREEN, "Funny Videos Listing");
+        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
+        intent.putExtra(Constants.ARTICLE_INDEX, "" + adapterPosition);
+        intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(adapterPosition).getAuthor().getId() + "~" + articleDataModelsNew.get(adapterPosition).getAuthor().getFirstName() + " " + articleDataModelsNew.get(adapterPosition).getAuthor().getLastName());
+        startActivity(intent);
+        Utils.momVlogEvent(getActivity(), "Challenge detail", "Video", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Detail", articleDataModelsNew.get(adapterPosition).getId(), "");
 
     }
 }

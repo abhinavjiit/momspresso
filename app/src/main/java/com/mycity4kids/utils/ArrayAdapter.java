@@ -40,6 +40,9 @@ public class ArrayAdapter<T> extends TypeAdapter<List<T>> {
             reader.endArray();
 
         }
+        else if (reader.peek() == JsonToken.NULL) {
+            reader.skipValue();
+        }
 
         return list;
     }

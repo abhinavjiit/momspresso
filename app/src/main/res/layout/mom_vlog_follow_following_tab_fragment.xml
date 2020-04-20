@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:fitsSystemWindows="true"
+        app:elevation="0dp">
+
+        <RelativeLayout
+            android:id="@+id/headerContainerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_scrollFlags="scroll">
+
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/headerTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#F9F9F9"
+                android:gravity="center"
+                android:padding="39dp"
+                android:text="Follow creators to create you own following feed"
+                android:textColor="#BABABA"
+                android:visibility="visible"
+                app:fontName="Roboto-Regular.ttf" />
+
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/suggestingFollowTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/headerTextView"
+                android:layout_marginStart="13dp"
+                android:layout_marginTop="@dimen/space_16"
+                android:background="@color/white"
+                android:text="People you would like to follow"
+                android:textColor="#515151"
+                android:textSize="@dimen/space_16"
+                android:visibility="visible"
+                app:fontName="Roboto-Medium.ttf" />
+        </RelativeLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_videos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:visibility="gone">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_funny_videos_article"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="visible"
+        fab:duration="1000">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/mainshimmer_layout" />
+
+            <include layout="@layout/mainshimmer_layout" />
+
+            <include layout="@layout/mainshimmer_layout" />
+
+            <include layout="@layout/mainshimmer_layout" />
+
+            <include layout="@layout/mainshimmer_layout" />
+
+        </LinearLayout>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

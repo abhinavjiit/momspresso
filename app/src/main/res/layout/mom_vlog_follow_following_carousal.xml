@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/headerTextView"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_16"
+        android:layout_marginTop="@dimen/space_16"
+        android:text="@string/follow_the_best_vloggers_on_momspresso"
+        android:textColor="#515151"
+        android:textSize="@dimen/space_16"
+        app:fontName="Roboto-Medium.ttf" />
+
+    <HorizontalScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/headerTextView"
+        android:background="@color/white"
+        android:visibility="gone">
+
+
+        <LinearLayout
+            android:id="@+id/userFollowingContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_17"
+            android:background="@color/white"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+
+            <LinearLayout
+                android:id="@+id/carosalContainer1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/space_30">
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/authorImageView1"
+                    android:layout_width="62dp"
+                    android:layout_height="62dp"
+                    android:src="@drawable/default_article" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/authorNameTextView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Deepika Pandey"
+                    android:textColor="#515151"
+                    app:fontName="Roboto-Medium.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/authorRankTextView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Rank:45"
+                    android:textColor="#979797"
+                    app:fontName="Roboto-Regular.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/authorFollowTextView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/red_rounded_border_shape"
+                    android:paddingStart="13dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="@dimen/space_13"
+                    android:paddingBottom="5dp"
+                    android:text="Follow"
+                    android:textColor="@color/app_red"
+                    app:fontName="Roboto-Medium.ttf" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/carosalContainer2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/space_30">
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/authorImageView2"
+                    android:layout_width="62dp"
+                    android:layout_height="62dp"
+                    android:src="@drawable/default_article" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/authorNameTextView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Deepika Pandey"
+                    android:textColor="#515151"
+                    app:fontName="Roboto-Medium.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/authorRankTextView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Rank:45"
+                    android:textColor="#979797"
+                    app:fontName="Roboto-Regular.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/authorFollowTextView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/red_rounded_border_shape"
+                    android:paddingStart="13dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="@dimen/space_13"
+                    android:paddingBottom="5dp"
+                    android:text="Follow"
+                    android:textColor="@color/app_red"
+                    app:fontName="Roboto-Medium.ttf" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/carosalContainer3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/space_30">
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/authorImageView3"
+                    android:layout_width="62dp"
+                    android:layout_height="62dp"
+                    android:src="@drawable/default_article" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/authorNameTextView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Deepika Pandey"
+                    android:textColor="#515151"
+                    app:fontName="Roboto-Medium.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/authorRankTextView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Rank:45"
+                    android:textColor="#979797"
+                    app:fontName="Roboto-Regular.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/authorFollowTextView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/red_rounded_border_shape"
+                    android:paddingStart="13dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="@dimen/space_13"
+                    android:paddingBottom="5dp"
+                    android:text="Follow"
+                    android:textColor="@color/app_red"
+                    app:fontName="Roboto-Medium.ttf" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/carosalContainer4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/space_30">
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/authorImageView4"
+                    android:layout_width="62dp"
+                    android:layout_height="62dp"
+                    android:src="@drawable/default_article" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/authorNameTextView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Deepika Pandey"
+                    android:textColor="#515151"
+                    app:fontName="Roboto-Medium.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/authorRankTextView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Rank:45"
+                    android:textColor="#979797"
+                    app:fontName="Roboto-Regular.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/authorFollowTextView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/red_rounded_border_shape"
+                    android:paddingStart="13dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="@dimen/space_13"
+                    android:paddingBottom="5dp"
+                    android:text="Follow"
+                    android:textColor="@color/app_red"
+                    app:fontName="Roboto-Medium.ttf" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/carosalContainer5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/space_30">
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/authorImageView5"
+                    android:layout_width="62dp"
+                    android:layout_height="62dp"
+                    android:src="@drawable/default_article" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/authorNameTextView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Deepika Pandey"
+                    android:textColor="#515151"
+                    app:fontName="Roboto-Medium.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/authorRankTextView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Rank:45"
+                    android:textColor="#979797"
+                    app:fontName="Roboto-Regular.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/authorFollowTextView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/red_rounded_border_shape"
+                    android:paddingStart="13dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="@dimen/space_13"
+                    android:paddingBottom="5dp"
+                    android:text="Follow"
+                    android:textColor="@color/app_red"
+                    app:fontName="Roboto-Medium.ttf" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/carosalContainer6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/space_30">
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/authorImageView6"
+                    android:layout_width="62dp"
+                    android:layout_height="62dp"
+                    android:src="@drawable/default_article" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/authorNameTextView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Deepika Pandey"
+                    android:textColor="#515151"
+                    app:fontName="Roboto-Medium.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/authorRankTextView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Rank:45"
+                    android:textColor="#979797"
+                    app:fontName="Roboto-Regular.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/authorFollowTextView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/red_rounded_border_shape"
+                    android:paddingStart="13dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="@dimen/space_13"
+                    android:paddingBottom="5dp"
+                    android:text="Follow"
+                    android:textColor="@color/app_red"
+                    app:fontName="Roboto-Medium.ttf" />
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/headerTextView"
+        android:background="@color/white"
+        android:visibility="visible"
+        app:duration="1000">
+
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_17"
+                android:background="@color/white"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="30dp">
+
+                    <ProgressBar
+                        android:layout_width="62dp"
+                        android:layout_height="62dp"
+                        android:indeterminate="true"
+                        android:indeterminateTint="@color/grey_light"
+                        android:indeterminateTintMode="src_atop" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:background="@color/grey_light"
+                        android:text="Deepika Pandey"
+                        android:textColor="@color/grey_light"
+                        app:fontName="Roboto-Medium.ttf" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:background="@color/grey_light"
+                        android:text="Rank:45"
+                        android:textColor="@color/grey_light"
+                        app:fontName="Roboto-Regular.ttf" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/red_rounded_border_shape"
+                        android:backgroundTint="@color/grey_light"
+                        android:paddingStart="13dp"
+
+                        android:paddingTop="5dp"
+                        android:paddingEnd="@dimen/space_13"
+                        android:paddingBottom="5dp"
+                        android:text="Follow"
+                        android:textColor="@color/grey_light"
+                        app:fontName="Roboto-Medium.ttf" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_30">
+
+                    <ProgressBar
+                        android:layout_width="62dp"
+                        android:layout_height="62dp"
+                        android:indeterminate="true"
+                        android:indeterminateTint="@color/grey_light"
+                        android:indeterminateTintMode="src_atop" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:background="@color/grey_light"
+                        android:text="Deepika Pandey"
+                        android:textColor="@color/grey_light"
+                        app:fontName="Roboto-Medium.ttf" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:background="@color/grey_light"
+                        android:text="Rank:45"
+                        android:textColor="@color/grey_light"
+                        app:fontName="Roboto-Regular.ttf" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/red_rounded_border_shape"
+                        android:backgroundTint="@color/grey_light"
+                        android:paddingStart="13dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="@dimen/space_13"
+                        android:paddingBottom="5dp"
+                        android:text="Follow"
+                        android:textColor="@color/grey_light"
+                        app:fontName="Roboto-Medium.ttf" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_30">
+
+                    <ProgressBar
+                        android:layout_width="62dp"
+                        android:layout_height="62dp"
+                        android:indeterminate="true"
+                        android:indeterminateTint="@color/grey_light"
+                        android:indeterminateTintMode="src_atop" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:background="@color/grey_light"
+                        android:text="Deepika Pandey"
+                        android:textColor="@color/grey_light"
+                        app:fontName="Roboto-Medium.ttf" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:background="@color/grey_light"
+                        android:text="Rank:45"
+                        android:textColor="@color/grey_light"
+                        app:fontName="Roboto-Regular.ttf" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/red_rounded_border_shape"
+                        android:backgroundTint="@color/grey_light"
+                        android:paddingStart="13dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="@dimen/space_13"
+                        android:paddingBottom="5dp"
+                        android:text="Follow"
+                        android:textColor="@color/grey_light"
+                        app:fontName="Roboto-Medium.ttf" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_30">
+
+                    <com.mikhaellopez.circularimageview.CircularImageView
+                        android:layout_width="62dp"
+                        android:layout_height="62dp"
+                        android:src="@drawable/default_article" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Deepika Pandey"
+                        android:textColor="#515151"
+                        app:fontName="Roboto-Medium.ttf" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Rank:45"
+                        android:textColor="#979797"
+                        app:fontName="Roboto-Regular.ttf" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/red_rounded_border_shape"
+                        android:paddingStart="13dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="@dimen/space_13"
+                        android:paddingBottom="5dp"
+                        android:text="Follow"
+                        android:textColor="@color/app_red"
+                        app:fontName="Roboto-Medium.ttf" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_30">
+
+                    <com.mikhaellopez.circularimageview.CircularImageView
+                        android:layout_width="62dp"
+                        android:layout_height="62dp"
+                        android:src="@drawable/default_article" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Deepika Pandey"
+                        android:textColor="#515151"
+                        app:fontName="Roboto-Medium.ttf" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Rank:45"
+                        android:textColor="#979797"
+                        app:fontName="Roboto-Regular.ttf" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/red_rounded_border_shape"
+                        android:paddingStart="13dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="@dimen/space_13"
+                        android:paddingBottom="5dp"
+                        android:text="Follow"
+                        android:textColor="@color/app_red"
+                        app:fontName="Roboto-Medium.ttf" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_30">
+
+                    <com.mikhaellopez.circularimageview.CircularImageView
+                        android:layout_width="62dp"
+                        android:layout_height="62dp"
+                        android:src="@drawable/default_article" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Deepika Pandey"
+                        android:textColor="#515151"
+                        app:fontName="Roboto-Medium.ttf" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Rank:45"
+                        android:textColor="#979797"
+                        app:fontName="Roboto-Regular.ttf" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/red_rounded_border_shape"
+                        android:paddingStart="13dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="@dimen/space_13"
+                        android:paddingBottom="5dp"
+                        android:text="Follow"
+                        android:textColor="@color/app_red"
+                        app:fontName="Roboto-Medium.ttf" />
+
+
+                </LinearLayout>
+            </LinearLayout>
+        </HorizontalScrollView>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+</RelativeLayout>

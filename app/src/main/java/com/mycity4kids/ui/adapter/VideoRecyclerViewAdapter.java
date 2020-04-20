@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -18,43 +19,66 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.crashlytics.android.Crashlytics;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.request.FollowUnfollowUserRequest;
+import com.mycity4kids.models.response.FollowUnfollowUserResponse;
+import com.mycity4kids.models.response.MomVlogersDetailResponse;
+import com.mycity4kids.models.response.UserDetailResult;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.profile.UserProfileActivity;
+import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.BaseViewHolder;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.fragment.AddCollectionAndCollectionItemDialogFragment;
 import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private static final int VIEW_TYPE_EMPTY = 0;
     private static final int VIEW_TYPE_NORMAL = 1;
+    private static final int VIEW_TYPE_CAROUSAL = 2;
     private Context context;
     private ViewHolder viewHolder;
     private String likeStatus;
     private String userDynamoId;
     private VideoFeedRecyclerViewClick videoFeedRecyclerViewClick;
     FragmentManager fm;
+    private int start = 1;
+    private int end = 0;
 
     private ArrayList<VlogsListingAndDetailResult> vlogsListingAndDetailResults;
 
@@ -85,6 +109,9 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             case VIEW_TYPE_EMPTY:
                 return new EmptyViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(R.layout.item_empty_view, parent, false));
+            case VIEW_TYPE_CAROUSAL:
+                return new FollowFollowingCarousal(LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.mom_vlog_follow_following_carousal, parent, false));
             default:
                 return null;
         }
@@ -98,8 +125,79 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position, List<Object> payload) {
-        viewHolder = (ViewHolder) holder;
-        holder.onBind(position);
+        if (holder instanceof ViewHolder) {
+            viewHolder = (ViewHolder) holder;
+            holder.onBind(position);
+        } else if (holder instanceof FollowFollowingCarousal) {
+
+            if (!vlogsListingAndDetailResults.get(position).isCarouselRequestRunning() && !vlogsListingAndDetailResults
+                    .get(position).isResponseReceived()) {
+                vlogsListingAndDetailResults.get(position).setCarouselRequestRunning(true);
+                ((FollowFollowingCarousal) holder).shimmerLayout.startShimmerAnimation();
+                ((FollowFollowingCarousal) holder).shimmerLayout.setVisibility(View.VISIBLE);
+                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
+                end = start + 5;
+                Call<MomVlogersDetailResponse> call = vlogsListingAndDetailsAPI.getVlogersData(
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), start, end,
+                        1);
+                start = end + start;
+                call.enqueue(new Callback<MomVlogersDetailResponse>() {
+                                 @Override
+                                 public void onResponse(@NonNull Call<MomVlogersDetailResponse> call,
+                                         @NonNull Response<MomVlogersDetailResponse> response) {
+                                     ((FollowFollowingCarousal) holder).shimmerLayout.stopShimmerAnimation();
+                                     ((FollowFollowingCarousal) holder).shimmerLayout.setVisibility(View.GONE);
+
+                                     if (response.isSuccessful() && null != response.body()) {
+                                         if (response.body().getData() != null) {
+                                             ArrayList<UserDetailResult> responseData = response.body().getData().getResult();
+
+                                             processVlogersData(
+                                                     (FollowFollowingCarousal) holder,
+                                                     responseData,
+                                                     position
+                                             );
+                                         }
+
+                                         vlogsListingAndDetailResults.get(position).setCarouselRequestRunning(true);
+                                         vlogsListingAndDetailResults.get(position).setResponseReceived(true);
+
+                                     } else {
+                                         vlogsListingAndDetailResults.get(position).setCarouselRequestRunning(true);
+                                         vlogsListingAndDetailResults.get(position).setResponseReceived(true);
+                                     }
+
+                                 }
+
+
+                                 @Override
+                                 public void onFailure(Call<MomVlogersDetailResponse> call, Throwable t) {
+
+                                 }
+                             }
+                );
+
+
+            } else if (vlogsListingAndDetailResults.get(position).isCarouselRequestRunning()
+                    && !vlogsListingAndDetailResults.get(position).isResponseReceived()) {
+
+            } else {
+
+                if (null != vlogsListingAndDetailResults.get(position).getCarouselVideoList()
+                        && !vlogsListingAndDetailResults.get(position).getCarouselVideoList().isEmpty()) {
+                    populateCarouselFollowFollowing(
+                            (FollowFollowingCarousal) holder,
+                            vlogsListingAndDetailResults.get(position).getCarouselVideoList()
+                    );
+                }
+
+            }
+
+
+        }
+
+
     }
 
     @Override
@@ -109,10 +207,14 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        if (vlogsListingAndDetailResults != null && vlogsListingAndDetailResults.size() > 0) {
-            return VIEW_TYPE_NORMAL;
+        if (vlogsListingAndDetailResults.get(position).getItemType() == 1) {
+            return VIEW_TYPE_CAROUSAL;
         } else {
-            return VIEW_TYPE_EMPTY;
+            if (vlogsListingAndDetailResults != null && vlogsListingAndDetailResults.size() > 0) {
+                return VIEW_TYPE_NORMAL;
+            } else {
+                return VIEW_TYPE_EMPTY;
+            }
         }
     }
 
@@ -361,6 +463,515 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                     });
         }
     }
+
+    public class FollowFollowingCarousal extends BaseViewHolder implements View.OnClickListener {
+
+        ShimmerFrameLayout shimmerLayout;
+        LinearLayout carosalContainer1, carosalContainer2, carosalContainer3, carosalContainer4, carosalContainer5, carosalContainer6;
+        HorizontalScrollView scroll;
+        ImageView authorImageView1, authorImageView2, authorImageView3, authorImageView4, authorImageView5, authorImageView6;
+        TextView authorNameTextView1, authorRankTextView1, authorFollowTextView1;
+        TextView authorNameTextView2, authorRankTextView2, authorFollowTextView2;
+        TextView authorNameTextView3, authorRankTextView3, authorFollowTextView3;
+        TextView authorNameTextView4, authorRankTextView4, authorFollowTextView4;
+        TextView authorNameTextView5, authorRankTextView5, authorFollowTextView5;
+        TextView authorNameTextView6, authorRankTextView6, authorFollowTextView6;
+
+
+        public FollowFollowingCarousal(View itemView) {
+            super(itemView);
+            shimmerLayout = itemView.findViewById(R.id.shimmerLayout);
+            carosalContainer1 = itemView.findViewById(R.id.carosalContainer1);
+            carosalContainer2 = itemView.findViewById(R.id.carosalContainer2);
+            carosalContainer3 = itemView.findViewById(R.id.carosalContainer3);
+            carosalContainer4 = itemView.findViewById(R.id.carosalContainer4);
+            carosalContainer5 = itemView.findViewById(R.id.carosalContainer5);
+            carosalContainer6 = itemView.findViewById(R.id.carosalContainer6);
+            authorImageView1 = itemView.findViewById(R.id.authorImageView1);
+            authorImageView2 = itemView.findViewById(R.id.authorImageView2);
+            authorImageView3 = itemView.findViewById(R.id.authorImageView3);
+            authorImageView4 = itemView.findViewById(R.id.authorImageView4);
+            authorImageView5 = itemView.findViewById(R.id.authorImageView5);
+            authorImageView6 = itemView.findViewById(R.id.authorImageView6);
+            authorNameTextView1 = itemView.findViewById(R.id.authorNameTextView1);
+            authorNameTextView2 = itemView.findViewById(R.id.authorNameTextView2);
+            authorNameTextView3 = itemView.findViewById(R.id.authorNameTextView3);
+            authorNameTextView4 = itemView.findViewById(R.id.authorNameTextView4);
+            authorNameTextView5 = itemView.findViewById(R.id.authorNameTextView5);
+            authorNameTextView6 = itemView.findViewById(R.id.authorNameTextView6);
+            authorRankTextView1 = itemView.findViewById(R.id.authorRankTextView1);
+            authorRankTextView2 = itemView.findViewById(R.id.authorRankTextView2);
+            authorRankTextView3 = itemView.findViewById(R.id.authorRankTextView3);
+            authorRankTextView4 = itemView.findViewById(R.id.authorRankTextView4);
+            authorRankTextView5 = itemView.findViewById(R.id.authorRankTextView5);
+            authorRankTextView6 = itemView.findViewById(R.id.authorRankTextView6);
+            authorFollowTextView1 = itemView.findViewById(R.id.authorFollowTextView1);
+            authorFollowTextView2 = itemView.findViewById(R.id.authorFollowTextView2);
+            authorFollowTextView3 = itemView.findViewById(R.id.authorFollowTextView3);
+            authorFollowTextView4 = itemView.findViewById(R.id.authorFollowTextView4);
+            authorFollowTextView5 = itemView.findViewById(R.id.authorFollowTextView5);
+            authorFollowTextView6 = itemView.findViewById(R.id.authorFollowTextView6);
+            scroll = itemView.findViewById(R.id.scroll);
+            authorFollowTextView1.setOnClickListener(this);
+            authorFollowTextView2.setOnClickListener(this);
+            authorFollowTextView3.setOnClickListener(this);
+            authorFollowTextView4.setOnClickListener(this);
+            authorFollowTextView5.setOnClickListener(this);
+            authorFollowTextView6.setOnClickListener(this);
+            carosalContainer1.setOnClickListener(this);
+            carosalContainer2.setOnClickListener(this);
+            carosalContainer3.setOnClickListener(this);
+            carosalContainer4.setOnClickListener(this);
+            carosalContainer5.setOnClickListener(this);
+            carosalContainer6.setOnClickListener(this);
+
+
+        }
+
+        @Override
+        protected void clear() {
+
+        }
+
+
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.authorFollowTextView1:
+                    if (vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(0)
+                            .getFollowing()) {
+                        unFollowApiCall(
+                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(0)
+                                        .getDynamoId(),
+                                getAdapterPosition(),
+                                0,
+                                authorFollowTextView1);
+                    } else {
+                        followApiCall(
+                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(0)
+                                        .getDynamoId(),
+                                getAdapterPosition(),
+                                0,
+                                authorFollowTextView1);
+                    }
+                    break;
+                case R.id.authorFollowTextView2:
+                    if (vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(1)
+                            .getFollowing()) {
+                        unFollowApiCall(
+                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(1)
+                                        .getDynamoId(),
+                                getAdapterPosition(),
+                                1,
+                                authorFollowTextView2);
+                    } else {
+                        followApiCall(
+                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(1)
+                                        .getDynamoId(),
+                                getAdapterPosition(),
+                                1,
+                                authorFollowTextView2);
+                    }
+                    break;
+                case R.id.authorFollowTextView3:
+                    if (vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(2)
+                            .getFollowing()) {
+                        unFollowApiCall(
+                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(2)
+                                        .getDynamoId(),
+                                getAdapterPosition(),
+                                2,
+                                authorFollowTextView3);
+                    } else {
+                        followApiCall(
+                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(2)
+                                        .getDynamoId(),
+                                getAdapterPosition(),
+                                2,
+                                authorFollowTextView3);
+                    }
+                    break;
+                case R.id.authorFollowTextView4:
+                    if (vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(3)
+                            .getFollowing()) {
+                        unFollowApiCall(
+                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(3)
+                                        .getDynamoId(),
+                                getAdapterPosition(),
+                                3,
+                                authorFollowTextView4);
+                    } else {
+                        followApiCall(
+                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(3)
+                                        .getDynamoId(),
+                                getAdapterPosition(),
+                                3,
+                                authorFollowTextView4);
+                    }
+                    break;
+                case R.id.authorFollowTextView5:
+                    if (vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(4)
+                            .getFollowing()) {
+                        unFollowApiCall(
+                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(4)
+                                        .getDynamoId(),
+                                getAdapterPosition(),
+                                4,
+                                authorFollowTextView5);
+                    } else {
+                        followApiCall(
+                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(4)
+                                        .getDynamoId(),
+                                getAdapterPosition(),
+                                4,
+                                authorFollowTextView5);
+                    }
+                    break;
+
+                case R.id.authorFollowTextView6:
+                    if (vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(5)
+                            .getFollowing()) {
+                        unFollowApiCall(
+                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(5)
+                                        .getDynamoId(),
+                                getAdapterPosition(),
+                                5,
+                                authorFollowTextView6);
+                    } else {
+                        followApiCall(
+                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(5)
+                                        .getDynamoId(),
+                                getAdapterPosition(),
+                                5,
+                                authorFollowTextView6);
+                    }
+                    break;
+
+                case R.id.carosalContainer1:
+                    Intent intent1 = new Intent(context, UserProfileActivity.class);
+                    intent1.putExtra(Constants.USER_ID,
+                            vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(0)
+                                    .getDynamoId());
+                    context.startActivity(intent1);
+                    break;
+                case R.id.carosalContainer2:
+
+                    Intent intent2 = new Intent(context, UserProfileActivity.class);
+                    intent2.putExtra(Constants.USER_ID,
+                            vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(1)
+                                    .getDynamoId());
+                    context.startActivity(intent2);
+                    break;
+                case R.id.carosalContainer3:
+                    Intent intent3 = new Intent(context, UserProfileActivity.class);
+                    intent3.putExtra(Constants.USER_ID,
+                            vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(2)
+                                    .getDynamoId());
+                    context.startActivity(intent3);
+                    break;
+                case R.id.carosalContainer4:
+                    Intent intent4 = new Intent(context, UserProfileActivity.class);
+                    intent4.putExtra(Constants.USER_ID,
+                            vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(3)
+                                    .getDynamoId());
+                    context.startActivity(intent4);
+                    break;
+                case R.id.carosalContainer5:
+                    Intent intent5 = new Intent(context, UserProfileActivity.class);
+                    intent5.putExtra(Constants.USER_ID,
+                            vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(4)
+                                    .getDynamoId());
+                    context.startActivity(intent5);
+                    break;
+                case R.id.carosalContainer6:
+                    Intent intent6 = new Intent(context, UserProfileActivity.class);
+                    intent6.putExtra(Constants.USER_ID,
+                            vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(5)
+                                    .getDynamoId());
+                    context.startActivity(intent6);
+                    break;
+            }
+        }
+    }
+
+
+    private void unFollowApiCall(String authorId,
+            int position,
+            int index,
+            TextView followFollowingTextView) {
+
+        vlogsListingAndDetailResults.get(position).getCarouselVideoList().get(index).setFollowing(false);
+        followFollowingTextView.setText(R.string.ad_follow_author);
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        FollowAPI vlogsListingAndDetailsAPI = retrofit.create(FollowAPI.class);
+        FollowUnfollowUserRequest followUnfollowUserRequest = new FollowUnfollowUserRequest();
+        followUnfollowUserRequest.setFollowee_id(authorId);
+        Call<FollowUnfollowUserResponse> call = vlogsListingAndDetailsAPI.unfollowUserV2(followUnfollowUserRequest);
+        call.enqueue(new Callback<FollowUnfollowUserResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<FollowUnfollowUserResponse> call,
+                    @NonNull Response<FollowUnfollowUserResponse> response) {
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<FollowUnfollowUserResponse> call, @NonNull Throwable t) {
+
+            }
+        });
+
+
+    }
+
+
+    private void followApiCall(String authorId,
+            int position,
+            int index,
+            TextView followFollowingTextView) {
+        vlogsListingAndDetailResults.get(position).getCarouselVideoList().get(index).setFollowing(true);
+        followFollowingTextView.setText(R.string.ad_following_author);
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        FollowAPI vlogsListingAndDetailsAPI = retrofit.create(FollowAPI.class);
+        FollowUnfollowUserRequest followUnfollowUserRequest = new FollowUnfollowUserRequest();
+        followUnfollowUserRequest.setFollowee_id(authorId);
+        Call<FollowUnfollowUserResponse> call = vlogsListingAndDetailsAPI.followUserV2(followUnfollowUserRequest);
+        call.enqueue(new Callback<FollowUnfollowUserResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<FollowUnfollowUserResponse> call,
+                    @NonNull Response<FollowUnfollowUserResponse> response) {
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<FollowUnfollowUserResponse> call, @NonNull Throwable t) {
+
+            }
+        });
+
+    }
+
+
+    private void processVlogersData(FollowFollowingCarousal holder, ArrayList<UserDetailResult> dataList,
+            int position) {
+        if (null != dataList && !dataList.isEmpty()) {
+            vlogsListingAndDetailResults.get(position).setCarouselVideoList(dataList);
+            populateCarouselFollowFollowing(holder, dataList);
+        }
+    }
+
+
+    private void populateCarouselFollowFollowing(FollowFollowingCarousal holder,
+            ArrayList<UserDetailResult> carosalList) {
+        if (carosalList.isEmpty()) {
+            holder.scroll.setVisibility(View.GONE);
+        } else {
+            holder.scroll.setVisibility(View.VISIBLE);
+        }
+
+        switch (carosalList.size()) {
+            case 1: {
+                updateCarosal(
+                        holder.authorFollowTextView1,
+                        holder.authorImageView1,
+                        holder.authorNameTextView1,
+                        holder.authorRankTextView1,
+                        carosalList.get(0)
+                );
+            }
+            break;
+            case 2: {
+                updateCarosal(
+                        holder.authorFollowTextView1,
+                        holder.authorImageView1,
+                        holder.authorNameTextView1,
+                        holder.authorRankTextView1,
+                        carosalList.get(0)
+                );
+                updateCarosal(
+                        holder.authorFollowTextView2,
+                        holder.authorImageView2,
+                        holder.authorNameTextView2,
+                        holder.authorRankTextView2,
+                        carosalList.get(1)
+                );
+            }
+            break;
+            case 3: {
+                updateCarosal(
+                        holder.authorFollowTextView1,
+                        holder.authorImageView1,
+                        holder.authorNameTextView1,
+                        holder.authorRankTextView1,
+                        carosalList.get(0)
+                );
+                updateCarosal(
+                        holder.authorFollowTextView2,
+                        holder.authorImageView2,
+                        holder.authorNameTextView2,
+                        holder.authorRankTextView2,
+                        carosalList.get(1)
+                );
+                updateCarosal(
+                        holder.authorFollowTextView3,
+                        holder.authorImageView3,
+                        holder.authorNameTextView3,
+                        holder.authorRankTextView3,
+                        carosalList.get(2)
+                );
+            }
+            break;
+            case 4: {
+                updateCarosal(
+                        holder.authorFollowTextView1,
+                        holder.authorImageView1,
+                        holder.authorNameTextView1,
+                        holder.authorRankTextView1,
+                        carosalList.get(0)
+                );
+                updateCarosal(
+                        holder.authorFollowTextView2,
+                        holder.authorImageView2,
+                        holder.authorNameTextView2,
+                        holder.authorRankTextView2,
+                        carosalList.get(1)
+                );
+                updateCarosal(
+                        holder.authorFollowTextView3,
+                        holder.authorImageView3,
+                        holder.authorNameTextView3,
+                        holder.authorRankTextView3,
+                        carosalList.get(2)
+                );
+                updateCarosal(
+                        holder.authorFollowTextView4,
+                        holder.authorImageView4,
+                        holder.authorNameTextView4,
+                        holder.authorRankTextView4,
+                        carosalList.get(3)
+                );
+            }
+            case 5: {
+                updateCarosal(
+                        holder.authorFollowTextView1,
+                        holder.authorImageView1,
+                        holder.authorNameTextView1,
+                        holder.authorRankTextView1,
+                        carosalList.get(0)
+                );
+                updateCarosal(
+                        holder.authorFollowTextView2,
+                        holder.authorImageView2,
+                        holder.authorNameTextView2,
+                        holder.authorRankTextView2,
+                        carosalList.get(1)
+                );
+                updateCarosal(
+                        holder.authorFollowTextView3,
+                        holder.authorImageView3,
+                        holder.authorNameTextView3,
+                        holder.authorRankTextView3,
+                        carosalList.get(2)
+                );
+                updateCarosal(
+                        holder.authorFollowTextView4,
+                        holder.authorImageView4,
+                        holder.authorNameTextView4,
+                        holder.authorRankTextView4,
+                        carosalList.get(3)
+                );
+                updateCarosal(
+                        holder.authorFollowTextView5,
+                        holder.authorImageView5,
+                        holder.authorNameTextView5,
+                        holder.authorRankTextView5,
+                        carosalList.get(4)
+                );
+            }
+            break;
+            case 6: {
+                updateCarosal(
+                        holder.authorFollowTextView1,
+                        holder.authorImageView1,
+                        holder.authorNameTextView1,
+                        holder.authorRankTextView1,
+                        carosalList.get(0)
+                );
+                updateCarosal(
+                        holder.authorFollowTextView2,
+                        holder.authorImageView2,
+                        holder.authorNameTextView2,
+                        holder.authorRankTextView2,
+                        carosalList.get(1)
+                );
+                updateCarosal(
+                        holder.authorFollowTextView3,
+                        holder.authorImageView3,
+                        holder.authorNameTextView3,
+                        holder.authorRankTextView3,
+                        carosalList.get(2)
+                );
+                updateCarosal(
+                        holder.authorFollowTextView4,
+                        holder.authorImageView4,
+                        holder.authorNameTextView4,
+                        holder.authorRankTextView4,
+                        carosalList.get(3)
+                );
+                updateCarosal(
+                        holder.authorFollowTextView5,
+                        holder.authorImageView5,
+                        holder.authorNameTextView5,
+                        holder.authorRankTextView5,
+                        carosalList.get(4)
+                );
+                updateCarosal(
+                        holder.authorFollowTextView6,
+                        holder.authorImageView6,
+                        holder.authorNameTextView6,
+                        holder.authorRankTextView6,
+                        carosalList.get(5)
+                );
+            }
+            break;
+            default: {
+            }
+        }
+
+    }
+
+
+    private void updateCarosal(TextView followTextView, ImageView authorImageView, TextView authorNameTextView,
+            TextView authorRankTextView, UserDetailResult carosalList) {
+        Picasso.get().load(carosalList.getProfilePicUrl().getClientApp()).error(R.drawable.default_article)
+                .into(authorImageView, new com.squareup.picasso.Callback() {
+                            @Override
+                            public void onSuccess() {
+
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+
+                            }
+                        }
+                );
+        if (carosalList.getFollowing()) {
+            GradientDrawable myGrad = (GradientDrawable) followTextView.getBackground();
+            myGrad.setStroke(2, ContextCompat.getColor(context, R.color.ad_author_name_text));
+            followTextView.setTextColor(ContextCompat.getColor(context, R.color.ad_author_name_text));
+            followTextView.setText(context.getString(R.string.ad_following_author));
+        } else {
+            GradientDrawable myGrad = (GradientDrawable) followTextView.getBackground();
+            myGrad.setStroke(2, ContextCompat.getColor(context, R.color.app_red));
+            followTextView.setTextColor(ContextCompat.getColor(context, R.color.app_red));
+            followTextView.setText(context.getString(R.string.ad_follow_author));
+        }
+        authorNameTextView.setText(
+                StringUtils.firstLetterToUpperCase(carosalList.getFirstName().trim().toLowerCase()) + " " + StringUtils
+                        .firstLetterToUpperCase(carosalList.getLastName().trim().toLowerCase()));
+        authorRankTextView.setText(context.getString(R.string.myprofile_rank_label) + ": " + carosalList.getRank());
+    }
+
 
     private PopupWindow popupDisplay(String isBookmarked) {
 
