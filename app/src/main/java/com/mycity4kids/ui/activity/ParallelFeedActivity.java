@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import androidx.appcompat.view.menu.MenuBuilder;
@@ -118,6 +119,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         ((BaseApplication) getApplication()).setActivity(this);
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
         Utils.pushOpenScreenEvent(this, "DetailVideoScreen", userDynamoId + "");
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         recyclerViewFeed = (ExoPlayerRecyclerView) findViewById(R.id.recyclerViewFeed);
         recyclerViewFeed.setRecyclerView(recyclerViewFeed);
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
