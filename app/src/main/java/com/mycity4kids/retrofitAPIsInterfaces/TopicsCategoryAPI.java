@@ -24,7 +24,7 @@ public interface TopicsCategoryAPI {
     @GET("/v1/utilities/config/")
     Call<ResponseBody> downloadCategoriesJSON();
 
-    @GET("https://mycity4kids-phoenix.s3-ap-southeast-1.amazonaws.com/category/temp_vid_cat.json")
+    @GET("/v1/categories/")
     Call<ResponseBody> downloadTopicsJSON();
 
     @GET("http://192.168.29.66/momVlogData/abc.json")

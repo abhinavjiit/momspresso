@@ -286,6 +286,9 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4KException", Log.getStackTraceString(e));
                     }
                 }
 
@@ -295,6 +298,9 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
             });
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4KException", Log.getStackTraceString(e));
         }
 
         chooseoptionradioButton.setOnCheckedChangeListener((radioGroup, i) -> {

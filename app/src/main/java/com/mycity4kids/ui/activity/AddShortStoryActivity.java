@@ -86,8 +86,11 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private String articleId;
     private boolean isMaxLengthToastShown = false;
     private String creationSourceNormalOrChallenge;
-    private RelativeLayout challengeHeader, chooseShortStoryTopicPopUp;
-    private TextView challengeActiveText, challengeHeaderText, shortstoryheadertext;
+    private RelativeLayout challengeHeader;
+    private RelativeLayout chooseShortStoryTopicPopUp;
+    private TextView challengeActiveText;
+    private TextView challengeHeaderText;
+    private TextView shortstoryheadertext;
     private TextView wordCounterTextView;
     private String taggedCategoryId;
     private String taggedCategoryName;
@@ -110,18 +113,18 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         challengeActiveText = (TextView) findViewById(R.id.challenge_topic_text);
         challengeHeaderText = (TextView) findViewById(R.id.challenge_heading);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        TextView startWriting = (TextView) findViewById(R.id.start_writing);
         publishTextView = (TextView) toolbar.findViewById(R.id.publishTextView);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         storyTitleEditText = (EditText) findViewById(R.id.storyTitleEditText);
         storyBodyEditText = (EditText) findViewById(R.id.storyBodyEditText);
         chooseShortStoryTopicPopUp = (RelativeLayout) findViewById(R.id.choose_layout);
         View overlayLayout = (View) findViewById(R.id.overlayView_choose_story_challenge);
-        RadioGroup chooseoptionradioButton = (RadioGroup) findViewById(R.id.reportReasonRadioGroup);
         wordCounterTextView = (TextView) findViewById(R.id.wordCounterTextView);
         publishTextView.setOnClickListener(this);
         overlayLayout.setOnClickListener(this);
+        TextView startWriting = (TextView) findViewById(R.id.start_writing);
         startWriting.setOnClickListener(this);
+        RadioGroup chooseoptionradioButton = (RadioGroup) findViewById(R.id.reportReasonRadioGroup);
         chooseoptionradioButton.setOnCheckedChangeListener((radioGroup, i) -> {
             taggedCategoryName = ssTopicsList.get(i).getDisplay_name();
             taggedCategoryId = ssTopicsList.get(i).getId();
@@ -176,7 +179,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                         isMaxLengthToastShown = false;
                     }
                 } catch (Exception e) {
-
+                    Crashlytics.logException(e);
+                    Log.d("MC4KException", Log.getStackTraceString(e));
                 }
             }
 
@@ -208,8 +212,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             Crashlytics.logException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
-            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
+            final TopicsCategoryAPI topicsApi = retro.create(TopicsCategoryAPI.class);
+            Call<ResponseBody> caller = topicsApi.downloadTopicsJSON();
             caller.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
@@ -268,7 +272,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             for (int i = 0; i < responseData.getData().size(); i++) {
                 if (AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())) {
                     for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
-                        //DO NOT REMOVE below commented check -- showInMenu 0 from backend --might be used to show/hide in future
+                        //DO NOT REMOVE below commented check -- showInMenu 0 from backend
+                        // --might be used to show/hide in future
                         if ("1".equals(responseData.getData().get(i).getChild().get(j).getPublicVisibility())) {
                             ssTopicsList.add(responseData.getData().get(i).getChild().get(j));
                         }
@@ -417,7 +422,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         try {
             stripUnwantedTagsFromTaggedChallenge();
         } catch (Exception e) {
-
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
         }
         for (Map.Entry<String, String> mapEntry : taggedChallenge.get(0).entrySet()) {
             taggedChallengeId = mapEntry.getKey();
@@ -506,8 +512,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private boolean populateChallengeHeaderImage(String topicId, int j) {
         if (topicId.equals(shortStoryChallengeTopic.getChild().get(j).getId())) {
             try {
-                if (shortStoryChallengeTopic.getChild().get(j).getExtraData() != null &&
-                        shortStoryChallengeTopic.getChild().get(j).getExtraData().size() != 0) {
+                if (shortStoryChallengeTopic.getChild().get(j).getExtraData() != null
+                        && shortStoryChallengeTopic.getChild().get(j).getExtraData().size() != 0) {
                     challengeImageUrl = shortStoryChallengeTopic.getChild().get(j).getExtraData().get(0).getChallenge()
                             .getImageUrl();
                 }
@@ -608,57 +614,67 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.publishTextView:
-                if (isValid()) {
-                    Intent intent = new Intent(this, ShortStoriesCardActivity.class);
-                    intent.putExtra("ssTopicsText", taggedCategoryName);
-                    intent.putExtra("challengeName", taggedChallengeName);
-                    intent.putExtra("challengeId", taggedChallengeId);
-                    intent.putExtra("runningrequest", creationSourceNormalOrChallenge);
-                    intent.putExtra("draftId", draftId);
-                    intent.putExtra("articleId", articleId);
-                    intent.putExtra("source", source);
-//                    intent.putExtra("isDraftTaggedInActiveChallenge", isDraftTaggedInActiveChallenge);
-                    intent.putExtra("taggedChallenge", taggedChallenge);
-                    intent.putParcelableArrayListExtra("ssTopicsList", ssTopicsList);
-//                    intent.putExtra("currentActiveChallengeId", currentActiveChallengeId);
-//                    intent.putExtra("currentActiveChallenge", currentActiveChallenge);
-                    intent.putExtra("tagsList", tagsList);
-                    intent.putExtra("title", storyTitleEditText.getText().toString().trim());
-                    intent.putExtra("story", storyBodyEditText.getText().toString().trim());
-                    intent.putExtra("categoryId", taggedCategoryId);
-                    startActivity(intent);
-                }
-                break;
-            case R.id.start_writing:
-                if (StringUtils.isNullOrEmpty(taggedCategoryId)) {
-                    Toast.makeText(this, R.string.select_atleast_one_topic, Toast.LENGTH_SHORT).show();
-                } else {
-                    chooseShortStoryTopicPopUp.setVisibility(View.INVISIBLE);
-                }
+        try {
+            switch (v.getId()) {
+                case R.id.publishTextView:
+                    if (isValid()) {
+                        Intent intent = new Intent(this, ShortStoriesCardActivity.class);
+                        intent.putExtra("ssTopicsText", taggedCategoryName);
+                        intent.putExtra("challengeName", taggedChallengeName);
+                        intent.putExtra("challengeId", taggedChallengeId);
+                        intent.putExtra("runningrequest", creationSourceNormalOrChallenge);
+                        intent.putExtra("draftId", draftId);
+                        intent.putExtra("articleId", articleId);
+                        intent.putExtra("source", source);
+                        intent.putExtra("taggedChallenge", taggedChallenge);
+                        intent.putParcelableArrayListExtra("ssTopicsList", ssTopicsList);
+                        intent.putExtra("tagsList", tagsList);
+                        intent.putExtra("title", storyTitleEditText.getText().toString().trim());
+                        intent.putExtra("story", storyBodyEditText.getText().toString().trim());
+                        intent.putExtra("categoryId", taggedCategoryId);
+                        startActivity(intent);
+                    }
+                    break;
+                case R.id.start_writing:
+                    if (StringUtils.isNullOrEmpty(taggedCategoryId)) {
+                        Toast.makeText(this, R.string.select_atleast_one_topic, Toast.LENGTH_SHORT).show();
+                    } else {
+                        chooseShortStoryTopicPopUp.setVisibility(View.INVISIBLE);
+                    }
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4KException", Log.getStackTraceString(e));
         }
     }
 
     @Override
     public void onClick(View view, int position) {
-        for (int i = 0; i < ssTopicsList.size(); i++) {
-            ssTopicsList.get(i).setIsSelected(false);
+        try {
+            for (int i = 0; i < ssTopicsList.size(); i++) {
+                ssTopicsList.get(i).setIsSelected(false);
+            }
+            ssTopicsList.get(position).setIsSelected(true);
+            taggedCategoryId = ssTopicsList.get(position).getId();
+            taggedCategoryName = ssTopicsList.get(position).getDisplay_name();
+            if (ssTopicsList.get(position).getId().equalsIgnoreCase(AppConstants.SHORT_STORY_QUOTES_CATEGORY_ID)) {
+                storyTitleEditText.setHint(
+                        getString(R.string.short_s_add_title_hint) + "(" + getString(
+                                R.string.short_s_add_title_Optional)
+                                + ")");
+                storyBodyEditText.setHint(getString(R.string.story_text_description_hint));
+            } else {
+                storyTitleEditText.setHint(R.string.short_s_add_title_hint);
+                storyBodyEditText.setHint(R.string.short_s_add_body_hint);
+            }
+            regulatePublishButtonState();
+            adapter.notifyDataSetChanged();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4KException", Log.getStackTraceString(e));
         }
-        ssTopicsList.get(position).setIsSelected(true);
-        taggedCategoryId = ssTopicsList.get(position).getId();
-        taggedCategoryName = ssTopicsList.get(position).getDisplay_name();
-        if (ssTopicsList.get(position).getId().equalsIgnoreCase(AppConstants.SHORT_STORY_QUOTES_CATEGORY_ID)) {
-            storyTitleEditText.setHint(
-                    getString(R.string.short_s_add_title_hint) + "(" + getString(R.string.short_s_add_title_Optional)
-                            + ")");
-            storyBodyEditText.setHint(getString(R.string.story_text_description_hint));
-        } else {
-            storyTitleEditText.setHint(R.string.short_s_add_title_hint);
-            storyBodyEditText.setHint(R.string.short_s_add_body_hint);
-        }
-        regulatePublishButtonState();
-        adapter.notifyDataSetChanged();
     }
 
     private void regulatePublishButtonState() {
@@ -726,7 +742,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     public void saveDraftRequest(String title, String body, String draftId1) {
         showProgressDialog(getResources().getString(R.string.please_wait));
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        ShortStoryAPI shortStoryAPI = retrofit.create(ShortStoryAPI.class);
+        ShortStoryAPI shortStoryApi = retrofit.create(ShortStoryAPI.class);
         if (StringUtils.isNullOrEmpty(body)) {
             //dynamoDB can't handle empty spaces
             body = " ";
@@ -773,10 +789,10 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             }
         }
         if (draftId1.isEmpty()) {
-            Call<ArticleDraftResponse> call = shortStoryAPI.saveOrPublishShortStory(shortStoryDraftOrPublishRequest);
+            Call<ArticleDraftResponse> call = shortStoryApi.saveOrPublishShortStory(shortStoryDraftOrPublishRequest);
             call.enqueue(saveDraftResponseListener);
         } else {
-            Call<ArticleDraftResponse> call = shortStoryAPI
+            Call<ArticleDraftResponse> call = shortStoryApi
                     .updateOrPublishShortStory(draftId1, shortStoryDraftOrPublishRequest);
             call.enqueue(saveDraftResponseListener);
         }
@@ -788,12 +804,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             if (response.body() == null) {
                 showToast(getString(R.string.server_went_wrong));
                 showAlertDialog(getString(R.string.draft_oops), getString(R.string.draft_not_saved),
-                        new OnButtonClicked() {
-                            @Override
-                            public void onButtonCLick(int buttonId) {
-                                finish();
-                            }
-                        });
+                        buttonId -> finish());
                 return;
             }
             try {

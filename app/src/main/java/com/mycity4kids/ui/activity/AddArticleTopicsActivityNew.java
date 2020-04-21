@@ -9,17 +9,15 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.editor.ArticleImageTagUploadActivity;
 import com.mycity4kids.gtmutils.Utils;
@@ -31,11 +29,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.AddArticleTopicsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -43,15 +36,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import okhttp3.ResponseBody;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 public class AddArticleTopicsActivityNew extends BaseActivity {
 
-    private Toolbar mToolbar;
+    private Toolbar toolbar;
     private TextView clearAllTextView;
     private ProgressBar progressBar;
     private TabLayout tabLayout;
@@ -63,9 +58,10 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
     private ArrayList<String> selectedTopicsIdList = new ArrayList<>();
     private HashMap<Topics, List<Topics>> topicsMap;
     private String userNavigatingFrom;
-    private String imageURL;
+    private String imageUrl;
     private String articleId;
-    private String tags, cities;
+    private String tags;
+    private String cities;
 
     private AddArticleTopicsPagerAdapter adapter;
     private String userAgent;
@@ -82,8 +78,8 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
         root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setActivity(this);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Topics");
 
@@ -96,24 +92,19 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
         userAgent = getIntent().getStringExtra("userAgent");
         draftObject = (PublishDraftObject) getIntent().getSerializableExtra("draftItem");
 
-
         //reminaingTopicsList is available only when Editing A Published Article
         if ("publishedList".equals(userNavigatingFrom)) {
-            imageURL = getIntent().getStringExtra("imageUrl");
+            imageUrl = getIntent().getStringExtra("imageUrl");
             articleId = getIntent().getStringExtra("articleId");
             tags = getIntent().getStringExtra("tag");
             cities = getIntent().getStringExtra("cities");
-            if (null == tags || tags.isEmpty()) {
-
-            } else {
+            if (null != tags && !tags.isEmpty()) {
                 try {
                     JSONArray jsonArray = new JSONArray(tags);
-
                     for (int i = 0; i < jsonArray.length(); i++) {
                         Iterator<?> keys = jsonArray.getJSONObject(i).keys();
                         selectedTopicsIdList.add((String) keys.next());
                     }
-
                 } catch (JSONException e) {
                     Crashlytics.logException(e);
                     Log.d("JSONException", Log.getStackTraceString(e));
@@ -131,13 +122,14 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
             Crashlytics.logException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
-            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
+            final TopicsCategoryAPI topicsApi = retro.create(TopicsCategoryAPI.class);
+            Call<ResponseBody> caller = topicsApi.downloadTopicsJSON();
 
             caller.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(AddArticleTopicsActivityNew.this, AppConstants.CATEGORIES_JSON_FILE, response.body());
+                    AppUtils.writeResponseBodyToDisk(AddArticleTopicsActivityNew.this,
+                            AppConstants.CATEGORIES_JSON_FILE, response.body());
 
                     try {
                         FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
@@ -148,6 +140,9 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4KException", Log.getStackTraceString(e));
                     }
                 }
 
@@ -160,10 +155,8 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
             });
         }
 
-
-        applyTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        applyTextView.setOnClickListener(v -> {
+            try {
                 getSelectedTopicsFromList();
                 createTagObjectFromList();
 
@@ -174,25 +167,29 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                     showToast(getString(R.string.add_article_topics_max_topics));
                     return;
                 }
-                Intent _intent = new Intent(AddArticleTopicsActivityNew.this, ArticleImageTagUploadActivity.class);
-                _intent.putExtra("draftItem", draftObject);
-                _intent.putExtra("imageUrl", imageURL);
-                _intent.putExtra("from", userNavigatingFrom);
-                _intent.putExtra("articleId", articleId);
-                _intent.putExtra("tag", tags);
-                _intent.putExtra("cities", cities);
+                Intent intent = new Intent(AddArticleTopicsActivityNew.this, ArticleImageTagUploadActivity.class);
+                intent.putExtra("draftItem", draftObject);
+                intent.putExtra("imageUrl", imageUrl);
+                intent.putExtra("from", userNavigatingFrom);
+                intent.putExtra("articleId", articleId);
+                intent.putExtra("tag", tags);
+                intent.putExtra("cities", cities);
                 if (AppConstants.ANDROID_NEW_EDITOR.equals(userAgent)) {
-                    _intent.putExtra("userAgent", AppConstants.ANDROID_NEW_EDITOR);
+                    intent.putExtra("userAgent", AppConstants.ANDROID_NEW_EDITOR);
                 }
-                startActivity(_intent);
-
+                startActivity(intent);
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
             }
         });
 
-        clearAllTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        clearAllTextView.setOnClickListener(v -> {
+            try {
                 clearTopicsSelection();
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
             }
         });
     }
@@ -208,22 +205,18 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
      * Sent as tag to server as post param.
      * */
     private void createTagObjectFromList() {
-//        JSONObject jObject = new JSONObject();
-        JSONArray jArray = new JSONArray();
+        JSONArray jsonArray = new JSONArray();
         try {
             for (int i = 0; i < chosenTopicsList.size(); i++) {
-                JSONObject jObject = new JSONObject();
-                jObject.put("" + chosenTopicsList.get(i).getId(), chosenTopicsList.get(i).getTitle());
-                jArray.put(jObject);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("" + chosenTopicsList.get(i).getId(), chosenTopicsList.get(i).getTitle());
+                jsonArray.put(jsonObject);
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
-        } catch (Exception ex) {
-            Crashlytics.logException(ex);
-            Log.d("MC4kException", Log.getStackTraceString(ex));
         }
-        tags = jArray.toString();
+        tags = jsonArray.toString();
     }
 
     private void getSelectedTopicsFromList() {
@@ -250,13 +243,15 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                 for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
                     ArrayList<Topics> thirdLevelLeafNodeList = new ArrayList<>();
                     for (int k = 0; k < responseData.getData().get(i).getChild().get(j).getChild().size(); k++) {
-                        if ("1".equals(responseData.getData().get(i).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                        if ("1".equals(responseData.getData().get(i).getChild().get(j).getChild().get(k)
+                                .getPublicVisibility())) {
                             //Adding All sub-subcategories
                             responseData.getData().get(i).getChild().get(j).getChild().get(k)
                                     .setParentId(responseData.getData().get(i).getId());
                             responseData.getData().get(i).getChild().get(j).getChild().get(k)
                                     .setParentName(responseData.getData().get(i).getTitle());
-                            thirdLevelLeafNodeList.add(responseData.getData().get(i).getChild().get(j).getChild().get(k));
+                            thirdLevelLeafNodeList
+                                    .add(responseData.getData().get(i).getChild().get(j).getChild().get(k));
                         }
                     }
                     responseData.getData().get(i).getChild().get(j).setChild(thirdLevelLeafNodeList);
@@ -273,7 +268,8 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                     }
                 }
 
-                if ("1".equals(responseData.getData().get(i).getPublicVisibility()) && !AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())) {
+                if ("1".equals(responseData.getData().get(i).getPublicVisibility())
+                        && !AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())) {
                     responseData.getData().get(i).setChild(secondLevelLeafNodeList);
                     if (!secondLevelLeafNodeList.isEmpty()) {
                         topicList.add(responseData.getData().get(i));
@@ -334,6 +330,8 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+            default:
+                break;
         }
         return true;
     }
@@ -343,17 +341,17 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
         Iterator it = topicsMap.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
-            ArrayList<Topics> tList = ((ArrayList) pair.getValue());
+            ArrayList<Topics> tempList = ((ArrayList) pair.getValue());
 
-            for (int j = 0; j < tList.size(); j++) {
+            for (int j = 0; j < tempList.size(); j++) {
 
                 //subcategories with no child
-                if (tList.get(j).getChild().size() == 0) {
-                    System.out.println(tList.get(j).getTitle() + " = ");
-                    tList.get(j).setIsSelected(false);
+                if (tempList.get(j).getChild().size() == 0) {
+                    System.out.println(tempList.get(j).getTitle() + " = ");
+                    tempList.get(j).setIsSelected(false);
                     for (int i = 0; i < list.size(); i++) {
-                        if (list.get(i).equals(tList.get(j).getId())) {
-                            tList.get(j).setIsSelected(true);
+                        if (list.get(i).equals(tempList.get(j).getId())) {
+                            tempList.get(j).setIsSelected(true);
                             totalSelectedItems++;
                         }
                     }
@@ -361,12 +359,12 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                 }
 
                 //subcategories children
-                for (int k = 0; k < tList.get(j).getChild().size(); k++) {
-                    System.out.println(tList.get(j).getChild().get(k).getTitle() + " = ");
-                    tList.get(j).getChild().get(k).setIsSelected(false);
+                for (int k = 0; k < tempList.get(j).getChild().size(); k++) {
+                    System.out.println(tempList.get(j).getChild().get(k).getTitle() + " = ");
+                    tempList.get(j).getChild().get(k).setIsSelected(false);
                     for (int i = 0; i < list.size(); i++) {
-                        if (list.get(i).equals(tList.get(j).getChild().get(k).getId())) {
-                            tList.get(j).getChild().get(k).setIsSelected(true);
+                        if (list.get(i).equals(tempList.get(j).getChild().get(k).getId())) {
+                            tempList.get(j).getChild().get(k).setIsSelected(true);
                             totalSelectedItems++;
                         }
                     }

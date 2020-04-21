@@ -121,11 +121,8 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
             caller.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    boolean writtenToDisk = AppUtils
-                            .writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE,
-                                    response.body());
-                    Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
-
+                    AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE,
+                            response.body());
                     try {
                         FileInputStream fileInputStream = BaseApplication.getAppContext()
                                 .openFileInput(AppConstants.CATEGORIES_JSON_FILE);
@@ -138,6 +135,9 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4KException", Log.getStackTraceString(e));
                     }
                 }
 
@@ -147,6 +147,9 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
             });
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4KException", Log.getStackTraceString(e));
         }
         AppUtils.deleteDirectoryContent("MyCity4Kids/videos");
     }

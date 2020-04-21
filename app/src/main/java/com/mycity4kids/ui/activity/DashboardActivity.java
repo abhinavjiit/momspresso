@@ -1137,6 +1137,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(intent1);
             } else if (AppConstants.NOTIFICATION_TYPE_STORY_LIST_IN_CHALLENGE.equalsIgnoreCase(notificationType)) {
                 pushEvent("shortStoryListingInChallenge");
+                if (StringUtils.isNullOrEmpty(notificationExtras.getString("categoryId"))) {
+                    return;
+                }
                 findValues(notificationExtras.getString("categoryId"));
                 Intent intent1 = new Intent(this, ShortStoryChallengeDetailActivity.class);
                 intent1.putExtra("Display_Name", deepLinkDisplayName);
@@ -1283,7 +1286,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         fragmentToLoad = Constants.PROFILE_FRAGMENT;
                     }
                 } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_ADD_SHORT_STORY_URL)) {
-                    //String temp = tempDeepLinkURL.concat("category-8220f60fd2f6432ba4417861a50f0587");
                     final String deepLinkChallengeId = tempDeepLinkUrl
                             .substring(tempDeepLinkUrl.lastIndexOf("/") + 1,
                                     tempDeepLinkUrl.length());
@@ -1309,7 +1311,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             deepLinkIntent.putExtra("StringUrl", deepLinkImageUrl);
                             startActivity(deepLinkIntent);
                         } else {
-                            findValues(deepLinkChallengeId);
                             Intent deepLinkIntent = new Intent(this,
                                     ShortStoryChallengeDetailActivity.class);
                             deepLinkIntent.putExtra("selectedrequest", fromDeepLink);
@@ -1589,6 +1590,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4KException", Log.getStackTraceString(e));
                     }
                 }
 
@@ -1599,6 +1603,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
             });
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4KException", Log.getStackTraceString(e));
         }
     }
 
@@ -1607,7 +1614,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         public void onResponse(Call<ShortStoryDetailResult> call,
                 retrofit2.Response<ShortStoryDetailResult> response) {
             removeProgressDialog();
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 return;
             }
             try {

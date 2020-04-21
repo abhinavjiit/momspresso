@@ -181,6 +181,9 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4KException", Log.getStackTraceString(e));
                     }
                 }
 
@@ -190,6 +193,9 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
             });
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4KException", Log.getStackTraceString(e));
         }
 
         gridview.setOnItemClickListener((adapterView, view, position, id) -> {

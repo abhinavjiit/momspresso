@@ -29,10 +29,8 @@ import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
 import com.mycity4kids.ui.activity.ParallelFeedActivity
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.add_momvlog_list_item.view.articleImageView
 import kotlinx.android.synthetic.main.mom_vlog_follow_following_carousal.view.*
 import kotlinx.android.synthetic.main.mom_vlog_listing_adapter.view.*
-import kotlinx.android.synthetic.main.mom_vlog_listing_adapter.view.imageWinner
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

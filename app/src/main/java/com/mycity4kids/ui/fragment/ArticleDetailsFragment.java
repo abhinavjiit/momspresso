@@ -13,7 +13,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -105,7 +104,6 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTube
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
-import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.SocketTimeoutException;
@@ -132,9 +130,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         GroupMembershipStatus.IMembershipStatus {
 
     private static final int ADD_BOOKMARK = 1;
-    private SimpleTooltip simpleTooltip;
     private MixpanelAPI mixpanel;
-    private Handler handler;
     private ISwipeRelated swipeRelated;
     private ArticleDetailResult detailData;
     private Bitmap defaultBloggerBitmap;
@@ -148,7 +144,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private int recommendStatus;
     private float density;
     private boolean isFollowing = false;
-    private boolean isLoading = false;
     private boolean isArticleDetailLoaded = false;
     private boolean isSwipeNextAvailable;
     private boolean bookmarkFlag = false;
@@ -158,11 +153,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private String bookmarkId;
     private String authorId;
     private String author;
-    private String parentId;
     private String articleId;
     private String deepLinkUrl;
     private String commentMainUrl;
-    private String pagination = "";
     private String isMomspresso;
     private String userDynamoId;
     private String articleLanguageCategoryId;
@@ -462,6 +455,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         } catch (FileNotFoundException e) {
                             Crashlytics.logException(e);
                             Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                        } catch (Exception e) {
+                            Crashlytics.logException(e);
+                            Log.d("MC4KException", Log.getStackTraceString(e));
                         }
                     }
 
@@ -480,7 +476,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             Bundle bundle = getArguments();
             if (bundle != null) {
-                parentId = bundle.getString("parentId");
                 articleId = bundle.getString(Constants.ARTICLE_ID);
                 authorId = bundle.getString(Constants.AUTHOR_ID, "");
                 isSwipeNextAvailable = bundle.getBoolean("swipeNext", false);
@@ -663,9 +658,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void onDestroy() {
-        if (handler != null) {
-            handler.removeCallbacksAndMessages(null);
-        }
         if (youTubePlayerView != null) {
             youTubePlayerView.release();
         }
@@ -2295,6 +2287,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                         } catch (FileNotFoundException e) {
                                             Crashlytics.logException(e);
                                             Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                                        } catch (Exception e) {
+                                            Crashlytics.logException(e);
+                                            Log.d("MC4KException", Log.getStackTraceString(e));
                                         }
                                     }
 
@@ -2304,6 +2299,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                         Log.d("MC4KException", Log.getStackTraceString(t));
                                     }
                                 });
+                            } catch (Exception e) {
+                                Crashlytics.logException(e);
+                                Log.d("MC4KException", Log.getStackTraceString(e));
                             }
                         } else {
                             if (isAdded()) {
@@ -2354,60 +2352,66 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 - ((RelativeLayout.LayoutParams) tagsLayout.getLayoutParams()).rightMargin;
 
         for (int i = 0; i < tagsList.size(); i++) {
-            for (Map.Entry<String, String> entry : tagsList.get(i).entrySet()) {
-                String key = entry.getKey();
-                final String value = entry.getValue();
-                if (AppConstants.IGNORE_TAG.equals(key)) {
-                    continue;
-                }
+            try {
+                for (Map.Entry<String, String> entry : tagsList.get(i).entrySet()) {
+                    String key = entry.getKey();
+                    final String value = entry.getValue();
+                    if (AppConstants.IGNORE_TAG.equals(key) || StringUtils.isNullOrEmpty(value)) {
+                        continue;
+                    }
 
-                final RelativeLayout topicView = (RelativeLayout) layoutInflater
-                        .inflate(R.layout.related_tags_view, null, false);
-                topicView.setClickable(true);
-                topicView.getChildAt(0).setTag(key);
-                topicView.getChildAt(2).setTag(key);
-                ((TextView) topicView.getChildAt(0)).setText(value.toUpperCase());
-                ((TextView) topicView.getChildAt(0)).measure(0, 0);
-                width = width - ((TextView) topicView.getChildAt(0)).getMeasuredWidth() - AppUtils
-                        .dpTopx(1)
-                        - relatedImageWidth - topicView.getPaddingLeft() - topicView
-                        .getPaddingRight();
-                if (width < 0) {
-                    viewAllTagsTextView.setVisibility(View.VISIBLE);
-                }
-                if (sponsoredList.contains(key)) {
-                    ((ImageView) topicView.getChildAt(2)).setVisibility(View.GONE);
-                    ((View) topicView.getChildAt(1)).setVisibility(View.GONE);
-                }
-                if (null != previouslyFollowedTopics && previouslyFollowedTopics.contains(key)) {
-                    ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat
-                            .getDrawable(BaseApplication.getAppContext(), R.drawable.tick));
-                    topicView.getChildAt(2).setBackgroundColor(ContextCompat
-                            .getColor(BaseApplication.getAppContext(), R.color.app_red));
-                    ((ImageView) topicView.getChildAt(2)).setColorFilter(ContextCompat
-                            .getColor(BaseApplication.getAppContext(), R.color.white_color));
-                    topicView.getChildAt(2).setOnClickListener(v -> followUnfollowTopics((String) v.getTag(),
-                            (RelativeLayout) v.getParent(), 0));
-                } else {
-                    ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat
-                            .getDrawable(BaseApplication.getAppContext(), R.drawable.follow_plus));
-                    topicView.getChildAt(2).setBackgroundColor(ContextCompat
-                            .getColor(BaseApplication.getAppContext(), R.color.ad_tags_follow_bg));
-                    ((ImageView) topicView.getChildAt(2)).setColorFilter(ContextCompat
-                            .getColor(BaseApplication.getAppContext(), R.color.app_red));
-                    topicView.getChildAt(2).setOnClickListener(v -> followUnfollowTopics((String) v.getTag(),
-                            (RelativeLayout) v.getParent(), 1));
-                }
+                    final RelativeLayout topicView = (RelativeLayout) layoutInflater
+                            .inflate(R.layout.related_tags_view, null, false);
+                    topicView.setClickable(true);
+                    topicView.getChildAt(0).setTag(key);
+                    topicView.getChildAt(2).setTag(key);
+                    ((TextView) topicView.getChildAt(0)).setText(value.toUpperCase());
+                    ((TextView) topicView.getChildAt(0)).measure(0, 0);
+                    width = width - ((TextView) topicView.getChildAt(0)).getMeasuredWidth() - AppUtils
+                            .dpTopx(1)
+                            - relatedImageWidth - topicView.getPaddingLeft() - topicView
+                            .getPaddingRight();
+                    if (width < 0) {
+                        viewAllTagsTextView.setVisibility(View.VISIBLE);
+                    }
+                    if (sponsoredList.contains(key)) {
+                        ((ImageView) topicView.getChildAt(2)).setVisibility(View.GONE);
+                        ((View) topicView.getChildAt(1)).setVisibility(View.GONE);
+                    }
+                    if (null != previouslyFollowedTopics && previouslyFollowedTopics.contains(key)) {
+                        ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat
+                                .getDrawable(BaseApplication.getAppContext(), R.drawable.tick));
+                        topicView.getChildAt(2).setBackgroundColor(ContextCompat
+                                .getColor(BaseApplication.getAppContext(), R.color.app_red));
+                        ((ImageView) topicView.getChildAt(2)).setColorFilter(ContextCompat
+                                .getColor(BaseApplication.getAppContext(), R.color.white_color));
+                        topicView.getChildAt(2).setOnClickListener(v -> followUnfollowTopics((String) v.getTag(),
+                                (RelativeLayout) v.getParent(), 0));
+                    } else {
+                        ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat
+                                .getDrawable(BaseApplication.getAppContext(), R.drawable.follow_plus));
+                        topicView.getChildAt(2).setBackgroundColor(ContextCompat
+                                .getColor(BaseApplication.getAppContext(), R.color.ad_tags_follow_bg));
+                        ((ImageView) topicView.getChildAt(2)).setColorFilter(ContextCompat
+                                .getColor(BaseApplication.getAppContext(), R.color.app_red));
+                        topicView.getChildAt(2).setOnClickListener(v -> followUnfollowTopics((String) v.getTag(),
+                                (RelativeLayout) v.getParent(), 1));
+                    }
 
-                topicView.getChildAt(0).setOnClickListener(v -> {
-                    String categoryId = (String) v.getTag();
-                    Intent intent = new Intent(getActivity(),
-                            FilteredTopicsArticleListingActivity.class);
-                    intent.putExtra("selectedTopics", categoryId);
-                    intent.putExtra("displayName", value);
-                    startActivity(intent);
-                });
-                tagsLayout.addView(topicView);
+                    topicView.getChildAt(0).setOnClickListener(v -> {
+                        String categoryId = (String) v.getTag();
+                        Intent intent = new Intent(getActivity(),
+                                FilteredTopicsArticleListingActivity.class);
+                        intent.putExtra("selectedTopics", categoryId);
+                        intent.putExtra("displayName", value);
+                        startActivity(intent);
+                    });
+                    tagsLayout.addView(topicView);
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                continue;
             }
         }
         loadGroupDataForCategories(tagsList);
