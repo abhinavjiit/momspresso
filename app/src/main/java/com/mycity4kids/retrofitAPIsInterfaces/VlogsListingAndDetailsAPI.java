@@ -16,7 +16,6 @@ import com.mycity4kids.models.response.MomVlogersDetailResponse;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.VlogsDetailResponse;
 import com.mycity4kids.models.response.VlogsListingResponse;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -34,6 +33,9 @@ import retrofit2.http.Query;
 public interface VlogsListingAndDetailsAPI {
 
 
+    @GET("https://stagingapi.momspresso.com/v2/categories")
+    Call<Topics> getVlogCategoriesAndChallenges(@Query("id") String id);
+
     @GET("/v2/categories")
     Call<Topics> getVlogChallengeDetails(@Query("id") String id);
 
@@ -45,33 +47,33 @@ public interface VlogsListingAndDetailsAPI {
 
     @PATCH("/v2/videos/{videoId}")
     Call<VlogsDetailResponse> updateVideoTitle(@Path("videoId") String videoId,
-                                               @Body UpdateVlogTitleRequest body);
+            @Body UpdateVlogTitleRequest body);
 
     @GET("v2/videos")
     Call<VlogsListingResponse> getPublishedVlogs(@Query("user_id") String userId,
-                                                 @Query("start") int start,
-                                                 @Query("end") int end,
-                                                 @Query("sort") int sort);
+            @Query("start") int start,
+            @Query("end") int end,
+            @Query("sort") int sort);
 
     @GET("v2/videos")
     Call<VlogsListingResponse> getPublishedVlogsForPublicProfile(@Query("user_id") String userId,
-                                                                 @Query("start") int start,
-                                                                 @Query("end") int end,
-                                                                 @Query("sort") int sort,
-                                                                 @Query("publication_status") int publicationStatus);
+            @Query("start") int start,
+            @Query("end") int end,
+            @Query("sort") int sort,
+            @Query("publication_status") int publicationStatus);
 
     @GET("/user_history/v1/{userId}")
     Call<VlogsListingResponse> getAuthorsSeenVideos(@Path("userId") String userId,
-                                                    @Query("size") int size,
-                                                    @Query("chunks") int chunks,
-                                                    @Query("filter") String filter);
+            @Query("size") int size,
+            @Query("chunks") int chunks,
+            @Query("filter") String filter);
 
     @GET("v2/videos/")
     Call<VlogsListingResponse> getVlogsList(@Query("start") int start,
-                                            @Query("end") int end,
-                                            @Query("sort") int sort,
-                                            @Query("type") int type,
-                                            @Query("category_id") String categoryId);
+            @Query("end") int end,
+            @Query("sort") int sort,
+            @Query("type") int type,
+            @Query("category_id") String categoryId);
 
     //https://stagingapi.momspresso.com/v2/categories/?id=category-d4379f58f7b24846adcefc82dc22a86b
     @GET("/v2/categories/")
@@ -79,11 +81,11 @@ public interface VlogsListingAndDetailsAPI {
 
     @GET("v2/videos/")
     Call<VlogsListingResponse> getVlogsListForWinner(@Query("start") int start,
-                                                     @Query("end") int end,
-                                                     @Query("sort") int sort,
-                                                     @Query("type") int type,
-                                                     @Query("category_id") String categoryId,
-                                                     @Query("$order_by") String orderBy);
+            @Query("end") int end,
+            @Query("sort") int sort,
+            @Query("type") int type,
+            @Query("category_id") String categoryId,
+            @Query("$order_by") String orderBy);
 
     @POST("v2/videos/")
     Call<ResponseBody> publishHomeVideo(@Body UploadVideoRequest uploadVideoRequest);
@@ -96,7 +98,7 @@ public interface VlogsListingAndDetailsAPI {
 
     @PUT("v1/comments/{commentId}")
     Call<AddCommentResponse> editComment(@Path("commentId") String commentId,
-                                         @Body AddCommentRequest body);
+            @Body AddCommentRequest body);
 
     @POST("v1/users/vlog/bookmarkVideo/")
     Call<AddBookmarkResponse> addBookmark(@Body ArticleDetailRequest body);
@@ -108,7 +110,8 @@ public interface VlogsListingAndDetailsAPI {
     Call<ArticleRecommendationStatusResponse> getArticleRecommendedStatus(@Path("articleId") String articleId);
 
     @PUT("v1/users/likes/")
-    Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle(@Body RecommendUnrecommendArticleRequest body);
+    Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle(
+            @Body RecommendUnrecommendArticleRequest body);
 
     @GET("v1/recommendations/video_ad")
     Call<Topics> getRecommendedVideoAd();
@@ -119,19 +122,19 @@ public interface VlogsListingAndDetailsAPI {
     //35.200.142.199/personalised/vlogs/7ebbffc86dba4c8a82750278024d1332?start=0&end=10
     @GET("/personalised/vlogs/{userId}")
     Call<MomVlogListingResponse> getVlogsData(@Path("userId") String userId,
-                                              @Query("start") int start,
-                                              @Query("end") int end);
+            @Query("start") int start,
+            @Query("end") int end);
 
     //35.200.142.199/personalised/vloggers/7ebbffc86dba4c8a82750278024d1332?start=0&end=10&is_top=1
     @GET("/personalised/vloggers/{userId}")
     Call<MomVlogersDetailResponse> getVlogersData(@Path("userId") String userId,
-                                                  @Query("start") int start,
-                                                  @Query("end") int end,
-                                                  @Query("is_top") int is_top);
+            @Query("start") int start,
+            @Query("end") int end,
+            @Query("is_top") int isTop);
 
     @GET("/personalised/vloggers/{userId}")
     Call<MomVlogersDetailResponse> getGoldVlogersData(@Path("userId") String userId,
-                                                      @Query("start") int start,
-                                                      @Query("end") int end,
-                                                      @Query("is_gold") int is_gold);
+            @Query("start") int start,
+            @Query("end") int end,
+            @Query("is_gold") int isGold);
 }

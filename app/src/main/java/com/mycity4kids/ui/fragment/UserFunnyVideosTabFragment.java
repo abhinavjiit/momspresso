@@ -44,7 +44,6 @@ import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
-import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.SearchAllActivity;
 import com.mycity4kids.ui.activity.UserPublishedContentActivity;
@@ -121,7 +120,7 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
         nextPageNumber = 1;
         hitArticleListingApi();
 
-        articlesListingAdapter = new MyFunnyVideosListingAdapter(getActivity(), this, isPrivateProfile);
+        articlesListingAdapter = new MyFunnyVideosListingAdapter(this, isPrivateProfile);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();
@@ -332,13 +331,14 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
                 startActivity(searchIntent);
                 break;
             case R.id.getStartedTextView:
-                ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                Bundle _args = new Bundle();
-                _args.putString("activity", "myfunnyvideos");
-                chooseVideoUploadOptionDialogFragment.setArguments(_args);
+                ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment =
+                        new ChooseVideoUploadOptionDialogFragment();
+                Bundle args = new Bundle();
+                args.putString("activity", "myfunnyvideos");
+                chooseVideoUploadOptionDialogFragment.setArguments(args);
                 chooseVideoUploadOptionDialogFragment.setCancelable(true);
                 chooseVideoUploadOptionDialogFragment.setTargetFragment(this, 1111);
+                FragmentManager fm = getActivity().getSupportFragmentManager();
                 chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
                 break;
             default:

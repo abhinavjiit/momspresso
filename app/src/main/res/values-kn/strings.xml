@@ -535,7 +535,9 @@
   <string name="notification.no_notification">ಯಾವುದೇ ಅಧಿಸೂಚನೆ ಕಂಡುಬಂದಿಲ್ಲ</string>
   <string name="user_funny_video.toolbar.title">ಮಾಮ್ ವ್ಲೋಗ್ಸ್</string>
   <string name="user_funny_video.published_on">ಪ್ರಕಟಿಸಲಾದ ದಿನ: %1$s</string>
-
+  <string name="user_funny_video.pending_since">Approval pending since: %1$s</string>
+  <string name="user_funny_video.unspecified">Unspecified: %1$s</string>
+  <string name="user_funny_video.rejected_on">Unapproved on: %1$s</string>
   <string name="article_listing.toolbar.title_recent">ಇತ್ತೀಚಿನದು</string>
   <string name="article_listing.toolbar.title_popular">ಜನಪ್ರಿಯ</string>
   <string name="article_listing.toolbar.title_trending">ಟ್ರೆಂಡಿಂಗ್</string>

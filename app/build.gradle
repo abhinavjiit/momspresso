@@ -39,8 +39,8 @@ android {
         applicationId "com.mycity4kids"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 191
-        versionName "13.0.7"
+        versionCode 192
+        versionName "13.0.71"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -51,8 +51,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

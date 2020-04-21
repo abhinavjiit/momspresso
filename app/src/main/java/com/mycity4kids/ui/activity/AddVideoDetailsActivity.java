@@ -1,29 +1,21 @@
 package com.mycity4kids.ui.activity;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
-import android.graphics.Typeface;
-import android.media.MediaCodec;
-import android.media.MediaExtractor;
-import android.media.MediaFormat;
-import android.media.MediaMetadataRetriever;
-import android.media.MediaMuxer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.work.Constraints;
 import androidx.work.Data;
 import androidx.work.NetworkType;
@@ -31,25 +23,15 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import com.afollestad.easyvideoplayer.EasyVideoCallback;
 import com.afollestad.easyvideoplayer.EasyVideoPlayer;
-import com.coremedia.iso.boxes.Container;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.googlecode.mp4parser.FileDataSourceImpl;
-import com.googlecode.mp4parser.authoring.Movie;
-import com.googlecode.mp4parser.authoring.Track;
-import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
-import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
-import com.googlecode.mp4parser.authoring.tracks.AACTrackImpl;
-import com.googlecode.mp4parser.authoring.tracks.CroppedTrack;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
@@ -57,11 +39,9 @@ import com.mycity4kids.ui.NotificationWorker;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.StringUtils;
+import com.mycity4kids.widget.ShareButtonWidget;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
+import org.apmem.tools.layouts.FlowLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -72,19 +52,15 @@ import retrofit2.Retrofit;
 public class AddVideoDetailsActivity extends BaseActivity implements View.OnClickListener, EasyVideoCallback {
 
     public static final String COMMON_PREF_FILE = "my_city_prefs";
-    private static final int MAX_VOLUME = 100;
 
     private EditText videoTitleEditText;
-    private SwitchCompat muteSwitch;
     private Toolbar toolbar;
     private TextView saveUploadTextView;
 
     private Uri originalUri;
-    private String vrotation;
 
     private String originalPath;
     private Uri contentUri;
-    private Uri mutedUri;
     private EasyVideoPlayer player;
     private String categoryId;
     private String duration;
@@ -99,6 +75,8 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     private OneTimeWorkRequest request;
     private RelativeLayout popup;
     private TextView okay;
+    private FlowLayout subCategoriesContainer;
+    private Topics selectedCategory;
 
 
     @Override
@@ -114,14 +92,13 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         popup = (RelativeLayout) findViewById(R.id.popup);
         okay = (TextView) findViewById(R.id.okay);
         videoTitleEditText = (EditText) findViewById(R.id.videoTitleEditText);
-        muteSwitch = (SwitchCompat) findViewById(R.id.muteVideoSwitch);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         player = (EasyVideoPlayer) findViewById(R.id.player);
         saveUploadTextView = (TextView) findViewById(R.id.saveUploadTextView);
+        subCategoriesContainer = (FlowLayout) findViewById(R.id.subCategoriesContainer);
+
         auth = FirebaseAuth.getInstance();
         workManager = WorkManager.getInstance(this);
-        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/oswald_regular.ttf");
-        muteSwitch.setTypeface(font);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -131,11 +108,13 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         duration = getIntent().getStringExtra("duration");
         thumbnailTime = getIntent().getStringExtra("thumbnailTime");
         comingFrom = getIntent().getStringExtra("comingFrom");
+        selectedCategory = getIntent().getParcelableExtra("selectedCategory");
         if ("Challenge".equals(comingFrom)) {
             challengeId = getIntent().getStringExtra("ChallengeId");
+        } else {
+            populateSubcategories();
         }
 
-        muteSwitch.setOnClickListener(this);
         if (getIntent().hasExtra("uriPath")) {
             originalPath = getIntent().getStringExtra("uriPath");
         } else if (getIntent().hasExtra("originalPath")) {
@@ -155,23 +134,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                         getResources().getColor(R.color.add_video_details_mute_label)
                 }
         );
-        muteSwitch.setThumbTintList(thumbStates);
-        if (Build.VERSION.SDK_INT >= 24) {
-            ColorStateList trackStates = new ColorStateList(
-                    new int[][] {
-                            new int[] {android.R.attr.state_checked},
-                            new int[] {}
-                    },
-                    new int[] {
-
-                            getColor(R.color.app_red_50_opacity),
-                            getColor(R.color.add_video_details_mute_label_50_percent_opacity)
-                    }
-            );
-            muteSwitch.setTrackTintList(trackStates);
-
-        }
-
         player.setCallback(this);
         player.setAutoPlay(true);
         // Sets the source to the HTTP URL held in the TEST_URL variable.
@@ -182,6 +144,79 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         // Starts or resumes playback.
         player.start();
         okay.setOnClickListener(this);
+    }
+
+    private void populateSubcategories() {
+        if (selectedCategory == null) {
+            return;
+        }
+        for (int i = 0; i < selectedCategory.getChild().size(); i++) {
+            ShareButtonWidget shareButtonWidget = new ShareButtonWidget(this);
+            TextView shareTextView = shareButtonWidget.findViewById(R.id.shareTextView);
+            ViewGroup.LayoutParams layoutParams = shareTextView.getLayoutParams();
+            layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            shareTextView.setLayoutParams(layoutParams);
+            shareButtonWidget.setTag(selectedCategory.getChild().get(i).getId());
+            shareButtonWidget.setText(selectedCategory.getChild().get(i).getDisplay_name());
+            shareButtonWidget.setButtonStartImage(null);
+            shareButtonWidget.setTextSizeInSP(14);
+            shareButtonWidget.setTextGravity(Gravity.CENTER);
+            shareButtonWidget.setTextColor(ContextCompat.getColor(this, R.color.app_grey));
+            shareButtonWidget.setButtonRadius(90.0f);
+            shareButtonWidget.setRadius(90.0f);
+            shareButtonWidget.setBorderColor(ContextCompat.getColor(this, R.color.app_grey));
+            shareButtonWidget.setBorderThickness(2);
+            shareButtonWidget.setElevation(0.0f);
+            shareButtonWidget.setButtonBackgroundColor(
+                    ContextCompat.getColor(
+                            this,
+                            R.color.white_color
+                    )
+            );
+            FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
+                    FlowLayout.LayoutParams.WRAP_CONTENT,
+                    FlowLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(10, 10, 10, 10);
+            shareButtonWidget.setLayoutParams(params);
+            shareButtonWidget.setOnClickListener(view -> {
+                deselectAllSubcategories();
+                categoryId = (String) view.getTag();
+                view.setSelected(true);
+                ((ShareButtonWidget) view).setTextColor(
+                        ContextCompat.getColor(
+                                AddVideoDetailsActivity.this,
+                                R.color.app_red
+                        )
+                );
+                ((ShareButtonWidget) view).setBorderColor(
+                        ContextCompat.getColor(
+                                AddVideoDetailsActivity.this,
+                                R.color.app_red
+                        )
+                );
+            });
+            subCategoriesContainer.addView(shareButtonWidget);
+        }
+    }
+
+    private void deselectAllSubcategories() {
+        for (int i = 0; i < subCategoriesContainer.getChildCount(); i++) {
+            subCategoriesContainer.getChildAt(i).setSelected(false);
+            ShareButtonWidget subCategoryButton = (ShareButtonWidget) subCategoriesContainer.getChildAt(i);
+            subCategoryButton.setTextColor(
+                    ContextCompat.getColor(
+                            this,
+                            R.color.app_grey
+                    )
+            );
+            subCategoryButton.setBorderColor(
+                    ContextCompat.getColor(
+                            this,
+                            R.color.app_grey
+                    )
+            );
+        }
     }
 
     @Override
@@ -199,20 +234,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.muteVideoSwitch:
-                if (muteSwitch.isChecked()) {
-
-                    muteSwitch.setTextColor(getResources().getColor(R.color.app_red));
-                    final float volume = (float) (1 - (Math.log(MAX_VOLUME - 0) / Math.log(MAX_VOLUME)));
-                    player.setVolume(volume, volume);
-                } else {
-
-                    muteSwitch.setTextColor(getResources().getColor(R.color.mute_text_color));
-                    final float volume = (float) (1 - (Math.log(MAX_VOLUME - 99) / Math.log(MAX_VOLUME)));
-                    player.setVolume(volume, volume);
-                }
-                break;
-
             case R.id.saveUploadTextView:
                 if (StringUtils.isNullOrEmpty(videoTitleEditText.getText().toString())) {
                     videoTitleEditText.setFocusableInTouchMode(true);
@@ -222,6 +243,8 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                     videoTitleEditText.setFocusableInTouchMode(true);
                     videoTitleEditText.setError(getString(R.string.add_video_details_title_length_error));
                     videoTitleEditText.requestFocus();
+                } else if (StringUtils.isNullOrEmpty(categoryId)) {
+                    showToast("Please select a category for your video");
                 } else {
                     uploadVideo();
                 }
@@ -239,63 +262,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-    private void muteVideo() {
-        String fname = AppUtils.getFileNameFromUri(this, originalUri);
-        String outputFile = "";
-        try {
-            File file = new File(Environment.getExternalStorageDirectory() + "/MyCity4Kids/" + "mute_" + fname);
-            file.createNewFile();
-            outputFile = file.getAbsolutePath();
-
-            MediaExtractor videoExtractor = new MediaExtractor();
-            videoExtractor.setDataSource(originalUri.getPath());
-
-            MediaMuxer muxer = new MediaMuxer(outputFile, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
-
-            videoExtractor.selectTrack(0);
-            MediaFormat videoFormat = videoExtractor.getTrackFormat(0);
-            int videoTrack = muxer.addTrack(videoFormat);
-            Log.d("TAG", "Video Format " + videoFormat.toString());
-            int frameCount = 0;
-            int offset = 100;
-            int sampleSize = 256 * 1024;
-            ByteBuffer videoBuf = ByteBuffer.allocate(sampleSize);
-            ByteBuffer audioBuf = ByteBuffer.allocate(sampleSize);
-            MediaCodec.BufferInfo videoBufferInfo = new MediaCodec.BufferInfo();
-            videoExtractor.seekTo(0, MediaExtractor.SEEK_TO_CLOSEST_SYNC);
-            muxer.setOrientationHint(Integer.parseInt(vrotation));
-            muxer.start();
-            boolean sawEos = false;
-            while (!sawEos) {
-                videoBufferInfo.offset = offset;
-                videoBufferInfo.size = videoExtractor.readSampleData(videoBuf, offset);
-                if (videoBufferInfo.size < 0) {
-                    Log.d("TAG", "saw input EOS.");
-                    sawEos = true;
-                    videoBufferInfo.size = 0;
-                } else {
-                    videoBufferInfo.presentationTimeUs = videoExtractor.getSampleTime();
-                    videoBufferInfo.flags = MediaCodec.BUFFER_FLAG_KEY_FRAME;
-                    muxer.writeSampleData(videoTrack, videoBuf, videoBufferInfo);
-                    videoExtractor.advance();
-                    frameCount++;
-                    Log.d("TAG",
-                            "Frame (" + frameCount + ") Video PresentationTimeUs:" + videoBufferInfo.presentationTimeUs
-                                    + " Flags:" + videoBufferInfo.flags + " Size(KB) " + videoBufferInfo.size / 1024);
-                }
-            }
-
-            muxer.stop();
-            muxer.release();
-            mutedUri = Uri.parse(outputFile);
-        } catch (IOException e) {
-            Log.d("TAG", "Mixer Error 1 " + e.getMessage());
-        } catch (Exception e) {
-            Log.d("TAG", "Mixer Error 2 " + e.getMessage());
-        }
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -310,29 +276,11 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 
     private void uploadVideo() {
         showProgressDialog("Please wait ...");
-        if (muteSwitch.isChecked()) {
-            MediaMetadataRetriever m = new MediaMetadataRetriever();
-            m.setDataSource(originalUri.getPath());
-            if (Build.VERSION.SDK_INT >= 17) {
-                vrotation = m.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
-                Log.e("Before Upload Rotation", "" + vrotation);
-            }
-
-            muteVideo();
-            if (null == mutedUri) {
-                showToast(getString(R.string.video_upload_fail));
-            } else {
-                contentUri = AppUtils.exportToGallery(mutedUri.getPath(), getContentResolver(), this);
-                contentUri = AppUtils.getVideoUriFromMediaProvider(mutedUri.getPath(), getContentResolver());
-            }
-        } else {
-            contentUri = AppUtils.exportToGallery(originalUri.getPath(), getContentResolver(), this);
-            contentUri = AppUtils.getVideoUriFromMediaProvider(originalUri.getPath(), getContentResolver());
-        }
+        contentUri = AppUtils.exportToGallery(originalUri.getPath(), getContentResolver(), this);
+        contentUri = AppUtils.getVideoUriFromMediaProvider(originalUri.getPath(), getContentResolver());
         removeProgressDialog();
         resumeUpload();
     }
-
 
     public void resumeUpload() {
         getBlogPage();
@@ -349,7 +297,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                     .putString("comingFrom", comingFrom)
                     .putString("challengeId", challengeId)
                     .putString("originalPath", originalPath)
-                    // .putString("workRequestId", mRequest.getId().toString())
                     .build();
             Constraints constraints = new Constraints.Builder().setRequiredNetworkType(
                     NetworkType.CONNECTED).build();
@@ -377,9 +324,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
             removeProgressDialog();
             showToast(getString(R.string.error_network));
-            return;
         }
-
     }
 
     Callback<UserDetailResponse> onLoginResponseReceivedListener = new Callback<UserDetailResponse>() {
@@ -467,83 +412,23 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 
     }
 
-    private void mp4mux(String audioFileName) {
-        try {
-            String fname = AppUtils.getFileNameFromUri(this, originalUri);
-            Movie movie = new Movie();
-            Movie m = MovieCreator.build(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/" + fname);
-            Track vtrack = null;
-            for (Track track : m.getTracks()) {
-                if ("soun".equals(track.getHandler())) {
-                    System.err.println("Adding audio track to new movie");
-                } else if ("vide".equals(track.getHandler())) {
-                    System.err.println("Adding video track to new movie");
-                    vtrack = track;
-                    movie.addTrack(track);
-                } else {
-                    System.err.println("Adding " + track.getHandler() + " track to new movie");
-                }
-            }
-
-            AACTrackImpl audioTrack = new AACTrackImpl(new FileDataSourceImpl(
-                    Environment.getExternalStorageDirectory() + "/MyCity4Kids/" + audioFileName));
-            int audioDuration = (int) Math.ceil(trackDuration(audioTrack));
-            int videoDuration = (int) Math.ceil(trackDuration(vtrack));
-            System.out.println("videoduration:" + videoDuration);
-            System.out.println("audioDuration:" + audioDuration);
-            System.out.println("video Samples:" + vtrack.getSamples().size());
-            System.out.println("audio Samples:" + audioTrack.getSamples().size());
-            if (audioDuration > videoDuration) {
-                int factor = audioDuration / videoDuration;
-                CroppedTrack croppedTrack = new CroppedTrack(audioTrack, 0, audioTrack.getSamples().size() / factor);
-                movie.addTrack(croppedTrack);
-            } else {
-                movie.addTrack(audioTrack);
-            }
-
-            String filePath = Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/modifiedVideo.mp4";
-            File fi = new File(filePath);
-            if (fi.exists()) {
-                fi.delete();
-            }
-
-            Container mp4file = new DefaultMp4Builder().build(movie);
-            FileChannel fc = new FileOutputStream(
-                    new File(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/modifiedVideo.mp4"))
-                    .getChannel();
-            mp4file.writeContainer(fc);
-            fc.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private double trackDuration(Track track) {
-        return (double) track.getDuration() / track.getTrackMetaData().getTimescale();
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = auth.getCurrentUser();
         auth.signInAnonymously()
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("VideoUpload", "signInAnonymously:success");
-                            signIn = true;
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("VideoUpload", "signInAnonymously:success");
+                        signIn = true;
 
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("VideoUpload", "signInAnonymously:failure", task.getException());
-                            Toast.makeText(AddVideoDetailsActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w("VideoUpload", "signInAnonymously:failure", task.getException());
+                        Toast.makeText(AddVideoDetailsActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
-
     }
 }

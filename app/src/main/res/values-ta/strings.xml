@@ -573,7 +573,9 @@
 
   <string name="user_funny_video.toolbar.title">மாம்விலாக்ஸ்</string>
   <string name="user_funny_video.published_on">வெளியிடப்பட்டது: %1$s</string>
-
+  <string name="user_funny_video.pending_since">Approval pending since: %1$s</string>
+  <string name="user_funny_video.unspecified">Unspecified: %1$s</string>
+  <string name="user_funny_video.rejected_on">Unapproved on: %1$s</string>
   <string name="article_listing.toolbar.title_recent">அண்மையில்</string>
   <string name="article_listing.toolbar.title_popular">பிரபலமான</string>
   <string name="article_listing.toolbar.title_trending">டிரெண்டிங்</string>

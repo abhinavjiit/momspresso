@@ -109,6 +109,7 @@ import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.videotrimmer.utils.FileUtils;
+import com.mycity4kids.vlogs.VideoCategoryAndChallengeSelectionActivity;
 import com.squareup.picasso.Picasso;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -980,7 +981,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(campaignIntent);
             } else if (AppConstants.NOTIFICATION_TYPE_CHOOSE_VIDEO_CATEGORY.equalsIgnoreCase(notificationType)) {
                 pushEvent("choose_video_category");
-                Intent createVideoIntent = new Intent(this, ChooseVideoCategoryActivity.class);
+                Intent createVideoIntent = new Intent(this, VideoCategoryAndChallengeSelectionActivity.class);
                 createVideoIntent.putExtra("comingFrom", "notification");
                 startActivity(createVideoIntent);
             } else if (AppConstants.NOTIFICATION_TYPE_VIDEO_CHALLENGE_DETAILS.equalsIgnoreCase(notificationType)) {
@@ -1780,21 +1781,31 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         String editorType = firebaseRemoteConfig.getString(EDITOR_TYPE);
         if ((!StringUtils.isNullOrEmpty(editorType) && "1".equals(editorType)) || AppUtils
                 .isUserBucketedInNewEditor(firebaseRemoteConfig)) {
+            Bundle bundle = new Bundle();
+            bundle.putString(EditorPostActivity.TITLE_PARAM, "");
+            bundle.putString(EditorPostActivity.CONTENT_PARAM, "");
+            bundle.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                    getString(R.string.example_post_title_placeholder));
+            bundle.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                    getString(R.string.example_post_content_placeholder));
+            bundle.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+            bundle.putString("from", "dashboard");
             Intent intent = new Intent(DashboardActivity.this, NewEditor.class);
+            intent.putExtras(bundle);
             startActivity(intent);
         } else {
-            Intent intent1 = new Intent(DashboardActivity.this, EditorPostActivity.class);
-            Bundle bundle5 = new Bundle();
-            bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
-            bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
-            bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+            Bundle bundle = new Bundle();
+            bundle.putString(EditorPostActivity.TITLE_PARAM, "");
+            bundle.putString(EditorPostActivity.CONTENT_PARAM, "");
+            bundle.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
                     getString(R.string.example_post_title_placeholder));
-            bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+            bundle.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
                     getString(R.string.example_post_content_placeholder));
-            bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
-            bundle5.putString("from", "dashboard");
-            intent1.putExtras(bundle5);
-            startActivity(intent1);
+            bundle.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+            bundle.putString("from", "dashboard");
+            Intent intent = new Intent(DashboardActivity.this, EditorPostActivity.class);
+            intent.putExtras(bundle);
+            startActivity(intent);
         }
     }
 
@@ -1883,9 +1894,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 .getDynamoId(), String.valueOf(System.currentTimeMillis()),
                         "Show_video_creation_categories", "", "");
                 MixPanelUtils.pushMomVlogsDrawerClickEvent(mixpanel);
-                Intent cityIntent = new Intent(this, ChooseVideoCategoryActivity.class);
-                cityIntent.putExtra("comingFrom", "createDashboardIcon");
-                startActivity(cityIntent);
+                Intent vlogsIntent = new Intent(this, VideoCategoryAndChallengeSelectionActivity.class);
+                vlogsIntent.putExtra("comingFrom", "createDashboardIcon");
+                startActivity(vlogsIntent);
                 fireEventForVideoCreationIntent();
             }
             break;

@@ -658,7 +658,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
   <string name="user_funny_video.toolbar.title">ਮੋਮ ਵਲੋਗਸ</string>
   <string name="user_funny_video.published_on">ਤੇ ਪ੍ਰਕਾਸ਼ਿਤ ਕੀਤਾ: %1$s</string>
-
+  <string name="user_funny_video.pending_since">Approval pending since: %1$s</string>
+  <string name="user_funny_video.unspecified">Unspecified: %1$s</string>
+  <string name="user_funny_video.rejected_on">Unapproved on: %1$s</string>
   <string name="article_listing.toolbar.title_recent">ਤਾਜਾ ਤਰੀਨ</string>
   <string name="article_listing.toolbar.title_popular">ਪ੍ਰਸਿੱਧ</string>
   <string name="article_listing.toolbar.title_trending">ਟ੍ਰੇਂਡਿੰਗ</string>

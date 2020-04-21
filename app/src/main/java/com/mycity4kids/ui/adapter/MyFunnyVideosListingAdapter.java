@@ -1,6 +1,5 @@
 package com.mycity4kids.ui.adapter;
 
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,41 +9,28 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.crashlytics.android.Crashlytics;
+import com.mycity4kids.R;
+import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.utils.DateTimeUtils;
 import com.mycity4kids.utils.StringUtils;
-import com.mycity4kids.R;
-import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 
-/**
- * @author deepanker.chaudhary
- */
 public class MyFunnyVideosListingAdapter extends BaseAdapter {
 
-    private final static String VIDEO_PUBLISHED_STATUS = "3";
-    private final IEditVlog iEditVlog;
+    private final IEditVlog editVlog;
     private boolean isPrivateProfile;
-    private Context mContext;
-    private LayoutInflater mInflator;
     ArrayList<VlogsListingAndDetailResult> articleDataModelsNew;
 
-    private final float density;
-
-    public MyFunnyVideosListingAdapter(Context pContext, IEditVlog iEditVlog, boolean isPrivateProfile) {
-
-        density = pContext.getResources().getDisplayMetrics().density;
-        mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mContext = pContext;
-        this.iEditVlog = iEditVlog;
+    public MyFunnyVideosListingAdapter(IEditVlog editVlog, boolean isPrivateProfile) {
+        this.editVlog = editVlog;
         this.isPrivateProfile = isPrivateProfile;
     }
 
-    public void setNewListData(ArrayList<VlogsListingAndDetailResult> mParentingLists_new) {
-        articleDataModelsNew = mParentingLists_new;
+    public void setNewListData(ArrayList<VlogsListingAndDetailResult> articleDataModelsNew) {
+        this.articleDataModelsNew = articleDataModelsNew;
     }
 
     @Override
@@ -68,7 +54,7 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
         try {
             final ViewHolder holder;
             if (view == null) {
-                view = mInflator.inflate(R.layout.users_funny_video_item, null);
+                view = LayoutInflater.from(view.getContext()).inflate(R.layout.users_funny_video_item, null);
                 holder = new ViewHolder();
                 holder.rootView = (RelativeLayout) view.findViewById(R.id.rootView);
                 holder.txvArticleTitle = (TextView) view.findViewById(R.id.articleTitleTextView);
@@ -102,50 +88,68 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
             try {
                 if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getUrl())) {
                     Picasso.get().load(R.drawable.default_article)
-                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                            .into(holder.articleImageView);
                 } else {
                     Picasso.get().load(articleDataModelsNew.get(position).getThumbnail())
-                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                            .into(holder.articleImageView);
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
 
-            holder.dateTextView.setText(mContext.getString(R.string.user_funny_video_published_on, DateTimeUtils.getDateFromTimestamp(Long.parseLong(articleDataModelsNew.get(position).getPublished_time()))));
-
-            if (VIDEO_PUBLISHED_STATUS.equals(articleDataModelsNew.get(position).getPublication_status()) && isPrivateProfile) {
+            if (AppConstants.VIDEO_STATUS_PUBLISHED.equals(articleDataModelsNew.get(position).getPublication_status())
+                    && isPrivateProfile) {
                 holder.shareImageView.setVisibility(View.VISIBLE);
                 holder.vlogOptionImageView.setVisibility(View.VISIBLE);
+                holder.dateTextView.setText(
+                        holder.dateTextView.getContext().getString(R.string.user_funny_video_published_on, DateTimeUtils
+                                .getDateFromTimestamp(
+                                        Long.parseLong(articleDataModelsNew.get(position).getPublished_time()))));
+            } else if (AppConstants.VIDEO_STATUS_APPROVAL_PENDING
+                    .equals(articleDataModelsNew.get(position).getPublication_status())) {
+                holder.shareImageView.setVisibility(View.GONE);
+                holder.vlogOptionImageView.setVisibility(View.GONE);
+                holder.dateTextView.setText(holder.dateTextView.getContext()
+                        .getString(R.string.user_funny_video_pending_since, DateTimeUtils
+                                .getDateFromTimestamp(
+                                        Long.parseLong(articleDataModelsNew.get(position).getPublished_time()))));
+            } else if (AppConstants.VIDEO_STATUS_APPROVAL_CANCELLED
+                    .equals(articleDataModelsNew.get(position).getPublication_status())) {
+                holder.shareImageView.setVisibility(View.GONE);
+                holder.vlogOptionImageView.setVisibility(View.GONE);
+                holder.dateTextView.setText(
+                        holder.dateTextView.getContext().getString(R.string.user_funny_video_rejected_on, DateTimeUtils
+                                .getDateFromTimestamp(
+                                        Long.parseLong(articleDataModelsNew.get(position).getPublished_time()))));
             } else {
                 holder.shareImageView.setVisibility(View.GONE);
                 holder.vlogOptionImageView.setVisibility(View.GONE);
+                holder.dateTextView
+                        .setText(holder.dateTextView.getContext().getString(R.string.user_funny_video_unspecified, ""));
             }
 
-            holder.vlogOptionImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    iEditVlog.onVlogEdit(position, holder.vlogOptionImageView);
-                }
-            });
+            holder.vlogOptionImageView.setOnClickListener(
+                    view1 -> editVlog.onVlogEdit(position, holder.vlogOptionImageView));
 
-            holder.shareImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-                    shareIntent.setType("text/plain");
-                    String shareUrl = articleDataModelsNew.get(position).getUrl();
-                    String shareMessage;
-                    if (StringUtils.isNullOrEmpty(shareUrl)) {
-                        shareMessage = mContext.getString(R.string.check_out_blog) + "\"" +
-                                articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew.get(position).getAuthor().getFirstName() + ".";
-                    } else {
-                        shareMessage = mContext.getString(R.string.check_out_blog) + "\"" +
-                                articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew.get(position).getAuthor().getFirstName() + ".\nRead Here: " + shareUrl;
-                    }
-                    shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
-                    mContext.startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+            holder.shareImageView.setOnClickListener(v -> {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                String shareUrl = articleDataModelsNew.get(position).getUrl();
+                String shareMessage;
+                if (StringUtils.isNullOrEmpty(shareUrl)) {
+                    shareMessage = holder.shareImageView.getContext().getString(R.string.check_out_blog) + "\""
+                            + articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew
+                            .get(position).getAuthor().getFirstName() + ".";
+                } else {
+                    shareMessage = holder.shareImageView.getContext().getString(R.string.check_out_blog) + "\""
+                            + articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew
+                            .get(position).getAuthor().getFirstName() + ".\nRead Here: " + shareUrl;
                 }
+                shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+                holder.shareImageView.getContext().startActivity(Intent.createChooser(shareIntent, "Momspresso"));
             });
         } catch (Exception ex) {
             Crashlytics.logException(ex);
@@ -156,16 +160,20 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
+
         TextView txvArticleTitle;
         ImageView articleImageView;
         TextView dateTextView;
         ImageView shareImageView;
         ImageView vlogOptionImageView;
         RelativeLayout rootView;
-        TextView viewCountTextView, commentCountTextView, recommendCountTextView;
+        TextView viewCountTextView;
+        TextView commentCountTextView;
+        TextView recommendCountTextView;
     }
 
     public interface IEditVlog {
+
         void onVlogEdit(int position, ImageView imageView);
     }
 

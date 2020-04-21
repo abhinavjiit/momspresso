@@ -34,7 +34,6 @@ import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BadgeActivity;
-import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.MyTotalEarningActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
@@ -49,6 +48,7 @@ import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.StringUtils;
+import com.mycity4kids.vlogs.VideoCategoryAndChallengeSelectionActivity;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -138,7 +138,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         contentIntent = handleForcedUpdate();
                     } else {
-                        intent = new Intent(getApplicationContext(), ChooseVideoCategoryActivity.class);
+                        intent = new Intent(getApplicationContext(), VideoCategoryAndChallengeSelectionActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("fromNotification", true);
                         intent.putExtra("comingFrom", "notification");

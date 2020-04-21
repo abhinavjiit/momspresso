@@ -120,7 +120,6 @@ class UserProfileActivity : BaseActivity(),
     val sharableProfileImageName = "profile"
     var shareCardType: String? = null
     var shareMedium: String? = null
-    var shareContentPosition: Int? = null
     lateinit var isRewardAdded: String
     var isRecommendRequestRunning: Boolean = false
     lateinit var likeStatus: String

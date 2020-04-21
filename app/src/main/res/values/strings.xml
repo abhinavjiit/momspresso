@@ -556,6 +556,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
   <string name="user_funny_video.toolbar.title">MOM VLOGS</string>
   <string name="user_funny_video.published_on">Published on: %1$s</string>
+  <string name="user_funny_video.pending_since">Approval pending since: %1$s</string>
+  <string name="user_funny_video.unspecified">Unspecified: %1$s</string>
+  <string name="user_funny_video.rejected_on">Unapproved on: %1$s</string>
   <string name="article_listing.toolbar.title_recent">RECENT</string>
   <string name="article_listing.toolbar.title_popular">POPULAR</string>
   <string name="article_listing.toolbar.title_trending">TRENDING</string>

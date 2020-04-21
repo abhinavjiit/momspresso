@@ -523,7 +523,9 @@
   <string name="notification.no_notification">ప్రకటనలు లేవు</string>
   <string name="user_funny_video.toolbar.title">మామ్ వీలాగ్స్ </string>
   <string name="user_funny_video.published_on">ప్రచురించబడిన తేది: %1$s</string>
-
+  <string name="user_funny_video.pending_since">Approval pending since: %1$s</string>
+  <string name="user_funny_video.unspecified">Unspecified: %1$s</string>
+  <string name="user_funny_video.rejected_on">Unapproved on: %1$s</string>
   <string name="article_listing.toolbar.title_recent">ఇటీవల</string>
   <string name="article_listing.toolbar.title_popular">ప్రముఖ</string>
   <string name="article_listing.toolbar.title_trending">ట్రెండింగ్</string>

@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.util.Log;
 import android.widget.Toast;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.StringUtils;
@@ -33,6 +35,7 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
     private String challengeId;
     private String challengeName;
     private String comingFrom;
+    private Topics selectedCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,7 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
         if (extraIntent != null) {
             path = extraIntent.getStringExtra(EXTRA_VIDEO_PATH);
             categoryId = extraIntent.getStringExtra("categoryId");
+            selectedCategory = extraIntent.getParcelableExtra("selectedCategory");
             duration = extraIntent.getStringExtra("duration");
             comingFrom = extraIntent.getStringExtra("comingFrom");
             if ("Challenge".equals(comingFrom)) {
@@ -100,6 +104,7 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
                 intent.putExtra("comingFrom", "Challenge");
             } else {
                 intent.putExtra("comingFrom", "notFromChallenge");
+                intent.putExtra("selectedCategory", selectedCategory);
             }
             intent.putExtra("thumbnailTime", "" + videoTrimmer.getTimeStampForIFrame());
             if (uri.getPath().contains("/MyCity4Kids/videos/")) {

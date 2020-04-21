@@ -576,7 +576,9 @@
 
   <string name="user_funny_video.toolbar.title">মায়েদের ভিডিও ব্লগস</string>
   <string name="user_funny_video.published_on">প্রকাশিত: %1$s</string>
-
+  <string name="user_funny_video.pending_since">Approval pending since: %1$s</string>
+  <string name="user_funny_video.unspecified">Unspecified: %1$s</string>
+  <string name="user_funny_video.rejected_on">Unapproved on: %1$s</string>
   <string name="article_listing.toolbar.title_recent">নতুন</string>
   <string name="article_listing.toolbar.title_popular">জনপ্রিয়</string>
   <string name="article_listing.toolbar.title_trending">ট্রেন্ডিং</string>
@@ -1339,4 +1341,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_open">দেখুন</string>
   <string name="watch_other_videos_text_in_mom_vlog_following_feed">Watch other awesome videos while we create your personalized feed</string>
   <string name="follow_creators_feed_header_text_in_mom_vlog_feed">Follow creators to create you own following feed</string>
+  <string name="follow_the_best_vloggers_on_momspresso">Follow the best vloggers on Momspresso</string>
 </resources>

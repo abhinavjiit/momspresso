@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ArrayAdapter<T> extends TypeAdapter<List<T>> {
+
     private Class<T> adapterclass;
 
     public ArrayAdapter(Class<T> adapterclass) {
@@ -31,14 +32,14 @@ public class ArrayAdapter<T> extends TypeAdapter<List<T>> {
             list.add(inning);
 
         } else if (reader.peek() == JsonToken.BEGIN_ARRAY) {
-
             reader.beginArray();
             while (reader.hasNext()) {
                 T inning = gson.fromJson(reader, adapterclass);
                 list.add(inning);
             }
             reader.endArray();
-
+        } else if (reader.peek() == JsonToken.NULL) {
+            reader.skipValue();
         }
         else if (reader.peek() == JsonToken.NULL) {
             reader.skipValue();

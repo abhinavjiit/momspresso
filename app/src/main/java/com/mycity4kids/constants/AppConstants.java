@@ -370,7 +370,7 @@ public class AppConstants {
     public static final String VIDEO_UPLOAD_SUCCESS = "video_upload_success";
     public static final String STATUS_FOLLOWING = "following";
     public static final String STATUS_NOT_FOLLOWING = "not_following";
-    public static final String PLACES_API_KEY = "AIzaSyATjKBk6YHXTxF0nuN6zCumLfq9JY4aBKU";
+    public static final String PLACES_API_KEY = "AIzaSyBUC-xHi4ntqp9r7O88pUiisOycOYmmvC0";
 
     public static final String VIDEO_COLLECTION_TYPE = "2";
     public static final String SHORT_STORY_COLLECTION_TYPE = "1";

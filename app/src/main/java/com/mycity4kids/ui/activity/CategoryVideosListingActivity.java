@@ -31,6 +31,7 @@ import com.mycity4kids.ui.adapter.VideoTopicsPagerAdapter;
 import com.mycity4kids.ui.fragment.CategoryVideosTabFragment;
 import com.mycity4kids.ui.fragment.ChallengeCategoryVideoTabFragment;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.vlogs.VideoCategoryAndChallengeSelectionActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -111,7 +112,8 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             @Override
             public void onClick(View view) {
 
-                Intent cityIntent = new Intent(CategoryVideosListingActivity.this, ChooseVideoCategoryActivity.class);
+                Intent cityIntent = new Intent(CategoryVideosListingActivity.this,
+                        VideoCategoryAndChallengeSelectionActivity.class);
                 cityIntent.putExtra("comingFrom", "createDashboardIcon");
 
                 startActivity(cityIntent);
@@ -138,7 +140,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         showProgressDialog("Please wait");
         Retrofit retrofit = BaseApplication.getInstance().getVlogsRetrofit();
         TopicsCategoryAPI topicsCategoryApi = retrofit.create(TopicsCategoryAPI.class);
-        Call<Topics> call = topicsCategoryApi.MomVlogTopics("category-d4379f58f7b24846adcefc82dc22a86b");
+        Call<Topics> call = topicsCategoryApi.momVlogTopics("category-d4379f58f7b24846adcefc82dc22a86b");
         call.enqueue(new Callback<Topics>() {
 
             @Override

@@ -14,25 +14,23 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
+import com.mycity4kids.utils.StringUtils;
+import com.mycity4kids.vlogs.VideoCategoryAndChallengeSelectionActivity;
 
 /**
  * Created by user on 08-06-2015.
@@ -48,13 +46,14 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.choose_video_option_dialog, container,
                 false);
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         Utils.pushOpenScreenEvent(getActivity(), "PickVideoScreen",
                 SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
+        rootLayout = rootView.findViewById(R.id.root);
         Bundle extras = getArguments();
         if (extras != null) {
             activity = extras.getString("activity");
@@ -62,24 +61,28 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
         }
 
         TextView cameraTextView = (TextView) rootView.findViewById(R.id.optionCameraTextView);
+        cameraTextView.setOnClickListener(this);
         TextView galleryTextView = (TextView) rootView.findViewById(R.id.optionGalleryTextView);
+        galleryTextView.setOnClickListener(this);
         TextView cancelTextView = (TextView) rootView.findViewById(R.id.cancelTextView);
+        cancelTextView.setOnClickListener(this);
         TextView timeLimitTextView = (TextView) rootView.findViewById(R.id.timeLimitTextView);
 
-        rootLayout = rootView.findViewById(R.id.root);
-
-        cameraTextView.setOnClickListener(this);
-        galleryTextView.setOnClickListener(this);
-        cancelTextView.setOnClickListener(this);
         if (!StringUtils.isNullOrEmpty(duration)) {
             if ("video_category_activity".equals(activity)) {
                 timeLimitTextView.setVisibility(View.VISIBLE);
-                timeLimitTextView.setText(getString(R.string.time_limit, AppUtils.calculateFormattedTimeLimit(Integer.parseInt(duration)) + getString(R.string.minutes_label)));
-                timeLimitTextView.setTextColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.app_red));
+                timeLimitTextView.setText(getString(R.string.time_limit,
+                        AppUtils.calculateFormattedTimeLimit(Integer.parseInt(duration)) + getString(
+                                R.string.minutes_label)));
+                timeLimitTextView
+                        .setTextColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.app_red));
             } else if ("challengeDetailFragment".equals(activity)) {
                 timeLimitTextView.setVisibility(View.VISIBLE);
-                timeLimitTextView.setText(getString(R.string.time_limit, AppUtils.calculateFormattedTimeLimit(Integer.parseInt(duration)) + getString(R.string.minutes_label)));
-                timeLimitTextView.setTextColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.app_red));
+                timeLimitTextView.setText(getString(R.string.time_limit,
+                        AppUtils.calculateFormattedTimeLimit(Integer.parseInt(duration)) + getString(
+                                R.string.minutes_label)));
+                timeLimitTextView
+                        .setTextColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.app_red));
             }
         }
         return rootView;
@@ -98,18 +101,18 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED
-                            || ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                            != PackageManager.PERMISSION_GRANTED
-                            || ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            ||
+                            ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                                    != PackageManager.PERMISSION_GRANTED
+                            || ActivityCompat
+                            .checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED) {
                         if ("dashboard".equals(activity)) {
                             ((DashboardActivity) getActivity()).requestPermissions("camera");
                         } else if ("myfunnyvideos".equals(activity)) {
                             ((UserFunnyVideosTabFragment) getTargetFragment()).requestPermissions("camera");
                         } else if ("video_category_activity".equals(activity)) {
-                            ((ChooseVideoCategoryActivity) getActivity()).requestPermissions("camera");
-                        } else if ("vlogslisting".equals(activity)) {
-                        } else if ("allvideosection".equals(activity)) {
+                            ((VideoCategoryAndChallengeSelectionActivity) getActivity()).requestPermissions("camera");
                         } else if ("challengeDetailFragment".equals(activity)) {
                             ((NewVideoChallengeActivity) getActivity()).requestPermissions("camera");
                         }
@@ -131,20 +134,20 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED
-                            || ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                            != PackageManager.PERMISSION_GRANTED
-                            || ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            ||
+                            ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                                    != PackageManager.PERMISSION_GRANTED
+                            || ActivityCompat
+                            .checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED) {
                         if ("dashboard".equals(activity)) {
                             ((DashboardActivity) getActivity()).requestPermissions("gallery");
                         } else if ("myfunnyvideos".equals(activity)) {
                             ((UserFunnyVideosTabFragment) getTargetFragment()).requestPermissions("gallery");
                         } else if ("video_category_activity".equals(activity)) {
-                            ((ChooseVideoCategoryActivity) getActivity()).requestPermissions("gallery");
+                            ((VideoCategoryAndChallengeSelectionActivity) getActivity()).requestPermissions("gallery");
                         } else if ("challengeDetailFragment".equals(activity)) {
                             ((NewVideoChallengeActivity) getActivity()).requestPermissions("gallery");
-                        } else if ("vlogslisting".equals(activity)) {
-                        } else if ("allvideosection".equals(activity)) {
                         }
                     } else {
                         pickFromGallery();
@@ -157,12 +160,14 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
             case R.id.cancelTextView:
                 dismiss();
                 break;
+            default:
+                break;
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull int[] grantResults) {
 
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
             Log.i("Permissions", "Received response for camera permissions request.");
@@ -212,8 +217,6 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                 getActivity().startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("challengeDetailFragment".equals(activity)) {
                 (getActivity()).startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
-
-            } else if ("allvideosection".equals(activity)) {
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -229,17 +232,26 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
             intent.addCategory(Intent.CATEGORY_OPENABLE);
 
             if ("dashboard".equals(activity)) {
-                getActivity().startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
+                getActivity()
+                        .startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)),
+                                AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("myfunnyvideos".equals(activity)) {
-                getActivity().startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
+                getActivity()
+                        .startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)),
+                                AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("video_category_activity".equals(activity)) {
-                getActivity().startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
+                getActivity()
+                        .startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)),
+                                AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("vlogslisting".equals(activity)) {
-                getActivity().startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
+                getActivity()
+                        .startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)),
+                                AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("challengeDetailFragment".equals(activity)) {
-                getActivity().startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
+                getActivity()
+                        .startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)),
+                                AppConstants.REQUEST_VIDEO_TRIMMER);
 
-            } else if ("allvideosection".equals(activity)) {
             }
         } catch (Exception e) {
             Crashlytics.logException(e);

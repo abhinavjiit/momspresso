@@ -12,15 +12,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.mycity4kids.R
-import com.mycity4kids.utils.AppUtils
 
 class ShareButtonWidget : CardView {
 
-    private lateinit var shareImageView: ImageView
-    private lateinit var shareTextView: TextView
-    var shareText: String? = null
-    var shareImage: Drawable? = null
-    var bgDrawable: Drawable? = null
+    lateinit var shareImageView: ImageView
+    lateinit var shareTextView: TextView
+    lateinit var cardViewContainer: CardView
+    private var shareText: String? = null
+    private var shareImage: Drawable? = null
+    private var bgDrawable: Drawable? = null
     private var shareImageTint: Int = 0
     private var textColor: Int = 0
     private var shareBg: Int = 0
@@ -45,11 +45,14 @@ class ShareButtonWidget : CardView {
     private fun initializeView(attrs: AttributeSet?, context: Context) {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.share_button_widget, this)
-        if (null != attrs) {
-            val a = context.obtainStyledAttributes(
-                attrs,
-                R.styleable.ShareButtonWidget, 0, 0
-            )
+        val a = context.obtainStyledAttributes(
+            attrs,
+            R.styleable.ShareButtonWidget, 0, 0
+        )
+        shareTextView = findViewById<View>(R.id.shareTextView) as TextView
+        shareImageView = findViewById<View>(R.id.shareImageView) as ImageView
+        cardViewContainer = findViewById<View>(R.id.cardViewContainer) as CardView
+        try {
             shareText = a.getString(R.styleable.ShareButtonWidget_shareText)
             shareImage = a.getDrawable(R.styleable.ShareButtonWidget_shareImage)
             shareBg = a.getColor(R.styleable.ShareButtonWidget_shareBgColor, Color.TRANSPARENT)
@@ -75,15 +78,13 @@ class ShareButtonWidget : CardView {
             )
             textStyle = a.getInt(R.styleable.ShareButtonWidget_textStyle, textStyle)
             textColor = a.getColor(R.styleable.ShareButtonWidget_shareTextColor, Color.WHITE)
+        } finally {
             a.recycle()
         }
     }
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-        shareTextView = findViewById<View>(R.id.shareTextView) as TextView
-        shareImageView = findViewById<View>(R.id.shareImageView) as ImageView
-        val cardViewContainer = findViewById<View>(R.id.cardViewContainer) as CardView
         shareTextView.text = shareText
         shareTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize.toFloat())
         shareTextView.setTypeface(null, textStyle)
@@ -91,9 +92,9 @@ class ShareButtonWidget : CardView {
         shareTextView.setTextColor(textColor)
         shareImageView.setImageDrawable(shareImage)
         shareImageView.setColorFilter(shareImageTint)
-        this.elevation = AppUtils.dpTopx(buttonElevation.toFloat()).toFloat()
-        this.radius = AppUtils.dpTopx(buttonRadius.toFloat()).toFloat()
-        cardViewContainer.radius = AppUtils.dpTopx(buttonRadius.toFloat()).toFloat()
+        //        this.elevation = AppUtils.dpTopx(buttonElevation.toFloat()).toFloat()
+        this.radius = buttonRadius.toFloat()
+        cardViewContainer.radius = buttonRadius.toFloat()
         cardViewContainer.setCardBackgroundColor(shareBg)
         this.setCardBackgroundColor(borderColor)
         this.setContentPadding(borderThickness, borderThickness, borderThickness, borderThickness)
@@ -101,5 +102,49 @@ class ShareButtonWidget : CardView {
         bgDrawable?.let {
             cardViewContainer.background = it
         }
+    }
+
+    fun setText(text: String) {
+        shareText = text
+        shareTextView.text = shareText
+    }
+
+    fun setTextSizeInSP(textSizeSP: Int) {
+        val textSizePX = textSizeSP * context.resources.displayMetrics.scaledDensity
+        shareTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePX)
+    }
+
+    fun setTextGravity(gravity: Int) {
+        shareTextView.gravity = gravity
+    }
+
+    fun setButtonStartImage(drawable: Drawable?) {
+        if (drawable == null) {
+            shareImageView.visibility = View.GONE
+        } else {
+            shareImageView.visibility = View.VISIBLE
+            shareImageView.setImageDrawable(drawable)
+        }
+    }
+
+    fun setTextColor(color: Int) {
+        shareTextView.setTextColor(color)
+    }
+
+    fun setButtonRadius(radius: Float) {
+        cardViewContainer.radius = radius
+    }
+
+    fun setButtonBackgroundColor(color: Int) {
+        cardViewContainer.setCardBackgroundColor(color)
+    }
+
+    fun setBorderColor(color: Int) {
+        this.setCardBackgroundColor(color)
+    }
+
+    fun setBorderThickness(thickness: Int) {
+        this.setContentPadding(thickness, thickness, thickness, thickness)
+        this.clipToOutline = true
     }
 }
