@@ -589,7 +589,9 @@
 
   <string name="user_funny_video.toolbar.title">അമ്മമാരുടെ വിലോഗുകൾ</string>
   <string name="user_funny_video.published_on">പ്രസിദ്ധപ്പെടുത്തിയ സമയം: %1$s</string>
-
+  <string name="user_funny_video.pending_since">Approval pending since: %1$s</string>
+  <string name="user_funny_video.unspecified">Unspecified: %1$s</string>
+  <string name="user_funny_video.rejected_on">Unapproved on: %1$s</string>
   <string name="article_listing.toolbar.title_recent">പുതിയത്</string>
   <string name="article_listing.toolbar.title_popular">ജനപ്രീതിയാർജ്ജിച്ചത്</string>
   <string name="article_listing.toolbar.title_trending">ട്രെൻഡിംഗ്</string>

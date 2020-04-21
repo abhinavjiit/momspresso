@@ -11,10 +11,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -43,26 +41,18 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
     private static final int REQUEST_GALLERY_PERMISSION = 2;
     private static String[] PERMISSIONS_STORAGE_CAMERA = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
-    private Toolbar toolbar;
-    private String jsonMyObject;
-    private String selectedId, mappedId;
+    private String selectedId;
     String screen;
     private String selected_Name;
     private String selectedActiveUrl;
     private String selectedStreamUrl;
     String challengeRules = "";
-    private int pos;
     private Topics topic;
     private CoordinatorLayout rootLayout;
     private String challengeId;
     private String mappedCategory;
     private int max_Duration;
-    private String parentName, parentId;
-    private CoordinatorLayout coordinatorLayout;
-    private ImageView thumbNail;
-    private int duration;
     private String comingFrom = "";
-    private CoordinatorLayout momVlogCoachMark;
     FrameLayout frameLayout;
 
     @Override

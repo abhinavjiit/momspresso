@@ -2,7 +2,6 @@ package com.mycity4kids.ui.videochallengenewui.Fragment;
 
 import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Build;
@@ -16,19 +15,16 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
@@ -40,29 +36,27 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.VideoChallengeDetailListingAdapter;
+import com.mycity4kids.ui.adapter.VideoChallengeDetailListingAdapter.RecyclerViewClickListener;
 import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.MixPanelUtils;
-
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
-
+import org.greenrobot.eventbus.EventBus;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class VideoChallengeListing extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, VideoChallengeDetailListingAdapter.RecyclerViewClickListner {
-    private RelativeLayout mLodingView;
-    private ProgressDialog mProgressDialog;
-    private MixpanelAPI mixpanel;
+public class VideoChallengeListing extends BaseFragment implements View.OnClickListener,
+        SwipeRefreshLayout.OnRefreshListener, RecyclerViewClickListener {
+
+    private RelativeLayout loadingView;
     private VideoChallengeDetailListingAdapter articlesListingAdapter;
     private String selectedId;
-    private com.mycity4kids.models.Topics topic;
     private ArrayList<VlogsListingAndDetailResult> articleDataModelsNew;
     FloatingActionsMenu fabMenu;
     RecyclerView listView;
     TextView noBlogsTextView;
-    FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
+    FloatingActionButton popularSortFab;
+    FloatingActionButton recentSortFab;
+    FloatingActionButton fabSort;
     FrameLayout frameLayout;
     private int sortType = 0;
     private int nextPageNumber;
@@ -71,7 +65,6 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
     private boolean isReuqestRunning = false;
     private ProgressBar progressBar;
     private ShimmerFrameLayout funnyvideosshimmer;
-    private String videoCategory;
     private GridLayoutManager gridLayoutManager;
     private int firstVisibleItem;
     private int visibleItemCount;
@@ -80,17 +73,18 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.video_challenge_detail_listing, container, false);
         listView = (RecyclerView) view.findViewById(R.id.vlogsListView);
 
-        mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
+        loadingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
         fabMenu = (FloatingActionsMenu) view.findViewById(R.id.fab_menu);
-        popularSortFAB = (FloatingActionButton) view.findViewById(R.id.popularSortFAB);
-        recentSortFAB = (FloatingActionButton) view.findViewById(R.id.recentSortFAB);
+        popularSortFab = (FloatingActionButton) view.findViewById(R.id.popularSortFAB);
+        recentSortFab = (FloatingActionButton) view.findViewById(R.id.recentSortFAB);
         fabSort = (FloatingActionButton) view.findViewById(R.id.fabSort);
         funnyvideosshimmer = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_funny_videos_article);
 
@@ -98,12 +92,10 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
 
         if (getArguments() != null) {
             selectedId = getArguments().getString("selectedId");
-            topic = getArguments().getParcelable("topics");
         }
 
-        popularSortFAB.setOnClickListener(this);
-        recentSortFAB.setOnClickListener(this);
-        /*   writeAtricleCell.setOnClickListener(this);*/
+        popularSortFab.setOnClickListener(this);
+        recentSortFab.setOnClickListener(this);
         fabSort.setOnClickListener(v -> {
             if (fabMenu.isExpanded()) {
                 fabMenu.collapse();
@@ -115,12 +107,9 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
             @Override
             public void onMenuExpanded() {
                 frameLayout.getBackground().setAlpha(240);
-                frameLayout.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        fabMenu.collapse();
-                        return true;
-                    }
+                frameLayout.setOnTouchListener((v, event) -> {
+                    fabMenu.collapse();
+                    return true;
                 });
             }
 
@@ -146,6 +135,8 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
                         // Allow ScrollView to intercept touch events.
                         v.getParent().requestDisallowInterceptTouchEvent(false);
                         break;
+                    default:
+                        break;
                 }
 
                 // Handle ListView touch events.
@@ -154,13 +145,12 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
             });
         }
 
-
-        articleDataModelsNew = new ArrayList<VlogsListingAndDetailResult>();
+        articleDataModelsNew = new ArrayList<>();
         showProgressDialog("Fetching Data");
         nextPageNumber = 1;
         hitArticleListingApi();
         gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        articlesListingAdapter = new VideoChallengeDetailListingAdapter(this, getActivity(), selectedId, topic);
+        articlesListingAdapter = new VideoChallengeDetailListingAdapter(this);
         listView.setLayoutManager(gridLayoutManager);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
@@ -171,21 +161,12 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
                 int position = parent.getChildAdapterPosition(view); // item position
                 int spanCount = 2;
                 int spacing = 10;//spacing between views in grid
-
                 if (position % 2 == 0) {
-                    int column = position % spanCount; // item column
-
-                    //  outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                    outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
-
-                    //           if (position < spanCount) { // top edge
-                    //             outRect.top = spacing;
-                    //       }
-                    //     outRect.bottom = spacing; // item bottom
+                    int column = position % spanCount;
+                    outRect.right = (column + 1) * spacing / spanCount;
                 } else if (position % 2 == 1) {
                     int column = position % spanCount;
                     outRect.left = spacing - column * spacing / spanCount;
-                    //    outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
                 } else {
                     outRect.left = 0;
                     outRect.right = 0;
@@ -194,55 +175,6 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
                 }
             }
         });
-
-    /*    listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
-
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem != 0) {
-
-                  *//*  articlesListingAdapter.player.setPlayWhenReady(false);
-                    articlesListingAdapter.isPaused = true;*//*
-                }*//* else {
-
-                    articlesListingAdapter.player.setPlayWhenReady(true);
-                    articlesListingAdapter.isPaused = false;
-                }*//*
-
-                boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
-                    mLodingView.setVisibility(View.VISIBLE);
-                    hitArticleListingApi();
-                    isReuqestRunning = true;
-                }
-            }
-        });
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                Intent intent = new Intent(getActivity(), ParallelFeedActivity.class);
-                if (adapterView.getAdapter() instanceof VideoChallengeDetailListingAdapter) {
-                    MixPanelUtils.pushMomVlogClickEvent(mixpanel, i, "" + videoCategory);
-                    VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) adapterView.getAdapter().getItem(i);
-                    intent.putExtra(Constants.VIDEO_ID, parentingListData.getId());
-                    intent.putExtra(Constants.STREAM_URL, parentingListData.getUrl());
-                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getAuthor().getId());
-                    intent.putExtra(Constants.FROM_SCREEN, "Funny Videos Listing");
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
-                    intent.putExtra(Constants.AUTHOR, parentingListData.getAuthor().getId() + "~" + parentingListData.getAuthor().getFirstName() + " " + parentingListData.getAuthor().getLastName());
-                    startActivity(intent);
-                    Utils.momVlogEvent(getActivity(), "Challenge detail", "Video", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Detail", parentingListData.getId(), "");
-
-                }
-            }
-        });*/
 
         listView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -258,12 +190,12 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
                     totalItemCount = gridLayoutManager.getItemCount();
 
                     boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-                    if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
-                        mLodingView.setVisibility(View.VISIBLE);
+                    if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning
+                            && !isLastPageReached) {
+                        loadingView.setVisibility(View.VISIBLE);
                         hitArticleListingApi();
                         isReuqestRunning = true;
                     }
-
                 }
             }
         });
@@ -271,16 +203,16 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
     }
 
 
-    void hitArticleListingApi() {
+    private void hitArticleListingApi() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
             removeProgressDialog();
             return;
         }
         int from = (nextPageNumber - 1) * limit;
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
-        Log.d("VIDEO CATEGORY", "--" + videoCategory);
-        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsListForWinner(from, from + limit - 1, sortType, 3, selectedId, "-winner");
+        VlogsListingAndDetailsAPI vlogsListingAndDetailsApi = retrofit.create(VlogsListingAndDetailsAPI.class);
+        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsApi
+                .getVlogsListForWinner(from, from + limit - 1, sortType, 3, selectedId, "-winner");
         callRecentVideoArticles.enqueue(recentArticleResponseCallback);
     }
 
@@ -291,9 +223,9 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
             if (nextPageNumber == 1) {
                 EventBus.getDefault().post("showDialogBox");
             }
-            mLodingView.setVisibility(View.GONE);
+            loadingView.setVisibility(View.GONE);
             isReuqestRunning = false;
-            if (response == null || null == response.body()) {
+            if (null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
                 return;
@@ -304,7 +236,6 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
                     processResponse(responseData);
                     funnyvideosshimmer.stopShimmerAnimation();
                     funnyvideosshimmer.setVisibility(View.GONE);
-                } else {
                 }
             } catch (Exception e) {
                 removeProgressDialog();
@@ -326,13 +257,11 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
         ArrayList<VlogsListingAndDetailResult> dataList = responseData.getData().get(0).getResult();
         if (dataList == null || dataList.size() == 0) {
             isLastPageReached = true;
-            if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
-                //No more next results for search from pagination
-            } else {
+            if (null == articleDataModelsNew || articleDataModelsNew.isEmpty()) {
                 fabSort.setVisibility(View.GONE);
                 fabMenu.setVisibility(View.GONE);
-                popularSortFAB.setVisibility(View.GONE);
-                recentSortFAB.setVisibility(View.GONE);
+                popularSortFab.setVisibility(View.GONE);
+                recentSortFab.setVisibility(View.GONE);
                 noBlogsTextView.setVisibility(View.VISIBLE);
                 noBlogsTextView.setText(getString(R.string.all_videos_funny_videos_no_videos));
                 articleDataModelsNew = dataList;
@@ -389,25 +318,29 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
                 nextPageNumber = 1;
                 hitArticleListingApi();
                 break;
-
-
+            default:
+                break;
         }
-
     }
 
     @Override
     public void onRecyclerClick(View v, int adapterPosition) {
         Intent intent = new Intent(getActivity(), ParallelFeedActivity.class);
-        MixPanelUtils.pushMomVlogClickEvent(mixpanel, adapterPosition, "" + videoCategory);
         intent.putExtra(Constants.VIDEO_ID, articleDataModelsNew.get(adapterPosition).getId());
         intent.putExtra(Constants.STREAM_URL, articleDataModelsNew.get(adapterPosition).getUrl());
         intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(adapterPosition).getAuthor().getId());
         intent.putExtra(Constants.FROM_SCREEN, "Funny Videos Listing");
         intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
         intent.putExtra(Constants.ARTICLE_INDEX, "" + adapterPosition);
-        intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(adapterPosition).getAuthor().getId() + "~" + articleDataModelsNew.get(adapterPosition).getAuthor().getFirstName() + " " + articleDataModelsNew.get(adapterPosition).getAuthor().getLastName());
+        intent.putExtra(Constants.AUTHOR,
+                articleDataModelsNew.get(adapterPosition).getAuthor().getId() + "~" + articleDataModelsNew
+                        .get(adapterPosition).getAuthor().getFirstName() + " " + articleDataModelsNew
+                        .get(adapterPosition).getAuthor().getLastName());
         startActivity(intent);
-        Utils.momVlogEvent(getActivity(), "Challenge detail", "Video", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Detail", articleDataModelsNew.get(adapterPosition).getId(), "");
-
+        Utils.momVlogEvent(getActivity(), "Challenge detail", "Video", "", "android",
+                SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                String.valueOf(System.currentTimeMillis()), "Show_Video_Detail",
+                articleDataModelsNew.get(adapterPosition).getId(), "");
     }
 }

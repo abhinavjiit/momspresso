@@ -47,21 +47,25 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
     RelativeLayout mainMediaFrameLayout;
     PlayerView exoplayerChallengeDetailListing;
     LinearLayout submitButtonLinearLayout;
-    TextView challengeNameText, submitStoryText, toolbarTitleTextView;
+    TextView challengeNameText;
+    TextView submitStoryText;
+    TextView toolbarTitleTextView;
     com.getbase.floatingactionbutton.FloatingActionButton saveTextView;
     TabLayout tabs;
     private ViewPager viewPager;
     private Toolbar toolbar;
-    private String selectedId, mappedId;
+    private String selectedId;
+    private String mappedId;
     String screen;
-    private String selected_Name;
+    private String selectedName;
     private String selectedActiveUrl;
     private String selectedStreamUrl;
     String challengeRules = "";
     private Topics topic;
     private CoordinatorLayout rootLayout;
-    private int max_Duration;
-    private ImageView thumbNail, back;
+    private int maxDuration;
+    private ImageView thumbNail;
+    private ImageView back;
     private String comingFrom = "";
     private CoordinatorLayout momVlogCoachMark;
 
@@ -92,13 +96,13 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
         thumbNail.setOnClickListener(this);
 
         if (getArguments() != null) {
-            selected_Name = getArguments().getString("selected_Name");
+            selectedName = getArguments().getString("selected_Name");
             selectedActiveUrl = getArguments().getString("selectedActiveUrl");
             challengeRules = getArguments().getString("challengeRules");
             selectedId = getArguments().getString("selectedId");
             selectedStreamUrl = getArguments().getString("selectedStreamUrl");
             mappedId = getArguments().getString("mappedCategory");
-            max_Duration = getArguments().getInt("max_Duration");
+            maxDuration = getArguments().getInt("max_Duration");
             topic = getArguments().getParcelable("topic");
             comingFrom = getArguments().getString("comingFrom");
             if (comingFrom.equals("chooseVideoCategory")) {
@@ -121,7 +125,7 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
         }
         if (getActivity() != null) {
             videoChallengePagerAdapter = new VideoChallengePagerAdapter(getActivity().getSupportFragmentManager(),
-                    selected_Name, selectedActiveUrl, selectedId, topic, selectedStreamUrl, challengeRules);
+                    selectedName, selectedActiveUrl, selectedId, topic, selectedStreamUrl, challengeRules);
             viewPager.setAdapter(videoChallengePagerAdapter);
             viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
             tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -144,12 +148,12 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
         }
 
         saveTextView.setOnClickListener(t -> {
-            if (max_Duration != 0) {
-                ((NewVideoChallengeActivity) getActivity()).chooseAndpermissionDialog(max_Duration);
+            if (maxDuration != 0) {
+                ((NewVideoChallengeActivity) getActivity()).chooseAndpermissionDialog(maxDuration);
             } else {
                 ToastUtils.showToast(getActivity(), "duration should be greater than 0.0");
-                Crashlytics.log("max_duration is :" + String.valueOf(max_Duration));
-                Log.i("ERROR", String.valueOf(max_Duration));
+                Crashlytics.log("max_duration is :" + String.valueOf(maxDuration));
+                Log.i("ERROR", String.valueOf(maxDuration));
             }
         });
         return view;
@@ -157,10 +161,8 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
 
     public void startTrimActivity(@NonNull Uri uri) {
         Intent intent = new Intent(getActivity(), VideoTrimmerActivity.class);
-        String filepath = FileUtils.getPath(getActivity(), uri);
-
-        if (max_Duration != 0) {
-            intent.putExtra("duration", String.valueOf(max_Duration));
+        if (maxDuration != 0) {
+            intent.putExtra("duration", String.valueOf(maxDuration));
         }
         intent.putExtra("ChallengeId", selectedId);
         intent.putExtra("categoryId", mappedId);
@@ -205,7 +207,7 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
         if (comingFrom.equals("chooseVideoCategory")) {
             viewPager.setCurrentItem(0);
             saveTextView.setVisibility(View.VISIBLE);
-            ((NewVideoChallengeActivity) getActivity()).chooseAndpermissionDialog(max_Duration);
+            ((NewVideoChallengeActivity) getActivity()).chooseAndpermissionDialog(maxDuration);
         } else if ("notification".equals(comingFrom)) {
             viewPager.setCurrentItem(0);
             saveTextView.setVisibility(View.VISIBLE);

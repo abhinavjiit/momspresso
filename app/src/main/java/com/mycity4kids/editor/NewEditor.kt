@@ -221,8 +221,6 @@ class NewEditor : BaseActivity(),
         mediaFile!!.setMediaId(mediaId)
 
         if (resultCode == Activity.RESULT_OK) {
-            var bitmap: Bitmap
-
             when (requestCode) {
                 ADD_MEDIA_ACTIVITY_REQUEST_CODE -> {
                     if (data == null) {

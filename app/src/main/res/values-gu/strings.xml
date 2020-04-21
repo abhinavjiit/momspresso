@@ -538,9 +538,11 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_videos.funny_videos.no_videos">No mom vlogs added.</string>
   <string name="notification.read_all">Read All</string>
   <string name="notification.no_notification">No notifications</string>
-
   <string name="user_funny_video.toolbar.title">મોમ વી લોગ્સ</string>
   <string name="user_funny_video.published_on">એ પ્રકાશિત કરાયું : %1$s</string>
+  <string name="user_funny_video.pending_since">Approval pending since: %1$s</string>
+  <string name="user_funny_video.unspecified">Unspecified: %1$s</string>
+  <string name="user_funny_video.rejected_on">Unapproved on: %1$s</string>
   <string name="article_listing.toolbar.title_recent">તાજેતરના </string>
   <string name="article_listing.toolbar.title_popular">લોકપ્રિય </string>
   <string name="article_listing.toolbar.title_trending">વલણ </string>

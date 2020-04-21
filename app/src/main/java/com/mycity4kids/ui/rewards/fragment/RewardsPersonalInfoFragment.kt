@@ -435,16 +435,6 @@ class RewardsPersonalInfoFragment : BaseFragment(),
         }
 
         editLocation.setOnClickListener {
-
-            //            val typeFilter = AutocompleteFilter.Builder()
-            //                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
-            //                    .build()
-            //            val intent = PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-            //                    .setFilter(typeFilter)
-            //                    .build(activity)
-
-            // Start the autocomplete intent.
-            //            List<Place.Field> fields = Arrays . asList (Place.Field.ID, Place.Field.NAME)
             val fieldsArr = arrayOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG).asList()
             val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fieldsArr)
                 .setTypeFilter(TypeFilter.CITIES)

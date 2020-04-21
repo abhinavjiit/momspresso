@@ -576,7 +576,9 @@
 
   <string name="user_funny_video.toolbar.title">मॉम वीलॉग्स </string>
   <string name="user_funny_video.published_on">पर प्रकाशित: %1$s</string>
-
+  <string name="user_funny_video.pending_since">Approval pending since: %1$s</string>
+  <string name="user_funny_video.unspecified">Unspecified: %1$s</string>
+  <string name="user_funny_video.rejected_on">Unapproved on: %1$s</string>
   <string name="article_listing.toolbar.title_recent">ताजातरीन</string>
   <string name="article_listing.toolbar.title_popular">प्रचलित</string>
   <string name="article_listing.toolbar.title_trending">ट्रेंडिंग</string>

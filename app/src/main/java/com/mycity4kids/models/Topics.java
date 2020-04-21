@@ -5,10 +5,12 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import com.mycity4kids.models.ExploreTopicsModel.ExtraData.CategoryImage;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Topics implements Parcelable {
+
     @SerializedName("id")
     private String id;
     @SerializedName("title")
@@ -56,11 +58,23 @@ public class Topics implements Parcelable {
         this.momVlogsSubCategoryModel = momVlogsSubCategoryModel;
     }
 
+    private ArrayList<Topics> taggedChallengeList = new ArrayList<>();
+
     public static class ExtraData implements Parcelable {
+
         @SerializedName("challenge")
         private Challenges challenge;
         @SerializedName("categoryTag")
         private CategoryTag categoryTag;
+        @SerializedName("max_duration")
+        private int max_duration;
+        @SerializedName("categoryBackImage")
+        private CategoryImage categoryBackImage;
+
+        public ExtraData(Challenges challenge, CategoryTag categoryTag) {
+            this.categoryTag = categoryTag;
+            this.challenge = challenge;
+        }
 
         public CategoryTag getCategoryTag() {
             return categoryTag;
@@ -68,11 +82,6 @@ public class Topics implements Parcelable {
 
         public void setCategoryTag(CategoryTag categoryTag) {
             this.categoryTag = categoryTag;
-        }
-
-        public ExtraData(Challenges challenge, CategoryTag categoryTag) {
-            this.categoryTag = categoryTag;
-            this.challenge = challenge;
         }
 
         public Challenges getChallenge() {
@@ -84,8 +93,24 @@ public class Topics implements Parcelable {
             this.challenge = challenge;
         }
 
+        public int getMax_duration() {
+            return max_duration;
+        }
+
+        public void setMax_duration(int max_duration) {
+            this.max_duration = max_duration;
+        }
+
+        public CategoryImage getCategoryBackImage() {
+            return categoryBackImage;
+        }
+
+        public void setCategoryBackImage(CategoryImage categoryBackImage) {
+            this.categoryBackImage = categoryBackImage;
+        }
 
         public static class CategoryTag implements Parcelable {
+
             @SerializedName("categoryImage")
             private String categoryImage;
             @SerializedName("categoryBadge")
@@ -142,6 +167,7 @@ public class Topics implements Parcelable {
         }
 
         public static class Challenges implements Parcelable {
+
             @SerializedName("active")
             private String active;
             @SerializedName("videoUrl")
@@ -318,7 +344,8 @@ public class Topics implements Parcelable {
 
     }
 
-    public Topics(String id, String title, boolean isSelected, ArrayList<Topics> child, String parentId, String parentName) {
+    public Topics(String id, String title, boolean isSelected, ArrayList<Topics> child, String parentId,
+            String parentName) {
         this.id = id;
         this.title = title;
         this.isSelected = isSelected;
@@ -343,6 +370,7 @@ public class Topics implements Parcelable {
         prevKey = in.readByte() != 0;
         mapped_category = in.readString();
         isSelectedSubCategory = in.readByte() != 0;
+        taggedChallengeList = in.createTypedArrayList(Topics.CREATOR);
     }
 
     public List<ExtraData> getExtraData() {
@@ -472,6 +500,13 @@ public class Topics implements Parcelable {
         this.slug = slug;
     }
 
+    public ArrayList<Topics> getTaggedChallengeList() {
+        return taggedChallengeList;
+    }
+
+    public void setTaggedChallengeList(ArrayList<Topics> taggedChallengeList) {
+        this.taggedChallengeList = taggedChallengeList;
+    }
 
     @Override
     public int describeContents() {
@@ -495,5 +530,6 @@ public class Topics implements Parcelable {
         dest.writeByte((byte) (prevKey ? 1 : 0));
         dest.writeString(mapped_category);
         dest.writeByte((byte) (isSelectedSubCategory ? 1 : 0));
+        dest.writeTypedList(taggedChallengeList);
     }
 }
