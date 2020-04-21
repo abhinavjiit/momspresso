@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment
 import com.crashlytics.android.Crashlytics
 import com.mycity4kids.R
 import com.mycity4kids.profile.UserProfileActivity
+import com.mycity4kids.ui.activity.ArticleModerationOrShareActivity
 import com.mycity4kids.ui.activity.PhoneContactsActivity
 import kotlinx.android.synthetic.main.invite_friends_dialog_fragment.*
 
@@ -68,6 +69,9 @@ class InviteFriendsDialogFragment : DialogFragment(), View.OnClickListener {
                 view?.id == R.id.shareLinkWidget -> {
                     if (activity is UserProfileActivity) {
                         (activity as UserProfileActivity).shareProfile()
+                        dismiss()
+                    } else if (activity is ArticleModerationOrShareActivity) {
+                        (activity as ArticleModerationOrShareActivity).shareProfileUrl()
                         dismiss()
                     }
                 }

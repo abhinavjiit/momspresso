@@ -11,17 +11,21 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.fragment.app.FragmentManager;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
+import com.mycity4kids.ui.fragment.InviteFriendsDialogFragment;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.StringUtils;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -74,8 +78,18 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         } else {
             moderationContainer.setVisibility(View.GONE);
             publishContainer.setVisibility(View.VISIBLE);
+            launchInviteFriendsDialog();
         }
         instagramImageView.setVisibility(View.GONE);
+    }
+
+    private void launchInviteFriendsDialog() {
+        InviteFriendsDialogFragment inviteFriendsDialogFragment = new InviteFriendsDialogFragment();
+        Bundle args = new Bundle();
+        inviteFriendsDialogFragment.setArguments(args);
+        inviteFriendsDialogFragment.setCancelable(true);
+        FragmentManager fm = getSupportFragmentManager();
+        inviteFriendsDialogFragment.show(fm, "Invite Friends");
     }
 
     @Override
@@ -153,6 +167,14 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
             default:
                 break;
         }
+    }
+
+    public void shareProfileUrl() {
+        String shareText = getString(
+                R.string.profile_follow_author,
+                authorName,
+                (AppConstants.USER_PROFILE_SHARE_BASE_URL + authorId));
+        AppUtils.shareGenericLinkWithSuccessStatus(this, shareText);
     }
 
     private Callback<UserDetailResponse> getUserDetailsResponseCallback = new Callback<UserDetailResponse>() {
