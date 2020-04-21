@@ -54,7 +54,7 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
         try {
             final ViewHolder holder;
             if (view == null) {
-                view = LayoutInflater.from(view.getContext()).inflate(R.layout.users_funny_video_item, null);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.users_funny_video_item, null);
                 holder = new ViewHolder();
                 holder.rootView = (RelativeLayout) view.findViewById(R.id.rootView);
                 holder.txvArticleTitle = (TextView) view.findViewById(R.id.articleTitleTextView);

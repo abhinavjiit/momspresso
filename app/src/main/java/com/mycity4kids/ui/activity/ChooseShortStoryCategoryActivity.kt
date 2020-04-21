@@ -168,74 +168,79 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
                     call: Call<ResponseBody>,
                     response: Response<ResponseBody>
                 ) {
-                    val writtenToDisk = AppUtils.writeResponseBodyToDisk(
-                        BaseApplication.getAppContext(),
-                        AppConstants.CATEGORIES_JSON_FILE,
-                        response.body()
-                    )
-                    Log.d("TopicsFilterActivity", "file download was a success? $writtenToDisk")
-
-                    val fileInputStream = BaseApplication.getAppContext()
-                        .openFileInput(AppConstants.CATEGORIES_JSON_FILE)
-                    val fileContent = AppUtils.convertStreamToString(fileInputStream)
-                    val gson =
-                        GsonBuilder().registerTypeAdapterFactory(ArrayAdapterFactory()).create()
-                    val res = gson.fromJson(fileContent, ExploreTopicsResponse::class.java)
-                    val challengesRes = gson.fromJson(fileContent, TopicsResponse::class.java)
-                    shortShortTopicsData = ArrayList()
-                    shortStoryChallengesData = ArrayList()
-                    for (i in 0 until res.data.size) {
-                        if (AppConstants.SHORT_STORY_CATEGORYID == res.data[i].id) {
-                            shortShortTopicsData = (res.data[i].child)
-                            shortStoryChallengesData = (challengesRes.data[i].child)
-                            shortShortTopicsData?.let {
-                                publicShortStoryTopics = ArrayList()
-                                it.forEach { checkPublicTopics ->
-                                    if (checkPublicTopics.publicVisibility == "1") {
-                                        publicShortStoryTopics?.add(checkPublicTopics)
+                    try {
+                        AppUtils.writeResponseBodyToDisk(
+                            BaseApplication.getAppContext(),
+                            AppConstants.CATEGORIES_JSON_FILE,
+                            response.body()
+                        )
+                        val fileInputStream = BaseApplication.getAppContext()
+                            .openFileInput(AppConstants.CATEGORIES_JSON_FILE)
+                        val fileContent = AppUtils.convertStreamToString(fileInputStream)
+                        val gson =
+                            GsonBuilder().registerTypeAdapterFactory(ArrayAdapterFactory()).create()
+                        val res = gson.fromJson(fileContent, ExploreTopicsResponse::class.java)
+                        val challengesRes = gson.fromJson(fileContent, TopicsResponse::class.java)
+                        shortShortTopicsData = ArrayList()
+                        shortStoryChallengesData = ArrayList()
+                        for (i in 0 until res.data.size) {
+                            if (AppConstants.SHORT_STORY_CATEGORYID == res.data[i].id) {
+                                shortShortTopicsData = (res.data[i].child)
+                                shortStoryChallengesData = (challengesRes.data[i].child)
+                                shortShortTopicsData?.let {
+                                    publicShortStoryTopics = ArrayList()
+                                    it.forEach { checkPublicTopics ->
+                                        if (checkPublicTopics.publicVisibility == "1") {
+                                            publicShortStoryTopics?.add(checkPublicTopics)
+                                        }
+                                    }
+                                    publicShortStoryTopics?.let { publicShortStoryTopics ->
+                                        adapter.setTopicsData(publicShortStoryTopics)
+                                        adapter.notifyDataSetChanged()
                                     }
                                 }
-                                publicShortStoryTopics?.let { publicShortStoryTopics ->
-                                    adapter.setTopicsData(publicShortStoryTopics)
-                                    adapter.notifyDataSetChanged()
+                                break
+                            }
+                        }
+                        for (i in 0 until shortStoryChallengesData?.size!!) {
+                            if (shortStoryChallengesData?.get(i)?.id == AppConstants.SHORT_STORY_CHALLENGE_ID) {
+                                shortStoryChallenges = shortStoryChallengesData?.get(i)?.child
+                                shortStoryChallenges?.let { challenges ->
+                                    publicShortStoryChallenges = ArrayList()
+                                    challenges.forEach { checkPublicChallenges ->
+
+                                        if (checkPublicChallenges.publicVisibility == "1") {
+                                            if (!checkPublicChallenges.extraData.isNullOrEmpty() && checkPublicChallenges.extraData?.get(
+                                                    0
+                                                )?.challenge?.active == "1"
+                                            )
+                                                publicShortStoryChallenges?.add(
+                                                    checkPublicChallenges
+                                                )
+                                        }
+                                    }
+                                    publicShortStoryChallenges?.reverse()
+                                    publicShortStoryChallenges?.let { publicAndActiveChallenges ->
+                                        shortStoryShimmer.stopShimmerAnimation()
+                                        shortStoryShimmer.visibility = View.GONE
+                                        shortStoryChallengeAdapter.setShortStoryChallengesData(
+                                            publicAndActiveChallenges
+                                        )
+                                        shortStoryChallengeAdapter.notifyDataSetChanged()
+                                    }
                                 }
                             }
                             break
                         }
-                    }
-                    for (i in 0 until shortStoryChallengesData?.size!!) {
-                        if (shortStoryChallengesData?.get(i)?.id == AppConstants.SHORT_STORY_CHALLENGE_ID) {
-                            shortStoryChallenges = shortStoryChallengesData?.get(i)?.child
-                            shortStoryChallenges?.let { challenges ->
-                                publicShortStoryChallenges = ArrayList()
-                                challenges.forEach { checkPublicChallenges ->
-
-                                    if (checkPublicChallenges.publicVisibility == "1") {
-                                        if (!checkPublicChallenges.extraData.isNullOrEmpty() && checkPublicChallenges.extraData?.get(
-                                                0
-                                            )?.challenge?.active == "1"
-                                        )
-                                            publicShortStoryChallenges?.add(checkPublicChallenges)
-                                    }
-                                }
-                                publicShortStoryChallenges?.reverse()
-                                publicShortStoryChallenges?.let { publicAndActiveChallenges ->
-                                    shortStoryShimmer.stopShimmerAnimation()
-                                    shortStoryShimmer.visibility = View.GONE
-                                    shortStoryChallengeAdapter.setShortStoryChallengesData(
-                                        publicAndActiveChallenges
-                                    )
-                                    shortStoryChallengeAdapter.notifyDataSetChanged()
-                                }
-                            }
-                        }
-                        break
+                    } catch (e: Exception) {
+                        Crashlytics.logException(e)
+                        Log.d("MC4KException", Log.getStackTraceString(e))
                     }
                 }
             })
         } catch (e: Exception) {
             Crashlytics.logException(e)
-            Log.d("Exception", Log.getStackTraceString(e))
+            Log.d("MC4KException", Log.getStackTraceString(e))
         }
     }
 }

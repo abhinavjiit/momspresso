@@ -3,12 +3,6 @@ package com.mycity4kids.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.viewpager.widget.ViewPager;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +10,15 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import androidx.viewpager.widget.ViewPager;
 import com.crashlytics.android.Crashlytics;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
@@ -34,15 +30,11 @@ import com.mycity4kids.ui.fragment.TopicsArticlesTabFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
-
-import org.json.JSONObject;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -81,41 +73,33 @@ public class TopicsListingFragment extends BaseFragment {
 
         String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext());
         if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
-            bottom_sheet.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    } else {
-                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    }
+            bottom_sheet.setOnClickListener(view -> {
+                if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                } else {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
             });
 
-            textUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.campaignEvent(getActivity(), "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
+            textUpdate.setOnClickListener(view -> {
+                Utils.campaignEvent(getActivity(), "Rewards 1st screen", "Bottom sheet", "Update", "", "android",
+                        SharedPrefUtils.getAppLocale(getActivity()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
 
-                    startActivity(new Intent(getActivity(), RewardsContainerActivity.class));
-                }
+                startActivity(new Intent(getActivity(), RewardsContainerActivity.class));
             });
 
-            textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.campaignEvent(getActivity(), "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
+            textHeaderUpdate.setOnClickListener(view -> {
+                Utils.campaignEvent(getActivity(), "Rewards 1st screen", "Bottom sheet", "Update", "", "android",
+                        SharedPrefUtils.getAppLocale(getActivity()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
 
-                    startActivity(new Intent(getActivity(), RewardsContainerActivity.class));
-                }
+                startActivity(new Intent(getActivity(), RewardsContainerActivity.class));
             });
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    bottom_sheet.setVisibility(View.GONE);
-                }
-            }, 10000);
+            new Handler().postDelayed(() -> bottom_sheet.setVisibility(View.GONE), 10000);
         } else {
             bottom_sheet.setVisibility(View.GONE);
         }
@@ -129,7 +113,8 @@ public class TopicsListingFragment extends BaseFragment {
             allTopicsMap = BaseApplication.getTopicsMap();
 
             if (allTopicsList == null || allTopicsMap == null) {
-                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                FileInputStream fileInputStream = BaseApplication.getAppContext()
+                        .openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                 String fileContent = AppUtils.convertStreamToString(fileInputStream);
                 Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
 
@@ -142,19 +127,16 @@ public class TopicsListingFragment extends BaseFragment {
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-
-//            Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
-//            call.enqueue(downloadCategoriesJSONCallback);
             Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
             caller.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
-                    Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
-
+                    AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE,
+                            response.body());
                     try {
 
-                        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                        FileInputStream fileInputStream = BaseApplication.getAppContext()
+                                .openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                         String fileContent = AppUtils.convertStreamToString(fileInputStream);
                         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
 
@@ -164,6 +146,9 @@ public class TopicsListingFragment extends BaseFragment {
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4KException", Log.getStackTraceString(e));
                     }
                 }
 
@@ -173,6 +158,9 @@ public class TopicsListingFragment extends BaseFragment {
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
             });
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4KException", Log.getStackTraceString(e));
         }
         if (subTopicsList.size() == 0) {
             Topics mainTopic = new Topics();
@@ -240,7 +228,8 @@ public class TopicsListingFragment extends BaseFragment {
                 for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
                     ArrayList<Topics> tempList = new ArrayList<>();
                     for (int k = 0; k < responseData.getData().get(i).getChild().get(j).getChild().size(); k++) {
-                        if ("1".equals(responseData.getData().get(i).getChild().get(j).getChild().get(k).getShowInMenu())) {
+                        if ("1".equals(
+                                responseData.getData().get(i).getChild().get(j).getChild().get(k).getShowInMenu())) {
                             //Adding All sub-subcategories
                             responseData.getData().get(i).getChild().get(j).getChild().get(k)
                                     .setParentId(responseData.getData().get(i).getId());
@@ -252,7 +241,8 @@ public class TopicsListingFragment extends BaseFragment {
                     responseData.getData().get(i).getChild().get(j).setChild(tempList);
                 }
 
-                if ("1".equals(responseData.getData().get(i).getShowInMenu()) && !AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())) {
+                if ("1".equals(responseData.getData().get(i).getShowInMenu()) && !AppConstants.SHORT_STORY_CATEGORYID
+                        .equals(responseData.getData().get(i).getId())) {
                     for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
                         if ("1".equals(responseData.getData().get(i).getChild().get(k).getShowInMenu())) {
                             //Adding All subcategories
@@ -269,12 +259,18 @@ public class TopicsListingFragment extends BaseFragment {
                                 Topics dupChildTopic = new Topics();
                                 dupChildTopic.setChild(new ArrayList<Topics>());
                                 dupChildTopic.setId(responseData.getData().get(i).getChild().get(k).getId());
-                                dupChildTopic.setIsSelected(responseData.getData().get(i).getChild().get(k).isSelected());
-                                dupChildTopic.setParentId(responseData.getData().get(i).getChild().get(k).getParentId());
-                                dupChildTopic.setDisplay_name(responseData.getData().get(i).getChild().get(k).getDisplay_name());
-                                dupChildTopic.setParentName(responseData.getData().get(i).getChild().get(k).getParentName());
-                                dupChildTopic.setPublicVisibility(responseData.getData().get(i).getChild().get(k).getPublicVisibility());
-                                dupChildTopic.setShowInMenu(responseData.getData().get(i).getChild().get(k).getShowInMenu());
+                                dupChildTopic
+                                        .setIsSelected(responseData.getData().get(i).getChild().get(k).isSelected());
+                                dupChildTopic
+                                        .setParentId(responseData.getData().get(i).getChild().get(k).getParentId());
+                                dupChildTopic.setDisplay_name(
+                                        responseData.getData().get(i).getChild().get(k).getDisplay_name());
+                                dupChildTopic
+                                        .setParentName(responseData.getData().get(i).getChild().get(k).getParentName());
+                                dupChildTopic.setPublicVisibility(
+                                        responseData.getData().get(i).getChild().get(k).getPublicVisibility());
+                                dupChildTopic
+                                        .setShowInMenu(responseData.getData().get(i).getChild().get(k).getShowInMenu());
                                 dupChildTopic.setSlug(responseData.getData().get(i).getChild().get(k).getSlug());
                                 dupChildTopic.setTitle(responseData.getData().get(i).getChild().get(k).getTitle());
                                 duplicateEntry.add(dupChildTopic);
@@ -292,10 +288,8 @@ public class TopicsListingFragment extends BaseFragment {
             BaseApplication.setTopicList(allTopicsList);
             BaseApplication.setTopicsMap(allTopicsMap);
         } catch (Exception e) {
-//            progressBar.setVisibility(View.GONE);
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
-//            showToast(getString(R.string.went_wrong));
         }
     }
 
@@ -306,7 +300,8 @@ public class TopicsListingFragment extends BaseFragment {
             if (parentTopicId.equals(allTopicsList.get(i).getId())) {
                 subTopicsList.addAll(allTopicsList.get(i).getChild());
                 ((DashboardActivity) getActivity()).setDynamicToolbarTitle(allTopicsList.get(i).getDisplay_name());
-                Utils.pushViewTopicArticlesEvent(getActivity(), "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
+                Utils.pushViewTopicArticlesEvent(getActivity(), "TopicArticlesListingScreen",
+                        SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
                         allTopicsList.get(i).getId() + "~" + allTopicsList.get(i).getDisplay_name());
                 return;
             }
@@ -314,79 +309,19 @@ public class TopicsListingFragment extends BaseFragment {
 
     }
 
-    Callback<ResponseBody> downloadCategoriesJSONCallback = new Callback<ResponseBody>() {
-        @Override
-        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-            if (response == null || response.body() == null) {
-//                showToast("Something went wrong from server");
-                return;
-            }
-            try {
-                String resData = new String(response.body().bytes());
-                JSONObject jsonObject = new JSONObject(resData);
-
-                Retrofit retro = BaseApplication.getInstance().getRetrofit();
-                final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-
-                Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
-                caller.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE, response.body());
-                        Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
-
-                        try {
-
-                            FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                            String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-
-                            TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
-                            createTopicsData(res);
-                            getCurrentParentTopicCategoriesAndSubCategories();
-                        } catch (FileNotFoundException e) {
-                            Crashlytics.logException(e);
-                            Log.d("FileNotFoundException", Log.getStackTraceString(e));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Crashlytics.logException(t);
-                        Log.d("MC4KException", Log.getStackTraceString(t));
-                    }
-                });
-            } catch (Exception e) {
-//                progressBar.setVisibility(View.GONE);
-                Crashlytics.logException(e);
-                Log.d("MC4KException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<ResponseBody> call, Throwable t) {
-//            progressBar.setVisibility(View.GONE);
-//            showToast(getString(R.string.went_wrong));
-            Crashlytics.logException(t);
-            Log.d("MC4KException", Log.getStackTraceString(t));
-        }
-    };
-
     @Override
     public void onStop() {
         super.onStop();
-        Log.d("TopicListingFragment", "onStop");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("TopicListingFragment", "onDestroy");
     }
 
     public void showGuideView() {
-        TopicsArticlesTabFragment topicsArticlesTabFragment = ((TopicsArticlesTabFragment) pagerAdapter.instantiateItem(viewPager, viewPager.getCurrentItem()));
+        TopicsArticlesTabFragment topicsArticlesTabFragment = ((TopicsArticlesTabFragment) pagerAdapter
+                .instantiateItem(viewPager, viewPager.getCurrentItem()));
         topicsArticlesTabFragment.showGuideView();
     }
 

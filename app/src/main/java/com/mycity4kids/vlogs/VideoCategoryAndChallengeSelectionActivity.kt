@@ -132,7 +132,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
                     processChallengesData(it[i])
                 }
                 if (it[i]?.id != AppConstants.VIDEO_CHALLENGE_ID) {
-                    if (it[i]?.publicVisibility == "false") {
+                    if (it[i]?.publicVisibility == "1") {
                         categoryList.add(it[i])
                     }
                 }

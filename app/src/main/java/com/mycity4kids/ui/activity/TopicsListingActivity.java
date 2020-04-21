@@ -3,17 +3,6 @@ package com.mycity4kids.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
@@ -22,13 +11,18 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 import com.crashlytics.android.Crashlytics;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
@@ -40,13 +34,11 @@ import com.mycity4kids.ui.fragment.TopicsArticlesTabFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,6 +48,7 @@ import retrofit2.Retrofit;
  * Created by hemant on 25/5/17.
  */
 public class TopicsListingActivity extends BaseActivity {
+
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private FrameLayout topLayerGuideLayout;
@@ -88,54 +81,43 @@ public class TopicsListingActivity extends BaseActivity {
 
         String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext());
         if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
-            bottom_sheet.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    } else {
-                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    }
+            bottom_sheet.setOnClickListener(view -> {
+                if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                } else {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
             });
 
-            textUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.campaignEvent(TopicsListingActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
+            textUpdate.setOnClickListener(view -> {
+                Utils.campaignEvent(TopicsListingActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "",
+                        "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
 
-                    startActivity(new Intent(TopicsListingActivity.this, RewardsContainerActivity.class));
-                }
+                startActivity(new Intent(TopicsListingActivity.this, RewardsContainerActivity.class));
             });
 
-            textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.campaignEvent(TopicsListingActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
+            textHeaderUpdate.setOnClickListener(view -> {
+                Utils.campaignEvent(TopicsListingActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "",
+                        "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
 
-                    startActivity(new Intent(TopicsListingActivity.this, RewardsContainerActivity.class));
-                }
+                startActivity(new Intent(TopicsListingActivity.this, RewardsContainerActivity.class));
             });
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    bottom_sheet.setVisibility(View.GONE);
-                }
-            }, 10000);
+            new Handler().postDelayed(() -> bottom_sheet.setVisibility(View.GONE), 10000);
         } else {
             bottom_sheet.setVisibility(View.GONE);
         }
 
         imageSortBy = (ImageView) findViewById(R.id.imageSortBy);
 
-        imageSortBy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = pagerAdapter.getCurrentFragment();//.get(viewPager.getCurrentItem());
-                if (fragment != null && fragment instanceof TopicsArticlesTabFragment) {
-                    ((TopicsArticlesTabFragment) fragment).showSortedByDialog();
-                }
+        imageSortBy.setOnClickListener(view -> {
+            Fragment fragment = pagerAdapter.getCurrentFragment();
+            if (fragment != null && fragment instanceof TopicsArticlesTabFragment) {
+                ((TopicsArticlesTabFragment) fragment).showSortedByDialog();
             }
         });
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -150,12 +132,14 @@ public class TopicsListingActivity extends BaseActivity {
 
         parentTopicId = getIntent().getStringExtra("parentTopicId");
 
-        Utils.pushOpenScreenEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(this, "TopicArticlesListingScreen",
+                SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         try {
             allTopicsList = BaseApplication.getTopicList();
             allTopicsMap = BaseApplication.getTopicsMap();
             if (allTopicsList == null || allTopicsMap == null) {
-                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                FileInputStream fileInputStream = BaseApplication.getAppContext()
+                        .openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                 String fileContent = AppUtils.convertStreamToString(fileInputStream);
                 Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                 TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
@@ -172,10 +156,13 @@ public class TopicsListingActivity extends BaseActivity {
             caller.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
+                    boolean writtenToDisk = AppUtils
+                            .writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE,
+                                    response.body());
                     Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
                     try {
-                        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                        FileInputStream fileInputStream = BaseApplication.getAppContext()
+                                .openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                         String fileContent = AppUtils.convertStreamToString(fileInputStream);
 
                         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
@@ -186,6 +173,9 @@ public class TopicsListingActivity extends BaseActivity {
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4KException", Log.getStackTraceString(e));
                     }
                 }
 
@@ -195,6 +185,9 @@ public class TopicsListingActivity extends BaseActivity {
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
             });
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4KException", Log.getStackTraceString(e));
         }
         if (subTopicsList.size() == 0) {
             Topics mainTopic = new Topics();
@@ -215,21 +208,18 @@ public class TopicsListingActivity extends BaseActivity {
         for (int i = 0; i < subTopicsList.size(); i++) {
             tabLayout.addTab(tabLayout.newTab().setText(subTopicsList.get(i).getDisplay_name()));
         }
-        tabLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                // don't forget to add Tab first before measuring..
-                DisplayMetrics displayMetrics = new DisplayMetrics();
-                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-                int widthS = displayMetrics.widthPixels;
-                tabLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-                int widthT = tabLayout.getMeasuredWidth();
+        tabLayout.post(() -> {
+            // don't forget to add Tab first before measuring..
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            int widthS = displayMetrics.widthPixels;
+            tabLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            int widthT = tabLayout.getMeasuredWidth();
 
-                if (widthS > widthT) {
-                    tabLayout.setTabMode(TabLayout.MODE_FIXED);
-                    tabLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT));
-                }
+            if (widthS > widthT) {
+                tabLayout.setTabMode(TabLayout.MODE_FIXED);
+                tabLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
             }
         });
         AppUtils.changeTabsFont(tabLayout);
@@ -261,7 +251,7 @@ public class TopicsListingActivity extends BaseActivity {
 
     private void createTopicsData(TopicsResponse responseData) {
         try {
-            allTopicsMap = new HashMap<Topics, List<Topics>>();
+            allTopicsMap = new HashMap<>();
             allTopicsList = new ArrayList<>();
 
             //Prepare structure for multi-expandable listview.
@@ -271,7 +261,8 @@ public class TopicsListingActivity extends BaseActivity {
                 for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
                     ArrayList<Topics> tempList = new ArrayList<>();
                     for (int k = 0; k < responseData.getData().get(i).getChild().get(j).getChild().size(); k++) {
-                        if ("1".equals(responseData.getData().get(i).getChild().get(j).getChild().get(k).getShowInMenu())) {
+                        if ("1".equals(
+                                responseData.getData().get(i).getChild().get(j).getChild().get(k).getShowInMenu())) {
                             //Adding All sub-subcategories
                             responseData.getData().get(i).getChild().get(j).getChild().get(k)
                                     .setParentId(responseData.getData().get(i).getId());
@@ -283,7 +274,8 @@ public class TopicsListingActivity extends BaseActivity {
                     responseData.getData().get(i).getChild().get(j).setChild(tempList);
                 }
 
-                if ("1".equals(responseData.getData().get(i).getShowInMenu()) && !AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())) {
+                if ("1".equals(responseData.getData().get(i).getShowInMenu()) && !AppConstants.SHORT_STORY_CATEGORYID
+                        .equals(responseData.getData().get(i).getId())) {
                     for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
                         if ("1".equals(responseData.getData().get(i).getChild().get(k).getShowInMenu())) {
                             //Adding All subcategories
@@ -300,12 +292,18 @@ public class TopicsListingActivity extends BaseActivity {
                                 Topics dupChildTopic = new Topics();
                                 dupChildTopic.setChild(new ArrayList<Topics>());
                                 dupChildTopic.setId(responseData.getData().get(i).getChild().get(k).getId());
-                                dupChildTopic.setIsSelected(responseData.getData().get(i).getChild().get(k).isSelected());
-                                dupChildTopic.setParentId(responseData.getData().get(i).getChild().get(k).getParentId());
-                                dupChildTopic.setDisplay_name(responseData.getData().get(i).getChild().get(k).getDisplay_name());
-                                dupChildTopic.setParentName(responseData.getData().get(i).getChild().get(k).getParentName());
-                                dupChildTopic.setPublicVisibility(responseData.getData().get(i).getChild().get(k).getPublicVisibility());
-                                dupChildTopic.setShowInMenu(responseData.getData().get(i).getChild().get(k).getShowInMenu());
+                                dupChildTopic
+                                        .setIsSelected(responseData.getData().get(i).getChild().get(k).isSelected());
+                                dupChildTopic
+                                        .setParentId(responseData.getData().get(i).getChild().get(k).getParentId());
+                                dupChildTopic.setDisplay_name(
+                                        responseData.getData().get(i).getChild().get(k).getDisplay_name());
+                                dupChildTopic
+                                        .setParentName(responseData.getData().get(i).getChild().get(k).getParentName());
+                                dupChildTopic.setPublicVisibility(
+                                        responseData.getData().get(i).getChild().get(k).getPublicVisibility());
+                                dupChildTopic
+                                        .setShowInMenu(responseData.getData().get(i).getChild().get(k).getShowInMenu());
                                 dupChildTopic.setSlug(responseData.getData().get(i).getChild().get(k).getSlug());
                                 dupChildTopic.setTitle(responseData.getData().get(i).getChild().get(k).getTitle());
                                 duplicateEntry.add(dupChildTopic);
@@ -335,8 +333,8 @@ public class TopicsListingActivity extends BaseActivity {
             if (parentTopicId.equals(allTopicsList.get(i).getId())) {
                 subTopicsList.addAll(allTopicsList.get(i).getChild());
                 toolbarTitleTextView.setText(allTopicsList.get(i).getDisplay_name());
-//                ((DashboardActivity) getActivity()).setDynamicToolbarTitle(allTopicsList.get(i).getDisplay_name());
-                Utils.pushViewTopicArticlesEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "",
+                Utils.pushViewTopicArticlesEvent(this, "TopicArticlesListingScreen",
+                        SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "",
                         allTopicsList.get(i).getId() + "~" + allTopicsList.get(i).getDisplay_name());
                 return;
             }
@@ -346,17 +344,16 @@ public class TopicsListingActivity extends BaseActivity {
     @Override
     public void onStop() {
         super.onStop();
-        Log.d("TopicListingFragment", "onStop");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("TopicListingFragment", "onDestroy");
     }
 
     public void showGuideView() {
-        TopicsArticlesTabFragment topicsArticlesTabFragment = ((TopicsArticlesTabFragment) pagerAdapter.instantiateItem(viewPager, viewPager.getCurrentItem()));
+        TopicsArticlesTabFragment topicsArticlesTabFragment = ((TopicsArticlesTabFragment) pagerAdapter
+                .instantiateItem(viewPager, viewPager.getCurrentItem()));
         topicsArticlesTabFragment.showGuideView();
     }
 

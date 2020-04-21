@@ -247,10 +247,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             caller.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(FilteredTopicsArticleListingActivity.this,
+                    AppUtils.writeResponseBodyToDisk(FilteredTopicsArticleListingActivity.this,
                             AppConstants.CATEGORIES_JSON_FILE, response.body());
-                    Log.d("FilteredTopicsArticle", "file download was a success? " + writtenToDisk);
-
                     try {
                         FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                         String fileContent = convertStreamToString(fileInputStream);
@@ -263,6 +261,9 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4KException", Log.getStackTraceString(e));
                     }
                 }
 
@@ -272,6 +273,9 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
             });
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4KException", Log.getStackTraceString(e));
         }
 
         if (AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics)) {
@@ -571,7 +575,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     }
 
     private boolean checkCurrentCategoryExists(FollowTopics[] res) {
-        Log.d("cttbhtbtbtb", "btrdsefafs");
         for (int i = 0; i < res.length; i++) {
             for (int j = 0; j < res[i].getChild().size(); j++) {
                 if (selectedTopics.equals(res[i].getChild().get(j).getId())) {
@@ -582,64 +585,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         }
         return false;
     }
-
-    Callback<ResponseBody> downloadCategoriesJSONCallback = new Callback<ResponseBody>() {
-        @Override
-        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-            progressBar.setVisibility(View.GONE);
-            if (response == null || response.body() == null) {
-                showToast(getString(R.string.server_went_wrong));
-                return;
-            }
-            try {
-                String resData = new String(response.body().bytes());
-                Retrofit retro = BaseApplication.getInstance().getRetrofit();
-                final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-                Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
-                caller.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                        boolean writtenToDisk = AppUtils
-                                .writeResponseBodyToDisk(FilteredTopicsArticleListingActivity.this,
-                                        AppConstants.CATEGORIES_JSON_FILE, response.body());
-                        Log.d("FilteredTopicsArticle", "file download was a success? " + writtenToDisk);
-
-                        try {
-                            FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                            String fileContent = convertStreamToString(fileInputStream);
-                            TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
-                            createTopicsData(res);
-                            getTopicLevelAndPrepareFilterData();
-                            sortBgLayout.setVisibility(View.GONE);
-                            bottomOptionMenu.setVisibility(View.GONE);
-                        } catch (FileNotFoundException e) {
-                            Crashlytics.logException(e);
-                            Log.d("FileNotFoundException", Log.getStackTraceString(e));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Crashlytics.logException(t);
-                        Log.d("MC4KException", Log.getStackTraceString(t));
-                    }
-                });
-            } catch (Exception e) {
-                progressBar.setVisibility(View.GONE);
-                Crashlytics.logException(e);
-                Log.d("MC4KException", Log.getStackTraceString(e));
-                showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<ResponseBody> call, Throwable t) {
-            progressBar.setVisibility(View.GONE);
-            showToast(getString(R.string.went_wrong));
-            Crashlytics.logException(t);
-            Log.d("MC4KException", Log.getStackTraceString(t));
-        }
-    };
 
     private void getTopicLevelAndPrepareFilterData() {
         for (int i = 0; i < allTopicsList.size(); i++) {
