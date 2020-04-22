@@ -17,11 +17,11 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.mom_vlog_follow_following_adaptr.view.*
 
 class MomVLogFollowFollowingAdapter(
-    var recyclerViewClickListner: FollowFollowingRecyclerViewClickListner,
+    private var recyclerViewClickListner: FollowFollowingRecyclerViewClickListner,
     val context: Context
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var vlogersDetailData = ArrayList<UserDetailResult>()
+    private var vlogersDetailData: ArrayList<UserDetailResult>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -30,16 +30,16 @@ class MomVLogFollowFollowingAdapter(
     }
 
     override fun getItemCount(): Int {
-        return vlogersDetailData.size
+        return vlogersDetailData?.size!!
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is FollowFollowingCarousal) {
             holder.authorName.text =
-                (vlogersDetailData[position].firstName).toLowerCase().capitalize().trim()
-                    .plus(" " + (vlogersDetailData[position].lastName).toLowerCase().capitalize().trim())
+                (vlogersDetailData?.get(position)?.firstName)?.toLowerCase()?.capitalize()?.trim()
+                    .plus(" " + (vlogersDetailData?.get(position)?.lastName)?.toLowerCase()?.capitalize()?.trim())
 
-            Picasso.get().load(vlogersDetailData[position].profilePicUrl.clientApp)
+            Picasso.get().load(vlogersDetailData?.get(position)?.profilePicUrl?.clientApp)
                 .error(R.drawable.default_article).into(holder.authorImageView, object : Callback {
                     override fun onSuccess() {
                         holder.homeProgress.visibility = View.GONE
@@ -49,22 +49,24 @@ class MomVLogFollowFollowingAdapter(
                         holder.homeProgress.visibility = View.VISIBLE
                     }
                 })
-            if (vlogersDetailData[position].following) {
+            if (vlogersDetailData?.get(position)?.following!!) {
 
                 holder.followTextView.setTextColor(
                     ContextCompat.getColor(
                         holder.itemView.context,
-                        R.color.ad_author_name_text
+                        R.color.color_BABABA
                     )
                 )
                 val myGrad: GradientDrawable =
                     holder.followTextView.background as GradientDrawable
                 myGrad.setStroke(
                     2,
-                    ContextCompat.getColor(holder.itemView.context, R.color.ad_author_name_text)
+                    ContextCompat.getColor(holder.itemView.context, R.color.color_BABABA)
                 )
+                myGrad.setColor(ContextCompat.getColor(context, R.color.white))
+
                 holder.followTextView.text =
-                    context.resources.getString(R.string.ad_following_author)
+                    context.resources.getString(R.string.ad_following_author).toLowerCase().capitalize()
             } else {
                 val myGrad: GradientDrawable =
                     holder.followTextView.background as GradientDrawable
@@ -72,18 +74,24 @@ class MomVLogFollowFollowingAdapter(
                     2,
                     ContextCompat.getColor(holder.itemView.context, R.color.app_red)
                 )
+                myGrad.setColor(ContextCompat.getColor(context, R.color.white))
                 holder.followTextView.setTextColor(
                     ContextCompat.getColor(
                         holder.itemView.context,
                         R.color.app_red
                     )
                 )
-                holder.followTextView.text = context.resources.getString(R.string.ad_follow_author)
+                holder.followTextView.text = context.resources.getString(R.string.all_follow)
             }
             holder.rank.text =
-                context.resources.getString(R.string.myprofile_rank_label) + ": " + vlogersDetailData[position].rank
+                context.resources.getString(R.string.myprofile_rank_label).toLowerCase().capitalize() + ": " + vlogersDetailData?.get(
+                    position
+                )?.rank
 
             holder.followTextView.setOnClickListener {
+                recyclerViewClickListner.recyclerViewClick(position, it)
+            }
+            holder.authorImageView.setOnClickListener {
                 recyclerViewClickListner.recyclerViewClick(position, it)
             }
         }

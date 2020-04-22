@@ -39,35 +39,41 @@ class MomVlogHorizontalRecyclerAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is MomVlogSubCategories) {
-            if (subCategoriesList[position].selectedSubCategory) {
-                holder.subCategoryTextView.setTextColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.app_red
+            try {
+                if (subCategoriesList[position].selectedSubCategory) {
+                    holder.subCategoryTextView.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.app_red
+                        )
                     )
-                )
-                val myGrad: GradientDrawable =
-                    holder.subCategoryTextView.background as GradientDrawable
-                myGrad.setStroke(2, Color.RED)
+                    val myGrad: GradientDrawable =
+                        holder.subCategoryTextView.background as GradientDrawable
+                    myGrad.setStroke(2, Color.RED)
 
-                /* holder.subCategoryTextView.background =
-                     context.getDrawable(R.drawable.update_profile_bg)*/
-            } else {
-                holder.subCategoryTextView.setTextColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.ad_author_name_text
+                    /* holder.subCategoryTextView.background =
+                         context.getDrawable(R.drawable.update_profile_bg)*/
+                } else {
+                    holder.subCategoryTextView.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.ad_author_name_text
+                        )
                     )
-                )
-                val myGrad: GradientDrawable =
-                    holder.subCategoryTextView.background as GradientDrawable
-                myGrad.setStroke(2, ContextCompat.getColor(context, R.color.ad_author_name_text))
-            }
+                    val myGrad: GradientDrawable =
+                        holder.subCategoryTextView.background as GradientDrawable
+                    myGrad.setStroke(
+                        2,
+                        ContextCompat.getColor(context, R.color.ad_author_name_text)
+                    )
+                }
 
-            holder.subCategoryTextView.text = subCategoriesList[position].display_name
+                holder.subCategoryTextView.text = subCategoriesList[position].display_name
 
-            holder.subCategoryTextView.setOnClickListener {
-                clickListener.onClick(position)
+                holder.subCategoryTextView.setOnClickListener {
+                    clickListener.onRecyclerClick(position)
+                }
+            } catch (e: Exception) {
             }
         }
     }
@@ -78,6 +84,6 @@ class MomVlogHorizontalRecyclerAdapter(
     }
 
     interface ClickListener {
-        fun onClick(position: Int)
+        fun onRecyclerClick(position: Int)
     }
 }

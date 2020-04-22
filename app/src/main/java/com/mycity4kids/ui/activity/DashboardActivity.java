@@ -1196,6 +1196,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             RewardsContainerActivity.class);
                     intent1.putExtra("showProfileInfo", true);
                     startActivity(intent1);
+                } else if ((!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel
+                        .getType().equals(AppConstants.BRANCH_VIDEO_CATEGORY_CHALLENGE_SELECTION_SCREEN))) {
+                    Intent videoCategorySelectionIntent = new Intent(this,
+                            VideoCategoryAndChallengeSelectionActivity.class);
+                    startActivity(videoCategorySelectionIntent);
                 }
             }
         } else {

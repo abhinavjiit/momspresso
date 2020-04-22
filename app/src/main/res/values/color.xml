@@ -565,4 +565,5 @@
     <color name="default_selected_dot_color">#ffffff</color>
     <color name="default_dot_color">#e8e8e8</color>
     <color name="color_24A851">#24A851</color>
+    <color name="color_BABABA">#BABABA</color>
 </resources>

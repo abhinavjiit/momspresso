@@ -1,8 +1,9 @@
 package com.mycity4kids.ui.fragment
 
-import android.content.Context
+import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +11,12 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
+import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
 import com.mycity4kids.models.response.FollowUnfollowUserResponse
 import com.mycity4kids.models.response.MomVlogListingResponse
@@ -21,6 +24,7 @@ import com.mycity4kids.models.response.MomVlogersDetailResponse
 import com.mycity4kids.models.response.UserDetailResult
 import com.mycity4kids.models.response.VlogsListingAndDetailResult
 import com.mycity4kids.preference.SharedPrefUtils
+import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
 import com.mycity4kids.ui.adapter.MomVLogFollowFollowingAdapter
@@ -33,16 +37,8 @@ import retrofit2.Response
 class FollowingVideoTabFragment : BaseFragment(),
     MomVLogFollowFollowingAdapter.FollowFollowingRecyclerViewClickListner {
 
-    private val momVlogFollowingAndVideosAdapter: MomVlogFollowingAndVideosAdapter by lazy {
-        MomVlogFollowingAndVideosAdapter(
-            (activity as Context?)!!
-        )
-    }
-    private val momVLogFollowFollowingAdapter: MomVLogFollowFollowingAdapter by lazy {
-        MomVLogFollowFollowingAdapter(
-            this, (activity as Context?)!!
-        )
-    }
+    private lateinit var momVlogFollowingAndVideosAdapter: MomVlogFollowingAndVideosAdapter
+    private lateinit var momVLogFollowFollowingAdapter: MomVLogFollowFollowingAdapter
     private lateinit var recyclerView: RecyclerView
     private var listData: ArrayList<VlogsListingAndDetailResult>? = null
     private var vlogersListData: ArrayList<UserDetailResult>? = null
@@ -70,12 +66,21 @@ class FollowingVideoTabFragment : BaseFragment(),
         recyclerView_videos = view.findViewById(R.id.recyclerView_videos)
         shimmer_funny_videos_article = view.findViewById(R.id.shimmer_funny_videos_article)
         headerContainerLayout = view.findViewById(R.id.headerContainerLayout)
-        gridLayoutManager = GridLayoutManager(activity, 2)
-        recyclerView_videos.layoutManager = gridLayoutManager
-        linearLayoutManager = GridLayoutManager(activity, 3)
-        recyclerView.layoutManager = linearLayoutManager
+        context?.let {
+            momVlogFollowingAndVideosAdapter = MomVlogFollowingAndVideosAdapter(it)
+            momVLogFollowFollowingAdapter = MomVLogFollowFollowingAdapter(this, it)
+        }
         listData = ArrayList()
         vlogersListData = ArrayList()
+        vloggers_start = 1
+        getVlogs(0)
+        gridLayoutManager = GridLayoutManager(activity, 2)
+        recyclerView_videos.layoutManager = gridLayoutManager
+        momVlogFollowingAndVideosAdapter.setListData(listData)
+
+        linearLayoutManager = GridLayoutManager(activity, 3)
+        recyclerView.layoutManager = linearLayoutManager
+
         if (SharedPrefUtils.getFollowClickCountInMomVlog(context)) {
             headerTextView.text =
                 getString(R.string.watch_other_videos_text_in_mom_vlog_following_feed)
@@ -83,8 +88,6 @@ class FollowingVideoTabFragment : BaseFragment(),
             headerTextView.text =
                 getString(R.string.follow_creators_feed_header_text_in_mom_vlog_feed)
         }
-        vloggers_start = 1
-        getVlogs(0)
         recyclerView_videos.addOnScrollListener(object : EndlessScrollListener(gridLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
                 start = totalItemsCount
@@ -162,16 +165,23 @@ class FollowingVideoTabFragment : BaseFragment(),
         )
         call.enqueue(object : Callback<MomVlogListingResponse> {
             override fun onFailure(call: Call<MomVlogListingResponse>, t: Throwable) {
+                Crashlytics.logException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
             }
 
             override fun onResponse(
                 call: Call<MomVlogListingResponse>,
                 response: Response<MomVlogListingResponse>
             ) {
-                shimmer_funny_videos_article.stopShimmerAnimation()
-                shimmer_funny_videos_article.visibility = View.GONE
-                val responseData = response.body()?.data?.result
-                processData(responseData as ArrayList<VlogsListingAndDetailResult>?)
+                try {
+                    shimmer_funny_videos_article.stopShimmerAnimation()
+                    shimmer_funny_videos_article.visibility = View.GONE
+                    val responseData = response.body()?.data?.result
+                    processData(responseData as ArrayList<VlogsListingAndDetailResult>?)
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
             }
         })
     }
@@ -223,17 +233,25 @@ class FollowingVideoTabFragment : BaseFragment(),
             1
         )
         call.enqueue(object : Callback<MomVlogersDetailResponse> {
-            override fun onFailure(call: Call<MomVlogersDetailResponse>, t: Throwable) {
+            override fun onFailure(call: Call<MomVlogersDetailResponse>, e: Throwable) {
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
             }
 
             override fun onResponse(
                 call: Call<MomVlogersDetailResponse>,
                 response: Response<MomVlogersDetailResponse>
             ) {
-                shimmer_funny_videos_article.stopShimmerAnimation()
-                shimmer_funny_videos_article.visibility = View.GONE
-                val responseVlogersData = response.body()?.data?.result
-                processVlogersData(responseVlogersData as ArrayList<UserDetailResult>?)
+                try {
+                    shimmer_funny_videos_article.stopShimmerAnimation()
+                    shimmer_funny_videos_article.visibility = View.GONE
+                    val responseVlogersData = response.body()?.data?.result
+                    processVlogersData(responseVlogersData as ArrayList<UserDetailResult>?)
+                } catch (e: Exception) {
+
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
             }
         })
     }
@@ -253,16 +271,22 @@ class FollowingVideoTabFragment : BaseFragment(),
     }
 
     override fun recyclerViewClick(position: Int, view: View) {
-        headerTextChangeAfterFiveFollowingTextViewClick += 1
-        if (vlogersListData?.get(position)?.following == true) {
-            unFollowApiCall(vlogersListData?.get(position)?.dynamoId!!, position)
-        } else {
-            followApiCall(vlogersListData?.get(position)?.dynamoId!!, position)
-        }
-        if (headerTextChangeAfterFiveFollowingTextViewClick == 5) {
-            headerTextView.text =
-                getString(R.string.watch_other_videos_text_in_mom_vlog_following_feed)
-            SharedPrefUtils.setFollowClickCountInMomVlog(context, true)
+        if (view.id == R.id.followTextView) {
+            headerTextChangeAfterFiveFollowingTextViewClick += 1
+            if (vlogersListData?.get(position)?.following == true) {
+                unFollowApiCall(vlogersListData?.get(position)?.dynamoId!!, position)
+            } else {
+                followApiCall(vlogersListData?.get(position)?.dynamoId!!, position)
+            }
+            if (headerTextChangeAfterFiveFollowingTextViewClick == 5) {
+                headerTextView.text =
+                    getString(R.string.watch_other_videos_text_in_mom_vlog_following_feed)
+                SharedPrefUtils.setFollowClickCountInMomVlog(context, true)
+            }
+        } else if (view.id == R.id.authorImageView) {
+            val intent = Intent(context, UserProfileActivity::class.java)
+            intent.putExtra(Constants.USER_ID, vlogersListData?.get(position)?.dynamoId)
+            startActivity(intent)
         }
     }
 
@@ -312,5 +336,11 @@ class FollowingVideoTabFragment : BaseFragment(),
             ) {
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        shimmer_funny_videos_article.stopShimmerAnimation()
+        shimmer_funny_videos_article.visibility = View.GONE
     }
 }

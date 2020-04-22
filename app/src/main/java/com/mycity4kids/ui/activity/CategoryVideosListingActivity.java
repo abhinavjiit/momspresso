@@ -140,7 +140,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         showProgressDialog("Please wait");
         Retrofit retrofit = BaseApplication.getInstance().getVlogsRetrofit();
         TopicsCategoryAPI topicsCategoryApi = retrofit.create(TopicsCategoryAPI.class);
-        Call<Topics> call = topicsCategoryApi.momVlogTopics("category-d4379f58f7b24846adcefc82dc22a86b");
+        Call<Topics> call = topicsCategoryApi.TopicsJSON();//("category-d4379f58f7b24846adcefc82dc22a86b")
         call.enqueue(new Callback<Topics>() {
 
             @Override

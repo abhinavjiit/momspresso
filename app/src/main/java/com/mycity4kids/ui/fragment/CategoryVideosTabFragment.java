@@ -17,7 +17,6 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -25,7 +24,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -45,28 +43,28 @@ import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.adapter.MomVlogHorizontalRecyclerAdapter;
 import com.mycity4kids.ui.adapter.MomVlogListingAdapter;
 import com.mycity4kids.utils.ConnectivityUtils;
-
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
-
+import org.jetbrains.annotations.NotNull;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 /**
- * Created by hemant on 29/5/17.
+ * git Created by hemant on 29/5/17.
  */
 
-public class CategoryVideosTabFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, MomVlogHorizontalRecyclerAdapter.ClickListener {
+public class CategoryVideosTabFragment extends BaseFragment implements View.OnClickListener,
+        SwipeRefreshLayout.OnRefreshListener, MomVlogHorizontalRecyclerAdapter.ClickListener {
 
     private MomVlogListingAdapter articlesListingAdapter;
     private ArrayList<VlogsListingAndDetailResult> articleDataModelsNew;
     private FloatingActionsMenu fabMenu;
     private RecyclerView listView;
-    private RelativeLayout mLodingView;
+    private RelativeLayout lodingView;
     TextView noBlogsTextView;
-    private FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
+    private FloatingActionButton popularSortFab;
+    private FloatingActionButton recentSortFab;
+    private FloatingActionButton fabSort;
     private FrameLayout frameLayout;
     private View rootLayout;
     Topics topic;
@@ -102,13 +100,13 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         View view = inflater.inflate(R.layout.funny_videos_tab_fragment, container, false);
         rootLayout = view.findViewById(R.id.rootLayout);
         listView = (RecyclerView) view.findViewById(R.id.vlogsListView);
-        mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
+        lodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
         fabMenu = (FloatingActionsMenu) view.findViewById(R.id.fab_menu);
-        popularSortFAB = (FloatingActionButton) view.findViewById(R.id.popularSortFAB);
-        recentSortFAB = (FloatingActionButton) view.findViewById(R.id.recentSortFAB);
+        popularSortFab = (FloatingActionButton) view.findViewById(R.id.popularSortFAB);
+        recentSortFab = (FloatingActionButton) view.findViewById(R.id.recentSortFAB);
         fabSort = (FloatingActionButton) view.findViewById(R.id.fabSort);
         funnyvideosshimmer = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_funny_videos_article);
         scrollView = view.findViewById(R.id.scrollView);
@@ -123,8 +121,8 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
 
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
-        popularSortFAB.setOnClickListener(this);
-        recentSortFAB.setOnClickListener(this);
+        popularSortFab.setOnClickListener(this);
+        recentSortFab.setOnClickListener(this);
         subCategoriesTopicList = new ArrayList<>();
         categoriesList = new ArrayList<>();
         Topics momVlogsSubCategoryModel = new Topics();
@@ -140,11 +138,13 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
             subCategoriesTopicList.get(i).setSelectedSubCategory(false);
         }
         subCategoriesTopicList.get(0).setSelectedSubCategory(true);
-        momVlogHorizontalRecyclerAdapter = new MomVlogHorizontalRecyclerAdapter(this, getActivity());
-        scrollView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
-        scrollView.setAdapter(momVlogHorizontalRecyclerAdapter);
-        momVlogHorizontalRecyclerAdapter.setListData(subCategoriesTopicList);
-        momVlogHorizontalRecyclerAdapter.notifyDataSetChanged();
+        if (subCategoriesTopicList.size() > 1) {
+            momVlogHorizontalRecyclerAdapter = new MomVlogHorizontalRecyclerAdapter(this, getActivity());
+            scrollView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
+            scrollView.setAdapter(momVlogHorizontalRecyclerAdapter);
+            momVlogHorizontalRecyclerAdapter.setListData(subCategoriesTopicList);
+            momVlogHorizontalRecyclerAdapter.notifyDataSetChanged();
+        }
 
         fabSort.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,15 +176,12 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
             }
         });
 
-        view.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
-
-//        progressBar.setVisibility(View.VISIBLE);
+        view.findViewById(R.id.imgLoader)
+                .startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
         articleDataModelsNew = new ArrayList<VlogsListingAndDetailResult>();
         nextPageNumber = 1;
-        //   hitRecommendedVideoAdApi();
         hitArticleListingApi();
-
 
         articlesListingAdapter = new MomVlogListingAdapter(getActivity());
         gridLayoutManager = new GridLayoutManager(getActivity(), 2);
@@ -194,7 +191,8 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         articlesListingAdapter.notifyDataSetChanged();
         listView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
-            public void getItemOffsets(@NotNull Rect outRect, @NotNull View view, @NotNull RecyclerView parent, @NotNull RecyclerView.State state) {
+            public void getItemOffsets(@NotNull Rect outRect, @NotNull View view, @NotNull RecyclerView parent,
+                    @NotNull RecyclerView.State state) {
                 int position = parent.getChildAdapterPosition(view); // item position
                 int spanCount = 2;
                 int spacing = 10;//spacing between views in grid
@@ -207,19 +205,13 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
                     if (((GridLayoutManager.LayoutParams) view.getLayoutParams()).getSpanIndex() == 0) {
                         // int column = position % spanCount; // item column
                         ;
-                        Log.d("Position____item", ((GridLayoutManager.LayoutParams) view.getLayoutParams()).getSpanIndex() + "");
-                        //  outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                        outRect.right = 4; // (column + 1) * ((1f / spanCount) * spacing)
-
-                        //           if (position < spanCount) { // top edge
-                        //             outRect.top = spacing;
-                        //       }
-                        //     outRect.bottom = spacing; // item bottom
+                        Log.d("Position____item",
+                                ((GridLayoutManager.LayoutParams) view.getLayoutParams()).getSpanIndex() + "");
+                        outRect.right = 4;
                     } else if (((GridLayoutManager.LayoutParams) view.getLayoutParams()).getSpanIndex() == 1) {
-                        Log.d("Position____item1", ((GridLayoutManager.LayoutParams) view.getLayoutParams()).getSpanIndex() + "");
-                        // int column = position % spanCount;
+                        Log.d("Position____item1",
+                                ((GridLayoutManager.LayoutParams) view.getLayoutParams()).getSpanIndex() + "");
                         outRect.left = 4;
-                        //    outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
                     } else {
                         outRect.left = 0;
                         outRect.right = 0;
@@ -238,53 +230,24 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
                 return 1;
             }
         });
-
-
-/*
-        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                funnyvideosshimmer.setVisibility(View.VISIBLE);
-                funnyvideosshimmer.startShimmerAnimation();
-                articleDataModelsNew.clear();
-                articlesListingAdapter.notifyDataSetChanged();
-                nextPageNumber = 1;
-                //    hitRecommendedVideoAdApi();
-                hitArticleListingApi();
-                pullToRefresh.setRefreshing(false);
-            }
-        });
-*/
-
-
-        listView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0) {
-                    firstVisibleItem = gridLayoutManager.findFirstVisibleItemPosition();
-                    visibleItemCount = gridLayoutManager.getChildCount();
-                    totalItemCount = gridLayoutManager.getItemCount();
-                    boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-                    if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
-                        mLodingView.setVisibility(View.VISIBLE);
-                        hitArticleListingApi();
-                        isReuqestRunning = true;
+        listView.addOnScrollListener(
+                new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                        if (dy > 0) {
+                            firstVisibleItem = gridLayoutManager.findFirstVisibleItemPosition();
+                            visibleItemCount = gridLayoutManager.getChildCount();
+                            totalItemCount = gridLayoutManager.getItemCount();
+                            boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
+                            if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning
+                                    && !isLastPageReached) {
+                                lodingView.setVisibility(View.VISIBLE);
+                                hitArticleListingApi();
+                                isReuqestRunning = true;
+                            }
+                        }
                     }
-                }
-            }
-
-/* @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-                boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
-                    mLodingView.setVisibility(View.VISIBLE);
-                    hitArticleListingApi();
-                    isReuqestRunning = true;
-                }
-            }*/
-        });
-
+                });
 
         return view;
     }
@@ -295,8 +258,8 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
             return;
         }
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
-        Call<Topics> topicsCall = vlogsListingAndDetailsAPI.getRecommendedVideoAd();
+        VlogsListingAndDetailsAPI vlogsListingAndDetailsApi = retrofit.create(VlogsListingAndDetailsAPI.class);
+        Call<Topics> topicsCall = vlogsListingAndDetailsApi.getRecommendedVideoAd();
         topicsCall.enqueue(topicsCallback);
     }
 
@@ -308,9 +271,10 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
 
         int from = (nextPageNumber - 1) * limit;
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
+        VlogsListingAndDetailsAPI vlogsListingAndDetailsApi = retrofit.create(VlogsListingAndDetailsAPI.class);
         Log.d("VIDEO CATEGORY", "--" + videoCategory);
-        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(from, from + limit - 1, sortType, 3, videoCategory);
+        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsApi
+                .getVlogsList(from, from + limit - 1, sortType, 3, videoCategory);
         callRecentVideoArticles.enqueue(recentArticleResponseCallback);
     }
 
@@ -337,12 +301,11 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         @Override
         public void onResponse(Call<VlogsListingResponse> call, retrofit2.Response<VlogsListingResponse> response) {
             progressBar.setVisibility(View.GONE);
-            mLodingView.setVisibility(View.GONE);
+            lodingView.setVisibility(View.GONE);
             isReuqestRunning = false;
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
-//                showToast("Something went wrong from server");
                 return;
             }
             try {
@@ -351,7 +314,6 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
                     processResponse(responseData);
                     funnyvideosshimmer.stopShimmerAnimation();
                     funnyvideosshimmer.setVisibility(View.GONE);
-                } else {
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
@@ -363,17 +325,18 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         public void onFailure(Call<VlogsListingResponse> call, Throwable t) {
             isReuqestRunning = false;
             isLastPageReached = true;
-            if (mLodingView.getVisibility() == View.VISIBLE) {
-                mLodingView.setVisibility(View.GONE);
+            if (lodingView.getVisibility() == View.VISIBLE) {
+                lodingView.setVisibility(View.GONE);
             }
             if (articleDataModelsNew == null || articleDataModelsNew.isEmpty()) {
                 fabSort.setVisibility(View.GONE);
                 fabMenu.setVisibility(View.GONE);
-                popularSortFAB.setVisibility(View.GONE);
-                recentSortFAB.setVisibility(View.GONE);
+                popularSortFab.setVisibility(View.GONE);
+                recentSortFab.setVisibility(View.GONE);
                 noBlogsTextView.setVisibility(View.VISIBLE);
-                if (isAdded())
+                if (isAdded()) {
                     noBlogsTextView.setText(getString(R.string.all_videos_funny_videos_no_videos));
+                }
                 articleDataModelsNew = new ArrayList<>();
                 articlesListingAdapter.setNewListData(articleDataModelsNew);
                 articlesListingAdapter.notifyDataSetChanged();
@@ -394,8 +357,8 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
             } else {
                 fabSort.setVisibility(View.GONE);
                 fabMenu.setVisibility(View.GONE);
-                popularSortFAB.setVisibility(View.GONE);
-                recentSortFAB.setVisibility(View.GONE);
+                popularSortFab.setVisibility(View.GONE);
+                recentSortFab.setVisibility(View.GONE);
                 noBlogsTextView.setVisibility(View.VISIBLE);
                 noBlogsTextView.setText(getString(R.string.all_videos_funny_videos_no_videos));
                 articleDataModelsNew = dataList;
@@ -428,7 +391,6 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     public void onRefresh() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
             removeProgressDialog();
-//            showToast(getString(R.string.error_network));
             return;
         }
 
@@ -450,7 +412,10 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
                 sortType = 0;
                 nextPageNumber = 1;
                 hitArticleListingApi();
-                Utils.momVlogEvent(getActivity(), "Video Listing", "Sort_recent", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
+                Utils.momVlogEvent(getActivity(), "Video Listing", "Sort_recent", "", "android",
+                        SharedPrefUtils.getAppLocale(getActivity()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
 
                 break;
             case R.id.popularSortFAB:
@@ -463,9 +428,12 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
                 sortType = 1;
                 nextPageNumber = 1;
                 hitArticleListingApi();
-                Utils.momVlogEvent(getActivity(), "Video Listing", "Sort_popular", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
+                Utils.momVlogEvent(getActivity(), "Video Listing", "Sort_popular", "", "android",
+                        SharedPrefUtils.getAppLocale(getActivity()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
 
-                break;
+            default:
         }
     }
 
@@ -541,7 +509,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     }
 
     @Override
-    public void onClick(int position) {
+    public void onRecyclerClick(int position) {
         for (int i = 0; i < subCategoriesTopicList.size(); i++) {
             if (position == i) {
                 subCategoriesTopicList.get(i).setSelectedSubCategory(true);

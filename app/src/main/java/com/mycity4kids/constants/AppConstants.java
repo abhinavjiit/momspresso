@@ -12,6 +12,8 @@ public class AppConstants {
     public static final String BRANCH_PERSONALINFO = "personal_info";
     public static final String BRANCH__CAMPAIGN_LISTING = "campaign_listing";
     public static final String BRANCH_CAMPAIGN_DETAIL = "campaign_detail";
+    public static final String BRANCH_VIDEO_CATEGORY_CHALLENGE_SELECTION_SCREEN =
+            "video_category_challenge_selection_screen";
 
     public static final String BASE_URL = LIVE_URL;
 
