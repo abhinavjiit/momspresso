@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.viewpager.widget.ViewPager;
@@ -46,31 +45,30 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
     private View view;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private FrameLayout tablayoutLayer;
     private TopicsShortStoriesPagerAdapter pagerAdapter;
     private ArrayList<Topics> shortStoriesTopicList;
     private String parentTopicId;
     private ArrayList<Topics> subTopicsList;
-    private LinearLayout layoutBottomSheet, bottom_sheet;
+    private LinearLayout layoutBottomSheet;
+    private LinearLayout bottomSheet;
     private BottomSheetBehavior sheetBehavior;
-    private TextView textHeaderUpdate, textUpdate;
+    private TextView textHeaderUpdate;
+    private TextView textUpdate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.topic_listing_activity, container, false);
 
         tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
-        tablayoutLayer = (FrameLayout) view.findViewById(R.id.topLayerGuideLayout);
-
         layoutBottomSheet = (LinearLayout) view.findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
         textHeaderUpdate = layoutBottomSheet.findViewById(R.id.textHeaderUpdate);
         textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
-        bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
+        bottomSheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
 
         String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext());
         if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
-            bottom_sheet.setOnClickListener(view -> {
+            bottomSheet.setOnClickListener(view -> {
                 if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
                     sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 } else {
@@ -96,9 +94,9 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
                 startActivity(new Intent(getActivity(), RewardsContainerActivity.class));
             });
 
-            new Handler().postDelayed(() -> bottom_sheet.setVisibility(View.GONE), 10000);
+            new Handler().postDelayed(() -> bottomSheet.setVisibility(View.GONE), 10000);
         } else {
-            bottom_sheet.setVisibility(View.GONE);
+            bottomSheet.setVisibility(View.GONE);
         }
 
         parentTopicId = getArguments().getString("parentTopicId");
@@ -119,15 +117,14 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
             Crashlytics.logException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
-            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
+            final TopicsCategoryAPI topicsApi = retro.create(TopicsCategoryAPI.class);
+            Call<ResponseBody> caller = topicsApi.downloadTopicsJSON();
             caller.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                     AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE,
                             response.body());
                     try {
-
                         FileInputStream fileInputStream = BaseApplication.getAppContext()
                                 .openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                         String fileContent = AppUtils.convertStreamToString(fileInputStream);
@@ -191,26 +188,27 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
         AppUtils.changeTabsFont(tabLayout);
 
         viewPager = (ViewPager) view.findViewById(R.id.pager);
-        pagerAdapter = new TopicsShortStoriesPagerAdapter
-                (getChildFragmentManager(), tabLayout.getTabCount(), subTopicsList);
+        pagerAdapter = new TopicsShortStoriesPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount(),
+                subTopicsList);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
+        tabLayout.addOnTabSelectedListener(
+                new TabLayout.OnTabSelectedListener() {
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        viewPager.setCurrentItem(tab.getPosition());
+                    }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
 
-            }
+                    }
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
 
-            }
-        });
+                    }
+                });
     }
 
     private void createTopicsData(TopicsResponse responseData) {
@@ -243,7 +241,8 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
 
                     for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
 
-                        //DO NOT REMOVE below commented check -- showInMenu 0 from backend --might be used to show/hide in future
+                        //DO NOT REMOVE below commented check -- showInMenu 0 from backend
+                        // --might be used to show/hide in future
                         if ("1".equals(responseData.getData().get(i).getChild().get(k).getShowInMenu())) {
                             //Adding All subcategories
                             responseData.getData().get(i).getChild().get(k)
@@ -253,9 +252,8 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
 
                             // create duplicate entry for subcategories with no child
                             if (responseData.getData().get(i).getChild().get(k).getChild().isEmpty()) {
-                                ArrayList<Topics> duplicateEntry = new ArrayList<Topics>();
-                                //adding exact same object adds the object recursively producing stackoverflow exception when writing for Parcel.
-                                //So need to create different object with same params
+                                //adding exact same object adds the object recursively producing stackoverflow exception
+                                // when writing for Parcel. So need to create different object with same params
                                 Topics dupChildTopic = new Topics();
                                 dupChildTopic.setChild(new ArrayList<Topics>());
                                 dupChildTopic.setId(responseData.getData().get(i).getChild().get(k).getId());
@@ -273,6 +271,7 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
                                         .setShowInMenu(responseData.getData().get(i).getChild().get(k).getShowInMenu());
                                 dupChildTopic.setSlug(responseData.getData().get(i).getChild().get(k).getSlug());
                                 dupChildTopic.setTitle(responseData.getData().get(i).getChild().get(k).getTitle());
+                                ArrayList<Topics> duplicateEntry = new ArrayList<Topics>();
                                 duplicateEntry.add(dupChildTopic);
                                 responseData.getData().get(i).getChild().get(k).setChild(duplicateEntry);
                             }

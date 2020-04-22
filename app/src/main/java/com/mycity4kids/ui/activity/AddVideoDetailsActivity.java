@@ -2,7 +2,6 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +34,7 @@ import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.NotificationWorker;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
@@ -44,6 +44,7 @@ import java.io.File;
 import org.apmem.tools.layouts.FlowLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
@@ -78,7 +79,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     private FlowLayout subCategoriesContainer;
     private Topics selectedCategory;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,10 +109,14 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         thumbnailTime = getIntent().getStringExtra("thumbnailTime");
         comingFrom = getIntent().getStringExtra("comingFrom");
         selectedCategory = getIntent().getParcelableExtra("selectedCategory");
+        saveUploadTextView.setOnClickListener(this);
         if ("Challenge".equals(comingFrom)) {
             challengeId = getIntent().getStringExtra("ChallengeId");
+            saveUploadTextView.setEnabled(false);
+            getSubcategorySiblings();
         } else {
             populateSubcategories();
+            saveUploadTextView.setEnabled(true);
         }
 
         if (getIntent().hasExtra("uriPath")) {
@@ -121,82 +125,105 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
             originalPath = getIntent().getStringExtra("originalPath");
         }
 
-        saveUploadTextView.setOnClickListener(this);
-
-        ColorStateList thumbStates = new ColorStateList(
-                new int[][] {
-                        new int[] {android.R.attr.state_checked},
-                        new int[] {}
-                },
-                new int[] {
-
-                        getResources().getColor(R.color.app_red),
-                        getResources().getColor(R.color.add_video_details_mute_label)
-                }
-        );
         player.setCallback(this);
         player.setAutoPlay(true);
-        // Sets the source to the HTTP URL held in the TEST_URL variable.
-        // To play files, you can use Uri.fromFile(new File("..."))
         player.setSource(Uri.fromFile(new File(originalPath)));
-        //specify the location of media file
         originalUri = Uri.parse(originalPath);
-        // Starts or resumes playback.
         player.start();
         okay.setOnClickListener(this);
     }
+
+    private void getSubcategorySiblings() {
+        showProgressDialog(getResources().getString(R.string.please_wait));
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        TopicsCategoryAPI topicsCategoryApi = retrofit.create(TopicsCategoryAPI.class);
+        Call<Topics> call = topicsCategoryApi.getCategorySiblings(categoryId);
+        call.enqueue(categorySiblingsResponseCallback);
+    }
+
+    private Callback<Topics> categorySiblingsResponseCallback = new Callback<Topics>() {
+        @Override
+        public void onResponse(Call<Topics> call, Response<Topics> response) {
+            removeProgressDialog();
+            if (response.body() == null) {
+                showToast(getString(R.string.went_wrong));
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    Topics responseData = response.body();
+                    selectedCategory = responseData;
+                    populateSubcategories();
+                    saveUploadTextView.setEnabled(true);
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<Topics> call, Throwable t) {
+            removeProgressDialog();
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
 
     private void populateSubcategories() {
         if (selectedCategory == null) {
             return;
         }
         for (int i = 0; i < selectedCategory.getChild().size(); i++) {
-            ShareButtonWidget shareButtonWidget = new ShareButtonWidget(this);
-            TextView shareTextView = shareButtonWidget.findViewById(R.id.shareTextView);
-            ViewGroup.LayoutParams layoutParams = shareTextView.getLayoutParams();
-            layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-            shareTextView.setLayoutParams(layoutParams);
-            shareButtonWidget.setTag(selectedCategory.getChild().get(i).getId());
-            shareButtonWidget.setText(selectedCategory.getChild().get(i).getDisplay_name());
-            shareButtonWidget.setButtonStartImage(null);
-            shareButtonWidget.setTextSizeInSP(14);
-            shareButtonWidget.setTextGravity(Gravity.CENTER);
-            shareButtonWidget.setTextColor(ContextCompat.getColor(this, R.color.app_grey));
-            shareButtonWidget.setButtonRadius(90.0f);
-            shareButtonWidget.setRadius(90.0f);
-            shareButtonWidget.setBorderColor(ContextCompat.getColor(this, R.color.app_grey));
-            shareButtonWidget.setBorderThickness(2);
-            shareButtonWidget.setElevation(0.0f);
-            shareButtonWidget.setButtonBackgroundColor(
-                    ContextCompat.getColor(
-                            this,
-                            R.color.white_color
-                    )
-            );
-            FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
-                    FlowLayout.LayoutParams.WRAP_CONTENT,
-                    FlowLayout.LayoutParams.WRAP_CONTENT
-            );
-            params.setMargins(10, 10, 10, 10);
-            shareButtonWidget.setLayoutParams(params);
-            shareButtonWidget.setOnClickListener(view -> {
-                deselectAllSubcategories();
-                categoryId = (String) view.getTag();
-                view.setSelected(true);
-                ((ShareButtonWidget) view).setTextColor(
+            if ("1".equals(selectedCategory.getChild().get(i).getPublicVisibility())) {
+                ShareButtonWidget shareButtonWidget = new ShareButtonWidget(this);
+                TextView shareTextView = shareButtonWidget.findViewById(R.id.shareTextView);
+                ViewGroup.LayoutParams layoutParams = shareTextView.getLayoutParams();
+                layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                shareTextView.setLayoutParams(layoutParams);
+                shareButtonWidget.setTag(selectedCategory.getChild().get(i).getId());
+                shareButtonWidget.setText(selectedCategory.getChild().get(i).getDisplay_name());
+                shareButtonWidget.setButtonStartImage(null);
+                shareButtonWidget.setTextSizeInSP(14);
+                shareButtonWidget.setTextGravity(Gravity.CENTER);
+                shareButtonWidget.setTextColor(ContextCompat.getColor(this, R.color.app_grey));
+                shareButtonWidget.setButtonRadius(90.0f);
+                shareButtonWidget.setRadius(90.0f);
+                shareButtonWidget.setBorderColor(ContextCompat.getColor(this, R.color.app_grey));
+                shareButtonWidget.setBorderThickness(2);
+                shareButtonWidget.setElevation(0.0f);
+                shareButtonWidget.setButtonBackgroundColor(
                         ContextCompat.getColor(
-                                AddVideoDetailsActivity.this,
-                                R.color.app_red
+                                this,
+                                R.color.white_color
                         )
                 );
-                ((ShareButtonWidget) view).setBorderColor(
-                        ContextCompat.getColor(
-                                AddVideoDetailsActivity.this,
-                                R.color.app_red
-                        )
+                FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
+                        FlowLayout.LayoutParams.WRAP_CONTENT,
+                        FlowLayout.LayoutParams.WRAP_CONTENT
                 );
-            });
-            subCategoriesContainer.addView(shareButtonWidget);
+                params.setMargins(10, 10, 10, 10);
+                shareButtonWidget.setLayoutParams(params);
+                shareButtonWidget.setOnClickListener(view -> {
+                    deselectAllSubcategories();
+                    categoryId = (String) view.getTag();
+                    view.setSelected(true);
+                    ((ShareButtonWidget) view).setTextColor(
+                            ContextCompat.getColor(
+                                    AddVideoDetailsActivity.this,
+                                    R.color.app_red
+                            )
+                    );
+                    ((ShareButtonWidget) view).setBorderColor(
+                            ContextCompat.getColor(
+                                    AddVideoDetailsActivity.this,
+                                    R.color.app_red
+                            )
+                    );
+                });
+                subCategoriesContainer.addView(shareButtonWidget);
+            }
         }
     }
 
@@ -330,7 +357,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     Callback<UserDetailResponse> onLoginResponseReceivedListener = new Callback<UserDetailResponse>() {
         @Override
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
-            Log.d("SUCCESS", "" + response);
             removeProgressDialog();
             if (response.body() == null) {
                 showToast(getString(R.string.went_wrong));

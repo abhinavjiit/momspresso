@@ -85,4 +85,7 @@ public interface TopicsCategoryAPI {
 
     @GET("v1/categories/topic/")
     Call<SuggestedTopicsResponse> getSuggestedTopics(@Query("langCode") String lang);
+
+    @GET("v2/categories/parent")
+    Call<Topics> getCategorySiblings(@Query("id") String categoryId);
 }

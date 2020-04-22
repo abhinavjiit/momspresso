@@ -43,7 +43,7 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
     private String selectedId;
     String screen;
-    private String selected_Name;
+    private String selectedName;
     private String selectedActiveUrl;
     private String selectedStreamUrl;
     String challengeRules = "";
@@ -51,7 +51,7 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
     private CoordinatorLayout rootLayout;
     private String challengeId;
     private String mappedCategory;
-    private int max_Duration;
+    private int maxDuration;
     private String comingFrom = "";
     FrameLayout frameLayout;
 
@@ -59,7 +59,7 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_video_listing_detail);
-        rootLayout = (CoordinatorLayout) findViewById(R.id.mainprofile_parent_layout);
+        rootLayout = findViewById(R.id.mainprofile_parent_layout);
         frameLayout = findViewById(R.id.container_layout);
         Intent intent = getIntent();
         if (intent != null) {
@@ -77,6 +77,8 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
             case android.R.id.home:
                 finish();
                 break;
+            default:
+                break;
         }
         return true;
     }
@@ -89,8 +91,8 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         }
         showProgressDialog(getResources().getString(R.string.please_wait));
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
-        Call<Topics> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogChallengeDetails(challengeId);
+        VlogsListingAndDetailsAPI vlogsListingAndDetailsApi = retrofit.create(VlogsListingAndDetailsAPI.class);
+        Call<Topics> callRecentVideoArticles = vlogsListingAndDetailsApi.getVlogChallengeDetails(challengeId);
         callRecentVideoArticles.enqueue(vlogChallengeDetailsResponseCallBack);
     }
 
@@ -106,13 +108,13 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
             if (response.isSuccessful()) {
                 try {
                     Topics responseData = response.body();
-                    selected_Name = responseData.getDisplay_name();
+                    selectedName = responseData.getDisplay_name();
                     selectedActiveUrl = responseData.getExtraData().get(0).getChallenge().getImageUrl();
                     selectedId = responseData.getId();
                     topic = responseData;
                     selectedStreamUrl = responseData.getExtraData().get(0).getChallenge().getVideoUrl();
                     challengeRules = responseData.getExtraData().get(0).getChallenge().getRules();
-                    max_Duration = responseData.getExtraData().get(0).getChallenge().getMax_duration();
+                    maxDuration = responseData.getExtraData().get(0).getChallenge().getMax_duration();
                     if (StringUtils
                             .isNullOrEmpty(responseData.getExtraData().get(0).getChallenge().getMapped_category())) {
                         mappedCategory = "category-6dfcf8006c794d4e852343776302f588";
@@ -121,13 +123,13 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
                     }
 
                     Bundle bundle = new Bundle();
-                    bundle.putString("selected_Name", selected_Name);
+                    bundle.putString("selected_Name", selectedName);
                     bundle.putString("selectedActiveUrl", selectedActiveUrl);
                     bundle.putString("selectedId", selectedId);
                     bundle.putString("selectedStreamUrl", selectedStreamUrl);
                     bundle.putString("challengeRules", challengeRules);
                     bundle.putString("mappedCategory", mappedCategory);
-                    bundle.putInt("max_Duration", max_Duration);
+                    bundle.putInt("max_Duration", maxDuration);
                     bundle.putParcelable("topic", topic);
                     bundle.putString("comingFrom", comingFrom);
                     Fragment fragment = new ChallengeDetailFragment();
@@ -179,6 +181,8 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
                 } else {
                     Toast.makeText(this, R.string.toast_cannot_retrieve_selected_video, Toast.LENGTH_SHORT).show();
                 }
+                break;
+            default:
                 break;
         }
     }
@@ -267,14 +271,15 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         }
     }
 
-    public void chooseAndpermissionDialog(int max_Duration) {
-        ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
-        FragmentManager fm = getSupportFragmentManager();
-        Bundle _args = new Bundle();
-        _args.putString("activity", "challengeDetailFragment");
-        _args.putString("duration", String.valueOf(max_Duration));
-        chooseVideoUploadOptionDialogFragment.setArguments(_args);
+    public void chooseAndpermissionDialog(int maxDuration) {
+        Bundle args = new Bundle();
+        args.putString("activity", "challengeDetailFragment");
+        args.putString("duration", String.valueOf(maxDuration));
+        ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment =
+                new ChooseVideoUploadOptionDialogFragment();
+        chooseVideoUploadOptionDialogFragment.setArguments(args);
         chooseVideoUploadOptionDialogFragment.setCancelable(true);
+        FragmentManager fm = getSupportFragmentManager();
         chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
     }
 }

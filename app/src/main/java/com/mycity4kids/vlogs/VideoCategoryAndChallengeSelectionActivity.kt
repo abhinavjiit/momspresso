@@ -144,6 +144,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
                         categoryList[i].taggedChallengeList.addAll(challenge)
                     }
                 }
+                categoryList[i].taggedChallengeList.sortByDescending { it.extraData[0].challenge.is_live }
             }
 
             for (i in 0 until categoryList.size) {
@@ -161,13 +162,26 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
         parentChallenge?.let {
             // subcategory-challenge mapping
             for (i in 0 until it.child.size) {
-                it.child[i].extraData[0].challenge.mapped_category?.let { mappedCategory ->
-                    if (categoryChallengeHashMap[mappedCategory] == null) {
-                        val arraylist = ArrayList<Topics>()
-                        arraylist.add(it.child[i])
-                        categoryChallengeHashMap[mappedCategory] = arraylist
-                    } else {
-                        categoryChallengeHashMap[mappedCategory]?.add(it.child[i])
+                if (it.child[i].publicVisibility == "1") {
+                    if (it.child[i].extraData[0].challenge.is_live == "1") {
+                        if (categoryWiseChallengeList.isEmpty()) {
+                            val liveChallengeTopic = Topics()
+                            liveChallengeTopic.display_name =
+                                getString(R.string.all_live_challenges)
+                            liveChallengeTopic.taggedChallengeList.add(it.child[i])
+                            categoryWiseChallengeList.add(liveChallengeTopic)
+                        } else {
+                            categoryWiseChallengeList[0].taggedChallengeList.add(it.child[i])
+                        }
+                    }
+                    it.child[i].extraData[0].challenge.mapped_category?.let { mappedCategory ->
+                        if (categoryChallengeHashMap[mappedCategory] == null) {
+                            val arraylist = ArrayList<Topics>()
+                            arraylist.add(it.child[i])
+                            categoryChallengeHashMap[mappedCategory] = arraylist
+                        } else {
+                            categoryChallengeHashMap[mappedCategory]?.add(it.child[i])
+                        }
                     }
                 }
             }
@@ -177,7 +191,11 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
     override fun onCategoryItemClick(view: View, position: Int) {
         selectedCategory = categoryList[position]
         try {
-            duration = selectedCategory?.extraData?.get(0)?.max_duration!!
+            if (selectedCategory != null && !selectedCategory?.extraData.isNullOrEmpty() &&
+                selectedCategory?.extraData?.get(0)?.max_duration != null &&
+                selectedCategory?.extraData?.get(0)?.max_duration != 0) {
+                duration = selectedCategory?.extraData?.get(0)?.max_duration!!
+            }
         } catch (e: Exception) {
             Crashlytics.logException(e)
             Log.d(
@@ -249,7 +267,6 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
                 )
                 intent.putExtra("challenge", topics.id)
                 intent.putExtra("comingFrom", "chooseVideoCategory")
-                intent.putExtra("mappedId", topics.extraData[0].challenge.mapped_category)
                 startActivity(intent)
                 Utils.momVlogEvent(
                     this,
