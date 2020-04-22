@@ -33,7 +33,7 @@ import retrofit2.http.Query;
 public interface VlogsListingAndDetailsAPI {
 
 
-    @GET("https://stagingapi.momspresso.com/v2/categories")
+    @GET("/v2/categories")
     Call<Topics> getVlogCategoriesAndChallenges(@Query("id") String id);
 
     @GET("/v2/categories")
