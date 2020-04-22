@@ -14,6 +14,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -141,22 +142,32 @@ class MomVlogListingAdapter(val mContext: Context) :
                         call: Call<MomVlogersDetailResponse>,
                         response: Response<MomVlogersDetailResponse>
                     ) {
-                        holder.shimmerLayout.stopShimmerAnimation()
-                        holder.shimmerLayout.visibility = View.GONE
-                        holder.scroll.visibility = View.VISIBLE
-                        //  alternateCarousal++
-                        if (response.isSuccessful && response.body() != null) {
-                            val responseVlogersData = response.body()?.data?.result
-                            processVlogersData(
-                                holder,
-                                responseVlogersData as ArrayList<UserDetailResult>?,
-                                pos
+                        try {
+                            holder.shimmerLayout.stopShimmerAnimation()
+                            holder.shimmerLayout.visibility = View.GONE
+                            holder.scroll.visibility = View.VISIBLE
+                            //  alternateCarousal++
+                            if (response.isSuccessful && response.body() != null) {
+                                val responseVlogersData = response.body()?.data?.result
+                                processVlogersData(
+                                    holder,
+                                    responseVlogersData as ArrayList<UserDetailResult>?,
+                                    pos
+                                )
+                                momVlogVideosOrCarousalList[pos].isCarouselRequestRunning = false
+                                momVlogVideosOrCarousalList[pos].isResponseReceived = true
+                            } else {
+                                momVlogVideosOrCarousalList[pos].isCarouselRequestRunning = false
+                                momVlogVideosOrCarousalList[pos].isResponseReceived = true
+                            }
+                        } catch (e: Exception) {
+                            Crashlytics.logException(e)
+                            Log.d(
+                                "MC4kException",
+                                Log.getStackTraceString(e)
                             )
                             momVlogVideosOrCarousalList[pos].isCarouselRequestRunning = false
-                            momVlogVideosOrCarousalList[pos].isResponseReceived = true
-                        } else {
-                            momVlogVideosOrCarousalList[pos].isCarouselRequestRunning = false
-                            momVlogVideosOrCarousalList[pos].isResponseReceived = true
+                            momVlogVideosOrCarousalList[pos].isResponseReceived = false
                         }
                     }
                 })
@@ -594,33 +605,27 @@ class MomVlogListingAdapter(val mContext: Context) :
                 }
             })
         if (carosalList.following) {
-            followTextView.setTextColor(
-                ContextCompat.getColor(
-                    mContext,
-                    R.color.ad_author_name_text
-                )
-            )
+            followTextView.setTextColor(ContextCompat.getColor(mContext, R.color.color_BABABA))
             val myGrad: GradientDrawable =
                 followTextView.background as GradientDrawable
-            myGrad.setStroke(2, ContextCompat.getColor(mContext, R.color.ad_author_name_text))
-            followTextView.text = mContext.getString(R.string.ad_following_author)
+            myGrad.setStroke(2, ContextCompat.getColor(mContext, R.color.color_BABABA))
+            myGrad.setColor(ContextCompat.getColor(mContext, R.color.white))
+            followTextView.text =
+                mContext.getString(R.string.ad_following_author).toLowerCase().capitalize()
         } else {
-            followTextView.setTextColor(
-                ContextCompat.getColor(
-                    mContext,
-                    R.color.app_red
-                )
-            )
+            followTextView.setTextColor(ContextCompat.getColor(mContext, R.color.white))
             val myGrad: GradientDrawable =
                 followTextView.background as GradientDrawable
             myGrad.setStroke(2, ContextCompat.getColor(mContext, R.color.app_red))
-            followTextView.text = mContext.getString(R.string.ad_follow_author)
+            myGrad.setColor(ContextCompat.getColor(mContext, R.color.app_red))
+            followTextView.text =
+                mContext.getString(R.string.ad_follow_author).toLowerCase().capitalize()
         }
         authorNameTextView.text = carosalList.firstName.trim().toLowerCase().capitalize()
             .plus(" " + carosalList.lastName.trim().toLowerCase().capitalize())
 
         authorRanktextView.text =
-            mContext.getString(R.string.myprofile_rank_label) + ": " + carosalList.rank
+            mContext.getString(R.string.myprofile_rank_label).toLowerCase().capitalize() + ": " + carosalList.rank
     }
 
     private fun unFollowApiCall(
@@ -630,7 +635,15 @@ class MomVlogListingAdapter(val mContext: Context) :
         followFollowingTextView: TextView
     ) {
         momVlogVideosOrCarousalList[position].carouselVideoList[index].following = false
-        followFollowingTextView.text = mContext.getString(R.string.ad_follow_author)
+        followFollowingTextView.setTextColor(ContextCompat.getColor(mContext, R.color.white))
+        val myGrad: GradientDrawable =
+            followFollowingTextView.background as GradientDrawable
+        myGrad.setStroke(2, ContextCompat.getColor(mContext, R.color.app_red))
+        myGrad.setColor(ContextCompat.getColor(mContext, R.color.app_red))
+        followFollowingTextView.text =
+            mContext.getString(R.string.ad_follow_author).toLowerCase().capitalize()
+        followFollowingTextView.text =
+            mContext.getString(R.string.ad_follow_author).toLowerCase().capitalize()
         val retrofit = BaseApplication.getInstance().retrofit
         val followApi = retrofit.create(FollowAPI::class.java)
         val request = FollowUnfollowUserRequest()
@@ -658,7 +671,13 @@ class MomVlogListingAdapter(val mContext: Context) :
         followFollowingTextView: TextView
     ) {
         momVlogVideosOrCarousalList[position].carouselVideoList[index].following = true
-        followFollowingTextView.text = mContext.getString(R.string.ad_following_author)
+        followFollowingTextView.setTextColor(ContextCompat.getColor(mContext, R.color.color_BABABA))
+        val myGrad: GradientDrawable =
+            followFollowingTextView.background as GradientDrawable
+        myGrad.setStroke(2, ContextCompat.getColor(mContext, R.color.color_BABABA))
+        myGrad.setColor(ContextCompat.getColor(mContext, R.color.white))
+        followFollowingTextView.text =
+            mContext.getString(R.string.ad_following_author).toLowerCase().capitalize()
         val retrofit = BaseApplication.getInstance().retrofit
         val followApi = retrofit.create(FollowAPI::class.java)
         val request = FollowUnfollowUserRequest()

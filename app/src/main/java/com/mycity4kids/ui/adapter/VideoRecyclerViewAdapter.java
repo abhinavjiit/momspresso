@@ -27,12 +27,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -57,10 +55,8 @@ import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.fragment.AddCollectionAndCollectionItemDialogFragment;
 import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -111,7 +107,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         LayoutInflater.from(parent.getContext()).inflate(R.layout.item_empty_view, parent, false));
             case VIEW_TYPE_CAROUSAL:
                 return new FollowFollowingCarousal(LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.mom_vlog_follow_following_carousal, parent, false));
+                        .inflate(R.layout.parallel_feed_follow_following_carousal_layout, parent, false));
             default:
                 return null;
         }
@@ -136,52 +132,63 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 ((FollowFollowingCarousal) holder).shimmerLayout.startShimmerAnimation();
                 ((FollowFollowingCarousal) holder).shimmerLayout.setVisibility(View.VISIBLE);
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
+                VlogsListingAndDetailsAPI vlogsListingAndDetailsApi = retrofit.create(VlogsListingAndDetailsAPI.class);
                 end = start + 5;
-                Call<MomVlogersDetailResponse> call = vlogsListingAndDetailsAPI.getVlogersData(
+                Call<MomVlogersDetailResponse> call = vlogsListingAndDetailsApi.getVlogersData(
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), start, end,
                         1);
                 start = end + start;
-                call.enqueue(new Callback<MomVlogersDetailResponse>() {
-                                 @Override
-                                 public void onResponse(@NonNull Call<MomVlogersDetailResponse> call,
-                                         @NonNull Response<MomVlogersDetailResponse> response) {
-                                     ((FollowFollowingCarousal) holder).shimmerLayout.stopShimmerAnimation();
-                                     ((FollowFollowingCarousal) holder).shimmerLayout.setVisibility(View.GONE);
+                call.enqueue(
+                        new Callback<MomVlogersDetailResponse>() {
+                            @Override
+                            public void onResponse(@NonNull Call<MomVlogersDetailResponse> call,
+                                    @NonNull Response<MomVlogersDetailResponse> response) {
+                                try {
+                                    ((FollowFollowingCarousal) holder).shimmerLayout.stopShimmerAnimation();
+                                    ((FollowFollowingCarousal) holder).shimmerLayout.setVisibility(View.GONE);
 
-                                     if (response.isSuccessful() && null != response.body()) {
-                                         if (response.body().getData() != null) {
-                                             ArrayList<UserDetailResult> responseData = response.body().getData().getResult();
+                                    if (response.isSuccessful() && null != response.body()) {
+                                        if (response.body().getData() != null) {
+                                            ArrayList<UserDetailResult> responseData = response.body().getData()
+                                                    .getResult();
 
-                                             processVlogersData(
-                                                     (FollowFollowingCarousal) holder,
-                                                     responseData,
-                                                     position
-                                             );
-                                         }
+                                            processVlogersData(
+                                                    (FollowFollowingCarousal) holder,
+                                                    responseData,
+                                                    position
+                                            );
+                                        }
 
-                                         vlogsListingAndDetailResults.get(position).setCarouselRequestRunning(true);
-                                         vlogsListingAndDetailResults.get(position).setResponseReceived(true);
+                                        vlogsListingAndDetailResults.get(position).setCarouselRequestRunning(true);
+                                        vlogsListingAndDetailResults.get(position).setResponseReceived(true);
 
-                                     } else {
-                                         vlogsListingAndDetailResults.get(position).setCarouselRequestRunning(true);
-                                         vlogsListingAndDetailResults.get(position).setResponseReceived(true);
-                                     }
+                                    } else {
+                                        vlogsListingAndDetailResults.get(position).setCarouselRequestRunning(false);
+                                        vlogsListingAndDetailResults.get(position).setResponseReceived(true);
+                                    }
 
-                                 }
+                                } catch (Exception e) {
+                                    vlogsListingAndDetailResults.get(position).setCarouselRequestRunning(false);
+                                    vlogsListingAndDetailResults.get(position).setResponseReceived(false);
+                                    Crashlytics.logException(e);
+                                    Log.d("MC4kException", Log.getStackTraceString(e));
+                                }
+                            }
 
 
-                                 @Override
-                                 public void onFailure(Call<MomVlogersDetailResponse> call, Throwable t) {
+                            @Override
+                            public void onFailure(Call<MomVlogersDetailResponse> call, Throwable t) {
 
-                                 }
-                             }
+                            }
+                        }
                 );
 
 
             } else if (vlogsListingAndDetailResults.get(position).isCarouselRequestRunning()
                     && !vlogsListingAndDetailResults.get(position).isResponseReceived()) {
-
+                Log.d("TAG", vlogsListingAndDetailResults.get(position).isCarouselRequestRunning() + " .........."
+                        + vlogsListingAndDetailResults.get(position).isResponseReceived()
+                );
             } else {
 
                 if (null != vlogsListingAndDetailResults.get(position).getCarouselVideoList()
@@ -467,19 +474,53 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     public class FollowFollowingCarousal extends BaseViewHolder implements View.OnClickListener {
 
         ShimmerFrameLayout shimmerLayout;
-        LinearLayout carosalContainer1, carosalContainer2, carosalContainer3, carosalContainer4, carosalContainer5, carosalContainer6;
+        LinearLayout carosalContainer1;
+        LinearLayout carosalContainer2;
+        LinearLayout carosalContainer3;
+        LinearLayout carosalContainer4;
+        LinearLayout carosalContainer5;
+        LinearLayout carosalContainer6;
         HorizontalScrollView scroll;
-        ImageView authorImageView1, authorImageView2, authorImageView3, authorImageView4, authorImageView5, authorImageView6;
-        TextView authorNameTextView1, authorRankTextView1, authorFollowTextView1;
-        TextView authorNameTextView2, authorRankTextView2, authorFollowTextView2;
-        TextView authorNameTextView3, authorRankTextView3, authorFollowTextView3;
-        TextView authorNameTextView4, authorRankTextView4, authorFollowTextView4;
-        TextView authorNameTextView5, authorRankTextView5, authorFollowTextView5;
-        TextView authorNameTextView6, authorRankTextView6, authorFollowTextView6;
+        ImageView authorImageView1;
+        ImageView authorImageView2;
+        ImageView authorImageView3;
+        ImageView authorImageView4;
+        ImageView authorImageView5;
+        ImageView authorImageView6;
+        TextView authorNameTextView1;
+        TextView authorRankTextView1;
+        TextView authorFollowTextView1;
+        TextView authorNameTextView2;
+        TextView authorRankTextView2;
+        TextView authorFollowTextView2;
+        TextView authorNameTextView3;
+        TextView authorRankTextView3;
+        TextView authorFollowTextView3;
+        TextView authorNameTextView4;
+        TextView authorRankTextView4;
+        TextView authorFollowTextView4;
+        TextView authorNameTextView5;
+        TextView authorRankTextView5;
+        TextView authorFollowTextView5;
+        TextView authorNameTextView6;
+        TextView authorRankTextView6;
+        TextView authorFollowTextView6;
+        ProgressBar progress1;
+        ProgressBar progress2;
+        ProgressBar progress3;
+        ProgressBar progress4;
+        ProgressBar progress5;
+        ProgressBar progress6;
 
 
         public FollowFollowingCarousal(View itemView) {
             super(itemView);
+            progress1 = itemView.findViewById(R.id.progress1);
+            progress2 = itemView.findViewById(R.id.progress2);
+            progress3 = itemView.findViewById(R.id.progress3);
+            progress4 = itemView.findViewById(R.id.progress4);
+            progress5 = itemView.findViewById(R.id.progress5);
+            progress6 = itemView.findViewById(R.id.progress6);
             shimmerLayout = itemView.findViewById(R.id.shimmerLayout);
             carosalContainer1 = itemView.findViewById(R.id.carosalContainer1);
             carosalContainer2 = itemView.findViewById(R.id.carosalContainer2);
@@ -690,6 +731,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                                     .getDynamoId());
                     context.startActivity(intent6);
                     break;
+                default:
             }
         }
     }
@@ -701,12 +743,17 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             TextView followFollowingTextView) {
 
         vlogsListingAndDetailResults.get(position).getCarouselVideoList().get(index).setFollowing(false);
-        followFollowingTextView.setText(R.string.ad_follow_author);
+        GradientDrawable myGrad = (GradientDrawable) followFollowingTextView.getBackground();
+        myGrad.setStroke(2, ContextCompat.getColor(context, R.color.app_red));
+        followFollowingTextView.setTextColor(ContextCompat.getColor(context, R.color.white));
+        myGrad.setColor(ContextCompat.getColor(context, R.color.app_red));
+        followFollowingTextView.setText(StringUtils
+                .firstLetterToUpperCase(context.getResources().getString(R.string.ad_follow_author).toLowerCase()));
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        FollowAPI vlogsListingAndDetailsAPI = retrofit.create(FollowAPI.class);
+        FollowAPI vlogsListingAndDetailsApi = retrofit.create(FollowAPI.class);
         FollowUnfollowUserRequest followUnfollowUserRequest = new FollowUnfollowUserRequest();
         followUnfollowUserRequest.setFollowee_id(authorId);
-        Call<FollowUnfollowUserResponse> call = vlogsListingAndDetailsAPI.unfollowUserV2(followUnfollowUserRequest);
+        Call<FollowUnfollowUserResponse> call = vlogsListingAndDetailsApi.unfollowUserV2(followUnfollowUserRequest);
         call.enqueue(new Callback<FollowUnfollowUserResponse>() {
             @Override
             public void onResponse(@NonNull Call<FollowUnfollowUserResponse> call,
@@ -729,12 +776,17 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             int index,
             TextView followFollowingTextView) {
         vlogsListingAndDetailResults.get(position).getCarouselVideoList().get(index).setFollowing(true);
-        followFollowingTextView.setText(R.string.ad_following_author);
+        GradientDrawable myGrad = (GradientDrawable) followFollowingTextView.getBackground();
+        myGrad.setStroke(2, ContextCompat.getColor(context, R.color.color_BABABA));
+        followFollowingTextView.setTextColor(ContextCompat.getColor(context, R.color.color_BABABA));
+        myGrad.setColor(ContextCompat.getColor(context, R.color.video_feed_bg));
+        followFollowingTextView.setText(StringUtils
+                .firstLetterToUpperCase(context.getResources().getString(R.string.ad_following_author).toLowerCase()));
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        FollowAPI vlogsListingAndDetailsAPI = retrofit.create(FollowAPI.class);
+        FollowAPI vlogsListingAndDetailsApi = retrofit.create(FollowAPI.class);
         FollowUnfollowUserRequest followUnfollowUserRequest = new FollowUnfollowUserRequest();
         followUnfollowUserRequest.setFollowee_id(authorId);
-        Call<FollowUnfollowUserResponse> call = vlogsListingAndDetailsAPI.followUserV2(followUnfollowUserRequest);
+        Call<FollowUnfollowUserResponse> call = vlogsListingAndDetailsApi.followUserV2(followUnfollowUserRequest);
         call.enqueue(new Callback<FollowUnfollowUserResponse>() {
             @Override
             public void onResponse(@NonNull Call<FollowUnfollowUserResponse> call,
@@ -775,6 +827,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView1,
                         holder.authorNameTextView1,
                         holder.authorRankTextView1,
+                        holder.progress1,
                         carosalList.get(0)
                 );
             }
@@ -785,6 +838,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView1,
                         holder.authorNameTextView1,
                         holder.authorRankTextView1,
+                        holder.progress1,
                         carosalList.get(0)
                 );
                 updateCarosal(
@@ -792,6 +846,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView2,
                         holder.authorNameTextView2,
                         holder.authorRankTextView2,
+                        holder.progress2,
                         carosalList.get(1)
                 );
             }
@@ -802,6 +857,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView1,
                         holder.authorNameTextView1,
                         holder.authorRankTextView1,
+                        holder.progress1,
                         carosalList.get(0)
                 );
                 updateCarosal(
@@ -809,6 +865,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView2,
                         holder.authorNameTextView2,
                         holder.authorRankTextView2,
+                        holder.progress2,
                         carosalList.get(1)
                 );
                 updateCarosal(
@@ -816,6 +873,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView3,
                         holder.authorNameTextView3,
                         holder.authorRankTextView3,
+                        holder.progress3,
                         carosalList.get(2)
                 );
             }
@@ -826,6 +884,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView1,
                         holder.authorNameTextView1,
                         holder.authorRankTextView1,
+                        holder.progress1,
                         carosalList.get(0)
                 );
                 updateCarosal(
@@ -833,6 +892,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView2,
                         holder.authorNameTextView2,
                         holder.authorRankTextView2,
+                        holder.progress2,
                         carosalList.get(1)
                 );
                 updateCarosal(
@@ -840,6 +900,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView3,
                         holder.authorNameTextView3,
                         holder.authorRankTextView3,
+                        holder.progress3,
                         carosalList.get(2)
                 );
                 updateCarosal(
@@ -847,6 +908,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView4,
                         holder.authorNameTextView4,
                         holder.authorRankTextView4,
+                        holder.progress4,
                         carosalList.get(3)
                 );
             }
@@ -856,6 +918,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView1,
                         holder.authorNameTextView1,
                         holder.authorRankTextView1,
+                        holder.progress1,
                         carosalList.get(0)
                 );
                 updateCarosal(
@@ -863,6 +926,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView2,
                         holder.authorNameTextView2,
                         holder.authorRankTextView2,
+                        holder.progress2,
                         carosalList.get(1)
                 );
                 updateCarosal(
@@ -870,6 +934,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView3,
                         holder.authorNameTextView3,
                         holder.authorRankTextView3,
+                        holder.progress3,
                         carosalList.get(2)
                 );
                 updateCarosal(
@@ -877,6 +942,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView4,
                         holder.authorNameTextView4,
                         holder.authorRankTextView4,
+                        holder.progress4,
                         carosalList.get(3)
                 );
                 updateCarosal(
@@ -884,6 +950,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView5,
                         holder.authorNameTextView5,
                         holder.authorRankTextView5,
+                        holder.progress5,
                         carosalList.get(4)
                 );
             }
@@ -894,6 +961,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView1,
                         holder.authorNameTextView1,
                         holder.authorRankTextView1,
+                        holder.progress1,
                         carosalList.get(0)
                 );
                 updateCarosal(
@@ -901,6 +969,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView2,
                         holder.authorNameTextView2,
                         holder.authorRankTextView2,
+                        holder.progress2,
                         carosalList.get(1)
                 );
                 updateCarosal(
@@ -908,6 +977,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView3,
                         holder.authorNameTextView3,
                         holder.authorRankTextView3,
+                        holder.progress3,
                         carosalList.get(2)
                 );
                 updateCarosal(
@@ -915,6 +985,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView4,
                         holder.authorNameTextView4,
                         holder.authorRankTextView4,
+                        holder.progress4,
                         carosalList.get(3)
                 );
                 updateCarosal(
@@ -922,6 +993,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView5,
                         holder.authorNameTextView5,
                         holder.authorRankTextView5,
+                        holder.progress5,
                         carosalList.get(4)
                 );
                 updateCarosal(
@@ -929,6 +1001,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         holder.authorImageView6,
                         holder.authorNameTextView6,
                         holder.authorRankTextView6,
+                        holder.progress6,
                         carosalList.get(5)
                 );
             }
@@ -941,37 +1014,42 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
 
 
     private void updateCarosal(TextView followTextView, ImageView authorImageView, TextView authorNameTextView,
-            TextView authorRankTextView, UserDetailResult carosalList) {
+            TextView authorRankTextView, ProgressBar progressBar, UserDetailResult carosalList) {
         Picasso.get().load(carosalList.getProfilePicUrl().getClientApp()).error(R.drawable.default_article)
                 .into(authorImageView, new com.squareup.picasso.Callback() {
                             @Override
                             public void onSuccess() {
-
+                                progressBar.setVisibility(View.GONE);
                             }
 
                             @Override
                             public void onError(Exception e) {
+                                progressBar.setVisibility(View.VISIBLE);
 
                             }
-                        }
-                );
+                        });
         if (carosalList.getFollowing()) {
             GradientDrawable myGrad = (GradientDrawable) followTextView.getBackground();
-            myGrad.setStroke(2, ContextCompat.getColor(context, R.color.ad_author_name_text));
-            followTextView.setTextColor(ContextCompat.getColor(context, R.color.ad_author_name_text));
-            followTextView.setText(context.getString(R.string.ad_following_author));
+            myGrad.setStroke(2, ContextCompat.getColor(context, R.color.color_BABABA));
+            followTextView.setTextColor(ContextCompat.getColor(context, R.color.color_BABABA));
+            myGrad.setColor(ContextCompat.getColor(context, R.color.video_feed_bg));
+            followTextView.setText(
+                    StringUtils.firstLetterToUpperCase(context.getString(R.string.ad_following_author).toLowerCase()));
         } else {
             GradientDrawable myGrad = (GradientDrawable) followTextView.getBackground();
             myGrad.setStroke(2, ContextCompat.getColor(context, R.color.app_red));
-            followTextView.setTextColor(ContextCompat.getColor(context, R.color.app_red));
-            followTextView.setText(context.getString(R.string.ad_follow_author));
+            myGrad.setColor(ContextCompat.getColor(context, R.color.app_red));
+            followTextView.setTextColor(ContextCompat.getColor(context, R.color.white));
+            followTextView.setText(
+                    StringUtils.firstLetterToUpperCase(context.getString(R.string.ad_follow_author).toLowerCase()));
         }
         authorNameTextView.setText(
                 StringUtils.firstLetterToUpperCase(carosalList.getFirstName().trim().toLowerCase()) + " " + StringUtils
                         .firstLetterToUpperCase(carosalList.getLastName().trim().toLowerCase()));
-        authorRankTextView.setText(context.getString(R.string.myprofile_rank_label) + ": " + carosalList.getRank());
+        authorRankTextView.setText(
+                StringUtils.firstLetterToUpperCase(context.getString(R.string.myprofile_rank_label)) + ": "
+                        + carosalList.getRank());
     }
-
 
     private PopupWindow popupDisplay(String isBookmarked) {
 

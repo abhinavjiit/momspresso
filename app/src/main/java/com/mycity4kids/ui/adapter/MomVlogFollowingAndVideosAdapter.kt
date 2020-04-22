@@ -2,6 +2,7 @@ package com.mycity4kids.ui.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.GradientDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +12,10 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.crashlytics.android.Crashlytics
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
@@ -25,7 +29,6 @@ import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
 import com.mycity4kids.ui.activity.ParallelFeedActivity
-import com.mycity4kids.utils.ToastUtils
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.follow_following_tab_vlog_adapter.view.articleImageView
 import kotlinx.android.synthetic.main.follow_following_tab_vlog_adapter.view.articleTitleTextView
@@ -44,7 +47,7 @@ const val FOLLOWING_CAROUSAL = 1
 
 class MomVlogFollowingAndVideosAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    var momVlogVideosOrFollowingList = ArrayList<VlogsListingAndDetailResult>()
+    var momVlogVideosOrFollowingList: ArrayList<VlogsListingAndDetailResult>? = null
     private var vlogersListData = ArrayList<UserDetailResult>()
     var start: Int = 0
     var end: Int = 0
@@ -62,10 +65,10 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
     }
 
     override fun getItemCount(): Int {
-        return momVlogVideosOrFollowingList.size
+        return momVlogVideosOrFollowingList?.size!!
     }
 
-    fun setListData(res: ArrayList<VlogsListingAndDetailResult>) {
+    fun setListData(res: ArrayList<VlogsListingAndDetailResult>?) {
         momVlogVideosOrFollowingList = res
     }
 
@@ -74,10 +77,16 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
             Log.e(
                 "TTTTT",
                 "position = " + position +
-                    " careouselRunnin --- " + momVlogVideosOrFollowingList[position].isCarouselRequestRunning + "  ----  list[position].isResponseReceived = " + momVlogVideosOrFollowingList[position].isResponseReceived
+                    " careouselRunnin --- " + momVlogVideosOrFollowingList?.get(position)?.isCarouselRequestRunning + "  ----  list[position].isResponseReceived = " + momVlogVideosOrFollowingList?.get(
+                    position
+                )?.isResponseReceived
             )
-            if (!momVlogVideosOrFollowingList[position].isCarouselRequestRunning && !momVlogVideosOrFollowingList[position].isResponseReceived) {
-                momVlogVideosOrFollowingList[position].isCarouselRequestRunning = true
+            if (!momVlogVideosOrFollowingList?.get(position)?.isCarouselRequestRunning!! && !momVlogVideosOrFollowingList?.get(
+                    position
+                )?.isResponseReceived!!) {
+                holder.shimmerLayout.startShimmerAnimation()
+                holder.shimmerLayout.visibility = View.VISIBLE
+                momVlogVideosOrFollowingList?.get(position)?.isCarouselRequestRunning = true
                 val pos = position
                 val retrofit = BaseApplication.getInstance().retrofit
                 val vlogsListingAndDetailsAPI =
@@ -98,127 +107,119 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
                         call: Call<MomVlogersDetailResponse>,
                         response: Response<MomVlogersDetailResponse>
                     ) {
-                        if (response.isSuccessful && response.body() != null) {
-                            val responseVlogersData = response.body()?.data?.result
-                            processVlogersData(
-                                holder,
-                                responseVlogersData as ArrayList<UserDetailResult>,
-                                pos
+                        try {
+                            holder.shimmerLayout.stopShimmerAnimation()
+                            holder.shimmerLayout.visibility = View.GONE
+                            holder.scroll.visibility = View.VISIBLE
+                            if (response.isSuccessful && response.body() != null) {
+                                val responseVlogersData = response.body()?.data?.result
+                                processVlogersData(
+                                    holder,
+                                    responseVlogersData as ArrayList<UserDetailResult>,
+                                    pos
+                                )
+                                momVlogVideosOrFollowingList?.get(pos)?.isCarouselRequestRunning =
+                                    false
+                                momVlogVideosOrFollowingList?.get(pos)?.isResponseReceived = true
+                            } else {
+                                momVlogVideosOrFollowingList?.get(pos)?.isCarouselRequestRunning =
+                                    false
+                                momVlogVideosOrFollowingList?.get(pos)?.isResponseReceived = true
+                            }
+                        } catch (e: Exception) {
+                            Crashlytics.logException(e)
+                            Log.d(
+                                "MC4kException",
+                                Log.getStackTraceString(e)
                             )
-                            momVlogVideosOrFollowingList[pos].isCarouselRequestRunning = false
-                            momVlogVideosOrFollowingList[pos].isResponseReceived = true
-                        } else {
-                            momVlogVideosOrFollowingList[pos].isCarouselRequestRunning = false
-                            momVlogVideosOrFollowingList[pos].isResponseReceived = true
+                            momVlogVideosOrFollowingList?.get(position)?.isCarouselRequestRunning =
+                                false
+                            momVlogVideosOrFollowingList?.get(position)?.isResponseReceived = false
                         }
                     }
                 })
-            } else if (momVlogVideosOrFollowingList[position].isCarouselRequestRunning && !momVlogVideosOrFollowingList[position].isResponseReceived) {
             } else {
                 Log.d(
                     "runningRequest",
-                    momVlogVideosOrFollowingList[position].isCarouselRequestRunning.toString()
+                    momVlogVideosOrFollowingList?.get(position)?.isCarouselRequestRunning.toString()
                 )
                 Log.d(
                     "runningRequest",
-                    momVlogVideosOrFollowingList[position].isResponseReceived.toString()
+                    momVlogVideosOrFollowingList?.get(position)?.isResponseReceived.toString()
                 )
 
-                if (!momVlogVideosOrFollowingList[position].carouselVideoList.isNullOrEmpty())
+                momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.let {
                     populateCarouselFollowFollowing(
                         holder,
-                        momVlogVideosOrFollowingList[position].carouselVideoList
+                        it
                     )
+                }
             }
 
             holder.carosalContainer1.setOnClickListener {
-                ToastUtils.showToast(
-                    context,
-                    position.toString() + "-------" + momVlogVideosOrFollowingList[position].carouselVideoList[0].firstName
-                )
                 val intent1 = Intent(context, UserProfileActivity::class.java)
                 intent1.putExtra(
                     Constants.USER_ID,
-                    momVlogVideosOrFollowingList[position].carouselVideoList[0].dynamoId
+                    momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(0)?.dynamoId
                 )
                 context.startActivity(intent1)
             }
 
             holder.carosalContainer2.setOnClickListener {
-                ToastUtils.showToast(
-                    context,
-                    position.toString() + "-------" + momVlogVideosOrFollowingList[position].carouselVideoList[1].firstName
-                )
                 val intent1 = Intent(context, UserProfileActivity::class.java)
                 intent1.putExtra(
                     Constants.USER_ID,
-                    momVlogVideosOrFollowingList[position].carouselVideoList[1].dynamoId
+                    momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(1)?.dynamoId
                 )
                 context.startActivity(intent1)
             }
 
             holder.carosalContainer3.setOnClickListener {
-                ToastUtils.showToast(
-                    context,
-                    position.toString() + "-------" + momVlogVideosOrFollowingList[position].carouselVideoList[2].firstName
-                )
                 val intent1 = Intent(context, UserProfileActivity::class.java)
                 intent1.putExtra(
                     Constants.USER_ID,
-                    momVlogVideosOrFollowingList[position].carouselVideoList[2].dynamoId
+                    momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(2)?.dynamoId
                 )
                 context.startActivity(intent1)
             }
             holder.carosalContainer4.setOnClickListener {
-                ToastUtils.showToast(
-                    context,
-                    position.toString() + "-------" + momVlogVideosOrFollowingList[position].carouselVideoList[3].firstName
-                )
                 val intent1 = Intent(context, UserProfileActivity::class.java)
                 intent1.putExtra(
                     Constants.USER_ID,
-                    momVlogVideosOrFollowingList[position].carouselVideoList[3].dynamoId
+                    momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(3)?.dynamoId
                 )
                 context.startActivity(intent1)
             }
 
             holder.carosalContainer5.setOnClickListener {
-                ToastUtils.showToast(
-                    context,
-                    position.toString() + "-------" + momVlogVideosOrFollowingList[position].carouselVideoList[4].firstName
-                )
                 val intent1 = Intent(context, UserProfileActivity::class.java)
                 intent1.putExtra(
                     Constants.USER_ID,
-                    momVlogVideosOrFollowingList[position].carouselVideoList[4].dynamoId
+                    momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(4)?.dynamoId
                 )
                 context.startActivity(intent1)
             }
 
             holder.carosalContainer6.setOnClickListener {
-                ToastUtils.showToast(
-                    context,
-                    position.toString() + "-------" + momVlogVideosOrFollowingList[position].carouselVideoList[5].firstName
-                )
                 val intent1 = Intent(context, UserProfileActivity::class.java)
                 intent1.putExtra(
                     Constants.USER_ID,
-                    momVlogVideosOrFollowingList[position].carouselVideoList[5].dynamoId
+                    momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(5)?.dynamoId
                 )
                 context.startActivity(intent1)
             }
             holder.authorFollowTextView1.setOnClickListener {
-                if (momVlogVideosOrFollowingList[position].carouselVideoList[0].following) {
+                if (momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(0)?.following!!) {
 
                     unFollowApiCall(
-                        momVlogVideosOrFollowingList[position].carouselVideoList[0].dynamoId,
+                        momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(0)?.dynamoId,
                         position,
                         0,
                         holder.authorFollowTextView1
                     )
                 } else {
                     followApiCall(
-                        momVlogVideosOrFollowingList[position].carouselVideoList[0].dynamoId,
+                        momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(0)?.dynamoId,
                         position,
                         0,
                         holder.authorFollowTextView1
@@ -226,17 +227,17 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
                 }
             }
             holder.authorFollowTextView2.setOnClickListener {
-                if (momVlogVideosOrFollowingList[position].carouselVideoList[1].following) {
+                if (momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(1)?.following!!) {
 
                     unFollowApiCall(
-                        momVlogVideosOrFollowingList[position].carouselVideoList[1].dynamoId,
+                        momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(1)?.dynamoId,
                         position,
                         1,
                         holder.authorFollowTextView2
                     )
                 } else {
                     followApiCall(
-                        momVlogVideosOrFollowingList[position].carouselVideoList[1].dynamoId,
+                        momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(1)?.dynamoId,
                         position,
                         1,
                         holder.authorFollowTextView2
@@ -244,17 +245,17 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
                 }
             }
             holder.authorFollowTextView3.setOnClickListener {
-                if (momVlogVideosOrFollowingList[position].carouselVideoList[2].following) {
+                if (momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(2)?.following!!) {
 
                     unFollowApiCall(
-                        momVlogVideosOrFollowingList[position].carouselVideoList[2].dynamoId,
+                        momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(2)?.dynamoId,
                         position,
                         2,
                         holder.authorFollowTextView3
                     )
                 } else {
                     followApiCall(
-                        momVlogVideosOrFollowingList[position].carouselVideoList[2].dynamoId,
+                        momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(2)?.dynamoId,
                         position,
                         2,
                         holder.authorFollowTextView3
@@ -262,17 +263,17 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
                 }
             }
             holder.authorFollowTextView4.setOnClickListener {
-                if (momVlogVideosOrFollowingList[position].carouselVideoList[3].following) {
+                if (momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(3)?.following!!) {
 
                     unFollowApiCall(
-                        momVlogVideosOrFollowingList[position].carouselVideoList[3].dynamoId,
+                        momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(3)?.dynamoId,
                         position,
                         3,
                         holder.authorFollowTextView4
                     )
                 } else {
                     followApiCall(
-                        momVlogVideosOrFollowingList[position].carouselVideoList[3].dynamoId,
+                        momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(3)?.dynamoId,
                         position,
                         3,
                         holder.authorFollowTextView4
@@ -280,17 +281,17 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
                 }
             }
             holder.authorFollowTextView5.setOnClickListener {
-                if (momVlogVideosOrFollowingList[position].carouselVideoList[4].following) {
+                if (momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(4)?.following!!) {
 
                     unFollowApiCall(
-                        momVlogVideosOrFollowingList[position].carouselVideoList[4].dynamoId,
+                        momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(4)?.dynamoId,
                         position,
                         4,
                         holder.authorFollowTextView5
                     )
                 } else {
                     followApiCall(
-                        momVlogVideosOrFollowingList[position].carouselVideoList[4].dynamoId,
+                        momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(4)?.dynamoId,
                         position,
                         4,
                         holder.authorFollowTextView5
@@ -298,17 +299,17 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
                 }
             }
             holder.authorFollowTextView6.setOnClickListener {
-                if (momVlogVideosOrFollowingList[position].carouselVideoList[5].following) {
+                if (momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(5)?.following!!) {
 
                     unFollowApiCall(
-                        momVlogVideosOrFollowingList[position].carouselVideoList[5].dynamoId,
+                        momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(5)?.dynamoId,
                         position,
                         5,
                         holder.authorFollowTextView6
                     )
                 } else {
                     followApiCall(
-                        momVlogVideosOrFollowingList[position].carouselVideoList[5].dynamoId,
+                        momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(5)?.dynamoId,
                         position,
                         5,
                         holder.authorFollowTextView6
@@ -316,23 +317,24 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
                 }
             }
         } else if (holder is MomVlogViewHolder) {
-            Picasso.get().load(momVlogVideosOrFollowingList[position].thumbnail)
+            Picasso.get().load(momVlogVideosOrFollowingList?.get(position)?.thumbnail)
                 .error(R.drawable.default_article)
                 .into(holder.articleImageView)
-            holder.articleTitleTextView.text = momVlogVideosOrFollowingList[position].title
+            holder.articleTitleTextView.text = momVlogVideosOrFollowingList?.get(position)?.title
             holder.authorName.text =
-                momVlogVideosOrFollowingList[position].author.firstName.plus(
+                momVlogVideosOrFollowingList?.get(position)?.author?.firstName.plus(
                     " " +
-                        momVlogVideosOrFollowingList[position].author.lastName
+                        momVlogVideosOrFollowingList?.get(position)?.author?.lastName
                 )
 
-            holder.recommendCountTextView1.text = momVlogVideosOrFollowingList[position].like_count
-            holder.viewCountTextView1.text = momVlogVideosOrFollowingList[position].view_count
+            holder.recommendCountTextView1.text =
+                momVlogVideosOrFollowingList?.get(position)?.like_count
+            holder.viewCountTextView1.text = momVlogVideosOrFollowingList?.get(position)?.view_count
             when {
-                momVlogVideosOrFollowingList[position].winner == 1 -> {
+                momVlogVideosOrFollowingList?.get(position)?.winner == 1 -> {
                     holder.imageWinner.setImageResource(R.drawable.ic_trophy)
                 }
-                momVlogVideosOrFollowingList[position].isIs_gold -> {
+                momVlogVideosOrFollowingList?.get(position)?.isIs_gold!! -> {
                     holder.imageWinner.setImageResource(R.drawable.ic_star_yellow)
                 }
                 else -> {
@@ -342,21 +344,24 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
 
             holder.container.setOnClickListener {
                 val intent = Intent(context, ParallelFeedActivity::class.java)
-                intent.putExtra(Constants.VIDEO_ID, momVlogVideosOrFollowingList[position].id)
-                intent.putExtra(Constants.STREAM_URL, momVlogVideosOrFollowingList[position].url)
+                intent.putExtra(Constants.VIDEO_ID, momVlogVideosOrFollowingList?.get(position)?.id)
+                intent.putExtra(
+                    Constants.STREAM_URL,
+                    momVlogVideosOrFollowingList?.get(position)?.url
+                )
                 intent.putExtra(
                     Constants.AUTHOR_ID,
-                    momVlogVideosOrFollowingList[position].author.id
+                    momVlogVideosOrFollowingList?.get(position)?.author?.id
                 )
                 intent.putExtra(Constants.FROM_SCREEN, "Funny Videos Listing")
                 intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos")
                 intent.putExtra(
                     Constants.AUTHOR,
-                    momVlogVideosOrFollowingList.get(position).getAuthor().getId() + "~" + momVlogVideosOrFollowingList.get(
+                    momVlogVideosOrFollowingList?.get(position)?.author?.id + "~" + momVlogVideosOrFollowingList?.get(
                         position
-                    ).getAuthor().getFirstName() + " " + momVlogVideosOrFollowingList.get(
+                    )?.author?.firstName + " " + momVlogVideosOrFollowingList?.get(
                         position
-                    ).getAuthor().getLastName()
+                    )?.author?.lastName
                 )
                 context.startActivity(intent)
             }
@@ -364,7 +369,7 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (momVlogVideosOrFollowingList[position].itemType == 0) {
+        return if (momVlogVideosOrFollowingList?.get(position)?.itemType == 0) {
             VIDEOS
         } else {
 
@@ -377,18 +382,23 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
         responseVlogersData: ArrayList<UserDetailResult>,
         position: Int
     ) {
-        if (responseVlogersData.isEmpty()) {
-            if (vlogersListData.isNullOrEmpty()) {
+        try {
+            if (responseVlogersData.isEmpty()) {
+                if (vlogersListData.isNullOrEmpty()) {
+                }
+            } else {
+                vlogersListData.addAll(responseVlogersData)
+                momVlogVideosOrFollowingList?.get(position)?.carouselVideoList = vlogersListData
+                momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.let {
+                    populateCarouselFollowFollowing(
+                        holder,
+                        it
+                    )
+                }
             }
-        } else {
-            vlogersListData.addAll(responseVlogersData)
-            momVlogVideosOrFollowingList[position].carouselVideoList = vlogersListData
-            momVlogVideosOrFollowingList[position].start =
-                momVlogVideosOrFollowingList[position].start + 6
-            populateCarouselFollowFollowing(
-                holder,
-                momVlogVideosOrFollowingList[position].carouselVideoList
-            )
+        } catch (e: Exception) {
+            Crashlytics.logException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
 
@@ -519,7 +529,7 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
                     carosalList[4]
                 )
             }
-            10 -> {
+            6 -> {
 
                 updateCarosal(
                     holder.authorFollowTextView1,
@@ -586,23 +596,39 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
                 }
             })
         if (carosalList.following) {
-            followTextView.text = context.getString(R.string.ad_following_author)
+            followTextView.setTextColor(ContextCompat.getColor(context, R.color.color_BABABA))
+            val myGrad: GradientDrawable =
+                followTextView.background as GradientDrawable
+            myGrad.setStroke(2, ContextCompat.getColor(context, R.color.color_BABABA))
+            myGrad.setColor(ContextCompat.getColor(context, R.color.white))
+
+            followTextView.text =
+                context.getString(R.string.ad_following_author).toLowerCase().capitalize()
         } else {
-            followTextView.text = context.getString(R.string.ad_follow_author)
+            followTextView.setTextColor(ContextCompat.getColor(context, R.color.white))
+            val myGrad: GradientDrawable =
+                followTextView.background as GradientDrawable
+            myGrad.setStroke(2, ContextCompat.getColor(context, R.color.app_red))
+            myGrad.setColor(ContextCompat.getColor(context, R.color.app_red))
+
+            followTextView.text =
+                context.getString(R.string.ad_follow_author).toLowerCase().capitalize()
         }
         authorNameTextView.text = carosalList.firstName.trim().toLowerCase().capitalize()
             .plus(" " + carosalList.lastName.trim().toLowerCase().capitalize())
 
-        authorRanktextView.text = carosalList.rank
+        authorRanktextView.text =
+            context.resources.getString(R.string.myprofile_rank_label).toLowerCase().capitalize() + ":" + carosalList.rank
     }
 
     private fun unFollowApiCall(
-        authorId: String,
+        authorId: String?,
         position: Int,
         index: Int,
         followFollowingTextView: TextView
     ) {
-        momVlogVideosOrFollowingList[position].carouselVideoList[index].following = false
+        momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(index)?.following =
+            false
         followFollowingTextView.text = context.getString(R.string.ad_follow_author)
         val retrofit = BaseApplication.getInstance().retrofit
         val followApi = retrofit.create(FollowAPI::class.java)
@@ -622,12 +648,12 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
     }
 
     private fun followApiCall(
-        authorId: String,
+        authorId: String?,
         position: Int,
         index: Int,
         followFollowingTextView: TextView
     ) {
-        momVlogVideosOrFollowingList[position].carouselVideoList[index].following = true
+        momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(index)?.following = true
         followFollowingTextView.text = context.getString(R.string.ad_following_author)
         val retrofit = BaseApplication.getInstance().retrofit
         val followApi = retrofit.create(FollowAPI::class.java)
@@ -657,6 +683,8 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
     }
 
     class FollowFollowingCarousal(view: View) : RecyclerView.ViewHolder(view) {
+
+        val shimmerLayout: ShimmerFrameLayout = view.shimmerLayout
         val carosalContainer1: LinearLayout = view.carosalContainer1
         val carosalContainer2: LinearLayout = view.carosalContainer2
         val carosalContainer3: LinearLayout = view.carosalContainer3
