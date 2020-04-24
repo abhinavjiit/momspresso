@@ -71,25 +71,8 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
         momVlogCoachMark = (CoordinatorLayout) findViewById(R.id.momVlogRootLayout);
         subTopicsList = new ArrayList<>();
+        fabAdd.setVisibility(View.VISIBLE);
         getAllMomVlolgCategries();
-        momVlogCoachMark.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                momVlogCoachMark.setVisibility(View.GONE);
-                fabAdd.setVisibility(View.VISIBLE);
-                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "Mom_vlog", true);
-            }
-        });
-
-        if (!SharedPrefUtils.isCoachmarksShownFlag(CategoryVideosListingActivity.this, "Mom_vlog")) {
-            momVlogCoachMark.setVisibility(View.VISIBLE);
-
-        } else {
-            fabAdd.setVisibility(View.VISIBLE);
-            momVlogCoachMark.setVisibility(View.GONE);
-
-        }
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         topLayerGuideLayout = (FrameLayout) findViewById(R.id.topLayerGuideLayout);
