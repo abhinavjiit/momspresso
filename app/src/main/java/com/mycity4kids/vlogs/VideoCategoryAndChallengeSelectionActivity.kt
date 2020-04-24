@@ -55,7 +55,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
     private lateinit var videoChallengesVerticalAdapter: VideoChallengeSelectionVerticalAdapter
     private val categoryList: ArrayList<Topics> by lazy { ArrayList<Topics>() }
     private val categoryWiseChallengeList: ArrayList<Topics> by lazy { ArrayList<Topics>() }
-    private var categoryChallengeHashMap = HashMap<String, ArrayList<Topics>>()
+    //    private var categoryChallengeHashMap = HashMap<String, ArrayList<Topics>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +64,11 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+
+        categoriesShimmerLayout.startShimmerAnimation()
+        challengesShimmerLayout1.startShimmerAnimation()
+        challengesShimmerLayout2.startShimmerAnimation()
+        challengesShimmerLayout3.startShimmerAnimation()
 
         val horizontalLM = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         categoriesRecyclerView.layoutManager = horizontalLM
@@ -75,7 +80,6 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
 
         videoChallengesVerticalAdapter =
             VideoChallengeSelectionVerticalAdapter(
-                this,
                 this
             )
         challengesRecyclerView.adapter = videoChallengesVerticalAdapter
@@ -86,18 +90,27 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
         videoCategoriesSelectionAdapter.setListData(categoryList)
         videoCategoriesSelectionAdapter.notifyDataSetChanged()
 
-        getCategoriesAndChallengesData()
+        getCategoriesData()
+        getChallengeData()
     }
 
-    private fun getCategoriesAndChallengesData() {
+    private fun getCategoriesData() {
         val retrofit = BaseApplication.getInstance().retrofit
         val vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI::class.java)
         val callRecentVideoArticles =
             vlogsListingAndDetailsAPI.getVlogCategoriesAndChallenges(AppConstants.HOME_VIDEOS_CATEGORYID)
-        callRecentVideoArticles.enqueue(vlogChallengeDetailsResponseCallBack)
+        callRecentVideoArticles.enqueue(vlogCategoriesResponseCallBack)
     }
 
-    private var vlogChallengeDetailsResponseCallBack = object : Callback<Topics> {
+    private fun getChallengeData() {
+        val retrofit = BaseApplication.getInstance().retrofit
+        val vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI::class.java)
+        val vlogsCategoryWiseChallengeListCall =
+            vlogsListingAndDetailsAPI.getVlogsCategoryWiseChallenges()
+        vlogsCategoryWiseChallengeListCall.enqueue(vlogsCategoryWiseChallengeListResponseCallBack)
+    }
+
+    private var vlogCategoriesResponseCallBack = object : Callback<Topics> {
         override fun onResponse(call: Call<Topics>, response: Response<Topics>) {
             if (null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
@@ -106,6 +119,8 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
             }
             if (response.isSuccessful) {
                 try {
+                    categoriesShimmerLayout.visibility = View.GONE
+                    categoriesRecyclerView.visibility = View.VISIBLE
                     val responseData = response.body()
                     responseData?.let {
                         processTopicsData(it)
@@ -125,12 +140,69 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
         }
     }
 
+    private var vlogsCategoryWiseChallengeListResponseCallBack =
+        object : Callback<VlogsCategoryWiseChallengesResponse> {
+            override fun onResponse(
+                call: Call<VlogsCategoryWiseChallengesResponse>,
+                response: Response<VlogsCategoryWiseChallengesResponse>
+            ) {
+                if (null == response.body()) {
+                    val nee = NetworkErrorException(response.raw().toString())
+                    Crashlytics.logException(nee)
+                    return
+                }
+                if (response.isSuccessful) {
+                    try {
+                        val responseData = response.body()
+                        responseData?.let { resData ->
+                            if (resData.code == 200) {
+                                challengesShimmerLayout1.visibility = View.GONE
+                                challengesShimmerLayout2.visibility = View.GONE
+                                challengesShimmerLayout3.visibility = View.GONE
+                                challengesRecyclerView.visibility = View.VISIBLE
+                                resData.data.result?.let {
+                                    processChallengesData(it)
+                                }
+                            } else {
+                                showToast(responseData.reason)
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Crashlytics.logException(e)
+                        Log.d(
+                            "MC4kException", Log.getStackTraceString(e)
+                        )
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<VlogsCategoryWiseChallengesResponse>, t: Throwable) {
+                Crashlytics.logException(t)
+                Log.d("MC4kException", Log.getStackTraceString(t))
+            }
+        }
+
+    private fun processChallengesData(catWiseChallengeList: ArrayList<Topics>) {
+        for (i in 0 until catWiseChallengeList.size) {
+            val originalChallengeList = ArrayList<Topics>()
+            originalChallengeList.addAll(catWiseChallengeList[i].child)
+            categoryWiseChallengeList.add(catWiseChallengeList[i])
+            categoryWiseChallengeList[i].child = ArrayList()
+            for (j in 0 until originalChallengeList.size) {
+                if (originalChallengeList[j].publicVisibility == "1") {
+                    categoryWiseChallengeList[i].child.add(originalChallengeList[j])
+                }
+            }
+        }
+        videoChallengesVerticalAdapter.notifyDataSetChanged()
+    }
+
     private fun processTopicsData(responseData: Topics) {
         responseData.child?.let {
             for (i in 0 until it.size) {
-                if (it[i]?.id == AppConstants.VIDEO_CHALLENGE_ID) {
-                    processChallengesData(it[i])
-                }
+                //                if (it[i]?.id == AppConstants.VIDEO_CHALLENGE_ID) {
+                //                    processChallengesData(it[i])
+                //                }
                 if (it[i]?.id != AppConstants.VIDEO_CHALLENGE_ID) {
                     if (it[i]?.publicVisibility == "1") {
                         categoryList.add(it[i])
@@ -138,55 +210,59 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
                 }
             }
 
-            for (i in 0 until categoryList.size) {
-                for (j in 0 until categoryList[i].child.size) {
-                    categoryChallengeHashMap[categoryList[i].child[j].id]?.let { challenge ->
-                        categoryList[i].taggedChallengeList.addAll(challenge)
-                    }
-                }
-                categoryList[i].taggedChallengeList.sortByDescending { it.extraData[0].challenge.is_live }
-            }
-
-            for (i in 0 until categoryList.size) {
-                if (!categoryList[i].taggedChallengeList.isNullOrEmpty()) {
-                    categoryWiseChallengeList.add(categoryList[i])
-                }
-            }
+            //            for (i in 0 until categoryList.size) {
+            //                for (j in 0 until categoryList[i].child.size) {
+            //                    categoryChallengeHashMap[categoryList[i].child[j].id]?.let { challenge ->
+            //                        categoryList[i].taggedChallengeList.addAll(challenge)
+            //                    }
+            //                }
+            //                categoryList[i].taggedChallengeList.sortByDescending { it.extraData[0].challenge.is_live }
+            //            }
+            //
+            //            for (i in 0 until categoryList.size) {
+            //                if (!categoryList[i].taggedChallengeList.isNullOrEmpty()) {
+            //                    categoryWiseChallengeList.add(categoryList[i])
+            //                }
+            //            }
 
             videoCategoriesSelectionAdapter.notifyDataSetChanged()
-            videoChallengesVerticalAdapter.notifyDataSetChanged()
+            //            videoChallengesVerticalAdapter.notifyDataSetChanged()
         }
     }
 
-    private fun processChallengesData(parentChallenge: Topics?) {
-        parentChallenge?.let {
-            // subcategory-challenge mapping
-            for (i in 0 until it.child.size) {
-                if (it.child[i].publicVisibility == "1") {
-                    if (it.child[i].extraData[0].challenge.is_live == "1") {
-                        if (categoryWiseChallengeList.isEmpty()) {
-                            val liveChallengeTopic = Topics()
-                            liveChallengeTopic.display_name =
-                                getString(R.string.all_live_challenges)
-                            liveChallengeTopic.taggedChallengeList.add(it.child[i])
-                            categoryWiseChallengeList.add(liveChallengeTopic)
-                        } else {
-                            categoryWiseChallengeList[0].taggedChallengeList.add(it.child[i])
-                        }
-                    }
-                    it.child[i].extraData[0].challenge.mapped_category?.let { mappedCategory ->
-                        if (categoryChallengeHashMap[mappedCategory] == null) {
-                            val arraylist = ArrayList<Topics>()
-                            arraylist.add(it.child[i])
-                            categoryChallengeHashMap[mappedCategory] = arraylist
-                        } else {
-                            categoryChallengeHashMap[mappedCategory]?.add(it.child[i])
-                        }
-                    }
-                }
-            }
-        }
-    }
+    //    private fun processChallengesData(parentChallenge: Topics?) {
+    //        parentChallenge?.let {
+    //            // subcategory-challenge mapping
+    //            for (i in 0 until it.child.size) {
+    //                if (it.child[i].publicVisibility == "1") {
+    //                    if (it.child[i].extraData[0].challenge.is_live == "1") {
+    //                        if (categoryWiseChallengeList.isEmpty()) {
+    //                            val liveChallengeTopic = Topics()
+    //                            liveChallengeTopic.display_name =
+    //                                getString(R.string.all_live_challenges)
+    //                            liveChallengeTopic.taggedChallengeList.add(it.child[i])
+    //                            categoryWiseChallengeList.add(liveChallengeTopic)
+    //                        } else {
+    //                            categoryWiseChallengeList[0].taggedChallengeList.add(it.child[i])
+    //                        }
+    //                    }
+    //                    if (it.child[i].extraData[0].challenge.mapped_category.isNullOrBlank()) {
+    //                        it.child[i].extraData[0].challenge.mapped_category =
+    //                            "category-ec48b6f0737e44b3a3681f2cca1d5faf"
+    //                    }
+    //                    it.child[i].extraData[0].challenge.mapped_category?.let { mappedCategory ->
+    //                        if (categoryChallengeHashMap[mappedCategory] == null) {
+    //                            val arraylist = ArrayList<Topics>()
+    //                            arraylist.add(it.child[i])
+    //                            categoryChallengeHashMap[mappedCategory] = arraylist
+    //                        } else {
+    //                            categoryChallengeHashMap[mappedCategory]?.add(it.child[i])
+    //                        }
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
 
     override fun onCategoryItemClick(view: View, position: Int) {
         selectedCategory = categoryList[position]

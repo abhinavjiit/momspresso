@@ -65,7 +65,7 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
     }
 
     override fun getItemCount(): Int {
-        return momVlogVideosOrFollowingList?.size!!
+        return if (momVlogVideosOrFollowingList == null) 0 else momVlogVideosOrFollowingList!!.size
     }
 
     fun setListData(res: ArrayList<VlogsListingAndDetailResult>?) {

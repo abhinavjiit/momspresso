@@ -130,7 +130,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         momVlogsSubCategoryModel.setDisplay_name("All");
         subCategoriesTopicList.add(0, momVlogsSubCategoryModel);
         for (int i = 0; i < topic.getChild().size(); i++) {
-            if ("true".equals(topic.getChild().get(i).getShowInMenu())) {
+            if ("1".equals(topic.getChild().get(i).getShowInMenu())) {
                 subCategoriesTopicList.add(topic.getChild().get(i));
             }
         }

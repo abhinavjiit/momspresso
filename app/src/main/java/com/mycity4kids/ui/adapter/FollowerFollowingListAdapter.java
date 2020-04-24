@@ -109,17 +109,22 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
             Picasso.get().load(R.drawable.default_commentor_img).into(holder.authorImageView);
         }
 
-        if (dataList.get(position).getUserId().equals(currentUserId)) {
+        try {
+            if (dataList.get(position).getUserId().equals(currentUserId)) {
+                holder.followingTextView.setVisibility(View.INVISIBLE);
+                holder.followTextView.setVisibility(View.INVISIBLE);
+            } else {
+                if (!dataList.get(position).getIsFollowed()) {
+                    holder.followingTextView.setVisibility(View.INVISIBLE);
+                    holder.followTextView.setVisibility(View.VISIBLE);
+                } else {
+                    holder.followingTextView.setVisibility(View.VISIBLE);
+                    holder.followTextView.setVisibility(View.INVISIBLE);
+                }
+            }
+        } catch (Exception e) {
             holder.followingTextView.setVisibility(View.INVISIBLE);
             holder.followTextView.setVisibility(View.INVISIBLE);
-        } else {
-            if (!dataList.get(position).getIsFollowed()) {
-                holder.followingTextView.setVisibility(View.INVISIBLE);
-                holder.followTextView.setVisibility(View.VISIBLE);
-            } else {
-                holder.followingTextView.setVisibility(View.VISIBLE);
-                holder.followTextView.setVisibility(View.INVISIBLE);
-            }
         }
 
         holder.followingTextView.setOnClickListener(v -> {

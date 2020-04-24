@@ -22,7 +22,6 @@ import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
-import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.request.VlogsEventRequest;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
@@ -138,9 +137,10 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
 
     private void getAllMomVlolgCategries() {
         showProgressDialog("Please wait");
-        Retrofit retrofit = BaseApplication.getInstance().getVlogsRetrofit();
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsCategoryApi = retrofit.create(TopicsCategoryAPI.class);
-        Call<Topics> call = topicsCategoryApi.TopicsJSON();//("category-d4379f58f7b24846adcefc82dc22a86b")
+        Call<Topics> call = topicsCategoryApi
+                .momVlogTopics(AppConstants.HOME_VIDEOS_CATEGORYID);//("category-d4379f58f7b24846adcefc82dc22a86b")
         call.enqueue(new Callback<Topics>() {
 
             @Override
@@ -149,10 +149,11 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 if (response.isSuccessful() && response.body() != null) {
                     categoriesList = response.body().getChild();
                     for (int i = 0; i < categoriesList.size(); i++) {
-                        if ("true".equals(categoriesList.get(i).getShowInMenu())) {
+                        if ("1".equals(categoriesList.get(i).getShowInMenu())) {
                             subTopicsList.add(categoriesList.get(i));
                         }
                     }
+                    moveChallengeTabToLast();
                     initializeUI();
                 }
             }
@@ -165,6 +166,23 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         });
 
 
+    }
+
+    private void moveChallengeTabToLast() {
+        Topics challengeTopic = null;
+        int challengeIndex = -1;
+        for (int i = 0; i < subTopicsList.size(); i++) {
+            if (AppConstants.VIDEO_CHALLENGE_ID.equals(subTopicsList.get(i).getId())) {
+                challengeIndex = i;
+            }
+        }
+        if (challengeIndex != -1) {
+            challengeTopic = subTopicsList.get(challengeIndex);
+            subTopicsList.remove(challengeIndex);
+            if (challengeTopic != null) {
+                subTopicsList.add(challengeTopic);
+            }
+        }
     }
 
     private void fireEventForVideoCreationIntent() {
@@ -247,88 +265,6 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
 
             }
         });
-    }
-
-    private void createTopicsData(TopicsResponse responseData) {
-        try {
-            allTopicsMap = new HashMap<Topics, List<Topics>>();
-            allTopicsList = new ArrayList<>();
-
-            //Prepare structure for multi-expandable listview.
-            for (int i = 0; i < responseData.getData().size(); i++) {
-                ArrayList<Topics> tempUpList = new ArrayList<>();
-                if (AppConstants.HOME_VIDEOS_CATEGORYID.equals(responseData.getData().get(i).getId())) {
-                    for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
-                        ArrayList<Topics> tempList = new ArrayList<>();
-                        for (int k = 0; k < responseData.getData().get(i).getChild().get(j).getChild().size(); k++) {
-                            //Adding All sub-subcategories
-                            responseData.getData().get(i).getChild().get(j).getChild().get(k)
-                                    .setParentId(responseData.getData().get(i).getId());
-                            responseData.getData().get(i).getChild().get(j).getChild().get(k)
-                                    .setParentName(responseData.getData().get(i).getTitle());
-                            tempList.add(responseData.getData().get(i).getChild().get(j).getChild().get(k));
-                        }
-                        responseData.getData().get(i).getChild().get(j).setChild(tempList);
-                    }
-
-                    for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
-                        //Adding All subcategories
-                        responseData.getData().get(i).getChild().get(k)
-                                .setParentId(responseData.getData().get(i).getId());
-                        responseData.getData().get(i).getChild().get(k)
-                                .setParentName(responseData.getData().get(i).getTitle());
-
-                        // create duplicate entry for subcategories with no child
-                        if (responseData.getData().get(i).getChild().get(k).getChild().isEmpty()) {
-                            //adding exact same object adds the object recursively producing stackoverflow exception
-                            // when writing for Parcel. So need to create different object with same params
-                            Topics dupChildTopic = new Topics();
-                            dupChildTopic.setChild(new ArrayList<Topics>());
-                            dupChildTopic.setId(responseData.getData().get(i).getChild().get(k).getId());
-                            dupChildTopic.setIsSelected(responseData.getData().get(i).getChild().get(k).isSelected());
-                            dupChildTopic.setParentId(responseData.getData().get(i).getChild().get(k).getParentId());
-                            dupChildTopic
-                                    .setDisplay_name(responseData.getData().get(i).getChild().get(k).getDisplay_name());
-                            dupChildTopic
-                                    .setParentName(responseData.getData().get(i).getChild().get(k).getParentName());
-                            dupChildTopic.setPublicVisibility(
-                                    responseData.getData().get(i).getChild().get(k).getPublicVisibility());
-                            dupChildTopic
-                                    .setShowInMenu(responseData.getData().get(i).getChild().get(k).getShowInMenu());
-                            dupChildTopic.setSlug(responseData.getData().get(i).getChild().get(k).getSlug());
-                            dupChildTopic.setTitle(responseData.getData().get(i).getChild().get(k).getTitle());
-                            ArrayList<Topics> duplicateEntry = new ArrayList<Topics>();
-                            duplicateEntry.add(dupChildTopic);
-                            responseData.getData().get(i).getChild().get(k).setChild(duplicateEntry);
-                        }
-                        tempUpList.add(responseData.getData().get(i).getChild().get(k));
-                    }
-                }
-                responseData.getData().get(i).setChild(tempUpList);
-
-                allTopicsList.add(responseData.getData().get(i));
-                allTopicsMap.put(responseData.getData().get(i), tempUpList);
-            }
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Log.d("MC4kException", Log.getStackTraceString(e));
-        }
-    }
-
-    private void getCurrentParentTopicCategoriesAndSubCategories() {
-        for (int i = 0; i < allTopicsList.size(); i++) {
-            subTopicsList = new ArrayList<>();
-            //Selected topic is Main Category
-            if (parentTopicId.equals(allTopicsList.get(i).getId())) {
-                // subTopicsList.addAll(allTopicsList.get(i).getChild());
-                for (int j = 0; j < allTopicsList.get(i).getChild().size(); j++) {
-                    if ("1".equals(allTopicsList.get(i).getChild().get(j).getShowInMenu())) {
-                        subTopicsList.add(allTopicsList.get(i).getChild().get(j));
-                    }
-                }
-                return;
-            }
-        }
     }
 
     @Override

@@ -20,6 +20,7 @@ import java.util.ArrayList;
  * Created by hemant on 24/5/17.
  */
 public class VideoTopicsPagerAdapter extends FragmentPagerAdapter {
+
     private int mNumOfTabs;
     private ArrayList<Topics> subTopicsList;
     private Fragment currentFragment;
@@ -50,8 +51,8 @@ public class VideoTopicsPagerAdapter extends FragmentPagerAdapter {
         if (position == 0) {
             FollowingVideoTabFragment followingVideoTabFragment = new FollowingVideoTabFragment();
             return followingVideoTabFragment;
-
-        } else if (subTopicsList != null && subTopicsList.get(position).getId() != null && subTopicsList.get(position).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
+        } else if (subTopicsList != null && subTopicsList.get(position).getId() != null && subTopicsList.get(position)
+                .getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
             bundle.putString("video_challenge_category_id", subTopicsList.get(position).getId());
             bundle.putParcelable("currentSubTopic", subTopicsList.get(position));
             ChallengeCategoryVideoTabFragment tab2 = new ChallengeCategoryVideoTabFragment();

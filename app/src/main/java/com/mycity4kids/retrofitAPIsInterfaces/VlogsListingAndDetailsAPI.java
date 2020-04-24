@@ -16,6 +16,8 @@ import com.mycity4kids.models.response.MomVlogersDetailResponse;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.VlogsDetailResponse;
 import com.mycity4kids.models.response.VlogsListingResponse;
+import com.mycity4kids.vlogs.VlogsCategoryWiseChallengesResponse;
+import java.util.ArrayList;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -38,6 +40,9 @@ public interface VlogsListingAndDetailsAPI {
 
     @GET("/v2/categories")
     Call<Topics> getVlogChallengeDetails(@Query("id") String id);
+
+    @GET("/v2/categories/video/challenges")
+    Call<VlogsCategoryWiseChallengesResponse> getVlogsCategoryWiseChallenges();
 
     @GET("/v2/videos/{videoId}")
     Call<VlogsDetailResponse> getVlogDetail(@Path("videoId") String videoId);

@@ -64,7 +64,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_above="@+id/saveUploadTextView"
-    android:layout_below="@+id/player">
+    android:layout_below="@+id/player"
+    android:layout_marginTop="10dp">
 
     <org.apmem.tools.layouts.FlowLayout
       android:id="@+id/subCategoriesContainer"

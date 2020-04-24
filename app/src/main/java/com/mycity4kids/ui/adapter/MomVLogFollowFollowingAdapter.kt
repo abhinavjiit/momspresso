@@ -30,7 +30,7 @@ class MomVLogFollowFollowingAdapter(
     }
 
     override fun getItemCount(): Int {
-        return vlogersDetailData?.size!!
+        return if (vlogersDetailData == null) 0 else vlogersDetailData!!.size
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

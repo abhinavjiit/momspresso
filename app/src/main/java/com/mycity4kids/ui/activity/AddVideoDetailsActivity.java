@@ -222,6 +222,21 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                             )
                     );
                 });
+                if (selectedCategory.getChild().get(i).getId().equals(categoryId)) {
+                    shareButtonWidget.setSelected(true);
+                    shareButtonWidget.setTextColor(
+                            ContextCompat.getColor(
+                                    this,
+                                    R.color.app_red
+                            )
+                    );
+                    shareButtonWidget.setBorderColor(
+                            ContextCompat.getColor(
+                                    this,
+                                    R.color.app_red
+                            )
+                    );
+                }
                 subCategoriesContainer.addView(shareButtonWidget);
             }
         }

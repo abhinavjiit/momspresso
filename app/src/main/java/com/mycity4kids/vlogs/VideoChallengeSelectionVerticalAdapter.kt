@@ -1,6 +1,5 @@
 package com.mycity4kids.vlogs
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +10,8 @@ import com.mycity4kids.R
 import com.mycity4kids.models.Topics
 
 class VideoChallengeSelectionVerticalAdapter(
-    private val listener: VideoChallengeSelectionHorizontalAdapter.RecyclerViewClickListener,
-    context: Context?
+    private val listener: VideoChallengeSelectionHorizontalAdapter.RecyclerViewClickListener
 ) : RecyclerView.Adapter<VideoChallengeSelectionVerticalAdapter.ViewHolder>() {
-    private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
     private var categoryWiseChallengeList: ArrayList<Topics>? = null
 
     fun setListData(categoryWiseChallengeList: ArrayList<Topics>) {
@@ -25,7 +22,7 @@ class VideoChallengeSelectionVerticalAdapter(
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        val view = layoutInflater.inflate(
+        val view = LayoutInflater.from(parent.context).inflate(
             R.layout.video_challenge_selection_vertical_item,
             parent,
             false
@@ -39,7 +36,7 @@ class VideoChallengeSelectionVerticalAdapter(
     ) {
         holder.challengeRecyclerView.adapter = VideoChallengeSelectionHorizontalAdapter(
             listener,
-            categoryWiseChallengeList?.get(position)?.taggedChallengeList!!
+            categoryWiseChallengeList?.get(position)?.child!!
         )
         holder.challengeRecyclerView.layoutManager = LinearLayoutManager(
             holder.challengeRecyclerView.context,
