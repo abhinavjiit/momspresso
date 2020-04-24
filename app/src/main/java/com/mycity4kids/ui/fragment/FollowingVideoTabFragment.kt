@@ -94,11 +94,11 @@ class FollowingVideoTabFragment : BaseFragment(),
                 getVlogs(start)
             }
         })
-        recyclerView.addOnScrollListener(object : EndlessScrollListener(linearLayoutManager) {
-            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                getVlogers(totalItemsCount)
-            }
-        })
+        /*   recyclerView.addOnScrollListener(object : EndlessScrollListener(linearLayoutManager) {
+               override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
+                   getVlogers(totalItemsCount)
+               }
+           })*/
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return if (momVlogFollowingAndVideosAdapter.getItemViewType(position) == 1)
@@ -228,8 +228,8 @@ class FollowingVideoTabFragment : BaseFragment(),
         val vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI::class.java)
         val call = vlogsListingAndDetailsAPI.getVlogersData(
             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-            vloggers_start,
-            vloggers_start + 11,
+            1,
+            15,
             1
         )
         call.enqueue(object : Callback<MomVlogersDetailResponse> {

@@ -166,8 +166,6 @@ class MomVlogListingAdapter(val mContext: Context) :
                                 "MC4kException",
                                 Log.getStackTraceString(e)
                             )
-                            momVlogVideosOrCarousalList[pos].isCarouselRequestRunning = false
-                            momVlogVideosOrCarousalList[pos].isResponseReceived = false
                         }
                     }
                 })

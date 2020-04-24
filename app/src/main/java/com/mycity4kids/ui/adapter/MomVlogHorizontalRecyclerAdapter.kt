@@ -3,12 +3,14 @@ package com.mycity4kids.ui.adapter
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.crashlytics.android.Crashlytics
 import com.mycity4kids.R
 import com.mycity4kids.models.Topics
 import java.util.ArrayList
@@ -73,7 +75,9 @@ class MomVlogHorizontalRecyclerAdapter(
                 holder.subCategoryTextView.setOnClickListener {
                     clickListener.onRecyclerClick(position)
                 }
-            } catch (e: Exception) {
+            } catch (t: Exception) {
+                Crashlytics.logException(t)
+                Log.d("MC4KException", Log.getStackTraceString(t))
             }
         }
     }
