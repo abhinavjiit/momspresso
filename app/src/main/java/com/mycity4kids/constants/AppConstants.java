@@ -14,6 +14,7 @@ public class AppConstants {
     public static final String BRANCH_CAMPAIGN_DETAIL = "campaign_detail";
     public static final String BRANCH_VIDEO_CATEGORY_CHALLENGE_SELECTION_SCREEN =
             "video_category_challenge_selection_screen";
+    public static final String BRANCH_MOMVLOG_LISTING_SCREEN = "mom_vlog_listing_screen";
 
     public static final String BASE_URL = LIVE_URL;
 
@@ -404,4 +405,7 @@ public class AppConstants {
     public static final String STORY_CATEGORY_DARK = "category-c9fa6d31a7c44699a8df5814030399a2";
 
     public static final String NEW_ARTICLE_DETAIL_FLAG = "new_article_detail_flag";
+
+    public static final String SHORT_STORY_LISTING_SCREEN = "https://www.momspresso.com/parenting/topic/short-stories/";
+    public static final String MOM_VLOG_LISTING_SCREEN = "https://www.momspresso.com/parenting/videos";
 }

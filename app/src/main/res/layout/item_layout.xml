@@ -131,7 +131,7 @@
     android:paddingTop="8dp"
     android:paddingEnd="18dp"
     android:paddingBottom="8dp"
-    android:textColor="#CCFFFFFF"
+    android:textColor="#D1D1D1"
     android:textSize="14sp"
     android:textStyle="bold"
     app:fontName="oswald_regular.ttf" />
@@ -145,22 +145,14 @@
     android:layout_marginBottom="6dp"
     android:alpha="0.65">
 
-    <com.mycity4kids.widget.CustomFontTextView
-      android:id="@+id/viewsCount"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_centerVertical="true"
-      android:layout_marginEnd="10dp"
-      android:textColor="#FFFFFF"
-      android:textSize="14sp" />
 
     <View
       android:id="@+id/countlikeseparator"
       android:layout_width="4dp"
       android:layout_height="4dp"
       android:layout_centerVertical="true"
-      android:layout_toEndOf="@+id/viewsCount"
-      android:background="@drawable/dot" />
+      android:background="@drawable/dot"
+      android:visibility="gone" />
 
     <com.mycity4kids.widget.CustomFontTextView
       android:id="@+id/viewsLike"
@@ -169,7 +161,8 @@
       android:layout_centerVertical="true"
       android:layout_marginStart="10dp"
       android:layout_toEndOf="@+id/countlikeseparator"
-      android:textColor="#FFFFFF" />
+      android:textColor="#FFFFFF"
+      android:visibility="gone" />
   </RelativeLayout>
 
   <RelativeLayout
@@ -194,7 +187,7 @@
       android:layout_width="46dp"
       android:layout_height="46dp"
       android:layout_centerVertical="true"
-      android:layout_toEndOf="@+id/heart"
+      android:layout_toEndOf="@+id/comment"
       android:padding="12dp"
       android:tint="@color/white_color"
       app:srcCompat="@drawable/ic_sharevideo" />
@@ -229,7 +222,7 @@
       android:layout_width="50dp"
       android:layout_height="50dp"
       android:layout_centerVertical="true"
-      android:layout_toStartOf="@+id/commentCount"
+      android:layout_toEndOf="@id/heart"
       android:alpha="0.9"
       android:padding="12dp"
       android:src="@drawable/ic_comments"
@@ -245,6 +238,17 @@
       android:layout_marginEnd="18dp"
       android:drawablePadding="@dimen/space_10"
       android:textColor="@color/white_color"
-      android:tint="@color/white_color" />
+      android:tint="@color/white_color"
+      android:visibility="gone" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/viewsCount"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:layout_centerVertical="true"
+      android:layout_marginEnd="10dp"
+      android:textColor="#979797"
+      android:textSize="14sp" />
   </RelativeLayout>
 </RelativeLayout>

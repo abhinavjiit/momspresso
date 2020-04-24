@@ -87,7 +87,6 @@ class MomVLogFollowFollowingAdapter(
                 context.resources.getString(R.string.myprofile_rank_label).toLowerCase().capitalize() + ": " + vlogersDetailData?.get(
                     position
                 )?.rank
-
             holder.followTextView.setOnClickListener {
                 recyclerViewClickListner.recyclerViewClick(position, it)
             }

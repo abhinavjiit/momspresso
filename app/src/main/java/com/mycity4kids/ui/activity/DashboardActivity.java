@@ -1201,6 +1201,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     Intent videoCategorySelectionIntent = new Intent(this,
                             VideoCategoryAndChallengeSelectionActivity.class);
                     startActivity(videoCategorySelectionIntent);
+                } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType()
+                        .equals(AppConstants.BRANCH_MOMVLOG_LISTING_SCREEN)) {
+                    Intent intent = new Intent(this, CategoryVideosListingActivity.class);
+                    startActivity(intent);
                 }
             }
         } else {
@@ -1218,6 +1222,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             if (!StringUtils.isNullOrEmpty(tempDeepLinkUrl)) {
                 if (matchRegex(tempDeepLinkUrl)) {
                     //////// need to optimize this code
+                } else if (tempDeepLinkUrl.equals(AppConstants.MOM_VLOG_LISTING_SCREEN)) {
+                    Intent intent = new Intent(this, CategoryVideosListingActivity.class);
+                    startActivity(intent);
+                } else if (tempDeepLinkUrl.equals(AppConstants.SHORT_STORY_LISTING_SCREEN)) {
+                    Intent intent = new Intent(this, ShortStoriesListingContainerActivity.class);
+                    startActivity(intent);
                 } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_EDITOR_URL)
                         || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_EDITOR_URL)) {
                     final String bloggerId = tempDeepLinkUrl
