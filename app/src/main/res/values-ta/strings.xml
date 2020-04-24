@@ -967,12 +967,12 @@
   <string name="add_text_or_media_group_post_activity_tooltip_text">ஒலிப்பதிவை முயற்சி செய்யுங்கள்</string>
   <string name="dialog_header_choose_sort_type">வரிசைப்படுத்து</string>
   <string name="rewards_instagram_handler">இன்ஸ்டாக்ராம் ஹான்டிலை சேர்க்கவும்</string>
-  <string name="rewards_facebook_handler">"ஃபேஸ்புக்கை இணைக்கவும் "</string>
-  <string name="add_youtube">யூட்யூப் சேனல் லிங்க்கை சேர்க்கவும்</string>
+  <string name="rewards_facebook_handler">Paste your profile link here</string>
+  <string name="add_youtube">Paste your YouTube channel link here</string>
   <string name="language">மொழி</string>
   <string name="notification">அறிவிப்புகள்</string>
 
-  <string name="add_twitter">ட்விட்டர் ஹான்டிலை சேர்க்கவும்</string>
+  <string name="add_twitter">Enter Twitter username, like ritu_gupta</string>
   <string name="about_video">இதைப் பற்றி</string>
   <string name="myprofile.section.mom_bottom_label">மாம் விலாக்ஸ்</string>
   <string name="all_videos.toolbar.title.homepage">காணொளி</string>
@@ -1042,7 +1042,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="label_campaign_open">By clicking on Apply Now, you agree to the Terms &amp; Conditions.</string>
   <string name="label_campaign_applied">We will notify you within 7 days on the status of your application.</string>
   <string name="label_campaign_apply"><![CDATA[By clicking on Apply Now, you agree to the <a href="https://www.momspresso.com/home/terms">Terms &amp; Conditions</a>.]]></string>
-  <string name="label_campaign_completed">Congratulations! Your submission is approved. Your payment will be processed within 14 days.</string>
+  <string name="label_campaign_completed">Congratulations! Your submission is approved. Your payment will be processed within 28 working days.</string>
 
 
   <string name="label_campaign_not_started">Campaign starts on </string>

@@ -930,8 +930,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <!--video challenges-->
 
   <string name="add_website">ADD WEBSITE</string>
-  <string name="add_youtube">Add Youtube channel link</string>
-  <string name="add_twitter">Add Twitter handle</string>
+  <string name="add_youtube">Paste your YouTube channel link here</string>
+  <string name="add_twitter">Enter Twitter username, like ritu_gupta</string>
   <string name="kids_number">"KID %d DETAIL</string>
 
 
@@ -1014,7 +1014,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
   //new Video Challenge Ui Strings
   <string name="rewards_instagram_handler">Enter your Instagram handle</string>
-  <string name="rewards_facebook_handler">Connect your Facebook</string>
+  <string name="rewards_facebook_handler">Paste your profile link here</string>
   <string name="rewards_participate_and_earn"><![CDATA[Participate & Earn]]></string>
   <string name="notification">Notification</string>
   <string name="about_video">About</string>
@@ -1065,7 +1065,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="label_campaign_open">By clicking on Apply Now, you agree to the Terms &amp; Conditions.</string>
   <string name="label_campaign_applied">We will notify you within 7 days on the status of your application.</string>
   <string name="label_campaign_apply"><![CDATA[By clicking on Apply Now, you agree to the <a href="https://www.momspresso.com/home/terms">Terms &amp; Conditions</a>.]]></string>
-  <string name="label_campaign_completed">Congratulations! Your submission is approved. Your payment will be processed within 14 days.</string>
+  <string name="label_campaign_completed">Congratulations! Your submission is approved. Your payment will be processed within 28 working days.</string>
   <string name="label_campaign_not_started">Campaign starts on </string>
   <string name="label_campaign_reject">Please explore other campaigns to participate and earn.</string>
   <string name="label_campaign_proof_moderation">We will check your submitted proofs within 7 days. To add more, you can click below.</string>
@@ -1348,7 +1348,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="rewards_yes">Yes</string>
   <string name="rewards_no">No</string>
   <string name="rewards_expected_date_delivery">EXPECTED DATE OF DELIVERY</string>
-  <string name="add_instagram_handle">Add Instagram handle e.g. ritu_mommy</string>
+  <string name="add_instagram_handle">Enter Instagram username, like ritu_gupta</string>
   <string name="enter_paytm_number">Please enter your paytm registered mobile number</string>
   <string name="note_detail_in_english">Note: Please enter your bank information in English only</string>
   <string name="track_status">TRACK STATUS</string>

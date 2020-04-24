@@ -903,11 +903,11 @@
   <string name="add_text_or_media_group_post_activity_tooltip_text">Tఆడియో పోస్ట్ ట్రై చేయండి</string>
   <string name="dialog_header_choose_sort_type">క్రమీకరించు</string>
   <string name="rewards_instagram_handler">Instagram హ్యాండిల్ జోడించండి</string>
-  <string name="rewards_facebook_handler">Facebook కనెక్ట్ చేయండి</string>
+  <string name="rewards_facebook_handler">Paste your profile link here</string>
 
   //groupdetail Activity toast String
-  <string name="add_youtube">YouTube ఛానెల్ లింక్ చేయండి</string>
-  <string name="add_twitter">Twitter హ్యాండిల్ జోడించండి</string>
+  <string name="add_youtube">Paste your YouTube channel link here</string>
+  <string name="add_twitter">Enter Twitter username, like ritu_gupta</string>
   <string name="language">భాష</string>
   <string name="about_video">విషయం</string>
   <string name="myprofile.section.mom_bottom_label">మామ్ వీలాగ్స్</string>
@@ -947,7 +947,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="label_campaign_open">By clicking on Apply Now, you agree to the Terms &amp; Conditions.</string>
   <string name="label_campaign_applied">We will notify you within 7 days on the status of your application.</string>
   <string name="label_campaign_apply"><![CDATA[By clicking on Apply Now, you agree to the <a href="https://www.momspresso.com/home/terms">Terms &amp; Conditions</a>.]]></string>
-  <string name="label_campaign_completed">Congratulations! Your submission is approved. Your payment will be processed within 14 days.</string>
+  <string name="label_campaign_completed">Congratulations! Your submission is approved. Your payment will be processed within 28 working days.</string>
   <string name="label_campaign_not_started">Campaign starts on </string>
 
   <string name="label_campaign_reject">Please explore other campaigns to participate and earn.</string>

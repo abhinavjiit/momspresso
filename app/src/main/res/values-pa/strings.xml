@@ -982,8 +982,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
   <!-- TODO: Remove or change this placeholder text -->
   <string name="add_website">ADD WEBSITE</string>
-  <string name="add_youtube">Enter your Youtube channel link</string>
-  <string name="add_twitter">Enter your Twitter handle</string>
+  <string name="add_youtube">Paste your YouTube channel link here</string>
+  <string name="add_twitter">Enter Twitter username, like ritu_gupta</string>
   <string name="kids_number">"KID %d DETAIL</string>
 
   <string name="hold_to_release">Hold to record, Release to send</string>
@@ -1057,7 +1057,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 </string>
   <string name="audio_post">ਆਡੀਓ</string>
   <string name="rewards_instagram_handler">Enter your Instagram handle</string>
-  <string name="rewards_facebook_handler">Connect your Facebook</string>
+  <string name="rewards_facebook_handler">Paste your profile link here</string>
   <string name="rewards_participate_and_earn"><![CDATA[Participate & Earn]]></string>
   <string name="notification">Notification</string>
   <string name="about_video">ਬਾਰੇ</string>
@@ -1100,7 +1100,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="label_campaign_open">By clicking on Apply Now, you agree to the Terms &amp; Conditions.</string>
   <string name="label_campaign_applied">We will notify you within 7 days on the status of your application.</string>
   <string name="label_campaign_apply"><![CDATA[By clicking on Apply Now, you agree to the <a href="https://www.momspresso.com/home/terms">Terms &amp; Conditions</a>.]]></string>
-  <string name="label_campaign_completed">Congratulations! Your submission is approved. Your payment will be processed within 14 days.</string>
+  <string name="label_campaign_completed">Congratulations! Your submission is approved. Your payment will be processed within 28 working days.</string>
 
 
   <string name="label_campaign_not_started">Campaign starts on </string>
