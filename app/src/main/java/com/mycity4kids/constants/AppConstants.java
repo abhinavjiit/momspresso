@@ -406,6 +406,6 @@ public class AppConstants {
 
     public static final String NEW_ARTICLE_DETAIL_FLAG = "new_article_detail_flag";
 
-    public static final String SHORT_STORY_LISTING_SCREEN = "https://www.momspresso.com/parenting/topic/short-stories/";
+    public static final String SHORT_STORY_LISTING_SCREEN = "https://www.momspresso.com/parenting/topic/short-stories";
     public static final String MOM_VLOG_LISTING_SCREEN = "https://www.momspresso.com/parenting/videos";
 }

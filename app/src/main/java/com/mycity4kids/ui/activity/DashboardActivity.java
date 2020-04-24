@@ -1209,6 +1209,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
         } else {
             String tempDeepLinkUrl = newIntent.getStringExtra(AppConstants.DEEP_LINK_URL);
+            String tempDeepLinkUrlWithoutSlash = "";
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId",
@@ -1220,12 +1221,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 e.printStackTrace();
             }
             if (!StringUtils.isNullOrEmpty(tempDeepLinkUrl)) {
+                if ((tempDeepLinkUrl.endsWith("/"))) {
+                    tempDeepLinkUrlWithoutSlash = tempDeepLinkUrl.substring(0,tempDeepLinkUrl.lastIndexOf("/"));
+                    Log.d("DeepLinkUrlWithoutSlash", tempDeepLinkUrlWithoutSlash);
+                }
+                Log.d("tempDeepLinkUrl", tempDeepLinkUrl);
                 if (matchRegex(tempDeepLinkUrl)) {
                     //////// need to optimize this code
-                } else if (tempDeepLinkUrl.equals(AppConstants.MOM_VLOG_LISTING_SCREEN)) {
+                } else if (tempDeepLinkUrl.equals(AppConstants.MOM_VLOG_LISTING_SCREEN) || tempDeepLinkUrlWithoutSlash
+                        .equals(AppConstants.MOM_VLOG_LISTING_SCREEN)) {
                     Intent intent = new Intent(this, CategoryVideosListingActivity.class);
                     startActivity(intent);
-                } else if (tempDeepLinkUrl.equals(AppConstants.SHORT_STORY_LISTING_SCREEN)) {
+                } else if (tempDeepLinkUrl.equals(AppConstants.SHORT_STORY_LISTING_SCREEN)
+                        || tempDeepLinkUrlWithoutSlash
+                        .equals(AppConstants.SHORT_STORY_LISTING_SCREEN)) {
                     Intent intent = new Intent(this, ShortStoriesListingContainerActivity.class);
                     startActivity(intent);
                 } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_EDITOR_URL)
