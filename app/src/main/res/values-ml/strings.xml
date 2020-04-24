@@ -1017,9 +1017,9 @@
   <string name="add_text_or_media_group_post_activity_tooltip_text">ശബ്ദശകലം ഉപയോഗിക്കാം</string>
   <string name="dialog_header_choose_sort_type">തിരിക്കൂ</string>
   <string name="rewards_instagram_handler">ഇൻസ്റ്റാഗ്രാം ഹാൻഡിൽ ചേർക്കൂ</string>
-  <string name="rewards_facebook_handler">ഫേസ്ബുക്ക് കണക്ട് ചെയ്യൂ</string>
-  <string name="add_youtube">യു ട്യൂബ് ചാനൽ ലിങ്ക് ചേർക്കൂ</string>
-  <string name="add_twitter">ട്വിറ്റർ ഹാൻഡിൽ ചേർക്കൂ</string>
+  <string name="rewards_facebook_handler">Paste your profile link here</string>
+  <string name="add_youtube">Paste your YouTube channel link here</string>
+  <string name="add_twitter">Enter Twitter username, like ritu_gupta</string>
   <string name="language">LANGUAGE</string>
   <string name="about_video">ഇതിനെക്കുറിച്ച്</string>
   <string name="myprofile.section.mom_bottom_label">അമ്മമാരുടെ വിലോഗുകൾ</string>
@@ -1092,7 +1092,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="label_campaign_open">By clicking on Apply Now, you agree to the Terms &amp; Conditions.</string>
   <string name="label_campaign_applied">We will notify you within 7 days on the status of your application.</string>
   <string name="label_campaign_apply"><![CDATA[By clicking on Apply Now, you agree to the <a href="https://www.momspresso.com/home/terms">Terms &amp; Conditions</a>.]]></string>
-  <string name="label_campaign_completed">Congratulations! Your submission is approved. Your payment will be processed within 14 days.</string>
+  <string name="label_campaign_completed">Congratulations! Your submission is approved. Your payment will be processed within 28 working days.</string>
 
 
   <string name="label_campaign_not_started">Campaign starts on </string>

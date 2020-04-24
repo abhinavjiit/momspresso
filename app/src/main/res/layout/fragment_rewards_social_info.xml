@@ -70,7 +70,6 @@
         android:hint="@string/rewards_facebook_handler"
         android:inputType="textNoSuggestions"
         android:paddingTop="10dp"
-
         android:paddingBottom="10dp"
         android:textColor="@color/app_light_black"
         android:textSize="16dp"
@@ -345,7 +344,7 @@
         android:layout_marginLeft="@dimen/space_15"
         android:layout_weight=".6"
         android:background="@null"
-        android:hint="www.momvlogger.com/sheetal"
+        android:hint="Paste your website link here"
         android:inputType="textNoSuggestions"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
