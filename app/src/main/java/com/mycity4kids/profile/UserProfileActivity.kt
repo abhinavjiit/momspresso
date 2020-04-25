@@ -987,6 +987,10 @@ class UserProfileActivity : BaseActivity(),
         inviteFriendsDialogFragment.isCancelable = true
         val fm = supportFragmentManager
         inviteFriendsDialogFragment.show(fm, "Invite Friends")
+        Utils.pushProfileEvents(
+            this, "Show_InvitePopup_FromProfile", "UserProfileActivity",
+            "Invite", ""
+        )
     }
 
     fun shareProfile() {

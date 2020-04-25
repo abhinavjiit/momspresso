@@ -469,7 +469,7 @@ public class BaseApplication extends Application {
         return retrofit;
     }
 
-    public Retrofit getVlogsRetrofit() {
+    public Retrofit getStagingRetrofit() {
         if (null == vlogRetrofit) {
             createMomVlogRetrofitInstance("https://stagingapi.momspresso.com/");
         }

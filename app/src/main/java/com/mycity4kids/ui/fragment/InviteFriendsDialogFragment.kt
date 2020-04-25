@@ -13,6 +13,9 @@ import android.view.Window
 import androidx.fragment.app.DialogFragment
 import com.crashlytics.android.Crashlytics
 import com.mycity4kids.R
+import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.gtmutils.Utils
+import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.ui.activity.ArticleModerationOrShareActivity
 import com.mycity4kids.ui.activity.PhoneContactsActivity
@@ -58,11 +61,21 @@ class InviteFriendsDialogFragment : DialogFragment(), View.OnClickListener {
         try {
             when {
                 view?.id == R.id.facebookShareWidget -> {
+                    Utils.pushGenericEvent(
+                        context, "CTA_Invite_Facebook_Friends",
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                        "InviteFriendsDialogFragment"
+                    )
                 }
                 view?.id == R.id.contactShareWidget -> {
                     activity?.let {
                         val contactIntent = Intent(it, PhoneContactsActivity::class.java)
                         startActivity(contactIntent)
+                        Utils.pushGenericEvent(
+                            it, "CTA_Invite_Phone_Contacts",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                            "InviteFriendsDialogFragment"
+                        )
                         dismiss()
                     }
                 }
@@ -74,6 +87,11 @@ class InviteFriendsDialogFragment : DialogFragment(), View.OnClickListener {
                         (activity as ArticleModerationOrShareActivity).shareProfileUrl()
                         dismiss()
                     }
+                    Utils.pushGenericEvent(
+                        context, "CTA_Share_Link",
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                        "InviteFriendsDialogFragment"
+                    )
                 }
                 view?.id == R.id.cancelTextView -> {
                     dismiss()

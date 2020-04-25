@@ -90,6 +90,9 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         inviteFriendsDialogFragment.setCancelable(true);
         FragmentManager fm = getSupportFragmentManager();
         inviteFriendsDialogFragment.show(fm, "Invite Friends");
+        Utils.pushGenericEvent(this, "Show_InvitePopup_PostBlogCreation",
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                "ArticleModerationOrShareActivity");
     }
 
     @Override
