@@ -163,6 +163,7 @@ class UserContentAdapter(
         internal var shareArticleImageView: ImageView
         internal var watchLaterImageView: ImageView
         internal var editArticleTextView: TextView
+        internal var menuItemImageView: ImageView
 
         init {
             txvArticleTitle = view.findViewById<View>(R.id.txvArticleTitle) as TextView
@@ -180,9 +181,12 @@ class UserContentAdapter(
             shareArticleImageView = view.findViewById<View>(R.id.shareArticleImageView) as ImageView
             watchLaterImageView = view.findViewById<View>(R.id.watchLaterImageView) as ImageView
             editArticleTextView = view.findViewById<View>(R.id.editArticleTextView) as TextView
+            menuItemImageView = view.findViewById<View>(R.id.menuItemImageView) as ImageView
+            menuItemImageView.visibility = View.VISIBLE
             shareArticleImageView.setOnClickListener(this)
             bookmarkArticleImageView.setOnClickListener(this)
             editArticleTextView.setOnClickListener(this)
+            menuItemImageView.setOnClickListener(this)
             view.setOnClickListener(this)
         }
 
@@ -355,7 +359,7 @@ class UserContentAdapter(
         }
         try {
             if (!StringUtils.isNullOrEmpty(data?.videoUrl) && (data?.imageUrl?.thumbMax == null ||
-                        data.imageUrl.thumbMax.contains("default.jp"))
+                    data.imageUrl.thumbMax.contains("default.jp"))
             ) {
                 Picasso.get().load(AppUtils.getYoutubeThumbnailURLMomspresso(data?.videoUrl))
                     .placeholder(R.drawable.default_article).into(articleIV)

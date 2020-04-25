@@ -23,12 +23,9 @@ import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask.TaskSnapshot;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -38,6 +35,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.receiver.CancelNotification;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.UserPublishedContentActivity;
+import com.mycity4kids.utils.MixPanelUtils;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import okhttp3.ResponseBody;
@@ -62,11 +60,13 @@ public class NotificationWorker extends Worker {
     private com.google.firebase.storage.UploadTask uploadTask;
     private BroadcastReceiver reciver;
     private int notificationId = 0;
+    private MixpanelAPI mixpanel;
 
     public NotificationWorker(@NonNull Context context,
             @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         this.context = context;
+        mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
     }
 
     @NonNull
@@ -81,9 +81,7 @@ public class NotificationWorker extends Worker {
         thumbnailTime = getInputData().getString("thumbnailTime");
         title = getInputData().getString("title");
         uploadToFirebase(contentUri);
-
         return Result.success();
-
     }
 
     private void uploadToFirebase(Uri file2) {
@@ -96,58 +94,45 @@ public class NotificationWorker extends Worker {
                             + file2
                             .getLastPathSegment() + "_" + suffixName);
             uploadTask = riversRef.putFile(file2);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    createForegroundInfo(0, "failed");
+            uploadTask.addOnFailureListener(exception -> {
+                MixPanelUtils.pushVideoUploadFailureEvent(mixpanel, title);
+                createForegroundInfo(0, "failed");
+            }).addOnSuccessListener(taskSnapshot -> riversRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                if (uploadTask != null) {
+                    MixPanelUtils.pushVideoUploadSuccessEvent(mixpanel, title);
+                    publishVideo(uri);
                 }
-            }).addOnSuccessListener(new OnSuccessListener<TaskSnapshot>() {
-                @Override
-                public void onSuccess(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
-                    riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            }));
+
+            uploadTask.addOnProgressListener(taskSnapshot -> {
+                Log.e("video uplo to firebase=", "Bytes uploaded: " + taskSnapshot.getBytesTransferred());
+                double progress =
+                        (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                double mb = (double) taskSnapshot.getTotalByteCount() / (1024 * 1024);
+                DecimalFormat df = new DecimalFormat();
+                df.setMaximumFractionDigits(2);
+                int currentprogress = (int) progress;
+                Log.d("upload_Tak_progress", "running");
+                if (uploadTask != null) {
+                    createForegroundInfo(currentprogress, "Uploading");
+                }
+                if (currentprogress == 0) {
+                    MixPanelUtils.pushVideoUploadStartedEvent(mixpanel, title);
+                    reciver = new BroadcastReceiver() {
                         @Override
-                        public void onSuccess(Uri uri) {
+                        public void onReceive(Context context, Intent intent) {
                             if (uploadTask != null) {
-                                publishVideo(uri);
+                                uploadTask.cancel();
+                                NotificationManagerCompat notificationManager =
+                                        NotificationManagerCompat.from(getApplicationContext());
+                                notificationManager.cancel(0);
+                                onStopped();
+                                uploadTask = null;
+                                Log.d("upload_Tak_progress", "Stopped");
                             }
                         }
-                    });
-                }
-            });
-
-            uploadTask.addOnProgressListener(new OnProgressListener<TaskSnapshot>() {
-                @Override
-                public void onProgress(@NonNull com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
-                    Log.e("video uplo to firebase=", "Bytes uploaded: " + taskSnapshot.getBytesTransferred());
-                    double progress =
-                            (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-
-                    double mb = (double) taskSnapshot.getTotalByteCount() / (1024 * 1024);
-                    DecimalFormat df = new DecimalFormat();
-                    df.setMaximumFractionDigits(2);
-                    int currentprogress = (int) progress;
-                    Log.d("upload_Tak_progress", "running");
-                    if (uploadTask != null) {
-                        createForegroundInfo(currentprogress, "Uploading");
-                    }
-                    if (currentprogress == 0) {
-                        reciver = new BroadcastReceiver() {
-                            @Override
-                            public void onReceive(Context context, Intent intent) {
-                                if (uploadTask != null) {
-                                    uploadTask.cancel();
-                                    NotificationManagerCompat notificationManager =
-                                            NotificationManagerCompat.from(getApplicationContext());
-                                    notificationManager.cancel(0);
-                                    onStopped();
-                                    uploadTask = null;
-                                    Log.d("upload_Tak_progress", "Stopped");
-                                }
-                            }
-                        };
-                        context.registerReceiver(reciver, new IntentFilter("Cancel_Video_Uploading_Notification"));
-                    }
+                    };
+                    context.registerReceiver(reciver, new IntentFilter("Cancel_Video_Uploading_Notification"));
                 }
             });
         } catch (Exception e) {
@@ -155,7 +140,6 @@ public class NotificationWorker extends Worker {
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
-
 
     private void publishVideo(Uri uri) {
         ArrayList<String> catList = new ArrayList<String>();
@@ -187,10 +171,10 @@ public class NotificationWorker extends Worker {
             if (response.body() == null) {
                 if (response.errorBody() != null) {
                     if (response.code() == 409) {
-                        //This title already exists. Kindly write a new title.
+                        MixPanelUtils.pushVideoPublishSuccessEvent(mixpanel, title);
                         createForegroundInfo(0, "Successfully Uploaded");
                     }
-                } else if (response != null && response.raw() != null) {
+                } else {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -198,6 +182,7 @@ public class NotificationWorker extends Worker {
             }
             try {
                 if (response.isSuccessful()) {
+                    MixPanelUtils.pushVideoPublishSuccessEvent(mixpanel, title);
                     createForegroundInfo(100, "Successfully Uploaded");
                 }
             } catch (Exception e) {

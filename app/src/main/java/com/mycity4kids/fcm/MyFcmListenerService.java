@@ -467,6 +467,23 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     handleNotificationAccordingToStructure(remoteMessage, pushNotificationModel, contentIntent,
                             "shortStoryDetails ----- Notification Message --- ",
                             "shortStoryDetails ----- Notification MixFeedData");
+                } else if (AppConstants.NOTIFICATION_TYPE_INVITE_FRIENDS.equalsIgnoreCase(type)) {
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
+                        contentIntent = handleForcedUpdate();
+                    } else {
+                        intent = new Intent(getApplicationContext(), UserProfileActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("fromNotification", true);
+                        intent.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true);
+                        intent.putExtra(Constants.FROM_SCREEN, "Notification");
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        stackBuilder.addParentStack(UserProfileActivity.class);
+                        stackBuilder.addNextIntent(intent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    }
+                    handleNotificationAccordingToStructure(remoteMessage, pushNotificationModel, contentIntent,
+                            "showInviteDialogFlag ----- Notification Message --- ",
+                            "showInviteDialogFlag ----- Notification MixFeedData");
                 } else {
                     Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT,
                             SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "default");

@@ -426,6 +426,13 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     }
                 }
                 break;
+                case AppConstants.NOTIFICATION_CENTER_INVITE_FRIENDS: {
+                    Intent profileIntent = new Intent(mainContext, UserProfileActivity.class);
+                    profileIntent.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true);
+                    mainContext.startActivity(profileIntent);
+                    pushEvent("NOTIFICATION_CENTER_PROFILE");
+                }
+                break;
                 default:
                     break;
             }

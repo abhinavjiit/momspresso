@@ -190,6 +190,7 @@ public class AppConstants {
     public static final String NOTIFICATION_TYPE_MY_MONEY_PROFILE = "my_money_profile";
     public static final String NOTIFICATION_TYPE_STORY_LIST_IN_CHALLENGE = "shortStoryListingInChallengeListing";
     public static final String NOTIFICATION_TYPE_STORY_PUBLISH_SUCCESS = "shortStoryPublishSuccess";
+    public static final String NOTIFICATION_TYPE_INVITE_FRIENDS = "inviteFriendsDialog";
 
     public static final String NOTIFICATION_CENTER_APP_SETTINGS = "-1";
     public static final String NOTIFICATION_CENTER_WEB_VIEW = "0";
@@ -224,6 +225,7 @@ public class AppConstants {
     public static final String NOTIFICATION_CENTER_BADGE_LISTING = "29";
     public static final String NOTIFICATION_CENTER_STORY_PUBLISH_SUCCESS = "30";
     public static final String NOTIFICATION_CENTER_STORY_CHALLENGE_DETAIL = "31";
+    public static final String NOTIFICATION_CENTER_INVITE_FRIENDS = "32";
 
     public static final String FOLLOWING_STATUS_ACTIVITY_RESULT = "followingStatusActivityResult";
     public static final String VIDEO_STATUS_DRAFT = "0";
@@ -395,6 +397,7 @@ public class AppConstants {
     public static final String BADGE_ID = "badgeId";
     public static final String MILESTONE_ID = "milestoneId";
     public static final String COLLECTION_ID = "collectionId";
+    public static final String SHOW_INVITE_DIALOG_FLAG = "showInviteDialogFlag";
     public static final String STORY_SHARE_IMAGE_NAME = "storyShareImage";
 
     public static final String STORY_CATEGORY_QUOTES = "category-8dcc26eb81de4042b225f82ec8e88cd3";

@@ -428,12 +428,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        bookmarkInfoView.setVisibility(View.GONE);
-                    }
-                }, 2000);
+                new Handler().postDelayed(() -> bookmarkInfoView.setVisibility(View.GONE), 2000);
             }
 
             @Override
@@ -1157,6 +1152,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Intent intent1 = new Intent(this, ShortStoryModerationOrShareActivity.class);
                 intent1.putExtra("shareUrl", "");
                 intent1.putExtra(Constants.ARTICLE_ID, notificationExtras.getString("id"));
+                startActivity(intent1);
+            } else if (AppConstants.NOTIFICATION_TYPE_INVITE_FRIENDS.equalsIgnoreCase(notificationType)) {
+                pushEvent("inviteFriendsDialog");
+                Intent intent1 = new Intent(this, UserProfileActivity.class);
+                intent1.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true);
                 startActivity(intent1);
             }
         } else if (newIntent.hasExtra("branchLink")

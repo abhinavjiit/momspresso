@@ -56,6 +56,17 @@ public class MixPanelUtils {
         }
     }
 
+    public static void pushVideoUploadStartedEvent(MixpanelAPI mixpanel, String title) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+            jsonObject.put("title", title);
+            mixpanel.track("MomVlogsUploadStarted", jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void pushVideoUploadSuccessEvent(MixpanelAPI mixpanel, String title) {
         try {
             JSONObject jsonObject = new JSONObject();

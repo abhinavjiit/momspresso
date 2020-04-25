@@ -248,6 +248,12 @@ class UserProfileActivity : BaseActivity(),
         deeplinkBadgeId = intent.getStringExtra(AppConstants.BADGE_ID)
         val milestoneId: String? = intent.getStringExtra(AppConstants.MILESTONE_ID)
         profileDetail = intent.getStringExtra("detail")
+        val showInviteDialogFlag: Boolean =
+            intent.getBooleanExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, false)
+
+        if (showInviteDialogFlag) {
+            launchInviteFriendsDialog()
+        }
 
         if (!deeplinkBadgeId.isNullOrBlank()) {
             showBadgeDialog(deeplinkBadgeId)
@@ -1137,7 +1143,45 @@ class UserProfileActivity : BaseActivity(),
             view.id == R.id.editStoryTextView -> {
                 editStory(view, position)
             }
+            view.id == R.id.menuItemImageView -> {
+                showArticleMenuOptions(view, position)
+            }
         }
+    }
+
+    private fun showArticleMenuOptions(view: View, position: Int) {
+        val popupMenu = PopupMenu(this@UserProfileActivity, view)
+        popupMenu.menuInflater.inflate(R.menu.published_article_menu, popupMenu.menu)
+        for (i in 0 until popupMenu.menu.size()) {
+            val drawable = popupMenu.menu.getItem(i).icon
+            if (drawable != null) {
+                drawable.mutate()
+                drawable.setColorFilter(
+                    ContextCompat.getColor(this, R.color.app_red),
+                    PorterDuff.Mode.SRC_ATOP
+                )
+            }
+        }
+        popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
+            override fun onMenuItemClick(item: MenuItem?): Boolean {
+                val id = item?.itemId
+                if (id == R.id.copyLink) {
+                    AppUtils.copyToClipboard(
+                        AppUtils.getShareUrl(
+                            userContentList?.get(position)?.userType,
+                            userContentList?.get(position)?.blogTitleSlug,
+                            userContentList?.get(position)?.titleSlug
+                        )
+                    )
+                    return true
+                }
+                return false
+            }
+        })
+
+        val menuPopupHelper = MenuPopupHelper(view.context, popupMenu.menu as MenuBuilder, view)
+        menuPopupHelper.setForceShowIcon(true)
+        menuPopupHelper.show()
     }
 
     private fun editArticle(position: Int) {
@@ -1165,7 +1209,7 @@ class UserProfileActivity : BaseActivity(),
                 response: Response<ArticleDetailResult>
             ) {
                 removeProgressDialog()
-                if (response.body() == null) { //                showToast("Something went wrong from server");
+                if (response.body() == null) {
                     return
                 }
                 try {
