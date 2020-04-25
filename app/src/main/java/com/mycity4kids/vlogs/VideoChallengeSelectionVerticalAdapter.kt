@@ -13,9 +13,14 @@ class VideoChallengeSelectionVerticalAdapter(
     private val listener: VideoChallengeSelectionHorizontalAdapter.RecyclerViewClickListener
 ) : RecyclerView.Adapter<VideoChallengeSelectionVerticalAdapter.ViewHolder>() {
     private var categoryWiseChallengeList: ArrayList<Topics>? = null
+    private var source: String = ""
 
     fun setListData(categoryWiseChallengeList: ArrayList<Topics>) {
         this.categoryWiseChallengeList = categoryWiseChallengeList
+    }
+
+    fun setSource(source: String) {
+        this.source = source
     }
 
     override fun onCreateViewHolder(
@@ -36,7 +41,8 @@ class VideoChallengeSelectionVerticalAdapter(
     ) {
         holder.challengeRecyclerView.adapter = VideoChallengeSelectionHorizontalAdapter(
             listener,
-            categoryWiseChallengeList?.get(position)?.child!!
+            categoryWiseChallengeList?.get(position)?.child!!,
+            source
         )
         holder.challengeRecyclerView.layoutManager = LinearLayoutManager(
             holder.challengeRecyclerView.context,

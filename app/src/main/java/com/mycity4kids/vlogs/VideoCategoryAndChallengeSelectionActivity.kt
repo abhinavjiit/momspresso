@@ -200,69 +200,15 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
     private fun processTopicsData(responseData: Topics) {
         responseData.child?.let {
             for (i in 0 until it.size) {
-                //                if (it[i]?.id == AppConstants.VIDEO_CHALLENGE_ID) {
-                //                    processChallengesData(it[i])
-                //                }
                 if (it[i]?.id != AppConstants.VIDEO_CHALLENGE_ID) {
                     if (it[i]?.publicVisibility == "1") {
                         categoryList.add(it[i])
                     }
                 }
             }
-
-            //            for (i in 0 until categoryList.size) {
-            //                for (j in 0 until categoryList[i].child.size) {
-            //                    categoryChallengeHashMap[categoryList[i].child[j].id]?.let { challenge ->
-            //                        categoryList[i].taggedChallengeList.addAll(challenge)
-            //                    }
-            //                }
-            //                categoryList[i].taggedChallengeList.sortByDescending { it.extraData[0].challenge.is_live }
-            //            }
-            //
-            //            for (i in 0 until categoryList.size) {
-            //                if (!categoryList[i].taggedChallengeList.isNullOrEmpty()) {
-            //                    categoryWiseChallengeList.add(categoryList[i])
-            //                }
-            //            }
-
             videoCategoriesSelectionAdapter.notifyDataSetChanged()
-            //            videoChallengesVerticalAdapter.notifyDataSetChanged()
         }
     }
-
-    //    private fun processChallengesData(parentChallenge: Topics?) {
-    //        parentChallenge?.let {
-    //            // subcategory-challenge mapping
-    //            for (i in 0 until it.child.size) {
-    //                if (it.child[i].publicVisibility == "1") {
-    //                    if (it.child[i].extraData[0].challenge.is_live == "1") {
-    //                        if (categoryWiseChallengeList.isEmpty()) {
-    //                            val liveChallengeTopic = Topics()
-    //                            liveChallengeTopic.display_name =
-    //                                getString(R.string.all_live_challenges)
-    //                            liveChallengeTopic.taggedChallengeList.add(it.child[i])
-    //                            categoryWiseChallengeList.add(liveChallengeTopic)
-    //                        } else {
-    //                            categoryWiseChallengeList[0].taggedChallengeList.add(it.child[i])
-    //                        }
-    //                    }
-    //                    if (it.child[i].extraData[0].challenge.mapped_category.isNullOrBlank()) {
-    //                        it.child[i].extraData[0].challenge.mapped_category =
-    //                            "category-ec48b6f0737e44b3a3681f2cca1d5faf"
-    //                    }
-    //                    it.child[i].extraData[0].challenge.mapped_category?.let { mappedCategory ->
-    //                        if (categoryChallengeHashMap[mappedCategory] == null) {
-    //                            val arraylist = ArrayList<Topics>()
-    //                            arraylist.add(it.child[i])
-    //                            categoryChallengeHashMap[mappedCategory] = arraylist
-    //                        } else {
-    //                            categoryChallengeHashMap[mappedCategory]?.add(it.child[i])
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
 
     override fun onCategoryItemClick(view: View, position: Int) {
         selectedCategory = categoryList[position]
@@ -278,7 +224,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
                 "MC4kException", Log.getStackTraceString(e)
             )
         }
-        launchAddVideoOptions(600)
+        launchAddVideoOptions(duration)
         Utils.momVlogEvent(
             this,
             "Creation listing",

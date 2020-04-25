@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.fragment;
 
 import android.accounts.NetworkErrorException;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,9 +17,11 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
+import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.vlogs.VideoChallengeSelectionHorizontalAdapter;
 import com.mycity4kids.vlogs.VideoChallengeSelectionVerticalAdapter;
@@ -56,6 +59,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements O
         categoryWiseChallengesRecyclerView = view.findViewById(R.id.challengesRecyclerView);
         llm = new LinearLayoutManager(getActivity());
         recyclerAdapter = new VideoChallengeSelectionVerticalAdapter(this);
+        recyclerAdapter.setSource("vlogsListing");
         recyclerAdapter.setListData(categoryWiseChallengeList);
         llm.setOrientation(RecyclerView.VERTICAL);
         categoryWiseChallengesRecyclerView.setLayoutManager(llm);
@@ -77,8 +81,8 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements O
             return;
         }
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
-        Call<VlogsCategoryWiseChallengesResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI
+        VlogsListingAndDetailsAPI vlogsListingAndDetailsApi = retrofit.create(VlogsListingAndDetailsAPI.class);
+        Call<VlogsCategoryWiseChallengesResponse> callRecentVideoArticles = vlogsListingAndDetailsApi
                 .getVlogsCategoryWiseChallenges();
         callRecentVideoArticles.enqueue(vlogChallengeResponseCallBack);
     }
@@ -113,6 +117,9 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements O
             };
 
     private void processChallengesData(ArrayList<Topics> catWiseChallengeList) {
+        if (categoryWiseChallengeList != null) {
+            categoryWiseChallengeList.clear();
+        }
         for (int i = 0; i < catWiseChallengeList.size(); i++) {
             ArrayList<Topics> originalChallengeList = new ArrayList<>();
             originalChallengeList.addAll(catWiseChallengeList.get(i).getChild());
@@ -131,28 +138,30 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements O
     public void onClick(View view) {
     }
 
-//    @Override
-//    public void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name,
-//            Topics articledatamodal, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl,
-//            ArrayList<String> rules, ArrayList<String> mappedCategory, int max_Duration) {
-//        switch (view.getId()) {
-//            case R.id.mainView:
-//            case R.id.getStartedTextView:
-//                Intent intent = new Intent(getActivity(), NewVideoChallengeActivity.class);
-//                Utils.momVlogEvent(getActivity(), "Video Listing", "Challenge container", "", "android",
-//                        SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
-//                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
-//                        String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "",
-//                        challengeId.toString());
-//                intent.putExtra("challenge", challengeId.get(position));
-//                intent.putExtra("comingFrom", "vlog_listing");
-//                intent.putExtra("mappedId", mappedCategory.get(position));
-//                startActivity(intent);
-//        }
-//    }
-
     @Override
     public void onChallengeItemClick(@NotNull View view, @NotNull Topics topics) {
-
+        try {
+            switch (view.getId()) {
+                case R.id.tagImageView:
+                    Intent intent = new Intent(
+                            getActivity(),
+                            NewVideoChallengeActivity.class
+                    );
+                    intent.putExtra("challenge", topics.getId());
+                    intent.putExtra("comingFrom", "vlog_listing");
+                    startActivity(intent);
+                    Utils.momVlogEvent(getActivity(), "Video Listing", "Challenge container", "", "android",
+                            SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                            String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "",
+                            topics.getId());
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
     }
 }

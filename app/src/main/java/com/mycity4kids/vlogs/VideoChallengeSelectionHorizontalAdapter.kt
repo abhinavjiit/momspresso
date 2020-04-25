@@ -15,7 +15,8 @@ import java.util.ArrayList
 
 class VideoChallengeSelectionHorizontalAdapter(
     private val listener: RecyclerViewClickListener,
-    private val challengeList: ArrayList<Topics>
+    private val challengeList: ArrayList<Topics>,
+    private val source: String
 ) : RecyclerView.Adapter<CustomViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -69,6 +70,9 @@ class VideoChallengeSelectionHorizontalAdapter(
         var liveChallengeTextView: TextView = itemView.findViewById(R.id.liveTextViewVideoChallenge)
 
         init {
+            if (source == "vlogsListing") {
+                challengeInfoImageView.visibility = View.GONE
+            }
             itemView.setOnClickListener(this)
             challengeInfoImageView.setOnClickListener(this)
             challengeImageView.setOnClickListener(this)

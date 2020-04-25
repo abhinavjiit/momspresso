@@ -36,155 +36,168 @@
 
     </RelativeLayout>
   </androidx.appcompat.widget.Toolbar>
-
-  <com.facebook.shimmer.ShimmerFrameLayout
-    android:id="@+id/categoriesShimmerLayout"
+  <FrameLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:animateLayoutChanges="true"
-    android:background="@color/white_color"
-    android:visibility="visible">
+    android:layout_height="wrap_content">
+    <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/categoriesRecyclerView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/white_color"
+      android:visibility="gone" />
 
+    <com.facebook.shimmer.ShimmerFrameLayout
+      android:id="@+id/categoriesShimmerLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:animateLayoutChanges="true"
+      android:background="@color/white_color"
+      android:visibility="visible">
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <ImageView
+          android:layout_width="100dp"
+          android:layout_height="100dp"
+          android:layout_margin="16dp"
+          android:background="@color/background" />
+
+        <ImageView
+          android:layout_width="100dp"
+          android:layout_height="100dp"
+          android:layout_margin="16dp"
+          android:background="@color/background" />
+
+        <ImageView
+          android:layout_width="100dp"
+          android:layout_height="100dp"
+          android:layout_margin="16dp"
+          android:background="@color/background" />
+
+      </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+  </FrameLayout>
+
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/challengesRecyclerView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:paddingStart="16dp"
+      android:paddingTop="16dp"
+      android:paddingEnd="16dp"
+      android:visibility="gone" />
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      android:visibility="visible">
+      android:orientation="vertical">
 
-      <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_margin="16dp"
-        android:background="@color/background" />
+      <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/challengesShimmerLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:animateLayoutChanges="true"
+        android:visibility="visible">
 
-      <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_margin="16dp"
-        android:background="@color/background" />
+        <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:visibility="visible">
 
-      <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_margin="16dp"
-        android:background="@color/background" />
+          <ImageView
+            android:layout_width="220dp"
+            android:layout_height="150dp"
+            android:layout_margin="16dp"
+            android:background="@color/background" />
 
+          <ImageView
+            android:layout_width="220dp"
+            android:layout_height="150dp"
+            android:layout_margin="16dp"
+            android:background="@color/background" />
+
+          <ImageView
+            android:layout_width="220dp"
+            android:layout_height="150dp"
+            android:layout_margin="16dp"
+            android:background="@color/background" />
+        </LinearLayout>
+      </com.facebook.shimmer.ShimmerFrameLayout>
+
+      <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/challengesShimmerLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:visibility="visible">
+
+        <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:visibility="visible">
+
+          <ImageView
+            android:layout_width="220dp"
+            android:layout_height="150dp"
+            android:layout_margin="16dp"
+            android:background="@color/background" />
+
+          <ImageView
+            android:layout_width="220dp"
+            android:layout_height="150dp"
+            android:layout_margin="16dp"
+            android:background="@color/background" />
+
+          <ImageView
+            android:layout_width="220dp"
+            android:layout_height="150dp"
+            android:layout_margin="16dp"
+            android:background="@color/background" />
+        </LinearLayout>
+      </com.facebook.shimmer.ShimmerFrameLayout>
+
+      <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/challengesShimmerLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:visibility="visible">
+
+        <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:visibility="visible">
+
+          <ImageView
+            android:layout_width="220dp"
+            android:layout_height="150dp"
+            android:layout_margin="16dp"
+            android:background="@color/background" />
+
+          <ImageView
+            android:layout_width="220dp"
+            android:layout_height="150dp"
+            android:layout_margin="16dp"
+            android:background="@color/background" />
+
+          <ImageView
+            android:layout_width="220dp"
+            android:layout_height="150dp"
+            android:layout_margin="16dp"
+            android:background="@color/background" />
+        </LinearLayout>
+      </com.facebook.shimmer.ShimmerFrameLayout>
     </LinearLayout>
-  </com.facebook.shimmer.ShimmerFrameLayout>
-
-  <com.facebook.shimmer.ShimmerFrameLayout
-    android:id="@+id/challengesShimmerLayout1"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
-    android:animateLayoutChanges="true"
-    android:visibility="visible">
-
-    <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      android:visibility="visible">
-
-      <ImageView
-        android:layout_width="220dp"
-        android:layout_height="150dp"
-        android:layout_margin="16dp"
-        android:background="@color/background" />
-
-      <ImageView
-        android:layout_width="220dp"
-        android:layout_height="150dp"
-        android:layout_margin="16dp"
-        android:background="@color/background" />
-
-      <ImageView
-        android:layout_width="220dp"
-        android:layout_height="150dp"
-        android:layout_margin="16dp"
-        android:background="@color/background" />
-    </LinearLayout>
-  </com.facebook.shimmer.ShimmerFrameLayout>
-
-  <com.facebook.shimmer.ShimmerFrameLayout
-    android:id="@+id/challengesShimmerLayout2"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:animateLayoutChanges="true"
-    android:visibility="visible">
-
-    <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      android:visibility="visible">
-
-      <ImageView
-        android:layout_width="220dp"
-        android:layout_height="150dp"
-        android:layout_margin="16dp"
-        android:background="@color/background" />
-
-      <ImageView
-        android:layout_width="220dp"
-        android:layout_height="150dp"
-        android:layout_margin="16dp"
-        android:background="@color/background" />
-
-      <ImageView
-        android:layout_width="220dp"
-        android:layout_height="150dp"
-        android:layout_margin="16dp"
-        android:background="@color/background" />
-    </LinearLayout>
-  </com.facebook.shimmer.ShimmerFrameLayout>
-
-  <com.facebook.shimmer.ShimmerFrameLayout
-    android:id="@+id/challengesShimmerLayout3"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:animateLayoutChanges="true"
-    android:visibility="visible">
-
-    <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      android:visibility="visible">
-
-      <ImageView
-        android:layout_width="220dp"
-        android:layout_height="150dp"
-        android:layout_margin="16dp"
-        android:background="@color/background" />
-
-      <ImageView
-        android:layout_width="220dp"
-        android:layout_height="150dp"
-        android:layout_margin="16dp"
-        android:background="@color/background" />
-
-      <ImageView
-        android:layout_width="220dp"
-        android:layout_height="150dp"
-        android:layout_margin="16dp"
-        android:background="@color/background" />
-    </LinearLayout>
-  </com.facebook.shimmer.ShimmerFrameLayout>
-
-  <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/categoriesRecyclerView"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white_color"
-    android:visibility="gone" />
-
-  <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/challengesRecyclerView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingStart="16dp"
-    android:paddingTop="16dp"
-    android:paddingEnd="16dp"
-    android:visibility="gone" />
+  </FrameLayout>
 </LinearLayout>

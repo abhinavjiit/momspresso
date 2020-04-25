@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.mycity4kids.R
+import com.mycity4kids.utils.AppUtils
 
 class ShareButtonWidget : CardView {
 
@@ -131,8 +132,9 @@ class ShareButtonWidget : CardView {
         shareTextView.setTextColor(color)
     }
 
-    fun setButtonRadius(radius: Float) {
-        cardViewContainer.radius = radius
+    fun setButtonRadiusInDP(radius: Float) {
+        cardViewContainer.radius = AppUtils.dpTopx(radius).toFloat()
+        this.radius = AppUtils.dpTopx(radius).toFloat()
     }
 
     fun setButtonBackgroundColor(color: Int) {
@@ -143,8 +145,9 @@ class ShareButtonWidget : CardView {
         this.setCardBackgroundColor(color)
     }
 
-    fun setBorderThickness(thickness: Int) {
-        this.setContentPadding(thickness, thickness, thickness, thickness)
+    fun setBorderThicknessInDP(thickness: Float) {
+        val pxThickness = AppUtils.dpTopx(thickness)
+        this.setContentPadding(pxThickness, pxThickness, pxThickness, pxThickness)
         this.clipToOutline = true
     }
 }

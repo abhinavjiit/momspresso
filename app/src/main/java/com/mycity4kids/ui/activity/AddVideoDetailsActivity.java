@@ -188,10 +188,9 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                 shareButtonWidget.setTextSizeInSP(14);
                 shareButtonWidget.setTextGravity(Gravity.CENTER);
                 shareButtonWidget.setTextColor(ContextCompat.getColor(this, R.color.app_grey));
-                shareButtonWidget.setButtonRadius(90.0f);
-                shareButtonWidget.setRadius(90.0f);
+                shareButtonWidget.setButtonRadiusInDP(20);
                 shareButtonWidget.setBorderColor(ContextCompat.getColor(this, R.color.app_grey));
-                shareButtonWidget.setBorderThickness(2);
+                shareButtonWidget.setBorderThicknessInDP(1);
                 shareButtonWidget.setElevation(0.0f);
                 shareButtonWidget.setButtonBackgroundColor(
                         ContextCompat.getColor(
