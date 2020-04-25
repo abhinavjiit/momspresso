@@ -1158,6 +1158,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Intent intent1 = new Intent(this, UserProfileActivity.class);
                 intent1.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true);
                 startActivity(intent1);
+            } else if (AppConstants.NOTIFICATION_TYPE_VIDEO_LISTING.equalsIgnoreCase(notificationType)) {
+                pushEvent("videoListing");
+                Intent intent1 = new Intent(this, CategoryVideosListingActivity.class);
+                intent1.putExtra("categoryId", notificationExtras.getString("categoryId"));
+                startActivity(intent1);
             }
         } else if (newIntent.hasExtra("branchLink")
                 || newIntent.hasExtra(AppConstants.BRANCH_DEEPLINK_URL)) {
@@ -1222,7 +1227,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             if (!StringUtils.isNullOrEmpty(tempDeepLinkUrl)) {
                 if ((tempDeepLinkUrl.endsWith("/"))) {
-                    tempDeepLinkUrlWithoutSlash = tempDeepLinkUrl.substring(0,tempDeepLinkUrl.lastIndexOf("/"));
+                    tempDeepLinkUrlWithoutSlash = tempDeepLinkUrl.substring(0, tempDeepLinkUrl.lastIndexOf("/"));
                     Log.d("DeepLinkUrlWithoutSlash", tempDeepLinkUrlWithoutSlash);
                 }
                 Log.d("tempDeepLinkUrl", tempDeepLinkUrl);

@@ -34,6 +34,7 @@ import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ArticleListingActivity;
 import com.mycity4kids.ui.activity.BadgeActivity;
+import com.mycity4kids.ui.activity.CategoryVideosListingActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
@@ -430,7 +431,14 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     Intent profileIntent = new Intent(mainContext, UserProfileActivity.class);
                     profileIntent.putExtra(AppConstants.SHOW_INVITE_DIALOG_FLAG, true);
                     mainContext.startActivity(profileIntent);
-                    pushEvent("NOTIFICATION_CENTER_PROFILE");
+                    pushEvent("NOTIFICATION_CENTER_INVITE_FRIENDS");
+                }
+                break;
+                case AppConstants.NOTIFICATION_CENTER_VIDEO_LISTING: {
+                    Intent vlogsIntent = new Intent(mainContext, CategoryVideosListingActivity.class);
+                    vlogsIntent.putExtra("categoryId", "" + notificationList.get(position).getCategoryId());
+                    mainContext.startActivity(vlogsIntent);
+                    pushEvent("NOTIFICATION_CENTER_VIDEO_LISTING");
                 }
                 break;
                 default:
