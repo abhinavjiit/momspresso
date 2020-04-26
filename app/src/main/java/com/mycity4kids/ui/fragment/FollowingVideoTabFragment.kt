@@ -189,6 +189,7 @@ class FollowingVideoTabFragment : BaseFragment(),
     fun processData(res: ArrayList<VlogsListingAndDetailResult>?) {
         if (res.isNullOrEmpty()) {
             if (listData.isNullOrEmpty()) {
+                recyclerView_videos.visibility = View.GONE
                 shimmer_funny_videos_article.startShimmerAnimation()
                 shimmer_funny_videos_article.visibility = View.VISIBLE
                 headerContainerLayout.visibility = View.VISIBLE
