@@ -191,6 +191,7 @@ public class AppConstants {
     public static final String NOTIFICATION_TYPE_STORY_LIST_IN_CHALLENGE = "shortStoryListingInChallengeListing";
     public static final String NOTIFICATION_TYPE_STORY_PUBLISH_SUCCESS = "shortStoryPublishSuccess";
     public static final String NOTIFICATION_TYPE_INVITE_FRIENDS = "inviteFriendsDialog";
+    public static final String NOTIFICATION_TYPE_VIDEO_LISTING = "videoListing";
 
     public static final String NOTIFICATION_CENTER_APP_SETTINGS = "-1";
     public static final String NOTIFICATION_CENTER_WEB_VIEW = "0";
