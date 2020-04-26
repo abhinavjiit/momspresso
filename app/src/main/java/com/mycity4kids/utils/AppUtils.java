@@ -466,6 +466,55 @@ public class AppUtils {
         return shareIntent;
     }
 
+    public static Intent getVlogsShareIntent(String userType, String blogSlug, String titleSlug,
+            String shareMsg, String title, String userName) {
+        String shareUrl = getVlogsShareUrl(userType, blogSlug, titleSlug);
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        String shareData;
+        if (StringUtils.isNullOrEmpty(shareUrl)) {
+            // shareData = shareMsg + "\"" + title + "\" by " + userName + ".";
+            shareData = shareMsg;
+        } else {
+            // shareData = shareMsg + "\"" + title + "\" by " + userName + ".\nRead Here: " + shareUrl;
+            shareData = shareMsg + shareUrl;
+        }
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareData);
+        return shareIntent;
+    }
+
+    public static String getVlogsShareUrl(String userType, String blogSlug, String titleSlug) {
+        String shareUrl = null;
+        switch (userType) {
+            case AppConstants.USER_TYPE_BLOGGER: {
+                if (StringUtils.isNullOrEmpty(blogSlug)) {
+                    shareUrl =
+                            AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + titleSlug;
+                } else {
+                    shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + blogSlug + "/video/" + titleSlug;
+                }
+            }
+            break;
+            case AppConstants.USER_TYPE_EXPERT:
+            case AppConstants.USER_TYPE_EDITOR:
+            case AppConstants.USER_TYPE_EDITORIAL:
+            case AppConstants.USER_TYPE_FEATURED:
+                shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + titleSlug;
+                break;
+            case AppConstants.USER_TYPE_USER:
+                if (StringUtils.isNullOrEmpty(blogSlug)) {
+                    shareUrl =
+                            AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + titleSlug;
+                } else {
+                    shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + blogSlug + "/video/" + titleSlug;
+                }
+                break;
+            default:
+                break;
+        }
+        return shareUrl;
+    }
+
     public static String getShareUrl(String userType, String blogSlug, String titleSlug) {
         String shareUrl = "";
         if (AppConstants.USER_TYPE_BLOGGER.equals(userType)) {

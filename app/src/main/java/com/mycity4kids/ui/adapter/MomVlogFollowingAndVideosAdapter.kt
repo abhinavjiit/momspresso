@@ -49,7 +49,7 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var momVlogVideosOrFollowingList: ArrayList<VlogsListingAndDetailResult>? = null
     private var vlogersListData = ArrayList<UserDetailResult>()
-    var start: Int = 0
+    var start: Int = 1
     var end: Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -91,14 +91,14 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
                 val retrofit = BaseApplication.getInstance().retrofit
                 val vlogsListingAndDetailsAPI =
                     retrofit.create(VlogsListingAndDetailsAPI::class.java)
-                end = start + 6
+                end = start + 5
                 val call = vlogsListingAndDetailsAPI.getVlogersData(
                     SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
                     start,
                     end,
                     1
                 )
-                start += end + 1
+                start += end
                 call.enqueue(object : Callback<MomVlogersDetailResponse> {
                     override fun onFailure(call: Call<MomVlogersDetailResponse>, t: Throwable) {
                     }
@@ -132,12 +132,18 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
                                 "MC4kException",
                                 Log.getStackTraceString(e)
                             )
-                            momVlogVideosOrFollowingList?.get(position)?.isCarouselRequestRunning =
-                                false
-                            momVlogVideosOrFollowingList?.get(position)?.isResponseReceived = false
                         }
                     }
                 })
+            } else if (momVlogVideosOrFollowingList?.get(position)?.isCarouselRequestRunning!! && !momVlogVideosOrFollowingList?.get(
+                    position
+                )?.isResponseReceived!!) {
+                Log.d(
+                    "Tag",
+                    momVlogVideosOrFollowingList?.get(position)?.isCarouselRequestRunning.toString() + momVlogVideosOrFollowingList?.get(
+                        position
+                    )?.isResponseReceived.toString()
+                )
             } else {
                 Log.d(
                     "runningRequest",
@@ -384,11 +390,10 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
     ) {
         try {
             if (responseVlogersData.isEmpty()) {
-                if (vlogersListData.isNullOrEmpty()) {
+                if (momVlogVideosOrFollowingList.isNullOrEmpty()) {
                 }
             } else {
-                vlogersListData.addAll(responseVlogersData)
-                momVlogVideosOrFollowingList?.get(position)?.carouselVideoList = vlogersListData
+                momVlogVideosOrFollowingList?.get(position)?.carouselVideoList = responseVlogersData
                 momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.let {
                     populateCarouselFollowFollowing(
                         holder,

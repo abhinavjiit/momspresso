@@ -1683,6 +1683,16 @@ class UserProfileActivity : BaseActivity(),
             data?.itemType == AppConstants.CONTENT_TYPE_SHORT_STORY -> {
             }
             data?.itemType == AppConstants.CONTENT_TYPE_VIDEO -> {
+                val shareIntent = AppUtils.getVlogsShareIntent(
+                    data.blogTitleSlug, data.titleSlug,
+                    getString(R.string.check_out_momvlog), data.title, data.userName
+                )
+                startActivity(Intent.createChooser(shareIntent, "Momspresso"))
+                Utils.pushShareArticleEvent(
+                    this, "Profile",
+                    SharedPrefUtils.getUserDetailModel(this).dynamoId + "", data.id,
+                    data.userId + "~" + data.userName, "-"
+                )
             }
         }
     }
