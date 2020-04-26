@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2016 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2016 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -13,94 +12,97 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-      android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_gravity="bottom"
+  android:background="#CC000000"
+  android:layoutDirection="ltr"
+  android:orientation="vertical">
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/space_10">
+
+    <RelativeLayout
+      android:id="@+id/play_pause_container"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="bottom"
-      android:layoutDirection="ltr"
-      android:background="#CC000000"
-      android:orientation="vertical">
+      android:layout_centerVertical="true">
 
-   <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:gravity="center"
-         android:paddingTop="4dp"
-         android:orientation="horizontal">
+      <ImageButton
+        android:id="@id/exo_play"
+        style="@style/ExoMediaButton.Play"
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
 
-      <ImageButton android:id="@id/exo_prev"
-            style="@style/ExoMediaButton.Previous"/>
+      <ImageButton
+        android:id="@id/exo_pause"
+        style="@style/ExoMediaButton.Pause"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_toEndOf="@id/exo_play"
+        android:src="@drawable/ic_group_3" />
+    </RelativeLayout>
 
-      <ImageButton android:id="@id/exo_rew"
-            style="@style/ExoMediaButton.Rewind"/>
+    <RelativeLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_toEndOf="@id/play_pause_container">
 
-      <ImageButton android:id="@id/exo_repeat_toggle"
-            style="@style/ExoMediaButton"/>
-
-      <ImageButton android:id="@id/exo_play"
-            style="@style/ExoMediaButton.Play"/>
-
-      <ImageButton android:id="@id/exo_pause"
-            style="@style/ExoMediaButton.Pause"/>
-
-      <ImageButton android:id="@id/exo_ffwd"
-            style="@style/ExoMediaButton.FastForward"/>
-
-      <ImageButton android:id="@id/exo_next"
-            style="@style/ExoMediaButton.Next"/>
-
-   </LinearLayout>
-
-   <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_marginTop="4dp"
-         android:gravity="center_vertical"
-         android:orientation="horizontal">
-
-      <TextView android:id="@id/exo_position"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:includeFontPadding="false"
-            android:textColor="#FFBEBEBE"/>
+      <TextView
+        android:id="@id/exo_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/exo_progress"
+        android:paddingLeft="4dp"
+        android:paddingTop="@dimen/space_4"
+        android:paddingRight="4dp"
+        android:textColor="#B4B4B4"
+        android:textSize="12sp"
+        android:textStyle="bold" />
 
       <com.google.android.exoplayer2.ui.DefaultTimeBar
-            android:id="@id/exo_progress"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="26dp"/>
+        android:id="@id/exo_progress"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/exo_fullscreen_button" />
+      <TextView
+        android:id="@id/exo_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/exo_progress"
+        android:layout_alignEnd="@id/exo_progress"
+        android:includeFontPadding="false"
+        android:paddingLeft="4dp"
+        android:paddingTop="@dimen/space_4"
+        android:paddingRight="4dp"
+        android:textColor="#B4B4B4"
+        android:textSize="12sp"
+        android:textStyle="bold" />
 
-      <TextView android:id="@id/exo_duration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:includeFontPadding="false"
-            android:textColor="#FFBEBEBE"/>
 
       <FrameLayout
-          android:id="@+id/exo_fullscreen_button"
-          android:layout_width="32dp"
-          android:layout_height="32dp"
-          android:layout_gravity="right">
+        android:id="@+id/exo_fullscreen_button"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true">
 
-         <ImageView
-             android:id="@+id/exo_fullscreen_icon"
-             android:layout_width="18dp"
-             android:layout_height="18dp"
-             android:layout_gravity="center"
-             android:adjustViewBounds="true"
-             android:scaleType="fitCenter"
-             android:src="@drawable/ic_fullscreen_expand"/>
+        <ImageView
+          android:id="@+id/exo_fullscreen_icon"
+          android:layout_width="18dp"
+          android:layout_height="18dp"
+          android:layout_gravity="center"
+          android:adjustViewBounds="true"
+          android:scaleType="fitCenter"
+          android:src="@drawable/ic_fullscreen_expand" />
 
       </FrameLayout>
+    </RelativeLayout>
 
-   </LinearLayout>
+  </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>
