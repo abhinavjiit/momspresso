@@ -226,6 +226,7 @@ public class AppConstants {
     public static final String NOTIFICATION_CENTER_STORY_PUBLISH_SUCCESS = "30";
     public static final String NOTIFICATION_CENTER_STORY_CHALLENGE_DETAIL = "31";
     public static final String NOTIFICATION_CENTER_INVITE_FRIENDS = "32";
+    public static final String NOTIFICATION_CENTER_VIDEO_LISTING = "33";
 
     public static final String FOLLOWING_STATUS_ACTIVITY_RESULT = "followingStatusActivityResult";
     public static final String VIDEO_STATUS_DRAFT = "0";
