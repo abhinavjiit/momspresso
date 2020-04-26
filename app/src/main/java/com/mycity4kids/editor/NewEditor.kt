@@ -1162,7 +1162,11 @@ class NewEditor : BaseActivity(),
     override fun onContinuePublish() {
         mHandler.removeCallbacksAndMessages(null)
         val publishObject = PublishDraftObject()
-        val finalContent = aztec.visualEditor.toFormattedHtml().replace("\n<br>", "<br>")
+        var finalContent = aztec.visualEditor.toFormattedHtml().replace("\n<br>", "<br>")
+        val re = Regex("<div[^>]*>")
+        finalContent = re.replace(finalContent, "<p>").replace("<p>\n", "<p>")
+        finalContent = finalContent.replace("</div>", "</p>").replace("\n</p>\n", "</p>")
+        finalContent = finalContent.replace("\n", "")
         publishObject.body = contentFormatting(finalContent)
         publishObject.title =
             titleFormatting(titleTxt?.text.toString())
