@@ -44,7 +44,8 @@
         android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/space_30">
+        android:padding="@dimen/space_30"
+        android:visibility="gone">
 
         <com.mikhaellopez.circularimageview.CircularImageView
           android:id="@+id/authorImageView1"
@@ -95,7 +96,8 @@
         android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/space_30">
+        android:padding="@dimen/space_30"
+        android:visibility="gone">
 
         <com.mikhaellopez.circularimageview.CircularImageView
           android:id="@+id/authorImageView2"
@@ -145,7 +147,8 @@
         android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/space_30">
+        android:padding="@dimen/space_30"
+        android:visibility="gone">
 
         <com.mikhaellopez.circularimageview.CircularImageView
           android:id="@+id/authorImageView3"
@@ -195,7 +198,8 @@
         android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/space_30">
+        android:padding="@dimen/space_30"
+        android:visibility="gone">
 
         <com.mikhaellopez.circularimageview.CircularImageView
           android:id="@+id/authorImageView4"
@@ -245,7 +249,8 @@
         android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/space_30">
+        android:padding="@dimen/space_30"
+        android:visibility="gone">
 
         <com.mikhaellopez.circularimageview.CircularImageView
           android:id="@+id/authorImageView5"
@@ -295,7 +300,8 @@
         android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/space_30">
+        android:padding="@dimen/space_30"
+        android:visibility="gone">
 
         <com.mikhaellopez.circularimageview.CircularImageView
           android:id="@+id/authorImageView6"
