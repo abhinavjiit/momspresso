@@ -72,7 +72,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:textColor="@color/app_light_black"
-        android:textSize="16dp"
+        android:textSize="13sp"
         app:fontName="oswald_regular.ttf" />
 
       <ImageView
@@ -142,7 +142,7 @@
 
         android:paddingBottom="10dp"
         android:textColor="@color/app_light_black"
-        android:textSize="16dp"
+        android:textSize="14sp"
         app:fontName="oswald_regular.ttf" />
 
       <ImageView
@@ -208,7 +208,7 @@
         android:paddingBottom="10dp"
 
         android:textColor="@color/app_light_black"
-        android:textSize="16dp"
+        android:textSize="14sp"
         app:fontName="oswald_regular.ttf" />
 
       <!--<com.mycity4kids.widget.CustomFontEditText-->
@@ -280,7 +280,7 @@
         android:paddingBottom="10dp"
 
         android:textColor="@color/app_light_black"
-        android:textSize="16dp"
+        android:textSize="14sp"
         app:fontName="oswald_regular.ttf" />
 
       <ImageView
@@ -350,7 +350,7 @@
         android:paddingBottom="10dp"
 
         android:textColor="@color/app_light_black"
-        android:textSize="16dp"
+        android:textSize="14sp"
         app:fontName="oswald_regular.ttf" />
 
       <ImageView
