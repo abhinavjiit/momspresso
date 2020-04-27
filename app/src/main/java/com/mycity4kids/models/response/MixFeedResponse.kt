@@ -3,6 +3,7 @@ package com.mycity4kids.models.response
 import com.google.gson.annotations.SerializedName
 import com.mycity4kids.models.collectionsModels.UserCollectionsModel
 import com.mycity4kids.models.parentingdetails.DetailsBody
+import com.mycity4kids.profile.Author
 
 data class MixFeedResponse(
     @SerializedName("code")
@@ -35,7 +36,9 @@ data class MixFeedResult(
     val approved_by: String = "",
     @SerializedName("articleCount")
     val articleCount: Int = -1,
-    @SerializedName("blogTitle")
+    @SerializedName("author")
+    val author: Author? = null,
+    @SerializedName("blogTitle", alternate = ["blog_title_slug"])
     val blogTitle: String = "",
     @SerializedName("blogTitleSlug")
     val blogTitleSlug: String = "",

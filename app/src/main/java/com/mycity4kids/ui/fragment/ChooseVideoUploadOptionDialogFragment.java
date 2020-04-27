@@ -110,7 +110,7 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                         if ("dashboard".equals(activity)) {
                             ((DashboardActivity) getActivity()).requestPermissions("camera");
                         } else if ("myfunnyvideos".equals(activity)) {
-                            ((UserFunnyVideosTabFragment) getTargetFragment()).requestPermissions("camera");
+                            ((UserPublishedVideosTabFragment) getTargetFragment()).requestPermissions("camera");
                         } else if ("video_category_activity".equals(activity)) {
                             ((VideoCategoryAndChallengeSelectionActivity) getActivity()).requestPermissions("camera");
                         } else if ("challengeDetailFragment".equals(activity)) {
@@ -143,7 +143,7 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                         if ("dashboard".equals(activity)) {
                             ((DashboardActivity) getActivity()).requestPermissions("gallery");
                         } else if ("myfunnyvideos".equals(activity)) {
-                            ((UserFunnyVideosTabFragment) getTargetFragment()).requestPermissions("gallery");
+                            ((UserPublishedVideosTabFragment) getTargetFragment()).requestPermissions("gallery");
                         } else if ("video_category_activity".equals(activity)) {
                             ((VideoCategoryAndChallengeSelectionActivity) getActivity()).requestPermissions("gallery");
                         } else if ("challengeDetailFragment".equals(activity)) {

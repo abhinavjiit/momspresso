@@ -2356,7 +2356,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 for (Map.Entry<String, String> entry : tagsList.get(i).entrySet()) {
                     String key = entry.getKey();
                     final String value = entry.getValue();
-                    if (AppConstants.IGNORE_TAG.equals(key) || StringUtils.isNullOrEmpty(value)) {
+                    if (!key.startsWith("category-") || StringUtils.isNullOrEmpty(value)) {
                         continue;
                     }
 
@@ -2411,7 +2411,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                continue;
             }
         }
         loadGroupDataForCategories(tagsList);

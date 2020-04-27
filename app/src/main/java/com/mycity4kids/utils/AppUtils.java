@@ -473,11 +473,9 @@ public class AppUtils {
         shareIntent.setType("text/plain");
         String shareData;
         if (StringUtils.isNullOrEmpty(shareUrl)) {
-            // shareData = shareMsg + "\"" + title + "\" by " + userName + ".";
-            shareData = shareMsg;
+             shareData = shareMsg + "\"" + title + "\" by " + userName + ".";
         } else {
-            // shareData = shareMsg + "\"" + title + "\" by " + userName + ".\nRead Here: " + shareUrl;
-            shareData = shareMsg + shareUrl;
+             shareData = shareMsg + "\"" + title + "\" by " + userName + ".\nWatch Here: " + shareUrl;
         }
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareData);
         return shareIntent;

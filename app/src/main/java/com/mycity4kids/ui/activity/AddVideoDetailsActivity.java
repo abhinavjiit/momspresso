@@ -25,9 +25,11 @@ import com.afollestad.easyvideoplayer.EasyVideoPlayer;
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
@@ -38,6 +40,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.NotificationWorker;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.widget.ShareButtonWidget;
 import java.io.File;
@@ -78,11 +81,13 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     private TextView okay;
     private FlowLayout subCategoriesContainer;
     private Topics selectedCategory;
+    MixpanelAPI mixpanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_video_details_activity);
+        mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
         root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
@@ -327,7 +332,8 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         getBlogPage();
     }
 
-    private void launchUploadActivity() {
+    private void launchUploadInBackground() {
+        MixPanelUtils.pushVideoUploadCTAClick(mixpanel, videoTitleEditText.getText().toString() + "~" + signIn);
         if (contentUri != null && signIn) {
             Data uriData = new Data.Builder()
                     .putString("ContentUrl", contentUri.toString())
@@ -351,7 +357,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
             workManager.enqueue(request);
             removeProgressDialog();
             popup.setVisibility(View.VISIBLE);
-
         }
     }
 
@@ -393,7 +398,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                     editor.putBoolean("blogSetup", true);
                     Log.e("blog setup in update ui", true + "");
                     editor.commit();
-                    launchUploadActivity();
+                    launchUploadInBackground();
                 }
             }
         }
@@ -462,7 +467,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                         // Sign in success, update UI with the signed-in user's information
                         Log.d("VideoUpload", "signInAnonymously:success");
                         signIn = true;
-
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w("VideoUpload", "signInAnonymously:failure", task.getException());

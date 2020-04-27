@@ -53,6 +53,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.BaseViewHolder;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.fragment.AddCollectionAndCollectionItemDialogFragment;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
@@ -355,23 +356,26 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             imgBookmark.setOnClickListener(view -> videoFeedRecyclerViewClick.onClick(getAdapterPosition(), view));
 
             share.setOnClickListener(view -> {
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-
-                if (!StringUtils.isNullOrEmpty(getShareUrl(responseData))) {
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, getShareUrl(responseData));
-                    context.startActivity(Intent.createChooser(shareIntent, "Momspresso"));
-                    Utils.pushShareArticleEvent(context, "DetailVideoScreen", userDynamoId + "",
+                try {
+                    Intent shareIntent = AppUtils.getVlogsShareIntent(responseData.getAuthor().getUserType(),
+                            responseData.getAuthor().getBlogTitleSlug(),
+                            responseData.getTitleSlug(), view.getContext().getString(R.string.check_out_momvlog),
+                            responseData.getTitle(), responseData.getAuthor().getFirstName() + " "
+                                    + responseData.getAuthor().getLastName());
+                    view.getContext().startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+                    Utils.pushShareVlogEvent(context, "DetailVideoScreen", userDynamoId + "",
                             responseData.getId(),
                             responseData.getAuthor().getId() + "~" + responseData.getAuthor().getFirstName() + " "
                                     + responseData.getAuthor().getLastName(), "CommonShare");
+
+                    Utils.momVlogEvent(context, "Video Detail", "Share", "", "android",
+                            SharedPrefUtils.getAppLocale(context),
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                            String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
                 }
-
-                Utils.momVlogEvent(context, "Video Detail", "Share", "", "android",
-                        SharedPrefUtils.getAppLocale(context),
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
-                        String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
-
             });
 
             collectionAdd.setOnClickListener(view -> {
@@ -392,50 +396,84 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             });
 
             whatsapp.setOnClickListener(v -> {
-                if (StringUtils.isNullOrEmpty(getShareUrl(responseData))) {
+                String shareUrl = AppUtils.getVlogsShareUrl(responseData.getAuthor().getUserType(),
+                        responseData.getAuthor().getBlogTitleSlug(),
+                        responseData.getTitleSlug());
+                if (StringUtils.isNullOrEmpty(shareUrl)) {
                     Toast.makeText(context, context.getString(R.string.moderation_or_share_whatsapp_fail),
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
-                    whatsappIntent.setType("text/plain");
-                    whatsappIntent.setPackage("com.whatsapp");
-                    whatsappIntent.putExtra(Intent.EXTRA_TEXT,
-                            context.getString(R.string.check_out_momvlog) + getShareUrl(responseData));
                     try {
+                        String shareData;
+                        if (StringUtils.isNullOrEmpty(shareUrl)) {
+                            shareData = context.getString(R.string.check_out_momvlog) + "\"" + responseData.getTitle()
+                                    + "\" by " + responseData.getAuthor().getFirstName() + " " + responseData
+                                    .getAuthor()
+                                    .getLastName();
+                        } else {
+                            shareData = context.getString(R.string.check_out_momvlog) + "\"" + responseData.getTitle()
+                                    + "\" by " + responseData.getAuthor().getFirstName() + " " + responseData
+                                    .getAuthor()
+                                    .getLastName() + ".\nWatch Here: " + shareUrl;
+                        }
+                        Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
+                        whatsappIntent.setType("text/plain");
+                        whatsappIntent.setPackage("com.whatsapp");
+                        whatsappIntent.putExtra(Intent.EXTRA_TEXT, shareData);
                         context.startActivity(whatsappIntent);
-                        Utils.pushShareArticleEvent(context, "DetailVideoScreen", userDynamoId + "",
+                        Utils.pushShareVlogEvent(context, "DetailVideoScreen", userDynamoId + "",
                                 responseData.getId(),
                                 responseData.getAuthor().getId() + "~" + responseData.getAuthor().getFirstName()
                                         + " " + responseData.getAuthor().getLastName(), "Whatsapp");
+
+                        Utils.momVlogEvent(context, "Video Detail", "Whatsapp", "", "android",
+                                SharedPrefUtils.getAppLocale(context),
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                                String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
                     } catch (android.content.ActivityNotFoundException ex) {
                         Toast.makeText(context,
                                 context.getString(R.string.moderation_or_share_whatsapp_not_installed),
                                 Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
                     }
-                    Utils.momVlogEvent(context, "Video Detail", "Whatsapp", "", "android",
+                }
+            });
+            commentCount.setOnClickListener(view -> {
+                try {
+                    ((ParallelFeedActivity) context)
+                            .openViewCommentDialog(responseData.getCommentUri(),
+                                    AppUtils.getVlogsShareUrl(responseData.getAuthor().getUserType(),
+                                            responseData.getAuthor().getBlogTitleSlug(),
+                                            responseData.getTitleSlug()),
+                                    responseData.getAuthor().getId(),
+                                    responseData.getAuthor().getFirstName() + " " + responseData.getAuthor()
+                                            .getLastName(), responseData.getId());
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                }
+            });
+            comment.setOnClickListener(view -> {
+                try {
+                    Utils.momVlogEvent(context, "Video Detail", "Add comment", "", "android",
                             SharedPrefUtils.getAppLocale(context),
                             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                             String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
 
+                    ((ParallelFeedActivity) context)
+                            .openViewCommentDialog(responseData.getCommentUri(),
+                                    AppUtils.getVlogsShareUrl(responseData.getAuthor().getUserType(),
+                                            responseData.getAuthor().getBlogTitleSlug(),
+                                            responseData.getTitleSlug()),
+                                    responseData.getAuthor().getId(),
+                                    responseData.getAuthor().getFirstName() + " " + responseData.getAuthor()
+                                            .getLastName(), responseData.getId());
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
                 }
-            });
-            commentCount.setOnClickListener(view -> ((ParallelFeedActivity) context)
-                    .openViewCommentDialog(responseData.getCommentUri(), getShareUrl(responseData),
-                            responseData.getAuthor().getId(),
-                            responseData.getAuthor().getFirstName() + " " + responseData.getAuthor()
-                                    .getLastName(), responseData.getId()));
-
-            comment.setOnClickListener(view -> {
-                Utils.momVlogEvent(context, "Video Detail", "Add comment", "", "android",
-                        SharedPrefUtils.getAppLocale(context),
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
-                        String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
-
-                ((ParallelFeedActivity) context)
-                        .openViewCommentDialog(responseData.getCommentUri(), getShareUrl(responseData),
-                                responseData.getAuthor().getId(),
-                                responseData.getAuthor().getFirstName() + " " + responseData.getAuthor()
-                                        .getLastName(), responseData.getId());
             });
 
             threeDot.setOnClickListener(view -> {
@@ -1017,17 +1055,17 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             TextView authorRankTextView, ProgressBar progressBar, UserDetailResult carosalList) {
         Picasso.get().load(carosalList.getProfilePicUrl().getClientApp()).error(R.drawable.default_article)
                 .into(authorImageView, new com.squareup.picasso.Callback() {
-                            @Override
-                            public void onSuccess() {
-                                progressBar.setVisibility(View.GONE);
-                            }
+                    @Override
+                    public void onSuccess() {
+                        progressBar.setVisibility(View.GONE);
+                    }
 
-                            @Override
-                            public void onError(Exception e) {
-                                progressBar.setVisibility(View.VISIBLE);
+                    @Override
+                    public void onError(Exception e) {
+                        progressBar.setVisibility(View.VISIBLE);
 
-                            }
-                        });
+                    }
+                });
         if (carosalList.getFollowing()) {
             GradientDrawable myGrad = (GradientDrawable) followTextView.getBackground();
             myGrad.setStroke(2, ContextCompat.getColor(context, R.color.color_BABABA));
@@ -1168,56 +1206,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         public void onClick(View widget) {
 
         }
-    }
-
-    private String getShareUrl(VlogsListingAndDetailResult responseData) {
-        String shareUrl = null;
-        try {
-            String titleSlug = responseData.getTitleSlug();
-            String authorType = responseData.getAuthor().getUserType();
-            if (!StringUtils.isNullOrEmpty(authorType)) {
-                switch (authorType) {
-                    case AppConstants.USER_TYPE_BLOGGER: {
-                        String blogTitleSlug = responseData.getAuthor().getBlogTitleSlug();
-                        if (StringUtils.isNullOrEmpty(blogTitleSlug)) {
-                            shareUrl =
-                                    AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + responseData.getTitleSlug();
-                        } else {
-                            shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + blogTitleSlug + "/video/" + responseData
-                                    .getTitleSlug();
-                        }
-                    }
-                    break;
-                    case AppConstants.USER_TYPE_EXPERT:
-                    case AppConstants.USER_TYPE_EDITOR:
-                    case AppConstants.USER_TYPE_EDITORIAL:
-                    case AppConstants.USER_TYPE_FEATURED:
-                        shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + responseData.getTitleSlug();
-                        break;
-                    case AppConstants.USER_TYPE_USER:
-                        String blogTitleSlug = responseData.getAuthor().getBlogTitleSlug();
-                        if (StringUtils.isNullOrEmpty(blogTitleSlug)) {
-                            shareUrl =
-                                    AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + responseData.getTitleSlug();
-                        } else {
-                            shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + blogTitleSlug + "/video/" + responseData
-                                    .getTitleSlug();
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            } else {
-                // Default Author type set to Blogger
-                shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + responseData.getAuthor().getBlogTitleSlug()
-                        + "/video/" + titleSlug;
-            }
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Log.d("MC4kException", Log.getStackTraceString(e));
-        }
-
-        return shareUrl;
     }
 
     public class EmptyViewHolder extends BaseViewHolder implements View.OnClickListener {

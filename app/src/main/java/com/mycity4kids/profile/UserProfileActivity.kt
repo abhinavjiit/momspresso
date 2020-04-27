@@ -1677,21 +1677,28 @@ class UserProfileActivity : BaseActivity(),
                 Utils.pushShareArticleEvent(
                     this, "Profile",
                     SharedPrefUtils.getUserDetailModel(this).dynamoId + "", data.id,
-                    data.userId + "~" + data.userName, "-"
+                    data.userId + "~" + data.userName, "Generic"
                 )
             }
             data?.itemType == AppConstants.CONTENT_TYPE_SHORT_STORY -> {
             }
             data?.itemType == AppConstants.CONTENT_TYPE_VIDEO -> {
                 val shareIntent = AppUtils.getVlogsShareIntent(
-                    data.blogTitleSlug, data.titleSlug,
-                    getString(R.string.check_out_momvlog), data.title, data.userName
+                    data.author?.userType,
+                    data.blogTitle,
+                    data.title_slug,
+                    getString(R.string.check_out_momvlog),
+                    data.title,
+                    data.author?.firstName + " " + data.author?.lastName
                 )
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"))
-                Utils.pushShareArticleEvent(
-                    this, "Profile",
-                    SharedPrefUtils.getUserDetailModel(this).dynamoId + "", data.id,
-                    data.userId + "~" + data.userName, "-"
+                Utils.pushShareVlogEvent(
+                    this,
+                    "Profile",
+                    SharedPrefUtils.getUserDetailModel(this).dynamoId + "",
+                    data.id,
+                    data.userId + "~" + data.author?.firstName + " " + data.author?.lastName,
+                    "Generic"
                 )
             }
         }

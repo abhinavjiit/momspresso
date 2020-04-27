@@ -112,7 +112,7 @@ public class EditVlogTitleDialogFragment extends DialogFragment implements View.
                 if (response.isSuccessful()) {
                     VlogsDetailResponse vlogsDetailResponse = response.body();
                     if (getParentFragment() != null) {
-                        ((UserFunnyVideosTabFragment) getParentFragment()).updateTitleInList(
+                        ((UserPublishedVideosTabFragment) getParentFragment()).updateTitleInList(
                                 position, vlogsDetailResponse.getData().getResult().getTitle());
                     }
                     dismiss();

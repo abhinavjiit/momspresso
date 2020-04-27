@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.ui.fragment.UserDraftArticleTabFragment;
-import com.mycity4kids.ui.fragment.UserFunnyVideosTabFragment;
+import com.mycity4kids.ui.fragment.UserPublishedVideosTabFragment;
 import com.mycity4kids.ui.fragment.UserPublishedArticleTabFragment;
 
 /**
@@ -19,7 +19,7 @@ public class UserPublishedContentPagerAdapter extends FragmentStatePagerAdapter 
     private int mNumOfTabs;
     private UserPublishedArticleTabFragment userPublishedArticleTabFragment;
     private UserDraftArticleTabFragment userDraftArticleTabFragment;
-    private UserFunnyVideosTabFragment userFunnyVideosTabFragment;
+    private UserPublishedVideosTabFragment userPublishedVideosTabFragment;
     private String authorId;
     private boolean isPrivateProfile;
 
@@ -49,13 +49,13 @@ public class UserPublishedContentPagerAdapter extends FragmentStatePagerAdapter 
                 userPublishedArticleTabFragment.setArguments(bundle);
                 return userPublishedArticleTabFragment;
             case 2:
-                if (userFunnyVideosTabFragment == null) {
-                    userFunnyVideosTabFragment = new UserFunnyVideosTabFragment();
+                if (userPublishedVideosTabFragment == null) {
+                    userPublishedVideosTabFragment = new UserPublishedVideosTabFragment();
                 }
                 bundle.putBoolean("isPrivateProfile", isPrivateProfile);
                 bundle.putString(Constants.AUTHOR_ID, authorId);
-                userFunnyVideosTabFragment.setArguments(bundle);
-                return userFunnyVideosTabFragment;
+                userPublishedVideosTabFragment.setArguments(bundle);
+                return userPublishedVideosTabFragment;
 
         }
 
