@@ -417,170 +417,65 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
         } else {
             holder.scroll.visibility = View.VISIBLE
         }
-
-        when (carosalList.size) {
-            1 -> {
-                updateCarosal(
-                    holder.authorFollowTextView1,
-                    holder.authorImageView1,
-                    holder.authorNameTextView1,
-                    holder.authorRankTextView1,
-                    carosalList[0]
-                )
-            }
-            2 -> {
-                updateCarosal(
-                    holder.authorFollowTextView1,
-                    holder.authorImageView1,
-                    holder.authorNameTextView1,
-                    holder.authorRankTextView1,
-                    carosalList[0]
-                )
-                updateCarosal(
-                    holder.authorFollowTextView2,
-                    holder.authorImageView2,
-                    holder.authorNameTextView2,
-                    holder.authorRankTextView2,
-                    carosalList[1]
-                )
-            }
-            3 -> {
-                updateCarosal(
-                    holder.authorFollowTextView1,
-                    holder.authorImageView1,
-                    holder.authorNameTextView1,
-                    holder.authorRankTextView1,
-                    carosalList[0]
-                )
-                updateCarosal(
-                    holder.authorFollowTextView2,
-                    holder.authorImageView2,
-                    holder.authorNameTextView2,
-                    holder.authorRankTextView2,
-                    carosalList[1]
-                )
-                updateCarosal(
-                    holder.authorFollowTextView3,
-                    holder.authorImageView3,
-                    holder.authorNameTextView3,
-                    holder.authorRankTextView3,
-                    carosalList[2]
-                )
-            }
-            4 -> {
-                updateCarosal(
-                    holder.authorFollowTextView1,
-                    holder.authorImageView1,
-                    holder.authorNameTextView1,
-                    holder.authorRankTextView1,
-                    carosalList[0]
-                )
-                updateCarosal(
-                    holder.authorFollowTextView2,
-                    holder.authorImageView2,
-                    holder.authorNameTextView2,
-                    holder.authorRankTextView2,
-                    carosalList[1]
-                )
-                updateCarosal(
-                    holder.authorFollowTextView3,
-                    holder.authorImageView3,
-                    holder.authorNameTextView3,
-                    holder.authorRankTextView3,
-                    carosalList[2]
-                )
-                updateCarosal(
-                    holder.authorFollowTextView4,
-                    holder.authorImageView4,
-                    holder.authorNameTextView4,
-                    holder.authorRankTextView4,
-                    carosalList[3]
-                )
-            }
-            5 -> {
-                updateCarosal(
-                    holder.authorFollowTextView1,
-                    holder.authorImageView1,
-                    holder.authorNameTextView1,
-                    holder.authorRankTextView1,
-                    carosalList[0]
-                )
-                updateCarosal(
-                    holder.authorFollowTextView2,
-                    holder.authorImageView2,
-                    holder.authorNameTextView2,
-                    holder.authorRankTextView2,
-                    carosalList[1]
-                )
-                updateCarosal(
-                    holder.authorFollowTextView3,
-                    holder.authorImageView3,
-                    holder.authorNameTextView3,
-                    holder.authorRankTextView3,
-                    carosalList[2]
-                )
-                updateCarosal(
-                    holder.authorFollowTextView4,
-                    holder.authorImageView4,
-                    holder.authorNameTextView4,
-                    holder.authorRankTextView4,
-                    carosalList[3]
-                )
-                updateCarosal(
-                    holder.authorFollowTextView5,
-                    holder.authorImageView5,
-                    holder.authorNameTextView5,
-                    holder.authorRankTextView5,
-                    carosalList[4]
-                )
-            }
-            6 -> {
-
-                updateCarosal(
-                    holder.authorFollowTextView1,
-                    holder.authorImageView1,
-                    holder.authorNameTextView1,
-                    holder.authorRankTextView1,
-                    carosalList[0]
-                )
-                updateCarosal(
-                    holder.authorFollowTextView2,
-                    holder.authorImageView2,
-                    holder.authorNameTextView2,
-                    holder.authorRankTextView2,
-                    carosalList[1]
-                )
-                updateCarosal(
-                    holder.authorFollowTextView3,
-                    holder.authorImageView3,
-                    holder.authorNameTextView3,
-                    holder.authorRankTextView3,
-                    carosalList[2]
-                )
-                updateCarosal(
-                    holder.authorFollowTextView4,
-                    holder.authorImageView4,
-                    holder.authorNameTextView4,
-                    holder.authorRankTextView4,
-                    carosalList[3]
-                )
-                updateCarosal(
-                    holder.authorFollowTextView5,
-                    holder.authorImageView5,
-                    holder.authorNameTextView5,
-                    holder.authorRankTextView5,
-                    carosalList[4]
-                )
-                updateCarosal(
-                    holder.authorFollowTextView6,
-                    holder.authorImageView6,
-                    holder.authorNameTextView6,
-                    holder.authorRankTextView6,
-                    carosalList[5]
-                )
-            }
-            else -> {
-            }
+        if (carosalList.size >= 1) {
+            holder.carosalContainer1.visibility = View.VISIBLE
+            updateCarosal(
+                holder.authorFollowTextView1,
+                holder.authorImageView1,
+                holder.authorNameTextView1,
+                holder.authorRankTextView1,
+                carosalList[0]
+            )
+        }
+        if (carosalList.size >= 2) {
+            holder.carosalContainer2.visibility = View.VISIBLE
+            updateCarosal(
+                holder.authorFollowTextView2,
+                holder.authorImageView2,
+                holder.authorNameTextView2,
+                holder.authorRankTextView2,
+                carosalList[1]
+            )
+        }
+        if (carosalList.size >= 3) {
+            holder.carosalContainer3.visibility = View.VISIBLE
+            updateCarosal(
+                holder.authorFollowTextView3,
+                holder.authorImageView3,
+                holder.authorNameTextView3,
+                holder.authorRankTextView3,
+                carosalList[2]
+            )
+        }
+        if (carosalList.size >= 4) {
+            holder.carosalContainer4.visibility = View.VISIBLE
+            updateCarosal(
+                holder.authorFollowTextView4,
+                holder.authorImageView4,
+                holder.authorNameTextView4,
+                holder.authorRankTextView4,
+                carosalList[3]
+            )
+        }
+        if (carosalList.size >= 5) {
+            holder.carosalContainer5.visibility = View.VISIBLE
+            updateCarosal(
+                holder.authorFollowTextView5,
+                holder.authorImageView5,
+                holder.authorNameTextView5,
+                holder.authorRankTextView5,
+                carosalList[4]
+            )
+        }
+        if (carosalList.size >= 6) {
+            holder.carosalContainer6.visibility = View.VISIBLE
+            updateCarosal(
+                holder.authorFollowTextView6,
+                holder.authorImageView6,
+                holder.authorNameTextView6,
+                holder.authorRankTextView6,
+                carosalList[5]
+            )
         }
     }
 
