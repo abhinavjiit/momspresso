@@ -25,7 +25,6 @@
     android:background="@color/white"
     android:visibility="gone">
 
-
     <LinearLayout
       android:id="@+id/userFollowingContainer"
       android:layout_width="wrap_content"

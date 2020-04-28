@@ -109,8 +109,6 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                             != PackageManager.PERMISSION_GRANTED) {
                         if ("dashboard".equals(activity)) {
                             ((DashboardActivity) getActivity()).requestPermissions("camera");
-                        } else if ("myfunnyvideos".equals(activity)) {
-                            ((UserPublishedVideosTabFragment) getTargetFragment()).requestPermissions("camera");
                         } else if ("video_category_activity".equals(activity)) {
                             ((VideoCategoryAndChallengeSelectionActivity) getActivity()).requestPermissions("camera");
                         } else if ("challengeDetailFragment".equals(activity)) {
@@ -142,8 +140,6 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                             != PackageManager.PERMISSION_GRANTED) {
                         if ("dashboard".equals(activity)) {
                             ((DashboardActivity) getActivity()).requestPermissions("gallery");
-                        } else if ("myfunnyvideos".equals(activity)) {
-                            ((UserPublishedVideosTabFragment) getTargetFragment()).requestPermissions("gallery");
                         } else if ("video_category_activity".equals(activity)) {
                             ((VideoCategoryAndChallengeSelectionActivity) getActivity()).requestPermissions("gallery");
                         } else if ("challengeDetailFragment".equals(activity)) {
@@ -209,8 +205,6 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
             Intent videoCapture = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
             if ("dashboard".equals(activity)) {
                 getActivity().startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
-            } else if ("myfunnyvideos".equals(activity)) {
-                getActivity().startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("video_category_activity".equals(activity)) {
                 getActivity().startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("vlogslisting".equals(activity)) {
@@ -232,10 +226,6 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
             intent.addCategory(Intent.CATEGORY_OPENABLE);
 
             if ("dashboard".equals(activity)) {
-                getActivity()
-                        .startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)),
-                                AppConstants.REQUEST_VIDEO_TRIMMER);
-            } else if ("myfunnyvideos".equals(activity)) {
                 getActivity()
                         .startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)),
                                 AppConstants.REQUEST_VIDEO_TRIMMER);

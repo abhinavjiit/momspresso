@@ -193,7 +193,12 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                 break;
                 case AppConstants.NOTIFICATION_CENTER_VIDEO_DETAIL: {
                     Intent intent = new Intent(mainContext, ParallelFeedActivity.class);
-                    intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getArticleId());
+                    if (StringUtils.isNullOrEmpty(notificationList.get(position).getArticleId()) ||
+                            notificationList.get(position).getArticleId().equals("0")) {
+                        intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getVideoId());
+                    } else {
+                        intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getArticleId());
+                    }
                     intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
                     intent.putExtra(Constants.FROM_SCREEN, "Home Screen");
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");

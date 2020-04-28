@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.Html;
@@ -28,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -483,29 +485,46 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 }
             });
 
-            Glide.with(context)
-                    .asBitmap()
-                    .load(responseData.getThumbnail())
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap bitmap,
-                                Transition<? super Bitmap> transition) {
-                            int w = bitmap.getWidth();
-                            int h = bitmap.getHeight();
-                            Log.e("width and height", w + " * " + h);
+            if (StringUtils.isNullOrEmpty(responseData.getThumbnail())) {
+                Glide.with(context).asBitmap().load(R.drawable.default_article)
+                        .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap bitmap,
+                            @Nullable Transition<? super Bitmap> transition) {
+                        int w = bitmap.getWidth();
+                        int h = bitmap.getHeight();
+                        Log.e("width and height", w + " * " + h);
 
-                            float ratio = ((float) h / (float) w);
-                            videoLayout.getLayoutParams().height = Math
-                                    .round(ratio * context.getResources().getDisplayMetrics().widthPixels);
-                            videoLayout.getLayoutParams().width = Math
-                                    .round(context.getResources().getDisplayMetrics().widthPixels);
+                        float ratio = ((float) h / (float) w);
+                        videoLayout.getLayoutParams().height = Math
+                                .round(ratio * context.getResources().getDisplayMetrics().widthPixels);
+                        videoLayout.getLayoutParams().width = Math
+                                .round(context.getResources().getDisplayMetrics().widthPixels);
+                        coverImageView.setImageBitmap(bitmap);
+                    }
+                });
+            } else {
+                Glide.with(context)
+                        .asBitmap()
+                        .load(responseData.getThumbnail())
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap bitmap,
+                                    Transition<? super Bitmap> transition) {
+                                int w = bitmap.getWidth();
+                                int h = bitmap.getHeight();
+                                Log.e("width and height", w + " * " + h);
 
-                            coverImageView.setImageBitmap(bitmap);
-                            Log.e("from ratio",
-                                    w + "   " + h + "   " + videoLayout.getLayoutParams().height + " * " + videoLayout
-                                            .getLayoutParams().width);
-                        }
-                    });
+                                float ratio = ((float) h / (float) w);
+                                videoLayout.getLayoutParams().height = Math
+                                        .round(ratio * context.getResources().getDisplayMetrics().widthPixels);
+                                videoLayout.getLayoutParams().width = Math
+                                        .round(context.getResources().getDisplayMetrics().widthPixels);
+
+                                coverImageView.setImageBitmap(bitmap);
+                            }
+                        });
+            }
         }
     }
 

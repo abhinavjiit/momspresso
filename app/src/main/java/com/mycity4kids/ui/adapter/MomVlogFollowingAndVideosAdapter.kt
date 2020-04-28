@@ -49,7 +49,7 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var momVlogVideosOrFollowingList: ArrayList<VlogsListingAndDetailResult>? = null
     private var vlogersListData = ArrayList<UserDetailResult>()
-    var start: Int = 1
+    var start: Int = 0
     var end: Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -81,6 +81,7 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
                     position
                 )?.isResponseReceived
             )
+            holder.scroll.fullScroll(HorizontalScrollView.FOCUS_LEFT)
             if (!momVlogVideosOrFollowingList?.get(position)?.isCarouselRequestRunning!! && !momVlogVideosOrFollowingList?.get(
                     position
                 )?.isResponseReceived!!) {
@@ -91,14 +92,14 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
                 val retrofit = BaseApplication.getInstance().retrofit
                 val vlogsListingAndDetailsAPI =
                     retrofit.create(VlogsListingAndDetailsAPI::class.java)
-                end = start + 5
+                end = start + 6
                 val call = vlogsListingAndDetailsAPI.getVlogersData(
                     SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
                     start,
                     end,
                     1
                 )
-                start += end
+                start = end + 1
                 call.enqueue(object : Callback<MomVlogersDetailResponse> {
                     override fun onFailure(call: Call<MomVlogersDetailResponse>, t: Throwable) {
                     }
@@ -389,10 +390,7 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
         position: Int
     ) {
         try {
-            if (responseVlogersData.isEmpty()) {
-                if (momVlogVideosOrFollowingList.isNullOrEmpty()) {
-                }
-            } else {
+            if (!responseVlogersData.isEmpty()) {
                 momVlogVideosOrFollowingList?.get(position)?.carouselVideoList = responseVlogersData
                 momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.let {
                     populateCarouselFollowFollowing(
@@ -477,6 +475,7 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
                 carosalList[5]
             )
         }
+        holder.scroll.fullScroll(HorizontalScrollView.FOCUS_LEFT)
     }
 
     private fun updateCarosal(

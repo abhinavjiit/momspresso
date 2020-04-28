@@ -20,15 +20,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.core.app.ActivityCompat;
-import androidx.appcompat.app.AppCompatDelegate;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -47,12 +38,16 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -62,10 +57,9 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.models.request.AddGroupPostRequest;
@@ -80,9 +74,10 @@ import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.AudioRecordView;
 import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.PermissionUtil;
+import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
-
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -93,8 +88,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -105,7 +98,9 @@ import retrofit2.Retrofit;
  * Created by hemant on 24/4/18.
  */
 
-public class AddTextOrMediaGroupPostActivity extends BaseActivity implements View.OnClickListener, ProcessBitmapTaskFragment.TaskCallbacks, Handler.Callback, AudioRecordView.RecordingListener, SeekBar.OnSeekBarChangeListener {
+public class AddTextOrMediaGroupPostActivity extends BaseActivity implements View.OnClickListener,
+        ProcessBitmapTaskFragment.TaskCallbacks, Handler.Callback, AudioRecordView.RecordingListener,
+        SeekBar.OnSeekBarChangeListener {
 
     private static final String TAG_TASK_FRAGMENT = "task_fragment";
 
@@ -229,7 +224,8 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         closeEditorImageView.setOnClickListener(this);
 
         if (SharedPrefUtils.getSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId()) != null) {
-            postContentEditText.setText(SharedPrefUtils.getSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId()));
+            postContentEditText
+                    .setText(SharedPrefUtils.getSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId()));
         }
 
         postContentEditText.addTextChangedListener(new TextWatcher() {
@@ -243,12 +239,14 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (charSequence.toString().length() > 0) {
                     audioRecordView.setVisibility(View.GONE);
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) addMediaImageView.getLayoutParams();
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) addMediaImageView
+                            .getLayoutParams();
                     params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                     addMediaImageView.setLayoutParams(params);
                 } else {
                     audioRecordView.setVisibility(View.VISIBLE);
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) addMediaImageView.getLayoutParams();
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) addMediaImageView
+                            .getLayoutParams();
                     params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                     params.addRule(RelativeLayout.LEFT_OF, R.id.recordingView);
                     addMediaImageView.setLayoutParams(params);
@@ -326,15 +324,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                 startActivityForResult(intent, ADD_IMAGE_GALLERY_ACTIVITY_REQUEST_CODE);
                 chooseMediaTypeContainer.setVisibility(View.GONE);
                 break;
-            case R.id.videoCameraTextView:
-                Intent videoCapture = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
-                chooseMediaTypeContainer.setVisibility(View.GONE);
-                break;
-            case R.id.videoGalleryTextView:
-                pickVideoFromGallery();
-                chooseMediaTypeContainer.setVisibility(View.GONE);
-                break;
             case R.id.anonymousImageView:
             case R.id.anonymousTextView:
             case R.id.anonymousCheckbox:
@@ -354,7 +343,8 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     }
 
     private boolean validateParams() {
-        if (audioUrlHashMap.isEmpty() && ((postContentEditText.getText() == null || StringUtils.isNullOrEmpty(postContentEditText.getText().toString())) &&
+        if (audioUrlHashMap.isEmpty() && ((postContentEditText.getText() == null || StringUtils
+                .isNullOrEmpty(postContentEditText.getText().toString())) &&
                 imageUrlHashMap.isEmpty())) {
             showToast("Please enter some content to continue");
             return false;
@@ -450,7 +440,9 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 try {
-                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, GenericFileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".my.package.name.provider", createImageFile()));
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, GenericFileProvider
+                            .getUriForFile(this, getApplicationContext().getPackageName() + ".my.package.name.provider",
+                                    createImageFile()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -482,7 +474,8 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             intent.setType("video/mp4");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-            startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
+            startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)),
+                    AppConstants.REQUEST_VIDEO_TRIMMER);
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
@@ -504,7 +497,8 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                         // If the Fragment is non-null, then it is currently being
                         // retained across a configuration change.
                         FragmentManager fm = getFragmentManager();
-                        mProcessBitmapTaskFragment = (ProcessBitmapTaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+                        mProcessBitmapTaskFragment = (ProcessBitmapTaskFragment) fm
+                                .findFragmentByTag(TAG_TASK_FRAGMENT);
                         if (mProcessBitmapTaskFragment == null) {
                             mProcessBitmapTaskFragment = new ProcessBitmapTaskFragment();
                             Bundle bundle = new Bundle();
@@ -529,7 +523,8 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             case ADD_IMAGE_CAMERA_ACTIVITY_REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK) {
                     try {
-                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(mCurrentPhotoPath));
+                        Bitmap imageBitmap = MediaStore.Images.Media
+                                .getBitmap(getContentResolver(), Uri.parse(mCurrentPhotoPath));
                         ExifInterface ei = new ExifInterface(absoluteImagePath);
                         int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                                 ExifInterface.ORIENTATION_UNDEFINED);
@@ -760,7 +755,8 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     private void requestUngrantedPermissionsForAudio() {
         ArrayList<String> permissionList = new ArrayList<>();
         for (int i = 0; i < PERMISSIONS_INIT_FOR_AUDIO.length; i++) {
-            if (ActivityCompat.checkSelfPermission(this, PERMISSIONS_INIT_FOR_AUDIO[i]) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, PERMISSIONS_INIT_FOR_AUDIO[i])
+                    != PackageManager.PERMISSION_GRANTED) {
                 permissionList.add(PERMISSIONS_INIT_FOR_AUDIO[i]);
             }
         }
@@ -773,7 +769,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull int[] grantResults) {
 
         if (requestCode == REQUEST_INIT_PERMISSION) {
             Log.i("Permissions", "Received response for storage permissions request.");
@@ -814,8 +810,10 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (null != postContentEditText.getText() && !StringUtils.isNullOrEmpty(postContentEditText.getText().toString())) {
-            SharedPrefUtils.setSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId(), postContentEditText.getText().toString());
+        if (null != postContentEditText.getText() && !StringUtils
+                .isNullOrEmpty(postContentEditText.getText().toString())) {
+            SharedPrefUtils.setSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId(),
+                    postContentEditText.getText().toString());
         }
     }
 
@@ -831,7 +829,9 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
 
     @Override
     public void onPostExecute(Bitmap image) {
-        String path = MediaStore.Images.Media.insertImage(AddTextOrMediaGroupPostActivity.this.getContentResolver(), image, "Title" + System.currentTimeMillis(), null);
+        String path = MediaStore.Images.Media
+                .insertImage(AddTextOrMediaGroupPostActivity.this.getContentResolver(), image,
+                        "Title" + System.currentTimeMillis(), null);
         if (path != null) {
             Uri imageUriTemp = Uri.parse(path);
             File file2 = FileUtils.getFile(this, imageUriTemp);
@@ -898,8 +898,11 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         } else if (recordTime >= 4) {
             stopRecording();
             originalUri = Uri.parse(mFileName);
-            contentURI = AppUtils.exportAudioToGallery(originalUri.getPath(), BaseApplication.getAppContext().getContentResolver(), this);
-            contentURI = AppUtils.getAudioUriFromMediaProvider(originalUri.getPath(), BaseApplication.getAppContext().getContentResolver());
+            contentURI = AppUtils
+                    .exportAudioToGallery(originalUri.getPath(), BaseApplication.getAppContext().getContentResolver(),
+                            this);
+            contentURI = AppUtils.getAudioUriFromMediaProvider(originalUri.getPath(),
+                    BaseApplication.getAppContext().getContentResolver());
             uploadAudio(contentURI);
             Log.d("RecordTime", "" + recordTime);
         } else {
@@ -1060,8 +1063,9 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         StorageMetadata metadata = new StorageMetadata.Builder()
                 .setContentType("audio/m4a")
                 .build();
-        final StorageReference riversRef = storageRef.child("user/" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()
-                + "/audio/" + file2.getLastPathSegment() + "_" + suffixName + ".m4a");
+        final StorageReference riversRef = storageRef
+                .child("user/" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()
+                        + "/audio/" + file2.getLastPathSegment() + "_" + suffixName + ".m4a");
         com.google.firebase.storage.UploadTask uploadTask = riversRef.putFile(file2, metadata);
 
 // Register observers to listen for when the download is done or if it fails
@@ -1213,13 +1217,13 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                 totalDuration = mMediaplayer.getDuration();
                 currentDuration = mMediaplayer.getCurrentPosition();
 
-                audioTimeElapsed.setText(milliSecondsToTimer(currentDuration) + "/" + milliSecondsToTimer(totalDuration));
+                audioTimeElapsed
+                        .setText(milliSecondsToTimer(currentDuration) + "/" + milliSecondsToTimer(totalDuration));
 
                 // Updating progress bar
                 int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
                 //Log.d("Progress", ""+progress);
                 audioSeekBarUpdate.setProgress(progress);
-
 
                 // Running this thread after 100 milliseconds
                 mHandler.postDelayed(this, 100);

@@ -879,7 +879,7 @@
   <string name="upload_larger_video">দুঃখিত! আপনার ভিডিওটি অন্তত 5 সেকেন্ডের বেশি হতে হবে </string>
   <string name="minutes_label">মিনিট</string>
   <string name="women_only">Oops! This section is for women only. You can, however, continue to read our other content</string>
-  <string name="check_out_momvlog">Momspresso\n\nCheck out this interesting blog post\n</string>
+  <string name="check_out_momvlog">Momspresso\n\nCheck out this interesting video\n</string>
   <string name="take_picture_from_camera">Take picture from camera</string>
   <string name="select_an_image">Select an image</string>
   <string name="related_videos">RELATED VIDEOS</string>

@@ -27,18 +27,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.models.request.UpdatePostContentRequest;
@@ -52,9 +49,9 @@ import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.ui.fragment.ProcessBitmapTaskFragment;
 import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.PermissionUtil;
+import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -64,7 +61,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -75,7 +71,8 @@ import retrofit2.Retrofit;
  * Created by hemant on 14/8/18.
  */
 
-public class GroupsEditPostActivity extends BaseActivity implements View.OnClickListener, ProcessBitmapTaskFragment.TaskCallbacks {
+public class GroupsEditPostActivity extends BaseActivity implements View.OnClickListener,
+        ProcessBitmapTaskFragment.TaskCallbacks {
 
     public static final int REQUEST_INIT_PERMISSION = 1;
     private EditText postContentEditText;
@@ -276,15 +273,6 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
                 startActivityForResult(intent, ADD_IMAGE_GALLERY_ACTIVITY_REQUEST_CODE);
                 chooseMediaTypeContainer.setVisibility(View.GONE);
                 break;
-            case R.id.videoCameraTextView:
-                Intent videoCapture = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
-                chooseMediaTypeContainer.setVisibility(View.GONE);
-                break;
-            case R.id.videoGalleryTextView:
-                pickVideoFromGallery();
-                chooseMediaTypeContainer.setVisibility(View.GONE);
-                break;
             case R.id.anonymousImageView:
             case R.id.anonymousTextView:
             case R.id.anonymousCheckbox:
@@ -293,8 +281,6 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
                 } else {
                     SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
                 }
-
-
                 break;
         }
     }
@@ -357,7 +343,7 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull int[] grantResults) {
 
         if (requestCode == REQUEST_INIT_PERMISSION) {
             Log.i("Permissions", "Received response for storage permissions request.");
@@ -399,7 +385,9 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 try {
-                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, GenericFileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".my.package.name.provider", createImageFile()));
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, GenericFileProvider
+                            .getUriForFile(this, getApplicationContext().getPackageName() + ".my.package.name.provider",
+                                    createImageFile()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -431,7 +419,8 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
             intent.setType("video/mp4");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-            startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
+            startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)),
+                    AppConstants.REQUEST_VIDEO_TRIMMER);
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
@@ -453,7 +442,8 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
                         // If the Fragment is non-null, then it is currently being
                         // retained across a configuration change.
                         FragmentManager fm = getFragmentManager();
-                        mProcessBitmapTaskFragment = (ProcessBitmapTaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+                        mProcessBitmapTaskFragment = (ProcessBitmapTaskFragment) fm
+                                .findFragmentByTag(TAG_TASK_FRAGMENT);
                         if (mProcessBitmapTaskFragment == null) {
                             mProcessBitmapTaskFragment = new ProcessBitmapTaskFragment();
                             Bundle bundle = new Bundle();
@@ -478,7 +468,8 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
             case ADD_IMAGE_CAMERA_ACTIVITY_REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK) {
                     try {
-                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(mCurrentPhotoPath));
+                        Bitmap imageBitmap = MediaStore.Images.Media
+                                .getBitmap(getContentResolver(), Uri.parse(mCurrentPhotoPath));
                         ExifInterface ei = new ExifInterface(absoluteImagePath);
                         int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                                 ExifInterface.ORIENTATION_UNDEFINED);
@@ -561,7 +552,8 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
                     postData = groupPostResponse.getData().get(0).getResult().get(0);
                     Intent intent = getIntent();
                     intent.putExtra("editedPost", postData);
-                    intent.putExtra("updatedContent", groupPostResponse.getData().get(0).getResult().get(0).getContent());
+                    intent.putExtra("updatedContent",
+                            groupPostResponse.getData().get(0).getResult().get(0).getContent());
                     setResult(RESULT_OK, intent);
                     finish();
                 } else {
@@ -635,8 +627,10 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (null != postContentEditText.getText() && !StringUtils.isNullOrEmpty(postContentEditText.getText().toString()) && selectedGroup != null) {
-            SharedPrefUtils.setSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId(), postContentEditText.getText().toString());
+        if (null != postContentEditText.getText() && !StringUtils
+                .isNullOrEmpty(postContentEditText.getText().toString()) && selectedGroup != null) {
+            SharedPrefUtils.setSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId(),
+                    postContentEditText.getText().toString());
         }
     }
 
@@ -652,7 +646,8 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
 
     @Override
     public void onPostExecute(Bitmap image) {
-        String path = MediaStore.Images.Media.insertImage(GroupsEditPostActivity.this.getContentResolver(), image, "Title" + System.currentTimeMillis(), null);
+        String path = MediaStore.Images.Media.insertImage(GroupsEditPostActivity.this.getContentResolver(), image,
+                "Title" + System.currentTimeMillis(), null);
         Uri imageUriTemp = Uri.parse(path);
         File file2 = FileUtils.getFile(this, imageUriTemp);
         sendUploadProfileImageRequest(file2);

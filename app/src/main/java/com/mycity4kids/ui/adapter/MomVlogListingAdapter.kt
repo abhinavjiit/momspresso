@@ -42,7 +42,7 @@ const val CAROUSAL = 1
 class MomVlogListingAdapter(val mContext: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var start: Int = 1
+    var start: Int = 0
     var end: Int = 0
     var start_gold = 1
     var end_gold = 0
@@ -117,6 +117,7 @@ class MomVlogListingAdapter(val mContext: Context) :
                 "TTTTT",
                 "position = " + position + " careouselRunning --- " + momVlogVideosOrCarousalList[position].isCarouselRequestRunning + "  ----  list[position].isResponseReceived = " + momVlogVideosOrCarousalList[position].isResponseReceived
             )
+            holder.scroll.fullScroll(HorizontalScrollView.FOCUS_LEFT)
             if (!momVlogVideosOrCarousalList[position].isCarouselRequestRunning && !momVlogVideosOrCarousalList[position].isResponseReceived) {
                 holder.shimmerLayout.startShimmerAnimation()
                 holder.shimmerLayout.visibility = View.VISIBLE
@@ -126,14 +127,14 @@ class MomVlogListingAdapter(val mContext: Context) :
                 val vlogsListingAndDetailsAPI =
                     retrofit.create(VlogsListingAndDetailsAPI::class.java)
                 // if (alternateCarousal % 2 == 0) {
-                end = start + 5
+                end = start + 6
                 val call = vlogsListingAndDetailsAPI.getVlogersData(
                     SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
                     start,
                     end,
                     1
                 )
-                start += end
+                start = end + 1
                 call.enqueue(object : Callback<MomVlogersDetailResponse> {
                     override fun onFailure(call: Call<MomVlogersDetailResponse>, t: Throwable) {
                     }
@@ -404,8 +405,7 @@ class MomVlogListingAdapter(val mContext: Context) :
         responseVlogersData: ArrayList<UserDetailResult>?,
         position: Int
     ) {
-        if (responseVlogersData.isNullOrEmpty()) {
-        } else {
+        if (!responseVlogersData.isNullOrEmpty()) {
             momVlogVideosOrCarousalList[position].carouselVideoList = responseVlogersData
             populateCarouselFollowFollowing(holder, responseVlogersData)
         }

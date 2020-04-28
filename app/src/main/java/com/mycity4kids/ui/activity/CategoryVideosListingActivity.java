@@ -120,7 +120,14 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 if (response.isSuccessful() && response.body() != null) {
                     categoriesList = response.body().getChild();
                     for (int i = 0; i < categoriesList.size(); i++) {
-                        if ("1".equals(categoriesList.get(i).getShowInMenu())) {
+                        //                        if ("1".equals(categoriesList.get(i).getShowInMenu())) {
+//                            subTopicsList.add(categoriesList.get(i));
+//                        }
+                        if (("category-eed5fd2777a24bd48ba9a7e1e4dd4b47").equals(categoriesList.get(i).getId())
+                                || ("category-958b29175e174f578c2d92a925451d4f").equals(categoriesList.get(i).getId())
+                                || ("category-2ce9257cbf4c4794acacacb173feda13").equals(categoriesList.get(i).getId())
+                                || ("category-ee7ea82543bd4bc0a8dad288561f2beb")
+                                .equals(categoriesList.get(i).getId())) {
                             subTopicsList.add(categoriesList.get(i));
                         }
                     }

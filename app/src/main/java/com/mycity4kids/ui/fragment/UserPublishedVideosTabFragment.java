@@ -4,12 +4,9 @@ import android.Manifest;
 import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -25,16 +22,13 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.material.snackbar.Snackbar;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
@@ -47,11 +41,9 @@ import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.SearchAllActivity;
 import com.mycity4kids.ui.activity.UserPublishedContentActivity;
-import com.mycity4kids.ui.activity.VideoTrimmerActivity;
 import com.mycity4kids.ui.adapter.UserPublishedVideosListingAdapter;
-import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.StringUtils;
-import com.mycity4kids.videotrimmer.utils.FileUtils;
+import com.mycity4kids.vlogs.VideoCategoryAndChallengeSelectionActivity;
 import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -331,135 +323,11 @@ public class UserPublishedVideosTabFragment extends BaseFragment implements View
                 startActivity(searchIntent);
                 break;
             case R.id.getStartedTextView:
-                ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment =
-                        new ChooseVideoUploadOptionDialogFragment();
-                Bundle args = new Bundle();
-                args.putString("activity", "myfunnyvideos");
-                chooseVideoUploadOptionDialogFragment.setArguments(args);
-                chooseVideoUploadOptionDialogFragment.setCancelable(true);
-                chooseVideoUploadOptionDialogFragment.setTargetFragment(this, 1111);
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
+                Intent intent = new Intent(getActivity(), VideoCategoryAndChallengeSelectionActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK) {
-            return;
-        }
-        if (requestCode == AppConstants.REQUEST_VIDEO_TRIMMER) {
-            final Uri selectedUri = data.getData();
-            if (selectedUri != null) {
-                startTrimActivity(selectedUri);
-            } else {
-                if (isAdded()) {
-                    ((UserPublishedContentActivity) getActivity())
-                            .showToast(getString(R.string.toast_cannot_retrieve_selected_video));
-                }
-            }
-        }
-    }
-
-    private void startTrimActivity(@NonNull Uri uri) {
-        Intent intent = new Intent(getActivity(), VideoTrimmerActivity.class);
-        String filepath = FileUtils.getPath(getActivity(), uri);
-        if (null != filepath && (filepath.endsWith(".mp4") || filepath.endsWith(".MP4"))) {
-            intent.putExtra("EXTRA_VIDEO_PATH", FileUtils.getPath(getActivity(), uri));
-            startActivity(intent);
-        } else {
-            if (isAdded()) {
-                ((UserPublishedContentActivity) getActivity()).showToast(getString(R.string.choose_mp4_file));
-            }
-        }
-    }
-
-    public void requestPermissions(final String imageFrom) {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                || ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Snackbar.make(rootLayout, R.string.permission_storage_rationale,
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            requestUngrantedPermissions(imageFrom);
-                        }
-                    })
-                    .show();
-        } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                Manifest.permission.CAMERA)) {
-            Snackbar.make(rootLayout, R.string.permission_camera_rationale,
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            requestUngrantedPermissions(imageFrom);
-                        }
-                    })
-                    .show();
-        } else {
-            requestUngrantedPermissions(imageFrom);
-        }
-    }
-
-    private void requestUngrantedPermissions(String imageFrom) {
-        ArrayList<String> permissionList = new ArrayList<>();
-        for (int i = 0; i < PERMISSIONS_STORAGE_CAMERA.length; i++) {
-            if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_STORAGE_CAMERA[i])
-                    != PackageManager.PERMISSION_GRANTED) {
-                permissionList.add(PERMISSIONS_STORAGE_CAMERA[i]);
-            }
-        }
-        String[] requiredPermission = permissionList.toArray(new String[permissionList.size()]);
-        if ("gallery".equals(imageFrom)) {
-            ActivityCompat.requestPermissions(getActivity(), requiredPermission, REQUEST_GALLERY_PERMISSION);
-        } else if ("camera".equals(imageFrom)) {
-            ActivityCompat.requestPermissions(getActivity(), requiredPermission, REQUEST_CAMERA_PERMISSION);
-        }
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-            @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            if (PermissionUtil.verifyPermissions(grantResults)) {
-                Snackbar.make(rootLayout, R.string.permision_available_init,
-                        Snackbar.LENGTH_SHORT)
-                        .show();
-                Intent videoCapture = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
-            } else {
-                Snackbar.make(rootLayout, R.string.permissions_not_granted,
-                        Snackbar.LENGTH_SHORT)
-                        .show();
-            }
-        } else if (requestCode == REQUEST_GALLERY_PERMISSION) {
-            if (PermissionUtil.verifyPermissions(grantResults)) {
-                Snackbar.make(rootLayout, R.string.permision_available_init,
-                        Snackbar.LENGTH_SHORT)
-                        .show();
-                Intent intent = new Intent();
-                intent.setType("video/mp4");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)),
-                        AppConstants.REQUEST_VIDEO_TRIMMER);
-            } else {
-                Snackbar.make(rootLayout, R.string.permissions_not_granted,
-                        Snackbar.LENGTH_SHORT)
-                        .show();
-            }
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
