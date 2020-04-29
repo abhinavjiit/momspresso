@@ -204,10 +204,10 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
                     //                    if (it[i]?.publicVisibility == "1") {
                     //                        categoryList.add(it[i])
                     //                    }
-                    if ("category-eed5fd2777a24bd48ba9a7e1e4dd4b47" == it[i].id
-                        || "category-958b29175e174f578c2d92a925451d4f" == it[i].id
-                        || "category-2ce9257cbf4c4794acacacb173feda13" == it[i].id
-                        || ("category-ee7ea82543bd4bc0a8dad288561f2beb" == it[i].id)) {
+                    if ("category-eed5fd2777a24bd48ba9a7e1e4dd4b47" == it[i].id ||
+                        "category-958b29175e174f578c2d92a925451d4f" == it[i].id ||
+                        "category-2ce9257cbf4c4794acacacb173feda13" == it[i].id ||
+                        ("category-ee7ea82543bd4bc0a8dad288561f2beb" == it[i].id)) {
                         categoryList.add(it[i])
                     }
                 }

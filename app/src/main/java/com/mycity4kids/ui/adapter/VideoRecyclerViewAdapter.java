@@ -313,9 +313,21 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             } catch (Exception e) {
                 userImage.setImageResource(R.drawable.default_blogger_profile_img);
             }
-            commentCount.setText(responseData.getComment_count());
-            likeCount.setText(responseData.getLike_count() + " " + "Likes");
-            viewsCount.setText(responseData.getView_count() + " " + "Views");
+            try {
+                commentCount.setText(AppUtils.withSuffix(Long.parseLong(responseData.getComment_count())));
+            } catch (Exception e) {
+                commentCount.setText(responseData.getComment_count());
+            }
+            try {
+                likeCount.setText(AppUtils.withSuffix(Long.parseLong(responseData.getLike_count())) + " " + "Likes");
+            } catch (Exception e) {
+                likeCount.setText(responseData.getLike_count() + " " + "Likes");
+            }
+            try {
+                viewsCount.setText(AppUtils.withSuffix(Long.parseLong(responseData.getView_count())) + " " + "Views");
+            } catch (Exception e) {
+                viewsCount.setText(responseData.getView_count() + " " + "Views");
+            }
             followText.setOnClickListener(view -> {
                 Utils.momVlogEvent(context, "Video Detail", "Follow", "", "android",
                         SharedPrefUtils.getAppLocale(context),
@@ -488,21 +500,21 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             if (StringUtils.isNullOrEmpty(responseData.getThumbnail())) {
                 Glide.with(context).asBitmap().load(R.drawable.default_article)
                         .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap bitmap,
-                            @Nullable Transition<? super Bitmap> transition) {
-                        int w = bitmap.getWidth();
-                        int h = bitmap.getHeight();
-                        Log.e("width and height", w + " * " + h);
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap bitmap,
+                                    @Nullable Transition<? super Bitmap> transition) {
+                                int w = bitmap.getWidth();
+                                int h = bitmap.getHeight();
+                                Log.e("width and height", w + " * " + h);
 
-                        float ratio = ((float) h / (float) w);
-                        videoLayout.getLayoutParams().height = Math
-                                .round(ratio * context.getResources().getDisplayMetrics().widthPixels);
-                        videoLayout.getLayoutParams().width = Math
-                                .round(context.getResources().getDisplayMetrics().widthPixels);
-                        coverImageView.setImageBitmap(bitmap);
-                    }
-                });
+                                float ratio = ((float) h / (float) w);
+                                videoLayout.getLayoutParams().height = Math
+                                        .round(ratio * context.getResources().getDisplayMetrics().widthPixels);
+                                videoLayout.getLayoutParams().width = Math
+                                        .round(context.getResources().getDisplayMetrics().widthPixels);
+                                coverImageView.setImageBitmap(bitmap);
+                            }
+                        });
             } else {
                 Glide.with(context)
                         .asBitmap()

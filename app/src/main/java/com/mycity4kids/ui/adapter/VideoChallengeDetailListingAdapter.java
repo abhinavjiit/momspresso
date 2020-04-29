@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
+import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
@@ -52,10 +53,22 @@ public class VideoChallengeDetailListingAdapter extends RecyclerView.Adapter<Rec
             ((ViewHolderChallenge) holder).authorName.setText(
                     articleDataModelsNew.get(position).getAuthor().getFirstName().trim() + " " + articleDataModelsNew
                             .get(position).getAuthor().getLastName().trim());
-            ((ViewHolderChallenge) holder).viewCountTextView
-                    .setText(articleDataModelsNew.get(position).getView_count());
-            ((ViewHolderChallenge) holder).recommendCountTextView1
-                    .setText(articleDataModelsNew.get(position).getLike_count());
+            try {
+                ((ViewHolderChallenge) holder).viewCountTextView
+                        .setText(AppUtils.withSuffix(
+                                Long.parseLong(articleDataModelsNew.get(position).getView_count())));
+            } catch (Exception e) {
+                ((ViewHolderChallenge) holder).viewCountTextView
+                        .setText(articleDataModelsNew.get(position).getView_count());
+            }
+            try {
+                ((ViewHolderChallenge) holder).recommendCountTextView1
+                        .setText(AppUtils.withSuffix(
+                                Long.parseLong(articleDataModelsNew.get(position).getLike_count())));
+            } catch (Exception e) {
+                ((ViewHolderChallenge) holder).recommendCountTextView1
+                        .setText(articleDataModelsNew.get(position).getLike_count());
+            }
             if (articleDataModelsNew.get(position).isIs_gold()) {
                 ((ViewHolderChallenge) holder).imageWinner.setImageResource(R.drawable.ic_trophy);
             } else if (articleDataModelsNew.get(position).getWinner() == 1) {

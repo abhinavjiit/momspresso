@@ -29,6 +29,7 @@ import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
 import com.mycity4kids.ui.activity.ParallelFeedActivity
+import com.mycity4kids.utils.AppUtils
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.mom_vlog_follow_following_carousal.view.*
 import kotlinx.android.synthetic.main.mom_vlog_listing_adapter.view.*
@@ -77,9 +78,19 @@ class MomVlogListingAdapter(val mContext: Context) :
                     " " +
                         momVlogVideosOrCarousalList[position].author.lastName
                 )
-
-            holder.recommendCountTextView1.text = momVlogVideosOrCarousalList[position].like_count
-            holder.viewCountTextView1.text = momVlogVideosOrCarousalList[position].view_count
+            try {
+                holder.recommendCountTextView1.text =
+                    AppUtils.withSuffix(momVlogVideosOrCarousalList[position].like_count.toLong())
+            } catch (e: Exception) {
+                holder.recommendCountTextView1.text =
+                    momVlogVideosOrCarousalList[position].like_count
+            }
+            try {
+                holder.viewCountTextView1.text =
+                    AppUtils.withSuffix(momVlogVideosOrCarousalList[position].view_count.toLong())
+            } catch (e: Exception) {
+                holder.viewCountTextView1.text = momVlogVideosOrCarousalList[position].view_count
+            }
             when {
 
                 momVlogVideosOrCarousalList[position].winner == 1 -> {

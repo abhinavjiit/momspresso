@@ -29,6 +29,7 @@ import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
 import com.mycity4kids.ui.activity.ParallelFeedActivity
+import com.mycity4kids.utils.AppUtils
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.follow_following_tab_vlog_adapter.view.articleImageView
 import kotlinx.android.synthetic.main.follow_following_tab_vlog_adapter.view.articleTitleTextView
@@ -74,13 +75,6 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is FollowFollowingCarousal) {
-            Log.e(
-                "TTTTT",
-                "position = " + position +
-                    " careouselRunnin --- " + momVlogVideosOrFollowingList?.get(position)?.isCarouselRequestRunning + "  ----  list[position].isResponseReceived = " + momVlogVideosOrFollowingList?.get(
-                    position
-                )?.isResponseReceived
-            )
             holder.scroll.fullScroll(HorizontalScrollView.FOCUS_LEFT)
             if (!momVlogVideosOrFollowingList?.get(position)?.isCarouselRequestRunning!! && !momVlogVideosOrFollowingList?.get(
                     position
@@ -334,9 +328,28 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
                         momVlogVideosOrFollowingList?.get(position)?.author?.lastName
                 )
 
-            holder.recommendCountTextView1.text =
-                momVlogVideosOrFollowingList?.get(position)?.like_count
-            holder.viewCountTextView1.text = momVlogVideosOrFollowingList?.get(position)?.view_count
+            try {
+                holder.recommendCountTextView1.text =
+                    momVlogVideosOrFollowingList?.get(position)?.like_count?.toLong()?.let {
+                        AppUtils.withSuffix(
+                            it
+                        )
+                    }
+            } catch (e: Exception) {
+                holder.recommendCountTextView1.text =
+                    momVlogVideosOrFollowingList?.get(position)?.like_count
+            }
+            try {
+                holder.viewCountTextView1.text =
+                    momVlogVideosOrFollowingList?.get(position)?.view_count?.toLong()?.let {
+                        AppUtils.withSuffix(
+                            it
+                        )
+                    }
+            } catch (e: Exception) {
+                holder.viewCountTextView1.text =
+                    momVlogVideosOrFollowingList?.get(position)?.view_count
+            }
             when {
                 momVlogVideosOrFollowingList?.get(position)?.winner == 1 -> {
                     holder.imageWinner.setImageResource(R.drawable.ic_trophy)

@@ -12,6 +12,7 @@ import com.google.gson.Gson
 import com.mycity4kids.R
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.models.response.UserDetailResult
+import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.RoundedTransformation
 import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.widget.BadgesProfileWidget
@@ -116,20 +117,9 @@ class ProfileShareCardWidget : RelativeLayout {
 
     private fun processAuthorsFollowingAndFollowership(responseData: UserDetailResult) {
         val followerCount = Integer.parseInt(responseData.followersCount)
-        if (followerCount > 999) {
-            val singleFollowerCount = followerCount.toFloat() / 1000
-            followerCountTextView.text = "" + singleFollowerCount + "k"
-        } else {
-            followerCountTextView.text = "" + followerCount
-        }
-
+        followerCountTextView.text = AppUtils.withSuffix(followerCount.toLong())
         val followingCount = Integer.parseInt(responseData.followingCount)
-        if (followingCount > 999) {
-            val singleFollowingCount = followingCount.toFloat() / 1000
-            followingCountTextView.text = "" + singleFollowingCount + "k"
-        } else {
-            followingCountTextView.text = "" + followingCount
-        }
+        followingCountTextView.text = AppUtils.withSuffix(followingCount.toLong())
     }
 
     private fun processAuthorPostCount(responseData: UserDetailResult) {
