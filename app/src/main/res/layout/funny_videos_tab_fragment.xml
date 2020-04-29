@@ -12,17 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_10"
-        android:layout_marginTop="@dimen/space_5"
-        android:background="@color/white"
         android:orientation="horizontal" />
-
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/pullToRefresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/scrollView"
-        android:layout_marginTop="@dimen/space_10">
+        android:layout_below="@+id/scrollView">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/vlogsListView"

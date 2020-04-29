@@ -56,7 +56,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private boolean isUploading = false;
     private Uri contentURI;
     private String title;
-    private String categoryId, challengeId, challengeName, comingFrom;
+    private String categoryId, challengeId, comingFrom;
     private String duration;
     private String thumbnailTime;
     private MixpanelAPI mixpanel;
@@ -95,7 +95,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         comingFrom = getIntent().getStringExtra("comingFrom");
         if ("Challenge".equals(comingFrom)) {
             challengeId = getIntent().getStringExtra("ChallengeId");
-            challengeName = getIntent().getStringExtra("ChallengeName");
+//            challengeName = getIntent().getStringExtra("ChallengeName");
         }
 
         uploadingContainer = (RelativeLayout) findViewById(R.id.uploadingContainer);
@@ -158,7 +158,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
             // Handle unsuccessful uploads
             isUploading = false;
             uploadStatus = AppConstants.VIDEO_UPLOAD_FAILED;
-            MixPanelUtils.pushVideoUploadFailureEvent(mixpanel, title);
+            MixPanelUtils.pushVideoUploadFailureEvent(mixpanel, title, exception.getMessage());
             createRowForFailedAttempt(exception.getMessage());
 
         }).addOnSuccessListener(taskSnapshot -> {

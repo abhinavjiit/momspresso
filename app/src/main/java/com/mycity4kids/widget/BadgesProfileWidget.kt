@@ -73,19 +73,16 @@ class BadgesProfileWidget : LinearLayout {
             ) {
                 try {
                     if (response.body() == null) {
-                        if (response.raw() != null) {
-                            val nee = NetworkErrorException(response.raw().toString())
-                            Crashlytics.logException(nee)
-                        }
+                        val nee = NetworkErrorException(response.raw().toString())
+                        Crashlytics.logException(nee)
                         return
                     }
                     val responseModel = response.body() as BadgeListResponse
                     if (responseModel.code == 200 && Constants.SUCCESS == responseModel.status) {
-                        badgesContainer.visibility = View.VISIBLE
                         badgesShimmerContainer.visibility = View.GONE
                         if (responseModel.data != null && !responseModel.data.isEmpty() && responseModel.data[0] != null) {
+                            badgesContainer.visibility = View.VISIBLE
                             processResponse(responseModel.data[0].result)
-                        } else {
                         }
                     }
                 } catch (e: Exception) {

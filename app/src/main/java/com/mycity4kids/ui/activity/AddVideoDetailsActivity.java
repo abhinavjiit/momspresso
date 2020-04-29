@@ -334,30 +334,44 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 
     private void launchUploadInBackground() {
         MixPanelUtils.pushVideoUploadCTAClick(mixpanel, videoTitleEditText.getText().toString() + "~" + signIn);
-        if (contentUri != null && signIn) {
-            Data uriData = new Data.Builder()
-                    .putString("ContentUrl", contentUri.toString())
-                    .putString("categoryId", categoryId)
-                    .putString("duration", duration)
-                    .putString("thumbnailTime", thumbnailTime)
-                    .putString("title", videoTitleEditText.getText().toString())
-                    .putString("comingFrom", comingFrom)
-                    .putString("challengeId", challengeId)
-                    .putString("originalPath", originalPath)
-                    .build();
-            Constraints constraints = new Constraints.Builder().setRequiredNetworkType(
-                    NetworkType.CONNECTED).build();
-
-            request = new OneTimeWorkRequest.Builder(NotificationWorker.class)
-                    .setConstraints(constraints)
-                    .addTag("VideoUploading")
-                    .setInputData(uriData)
-                    .build();
-
-            workManager.enqueue(request);
-            removeProgressDialog();
-            popup.setVisibility(View.VISIBLE);
+        Intent intt = new Intent(this, VideoUploadProgressActivity.class);
+        intt.putExtra("uri", contentUri);
+        intt.putExtra("title", videoTitleEditText.getText().toString());
+        intt.putExtra("categoryId", categoryId);
+        intt.putExtra("duration", duration);
+        intt.putExtra("thumbnailTime", thumbnailTime);
+        intt.putExtra("extension", originalUri.getPath().substring(originalUri.getPath().lastIndexOf(".")));
+        if (comingFrom.equals("Challenge")) {
+            intt.putExtra("ChallengeId", challengeId);
+            intt.putExtra("comingFrom", "Challenge");
+        } else {
+            intt.putExtra("comingFrom", "notFromChallenge");
         }
+        startActivity(intt);
+//        if (contentUri != null && signIn) {
+//            Data uriData = new Data.Builder()
+//                    .putString("ContentUrl", contentUri.toString())
+//                    .putString("categoryId", categoryId)
+//                    .putString("duration", duration)
+//                    .putString("thumbnailTime", thumbnailTime)
+//                    .putString("title", videoTitleEditText.getText().toString())
+//                    .putString("comingFrom", comingFrom)
+//                    .putString("challengeId", challengeId)
+//                    .putString("originalPath", originalPath)
+//                    .build();
+//            Constraints constraints = new Constraints.Builder().setRequiredNetworkType(
+//                    NetworkType.CONNECTED).build();
+//
+//            request = new OneTimeWorkRequest.Builder(NotificationWorker.class)
+//                    .setConstraints(constraints)
+//                    .addTag("VideoUploading")
+//                    .setInputData(uriData)
+//                    .build();
+//
+//            workManager.enqueue(request);
+//            removeProgressDialog();
+//            popup.setVisibility(View.VISIBLE);
+//        }
     }
 
     private void getBlogPage() {

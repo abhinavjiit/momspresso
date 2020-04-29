@@ -270,7 +270,13 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
                         dialog.findViewById<View>(R.id.closeEditorImageView) as ImageView
                     val webView =
                         dialog.findViewById<View>(R.id.videoChallengeRulesWebView) as WebView
-                    webView.loadData(topics.extraData[0].challenge.rules, "text/html", "UTF-8")
+                    webView.loadDataWithBaseURL(
+                        "",
+                        topics.extraData[0].challenge.rules,
+                        "text/html",
+                        "UTF-8",
+                        ""
+                    )
                     imageView.setOnClickListener { view2: View? -> dialog.dismiss() }
                     dialog.show()
                     Utils.momVlogEvent(

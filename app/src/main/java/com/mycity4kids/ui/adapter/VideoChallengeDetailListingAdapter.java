@@ -42,8 +42,12 @@ public class VideoChallengeDetailListingAdapter extends RecyclerView.Adapter<Rec
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ViewHolderChallenge) {
-            Picasso.get().load(articleDataModelsNew.get(position).getThumbnail()).fit()
-                    .into(((ViewHolderChallenge) holder).articleImageView);
+            try {
+                Picasso.get().load(articleDataModelsNew.get(position).getThumbnail())
+                        .into(((ViewHolderChallenge) holder).articleImageView);
+            } catch (Exception e) {
+                ((ViewHolderChallenge) holder).articleImageView.setImageResource(R.drawable.default_article);
+            }
             ((ViewHolderChallenge) holder).articleTitleTextView.setText(articleDataModelsNew.get(position).getTitle());
             ((ViewHolderChallenge) holder).authorName.setText(
                     articleDataModelsNew.get(position).getAuthor().getFirstName().trim() + " " + articleDataModelsNew
@@ -53,9 +57,9 @@ public class VideoChallengeDetailListingAdapter extends RecyclerView.Adapter<Rec
             ((ViewHolderChallenge) holder).recommendCountTextView1
                     .setText(articleDataModelsNew.get(position).getLike_count());
             if (articleDataModelsNew.get(position).isIs_gold()) {
-                ((ViewHolderChallenge) holder).imageWinner.setImageResource(R.drawable.ic_star_yellow);
-            } else if (articleDataModelsNew.get(position).getWinner() == 1) {
                 ((ViewHolderChallenge) holder).imageWinner.setImageResource(R.drawable.ic_trophy);
+            } else if (articleDataModelsNew.get(position).getWinner() == 1) {
+                ((ViewHolderChallenge) holder).imageWinner.setImageResource(R.drawable.ic_star_yellow);
             } else {
                 ((ViewHolderChallenge) holder).imageWinner.setVisibility(View.GONE);
             }

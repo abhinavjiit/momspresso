@@ -43,7 +43,7 @@ class FollowingVideoTabFragment : BaseFragment(),
     private var listData: ArrayList<VlogsListingAndDetailResult>? = null
     private var vlogersListData: ArrayList<UserDetailResult>? = null
     private var start = 0
-    private var vloggers_start = 1
+    private var vloggers_start = 0
     private lateinit var gridLayoutManager: GridLayoutManager
     private lateinit var linearLayoutManager: GridLayoutManager
     private lateinit var headerTextView: TextView
@@ -72,7 +72,7 @@ class FollowingVideoTabFragment : BaseFragment(),
         }
         listData = ArrayList()
         vlogersListData = ArrayList()
-        vloggers_start = 1
+        vloggers_start = 0
         getVlogs(0)
         gridLayoutManager = GridLayoutManager(activity, 2)
         recyclerView_videos.layoutManager = gridLayoutManager
@@ -229,7 +229,7 @@ class FollowingVideoTabFragment : BaseFragment(),
         val vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI::class.java)
         val call = vlogsListingAndDetailsAPI.getVlogersData(
             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-            1,
+            0,
             15,
             1
         )

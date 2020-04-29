@@ -2,20 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="wrap_content"
   android:layout_height="wrap_content"
-  android:background="@color/white"
+  android:background="#F9F9F9"
   android:orientation="vertical">
-
 
   <com.mycity4kids.widget.CustomFontTextView
     android:id="@+id/subCategoryTextView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_margin="8dp"
     android:background="@drawable/mom_vlog_rounded_shape_layout"
-    android:paddingStart="@dimen/space_20"
-    android:paddingTop="@dimen/space_10"
-    android:paddingRight="@dimen/space_20"
-    android:paddingBottom="@dimen/space_10"
+    android:paddingStart="@dimen/space_18"
+    android:paddingTop="@dimen/space_8"
+    android:paddingEnd="@dimen/space_18"
+    android:paddingBottom="@dimen/space_8"
     android:text="All"
     android:textColor="#9B9B9B" />
 

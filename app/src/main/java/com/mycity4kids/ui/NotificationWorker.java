@@ -95,7 +95,9 @@ public class NotificationWorker extends Worker {
                             .getLastPathSegment() + "_" + suffixName);
             uploadTask = riversRef.putFile(file2);
             uploadTask.addOnFailureListener(exception -> {
-                MixPanelUtils.pushVideoUploadFailureEvent(mixpanel, title);
+                Crashlytics.logException(exception);
+                Log.d("MC4kException", Log.getStackTraceString(exception));
+                MixPanelUtils.pushVideoUploadFailureEvent(mixpanel, title, "" + Log.getStackTraceString(exception));
                 createForegroundInfo(0, "failed");
             }).addOnSuccessListener(taskSnapshot -> riversRef.getDownloadUrl().addOnSuccessListener(uri -> {
                 if (uploadTask != null) {

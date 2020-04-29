@@ -89,11 +89,12 @@ public class MixPanelUtils {
         }
     }
 
-    public static void pushVideoUploadFailureEvent(MixpanelAPI mixpanel, String title) {
+    public static void pushVideoUploadFailureEvent(MixpanelAPI mixpanel, String title, String exception) {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
             jsonObject.put("title", title);
+            jsonObject.put("exception", exception);
             mixpanel.track("MomVlogsUploadFailure", jsonObject);
         } catch (Exception e) {
             e.printStackTrace();

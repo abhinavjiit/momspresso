@@ -76,7 +76,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     private String userDynamoId;
     private VideoFeedRecyclerViewClick videoFeedRecyclerViewClick;
     FragmentManager fm;
-    private int start = 1;
+    private int start = 0;
     private int end = 0;
 
     private ArrayList<VlogsListingAndDetailResult> vlogsListingAndDetailResults;
@@ -136,11 +136,11 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 ((FollowFollowingCarousal) holder).shimmerLayout.setVisibility(View.VISIBLE);
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                 VlogsListingAndDetailsAPI vlogsListingAndDetailsApi = retrofit.create(VlogsListingAndDetailsAPI.class);
-                end = start + 5;
+                end = start + 6;
                 Call<MomVlogersDetailResponse> call = vlogsListingAndDetailsApi.getVlogersData(
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), start, end,
                         1);
-                start = end + start;
+                start = end + 1;
                 call.enqueue(
                         new Callback<MomVlogersDetailResponse>() {
                             @Override
