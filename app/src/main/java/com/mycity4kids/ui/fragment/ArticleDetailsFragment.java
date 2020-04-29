@@ -1854,19 +1854,35 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 ViewCountResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS
                         .equals(responseData.getStatus())) {
-                    articleViewCountTextView.setText(responseData.getData().get(0).getCount());
-                    articleCommentCountTextView
-                            .setText(responseData.getData().get(0).getCommentCount());
-                    articleRecommendationCountTextView
-                            .setText(responseData.getData().get(0).getLikeCount());
+                    try {
+                        articleViewCountTextView
+                                .setText(AppUtils.withSuffix(Long.parseLong(responseData.getData().get(0).getCount())));
+                    } catch (Exception e) {
+                        articleViewCountTextView.setText(responseData.getData().get(0).getCount());
+                    }
+                    try {
+                        articleCommentCountTextView
+                                .setText(AppUtils.withSuffix(
+                                        Long.parseLong(responseData.getData().get(0).getCommentCount())));
+                    } catch (Exception e) {
+                        articleCommentCountTextView
+                                .setText(responseData.getData().get(0).getCommentCount());
+                    }
+                    try {
+                        articleRecommendationCountTextView
+                                .setText(AppUtils.withSuffix(
+                                        Long.parseLong(responseData.getData().get(0).getLikeCount())));
+                    } catch (Exception e) {
+                        articleRecommendationCountTextView
+                                .setText(responseData.getData().get(0).getLikeCount());
+                    }
+
                     if ("0".equals(responseData.getData().get(0).getCommentCount())) {
                         articleCommentCountTextView.setVisibility(View.GONE);
                     }
                     if ("0".equals(responseData.getData().get(0).getLikeCount())) {
                         articleRecommendationCountTextView.setVisibility(View.GONE);
                     }
-                } else {
-                    articleViewCountTextView.setText(responseData.getReason());
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);

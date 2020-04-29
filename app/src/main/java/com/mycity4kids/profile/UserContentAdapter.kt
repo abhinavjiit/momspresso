@@ -338,19 +338,31 @@ class UserContentAdapter(
             viewCountTV.visibility = View.GONE
         } else {
             viewCountTV.visibility = View.VISIBLE
-            viewCountTV.text = "" + data.articleCount
+            try {
+                viewCountTV.text = AppUtils.withSuffix(data.articleCount.toLong())
+            } catch (e: Exception) {
+                viewCountTV.text = "" + data.articleCount
+            }
         }
         if (null == data?.commentsCount || 0 == data?.commentsCount) {
             commentCountTV.visibility = View.GONE
         } else {
             commentCountTV.visibility = View.VISIBLE
-            commentCountTV.text = "" + data?.commentsCount
+            try {
+                commentCountTV.text = AppUtils.withSuffix(data.commentsCount.toLong())
+            } catch (e: Exception) {
+                commentCountTV.text = "" + data.commentsCount
+            }
         }
-        if (null == data?.likesCount || 0 == data?.likesCount) {
+        if (null == data?.likesCount || 0 == data.likesCount) {
             recommendCountTV.visibility = View.GONE
         } else {
             recommendCountTV.visibility = View.VISIBLE
-            recommendCountTV.text = "" + data?.likesCount
+            try {
+                recommendCountTV.text = AppUtils.withSuffix(data.likesCount.toLong())
+            } catch (e: Exception) {
+                recommendCountTV.text = "" + data.likesCount
+            }
         }
         if (data?.userName.isNullOrBlank()) {
             authorNameTV.text = "NA"
@@ -415,12 +427,20 @@ class UserContentAdapter(
         if (null == data?.commentsCount) {
             storyCommentCountTV.text = "0"
         } else {
-            storyCommentCountTV.text = "" + data.commentsCount
+            try {
+                storyCommentCountTV.text = AppUtils.withSuffix(data.commentsCount.toLong())
+            } catch (e: Exception) {
+                storyCommentCountTV.text = "" + data.commentsCount
+            }
         }
         if (null == data?.likesCount) {
             storyRecommendationCountTV.text = "0"
         } else {
-            storyRecommendationCountTV.text = "" + data.likesCount
+            try {
+                storyRecommendationCountTV.text = AppUtils.withSuffix(data.likesCount.toLong())
+            } catch (e: Exception) {
+                storyRecommendationCountTV.text = "" + data.likesCount
+            }
         }
         data?.isLiked?.let {
             if (it) {
@@ -478,10 +498,23 @@ class UserContentAdapter(
         private: Boolean
     ) {
         txvArticleTitle.text = data?.title
-        viewCountTextView.text = "" + data?.view_count
-        commentCountTextView.text = "" + data?.comment_count
-        recommendCountTextView.text = "" + data?.like_count
-
+        try {
+            viewCountTextView.text = data?.view_count?.toLong()?.let { AppUtils.withSuffix(it) }
+        } catch (e: Exception) {
+            viewCountTextView.text = "" + data?.view_count
+        }
+        try {
+            commentCountTextView.text =
+                data?.comment_count?.toLong()?.let { AppUtils.withSuffix(it) }
+        } catch (e: Exception) {
+            commentCountTextView.text = "" + data?.comment_count
+        }
+        try {
+            recommendCountTextView.text =
+                data?.like_count?.toLong()?.let { AppUtils.withSuffix(it) }
+        } catch (e: Exception) {
+            recommendCountTextView.text = "" + data?.like_count
+        }
         try {
             val userName = data?.userName
             if (userName.isNullOrBlank()) {

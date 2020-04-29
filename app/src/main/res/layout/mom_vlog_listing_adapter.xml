@@ -31,8 +31,7 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:contentDescription="@string/author_img"
-        android:scaleType="centerCrop"
-        android:src="@drawable/upi" />
+        android:scaleType="centerCrop" />
 
       <View
         android:layout_width="match_parent"

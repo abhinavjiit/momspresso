@@ -442,19 +442,31 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             viewCountTV.setVisibility(View.GONE);
         } else {
             viewCountTV.setVisibility(View.VISIBLE);
-            viewCountTV.setText(data.getArticleCount());
+            try {
+                viewCountTV.setText(AppUtils.withSuffix(Long.parseLong(data.getArticleCount())));
+            } catch (Exception e) {
+                viewCountTV.setText(data.getArticleCount());
+            }
         }
         if (null == data.getCommentsCount() || "0".equals(data.getCommentsCount())) {
             commentCountTV.setVisibility(View.GONE);
         } else {
             commentCountTV.setVisibility(View.VISIBLE);
-            commentCountTV.setText(data.getCommentsCount());
+            try {
+                commentCountTV.setText(AppUtils.withSuffix(Long.parseLong(data.getCommentsCount())));
+            } catch (Exception e) {
+                commentCountTV.setText(data.getCommentsCount());
+            }
         }
         if (null == data.getLikesCount() || "0".equals(data.getLikesCount())) {
             recommendCountTV.setVisibility(View.GONE);
         } else {
             recommendCountTV.setVisibility(View.VISIBLE);
-            recommendCountTV.setText(data.getLikesCount());
+            try {
+                recommendCountTV.setText(AppUtils.withSuffix(Long.parseLong(data.getLikesCount())));
+            } catch (Exception e) {
+                recommendCountTV.setText(data.getLikesCount());
+            }
         }
         if (StringUtils.isNullOrEmpty(data.getUserName()) || data.getUserName().trim().equalsIgnoreCase("")) {
             authorNameTV.setText("NA");
@@ -1647,19 +1659,31 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             viewCountTextView1.setVisibility(View.GONE);
         } else {
             viewCountTextView1.setVisibility(View.VISIBLE);
-            viewCountTextView1.setText(data.getView_count());
+            try {
+                viewCountTextView1.setText(AppUtils.withSuffix(Long.parseLong(data.getView_count())));
+            } catch (Exception e) {
+                viewCountTextView1.setText(data.getView_count());
+            }
         }
         if (null == data.getComment_count() || "0".equals(data.getComment_count())) {
             commentCountTextView1.setVisibility(View.GONE);
         } else {
             commentCountTextView1.setVisibility(View.VISIBLE);
-            commentCountTextView1.setText(data.getComment_count());
+            try {
+                commentCountTextView1.setText(AppUtils.withSuffix(Long.parseLong(data.getComment_count())));
+            } catch (Exception e) {
+                commentCountTextView1.setText(data.getComment_count());
+            }
         }
         if (null == data.getLike_count() || "0".equals(data.getLike_count())) {
             recommendCountTextView1.setVisibility(View.GONE);
         } else {
             recommendCountTextView1.setVisibility(View.VISIBLE);
-            recommendCountTextView1.setText(data.getLike_count());
+            try {
+                recommendCountTextView1.setText(AppUtils.withSuffix(Long.parseLong(data.getLike_count())));
+            } catch (Exception e) {
+                recommendCountTextView1.setText(data.getLike_count());
+            }
         }
         try {
             String userName = data.getAuthor().getFirstName() + " " + data.getAuthor().getLastName();
