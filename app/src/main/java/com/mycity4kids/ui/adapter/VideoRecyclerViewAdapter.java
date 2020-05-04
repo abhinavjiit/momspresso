@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.Html;
@@ -110,7 +109,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         LayoutInflater.from(parent.getContext()).inflate(R.layout.item_empty_view, parent, false));
             case VIEW_TYPE_CAROUSAL:
                 return new FollowFollowingCarousal(LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.parallel_feed_follow_following_carousal_layout, parent, false));
+                        .inflate(R.layout.mom_vlog_follow_following_carousal, parent, false));
             default:
                 return null;
         }
@@ -543,6 +542,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     public class FollowFollowingCarousal extends BaseViewHolder implements View.OnClickListener {
 
         ShimmerFrameLayout shimmerLayout;
+        View spacingView;
         LinearLayout carosalContainer1;
         LinearLayout carosalContainer2;
         LinearLayout carosalContainer3;
@@ -582,8 +582,10 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         ProgressBar progress6;
 
 
-        public FollowFollowingCarousal(View itemView) {
+        FollowFollowingCarousal(View itemView) {
             super(itemView);
+            itemView.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.video_feed_bg));
+            spacingView = itemView.findViewById(R.id.spacingView);
             progress1 = itemView.findViewById(R.id.progress1);
             progress2 = itemView.findViewById(R.id.progress2);
             progress3 = itemView.findViewById(R.id.progress3);
@@ -591,6 +593,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             progress5 = itemView.findViewById(R.id.progress5);
             progress6 = itemView.findViewById(R.id.progress6);
             shimmerLayout = itemView.findViewById(R.id.shimmerLayout);
+            shimmerLayout.setBackgroundColor(ContextCompat.getColor(shimmerLayout.getContext(), R.color.video_feed_bg));
             carosalContainer1 = itemView.findViewById(R.id.carosalContainer1);
             carosalContainer2 = itemView.findViewById(R.id.carosalContainer2);
             carosalContainer3 = itemView.findViewById(R.id.carosalContainer3);
@@ -634,8 +637,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             carosalContainer4.setOnClickListener(this);
             carosalContainer5.setOnClickListener(this);
             carosalContainer6.setOnClickListener(this);
-
-
+            spacingView.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -737,7 +739,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                                 authorFollowTextView5);
                     }
                     break;
-
                 case R.id.authorFollowTextView6:
                     if (vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(5)
                             .getFollowing()) {
@@ -756,7 +757,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                                 authorFollowTextView6);
                     }
                     break;
-
                 case R.id.carosalContainer1:
                     Intent intent1 = new Intent(context, UserProfileActivity.class);
                     intent1.putExtra(Constants.USER_ID,
@@ -868,9 +868,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
 
             }
         });
-
     }
-
 
     private void processVlogersData(FollowFollowingCarousal holder, ArrayList<UserDetailResult> dataList,
             int position) {
@@ -880,7 +878,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         }
     }
 
-
     private void populateCarouselFollowFollowing(FollowFollowingCarousal holder,
             ArrayList<UserDetailResult> carosalList) {
         if (carosalList.isEmpty()) {
@@ -888,199 +885,73 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         } else {
             holder.scroll.setVisibility(View.VISIBLE);
         }
-
-        switch (carosalList.size()) {
-            case 1: {
-                updateCarosal(
-                        holder.authorFollowTextView1,
-                        holder.authorImageView1,
-                        holder.authorNameTextView1,
-                        holder.authorRankTextView1,
-                        holder.progress1,
-                        carosalList.get(0)
-                );
-            }
-            break;
-            case 2: {
-                updateCarosal(
-                        holder.authorFollowTextView1,
-                        holder.authorImageView1,
-                        holder.authorNameTextView1,
-                        holder.authorRankTextView1,
-                        holder.progress1,
-                        carosalList.get(0)
-                );
-                updateCarosal(
-                        holder.authorFollowTextView2,
-                        holder.authorImageView2,
-                        holder.authorNameTextView2,
-                        holder.authorRankTextView2,
-                        holder.progress2,
-                        carosalList.get(1)
-                );
-            }
-            break;
-            case 3: {
-                updateCarosal(
-                        holder.authorFollowTextView1,
-                        holder.authorImageView1,
-                        holder.authorNameTextView1,
-                        holder.authorRankTextView1,
-                        holder.progress1,
-                        carosalList.get(0)
-                );
-                updateCarosal(
-                        holder.authorFollowTextView2,
-                        holder.authorImageView2,
-                        holder.authorNameTextView2,
-                        holder.authorRankTextView2,
-                        holder.progress2,
-                        carosalList.get(1)
-                );
-                updateCarosal(
-                        holder.authorFollowTextView3,
-                        holder.authorImageView3,
-                        holder.authorNameTextView3,
-                        holder.authorRankTextView3,
-                        holder.progress3,
-                        carosalList.get(2)
-                );
-            }
-            break;
-            case 4: {
-                updateCarosal(
-                        holder.authorFollowTextView1,
-                        holder.authorImageView1,
-                        holder.authorNameTextView1,
-                        holder.authorRankTextView1,
-                        holder.progress1,
-                        carosalList.get(0)
-                );
-                updateCarosal(
-                        holder.authorFollowTextView2,
-                        holder.authorImageView2,
-                        holder.authorNameTextView2,
-                        holder.authorRankTextView2,
-                        holder.progress2,
-                        carosalList.get(1)
-                );
-                updateCarosal(
-                        holder.authorFollowTextView3,
-                        holder.authorImageView3,
-                        holder.authorNameTextView3,
-                        holder.authorRankTextView3,
-                        holder.progress3,
-                        carosalList.get(2)
-                );
-                updateCarosal(
-                        holder.authorFollowTextView4,
-                        holder.authorImageView4,
-                        holder.authorNameTextView4,
-                        holder.authorRankTextView4,
-                        holder.progress4,
-                        carosalList.get(3)
-                );
-            }
-            case 5: {
-                updateCarosal(
-                        holder.authorFollowTextView1,
-                        holder.authorImageView1,
-                        holder.authorNameTextView1,
-                        holder.authorRankTextView1,
-                        holder.progress1,
-                        carosalList.get(0)
-                );
-                updateCarosal(
-                        holder.authorFollowTextView2,
-                        holder.authorImageView2,
-                        holder.authorNameTextView2,
-                        holder.authorRankTextView2,
-                        holder.progress2,
-                        carosalList.get(1)
-                );
-                updateCarosal(
-                        holder.authorFollowTextView3,
-                        holder.authorImageView3,
-                        holder.authorNameTextView3,
-                        holder.authorRankTextView3,
-                        holder.progress3,
-                        carosalList.get(2)
-                );
-                updateCarosal(
-                        holder.authorFollowTextView4,
-                        holder.authorImageView4,
-                        holder.authorNameTextView4,
-                        holder.authorRankTextView4,
-                        holder.progress4,
-                        carosalList.get(3)
-                );
-                updateCarosal(
-                        holder.authorFollowTextView5,
-                        holder.authorImageView5,
-                        holder.authorNameTextView5,
-                        holder.authorRankTextView5,
-                        holder.progress5,
-                        carosalList.get(4)
-                );
-            }
-            break;
-            case 6: {
-                updateCarosal(
-                        holder.authorFollowTextView1,
-                        holder.authorImageView1,
-                        holder.authorNameTextView1,
-                        holder.authorRankTextView1,
-                        holder.progress1,
-                        carosalList.get(0)
-                );
-                updateCarosal(
-                        holder.authorFollowTextView2,
-                        holder.authorImageView2,
-                        holder.authorNameTextView2,
-                        holder.authorRankTextView2,
-                        holder.progress2,
-                        carosalList.get(1)
-                );
-                updateCarosal(
-                        holder.authorFollowTextView3,
-                        holder.authorImageView3,
-                        holder.authorNameTextView3,
-                        holder.authorRankTextView3,
-                        holder.progress3,
-                        carosalList.get(2)
-                );
-                updateCarosal(
-                        holder.authorFollowTextView4,
-                        holder.authorImageView4,
-                        holder.authorNameTextView4,
-                        holder.authorRankTextView4,
-                        holder.progress4,
-                        carosalList.get(3)
-                );
-                updateCarosal(
-                        holder.authorFollowTextView5,
-                        holder.authorImageView5,
-                        holder.authorNameTextView5,
-                        holder.authorRankTextView5,
-                        holder.progress5,
-                        carosalList.get(4)
-                );
-                updateCarosal(
-                        holder.authorFollowTextView6,
-                        holder.authorImageView6,
-                        holder.authorNameTextView6,
-                        holder.authorRankTextView6,
-                        holder.progress6,
-                        carosalList.get(5)
-                );
-            }
-            break;
-            default: {
-            }
+        if (carosalList.size() >= 1) {
+            holder.carosalContainer1.setVisibility(View.VISIBLE);
+            updateCarosal(
+                    holder.authorFollowTextView1,
+                    holder.authorImageView1,
+                    holder.authorNameTextView1,
+                    holder.authorRankTextView1,
+                    holder.progress1,
+                    carosalList.get(0)
+            );
         }
-
+        if (carosalList.size() >= 2) {
+            holder.carosalContainer2.setVisibility(View.VISIBLE);
+            updateCarosal(
+                    holder.authorFollowTextView2,
+                    holder.authorImageView2,
+                    holder.authorNameTextView2,
+                    holder.authorRankTextView2,
+                    holder.progress2,
+                    carosalList.get(1)
+            );
+        }
+        if (carosalList.size() >= 3) {
+            holder.carosalContainer3.setVisibility(View.VISIBLE);
+            updateCarosal(
+                    holder.authorFollowTextView3,
+                    holder.authorImageView3,
+                    holder.authorNameTextView3,
+                    holder.authorRankTextView3,
+                    holder.progress3,
+                    carosalList.get(2)
+            );
+        }
+        if (carosalList.size() >= 4) {
+            holder.carosalContainer4.setVisibility(View.VISIBLE);
+            updateCarosal(
+                    holder.authorFollowTextView4,
+                    holder.authorImageView4,
+                    holder.authorNameTextView4,
+                    holder.authorRankTextView4,
+                    holder.progress4,
+                    carosalList.get(3)
+            );
+        }
+        if (carosalList.size() >= 5) {
+            holder.carosalContainer5.setVisibility(View.VISIBLE);
+            updateCarosal(
+                    holder.authorFollowTextView5,
+                    holder.authorImageView5,
+                    holder.authorNameTextView5,
+                    holder.authorRankTextView5,
+                    holder.progress5,
+                    carosalList.get(4)
+            );
+        }
+        if (carosalList.size() >= 6) {
+            holder.carosalContainer6.setVisibility(View.VISIBLE);
+            updateCarosal(
+                    holder.authorFollowTextView6,
+                    holder.authorImageView6,
+                    holder.authorNameTextView6,
+                    holder.authorRankTextView6,
+                    holder.progress6,
+                    carosalList.get(5)
+            );
+        }
     }
-
 
     private void updateCarosal(TextView followTextView, ImageView authorImageView, TextView authorNameTextView,
             TextView authorRankTextView, ProgressBar progressBar, UserDetailResult carosalList) {
@@ -1088,13 +959,12 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 .into(authorImageView, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
-                        progressBar.setVisibility(View.GONE);
+//                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        progressBar.setVisibility(View.VISIBLE);
-
+//                        progressBar.setVisibility(View.VISIBLE);
                     }
                 });
         if (carosalList.getFollowing()) {

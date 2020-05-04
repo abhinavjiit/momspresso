@@ -28,7 +28,6 @@
     android:background="@color/video_feed_bg"
     android:visibility="visible">
 
-
     <LinearLayout
       android:id="@+id/userFollowingContainer"
       android:layout_width="wrap_content"
@@ -61,8 +60,7 @@
           <ProgressBar
             android:id="@+id/progress1"
             android:layout_width="62dp"
-            android:layout_height="62dp"
-            />
+            android:layout_height="62dp" />
 
         </RelativeLayout>
 

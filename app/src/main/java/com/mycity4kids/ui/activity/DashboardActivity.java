@@ -274,7 +274,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         mixpanel = MixpanelAPI
                 .getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
         Utils.pushGenericEvent(this, "Dashboard_event",
-                SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "DashboardActivity");
+                SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "DashboardActivity", "firebase");
         try {
             currentVersion = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {

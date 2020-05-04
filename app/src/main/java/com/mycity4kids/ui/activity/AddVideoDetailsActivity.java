@@ -15,9 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.work.Constraints;
-import androidx.work.Data;
-import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import com.afollestad.easyvideoplayer.EasyVideoCallback;
@@ -37,7 +34,6 @@ import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
-import com.mycity4kids.ui.NotificationWorker;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.MixPanelUtils;
@@ -66,7 +62,8 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     private String originalPath;
     private Uri contentUri;
     private EasyVideoPlayer player;
-    private String categoryId;
+    private String subcategoryId;
+    private String mappedCategoryId;
     private String duration;
     private String thumbnailTime;
     private SharedPreferences pref;
@@ -109,7 +106,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Upload Video");
 
-        categoryId = getIntent().getStringExtra("categoryId");
+        mappedCategoryId = getIntent().getStringExtra("categoryId");
         duration = getIntent().getStringExtra("duration");
         thumbnailTime = getIntent().getStringExtra("thumbnailTime");
         comingFrom = getIntent().getStringExtra("comingFrom");
@@ -142,7 +139,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         showProgressDialog(getResources().getString(R.string.please_wait));
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsCategoryApi = retrofit.create(TopicsCategoryAPI.class);
-        Call<Topics> call = topicsCategoryApi.getCategorySiblings(categoryId);
+        Call<Topics> call = topicsCategoryApi.getCategorySiblings(mappedCategoryId);
         call.enqueue(categorySiblingsResponseCallback);
     }
 
@@ -211,7 +208,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                 shareButtonWidget.setLayoutParams(params);
                 shareButtonWidget.setOnClickListener(view -> {
                     deselectAllSubcategories();
-                    categoryId = (String) view.getTag();
+                    subcategoryId = (String) view.getTag();
                     view.setSelected(true);
                     ((ShareButtonWidget) view).setTextColor(
                             ContextCompat.getColor(
@@ -226,21 +223,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                             )
                     );
                 });
-                if (selectedCategory.getChild().get(i).getId().equals(categoryId)) {
-                    shareButtonWidget.setSelected(true);
-                    shareButtonWidget.setTextColor(
-                            ContextCompat.getColor(
-                                    this,
-                                    R.color.app_red
-                            )
-                    );
-                    shareButtonWidget.setBorderColor(
-                            ContextCompat.getColor(
-                                    this,
-                                    R.color.app_red
-                            )
-                    );
-                }
                 subCategoriesContainer.addView(shareButtonWidget);
             }
         }
@@ -289,7 +271,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                     videoTitleEditText.setFocusableInTouchMode(true);
                     videoTitleEditText.setError(getString(R.string.add_video_details_title_length_error));
                     videoTitleEditText.requestFocus();
-                } else if (StringUtils.isNullOrEmpty(categoryId)) {
+                } else if (StringUtils.isNullOrEmpty(subcategoryId)) {
                     showToast("Please select a category for your video");
                 } else {
                     uploadVideo();
@@ -337,7 +319,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         Intent intt = new Intent(this, VideoUploadProgressActivity.class);
         intt.putExtra("uri", contentUri);
         intt.putExtra("title", videoTitleEditText.getText().toString());
-        intt.putExtra("categoryId", categoryId);
+        intt.putExtra("categoryId", subcategoryId);
         intt.putExtra("duration", duration);
         intt.putExtra("thumbnailTime", thumbnailTime);
         intt.putExtra("extension", originalUri.getPath().substring(originalUri.getPath().lastIndexOf(".")));

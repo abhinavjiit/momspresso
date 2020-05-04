@@ -3,7 +3,7 @@ package com.mycity4kids.constants;
 public class AppConstants {
 
     public static final String DEV_URL = "http://54.169.17.138/";
-    public static final String STAGING_URL = "http://52.220.87.141/";
+    public static final String STAGING_URL = "https://stagingapi.momspresso.com/";
 
     public static final String LIVE_URL = "https://api.momspresso.com/";
     public static final String DEV_REWARDS_URL = "https://testingapi.momspresso.com/";
