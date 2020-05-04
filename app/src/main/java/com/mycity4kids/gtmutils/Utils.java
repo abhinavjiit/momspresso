@@ -1409,6 +1409,36 @@ public class Utils {
         firebaseAnalytics.logEvent(event.toString(), bundle);
     }
 
+    public static void pushGenericEvent(Context context, String event, String user, String screenName,
+            String analyticsPlatform) {
+        try {
+            if ("all".equals(analyticsPlatform) || "mixpanel".equals(analyticsPlatform)) {
+                MixpanelAPI mixpanel = MixpanelAPI
+                        .getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("screen", screenName);
+                    jsonObject.put(GTMTags.Timestamp, String.valueOf(System.currentTimeMillis()));
+                    mixpanel.track(event, jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if ("all".equals(analyticsPlatform) || "firebase".equals(analyticsPlatform)) {
+                Bundle bundle = new Bundle();
+                bundle.putString("userId", user);
+                bundle.putString("screen", screenName);
+                bundle.putString(GTMTags.Timestamp, "" + System.currentTimeMillis());
+                bundle.putString(GTMTags.Language, "" + SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()));
+                FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+                firebaseAnalytics.logEvent(event, bundle);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public static void pushGenericEvent(Context context, String event, String user, String screenName) {
         try {
             MixpanelAPI mixpanel = MixpanelAPI

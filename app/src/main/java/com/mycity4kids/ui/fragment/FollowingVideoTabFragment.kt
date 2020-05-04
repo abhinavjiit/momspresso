@@ -9,9 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
+import com.facebook.FacebookSdk.getApplicationContext
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -80,6 +84,31 @@ class FollowingVideoTabFragment : BaseFragment(),
 
         linearLayoutManager = GridLayoutManager(activity, 3)
         recyclerView.layoutManager = linearLayoutManager
+        recyclerView.setItemAnimator(DefaultItemAnimator())
+        val Hdivider = DividerItemDecoration(
+            recyclerView.context,
+            DividerItemDecoration.HORIZONTAL
+        )
+        val Vdivider = DividerItemDecoration(
+            recyclerView.context,
+            DividerItemDecoration.VERTICAL
+        )
+        activity?.let {
+            ContextCompat.getDrawable(it, R.drawable.divider)?.let {
+                Hdivider.setDrawable(
+                    it
+                )
+            }
+        }
+        activity?.let {
+            ContextCompat.getDrawable(it, R.drawable.divider)?.let {
+                Vdivider.setDrawable(
+                    it
+                )
+            }
+        }
+        recyclerView.addItemDecoration(Hdivider)
+        recyclerView.addItemDecoration(Vdivider)
 
         if (SharedPrefUtils.getFollowClickCountInMomVlog(context)) {
             headerTextView.text =
