@@ -1,59 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/root"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/root"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="@color/white_color">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white_color">
+    android:background="?attr/colorPrimary"
+    android:elevation="5dp"
+    android:minHeight="?attr/actionBarSize"
+    app:theme="@style/ToolbarTheme"
+    app:titleTextAppearance="@style/ToolbarTheme.Title">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:elevation="5dp"
-        android:minHeight="?attr/actionBarSize"
-        app:theme="@style/ToolbarTheme"
-        app:titleTextAppearance="@style/ToolbarTheme.Title">
+    <RelativeLayout
+      android:id="@+id/toolbarRelativeLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:visibility="visible">
 
-        <RelativeLayout
-            android:id="@+id/toolbarRelativeLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible">
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/toolbarTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="Replies"
-                android:textColor="@color/city_picker.toolbar.title"
-                android:textSize="20sp"
-                app:fontName="oswald_regular.ttf" />
-
-        </RelativeLayout>
-    </androidx.appcompat.widget.Toolbar>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/repliesRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:clipToPadding="false"
-        android:paddingBottom="80dp" />
-
-    <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/openAddReplyDialog"
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/toolbarTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="right|bottom"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"
-        app:fab_colorNormal="@color/short_story.blue"
-        app:fab_colorPressed="@color/short_story.blue"
-        app:fab_icon="@drawable/ic_add_comments" />
+        android:layout_centerVertical="true"
+        android:text="Replies"
+        android:textColor="@color/city_picker.toolbar.title"
+        android:textSize="20sp"
+        app:fontName="oswald_regular.ttf" />
+
+    </RelativeLayout>
+  </androidx.appcompat.widget.Toolbar>
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/repliesRecyclerView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/toolbar"
+    android:clipToPadding="false"
+    android:paddingBottom="80dp" />
+
+  <com.getbase.floatingactionbutton.FloatingActionButton
+    android:id="@+id/openAddReplyDialog"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentEnd="true"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentBottom="true"
+    android:layout_gravity="right|bottom"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="10dp"
+    app:fab_colorNormal="@color/app_red"
+    app:fab_colorPressed="@color/app_red"
+    app:fab_icon="@drawable/ic_add_comments" />
 </RelativeLayout>

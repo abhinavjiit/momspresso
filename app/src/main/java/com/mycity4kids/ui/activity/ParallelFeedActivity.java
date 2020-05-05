@@ -54,7 +54,7 @@ import com.mycity4kids.ui.ExoPlayerRecyclerView;
 import com.mycity4kids.ui.adapter.VideoRecyclerViewAdapter;
 import com.mycity4kids.ui.adapter.VideoRecyclerViewAdapter.VideoFeedRecyclerViewClick;
 import com.mycity4kids.ui.fragment.AddCollectionAndCollectionItemDialogFragment;
-import com.mycity4kids.ui.fragment.ViewAllCommentsDialogFragment;
+import com.mycity4kids.ui.fragment.ViewAllCommentsFragment;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.DividerItemDecoration;
 import com.mycity4kids.utils.EndlessScrollListener;
@@ -114,7 +114,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.parallel_feed_activity);
-        root = findViewById(R.id.root);
+        root = findViewById(R.id.content_frame);
         ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
@@ -567,17 +567,16 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             };
 
     public void openViewCommentDialog(String commentMainUrl, String shareUrl, String authorId, String author,
-            String vidId) {
+            String vidId, String titleSlug) {
         try {
             Bundle args = new Bundle();
             args.putString("mycityCommentURL", commentMainUrl);
             args.putString("fbCommentURL", shareUrl);
             args.putString(Constants.ARTICLE_ID, vidId);
-            args.putString(Constants.AUTHOR, authorId + "~" + author);
-            ViewAllCommentsDialogFragment commentFrag = new ViewAllCommentsDialogFragment();
-            commentFrag.setArguments(args);
-            FragmentManager fm = getSupportFragmentManager();
-            commentFrag.show(fm, "ViewAllComments");
+            args.putString(Constants.AUTHOR_ID, authorId);
+            args.putString(Constants.TITLE_SLUG, titleSlug);
+            ViewAllCommentsFragment commentFrag = new ViewAllCommentsFragment();
+            this.addFragment(commentFrag, args);
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));

@@ -463,7 +463,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                                             responseData.getTitleSlug()),
                                     responseData.getAuthor().getId(),
                                     responseData.getAuthor().getFirstName() + " " + responseData.getAuthor()
-                                            .getLastName(), responseData.getId());
+                                            .getLastName(), responseData.getId(),responseData.getTitleSlug());
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
@@ -483,7 +483,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                                             responseData.getTitleSlug()),
                                     responseData.getAuthor().getId(),
                                     responseData.getAuthor().getFirstName() + " " + responseData.getAuthor()
-                                            .getLastName(), responseData.getId());
+                                            .getLastName(), responseData.getId(),responseData.getTitleSlug());
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
