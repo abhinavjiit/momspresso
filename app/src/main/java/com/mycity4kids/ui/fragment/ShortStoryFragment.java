@@ -140,6 +140,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private StoryShareCardWidget storyShareCardWidget;
     private ImageView shareStoryImageView;
     private ShortStoryDetailResult sharedStoryItem;
+    private TextView viewAllTextView;
 
     @Nullable
     @Override
@@ -149,6 +150,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         rootLayout = (RelativeLayout) fragmentView.findViewById(R.id.rootLayout);
         shortStoryRecyclerView = (RecyclerView) fragmentView.findViewById(R.id.shortStoryRecyclerView);
         openAddCommentDialog = (FloatingActionButton) fragmentView.findViewById(R.id.openAddCommentDialog);
+        viewAllTextView = fragmentView.findViewById(R.id.viewAllTextView);
 
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
         try {
@@ -177,7 +179,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 shortStoryApi = retro.create(ShortStoryAPI.class);
                 getShortStoryDetails();
-                shortStoryRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                /* shortStoryRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
                     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                         if (dy > 0) {
@@ -187,19 +189,20 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
 
                             if (!isReuqestRunning && !isLastPageReached) {
                                 if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                                    isReuqestRunning = true;
-                                    getStoryComments(articleId, "comment");
+                                  //  isReuqestRunning = true;
+                                   // getStoryComments(articleId, "comment");
                                 }
                             }
                         }
                     }
-                });
+                });*/
             }
         } catch (Exception e) {
             removeProgressDialog();
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
+        viewAllTextView.setOnClickListener(this);
         return fragmentView;
     }
 
@@ -573,6 +576,27 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     addGpPostCommentReplyDialogFragment.setArguments(args);
                     addGpPostCommentReplyDialogFragment.setCancelable(true);
                     addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                    break;
+                case R.id.viewAllTextView:
+                    try {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(Constants.ARTICLE_ID, articleId);
+                        bundle.putString(Constants.BLOG_SLUG, blogSlug);
+                        bundle.putString(Constants.TITLE_SLUG, titleSlug);
+                        bundle.putString(Constants.AUTHOR_ID, authorId);
+                        ViewAllCommentsFragment viewAllCommentsFragment = new ViewAllCommentsFragment();
+                        viewAllCommentsFragment.setArguments(bundle);
+                        if (isAdded() && getActivity() != null) {
+                            ((ShortStoryContainerActivity) getActivity()).addFragment(viewAllCommentsFragment, bundle);
+                        }
+                    } catch (NullPointerException e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                        if (isAdded() && getActivity() != null) {
+                            ((ShortStoryContainerActivity) getActivity())
+                                    .showToast(getString(R.string.unable_to_load_comment));
+                        }
+                    }
                     break;
                 default:
                     break;
