@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
-import com.facebook.FacebookSdk.getApplicationContext
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication

@@ -146,7 +146,6 @@
     android:layout_width="match_parent"
     android:layout_height="0.5dp"
     android:layout_below="@id/title"
-    android:layout_marginTop="@dimen/space_5"
     android:background="@drawable/campaign_expired" />
 
   <FrameLayout
@@ -155,39 +154,53 @@
     android:layout_height="match_parent"
     android:layout_above="@id/aztoolbar"
     android:layout_below="@+id/title">
+    <RelativeLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content">
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/wordCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:background="@color/app_blue"
+        android:padding="5dp"
+        android:text="100"
+        android:textColor="@color/white"
+        android:textSize="@dimen/space_16"
+        android:visibility="gone" />
 
-    <org.wordpress.aztec.AztecText
-      android:id="@+id/visualEditor"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:gravity="top|start"
-      android:hint="@string/example_post_content_placeholder"
-      android:imeOptions="flagNoExtractUi"
-      android:paddingLeft="16dp"
-      android:paddingTop="16dp"
-      android:paddingEnd="16dp"
-      android:paddingRight="16dp"
-      android:scrollbars="vertical"
-      aztec:codeTextColor="@android:color/black"
-      aztec:historyEnable="true"
-      aztec:historySize="10" />
-
-    <org.wordpress.aztec.source.SourceViewEditText
-      android:id="@+id/source"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:gravity="top|start"
-      android:hint=""
-      android:imeOptions="flagNoExtractUi"
-      android:inputType="textNoSuggestions|textMultiLine"
-      android:paddingLeft="16dp"
-      android:paddingTop="16dp"
-      android:paddingEnd="16dp"
-      android:paddingRight="16dp"
-      android:scrollbars="vertical"
-      android:textSize="14sp"
-      android:visibility="gone"
-      aztec:codeTextColor="@android:color/black" />
-
+      <org.wordpress.aztec.AztecText
+        android:id="@+id/visualEditor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/wordCount"
+        android:gravity="top|start"
+        android:hint="@string/example_post_content_placeholder"
+        android:imeOptions="flagNoExtractUi"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="16dp"
+        android:paddingRight="16dp"
+        android:scrollbars="vertical"
+        aztec:codeTextColor="@android:color/black"
+        aztec:historyEnable="true"
+        aztec:historySize="10" />
+      <org.wordpress.aztec.source.SourceViewEditText
+        android:id="@+id/source"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="top|start"
+        android:hint=""
+        android:imeOptions="flagNoExtractUi"
+        android:inputType="textNoSuggestions|textMultiLine"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="16dp"
+        android:paddingRight="16dp"
+        android:scrollbars="vertical"
+        android:textSize="14sp"
+        android:visibility="gone"
+        aztec:codeTextColor="@android:color/black" />
+    </RelativeLayout>
   </FrameLayout>
 </RelativeLayout>

@@ -23,6 +23,9 @@ import android.os.Environment
 import android.os.Handler
 import android.os.Message
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.InputFilter
+import android.text.TextWatcher
 import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
@@ -116,6 +119,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+const val MAX_WORDS = 300
+
 class NewEditor : BaseActivity(),
     AztecText.OnImeBackListener,
     AztecText.OnImageTappedListener,
@@ -147,7 +152,6 @@ class NewEditor : BaseActivity(),
     private val REQUEST_MEDIA_CAMERA_VIDEO: Int = 2002
     private val REQUEST_MEDIA_PHOTO: Int = 2003
     private val REQUEST_MEDIA_VIDEO: Int = 2004
-
     protected lateinit var aztec: Aztec
     private lateinit var mediaPath: String
     var mediaFile: MediaFile? = null
@@ -163,11 +167,10 @@ class NewEditor : BaseActivity(),
     private val mHandler = MyHandler(this@NewEditor)
     private var titleTxt: EditText? = null
     private lateinit var editorGetHelp: TextView
-
+    private var filter: InputFilter? = null
+    private var isMaxLengthToastShown = false
     private val mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-
     private val SPELL_CHECK_FLAG = "show_spell_check_flag"
-
     private val PERMISSIONS_INIT = arrayOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA
@@ -210,6 +213,9 @@ class NewEditor : BaseActivity(),
     var periodicUpdate: Runnable? = null
     private var lastUpdatedTime: Long = 0
     private var spellCheckFlag = false
+    private lateinit var wordCount: TextView
+    private var imageWordCount = 0
+    private var numberOfImages = 0
 
     val HTML_PATTERN = "(?i)<p.*?>.*?</p>"
     var pattern: Pattern = Pattern.compile(HTML_PATTERN)
@@ -427,11 +433,10 @@ class NewEditor : BaseActivity(),
         val sourceEditor = findViewById<SourceViewEditText>(R.id.source)
         titleTxt = findViewById<View>(com.mycity4kids.R.id.title) as EditText
         editorGetHelp = findViewById(R.id.editor_get_help)
-
+        wordCount = findViewById(R.id.wordCount)
         editor_get_help.setOnClickListener(this)
         closeEditorImageView!!.setOnClickListener(this)
         publishTextView!!.setOnClickListener(this)
-
         val isLocalDraft =
             intent.getBooleanExtra(EditorPostActivity.DRAFT_PARAM, true)
         if (intent.getStringExtra("from") != null && intent.getStringExtra("from") == "draftList") {
@@ -443,6 +448,12 @@ class NewEditor : BaseActivity(),
                 moderation_status = "0"
             }
             titleTxt!!.setText(title)
+            content?.let {
+                numberOfImages = getNumberOfImages(it)
+                if (numberOfImages > 0) {
+                    imageWordCount = 100
+                }
+            }
             initiatePeriodicDraftSave()
         } else if (intent.getStringExtra("from") != null && intent.getStringExtra("from") == "publishedList") {
             title = intent.getStringExtra("title")
@@ -453,6 +464,12 @@ class NewEditor : BaseActivity(),
             thumbnailUrl = intent.getStringExtra("thumbnailUrl")
             articleId = intent.getStringExtra("articleId")
             titleTxt!!.setText(title)
+            content?.let {
+                numberOfImages = getNumberOfImages(it)
+                if (numberOfImages > 0) {
+                    imageWordCount = 100
+                }
+            }
         } else {
             titleTxt!!.setText(title)
             titleTxt!!.setHint(title_placeholder_param)
@@ -511,7 +528,7 @@ class NewEditor : BaseActivity(),
             }
         })
 
-        titleTxt!!.setOnFocusChangeListener(focusListener)
+        titleTxt!!.onFocusChangeListener = focusListener
 
         aztec = Aztec.with(visualEditor, sourceEditor, aztoolbar, this)
             .setImageGetter(GlideImageLoader(this))
@@ -548,19 +565,72 @@ class NewEditor : BaseActivity(),
             }
             aztec.initSourceEditorHistory()
         }
-
         invalidateOptionsHandler = Handler()
         invalidateOptionsRunnable = Runnable { invalidateOptionsMenu() }
+        aztec.visualEditor.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val wordsLength = countWords(
+                    s.toString().replace(
+                        "&nbsp;",
+                        " "
+                    )
+                ) + imageWordCount - numberOfImages
+                wordCount.visibility = View.VISIBLE
+                if (wordsLength <= MAX_WORDS) {
+                    wordCount.text = ("" + (300 - wordsLength))
+                    wordCount.background =
+                        (resources.getDrawable(R.drawable.short_story_word_count_bg, null))
+                } else {
+                    wordCount.text = ("-" + (wordsLength - 300))
+                    wordCount.background =
+                        (resources.getDrawable(R.drawable.campaign_detail_red_bg, null))
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                val wordsLength = countWords(
+                    s.toString().replace(
+                        "&nbsp;",
+                        " "
+                    )
+                ) + imageWordCount - numberOfImages
+                if (wordsLength > 0)
+                    wordCount.visibility = View.VISIBLE
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
     }
 
-    var focusListener: View.OnFocusChangeListener = object : View.OnFocusChangeListener {
-        override fun onFocusChange(v: View, hasFocus: Boolean) {
+    private var focusListener: View.OnFocusChangeListener =
+        View.OnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
                 aztoolbar.enableFormatButtons(false)
             } else {
                 aztoolbar.enableFormatButtons(true)
             }
         }
+
+    private fun countWords(s: String): Int {
+        val trim = s.trim()
+        if (trim.isEmpty()) {
+            return 0
+        }
+        return trim.split("\\s+".toRegex()).size
+        // separate string around spaces
+    }
+
+    private fun getNumberOfImages(content: String): Int {
+        val imageTag = "<img"
+        var sCountInContent = 0
+        val arrrayofContentString = content.split("\\s+".toRegex())
+        arrrayofContentString.forEach {
+            if (it == imageTag || it.contains(imageTag)) {
+                sCountInContent++
+            }
+        }
+        return sCountInContent
     }
 
     private fun initiatePeriodicDraftSave() {
@@ -1035,6 +1105,8 @@ class NewEditor : BaseActivity(),
                             removeProgressDialog()
                             return
                         } else {
+                            imageWordCount = 100
+                            numberOfImages++
                             mediaFile!!.fileURL = responseModel.data.result.url
                             val (id, attrs) = generateAttributesForMedia(
                                 mediaFile!!.fileURL,
@@ -1452,13 +1524,12 @@ class NewEditor : BaseActivity(),
             } else if (aztec.visualEditor.text.toString().replace(
                     "&nbsp;",
                     " "
-                ).split("\\s+".toRegex()).size < 299
-            ) {
+                ).split("\\s+".toRegex()).size + imageWordCount - numberOfImages < 299) {
                 showCustomToast(
                     aztec.visualEditor.text.toString().replace(
                         "&nbsp;",
                         " "
-                    ).split("\\s+".toRegex()).size
+                    ).split("\\s+".toRegex()).size + imageWordCount - numberOfImages
                 )
             } else {
                 if (intent.getStringExtra("from") != null && intent.getStringExtra("from") == "publishedList") {
