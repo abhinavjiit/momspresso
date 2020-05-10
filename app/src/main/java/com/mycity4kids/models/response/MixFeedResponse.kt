@@ -22,7 +22,9 @@ data class MixFeedResponse(
 
 data class MixFeedData(
     @SerializedName("result")
-    val result: List<MixFeedResult>?
+    val result: List<MixFeedResult>?,
+    @SerializedName("chunks")
+    var chunks: String?
 )
 
 data class MixFeedResult(
@@ -161,5 +163,12 @@ data class MixFeedResult(
     @SerializedName("isbookmark")
     var isbookmark: Int = 0,
     @SerializedName("isLiked")
-    var isLiked: Boolean = false
+    var isLiked: Boolean = false,
+    @SerializedName("isfollowing")
+    var isfollowing: String? = "0",
+    @SerializedName("bookmarkId")
+    var bookmarkId: String? = null,
+    var isCarouselRequestRunning: Boolean = false,
+    var responseReceived: Boolean = false,
+    var carouselBloggerList: ArrayList<ContributorListResult>? = null
 )

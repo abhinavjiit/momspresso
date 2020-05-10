@@ -1366,7 +1366,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="editor_help_header_text">ಸಹಾಯ ಬೇಕೇ?</string>
   <string name="get_help_bottom_text">ಸಮಸ್ಯೆಗಳಿದ್ದರೆ ಇ ಮೇಲ್‌ ಮಾಡಿ. ಆ ಮೂಲಕ ನಿಮ್ಮ ಸಮಸ್ಯೆಗಳಿಗೆ ಸ್ಪಂದಿಸುತ್ತೇವೆ</string>
   <string name="detail_take_survey">Take survey</string>
-  <string name="all_follow">Follow</string>
+  <string name="all_follow">ಫಾಲೋ</string>
+  <string name="all_following">ಫಾಲೋ ಮಾಡುತ್ತಿದ್ದೀರಿ</string>
   <string name="invite_friends_follow_you">ನಿಮ್ಮನ್ನು ಫಾಲೋ ಮಾಡಲು ನಿಮ್ಮ ಗೆಳೆಯರನ್ನು ಆಹ್ವಾನಿಸಿ</string>
   <string name="invite_friends_facebook">ಫೇಸ್ಬುಕ್‌ ಗೆಳೆಯರು</string>
   <string name="invite_friends_link">ಆಹ್ವಾನಿಸಲು ಇರುವ ಲಿಂಕ್‌ ಹಂಚಿಕೊಳ್ಳಿ</string>
@@ -1374,9 +1375,10 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="video_upload_thankyou_msg">ಧನ್ಯವಾದಗಳು. ನಿಮ್ಮ ವಿಡಿಯೋ ಅಪ್ಲೋಡ್ ಆದ ಕೂಡಲೇ ತಿಳಿಸುತ್ತೇವೆ.</string>
   <string name="video_upload_success">ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್ ಆಗಿದೆ</string>
   <string name="all_open">ತೆರೆಯಿರಿ</string>
-  <string name="watch_other_videos_text_in_mom_vlog_following_feed">Watch other awesome videos while we create your personalized feed</string>
-  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">You aren\'t following anyone. Follow our top vloggers to see the best videos on Momspresso! </string>
-  <string name="follow_the_best_vloggers_on_momspresso">Follow the best vloggers on Momspresso</string>
+  <string name="watch_other_videos_text_in_mom_vlog_following_feed">ನಿಮಗೆ ಇಷ್ಟವಾಗುವ ವಿಡಿಯೋಗಳ ಪಟ್ಟಿಯನ್ನು ನಾವು ಸಿದ್ಧಪಡಿಸುತ್ತಿದ್ದೇವೆ. ಈ ಸಮಯದಲ್ಲಿ ನಮ್ಮ ಬೆಸ್ಟ್ ವಿಡಿಯೋಗಳನ್ನು ನೋಡಿ</string>
+  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">ನೀವು ಯಾರನ್ನೂ ಫಾಲೋ ಮಾಡುತ್ತಿಲ್ಲ ಅತ್ಯುತ್ತಮ ವಿಡಿಯೋಗಳನ್ನು ನೋಡಲು ನಮ್ಮ ಟಾಪ್‌ ವಿಡಿಯೋ ಬ್ಲಾಗರ್‌ ಗಳನ್ನು ಫಾಲೋ ಮಾಡಿ</string>
+  <string name="follow_the_best_vloggers_on_momspresso">ಮಾಮ್ಸ್ಪ್ರೆಸೋದ ಬೆಸ್ಟ್ ವಿಡಿಯೋ ಬ್ಲಾಗರ್‌ ಗಳನ್ನು ಫಾಲೋ ಮಾಡಿ</string>
   <string name="all_live_challenges">Live Challenges</string>
   <string name="view_comments">View Comments</string>
+  <string name="add_vlogs_detail_select_tag">ಟ್ಯಾಗ್‌ ಆಯ್ದುಕೊಳ್ಳಿ</string>
 </resources>

@@ -1324,7 +1324,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="editor_help_header_text">मदत मिळवा?</string>
   <string name="get_help_bottom_text">कृपया आम्हाला तुमची समस्या पाठवा म्हणजे आम्ही तुमची मदत करू शकू.</string>
   <string name="detail_take_survey">Take survey</string>
-  <string name="all_follow">Follow</string>
+  <string name="all_follow">फॉलो करा</string>
+  <string name="all_following">फॉलोविंग</string>
   <string name="invite_friends_follow_you">तुम्हाला फॉलो करण्यासाठी तुमच्या  मित्रांना आमंत्रित करा.</string>
   <string name="invite_friends_facebook">फेसबुकचे मित्र</string>
   <string name="invite_friends_link">आमंत्रित करण्यासाठी लिंक शेअर करा</string>
@@ -1332,9 +1333,10 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="video_upload_thankyou_msg">धन्यवाद!आपला व्हिडिओ अपलोड झाल्यावर तुम्हाला नोटिफिकेशन पाठवू</string>
   <string name="video_upload_success">यशस्वीरीत्या अपलोड</string>
   <string name="all_open">उघडा</string>
-  <string name="watch_other_videos_text_in_mom_vlog_following_feed">Watch other awesome videos while we create your personalized feed</string>
-  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">You aren\'t following anyone. Follow our top vloggers to see the best videos on Momspresso! </string>
-  <string name="follow_the_best_vloggers_on_momspresso">Follow the best vloggers on Momspresso</string>
+  <string name="watch_other_videos_text_in_mom_vlog_following_feed">आम्ही आपले वैयक्तिकृत फीड तयार करत आहोत तोपर्यंत बाकीचे व्हिडिओ पहा</string>
+  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">आपण कोणालाच फॉलो करीत नाही आहात  सर्वोत्तम व्हिडिओ पाहण्यासाठी आमच्या टॉप व्हीलॉगरचे अनुसरण करा!</string>
+  <string name="follow_the_best_vloggers_on_momspresso">सर्वोत्तम व्हीलॉगरला फॉलो करा</string>
   <string name="all_live_challenges">Live Challenges</string>
   <string name="view_comments">View Comments</string>
+  <string name="add_vlogs_detail_select_tag">एक टॅग निवडा</string>
 </resources>

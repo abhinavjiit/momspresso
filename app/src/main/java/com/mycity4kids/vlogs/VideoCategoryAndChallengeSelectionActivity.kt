@@ -55,7 +55,6 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
     private lateinit var videoChallengesVerticalAdapter: VideoChallengeSelectionVerticalAdapter
     private val categoryList: ArrayList<Topics> by lazy { ArrayList<Topics>() }
     private val categoryWiseChallengeList: ArrayList<Topics> by lazy { ArrayList<Topics>() }
-    //    private var categoryChallengeHashMap = HashMap<String, ArrayList<Topics>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

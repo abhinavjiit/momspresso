@@ -1326,7 +1326,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="editor_help_header_text">Need Help?</string>
   <string name="get_help_bottom_text">Please mail us your issue so we can help you out.</string>
   <string name="detail_take_survey">Take survey</string>
-  <string name="all_follow">Follow</string>
+  <string name="all_follow">ఫాలో</string>
+  <string name="all_following">ఫాలోవింగ్</string>
   <string name="invite_friends_follow_you">మిమ్మల్ని అనుసరించడానికి స్నేహితులను ఆహ్వానించండి</string>
   <string name="invite_friends_facebook">Facebook Friends</string>
   <string name="invite_friends_link">Share Invite Link</string>
@@ -1334,9 +1335,10 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="video_upload_thankyou_msg">ధన్యవాదాలు! మీ వీడియో అప్‌లోడ్ అయిన తర్వాత మేము మీకు తెలియజేస్తాము.</string>
   <string name="video_upload_success">విజయవంతంగా అప్‌లోడ్ చేయబడింది</string>
   <string name="all_open"> ఓపెన్</string>
-  <string name="watch_other_videos_text_in_mom_vlog_following_feed">Watch other awesome videos while we create your personalized feed</string>
-  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">You aren\'t following anyone. Follow our top vloggers to see the best videos on Momspresso!</string>
-  <string name="follow_the_best_vloggers_on_momspresso">Follow the best vloggers on Momspresso</string>
+  <string name="watch_other_videos_text_in_mom_vlog_following_feed">మేము మీ పర్సనల్  ఫీడ్‌ను తయారుచేసే లోపల ఇతర అద్భుతమైన వీడియోలను చూడండి</string>
+  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">మీరు ఎవరినీ ఫాలో అవడం లేదు. ఉత్తమ వీడియోలను చూడటానికి మా ఉత్తమ వ్లాగర్‌లను ఫాలో అవ్వండి!</string>
+  <string name="follow_the_best_vloggers_on_momspresso">ఉత్తమ వ్లాగర్లను ఫాలో అవ్వండి</string>
   <string name="all_live_challenges">Live Challenges</string>
   <string name="view_comments">View Comments</string>
+  <string name="add_vlogs_detail_select_tag">ట్యాగ్ ఎంచుకోండి</string>
 </resources>

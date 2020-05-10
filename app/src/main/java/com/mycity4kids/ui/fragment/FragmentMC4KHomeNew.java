@@ -152,11 +152,4 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
             };
-
-    public void hideFollowTopicHeader() {
-        if (adapter != null) {
-            adapter.hideFollowTopicHeader();
-        }
-    }
-
 }

@@ -1387,7 +1387,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="editor_help_header_text">Need Help?</string>
   <string name="get_help_bottom_text">Please mail us your issue so we can help you out.</string>
   <string name="detail_take_survey">Take survey</string>
-  <string name="all_follow">Follow</string>
+  <string name="all_follow">ਫੋਲੋ</string>
+  <string name="all_following">ਫੋਲੋਵਿੰਗ</string>
   <string name="invite_friends_follow_you">ਦੋਸਤਾਂ ਨੂੰ ਤੁਹਾਨੂੰ ਫੋਲੋ ਕਰਨ ਲਈ ਸੱਦਾ ਦਿਓ</string>
   <string name="invite_friends_facebook">ਫੇਸਬੁੱਕ ਦੋਸਤ</string>
   <string name="invite_friends_link">ਸੱਦਾ ਲਿੰਕ ਸ਼ੇਅਰ ਕਰੋ</string>
@@ -1395,9 +1396,10 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="video_upload_thankyou_msg">ਧੰਨਵਾਦ ! ਵੀਡੀਓ ਅਪਲੋਡ ਹੋਣ ਤੋਂ ਬਾਅਦ ਅਸੀਂ ਤੁਹਾਨੂੰ ਸੂਚਿਤ ਕਰਾਂਗੇ.।</string>
   <string name="video_upload_success">ਤੁਹਾਡਾ ਵੀਡੀਓ ਸਫਲਤਾਪੂਰਵਕ ਅਪਲੋਡ ਹੋ ਗਿਆ ਹੈ।</string>
   <string name="all_open">ਵੀਡੀਓ ਦੇਖੋ</string>
-  <string name="watch_other_videos_text_in_mom_vlog_following_feed">Watch other awesome videos while we create your personalized feed</string>
-  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">You aren\'t following anyone. Follow our top vloggers to see the best videos on Momspresso! </string>
-  <string name="follow_the_best_vloggers_on_momspresso">Follow the best vloggers on Momspresso</string>
+  <string name="watch_other_videos_text_in_mom_vlog_following_feed">ਜਦੋਂ ਤੱਕ ਅਸੀਂ ਤੁਹਾਡੀ ਨਿੱਜੀ ਫੀਡ ਤਿਆਰ ਕਰ ਰਹੇ ਹਾਂ, ਉਦੋਂ ਤੱਕ ਤੁਸੀਂ ਹੋਰ ਵਧੀਆ ਵੀਡੀਓ ਵੇਖੋ</string>
+  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">ਤੁਸੀਂ ਕਿਸੇ ਨੂੰ ਫੋਲੋ ਨਹੀਂ ਕਰ ਰਹੇ ਹੋ। ਮੌਮਸਪ੍ਰੈਸੋ \'ਤੇ ਸਭ ਤੋਂ ਵਧੀਆ ਵੀਡੀਓ ਦੇਖਣ ਲਈ ਸਾਡੇ ਟਾਪ ਵੀ-ਲੌਗਰਸ ਨੂੰ ਫੋਲੋ ਕਰੋ</string>
+  <string name="follow_the_best_vloggers_on_momspresso">ਬੈਸਟ ਵੀ-ਲੌਗਰਸ ਨੂੰ ਫੋਲੋ ਕਰੋ</string>
   <string name="all_live_challenges">Live Challenges</string>
   <string name="view_comments">View Comments</string>
+  <string name="add_vlogs_detail_select_tag">ਟੈਗ ਚੁਣੋ</string>
 </resources>

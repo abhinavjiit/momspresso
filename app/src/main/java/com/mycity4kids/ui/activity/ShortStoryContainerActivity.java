@@ -2,24 +2,27 @@ package com.mycity4kids.ui.activity;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
+import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
-
-import com.mycity4kids.base.BaseActivity;
+import com.crashlytics.android.Crashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.ShortStoryPagerAdapter;
-
+import com.mycity4kids.ui.fragment.ViewAllCommentsFragment;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Created by hemant on 6/6/17.
@@ -29,7 +32,6 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
     private ViewPager mViewPager;
     private ShortStoryPagerAdapter mViewPagerAdapter;
     private Toolbar mToolbar;
-    private ImageView backNavigationImageView;
     private ImageView playTtsTextView;
 
     private String authorId;
@@ -40,6 +42,7 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
     private Toolbar guidetoolbar;
     private int currPos;
     private RelativeLayout root;
+    private TextView toolbarTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +53,11 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
         ((BaseApplication) getApplication()).setActivity(this);
         userDynamoId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         Utils.pushOpenScreenEvent(this, "ShortStoryDetailContainerScreen", userDynamoId + "");
-        mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);
-        backNavigationImageView = (ImageView) findViewById(R.id.backNavigationImageView);
-        playTtsTextView = (ImageView) findViewById(R.id.playTtsTextView);
-        guideOverlay = (RelativeLayout) findViewById(R.id.guideOverlay);
-        guidetoolbar = (Toolbar) findViewById(R.id.guidetoolbar);
+        mToolbar = findViewById(R.id.anim_toolbar);
+        toolbarTitle = findViewById(R.id.toolbarTitle);
+        playTtsTextView = findViewById(R.id.playTtsTextView);
+        guideOverlay = findViewById(R.id.guideOverlay);
+        guidetoolbar = findViewById(R.id.guidetoolbar);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("");
@@ -67,7 +70,8 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
 
         if (bundle.getBoolean("fromNotification")) {
             Utils.pushNotificationClickEvent(this, "shortStoryDetails", userDynamoId, "ShortStoryContainerActivity");
-            Utils.pushViewShortStoryEvent(this, "Notification", userDynamoId + "", articleId, "Notification Popup", "-1" + "", author);
+            Utils.pushViewShortStoryEvent(this, "Notification", userDynamoId + "", articleId, "Notification Popup",
+                    "-1" + "", author);
         } else {
             String listingType = bundle.getString(Constants.ARTICLE_OPENED_FROM);
             String index = bundle.getString(Constants.ARTICLE_INDEX);
@@ -93,7 +97,8 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
         } else {
             final int pos = Integer.parseInt(bundle.getString(Constants.ARTICLE_INDEX));
 
-            mViewPagerAdapter = new ShortStoryPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, fromScreen);
+            mViewPagerAdapter = new ShortStoryPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList,
+                    fromScreen);
             mViewPager.setAdapter(mViewPagerAdapter);
             mViewPager.setCurrentItem(pos);
             mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -105,9 +110,11 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
                 @Override
                 public void onPageSelected(int position) {
                     if (currPos == position) {
-                        Utils.pushArticleSwipeEvent(ShortStoryContainerActivity.this, "ShortStoryDetailContainerScreen", userDynamoId + "", articleId, "" + (currPos + 1), "" + position);
+                        Utils.pushArticleSwipeEvent(ShortStoryContainerActivity.this, "ShortStoryDetailContainerScreen",
+                                userDynamoId + "", articleId, "" + (currPos + 1), "" + position);
                     } else {
-                        Utils.pushArticleSwipeEvent(ShortStoryContainerActivity.this, "ShortStoryDetailContainerScreen", userDynamoId + "", articleId, "" + currPos, "" + position);
+                        Utils.pushArticleSwipeEvent(ShortStoryContainerActivity.this, "ShortStoryDetailContainerScreen",
+                                userDynamoId + "", articleId, "" + currPos, "" + position);
                     }
                 }
 
@@ -118,7 +125,6 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
             });
         }
 
-        backNavigationImageView.setOnClickListener(this);
         playTtsTextView.setOnClickListener(this);
         guideOverlay.setOnClickListener(this);
         guidetoolbar.setOnClickListener(this);
@@ -132,7 +138,7 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                onBackPressed();
                 break;
 
             default:
@@ -143,15 +149,11 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.backNavigationImageView:
-                finish();
-                break;
-        }
     }
 
     private void initializeViewPager() {
-        mViewPagerAdapter = new ShortStoryPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, "dw");
+        mViewPagerAdapter = new ShortStoryPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList,
+                "dw");
         mViewPager.setAdapter(mViewPagerAdapter);
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -172,6 +174,19 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
 
     @Override
     public void onBackPressed() {
+        try {
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+            if (fragment instanceof ViewAllCommentsFragment) {
+                toolbarTitle.setText("");
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
         super.onBackPressed();
+    }
+
+    public void setToolbarTitle(String comments) {
+        toolbarTitle.setText(comments);
     }
 }

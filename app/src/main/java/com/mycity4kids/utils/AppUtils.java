@@ -49,6 +49,7 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.MixFeedResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.widget.Hashids;
 import com.squareup.picasso.Picasso;
@@ -646,7 +647,29 @@ public class AppUtils {
         return filteredList;
     }
 
+    public static ArrayList<MixFeedResult> getFilteredContentList1(
+            ArrayList<MixFeedResult> originalList, String contentType) {
+        ArrayList<MixFeedResult> filteredList = new ArrayList<>();
+        for (int i = 0; i < originalList.size(); i++) {
+            if (contentType.equals(originalList.get(i).getContentType())) {
+                filteredList.add(originalList.get(i));
+            }
+        }
+        return filteredList;
+    }
+
     public static int getFilteredPosition(int position, ArrayList<ArticleListingResult> filteredList,
+            String contentType) {
+        int effectivePosition = 0;
+        for (int i = 0; i < position; i++) {
+            if (contentType.equals(filteredList.get(i).getContentType())) {
+                effectivePosition++;
+            }
+        }
+        return effectivePosition;
+    }
+
+    public static int getFilteredPosition1(int position, ArrayList<MixFeedResult> filteredList,
             String contentType) {
         int effectivePosition = 0;
         for (int i = 0; i < position; i++) {
@@ -962,6 +985,42 @@ public class AppUtils {
             return "APP_" + screenName + position + "_PUN";
         } else {
             return "APP_" + screenName + position + "_ENG";
+        }
+    }
+
+    public static int getLangKey() {
+        if (AppConstants.LOCALE_ENGLISH
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return 0;
+        } else if (AppConstants.LOCALE_HINDI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return 1;
+        } else if (AppConstants.LOCALE_MARATHI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return 2;
+        } else if (AppConstants.LOCALE_BENGALI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return 3;
+        } else if (AppConstants.LOCALE_TAMIL
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return 4;
+        } else if (AppConstants.LOCALE_TELUGU
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return 5;
+        } else if (AppConstants.LOCALE_KANNADA
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return 6;
+        } else if (AppConstants.LOCALE_MALAYALAM
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return 7;
+        } else if (AppConstants.LOCALE_GUJARATI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return 8;
+        } else if (AppConstants.LOCALE_PUNJABI
+                .equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+            return 9;
+        } else {
+            return 0;
         }
     }
 

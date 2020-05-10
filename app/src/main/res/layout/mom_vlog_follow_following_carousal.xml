@@ -10,7 +10,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/space_16"
-    android:layout_marginTop="4dp"
+    android:layout_marginTop="8dp"
     android:text="@string/follow_the_best_vloggers_on_momspresso"
     android:textColor="#515151"
     android:textSize="16sp"
@@ -92,6 +92,7 @@
       </LinearLayout>
 
       <View
+        android:id="@+id/divider1"
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
@@ -158,6 +159,7 @@
       </LinearLayout>
 
       <View
+        android:id="@+id/divider2"
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
@@ -224,6 +226,7 @@
       </LinearLayout>
 
       <View
+        android:id="@+id/divider3"
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
@@ -290,6 +293,7 @@
       </LinearLayout>
 
       <View
+        android:id="@+id/divider4"
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
@@ -356,6 +360,7 @@
       </LinearLayout>
 
       <View
+        android:id="@+id/divider5"
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"

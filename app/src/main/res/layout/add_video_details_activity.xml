@@ -59,12 +59,23 @@
     android:layout_height="250dp"
     android:layout_below="@+id/videoTitleEditText" />
 
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/selectTagLabel"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/player"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="10dp"
+    android:textColor="@color/app_dark_black"
+    android:text="@string/add_vlogs_detail_select_tag"
+    android:textSize="18sp" />
+
   <ScrollView
     android:id="@+id/subcategoryScrollView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_above="@+id/saveUploadTextView"
-    android:layout_below="@+id/player"
+    android:layout_below="@+id/selectTagLabel"
     android:layout_marginTop="10dp">
 
     <org.apmem.tools.layouts.FlowLayout

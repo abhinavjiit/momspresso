@@ -1357,7 +1357,7 @@ class UserProfileActivity : BaseActivity(),
     ) {
         Utils.pushLikeStoryEvent(
             this@UserProfileActivity,
-            "ArticleListingFragment",
+            "UserProfileActivity",
             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId + "",
             articleId,
             "$authorId~$author"

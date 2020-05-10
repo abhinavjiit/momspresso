@@ -17,7 +17,7 @@ public class TrendingTopicsPagerAdapter extends FragmentStatePagerAdapter {
     private ArticleListingFragment articleListingFragment;
 
     public TrendingTopicsPagerAdapter(FragmentManager fm, int NumOfTabs, String[] feedOrderArray) {
-        super(fm);
+        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.mNumOfTabs = NumOfTabs;
         this.feedOrderArray = feedOrderArray;
     }
@@ -45,11 +45,5 @@ public class TrendingTopicsPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return mNumOfTabs;
-    }
-
-    public void hideFollowTopicHeader() {
-        if (articleListingFragment != null) {
-            articleListingFragment.hideFollowTopicHeader();
-        }
     }
 }

@@ -715,8 +715,19 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                         addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
                         FragmentManager fm = getSupportFragmentManager();
                         addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
-                        Utils.pushProfileEvents(this, "CTA_100WS_Add_To_Collection",
-                                "TopicsShortStoriesTabFragment", "Add to Collection", "-");
+                        Utils.momVlogEvent(
+                                this,
+                                "Video Detail",
+                                "Add To Collection",
+                                "",
+                                "android",
+                                SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                                "" + System.currentTimeMillis(),
+                                "Show_Video_Detail",
+                                "",
+                                ""
+                        );
                     } catch (Exception e) {
                         Crashlytics.logException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
@@ -731,8 +742,19 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                         articleDetailRequest.setContentType("vlogs");
                         Call<AddBookmarkResponse> call = vlogsListingAndDetailsApi.addBookmark(articleDetailRequest);
                         call.enqueue(addBookmarkResponseCallback);
-                        Utils.pushBookmarkArticleEvent(this, "DetailArticleScreen", userDynamoId + "", bookmarkStatus,
-                                authorId + "~" + authorId);
+                        Utils.momVlogEvent(
+                                this,
+                                "Video Detail",
+                                "Bookmark",
+                                "",
+                                "android",
+                                SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                                "" + System.currentTimeMillis(),
+                                "Show_Video_Detail",
+                                "",
+                                ""
+                        );
                     } else {
                         bookmarkStatus = "1";
                         if (StringUtils.isNullOrEmpty(finalList.get(position).getBookmark_id())) {

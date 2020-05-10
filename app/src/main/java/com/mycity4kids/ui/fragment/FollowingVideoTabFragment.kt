@@ -20,6 +20,7 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
 import com.mycity4kids.models.response.FollowUnfollowUserResponse
 import com.mycity4kids.models.response.MomVlogListingResponse
@@ -63,6 +64,7 @@ class FollowingVideoTabFragment : BaseFragment(),
     ): View? {
         val view =
             inflater.inflate(R.layout.mom_vlog_follow_following_tab_fragment, container, false)
+
         recyclerView = view.findViewById(R.id.recyclerView)
         headerTextView = view.findViewById(R.id.headerTextView)
         suggestingFollowTextView = view.findViewById(R.id.suggestingFollowTextView)
@@ -122,11 +124,6 @@ class FollowingVideoTabFragment : BaseFragment(),
                 getVlogs(start)
             }
         })
-        /*   recyclerView.addOnScrollListener(object : EndlessScrollListener(linearLayoutManager) {
-               override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                   getVlogers(totalItemsCount)
-               }
-           })*/
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return if (momVlogFollowingAndVideosAdapter.getItemViewType(position) == 1)
@@ -233,7 +230,6 @@ class FollowingVideoTabFragment : BaseFragment(),
                 }
             }
         } else {
-
             listData?.addAll(res)
             if (start == 0) {
                 listData?.add(VlogsListingAndDetailResult(1))
@@ -277,7 +273,6 @@ class FollowingVideoTabFragment : BaseFragment(),
                     val responseVlogersData = response.body()?.data?.result
                     processVlogersData(responseVlogersData as ArrayList<UserDetailResult>?)
                 } catch (e: Exception) {
-
                     Crashlytics.logException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
@@ -286,13 +281,9 @@ class FollowingVideoTabFragment : BaseFragment(),
     }
 
     private fun processVlogersData(responseVlogersData: ArrayList<UserDetailResult>?) {
-        if (responseVlogersData.isNullOrEmpty()) {
-            if (vlogersListData.isNullOrEmpty()) {
-            }
-        } else {
+        if (!responseVlogersData.isNullOrEmpty()) {
             vlogersListData?.addAll(responseVlogersData)
         }
-
         vlogersListData?.let {
             momVLogFollowFollowingAdapter.setVlogersData(it)
             momVLogFollowFollowingAdapter.notifyDataSetChanged()
@@ -305,6 +296,19 @@ class FollowingVideoTabFragment : BaseFragment(),
             if (vlogersListData?.get(position)?.following == true) {
                 unFollowApiCall(vlogersListData?.get(position)?.dynamoId!!, position)
             } else {
+                Utils.momVlogEvent(
+                    activity,
+                    "Following Feed",
+                    "Follow_CTA",
+                    "",
+                    "android",
+                    SharedPrefUtils.getAppLocale(context),
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                    System.currentTimeMillis().toString(),
+                    "Following",
+                    "",
+                    ""
+                )
                 followApiCall(vlogersListData?.get(position)?.dynamoId!!, position)
             }
             if (headerTextChangeAfterFiveFollowingTextViewClick == 5) {
@@ -371,5 +375,18 @@ class FollowingVideoTabFragment : BaseFragment(),
         super.onResume()
         shimmer_funny_videos_article.stopShimmerAnimation()
         shimmer_funny_videos_article.visibility = View.GONE
+        Utils.momVlogEvent(
+            activity,
+            "Following Feed",
+            "Following",
+            "",
+            "android",
+            SharedPrefUtils.getAppLocale(context),
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+            System.currentTimeMillis().toString(),
+            "Show_following_feed",
+            "",
+            ""
+        )
     }
 }
