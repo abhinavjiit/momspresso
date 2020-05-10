@@ -1438,7 +1438,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="editor_help_header_text">Need Help?</string>
   <string name="get_help_bottom_text">Please mail us your issue so we can help you out.</string>
   <string name="detail_take_survey">Take survey</string>
-  <string name="all_follow">Follow</string>
+  <string name="all_follow">અનુસરો</string>
+  <string name="all_following">અનુસરો છો</string>
   <string name="invite_friends_follow_you">મિત્રો ને તમને અનુસરવા આમંત્રણ આપો.</string>
   <string name="invite_friends_facebook">ફેસબુક ફ્રેન્ડસ/ મિત્રો</string>
   <string name="invite_friends_link">આમંત્રણ ની લિંક શેર કરો</string>
@@ -1446,9 +1447,10 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="video_upload_thankyou_msg">આભાર! વિડીયો અપલોડ થયે અમે તમને જાણ કરીશું.</string>
   <string name="video_upload_success"> અપલોડ થવામાં સફળ</string>
   <string name="all_open">વિડીયો જુઓ</string>
-  <string name="watch_other_videos_text_in_mom_vlog_following_feed">Watch other awesome videos while we create your personalized feed</string>
-  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">You aren\'t following anyone. Follow our top vloggers to see the best videos on Momspresso! </string>
-  <string name="follow_the_best_vloggers_on_momspresso">Follow the best vloggers on Momspresso</string>
+  <string name="watch_other_videos_text_in_mom_vlog_following_feed">જ્યાર સુધી અમે તમારી વ્યક્તિગત ફિડ બનાવીએ, ત્યાર સુધી અમારા જોરદાર વિડીયો માણો</string>
+  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">તમે કોઈને અનુસર્યા નથી. અમારા શ્રેષ્ઠ વી લોગર ને અનુસરો અને સર્વશ્રેષ્ઠ વિડીયો જુઓ!</string>
+  <string name="follow_the_best_vloggers_on_momspresso">શ્રેષ્ઠ વી લોગરો ને અનુસરો</string>
   <string name="all_live_challenges">Live Challenges</string>
   <string name="view_comments">View Comments</string>
+  <string name="add_vlogs_detail_select_tag">ટેગ પસંદ કરો</string>
 </resources>

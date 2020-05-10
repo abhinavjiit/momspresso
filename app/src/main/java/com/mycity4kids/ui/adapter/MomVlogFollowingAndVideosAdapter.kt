@@ -19,6 +19,7 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
 import com.mycity4kids.models.response.FollowUnfollowUserResponse
 import com.mycity4kids.models.response.MomVlogersDetailResponse
@@ -565,6 +566,19 @@ class MomVlogFollowingAndVideosAdapter(val context: Context) :
         index: Int,
         followFollowingTextView: TextView
     ) {
+        Utils.momVlogEvent(
+            followFollowingTextView.context,
+            "Following Feed",
+            "Follow_CTA",
+            "",
+            "android",
+            SharedPrefUtils.getAppLocale(context),
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+            System.currentTimeMillis().toString(),
+            "Following",
+            "",
+            ""
+        )
         momVlogVideosOrFollowingList?.get(position)?.carouselVideoList?.get(index)?.following = true
         followFollowingTextView.text = context.getString(R.string.ad_following_author)
         val retrofit = BaseApplication.getInstance().retrofit

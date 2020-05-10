@@ -38,8 +38,6 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements O
     RecyclerView categoryWiseChallengesRecyclerView;
     LinearLayoutManager llm;
     String userDynamoId;
-    Topics currentSubTopic;
-    Topics selectedTopic;
     private ArrayList<Topics> allChallenge = new ArrayList<>();
     private VideoChallengeSelectionVerticalAdapter recyclerAdapter;
     private SwipeRefreshLayout pullToRefresh;
@@ -50,10 +48,6 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements O
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.vlogs_challenge_list_tab_fragment, container, false);
-        if (getArguments() != null) {
-            currentSubTopic = getArguments().getParcelable("currentSubTopic");
-            selectedTopic = currentSubTopic;
-        }
         getChallenges();
         pullToRefresh = view.findViewById(R.id.pullToRefresh);
         categoryWiseChallengesRecyclerView = view.findViewById(R.id.challengesRecyclerView);

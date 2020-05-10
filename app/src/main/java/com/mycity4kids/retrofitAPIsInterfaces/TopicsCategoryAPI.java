@@ -3,6 +3,7 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
+import com.mycity4kids.models.response.MixFeedResponse;
 import com.mycity4kids.models.response.SuggestedTopicsResponse;
 import com.mycity4kids.models.response.TopicsFollowingStatusResponse;
 import com.mycity4kids.models.response.TrendingListingResponse;
@@ -53,6 +54,30 @@ public interface TopicsCategoryAPI {
 
     @GET("/v1/articles/recent/{start}/{end}")
     Call<ArticleListingResponse> getRecentArticles(@Path("start") int start,
+            @Path("end") int end,
+            @Query("lang") String lang);
+
+    @GET("/v1/articles/handpicked/")
+    Call<MixFeedResponse> getTodaysBestFeed(@Query("publicationDate") String categoryId,
+            @Query("start") int start,
+            @Query("end") int end,
+            @Query("lang") String lang);
+
+//    @GET("/v1/articles/handpicked/mixed/")
+//    Call<MixFeedResponse> getTodaysBestFeed(
+//            @Query("publicationDate") String categoryId,
+//            @Query("start") int start,
+//            @Query("end") int end,
+//            @Query("lang") String lang
+//    );
+
+    @GET("/v1/trending/mixfeed/{start}/{size}")
+    Call<MixFeedResponse> getTrendingFeed(@Path("start") int start,
+            @Path("size") int size,
+            @Query("lang") String lang);
+
+    @GET("/v1/articles/recent/mixed/{start}/{end}")
+    Call<MixFeedResponse> getRecentFeed(@Path("start") int start,
             @Path("end") int end,
             @Query("lang") String lang);
 

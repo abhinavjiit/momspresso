@@ -586,10 +586,11 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                         bundle.putString(Constants.AUTHOR_ID, authorId);
                         ViewAllCommentsFragment viewAllCommentsFragment = new ViewAllCommentsFragment();
                         viewAllCommentsFragment.setArguments(bundle);
-                        if (isAdded() && getActivity() != null) {
+                        if (isAdded()) {
                             ((ShortStoryContainerActivity) getActivity()).addFragment(viewAllCommentsFragment, bundle);
+                            ((ShortStoryContainerActivity) getActivity()).setToolbarTitle("Comments");
                         }
-                    } catch (NullPointerException e) {
+                    } catch (Exception e) {
                         Crashlytics.logException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                         if (isAdded() && getActivity() != null) {

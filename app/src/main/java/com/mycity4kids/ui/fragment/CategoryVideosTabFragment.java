@@ -88,10 +88,8 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     private int totalItemCount;
     private GridLayoutManager gridLayoutManager;
 
-
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-
     }
 
     @Nullable
@@ -146,14 +144,11 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
             momVlogHorizontalRecyclerAdapter.notifyDataSetChanged();
         }
 
-        fabSort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (fabMenu.isExpanded()) {
-                    fabMenu.collapse();
-                } else {
-                    fabMenu.expand();
-                }
+        fabSort.setOnClickListener(v -> {
+            if (fabMenu.isExpanded()) {
+                fabMenu.collapse();
+            } else {
+                fabMenu.expand();
             }
         });
         fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
@@ -179,7 +174,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         view.findViewById(R.id.imgLoader)
                 .startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
-        articleDataModelsNew = new ArrayList<VlogsListingAndDetailResult>();
+        articleDataModelsNew = new ArrayList<>();
         nextPageNumber = 1;
         hitArticleListingApi();
 
@@ -194,8 +189,6 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
             public void getItemOffsets(@NotNull Rect outRect, @NotNull View view, @NotNull RecyclerView parent,
                     @NotNull RecyclerView.State state) {
                 int position = parent.getChildAdapterPosition(view); // item position
-                int spanCount = 2;
-                int spacing = 10;//spacing between views in grid
                 if (articlesListingAdapter.getItemViewType(position) == 1) {
                     outRect.left = 0;
                     outRect.right = 0;
@@ -252,17 +245,6 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         return view;
     }
 
-    public void hitRecommendedVideoAdApi() {
-        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            removeProgressDialog();
-            return;
-        }
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        VlogsListingAndDetailsAPI vlogsListingAndDetailsApi = retrofit.create(VlogsListingAndDetailsAPI.class);
-        Call<Topics> topicsCall = vlogsListingAndDetailsApi.getRecommendedVideoAd();
-        topicsCall.enqueue(topicsCallback);
-    }
-
     private void hitArticleListingApi() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
             removeProgressDialog();
@@ -277,25 +259,6 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
                 .getVlogsList(from, from + limit - 1, sortType, 3, videoCategory);
         callRecentVideoArticles.enqueue(recentArticleResponseCallback);
     }
-
-    private Callback<Topics> topicsCallback = new Callback<Topics>() {
-        @Override
-        public void onResponse(Call<Topics> call, retrofit2.Response<Topics> response) {
-            if (response == null || null == response.body()) {
-                return;
-            }
-            try {
-                //  articlesListingAdapter.setRecommendedVideoAd(response.body());
-                articlesListingAdapter.notifyDataSetChanged();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        @Override
-        public void onFailure(Call<Topics> call, Throwable t) {
-        }
-    };
 
     private Callback<VlogsListingResponse> recentArticleResponseCallback = new Callback<VlogsListingResponse>() {
         @Override
@@ -499,7 +462,19 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     public void onResume() {
         super.onResume();
         funnyvideosshimmer.startShimmerAnimation();
-
+        Utils.momVlogEvent(
+                getActivity(),
+                "Video Listing",
+                topic.getDisplay_name(),
+                "",
+                "android",
+                SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                "" + System.currentTimeMillis(),
+                "Show_Video_Listing",
+                topic.getId(),
+                ""
+        );
     }
 
     @Override
@@ -523,7 +498,19 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
                 funnyvideosshimmer.setVisibility(View.VISIBLE);
                 funnyvideosshimmer.startShimmerAnimation();
                 hitArticleListingApi();
-
+                Utils.momVlogEvent(
+                        getActivity(),
+                        "Video Listing",
+                        subCategoriesTopicList.get(i).getDisplay_name(),
+                        "",
+                        "android",
+                        SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        "" + System.currentTimeMillis(),
+                        "Show_Video_Listing",
+                        videoCategory,
+                        ""
+                );
             } else {
                 subCategoriesTopicList.get(i).setSelectedSubCategory(false);
             }

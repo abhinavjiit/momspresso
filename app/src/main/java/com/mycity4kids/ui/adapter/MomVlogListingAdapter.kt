@@ -19,6 +19,7 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.request.FollowUnfollowUserRequest
 import com.mycity4kids.models.response.FollowUnfollowUserResponse
 import com.mycity4kids.models.response.MomVlogersDetailResponse
@@ -575,6 +576,19 @@ class MomVlogListingAdapter(val mContext: Context) :
         index: Int,
         followFollowingTextView: TextView
     ) {
+        Utils.momVlogEvent(
+            followFollowingTextView.context,
+            "Video Listing",
+            "Follow",
+            "",
+            "android",
+            SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+            System.currentTimeMillis().toString(),
+            "Following",
+            "",
+            ""
+        )
         momVlogVideosOrCarousalList[position].carouselVideoList[index].following = true
         followFollowingTextView.setTextColor(ContextCompat.getColor(mContext, R.color.color_BABABA))
         val myGrad: GradientDrawable =

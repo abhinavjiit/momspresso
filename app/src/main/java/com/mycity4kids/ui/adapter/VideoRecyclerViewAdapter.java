@@ -331,7 +331,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 Utils.momVlogEvent(context, "Video Detail", "Follow", "", "android",
                         SharedPrefUtils.getAppLocale(context),
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
-                        String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
+                        String.valueOf(System.currentTimeMillis()), "Following", "", "");
 
                 ((ParallelFeedActivity) context).followApiCall(responseData.getAuthor().getId(), position);
             });
@@ -543,6 +543,12 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
 
         ShimmerFrameLayout shimmerLayout;
         View spacingView;
+        TextView headerTextView;
+        View divider1;
+        View divider2;
+        View divider3;
+        View divider4;
+        View divider5;
         LinearLayout carosalContainer1;
         LinearLayout carosalContainer2;
         LinearLayout carosalContainer3;
@@ -586,6 +592,8 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             super(itemView);
             itemView.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.video_feed_bg));
             spacingView = itemView.findViewById(R.id.spacingView);
+            headerTextView = itemView.findViewById(R.id.headerTextView);
+            headerTextView.setTextColor(Color.parseColor("#D1D1D1"));
             progress1 = itemView.findViewById(R.id.progress1);
             progress2 = itemView.findViewById(R.id.progress2);
             progress3 = itemView.findViewById(R.id.progress3);
@@ -594,6 +602,16 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             progress6 = itemView.findViewById(R.id.progress6);
             shimmerLayout = itemView.findViewById(R.id.shimmerLayout);
             shimmerLayout.setBackgroundColor(ContextCompat.getColor(shimmerLayout.getContext(), R.color.video_feed_bg));
+            divider1 = itemView.findViewById(R.id.divider1);
+            divider1.setBackgroundColor(Color.parseColor("#303030"));
+            divider2 = itemView.findViewById(R.id.divider2);
+            divider2.setBackgroundColor(Color.parseColor("#303030"));
+            divider3 = itemView.findViewById(R.id.divider3);
+            divider3.setBackgroundColor(Color.parseColor("#303030"));
+            divider4 = itemView.findViewById(R.id.divider4);
+            divider4.setBackgroundColor(Color.parseColor("#303030"));
+            divider5 = itemView.findViewById(R.id.divider5);
+            divider5.setBackgroundColor(Color.parseColor("#303030"));
             carosalContainer1 = itemView.findViewById(R.id.carosalContainer1);
             carosalContainer2 = itemView.findViewById(R.id.carosalContainer2);
             carosalContainer3 = itemView.findViewById(R.id.carosalContainer3);
@@ -607,10 +625,15 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             authorImageView5 = itemView.findViewById(R.id.authorImageView5);
             authorImageView6 = itemView.findViewById(R.id.authorImageView6);
             authorNameTextView1 = itemView.findViewById(R.id.authorNameTextView1);
+            authorNameTextView1.setTextColor(Color.parseColor("#D1D1D1"));
             authorNameTextView2 = itemView.findViewById(R.id.authorNameTextView2);
+            authorNameTextView2.setTextColor(Color.parseColor("#D1D1D1"));
             authorNameTextView3 = itemView.findViewById(R.id.authorNameTextView3);
+            authorNameTextView3.setTextColor(Color.parseColor("#D1D1D1"));
             authorNameTextView4 = itemView.findViewById(R.id.authorNameTextView4);
+            authorNameTextView4.setTextColor(Color.parseColor("#D1D1D1"));
             authorNameTextView5 = itemView.findViewById(R.id.authorNameTextView5);
+            authorNameTextView5.setTextColor(Color.parseColor("#D1D1D1"));
             authorNameTextView6 = itemView.findViewById(R.id.authorNameTextView6);
             authorRankTextView1 = itemView.findViewById(R.id.authorRankTextView1);
             authorRankTextView2 = itemView.findViewById(R.id.authorRankTextView2);

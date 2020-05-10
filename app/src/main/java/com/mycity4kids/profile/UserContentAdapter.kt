@@ -1,9 +1,13 @@
 package com.mycity4kids.profile
 
+import android.content.Intent
 import android.graphics.PorterDuff
+import android.graphics.drawable.GradientDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -11,13 +15,31 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.crashlytics.android.Crashlytics
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.mycity4kids.R
+import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
+import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
+import com.mycity4kids.models.campaignmodels.CampaignDataListResult
+import com.mycity4kids.models.request.FollowUnfollowUserRequest
+import com.mycity4kids.models.response.ContributorListResponse
+import com.mycity4kids.models.response.ContributorListResult
+import com.mycity4kids.models.response.FollowUnfollowUserResponse
 import com.mycity4kids.models.response.MixFeedResult
+import com.mycity4kids.preference.SharedPrefUtils
+import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI
+import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
 import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
+import java.util.Locale
+import kotlinx.android.synthetic.main.mom_vlog_follow_following_carousal.view.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 /**
  * Created by hemant on 19/7/17.
@@ -38,6 +60,7 @@ class UserContentAdapter(
             AppConstants.CONTENT_TYPE_CREATE_SECTION == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_CREATE
             AppConstants.CONTENT_TYPE_SHORT_STORY == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_SHORT_STORY
             AppConstants.CONTENT_TYPE_VIDEO == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_VIDEO
+            AppConstants.CONTENT_TYPE_SUGGESTED_BLOGGERS == mixFeedList?.get(position)?.contentType -> CONTENT_TYPE_SUGGESTED_BLOGGERS
             else -> CONTENT_TYPE_ARTICLE
         }
     }
@@ -58,6 +81,11 @@ class UserContentAdapter(
                 val v0 = LayoutInflater.from(parent.context)
                     .inflate(R.layout.short_story_listing_item, parent, false)
                 ShortStoriesViewHolder(v0, mListener)
+            }
+            CONTENT_TYPE_SUGGESTED_BLOGGERS -> {
+                val v0 = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.mom_vlog_follow_following_carousal, parent, false)
+                FollowFollowingCarousel(v0, mListener)
             }
             else -> {
                 val v0 = LayoutInflater.from(parent.context)
@@ -113,6 +141,237 @@ class UserContentAdapter(
                 holder,
                 isPrivate
             )
+            is FollowFollowingCarousel -> {
+                try {
+                    holder.scroll.fullScroll(HorizontalScrollView.FOCUS_LEFT)
+                    if (!mixFeedList?.get(position)?.isCarouselRequestRunning!! && !mixFeedList?.get(
+                            position
+                        )?.responseReceived!!) {
+                        holder.shimmerLayout.startShimmerAnimation()
+                        holder.shimmerLayout.visibility = View.VISIBLE
+                        mixFeedList?.get(position)?.isCarouselRequestRunning = true
+                        val pos = position
+                        val retrofit = BaseApplication.getInstance().retrofit
+                        val contributorListApi =
+                            retrofit.create(
+                                ContributorListAPI::class.java
+                            )
+                        val call = contributorListApi
+                            .getContributorList(
+                                10,
+                                2,
+                                AppConstants.USER_TYPE_BLOGGER,
+                                "" + AppUtils.getLangKey(),
+                                ""
+                            )
+                        call.enqueue(object : Callback<ContributorListResponse> {
+                            override fun onFailure(
+                                call: Call<ContributorListResponse>,
+                                t: Throwable
+                            ) {
+                            }
+
+                            override fun onResponse(
+                                call: Call<ContributorListResponse>,
+                                response: Response<ContributorListResponse>
+                            ) {
+                                try {
+                                    holder.shimmerLayout.stopShimmerAnimation()
+                                    holder.shimmerLayout.visibility = View.GONE
+                                    holder.scroll.visibility = View.VISIBLE
+                                    if (response.isSuccessful && response.body() != null) {
+                                        val bloggersList = response.body()?.data?.result
+                                        processBloggersData(
+                                            holder,
+                                            bloggersList as ArrayList<ContributorListResult>,
+                                            pos
+                                        )
+                                        mixFeedList?.get(pos)?.isCarouselRequestRunning =
+                                            false
+                                        mixFeedList?.get(pos)?.responseReceived = true
+                                    } else {
+                                        mixFeedList?.get(pos)?.isCarouselRequestRunning =
+                                            false
+                                        mixFeedList?.get(pos)?.responseReceived = true
+                                    }
+                                } catch (e: Exception) {
+                                    Crashlytics.logException(e)
+                                    Log.d(
+                                        "MC4kException",
+                                        Log.getStackTraceString(e)
+                                    )
+                                }
+                            }
+                        })
+                    } else {
+                        mixFeedList?.get(position)?.carouselBloggerList?.let {
+                            populateCarouselFollowFollowing(
+                                holder,
+                                it
+                            )
+                        }
+                    }
+
+                    holder.carosalContainer1.setOnClickListener {
+                        val intent1 = Intent(it.context, UserProfileActivity::class.java)
+                        intent1.putExtra(
+                            Constants.USER_ID,
+                            mixFeedList?.get(position)?.carouselBloggerList?.get(0)?.id
+                        )
+                        it.context.startActivity(intent1)
+                    }
+                    holder.carosalContainer2.setOnClickListener {
+                        val intent1 = Intent(it.context, UserProfileActivity::class.java)
+                        intent1.putExtra(
+                            Constants.USER_ID,
+                            mixFeedList?.get(position)?.carouselBloggerList?.get(1)?.id
+                        )
+                        it.context.startActivity(intent1)
+                    }
+                    holder.carosalContainer3.setOnClickListener {
+                        val intent1 = Intent(it.context, UserProfileActivity::class.java)
+                        intent1.putExtra(
+                            Constants.USER_ID,
+                            mixFeedList?.get(position)?.carouselBloggerList?.get(2)?.id
+                        )
+                        it.context.startActivity(intent1)
+                    }
+                    holder.carosalContainer4.setOnClickListener {
+                        val intent1 = Intent(it.context, UserProfileActivity::class.java)
+                        intent1.putExtra(
+                            Constants.USER_ID,
+                            mixFeedList?.get(position)?.carouselBloggerList?.get(3)?.id
+                        )
+                        it.context.startActivity(intent1)
+                    }
+                    holder.carosalContainer5.setOnClickListener {
+                        val intent1 = Intent(it.context, UserProfileActivity::class.java)
+                        intent1.putExtra(
+                            Constants.USER_ID,
+                            mixFeedList?.get(position)?.carouselBloggerList?.get(4)?.id
+                        )
+                        it.context.startActivity(intent1)
+                    }
+                    holder.carosalContainer6.setOnClickListener {
+                        val intent1 = Intent(it.context, UserProfileActivity::class.java)
+                        intent1.putExtra(
+                            Constants.USER_ID,
+                            mixFeedList?.get(position)?.carouselBloggerList?.get(5)?.id
+                        )
+                        it.context.startActivity(intent1)
+                    }
+                    holder.authorFollowTextView1.setOnClickListener {
+                        if (mixFeedList?.get(position)?.carouselBloggerList?.get(0)?.isFollowed == 1) {
+                            unFollowApiCall(
+                                mixFeedList?.get(position)?.carouselBloggerList?.get(0)?.id,
+                                position,
+                                0,
+                                holder.authorFollowTextView1
+                            )
+                        } else {
+                            followApiCall(
+                                mixFeedList?.get(position)?.carouselBloggerList?.get(0)?.id,
+                                position,
+                                0,
+                                holder.authorFollowTextView1
+                            )
+                        }
+                    }
+                    holder.authorFollowTextView2.setOnClickListener {
+                        if (mixFeedList?.get(position)?.carouselBloggerList?.get(1)?.isFollowed == 1) {
+
+                            unFollowApiCall(
+                                mixFeedList?.get(position)?.carouselBloggerList?.get(1)?.id,
+                                position,
+                                1,
+                                holder.authorFollowTextView2
+                            )
+                        } else {
+                            followApiCall(
+                                mixFeedList?.get(position)?.carouselBloggerList?.get(1)?.id,
+                                position,
+                                1,
+                                holder.authorFollowTextView2
+                            )
+                        }
+                    }
+                    holder.authorFollowTextView3.setOnClickListener {
+                        if (mixFeedList?.get(position)?.carouselBloggerList?.get(2)?.isFollowed == 1) {
+
+                            unFollowApiCall(
+                                mixFeedList?.get(position)?.carouselBloggerList?.get(2)?.id,
+                                position,
+                                2,
+                                holder.authorFollowTextView3
+                            )
+                        } else {
+                            followApiCall(
+                                mixFeedList?.get(position)?.carouselBloggerList?.get(2)?.id,
+                                position,
+                                2,
+                                holder.authorFollowTextView3
+                            )
+                        }
+                    }
+                    holder.authorFollowTextView4.setOnClickListener {
+                        if (mixFeedList?.get(position)?.carouselBloggerList?.get(3)?.isFollowed == 1) {
+
+                            unFollowApiCall(
+                                mixFeedList?.get(position)?.carouselBloggerList?.get(3)?.id,
+                                position,
+                                3,
+                                holder.authorFollowTextView4
+                            )
+                        } else {
+                            followApiCall(
+                                mixFeedList?.get(position)?.carouselBloggerList?.get(3)?.id,
+                                position,
+                                3,
+                                holder.authorFollowTextView4
+                            )
+                        }
+                    }
+                    holder.authorFollowTextView5.setOnClickListener {
+                        if (mixFeedList?.get(position)?.carouselBloggerList?.get(4)?.isFollowed == 1) {
+
+                            unFollowApiCall(
+                                mixFeedList?.get(position)?.carouselBloggerList?.get(4)?.id,
+                                position,
+                                4,
+                                holder.authorFollowTextView5
+                            )
+                        } else {
+                            followApiCall(
+                                mixFeedList?.get(position)?.carouselBloggerList?.get(4)?.id,
+                                position,
+                                4,
+                                holder.authorFollowTextView5
+                            )
+                        }
+                    }
+                    holder.authorFollowTextView6.setOnClickListener {
+                        if (mixFeedList?.get(position)?.carouselBloggerList?.get(5)?.isFollowed == 1) {
+
+                            unFollowApiCall(
+                                mixFeedList?.get(position)?.carouselBloggerList?.get(5)?.id,
+                                position,
+                                5,
+                                holder.authorFollowTextView6
+                            )
+                        } else {
+                            followApiCall(
+                                mixFeedList?.get(position)?.carouselBloggerList?.get(5)?.id,
+                                position,
+                                5,
+                                holder.authorFollowTextView6
+                            )
+                        }
+                    }
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            }
         }
     }
 
@@ -182,7 +441,11 @@ class UserContentAdapter(
             watchLaterImageView = view.findViewById<View>(R.id.watchLaterImageView) as ImageView
             editArticleTextView = view.findViewById<View>(R.id.editArticleTextView) as TextView
             menuItemImageView = view.findViewById<View>(R.id.menuItemImageView) as ImageView
-            menuItemImageView.visibility = View.VISIBLE
+            if (isPrivate) {
+                menuItemImageView.visibility = View.VISIBLE
+            } else {
+                menuItemImageView.visibility = View.GONE
+            }
             shareArticleImageView.setOnClickListener(this)
             bookmarkArticleImageView.setOnClickListener(this)
             editArticleTextView.setOnClickListener(this)
@@ -248,7 +511,6 @@ class UserContentAdapter(
             logoImageView = storyShareCardWidget.findViewById(R.id.logoImageView) as ImageView
             storyAuthorTextView =
                 storyShareCardWidget.findViewById(R.id.storyAuthorTextView) as TextView
-            followAuthorTextView.visibility = View.INVISIBLE
             menuItem = itemView.findViewById<View>(R.id.menuItem) as ImageView
             whatsappShareImageView.tag = itemView
 
@@ -316,6 +578,54 @@ class UserContentAdapter(
         }
     }
 
+    inner class FollowFollowingCarousel(view: View, val listener: RecyclerViewClickListener) :
+        RecyclerView.ViewHolder(view) {
+
+        val headerTextView: TextView = view.headerTextView
+        val shimmerLayout: ShimmerFrameLayout = view.shimmerLayout
+        val carosalContainer1: LinearLayout = view.carosalContainer1
+        val carosalContainer2: LinearLayout = view.carosalContainer2
+        val carosalContainer3: LinearLayout = view.carosalContainer3
+        val carosalContainer4: LinearLayout = view.carosalContainer4
+        val carosalContainer5: LinearLayout = view.carosalContainer5
+        val carosalContainer6: LinearLayout = view.carosalContainer6
+
+        val scroll: HorizontalScrollView = view.scroll
+        val authorImageView1: ImageView = view.authorImageView1
+        val authorNameTextView1: TextView = view.authorNameTextView1
+        val authorRankTextView1: TextView = view.authorRankTextView1
+        val authorFollowTextView1: TextView = view.authorFollowTextView1
+
+        val authorImageView2: ImageView = view.authorImageView2
+        val authorNameTextView2: TextView = view.authorNameTextView2
+        val authorRankTextView2: TextView = view.authorRankTextView2
+        val authorFollowTextView2: TextView = view.authorFollowTextView2
+
+        val authorImageView3: ImageView = view.authorImageView3
+        val authorNameTextView3: TextView = view.authorNameTextView3
+        val authorRankTextView3: TextView = view.authorRankTextView3
+        val authorFollowTextView3: TextView = view.authorFollowTextView3
+
+        val authorImageView4: ImageView = view.authorImageView4
+        val authorNameTextView4: TextView = view.authorNameTextView4
+        val authorRankTextView4: TextView = view.authorRankTextView4
+        val authorFollowTextView4: TextView = view.authorFollowTextView4
+
+        val authorImageView5: ImageView = view.authorImageView5
+        val authorNameTextView5: TextView = view.authorNameTextView5
+        val authorRankTextView5: TextView = view.authorRankTextView5
+        val authorFollowTextView5: TextView = view.authorFollowTextView5
+
+        val authorImageView6: ImageView = view.authorImageView6
+        val authorNameTextView6: TextView = view.authorNameTextView6
+        val authorRankTextView6: TextView = view.authorRankTextView6
+        val authorFollowTextView6: TextView = view.authorFollowTextView6
+
+        init {
+            headerTextView.text = "Follow Top Ranking Authors"
+        }
+    }
+
     private fun addArticleItem(
         articleTitleTV: TextView,
         forYouInfoLL: LinearLayout,
@@ -332,81 +642,86 @@ class UserContentAdapter(
         holder: FeedViewHolder,
         private: Boolean
     ) {
-        articleTitleTV.text = data?.title
-        forYouInfoLL.visibility = View.GONE
-        if (null == data?.articleCount || 0 == data.articleCount) {
-            viewCountTV.visibility = View.GONE
-        } else {
-            viewCountTV.visibility = View.VISIBLE
-            try {
-                viewCountTV.text = AppUtils.withSuffix(data.articleCount.toLong())
-            } catch (e: Exception) {
-                viewCountTV.text = "" + data.articleCount
-            }
-        }
-        if (null == data?.commentsCount || 0 == data?.commentsCount) {
-            commentCountTV.visibility = View.GONE
-        } else {
-            commentCountTV.visibility = View.VISIBLE
-            try {
-                commentCountTV.text = AppUtils.withSuffix(data.commentsCount.toLong())
-            } catch (e: Exception) {
-                commentCountTV.text = "" + data.commentsCount
-            }
-        }
-        if (null == data?.likesCount || 0 == data.likesCount) {
-            recommendCountTV.visibility = View.GONE
-        } else {
-            recommendCountTV.visibility = View.VISIBLE
-            try {
-                recommendCountTV.text = AppUtils.withSuffix(data.likesCount.toLong())
-            } catch (e: Exception) {
-                recommendCountTV.text = "" + data.likesCount
-            }
-        }
-        if (data?.userName.isNullOrBlank()) {
-            authorNameTV.text = "NA"
-        } else {
-            authorNameTV.text = data?.userName
-        }
         try {
-            if (!StringUtils.isNullOrEmpty(data?.videoUrl) && (data?.imageUrl?.thumbMax == null ||
-                    data.imageUrl.thumbMax.contains("default.jp"))
-            ) {
-                Picasso.get().load(AppUtils.getYoutubeThumbnailURLMomspresso(data?.videoUrl))
-                    .placeholder(R.drawable.default_article).into(articleIV)
+            articleTitleTV.text = data?.title
+            forYouInfoLL.visibility = View.GONE
+            if (null == data?.articleCount || 0 == data.articleCount) {
+                viewCountTV.visibility = View.GONE
             } else {
-                if (!StringUtils.isNullOrEmpty(data?.imageUrl?.thumbMax)) {
-                    Picasso.get().load(data?.imageUrl?.thumbMax)
-                        .placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                        .into(articleIV)
+                viewCountTV.visibility = View.VISIBLE
+                try {
+                    viewCountTV.text = AppUtils.withSuffix(data.articleCount.toLong())
+                } catch (e: Exception) {
+                    viewCountTV.text = "" + data.articleCount
+                }
+            }
+            if (null == data?.commentsCount || 0 == data?.commentsCount) {
+                commentCountTV.visibility = View.GONE
+            } else {
+                commentCountTV.visibility = View.VISIBLE
+                try {
+                    commentCountTV.text = AppUtils.withSuffix(data.commentsCount.toLong())
+                } catch (e: Exception) {
+                    commentCountTV.text = "" + data.commentsCount
+                }
+            }
+            if (null == data?.likesCount || 0 == data.likesCount) {
+                recommendCountTV.visibility = View.GONE
+            } else {
+                recommendCountTV.visibility = View.VISIBLE
+                try {
+                    recommendCountTV.text = AppUtils.withSuffix(data.likesCount.toLong())
+                } catch (e: Exception) {
+                    recommendCountTV.text = "" + data.likesCount
+                }
+            }
+            if (data?.userName.isNullOrBlank()) {
+                authorNameTV.text = "NA"
+            } else {
+                authorNameTV.text = data?.userName
+            }
+            try {
+                if (!StringUtils.isNullOrEmpty(data?.videoUrl) && (data?.imageUrl?.thumbMax == null ||
+                        data.imageUrl.thumbMax.contains("default.jp"))
+                ) {
+                    Picasso.get().load(AppUtils.getYoutubeThumbnailURLMomspresso(data?.videoUrl))
+                        .placeholder(R.drawable.default_article).into(articleIV)
                 } else {
-                    articleIV.setBackgroundResource(R.drawable.default_article)
+                    if (!StringUtils.isNullOrEmpty(data?.imageUrl?.thumbMax)) {
+                        Picasso.get().load(data?.imageUrl?.thumbMax)
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                            .into(articleIV)
+                    } else {
+                        articleIV.setBackgroundResource(R.drawable.default_article)
+                    }
+                }
+            } catch (e: Exception) {
+                articleIV.setBackgroundResource(R.drawable.default_article)
+            }
+
+            if (!StringUtils.isNullOrEmpty(data?.videoUrl)) {
+                videoIndicatorIV.visibility = View.VISIBLE
+            } else {
+                videoIndicatorIV.visibility = View.INVISIBLE
+            }
+
+            if (private) {
+                holder.shareArticleImageView.visibility = View.VISIBLE
+                holder.bookmarkArticleImageView.visibility = View.GONE
+                holder.editArticleTextView.visibility = View.VISIBLE
+            } else {
+                holder.editArticleTextView.visibility = View.GONE
+                holder.shareArticleImageView.visibility = View.GONE
+                holder.bookmarkArticleImageView.visibility = View.VISIBLE
+                if (data?.isbookmark == 0) {
+                    holder.bookmarkArticleImageView.setImageResource(R.drawable.ic_bookmark)
+                } else {
+                    holder.bookmarkArticleImageView.setImageResource(R.drawable.ic_bookmarked)
                 }
             }
         } catch (e: Exception) {
-            articleIV.setBackgroundResource(R.drawable.default_article)
-        }
-
-        if (!StringUtils.isNullOrEmpty(data?.videoUrl)) {
-            videoIndicatorIV.visibility = View.VISIBLE
-        } else {
-            videoIndicatorIV.visibility = View.INVISIBLE
-        }
-
-        if (private) {
-            holder.shareArticleImageView.visibility = View.VISIBLE
-            holder.bookmarkArticleImageView.visibility = View.GONE
-            holder.editArticleTextView.visibility = View.VISIBLE
-        } else {
-            holder.editArticleTextView.visibility = View.GONE
-            holder.shareArticleImageView.visibility = View.GONE
-            holder.bookmarkArticleImageView.visibility = View.VISIBLE
-            if (data?.isbookmark == 0) {
-                holder.bookmarkArticleImageView.setImageResource(R.drawable.ic_bookmark)
-            } else {
-                holder.bookmarkArticleImageView.setImageResource(R.drawable.ic_bookmarked)
-            }
+            Crashlytics.logException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
 
@@ -423,64 +738,86 @@ class UserContentAdapter(
         holder: ShortStoriesViewHolder,
         private: Boolean
     ) {
-        authorNameTV.text = data?.userName
-        if (null == data?.commentsCount) {
-            storyCommentCountTV.text = "0"
-        } else {
-            try {
-                storyCommentCountTV.text = AppUtils.withSuffix(data.commentsCount.toLong())
-            } catch (e: Exception) {
-                storyCommentCountTV.text = "" + data.commentsCount
-            }
-        }
-        if (null == data?.likesCount) {
-            storyRecommendationCountTV.text = "0"
-        } else {
-            try {
-                storyRecommendationCountTV.text = AppUtils.withSuffix(data.likesCount.toLong())
-            } catch (e: Exception) {
-                storyRecommendationCountTV.text = "" + data.likesCount
-            }
-        }
-        data?.isLiked?.let {
-            if (it) {
-                holder.likeImageView.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        holder.itemView.context,
-                        R.drawable.ic_recommended
-                    )
-                )
+        try {
+            authorNameTV.text = data?.userName
+            if (null == data?.commentsCount) {
+                storyCommentCountTV.text = "0"
             } else {
-                likeIV.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        holder.itemView.context,
-                        R.drawable.ic_ss_like
-                    )
-                )
+                try {
+                    storyCommentCountTV.text = AppUtils.withSuffix(data.commentsCount.toLong())
+                } catch (e: Exception) {
+                    storyCommentCountTV.text = "" + data.commentsCount
+                }
             }
-        }
+            if (null == data?.likesCount) {
+                storyRecommendationCountTV.text = "0"
+            } else {
+                try {
+                    storyRecommendationCountTV.text = AppUtils.withSuffix(data.likesCount.toLong())
+                } catch (e: Exception) {
+                    storyRecommendationCountTV.text = "" + data.likesCount
+                }
+            }
+            data?.isLiked?.let {
+                if (it) {
+                    holder.likeImageView.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            holder.itemView.context,
+                            R.drawable.ic_recommended
+                        )
+                    )
+                } else {
+                    likeIV.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            holder.itemView.context,
+                            R.drawable.ic_ss_like
+                        )
+                    )
+                }
+            }
 
-        try {
-            Picasso.get().load(data?.storyImage?.trim { it <= ' ' })
-                .placeholder(R.drawable.default_article).into(storyImage)
+            try {
+                Picasso.get().load(data?.storyImage?.trim { it <= ' ' })
+                    .placeholder(R.drawable.default_article).into(storyImage)
+            } catch (e: Exception) {
+                holder.storyImage.setImageResource(R.drawable.default_article)
+            }
+            try {
+                Picasso.get().load(data?.storyImage?.trim { it <= ' ' }).into(shareStoryImageView)
+                storyAuthorTextView.text = data?.userName
+                AppUtils.populateLogoImageLanguageWise(
+                    holder.itemView.context,
+                    logoImageView,
+                    data?.lang.toString()
+                )
+            } catch (e: Exception) {
+                holder.storyImage.setImageResource(R.drawable.default_article)
+            }
+            if (private) {
+                holder.editStoryTextView.visibility = View.VISIBLE
+            } else {
+                holder.editStoryTextView.visibility = View.GONE
+            }
+
+            if (isPrivate) {
+                holder.followAuthorTextView.visibility = View.INVISIBLE
+            } else {
+                holder.followAuthorTextView.visibility = View.VISIBLE
+                if (data?.isfollowing == "1") {
+                    holder.followAuthorTextView.text =
+                        holder.followAuthorTextView.context.getString(R.string.all_following).toUpperCase(
+                            Locale.getDefault()
+                        )
+                } else {
+                    holder.followAuthorTextView.text =
+                        holder.followAuthorTextView.context.getString(R.string.all_follow).toUpperCase(
+                            Locale.getDefault()
+                        )
+                }
+            }
         } catch (e: Exception) {
-            holder.storyImage.setImageResource(R.drawable.default_article)
-        }
-        try {
-            Picasso.get().load(data?.storyImage?.trim { it <= ' ' }).into(shareStoryImageView)
-            storyAuthorTextView.text = data?.userName
-            AppUtils.populateLogoImageLanguageWise(
-                holder.itemView.context,
-                logoImageView,
-                data?.lang.toString()
-            )
-        } catch (e: Exception) {
-            holder.storyImage.setImageResource(R.drawable.default_article)
-        }
-        if (private) {
-            holder.editStoryTextView.visibility = View.VISIBLE
-        } else {
-            holder.editStoryTextView.visibility = View.GONE
+            Crashlytics.logException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
 
@@ -497,57 +834,292 @@ class UserContentAdapter(
         holder: RecyclerView.ViewHolder,
         private: Boolean
     ) {
-        txvArticleTitle.text = data?.title
         try {
-            viewCountTextView.text = data?.view_count?.toLong()?.let { AppUtils.withSuffix(it) }
-        } catch (e: Exception) {
-            viewCountTextView.text = "" + data?.view_count
-        }
-        try {
-            commentCountTextView.text =
-                data?.comment_count?.toLong()?.let { AppUtils.withSuffix(it) }
-        } catch (e: Exception) {
-            commentCountTextView.text = "" + data?.comment_count
-        }
-        try {
-            recommendCountTextView.text =
-                data?.like_count?.toLong()?.let { AppUtils.withSuffix(it) }
-        } catch (e: Exception) {
-            recommendCountTextView.text = "" + data?.like_count
-        }
-        try {
-            val userName = data?.userName
-            if (userName.isNullOrBlank()) {
+            txvArticleTitle.text = data?.title
+            try {
+                viewCountTextView.text = data?.view_count?.toLong()?.let { AppUtils.withSuffix(it) }
+            } catch (e: Exception) {
+                viewCountTextView.text = "" + data?.view_count
+            }
+            try {
+                commentCountTextView.text =
+                    data?.comment_count?.toLong()?.let { AppUtils.withSuffix(it) }
+            } catch (e: Exception) {
+                commentCountTextView.text = "" + data?.comment_count
+            }
+            try {
+                recommendCountTextView.text =
+                    data?.like_count?.toLong()?.let { AppUtils.withSuffix(it) }
+            } catch (e: Exception) {
+                recommendCountTextView.text = "" + data?.like_count
+            }
+            try {
+                val userName = data?.userName
+                if (userName.isNullOrBlank()) {
+                    txvAuthorName.text = ""
+                } else {
+                    txvAuthorName.text = userName
+                }
+            } catch (e: Exception) {
                 txvAuthorName.text = ""
+            }
+
+            try {
+                Picasso.get().load(data?.thumbnail)
+                    .placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                    .into(articleImageView)
+            } catch (e: Exception) {
+                articleImageView.setImageResource(R.drawable.default_article)
+            }
+
+            if (data?.is_gold != null && data.is_gold) {
+                goldLogo.visibility = View.VISIBLE
             } else {
-                txvAuthorName.text = userName
+                goldLogo.visibility = View.GONE
+            }
+            if (data?.winner != null && data.winner as Boolean) {
+                winnerLayout.visibility = View.VISIBLE
+            } else {
+                winnerLayout.visibility = View.GONE
             }
         } catch (e: Exception) {
-            txvAuthorName.text = ""
+            Crashlytics.logException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
         }
+    }
 
-        try {
-            Picasso.get().load(data?.thumbnail)
-                .placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                .into(articleImageView)
-        } catch (e: Exception) {
-            articleImageView.setImageResource(R.drawable.default_article)
-        }
+    fun setTorcaiAdSlotData(showAds: Boolean, adSlotHtml: String) {
+        //        this.showAds = showAds
+        //        this.htmlContent = adSlotHtml
+    }
 
-        if (data?.is_gold != null && data.is_gold) {
-            goldLogo.visibility = View.VISIBLE
-        } else {
-            goldLogo.visibility = View.GONE
-        }
-        if (data?.winner != null && data.winner as Boolean) {
-            winnerLayout.visibility = View.VISIBLE
-        } else {
-            winnerLayout.visibility = View.GONE
-        }
+    fun setCampaignOrAdSlotData(
+        dataType: String,
+        campaignList: ArrayList<CampaignDataListResult>,
+        adSlotHtml: String
+    ) {
+        //        this.dataType = dataType
+        //        campaignListDataModels = campaignList
+        //        this.htmlContent = adSlotHtml
     }
 
     interface RecyclerViewClickListener {
         fun onClick(view: View, position: Int)
+    }
+
+    private fun processBloggersData(
+        holder: FollowFollowingCarousel,
+        bloggersList: ArrayList<ContributorListResult>,
+        position: Int
+    ) {
+        try {
+            if (!bloggersList.isEmpty()) {
+                mixFeedList?.get(position)?.carouselBloggerList = bloggersList
+                mixFeedList?.get(position)?.carouselBloggerList?.let {
+                    populateCarouselFollowFollowing(
+                        holder,
+                        it
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            Crashlytics.logException(e)
+            Log.d("MC4kException", Log.getStackTraceString(e))
+        }
+    }
+
+    private fun populateCarouselFollowFollowing(
+        holder: FollowFollowingCarousel,
+        carouselList: ArrayList<ContributorListResult>
+    ) {
+        if (carouselList.isEmpty()) {
+            holder.scroll.visibility = View.GONE
+            return
+        } else {
+            holder.scroll.visibility = View.VISIBLE
+        }
+        if (carouselList.size >= 1) {
+            holder.carosalContainer1.visibility = View.VISIBLE
+            updateCarousel(
+                holder.authorFollowTextView1,
+                holder.authorImageView1,
+                holder.authorNameTextView1,
+                holder.authorRankTextView1,
+                carouselList[0]
+            )
+        }
+        if (carouselList.size >= 2) {
+            holder.carosalContainer2.visibility = View.VISIBLE
+            updateCarousel(
+                holder.authorFollowTextView2,
+                holder.authorImageView2,
+                holder.authorNameTextView2,
+                holder.authorRankTextView2,
+                carouselList[1]
+            )
+        }
+        if (carouselList.size >= 3) {
+            holder.carosalContainer3.visibility = View.VISIBLE
+            updateCarousel(
+                holder.authorFollowTextView3,
+                holder.authorImageView3,
+                holder.authorNameTextView3,
+                holder.authorRankTextView3,
+                carouselList[2]
+            )
+        }
+        if (carouselList.size >= 4) {
+            holder.carosalContainer4.visibility = View.VISIBLE
+            updateCarousel(
+                holder.authorFollowTextView4,
+                holder.authorImageView4,
+                holder.authorNameTextView4,
+                holder.authorRankTextView4,
+                carouselList[3]
+            )
+        }
+        if (carouselList.size >= 5) {
+            holder.carosalContainer5.visibility = View.VISIBLE
+            updateCarousel(
+                holder.authorFollowTextView5,
+                holder.authorImageView5,
+                holder.authorNameTextView5,
+                holder.authorRankTextView5,
+                carouselList[4]
+            )
+        }
+        if (carouselList.size >= 6) {
+            holder.carosalContainer6.visibility = View.VISIBLE
+            updateCarousel(
+                holder.authorFollowTextView6,
+                holder.authorImageView6,
+                holder.authorNameTextView6,
+                holder.authorRankTextView6,
+                carouselList[5]
+            )
+        }
+        holder.scroll.fullScroll(HorizontalScrollView.FOCUS_LEFT)
+    }
+
+    private fun updateCarousel(
+        followTextView: TextView,
+        authorImageView: ImageView,
+        authorNameTextView: TextView,
+        authorRanktextView: TextView,
+        contributorItem: ContributorListResult
+    ) {
+
+        Picasso.get().load(contributorItem.profilePic.clientApp).error(R.drawable.default_article)
+            .into(authorImageView, object : com.squareup.picasso.Callback {
+                override fun onSuccess() {
+                }
+
+                override fun onError(e: Exception?) {
+                }
+            })
+        if (contributorItem.isFollowed == 1) {
+            followTextView.setTextColor(
+                ContextCompat.getColor(
+                    followTextView.context,
+                    R.color.color_BABABA
+                )
+            )
+            val myGrad: GradientDrawable =
+                followTextView.background as GradientDrawable
+            myGrad.setStroke(
+                2,
+                ContextCompat.getColor(followTextView.context, R.color.color_BABABA)
+            )
+            myGrad.setColor(ContextCompat.getColor(followTextView.context, R.color.white))
+
+            followTextView.text =
+                followTextView.context.getString(R.string.ad_following_author).toLowerCase().capitalize()
+        } else {
+            followTextView.setTextColor(
+                ContextCompat.getColor(
+                    followTextView.context,
+                    R.color.white
+                )
+            )
+            val myGrad: GradientDrawable =
+                followTextView.background as GradientDrawable
+            myGrad.setStroke(2, ContextCompat.getColor(followTextView.context, R.color.app_red))
+            myGrad.setColor(ContextCompat.getColor(followTextView.context, R.color.app_red))
+
+            followTextView.text =
+                followTextView.context.getString(R.string.ad_follow_author).toLowerCase().capitalize()
+        }
+        authorNameTextView.text = contributorItem.firstName.trim().toLowerCase().capitalize()
+            .plus(" " + contributorItem.lastName.trim().toLowerCase().capitalize())
+
+        authorRanktextView.text =
+            authorRanktextView.context.resources.getString(R.string.myprofile_rank_label).toLowerCase().capitalize() +
+                ":" + contributorItem.rank
+    }
+
+    private fun unFollowApiCall(
+        authorId: String?,
+        position: Int,
+        index: Int,
+        followFollowingTextView: TextView
+    ) {
+        mixFeedList?.get(position)?.carouselBloggerList?.get(index)?.isFollowed = 0
+        followFollowingTextView.text =
+            followFollowingTextView.context.getString(R.string.ad_follow_author)
+        val retrofit = BaseApplication.getInstance().retrofit
+        val followApi = retrofit.create(FollowAPI::class.java)
+        val request = FollowUnfollowUserRequest()
+        request.followee_id = authorId
+        val followUnfollowUserResponseCall = followApi.unfollowUserV2(request)
+        followUnfollowUserResponseCall.enqueue(object : Callback<FollowUnfollowUserResponse> {
+            override fun onFailure(call: Call<FollowUnfollowUserResponse>, t: Throwable) {
+            }
+
+            override fun onResponse(
+                call: Call<FollowUnfollowUserResponse>,
+                response: Response<FollowUnfollowUserResponse>
+            ) {
+            }
+        })
+    }
+
+    private fun followApiCall(
+        authorId: String?,
+        position: Int,
+        index: Int,
+        followFollowingTextView: TextView
+    ) {
+        Utils.momVlogEvent(
+            followFollowingTextView.context,
+            "Following Feed",
+            "Follow_CTA",
+            "",
+            "android",
+            SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+            System.currentTimeMillis().toString(),
+            "Following",
+            "",
+            ""
+        )
+        mixFeedList?.get(position)?.carouselBloggerList?.get(index)?.isFollowed = 1
+        followFollowingTextView.text =
+            followFollowingTextView.context.getString(R.string.ad_following_author)
+        val retrofit = BaseApplication.getInstance().retrofit
+        val followApi = retrofit.create(FollowAPI::class.java)
+        val request = FollowUnfollowUserRequest()
+        request.followee_id = authorId
+        val followUnfollowUserResponseCall = followApi.followUserV2(request)
+        followUnfollowUserResponseCall.enqueue(object : Callback<FollowUnfollowUserResponse> {
+            override fun onFailure(call: Call<FollowUnfollowUserResponse>, t: Throwable) {
+            }
+
+            override fun onResponse(
+                call: Call<FollowUnfollowUserResponse>,
+                response: Response<FollowUnfollowUserResponse>
+            ) {
+            }
+        })
     }
 
     companion object {
@@ -555,5 +1127,6 @@ class UserContentAdapter(
         private val CONTENT_TYPE_SHORT_STORY = 1
         private val CONTENT_TYPE_ARTICLE = 2
         private val CONTENT_TYPE_VIDEO = 3
+        private val CONTENT_TYPE_SUGGESTED_BLOGGERS = 4
     }
 }

@@ -1322,7 +1322,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="editor_help_header_text">உதவி பெற</string>
   <string name="get_help_bottom_text">"ஏதாவது பிரச்சனையா?"\nஎங்களிடம் பகிருங்கள். உங்களுக்கு உதவ நாங்கள் காத்துக் கொண்டிருக்கிறோம். </string>
   <string name="detail_take_survey">Take survey</string>
-  <string name="all_follow">Follow</string>
+  <string name="all_follow">பின்தொடரவும்</string>
+  <string name="all_following">பின்தொடர்கிறீர்கள்</string>
   <string name="invite_friends_follow_you">உங்களைப் பின்தொடர நண்பர்களை அழையுங்கள்</string>
   <string name="invite_friends_facebook">முகநூல் நண்பர்கள்</string>
   <string name="invite_friends_link">அழைப்பு உரலியை பகிர்</string>
@@ -1330,9 +1331,10 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="video_upload_thankyou_msg">நன்றி! உங்கள் வீடியோ பதிவேற்றப்பட்டதும் நாங்கள் உங்களுக்கு தெரியப்படுத்துகிறோம்.</string>
   <string name="video_upload_success">வெற்றிகரமாக பதிவேற்றப்பட்டது</string>
   <string name="all_open">திற</string>
-  <string name="watch_other_videos_text_in_mom_vlog_following_feed">Watch other awesome videos while we create your personalized feed</string>
-  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">You aren\'t following anyone. Follow our top vloggers to see the best videos on Momspresso! </string>
-  <string name="follow_the_best_vloggers_on_momspresso">Follow the best vloggers on Momspresso</string>
+  <string name="watch_other_videos_text_in_mom_vlog_following_feed">உங்களுக்கான பக்கத்தை நாங்கள் உருவாக்கும் வரை, வேறு சிறந்த வீடியோக்களைப் பாருங்கள்</string>
+  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">நீங்கள் யாரையும் பின்பற்றவில்லை.   சிறந்த வீடியோக்களைக் காண எங்களின் சிறந்த விலாகர்களை பின்தொடருங்கள்!</string>
+  <string name="follow_the_best_vloggers_on_momspresso">சிறந்த விலாகர்களை பின்தொடருங்கள்</string>
   <string name="all_live_challenges">Live Challenges</string>
   <string name="view_comments">View Comments</string>
+  <string name="add_vlogs_detail_select_tag">வகையைக் தேர்ந்தெடுங்கள்</string>
 </resources>

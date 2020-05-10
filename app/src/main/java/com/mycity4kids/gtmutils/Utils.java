@@ -93,12 +93,11 @@ public class Utils {
 
     public static void momVlogEvent(Context context, String currentScreen, String CTA, String videoId, String platform,
             String lang, String userId, String timestamp, String event, String categoryId, String challengeId) {
-        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
-        dataLayer.push(DataLayer
-                .mapOf(GTMTags.TagEvent, event, GTMTags.Current_Screen, currentScreen, GTMTags.videoId, videoId,
-                        GTMTags.CTA, CTA, GTMTags.challengeId, challengeId, GTMTags.Platform, platform,
-                        GTMTags.Language, lang, GTMTags.USER_ID, userId, GTMTags.Timestamp, timestamp,
-                        GTMTags.categoryId, categoryId));
+        Log.e("MOMVLOG EVENT", "currentScreen="+currentScreen+" || "
+                +"currentScreen="+currentScreen+" || "
+                +"CTA="+CTA+" || "
+                +"event="+event+" || "
+                +"categoryId="+categoryId+" || ");
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
         try {
             JSONObject jsonObject = new JSONObject();

@@ -29,8 +29,8 @@
         android:layout_height="wrap_content"
         android:background="#F9F9F9"
         android:gravity="center"
-        android:padding="39dp"
-        android:text="Follow creators to create you own following feed"
+        android:padding="40dp"
+        android:text=""
         android:textColor="#BABABA"
         android:visibility="visible"
         app:fontName="Roboto-Regular.ttf" />
@@ -41,12 +41,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/headerTextView"
-        android:layout_marginStart="13dp"
+        android:layout_marginStart="14dp"
         android:layout_marginTop="@dimen/space_16"
         android:background="@color/white"
-        android:text="People you would like to follow"
+        android:text="@string/follow_the_best_vloggers_on_momspresso"
         android:textColor="#515151"
-        android:textSize="@dimen/space_16"
+        android:textSize="18sp"
+        android:layout_marginBottom="16dp"
         android:visibility="visible"
         app:fontName="Roboto-Medium.ttf" />
     </RelativeLayout>

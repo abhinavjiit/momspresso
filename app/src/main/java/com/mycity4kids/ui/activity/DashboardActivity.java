@@ -1730,11 +1730,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         ((BaseApplication) getApplication()).setView(root);
         final Fragment topFragment = getSupportFragmentManager()
                 .findFragmentById(R.id.content_frame);
-
-        if (topFragment instanceof FragmentMC4KHomeNew && SharedPrefUtils
-                .isTopicSelectionChanged(BaseApplication.getAppContext())) {
-            ((FragmentMC4KHomeNew) topFragment).hideFollowTopicHeader();
-        }
         refreshMenu();
         final Fragment topFragmentt = getSupportFragmentManager()
                 .findFragmentById(R.id.content_frame);
@@ -2426,9 +2421,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         .isCoachmarksShownFlag(BaseApplication.getAppContext(), "HomeScreen")
                         && !BuildConfig.DEBUG) {
                     homeCoachmark.setVisibility(View.VISIBLE);
-                }
-                if (SharedPrefUtils.isTopicSelectionChanged(this)) {
-                    ((FragmentMC4KHomeNew) topFragment).hideFollowTopicHeader();
                 }
                 langTextView.setVisibility(View.VISIBLE);
                 toolbarTitleTextView.setText(getString(R.string.navigation_bar_home));

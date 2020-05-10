@@ -1370,7 +1370,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="editor_help_header_text">സഹായം വേണോ?</string>
   <string name="get_help_bottom_text">നിങ്ങളുടെ പ്രശ്നം ഞങ്ങൾക്ക് മെയിൽ ചെയ്യുക, അതുവഴി ഞങ്ങൾക്ക് നിങ്ങളെ സഹായിക്കാനാകും.</string>
   <string name="detail_take_survey">Take survey</string>
-  <string name="all_follow">Follow</string>
+  <string name="all_follow">പിന്തുടരൂ</string>
+  <string name="all_following">പിന്തുടരുന്നു</string>
   <string name="invite_friends_follow_you">നിങ്ങളെ പിന്തുടരാൻ സുഹൃത്തുക്കളെ ക്ഷണിക്കുക</string>
   <string name="invite_friends_facebook">ഫേസ്ബുക്ക് സുഹൃത്തുക്കൾ</string>
   <string name="invite_friends_link">ക്ഷണിക്കുന്നതിനുള്ള ലിങ്ക് പങ്കിടുക</string>
@@ -1378,9 +1379,10 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="video_upload_thankyou_msg">നന്ദി! നിങ്ങളുടെ വീഡിയോ അപ്‌ലോഡ് ആയാൽ ഞങ്ങൾ അറിയിക്കും.</string>
   <string name="video_upload_success">വിജയകരമായി അപ്‌ലോഡ് ചെയ്തിരിക്കുന്നു</string>
   <string name="all_open">തുറക്കാം</string>
-  <string name="watch_other_videos_text_in_mom_vlog_following_feed">Watch other awesome videos while we create your personalized feed</string>
-  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">You aren\'t following anyone. Follow our top vloggers to see the best videos on Momspresso! </string>
-  <string name="follow_the_best_vloggers_on_momspresso">Follow the best vloggers on Momspresso</string>
+  <string name="watch_other_videos_text_in_mom_vlog_following_feed">ഞങ്ങൾ നിങ്ങളുടെ വ്യക്തിഗത ഫീഡ് തയാറാക്കുന്നു, അത് വരെ മറ്റ് വിഡിയോകൾ കാണൂ</string>
+  <string name="follow_creators_feed_header_text_in_mom_vlog_feed">നിങ്ങൾ ആരെയും ഫോളോ ചെയ്യുന്നില്ല. മികച്ച വിഡിയോകൾ കാണാൻ ടോപ് വ്ലോഗർമാരെ പിന്തുടരൂ! </string>
+  <string name="follow_the_best_vloggers_on_momspresso">മികച്ച വ്ലോഗർമാരെ പിന്തുടരൂ</string>
   <string name="all_live_challenges">Live Challenges</string>
   <string name="view_comments">View Comments</string>
+  <string name="add_vlogs_detail_select_tag">ടാഗ് തിരഞ്ഞെടുക്കൂ</string>
 </resources>

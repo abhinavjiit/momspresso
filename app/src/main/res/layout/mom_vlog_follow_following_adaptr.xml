@@ -15,7 +15,7 @@
     android:background="#F9F9F9"
     android:gravity="center"
     android:padding="39dp"
-    android:text="Follow creators to create you own following feed"
+    android:text=""
     android:textColor="#BABABA"
     android:visibility="gone"
     app:fontName="Roboto-Regular.ttf" />
@@ -27,7 +27,7 @@
     android:layout_below="@id/headerTextView"
     android:layout_marginStart="13dp"
     android:layout_marginTop="@dimen/space_16"
-    android:text="People you would like to follow"
+    android:text="@string/follow_the_best_vloggers_on_momspresso"
     android:textColor="#515151"
     android:textSize="@dimen/space_16"
     android:visibility="gone"
@@ -44,15 +44,17 @@
 
     <com.mikhaellopez.circularimageview.CircularImageView
       android:id="@+id/authorImageView"
-      android:layout_width="62dp"
-      android:layout_height="62dp"
+      android:layout_width="72dp"
+      android:layout_height="72dp"
       android:layout_centerHorizontal="true"
-      android:src="@drawable/default_article" />
+      android:src="@drawable/default_article"
+      app:civ_border="false"
+      app:civ_shadow="false" />
 
     <ProgressBar
       android:id="@+id/homeProgress"
-      android:layout_width="62dp"
-      android:layout_height="62dp"
+      android:layout_width="72dp"
+      android:layout_height="72dp"
       android:layout_centerHorizontal="true"
       android:indeterminate="true"
       android:indeterminateTint="@color/grey_light"
@@ -68,9 +70,10 @@
       android:layout_marginTop="6dp"
       android:ellipsize="marquee"
       android:gravity="center"
-      android:lines="2"
-      android:text="Deepika Pandey nbknk jbdkbkvdk"
+      android:singleLine="true"
+      android:text=""
       android:textColor="#515151"
+      android:textSize="15sp"
       app:fontName="Roboto-Medium.ttf" />
 
     <com.mycity4kids.widget.CustomFontTextView
@@ -80,8 +83,9 @@
       android:layout_below="@id/authorName"
       android:layout_centerHorizontal="true"
       android:layout_marginTop="6dp"
-      android:text="Rank:45"
+      android:text=""
       android:textColor="#979797"
+      android:textSize="13sp"
       app:fontName="Roboto-Regular.ttf" />
 
     <com.mycity4kids.widget.CustomFontTextView

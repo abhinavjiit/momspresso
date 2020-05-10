@@ -324,6 +324,7 @@ public class AppConstants {
     public static final String GROUP_ACTION_TYPE_VOTE_KEY = "3";
     public static final String GROUP_ACTION_TYPE_TAG_KEY = "4";
 
+    public static final String CONTENT_TYPE_SUGGESTED_BLOGGERS = "5";
     public static final String CONTENT_TYPE_MYMONEY = "4";
     public static final String CONTENT_TYPE_VIDEO = "2";
     public static final String CONTENT_TYPE_SHORT_STORY = "1";

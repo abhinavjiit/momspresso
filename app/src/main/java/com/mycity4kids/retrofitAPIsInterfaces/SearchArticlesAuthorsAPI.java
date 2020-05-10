@@ -16,50 +16,23 @@ import retrofit2.http.Query;
  */
 public interface SearchArticlesAuthorsAPI {
 
-    @GET("/v1/search/find")
+    @GET("/v2/search/find")
     Call<SearchResponse> getAllSearchResult(@Query("q") String searchString,
                                                  @Query("type") String type,
                                                  @Query("start") int start,
                                                  @Query("end") int end);
 
-    @GET("/v1/search/find")
-    Call<SearchResponse> getSearchArticlesResult(@Query("q") String searchString,
-                                                 @Query("type") String type,
-                                                 @Query("start") int start,
-                                                 @Query("end") int end);
-
-    //    @GET("apiparentingstop/searchV1")
-    @GET("/v1/search/find")
+    @GET("/v2/search/find")
     Call<SearchResponse> getSearchAuthorsResult(@Query("q") String searchString,
                                                 @Query("type") String type,
                                                 @Query("start") int start,
                                                 @Query("end") int end);
 
-    @GET("/v1/search/find")
-    Call<SearchResponse> getSearchBlogsResult(@Query("q") String searchString,
-                                              @Query("type") String type,
-                                              @Query("start") int start,
-                                              @Query("end") int end);
-
-    @GET("/v1/search/find")
+    @GET("/v2/search/find")
     Call<SearchResponse> getSearchTopicsResult(@Query("q") String searchString,
                                                @Query("type") String type,
                                                @Query("start") int start,
                                                @Query("end") int end);
-
-    @GET("/v1/search/find")
-    Call<SearchResponse> getContextualSearchResult(@Query("q") String searchString,
-                                                   @Query("type") String type,
-                                                   @Query("start") int start,
-                                                   @Query("end") int end,
-                                                   @Query("category") String categoryId);
-
-    @GET("/v1/search/find")
-    Call<SearchResponse> getContextualSearchResultForCity(@Query("q") String searchString,
-                                                          @Query("type") String type,
-                                                          @Query("start") int start,
-                                                          @Query("end") int end,
-                                                          @Query("city") String cityId);
 
     @GET("/v1/search/usersearch")
     Call<SearchTrendsAndHistoryResponse> getSearchTrendAndHistory();
