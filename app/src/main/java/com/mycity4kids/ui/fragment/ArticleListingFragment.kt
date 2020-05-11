@@ -438,10 +438,16 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                     chunks = responseData.data.chunks!!
                 }
                 if (!mixfeedList.isNullOrEmpty() && mixfeedList!!.size <= LIMIT) {
-                    mixfeedList?.add(
-                        3,
-                        MixFeedResult(contentType = AppConstants.CONTENT_TYPE_SUGGESTED_BLOGGERS)
-                    )
+                    if (mixfeedList?.size!! < 3) {
+                        mixfeedList?.add(
+                            MixFeedResult(contentType = AppConstants.CONTENT_TYPE_SUGGESTED_BLOGGERS)
+                        )
+                    } else {
+                        mixfeedList?.add(
+                            3,
+                            MixFeedResult(contentType = AppConstants.CONTENT_TYPE_SUGGESTED_BLOGGERS)
+                        )
+                    }
                 }
                 mixfeedAdapter.setListData(mixfeedList)
                 mixfeedAdapter.notifyDataSetChanged()

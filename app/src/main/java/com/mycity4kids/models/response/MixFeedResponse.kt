@@ -57,7 +57,7 @@ data class MixFeedResult(
     @SerializedName("commentUri")
     val commentUri: String = "",
     @SerializedName("comment_count")
-    val comment_count: Int = -1,
+    var comment_count: Int = -1,
     @SerializedName("commentsCount")
     val commentsCount: Int = -1,
     @SerializedName("contentType")
@@ -99,7 +99,7 @@ data class MixFeedResult(
     @SerializedName("lang")
     val lang: Any = "",
     @SerializedName("like_count")
-    val like_count: Int = -1,
+    var like_count: Int = -1,
     @SerializedName("likesCount")
     var likesCount: Int = -1,
     @SerializedName("old_video_id")
@@ -151,7 +151,7 @@ data class MixFeedResult(
     @SerializedName("videoUrl")
     val videoUrl: String = "",
     @SerializedName("view_count")
-    val view_count: Int = -1,
+    var view_count: Int = -1,
     @SerializedName("winner")
     val winner: Any? = -1,
     @SerializedName("itemType")
