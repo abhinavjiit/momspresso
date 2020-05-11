@@ -3,6 +3,7 @@ package com.mycity4kids.ui.activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
@@ -42,6 +43,7 @@ class UserInviteFBSuggestionActivity : BaseActivity(), View.OnClickListener,
     private var userDynamoId: String? = null
     private var adapter: FBInviteFriendsAdapter? = null
     private var callbackManager: CallbackManager? = null
+    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private val facebookFriendList = mutableListOf<FacebookInviteFriendsData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +54,11 @@ class UserInviteFBSuggestionActivity : BaseActivity(), View.OnClickListener,
         emptyList = findViewById(R.id.emptyList)
         progressBar = findViewById(R.id.progressBar)
         fbFriendsContainer = findViewById(R.id.fbFriendsContainer)
+        toolbar = findViewById(R.id.toolbar)
+
+        setSupportActionBar(toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
 
         fbFriendsContainer?.setOnClickListener(this)
         callbackManager = CallbackManager.Factory.create()
@@ -96,11 +103,6 @@ class UserInviteFBSuggestionActivity : BaseActivity(), View.OnClickListener,
                 }
                 try {
                     val facebookFriendsResponse = response.body()
-                    /*facebookFriendsResponse?.data?.get(0)?.friendList?.let {
-                        facebookFriendList.addAll(
-                            it
-                        )
-                    }*/
                     facebookFriendsResponse?.let { response ->
                         facebookFriendsResponse.data?.get(0)?.friendList?.let {
                             facebookFriendList.addAll(it)
@@ -151,11 +153,6 @@ class UserInviteFBSuggestionActivity : BaseActivity(), View.OnClickListener,
                 facebookFriendList.get(position).id?.let { hitInviteAPI(it) }
                 //                facebookFriendList.get(position).id?.let { hitInviteAPI(it, "1") }
             }
-            /*view.id == R.id.invitedTextView -> {
-                facebookFriendList.get(position).isFollowing = "0"
-                adapter?.notifyDataSetChanged()
-                facebookFriendList.get(position).id?.let { hitFollowUnfollowAPI(it, "0") }
-            }*/
             view.id == R.id.authorNameTextView || view.id == R.id.authorImageView -> {
                 this.let {
                     val profileIntent = Intent(this, UserProfileActivity::class.java)
@@ -166,37 +163,24 @@ class UserInviteFBSuggestionActivity : BaseActivity(), View.OnClickListener,
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun hitInviteAPI(authorId: String) {
         val retrofit = BaseApplication.getInstance().retrofit
         val followAPI = retrofit.create(FollowAPI::class.java)
-        val request = FacebookInviteFriendsRequest(authorId)
-        //        request.notifiedUsers = authorId
+        val friendInviteList = ArrayList<String>()
+        friendInviteList.add(authorId)
+        val request = FacebookInviteFriendsRequest(friendInviteList)
         val inviteResponseCall = followAPI.inviteFBFriends(request)
         inviteResponseCall.enqueue(followUnfollowUserResponseCallback)
-        /*this.let {
-            Utils.pushProfileEvents(
-                it, "CTA_Unfollow_Profile", "UserProfileActivity", "Unfollow", "-"
-            )
-        }*/
-        /*val request = FollowUnfollowUserRequest()
-        request.followee_id = authorId
-        if ("0" == action) {
-            val followUnfollowUserResponseCall = followAPI.inviteFBFriends(authorId)
-            followUnfollowUserResponseCall.enqueue(followUnfollowUserResponseCallback)
-            this.let {
-                Utils.pushProfileEvents(
-                    it, "CTA_Unfollow_Profile", "UserProfileActivity", "Unfollow", "-"
-                )
-            }
-        } else {
-            val followUnfollowUserResponseCall = followAPI.followUserV2(request)
-            followUnfollowUserResponseCall.enqueue(followUnfollowUserResponseCallback)
-            this.let {
-                Utils.pushProfileEvents(
-                    it, "CTA_Follow_Profile", "UserProfileActivity", "Follow", "-"
-                )
-            }
-        }*/
     }
 
     object followUnfollowUserResponseCallback : Callback<ResponseBody> {
