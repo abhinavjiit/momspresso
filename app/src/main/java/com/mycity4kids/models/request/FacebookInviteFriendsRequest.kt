@@ -4,5 +4,5 @@ import com.google.gson.annotations.SerializedName
 
 data class FacebookInviteFriendsRequest(
     @SerializedName("notifiedUsers")
-    var notifiedUsers: String
+    var notifiedUsers: ArrayList<String>
 )
