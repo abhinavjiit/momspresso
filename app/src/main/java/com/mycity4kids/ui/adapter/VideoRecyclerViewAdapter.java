@@ -462,7 +462,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                                             responseData.getTitleSlug()),
                                     responseData.getAuthor().getId(),
                                     responseData.getAuthor().getFirstName() + " " + responseData.getAuthor()
-                                            .getLastName(), responseData.getId(),responseData.getTitleSlug());
+                                            .getLastName(), responseData.getId(), responseData.getTitleSlug());
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
@@ -482,7 +482,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                                             responseData.getTitleSlug()),
                                     responseData.getAuthor().getId(),
                                     responseData.getAuthor().getFirstName() + " " + responseData.getAuthor()
-                                            .getLastName(), responseData.getId(),responseData.getTitleSlug());
+                                            .getLastName(), responseData.getId(), responseData.getTitleSlug());
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
@@ -982,12 +982,10 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 .into(authorImageView, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
-//                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onError(Exception e) {
-//                        progressBar.setVisibility(View.VISIBLE);
                     }
                 });
         if (carosalList.getFollowing()) {
@@ -1017,7 +1015,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
 
         final PopupWindow popupWindow = new PopupWindow(context);
 
-        LayoutInflater inflater = (LayoutInflater) ((ParallelFeedActivity) context)
+        LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View view = inflater.inflate(R.layout.parallel_feed_popup, null);

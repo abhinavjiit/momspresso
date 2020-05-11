@@ -70,7 +70,6 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener,
         recyclerView?.layoutManager = llm
         recyclerView?.adapter = adapter
 
-
         val retrofit = BaseApplication.getInstance().retrofit
         val fbFriendsApi = retrofit.create(FollowAPI::class.java)
         val call = fbFriendsApi.getFacebookFriendsToInvite()

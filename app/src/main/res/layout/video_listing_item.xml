@@ -44,12 +44,10 @@
         <ImageView
           android:id="@+id/articleImageView"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"
+          android:layout_height="@dimen/article_listing.article_image"
           android:layout_alignParentTop="true"
           android:layout_alignParentEnd="true"
           android:layout_centerVertical="true"
-          android:layout_marginEnd="0dp"
-          android:adjustViewBounds="true"
           android:contentDescription="@string/author_img"
           android:src="@drawable/default_article" />
 

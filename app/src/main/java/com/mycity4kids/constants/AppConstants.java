@@ -333,6 +333,7 @@ public class AppConstants {
 
     public static final int REPORT_TYPE_STORY = 1;
     public static final int REPORT_TYPE_COMMENT = 2;
+    public static final int REPORT_TYPE_VIDEO = 3;
     public static final String GROUP_REPORT_TYPE_POST = "0";
     public static final String GROUP_REPORT_TYPE_COMMENT = "1";
 

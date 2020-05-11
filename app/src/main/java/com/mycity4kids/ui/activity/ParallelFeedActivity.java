@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
@@ -54,6 +55,7 @@ import com.mycity4kids.ui.ExoPlayerRecyclerView;
 import com.mycity4kids.ui.adapter.VideoRecyclerViewAdapter;
 import com.mycity4kids.ui.adapter.VideoRecyclerViewAdapter.VideoFeedRecyclerViewClick;
 import com.mycity4kids.ui.fragment.AddCollectionAndCollectionItemDialogFragment;
+import com.mycity4kids.ui.fragment.ReportContentDialogFragment;
 import com.mycity4kids.ui.fragment.ViewAllCommentsFragment;
 import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.DividerItemDecoration;
@@ -680,13 +682,12 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     public void onClick(int position, View view) {
         this.bookMarkPosition = position;
         if (view.getId() == R.id.bookmark) {
-            final androidx.appcompat.widget.PopupMenu popupMenu = new androidx.appcompat.widget.PopupMenu(this,
+            final PopupMenu popupMenu = new PopupMenu(this,
                     view);
             popupMenu.getMenuInflater().inflate(R.menu.choose_short_story_menu, popupMenu.getMenu());
 
             for (int i = 0; i < popupMenu.getMenu().size(); i++) {
-                if (popupMenu.getMenu().getItem(i).getItemId() == R.id.reportContentShortStory
-                        || popupMenu.getMenu().getItem(i).getItemId() == R.id.copyLink) {
+                if (popupMenu.getMenu().getItem(i).getItemId() == R.id.copyLink) {
                     popupMenu.getMenu().getItem(i).setVisible(false);
                 } else if (popupMenu.getMenu().getItem(i).getItemId() == R.id.bookmarkShortStory) {
                     popupMenu.getMenu().getItem(i).setVisible(true);
@@ -763,7 +764,17 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                             delete(finalList.get(position).getBookmark_id());
                         }
                     }
-
+                    return true;
+                } else if (item.getItemId() == R.id.reportContentShortStory) {
+                    ReportContentDialogFragment reportContentDialogFragment = new
+                            ReportContentDialogFragment();
+                    Bundle args = new Bundle();
+                    args.putString("postId", finalList.get(position).getId());
+                    args.putInt("type", AppConstants.REPORT_TYPE_VIDEO);
+                    reportContentDialogFragment.setArguments(args);
+                    reportContentDialogFragment.setCancelable(true);
+                    FragmentManager fm = getSupportFragmentManager();
+                    reportContentDialogFragment.show(fm, "Report Content");
                     return true;
                 }
                 return false;

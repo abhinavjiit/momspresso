@@ -913,7 +913,7 @@ class UserContentAdapter(
         position: Int
     ) {
         try {
-            if (!bloggersList.isEmpty()) {
+            if (bloggersList.isNotEmpty()) {
                 mixFeedList?.get(position)?.carouselBloggerList = bloggersList
                 mixFeedList?.get(position)?.carouselBloggerList?.let {
                     populateCarouselFollowFollowing(
@@ -1008,7 +1008,6 @@ class UserContentAdapter(
         authorRanktextView: TextView,
         contributorItem: ContributorListResult
     ) {
-
         Picasso.get().load(contributorItem.profilePic.clientApp).error(R.drawable.default_article)
             .into(authorImageView, object : com.squareup.picasso.Callback {
                 override fun onSuccess() {
@@ -1018,6 +1017,20 @@ class UserContentAdapter(
                 }
             })
         if (contributorItem.isFollowed == 1) {
+            updateTextViewForFollowUnfollow(followTextView, 1)
+        } else {
+            updateTextViewForFollowUnfollow(followTextView, 0)
+        }
+        authorNameTextView.text = contributorItem.firstName.trim().toLowerCase().capitalize()
+            .plus(" " + contributorItem.lastName.trim().toLowerCase().capitalize())
+
+        authorRanktextView.text =
+            authorRanktextView.context.resources.getString(R.string.myprofile_rank_label).toLowerCase().capitalize() +
+                ":" + contributorItem.rank
+    }
+
+    private fun updateTextViewForFollowUnfollow(followTextView: TextView, status: Int) {
+        if (status == 1) {
             followTextView.setTextColor(
                 ContextCompat.getColor(
                     followTextView.context,
@@ -1031,7 +1044,6 @@ class UserContentAdapter(
                 ContextCompat.getColor(followTextView.context, R.color.color_BABABA)
             )
             myGrad.setColor(ContextCompat.getColor(followTextView.context, R.color.white))
-
             followTextView.text =
                 followTextView.context.getString(R.string.ad_following_author).toLowerCase().capitalize()
         } else {
@@ -1045,16 +1057,9 @@ class UserContentAdapter(
                 followTextView.background as GradientDrawable
             myGrad.setStroke(2, ContextCompat.getColor(followTextView.context, R.color.app_red))
             myGrad.setColor(ContextCompat.getColor(followTextView.context, R.color.app_red))
-
             followTextView.text =
                 followTextView.context.getString(R.string.ad_follow_author).toLowerCase().capitalize()
         }
-        authorNameTextView.text = contributorItem.firstName.trim().toLowerCase().capitalize()
-            .plus(" " + contributorItem.lastName.trim().toLowerCase().capitalize())
-
-        authorRanktextView.text =
-            authorRanktextView.context.resources.getString(R.string.myprofile_rank_label).toLowerCase().capitalize() +
-                ":" + contributorItem.rank
     }
 
     private fun unFollowApiCall(
@@ -1064,8 +1069,7 @@ class UserContentAdapter(
         followFollowingTextView: TextView
     ) {
         mixFeedList?.get(position)?.carouselBloggerList?.get(index)?.isFollowed = 0
-        followFollowingTextView.text =
-            followFollowingTextView.context.getString(R.string.ad_follow_author)
+        updateTextViewForFollowUnfollow(followFollowingTextView, 0)
         val retrofit = BaseApplication.getInstance().retrofit
         val followApi = retrofit.create(FollowAPI::class.java)
         val request = FollowUnfollowUserRequest()
@@ -1103,8 +1107,7 @@ class UserContentAdapter(
             ""
         )
         mixFeedList?.get(position)?.carouselBloggerList?.get(index)?.isFollowed = 1
-        followFollowingTextView.text =
-            followFollowingTextView.context.getString(R.string.ad_following_author)
+        updateTextViewForFollowUnfollow(followFollowingTextView, 1)
         val retrofit = BaseApplication.getInstance().retrofit
         val followApi = retrofit.create(FollowAPI::class.java)
         val request = FollowUnfollowUserRequest()

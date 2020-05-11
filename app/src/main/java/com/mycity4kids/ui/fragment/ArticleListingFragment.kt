@@ -56,6 +56,7 @@ import com.mycity4kids.models.response.MixFeedResult
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.profile.UserContentAdapter
+import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
@@ -1590,8 +1591,8 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 intent.putExtra(Constants.AUTHOR_ID, mixfeedList?.get(position)?.userId)
                 intent.putExtra(Constants.BLOG_SLUG, mixfeedList?.get(position)?.blogTitleSlug)
                 intent.putExtra(Constants.TITLE_SLUG, mixfeedList?.get(position)?.titleSlug)
-                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + "userProfileActivity")
-                intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen")
+                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + "ArticleListingActivity")
+                intent.putExtra(Constants.FROM_SCREEN, "ArticleListingActivity")
                 intent.putExtra(Constants.ARTICLE_INDEX, "" + position)
                 intent.putExtra(
                     Constants.AUTHOR,
@@ -1605,6 +1606,14 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 } else {
                     deleteBookmark(position)
                 }
+            }
+            view.id == R.id.authorNameTextView -> {
+                val intent = Intent(activity, UserProfileActivity::class.java)
+                intent.putExtra(
+                    Constants.USER_ID,
+                    mixfeedList?.get(position)?.userId
+                )
+                startActivity(intent)
             }
             view.id == R.id.followAuthorTextView -> {
                 followApiCall(

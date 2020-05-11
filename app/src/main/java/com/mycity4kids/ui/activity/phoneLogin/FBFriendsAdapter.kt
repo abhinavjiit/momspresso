@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.mycity4kids.R
-import com.mycity4kids.models.response.FacebookFriendsData
 import com.mycity4kids.models.response.FacebookInviteFriendsData
 import com.squareup.picasso.Picasso
 
