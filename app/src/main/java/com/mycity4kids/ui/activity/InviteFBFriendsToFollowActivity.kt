@@ -14,8 +14,8 @@ import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.facebook.FacebookUtils
 import com.mycity4kids.interfaces.IFacebookUser
 import com.mycity4kids.models.request.FacebookFriendsRequest
-import com.mycity4kids.models.response.FacebookFriendsData
-import com.mycity4kids.models.response.FacebookFriendsResponse
+import com.mycity4kids.models.response.FacebookInviteFriendsData
+import com.mycity4kids.models.response.FacebookInviteFriendsResponse
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
 import com.mycity4kids.ui.activity.phoneLogin.FBFriendsAdapter
 import kotlinx.android.synthetic.main.invite_fb_friends_follow_activity.*
@@ -27,7 +27,7 @@ import retrofit2.Response
 class InviteFBFriendsToFollowActivity : BaseActivity(), FBFriendsAdapter.RecyclerViewClickListener,
     IFacebookUser, View.OnClickListener {
     private lateinit var adapter: FBFriendsAdapter
-    private val facebookFriendList = ArrayList<FacebookFriendsData>()
+    private val facebookFriendList = ArrayList<FacebookInviteFriendsData>()
     private var callbackManager: CallbackManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +43,11 @@ class InviteFBFriendsToFollowActivity : BaseActivity(), FBFriendsAdapter.Recycle
         recyclerView?.layoutManager = llm
         recyclerView?.adapter = adapter
         adapter.notifyDataSetChanged()
+
+        val retrofit = BaseApplication.getInstance().retrofit
+        val fbFriendsApi = retrofit.create(FollowAPI::class.java)
+        val call = fbFriendsApi.getFacebookFriendsToInvite()
+        call.enqueue(getFacebookFriendsResponseCallback)
     }
 
     override fun onClick(view: View, position: Int) {
@@ -57,17 +62,17 @@ class InviteFBFriendsToFollowActivity : BaseActivity(), FBFriendsAdapter.Recycle
                 val retrofit = BaseApplication.getInstance().retrofit
                 val facebookFriendsRequest = FacebookFriendsRequest(it, json.getString("id"))
                 val fbFriendsApi = retrofit.create(FollowAPI::class.java)
-                val call = fbFriendsApi.getFacebookFriends(facebookFriendsRequest)
+                val call = fbFriendsApi.getFacebookFriendsToInvite(facebookFriendsRequest)
                 call.enqueue(getFacebookFriendsResponseCallback)
             }
         }
     }
 
-    private var getFacebookFriendsResponseCallback: Callback<FacebookFriendsResponse> =
-        object : Callback<FacebookFriendsResponse> {
+    private var getFacebookFriendsResponseCallback: Callback<FacebookInviteFriendsResponse> =
+        object : Callback<FacebookInviteFriendsResponse> {
             override fun onResponse(
-                call: Call<FacebookFriendsResponse>,
-                response: Response<FacebookFriendsResponse>
+                call: Call<FacebookInviteFriendsResponse>,
+                response: Response<FacebookInviteFriendsResponse>
             ) {
                 if (response.body() == null) {
                     showToast(getString(R.string.went_wrong))
@@ -76,8 +81,10 @@ class InviteFBFriendsToFollowActivity : BaseActivity(), FBFriendsAdapter.Recycle
                 try {
                     val facebookFriendsResponse = response.body()
                     facebookFriendsResponse?.let { response ->
-                        response.data?.let {
-                            if (it.isNullOrEmpty()) {
+                        facebookFriendsResponse.data?.get(0)?.friendList?.let {
+                            if (it.isNullOrEmpty() && !facebookFriendsResponse.data.get(
+                                    0
+                                ).hasExpired) {
                                 showToast("No friends")
                             } else {
                                 facebookShareWidget.visibility = View.GONE
@@ -92,7 +99,7 @@ class InviteFBFriendsToFollowActivity : BaseActivity(), FBFriendsAdapter.Recycle
                 }
             }
 
-            override fun onFailure(call: Call<FacebookFriendsResponse>, t: Throwable) {
+            override fun onFailure(call: Call<FacebookInviteFriendsResponse>, t: Throwable) {
                 Crashlytics.logException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }

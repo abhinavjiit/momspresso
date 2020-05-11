@@ -27,13 +27,13 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.campaign_list_recycler_adapter.view.*
+import retrofit2.Call
+import retrofit2.Callback
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import kotlinx.android.synthetic.main.campaign_list_recycler_adapter.view.*
-import retrofit2.Call
-import retrofit2.Callback
 
 class RewardCampaignAdapter(
     private var campaignList: List<CampaignDataListResult>,
@@ -149,7 +149,11 @@ class RewardCampaignAdapter(
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_expired_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_expired_bg)
             } else if (status == 1 || status == 18) {
-                (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_apply_now))
+                if (campaignList?.deliverableTypes?.get(0) == 5) {
+                    (view.submission_status).setText(context!!.resources.getString(R.string.detail_take_survey))
+                } else {
+                    (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_apply_now))
+                }
                 (view.submission_status).setBackgroundResource(R.drawable.subscribe_now)
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
@@ -194,7 +198,11 @@ class RewardCampaignAdapter(
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             } else if (status == 5) {
                 if (forYouStatus == 0) {
-                    (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_apply_now))
+                    if (campaignList?.deliverableTypes?.get(0) == 5) {
+                        (view.submission_status).setText(context!!.resources.getString(R.string.detail_take_survey))
+                    } else {
+                        (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_apply_now))
+                    }
                     (view.submission_status).setBackgroundResource(R.drawable.subscribe_now)
                     (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                     (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)

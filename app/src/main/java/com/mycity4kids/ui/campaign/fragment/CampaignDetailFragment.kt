@@ -56,6 +56,7 @@ import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
+import com.mycity4kids.ui.activity.NewsLetterWebviewActivity
 import com.mycity4kids.ui.adapter.CampaignDetailAdapter
 import com.mycity4kids.ui.campaign.BasicResponse
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
@@ -69,18 +70,19 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Calendar
-import java.util.regex.Pattern
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
+import java.text.SimpleDateFormat
+import java.util.ArrayList
+import java.util.Calendar
+import java.util.regex.Pattern
 
 const val REWARDS_FILL_FORM_REQUEST = 1000
+const val SURVEY_CAMPAIGN_REQUEST = 10000
 
 class CampaignDetailFragment : BaseFragment() {
     private lateinit var scrollView2: NestedScrollView
@@ -162,6 +164,7 @@ class CampaignDetailFragment : BaseFragment() {
     // the default update interval for your text, this is in your hand , just run this sample
     var updateLoaderTextHandler = Handler()
     var count = 0
+    private var loadWebView: Boolean = false
     private val updateLoaderTextArray = arrayOf(
         "Thanks for applying!",
         "We are generating the survey link.",
@@ -609,6 +612,15 @@ class CampaignDetailFragment : BaseFragment() {
             val campaignAPI = retro.create(CampaignAPI::class.java)
             val call = campaignAPI.postRegisterCampaign(participateRequest)
             call.enqueue(participateCampaign)
+        } else if (submitBtn.text == resources.getString(
+                R.string.detail_take_survey
+            )) {
+            val url =
+                apiGetResponse!!.deliverables?.get(0)?.get(0)?.instructions?.get(0)
+            val intent = Intent(context, NewsLetterWebviewActivity::class.java)
+            //            intent.putExtra("fromNotification", true)
+            intent.putExtra(Constants.URL, url)
+            startActivityForResult(intent, SURVEY_CAMPAIGN_REQUEST)
         } else if (submitBtn.text == resources.getString(R.string.detail_bottom_share)) {
             activity?.let {
                 Utils.campaignEvent(
@@ -723,6 +735,7 @@ class CampaignDetailFragment : BaseFragment() {
                     } else {
                         txtTrackerStatus.visibility = View.VISIBLE
                         if (apiGetResponse!!.deliverableTypes!!.get(0) == 5) {
+                            loadWebView = true
                             updateLoaderTextHandler.post(updateLoaderTextRunnable)
                             val handler = Handler()
                             handler.postDelayed({
@@ -935,7 +948,15 @@ class CampaignDetailFragment : BaseFragment() {
                 applicationStatus.text =
                     it.resources.getString(R.string.campaign_details_submission_open)
                 if (apiGetResponse!!.deliverableTypes!!.get(0) == 5) {
-                    submitBtn.text = resources.getString(R.string.detail_scroll_survey)
+                    submitBtn.text = resources.getString(R.string.detail_take_survey)
+                    if (loadWebView) {
+                        val url =
+                            apiGetResponse!!.deliverables?.get(0)?.get(0)?.instructions?.get(0)
+                        val intent = Intent(context, NewsLetterWebviewActivity::class.java)
+                        //                        intent.putExtra("fromNotification", true)
+                        intent.putExtra(Constants.URL, url)
+                        startActivityForResult(intent, SURVEY_CAMPAIGN_REQUEST)
+                    }
                 } else {
                     submitBtn.text = it.resources.getString(R.string.detail_bottom_submit_proof)
                     Toast.makeText(
@@ -1068,8 +1089,13 @@ class CampaignDetailFragment : BaseFragment() {
                     it.resources.getString(R.string.toast_campaign_reject),
                     Toast.LENGTH_SHORT
                 ).show()
-                labelText.text = it.resources.getString(R.string.label_campaign_reject)
-                submitBtn.text = it.resources.getString(R.string.detail_bottom_view_other)
+                if (apiGetResponse!!.deliverableTypes!!.get(0) == 5) {
+                    labelText.text = it.resources.getString(R.string.label_survey_reject)
+                    submitBtn.text = it.resources.getString(R.string.detail_bottom_survey_rejected)
+                } else {
+                    labelText.text = it.resources.getString(R.string.label_campaign_reject)
+                    submitBtn.text = it.resources.getString(R.string.detail_bottom_view_other)
+                }
             }
         } else if (status == 7) {
             hideShowReferral(status)
@@ -1077,8 +1103,13 @@ class CampaignDetailFragment : BaseFragment() {
             context?.let {
                 applicationStatus.text = it.resources.getString(R.string.campaign_details_completed)
                 labelText.text = it.resources.getString(R.string.label_campaign_completed)
-                submitBtn.text =
-                    it.resources.getString(R.string.detail_bottom_share_momspresso_reward)
+                if (apiGetResponse!!.deliverableTypes!!.get(0) == 5) {
+                    submitBtn.text =
+                        it.resources.getString(R.string.detail_bottom_survey_completed)
+                } else {
+                    submitBtn.text =
+                        it.resources.getString(R.string.detail_bottom_share_momspresso_reward)
+                }
             }
         } else if (status == 9) {
             hideShowReferral(status)
@@ -1229,6 +1260,9 @@ class CampaignDetailFragment : BaseFragment() {
                         //   fetchForYou()
                         defaultCampaignShow = true
                     }
+                }
+                SURVEY_CAMPAIGN_REQUEST -> {
+                    fetchCampaignDetail()
                 }
             }
         }

@@ -1,11 +1,9 @@
-package com.mycity4kids.ui.fragment
+package com.mycity4kids.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -15,68 +13,58 @@ import com.crashlytics.android.Crashlytics
 import com.facebook.CallbackManager
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
-import com.mycity4kids.base.BaseFragment
+import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.facebook.FacebookUtils
-import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.interfaces.IFacebookUser
 import com.mycity4kids.models.request.FacebookFriendsRequest
-import com.mycity4kids.models.request.FollowUnfollowUserRequest
+import com.mycity4kids.models.request.FacebookInviteFriendsRequest
 import com.mycity4kids.models.response.FacebookInviteFriendsData
 import com.mycity4kids.models.response.FacebookInviteFriendsResponse
-import com.mycity4kids.models.response.FollowUnfollowUserResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
-import com.mycity4kids.ui.activity.phoneLogin.FBFriendsAdapter
-import com.mycity4kids.utils.ToastUtils.showToast
+import com.mycity4kids.ui.adapter.FBInviteFriendsAdapter
+import com.mycity4kids.utils.ToastUtils
+import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-/**
- * Created by hemant.parmar on 21-04-2016.
- */
-class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener,
-    FBFriendsAdapter.RecyclerViewClickListener, IFacebookUser {
+class UserInviteFBSuggestionActivity : BaseActivity(), View.OnClickListener,
+    FBInviteFriendsAdapter.RecyclerViewClickListener, IFacebookUser {
+
     private var recyclerView: RecyclerView? = null
     private var progressBar: ProgressBar? = null
     private var emptyList: TextView? = null
     var fbFriendsContainer: RelativeLayout? = null
     private var userDynamoId: String? = null
-    private var adapter: FBFriendsAdapter? = null
+    private var adapter: FBInviteFriendsAdapter? = null
     private var callbackManager: CallbackManager? = null
     private val facebookFriendList = mutableListOf<FacebookInviteFriendsData>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view =
-            inflater.inflate(R.layout.user_follow_fb_suggestion_tab_fragment, container, false)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.user_invite_fb_suggestion_activity)
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
-        recyclerView = view.findViewById(R.id.recyclerView)
-        emptyList = view.findViewById(R.id.emptyList)
-        progressBar = view.findViewById(R.id.progressBar)
-        fbFriendsContainer = view.findViewById(R.id.fbFriendsContainer)
+        recyclerView = findViewById(R.id.recyclerView)
+        emptyList = findViewById(R.id.emptyList)
+        progressBar = findViewById(R.id.progressBar)
+        fbFriendsContainer = findViewById(R.id.fbFriendsContainer)
 
         fbFriendsContainer?.setOnClickListener(this)
         callbackManager = CallbackManager.Factory.create()
-        adapter = FBFriendsAdapter(this)
-        val llm = LinearLayoutManager(activity)
+        adapter = FBInviteFriendsAdapter(this)
+        val llm = LinearLayoutManager(this)
         llm.orientation = RecyclerView.VERTICAL
         recyclerView?.layoutManager = llm
         recyclerView?.adapter = adapter
-
 
         val retrofit = BaseApplication.getInstance().retrofit
         val fbFriendsApi = retrofit.create(FollowAPI::class.java)
         val call = fbFriendsApi.getFacebookFriendsToInvite()
         call.enqueue(getFacebookFriendsResponseCallback)
-
-        return view
     }
 
     override fun getFacebookUser(jObject: JSONObject?, token: String?) {
@@ -101,17 +89,22 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener,
                 response: Response<FacebookInviteFriendsResponse>
             ) {
                 if (response.body() == null) {
-                    activity?.let {
-                        showToast(it, getString(R.string.went_wrong))
+                    this@UserInviteFBSuggestionActivity.let {
+                        ToastUtils.showToast(it, getString(R.string.went_wrong))
                     }
                     return
                 }
                 try {
                     val facebookFriendsResponse = response.body()
+                    /*facebookFriendsResponse?.data?.get(0)?.friendList?.let {
+                        facebookFriendList.addAll(
+                            it
+                        )
+                    }*/
                     facebookFriendsResponse?.let { response ->
                         facebookFriendsResponse.data?.get(0)?.friendList?.let {
                             facebookFriendList.addAll(it)
-                            if (it.isNotEmpty() && !facebookFriendsResponse.data.get(
+                            if (facebookFriendList.isNotEmpty() && !facebookFriendsResponse.data.get(
                                     0
                                 ).hasExpired) {
                                 recyclerView?.visibility = View.VISIBLE
@@ -143,28 +136,29 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener,
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         callbackManager?.onActivityResult(requestCode, resultCode, data)
-        FacebookUtils.onActivityResult(activity, requestCode, resultCode, data)
+        FacebookUtils.onActivityResult(this, requestCode, resultCode, data)
     }
 
     override fun onClick(v: View) {
-        FacebookUtils.facebookLogin(activity, this)
+        FacebookUtils.facebookLogin(this, this)
     }
 
     override fun onClick(view: View, position: Int) {
         when {
-            view.id == R.id.followTextView -> {
+            view.id == R.id.inviteTextView -> {
                 facebookFriendList.get(position).isFollowing = "1"
                 adapter?.notifyDataSetChanged()
-                facebookFriendList.get(position).id?.let { hitFollowUnfollowAPI(it, "1") }
+                facebookFriendList.get(position).id?.let { hitInviteAPI(it) }
+                //                facebookFriendList.get(position).id?.let { hitInviteAPI(it, "1") }
             }
-            view.id == R.id.followingTextView -> {
+            /*view.id == R.id.invitedTextView -> {
                 facebookFriendList.get(position).isFollowing = "0"
                 adapter?.notifyDataSetChanged()
                 facebookFriendList.get(position).id?.let { hitFollowUnfollowAPI(it, "0") }
-            }
+            }*/
             view.id == R.id.authorNameTextView || view.id == R.id.authorImageView -> {
-                activity?.let {
-                    val profileIntent = Intent(activity, UserProfileActivity::class.java)
+                this.let {
+                    val profileIntent = Intent(this, UserProfileActivity::class.java)
                     profileIntent.putExtra(Constants.USER_ID, facebookFriendList.get(position).id)
                     startActivity(profileIntent)
                 }
@@ -172,15 +166,24 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener,
         }
     }
 
-    private fun hitFollowUnfollowAPI(authorId: String, action: String) {
+    private fun hitInviteAPI(authorId: String) {
         val retrofit = BaseApplication.getInstance().retrofit
         val followAPI = retrofit.create(FollowAPI::class.java)
-        val request = FollowUnfollowUserRequest()
+        val request = FacebookInviteFriendsRequest(authorId)
+        //        request.notifiedUsers = authorId
+        val inviteResponseCall = followAPI.inviteFBFriends(request)
+        inviteResponseCall.enqueue(followUnfollowUserResponseCallback)
+        /*this.let {
+            Utils.pushProfileEvents(
+                it, "CTA_Unfollow_Profile", "UserProfileActivity", "Unfollow", "-"
+            )
+        }*/
+        /*val request = FollowUnfollowUserRequest()
         request.followee_id = authorId
         if ("0" == action) {
-            val followUnfollowUserResponseCall = followAPI.unfollowUserV2(request)
+            val followUnfollowUserResponseCall = followAPI.inviteFBFriends(authorId)
             followUnfollowUserResponseCall.enqueue(followUnfollowUserResponseCallback)
-            activity?.let {
+            this.let {
                 Utils.pushProfileEvents(
                     it, "CTA_Unfollow_Profile", "UserProfileActivity", "Unfollow", "-"
                 )
@@ -188,21 +191,21 @@ class UserFollowFBSuggestionTabFragment : BaseFragment(), View.OnClickListener,
         } else {
             val followUnfollowUserResponseCall = followAPI.followUserV2(request)
             followUnfollowUserResponseCall.enqueue(followUnfollowUserResponseCallback)
-            activity?.let {
+            this.let {
                 Utils.pushProfileEvents(
                     it, "CTA_Follow_Profile", "UserProfileActivity", "Follow", "-"
                 )
             }
-        }
+        }*/
     }
 
-    object followUnfollowUserResponseCallback : Callback<FollowUnfollowUserResponse> {
-        override fun onFailure(call: Call<FollowUnfollowUserResponse>, t: Throwable) {
+    object followUnfollowUserResponseCallback : Callback<ResponseBody> {
+        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
         }
 
         override fun onResponse(
-            call: Call<FollowUnfollowUserResponse>,
-            response: Response<FollowUnfollowUserResponse>
+            call: Call<ResponseBody>,
+            response: Response<ResponseBody>
         ) {
         }
     }
