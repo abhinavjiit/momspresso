@@ -1453,4 +1453,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="all_live_challenges">Live Challenges</string>
   <string name="view_comments">View Comments</string>
   <string name="add_vlogs_detail_select_tag">ટેગ પસંદ કરો</string>
+  <string name="fb_invited_friend">Invited</string>
+  <string name="fb_invite_friend">Invite</string>
+  <string name="detail_bottom_survey_completed">Survey Completed</string>
+  <string name="label_survey_reject">Unfortunately, you did not qualify to complete the survey.</string>
+  <string name="detail_bottom_survey_rejected">Survey rejected</string>
 </resources>

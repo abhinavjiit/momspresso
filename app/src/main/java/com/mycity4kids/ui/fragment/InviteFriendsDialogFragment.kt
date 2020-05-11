@@ -19,6 +19,7 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.profile.UserProfileActivity
 import com.mycity4kids.ui.activity.ArticleModerationOrShareActivity
 import com.mycity4kids.ui.activity.PhoneContactsActivity
+import com.mycity4kids.ui.activity.UserInviteFBSuggestionActivity
 import kotlinx.android.synthetic.main.invite_friends_dialog_fragment.*
 
 class InviteFriendsDialogFragment : DialogFragment(), View.OnClickListener {
@@ -66,6 +67,11 @@ class InviteFriendsDialogFragment : DialogFragment(), View.OnClickListener {
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
                         "InviteFriendsDialogFragment"
                     )
+                    activity?.let {
+                        val intent = Intent(it, UserInviteFBSuggestionActivity::class.java)
+                        startActivity(intent)
+                        dismiss()
+                    }
                 }
                 view?.id == R.id.contactShareWidget -> {
                     activity?.let {

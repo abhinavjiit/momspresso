@@ -1,8 +1,10 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.request.FacebookFriendsRequest;
+import com.mycity4kids.models.request.FacebookInviteFriendsRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.response.FacebookFriendsResponse;
+import com.mycity4kids.models.response.FacebookInviteFriendsResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.FollowersFollowingResponse;
 import okhttp3.ResponseBody;
@@ -47,4 +49,13 @@ public interface FollowAPI {
 
     @POST("/follow/v2/users/unfollow/")
     Call<ResponseBody> unfollowUserInShortStoryListingV2(@Body FollowUnfollowUserRequest body);
+
+    @POST("/v2/users/userfrdspoc/")
+    Call<FacebookInviteFriendsResponse> getFacebookFriendsToInvite(@Body FacebookFriendsRequest body);
+
+    @POST("/v2/users/userfrdspoc/")
+    Call<FacebookInviteFriendsResponse> getFacebookFriendsToInvite();
+
+    @POST("/v1/users/userfrdspoc/notification")
+    Call<ResponseBody> inviteFBFriends(@Body FacebookInviteFriendsRequest body);
 }

@@ -39,7 +39,7 @@
     android:layout_below="@+id/subtitleTextView"
     android:layout_centerHorizontal="true"
     android:layout_marginTop="20dp"
-    android:visibility="gone"
+    android:visibility="visible"
     app:gravity="center"
     app:radius="20dp"
     app:shareBgColor="@color/all_facebook_share"

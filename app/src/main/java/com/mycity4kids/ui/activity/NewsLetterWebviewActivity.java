@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.activity;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -65,9 +66,14 @@ public class NewsLetterWebviewActivity extends BaseActivity {
                     }
 
                     public void onPageFinished(WebView view, String url) {
+                        if (url.startsWith("https://www.momspresso.com/mymoney/SurveyCampaign/")) {
+                            setResult(Activity.RESULT_OK);
+                            finish();
+                        }
                     }
 
                     public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                        System.out.println("-----------url " + failingUrl);
                     }
                 });
             }
