@@ -183,14 +183,23 @@ class UserInviteFBSuggestionActivity : BaseActivity(), View.OnClickListener,
         inviteResponseCall.enqueue(followUnfollowUserResponseCallback)
     }
 
-    object followUnfollowUserResponseCallback : Callback<ResponseBody> {
-        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-        }
+    private var followUnfollowUserResponseCallback: Callback<ResponseBody> =
+        object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+            }
 
-        override fun onResponse(
-            call: Call<ResponseBody>,
-            response: Response<ResponseBody>
-        ) {
+            override fun onResponse(
+                call: Call<ResponseBody>,
+                response: Response<ResponseBody>
+            ) {
+                try {
+                    if (response.code() == 200 && response.isSuccessful) {
+                        showToast(getString(R.string.follow_invite))
+                    }
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Log.d("MC4kException", Log.getStackTraceString(e))
+                }
+            }
         }
-    }
 }

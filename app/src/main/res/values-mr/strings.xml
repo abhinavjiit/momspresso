@@ -1344,4 +1344,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="detail_bottom_survey_completed">Survey Completed</string>
   <string name="label_survey_reject">Unfortunately, you did not qualify to complete the survey.</string>
   <string name="detail_bottom_survey_rejected">Survey rejected</string>
+  <string name="follow_invite">Your friend has been invited to follow you!</string>
 </resources>

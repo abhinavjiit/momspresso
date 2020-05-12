@@ -4,11 +4,6 @@ import android.accounts.NetworkErrorException;
 import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,14 +12,16 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
-import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
@@ -33,17 +30,12 @@ import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.models.response.CommentListResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
-import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
-import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.ArticleCommentsRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
-
+import com.mycity4kids.utils.StringUtils;
+import com.mycity4kids.utils.ToastUtils;
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -51,17 +43,20 @@ import retrofit2.Retrofit;
 /**
  * Created by user on 08-06-2015.
  */
-public class ArticleCommentsFragment extends BaseFragment implements OnClickListener, ArticleCommentsRecyclerAdapter.RecyclerViewClickListener,
+public class ArticleCommentsFragment extends BaseFragment implements OnClickListener,
+        ArticleCommentsRecyclerAdapter.RecyclerViewClickListener,
         CommentOptionsDialogFragment.ICommentOptionAction, AddArticleCommentReplyDialogFragment.AddComments {
 
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private int pastVisiblesItems;
+    private int visibleItemCount;
+    private int totalItemCount;
     private String paginationCommentId = null;
     private boolean isReuqestRunning = true;
     private boolean isLastPageReached = false;
     private int totalCommentCount = 0;
     private int downloadedComment = 0;
     private ArrayList<CommentListData> commentsList;
-    private ProgressDialog mProgressDialog;
+    private ProgressDialog progressDialog;
     private int actionItemPosition;
     private String editContent;
     private String editReplyParentCommentId;
@@ -70,29 +65,29 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     private int deleteReplyPos;
 
     private String userDynamoId;
-    private String articleId, author, titleSlug, blogSlug, userType;
-    private RelativeLayout addCommentFAB;
+    private String articleId;
+    private String titleSlug;
+    private String blogSlug;
+    private String userType;
+    private RelativeLayout addCommentFab;
     private RecyclerView commentsRecyclerView;
     private ArticleCommentsRecyclerAdapter articleCommentsRecyclerAdapter;
-    private ArticleDetailsAPI articleDetailsAPI;
+    private ArticleDetailsAPI articleDetailsApi;
     private ArticleCommentRepliesDialogFragment articleCommentRepliesDialogFragment;
     private TextView noCommentsTextView;
     private String sourceType;
-    private String currentActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.article_comment_replies_dialog, container,
                 false);
-        currentActivity = getActivity().getClass().getSimpleName();
-        Log.i("CURRENT Activity ", currentActivity);
-        addCommentFAB = (RelativeLayout) rootView.findViewById(R.id.addCommentFAB);
+        addCommentFab = (RelativeLayout) rootView.findViewById(R.id.addCommentFAB);
         commentsRecyclerView = (RecyclerView) rootView.findViewById(R.id.commentsRecyclerView);
         noCommentsTextView = (TextView) rootView.findViewById(R.id.noCommentsTextView);
 
-        addCommentFAB.setOnClickListener(this);
+        addCommentFab.setOnClickListener(this);
 
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
 
@@ -108,7 +103,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         Bundle extras = getArguments();
         if (extras != null) {
             articleId = extras.getString(Constants.ARTICLE_ID);
-            author = extras.getString(Constants.AUTHOR);
             titleSlug = extras.getString(Constants.TITLE_SLUG);
             blogSlug = extras.getString(Constants.BLOG_SLUG);
             userType = extras.getString("userType");
@@ -116,15 +110,14 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         }
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
+        articleDetailsApi = retro.create(ArticleDetailsAPI.class);
 
         getArticleComments(articleId, null);
 
         commentsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0) //check for scroll down
-                {
+                if (dy > 0) {
                     visibleItemCount = llm.getChildCount();
                     totalItemCount = llm.getItemCount();
                     pastVisiblesItems = llm.findFirstVisibleItemPosition();
@@ -139,12 +132,11 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             }
         });
 
-        // EventBus.getDefault().register(this);
         return rootView;
     }
 
     private void getArticleComments(String id, String commentType) {
-        Call<CommentListResponse> call = articleDetailsAPI.getArticleComments(id, commentType, paginationCommentId);
+        Call<CommentListResponse> call = articleDetailsApi.getArticleComments(id, commentType, paginationCommentId);
         call.enqueue(ssCommentsResponseCallback);
     }
 
@@ -152,7 +144,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         @Override
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             isReuqestRunning = false;
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException("New comments API failure");
                 Crashlytics.logException(nee);
                 return;
@@ -174,11 +166,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         public void onFailure(Call<CommentListResponse> call, Throwable t) {
             isReuqestRunning = false;
             if (isAdded()) {
-                if (currentActivity.equals("ParallelFeedActivity")) {
-                    ((ParallelFeedActivity) getActivity()).apiExceptions(t);
-                } else {
-                    ((ArticleDetailsContainerActivity) getActivity()).apiExceptions(t);
-                }
+                ((BaseActivity) getActivity()).apiExceptions(t);
             }
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
@@ -213,12 +201,15 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
 
         switch (v.getId()) {
             case R.id.addCommentFAB:
-                AddArticleCommentReplyDialogFragment addArticleCommentReplyDialogFragment = new AddArticleCommentReplyDialogFragment();
-                FragmentManager fm = getChildFragmentManager();
-                Bundle _args = new Bundle();
-                addArticleCommentReplyDialogFragment.setArguments(_args);
+                Bundle args = new Bundle();
+                AddArticleCommentReplyDialogFragment addArticleCommentReplyDialogFragment =
+                        new AddArticleCommentReplyDialogFragment();
+                addArticleCommentReplyDialogFragment.setArguments(args);
                 addArticleCommentReplyDialogFragment.setCancelable(true);
+                FragmentManager fm = getChildFragmentManager();
                 addArticleCommentReplyDialogFragment.show(fm, "Add Comment");
+                break;
+            default:
                 break;
         }
 
@@ -235,7 +226,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         } else {
             addEditCommentOrReplyRequest.setType("article");
         }
-        Call<CommentListResponse> call = articleDetailsAPI.addCommentOrReply(addEditCommentOrReplyRequest);
+        Call<CommentListResponse> call = articleDetailsApi.addCommentOrReply(addEditCommentOrReplyRequest);
         call.enqueue(addCommentResponseListener);
     }
 
@@ -243,19 +234,12 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         @Override
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             removeProgressDialog();
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
-                }
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
                 if (isAdded()) {
-                    if (currentActivity.equals("ParallelFeedActivity")) {
-                        ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    } else {
-                        ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    }
+                    ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
                 }
-
                 return;
             }
             try {
@@ -276,37 +260,31 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
 
                     commentsList.add(0, commentModel);
                     articleCommentsRecyclerAdapter.notifyDataSetChanged();
-                    if (StringUtils.isNullOrEmpty(userType) || StringUtils.isNullOrEmpty(titleSlug) || StringUtils.isNullOrEmpty(blogSlug)) {
-
-                    } else {
+                    if (!StringUtils.isNullOrEmpty(userType) && !StringUtils.isNullOrEmpty(titleSlug) && !StringUtils
+                            .isNullOrEmpty(blogSlug)) {
                         String shareUrl = AppUtils.getShareUrl(userType, blogSlug, titleSlug);
                         if (ShareDialog.canShow(ShareLinkContent.class)) {
                             ShareLinkContent content = new ShareLinkContent.Builder()
                                     .setQuote(responseData.getData().get(0).getMessage())
                                     .setContentUrl(Uri.parse(shareUrl))
                                     .build();
-                            if (isAdded())
+                            if (isAdded()) {
                                 new ShareDialog(getActivity()).show(content);
+                            }
                         }
                     }
-                    if (isAdded())
-                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId, articleId, "add", "comment");
+                    if (isAdded()) {
+                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId,
+                                articleId, "add", "comment");
+                    }
                 } else {
                     if (isAdded()) {
-                        if (currentActivity.equals("ParallelFeedActivity")) {
-                            ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                        } else {
-                            ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                        }
+                        ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
                     }
                 }
             } catch (Exception e) {
                 if (isAdded()) {
-                    if (currentActivity.equals("ParallelFeedActivity")) {
-                        ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    } else {
-                        ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    }
+                    ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
                 }
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
@@ -317,11 +295,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         public void onFailure(Call<CommentListResponse> call, Throwable t) {
             removeProgressDialog();
             if (isAdded()) {
-                if (currentActivity.equals("ParallelFeedActivity")) {
-                    ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                } else {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                }
+                ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
             }
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
@@ -335,7 +309,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         AddEditCommentOrReplyRequest addEditCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditCommentOrReplyRequest.setPost_id(articleId);
         addEditCommentOrReplyRequest.setMessage(content);
-        Call<CommentListResponse> call = articleDetailsAPI.editCommentOrReply(responseId, addEditCommentOrReplyRequest);
+        Call<CommentListResponse> call = articleDetailsApi.editCommentOrReply(responseId, addEditCommentOrReplyRequest);
         call.enqueue(editCommentResponseListener);
     }
 
@@ -343,17 +317,11 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         @Override
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             removeProgressDialog();
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
-                }
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
                 if (isAdded()) {
-                    if (currentActivity.equals("ParallelFeedActivity")) {
-                        ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    } else {
-                        ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    }
+                    ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
                 }
 
                 return;
@@ -366,24 +334,18 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                         articleCommentRepliesDialogFragment.updateRepliesList(commentsList.get(actionItemPosition));
                     }
                     articleCommentsRecyclerAdapter.notifyDataSetChanged();
-                    if (isAdded())
-                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId, articleId, "edit", "comment");
+                    if (isAdded()) {
+                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId,
+                                articleId, "edit", "comment");
+                    }
                 } else {
                     if (isAdded()) {
-                        if (currentActivity.equals("ParallelFeedActivity")) {
-                            ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                        } else {
-                            ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                        }
+                        ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
                     }
                 }
             } catch (Exception e) {
                 if (isAdded()) {
-                    if (currentActivity.equals("ParallelFeedActivity")) {
-                        ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    } else {
-                        ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    }
+                    ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
                 }
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
@@ -394,11 +356,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         public void onFailure(Call<CommentListResponse> call, Throwable t) {
             removeProgressDialog();
             if (isAdded()) {
-                if (currentActivity.equals("ParallelFeedActivity")) {
-                    ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                } else {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                }
+                ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
             }
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
@@ -407,33 +365,34 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
 
     @Override
     public void onResponseDelete(int position, String responseType) {
-        Call<CommentListResponse> call = articleDetailsAPI.deleteCommentOrReply(commentsList.get(position).get_id());
+        Call<CommentListResponse> call = articleDetailsApi.deleteCommentOrReply(commentsList.get(position).get_id());
         call.enqueue(deleteCommentResponseListener);
         actionItemPosition = position;
     }
 
     @Override
     public void onResponseEdit(int position, String responseType) {
-        AddArticleCommentReplyDialogFragment addArticleCommentReplyDialogFragment = new AddArticleCommentReplyDialogFragment();
-        FragmentManager fm = getChildFragmentManager();
-        Bundle _args = new Bundle();
-        _args.putString("action", "EDIT_COMMENT");
-        _args.putParcelable("parentCommentData", commentsList.get(position));
-        _args.putInt("position", position);
-        addArticleCommentReplyDialogFragment.setArguments(_args);
+        Bundle args = new Bundle();
+        args.putString("action", "EDIT_COMMENT");
+        args.putParcelable("parentCommentData", commentsList.get(position));
+        args.putInt("position", position);
+        AddArticleCommentReplyDialogFragment addArticleCommentReplyDialogFragment =
+                new AddArticleCommentReplyDialogFragment();
+        addArticleCommentReplyDialogFragment.setArguments(args);
         addArticleCommentReplyDialogFragment.setCancelable(true);
+        FragmentManager fm = getChildFragmentManager();
         addArticleCommentReplyDialogFragment.show(fm, "Add Comment");
     }
 
     @Override
     public void onResponseReport(int position, String responseType) {
+        Bundle args = new Bundle();
+        args.putString("postId", commentsList.get(position).get_id());
+        args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
         ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
-        FragmentManager fm = getChildFragmentManager();
-        Bundle _args = new Bundle();
-        _args.putString("postId", commentsList.get(position).get_id());
-        _args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
-        reportContentDialogFragment.setArguments(_args);
+        reportContentDialogFragment.setArguments(args);
         reportContentDialogFragment.setCancelable(true);
+        FragmentManager fm = getChildFragmentManager();
         reportContentDialogFragment.show(fm, "Report Content");
     }
 
@@ -441,17 +400,11 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         @Override
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             removeProgressDialog();
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
-                }
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
                 if (isAdded()) {
-                    if (currentActivity.equals("ParallelFeedActivity")) {
-                        ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    } else {
-                        ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    }
+                    ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
                 }
                 return;
             }
@@ -463,24 +416,18 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                         articleCommentRepliesDialogFragment.dismiss();
                     }
                     articleCommentsRecyclerAdapter.notifyDataSetChanged();
-                    if (isAdded())
-                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId, articleId, "delete", "comment");
+                    if (isAdded()) {
+                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId,
+                                articleId, "delete", "comment");
+                    }
                 } else {
                     if (isAdded()) {
-                        if (currentActivity.equals("ParallelFeedActivity")) {
-                            ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                        } else {
-                            ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                        }
+                        ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
                     }
                 }
             } catch (Exception e) {
                 if (isAdded()) {
-                    if (currentActivity.equals("ParallelFeedActivity")) {
-                        ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    } else {
-                        ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    }
+                    ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
                 }
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
@@ -491,18 +438,14 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         public void onFailure(Call<CommentListResponse> call, Throwable t) {
             removeProgressDialog();
             if (isAdded()) {
-                if (currentActivity.equals("ParallelFeedActivity")) {
-                    ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                } else {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                }
+                ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
             }
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
-    public void addReply(String content, String parentCommentId) {
+    void addReply(String content, String parentCommentId) {
         showProgressDialog("Adding Reply");
         AddEditCommentOrReplyRequest addEditCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditCommentOrReplyRequest.setPost_id(articleId);
@@ -513,7 +456,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         } else {
             addEditCommentOrReplyRequest.setType("article");
         }
-        Call<CommentListResponse> call = articleDetailsAPI.addCommentOrReply(addEditCommentOrReplyRequest);
+        Call<CommentListResponse> call = articleDetailsApi.addCommentOrReply(addEditCommentOrReplyRequest);
         call.enqueue(addReplyResponseListener);
     }
 
@@ -521,17 +464,11 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         @Override
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             removeProgressDialog();
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
-                }
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
                 if (isAdded()) {
-                    if (currentActivity.equals("ParallelFeedActivity")) {
-                        ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    } else {
-                        ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    }
+                    ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
                 }
                 return;
             }
@@ -560,24 +497,18 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                         }
                     }
                     articleCommentsRecyclerAdapter.notifyDataSetChanged();
-                    if (isAdded())
-                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId, articleId, "add", "reply");
+                    if (isAdded()) {
+                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId,
+                                articleId, "add", "reply");
+                    }
                 } else {
                     if (isAdded()) {
-                        if (currentActivity.equals("ParallelFeedActivity")) {
-                            ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                        } else {
-                            ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                        }
+                        ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
                     }
                 }
             } catch (Exception e) {
                 if (isAdded()) {
-                    if (currentActivity.equals("ParallelFeedActivity")) {
-                        ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    } else {
-                        ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    }
+                    ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
                 }
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
@@ -588,11 +519,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         public void onFailure(Call<CommentListResponse> call, Throwable t) {
             removeProgressDialog();
             if (isAdded()) {
-                if (currentActivity.equals("ParallelFeedActivity")) {
-                    ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                } else {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                }
+                ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
             }
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
@@ -600,12 +527,12 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     };
 
 
-    public void editReply(String content, String parentCommentId, String replyId) {
+    void editReply(String content, String parentCommentId, String replyId) {
         showProgressDialog("Editing Reply");
         AddEditCommentOrReplyRequest addEditCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditCommentOrReplyRequest.setPost_id(articleId);
         addEditCommentOrReplyRequest.setMessage(content);
-        Call<CommentListResponse> call = articleDetailsAPI.editCommentOrReply(replyId, addEditCommentOrReplyRequest);
+        Call<CommentListResponse> call = articleDetailsApi.editCommentOrReply(replyId, addEditCommentOrReplyRequest);
         call.enqueue(editReplyResponseListener);
         editReplyId = replyId;
         editReplyParentCommentId = parentCommentId;
@@ -616,17 +543,11 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         @Override
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             removeProgressDialog();
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
-                }
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
                 if (isAdded()) {
-                    if (currentActivity.equals("ParallelFeedActivity")) {
-                        ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    } else {
-                        ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    }
+                    ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
                 }
                 return;
             }
@@ -652,24 +573,18 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                         }
                     }
                     articleCommentsRecyclerAdapter.notifyDataSetChanged();
-                    if (isAdded())
-                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId, articleId, "edit", "reply");
+                    if (isAdded()) {
+                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId,
+                                articleId, "edit", "reply");
+                    }
                 } else {
                     if (isAdded()) {
-                        if (currentActivity.equals("ParallelFeedActivity")) {
-                            ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                        } else {
-                            ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                        }
+                        ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
                     }
                 }
             } catch (Exception e) {
                 if (isAdded()) {
-                    if (currentActivity.equals("ParallelFeedActivity")) {
-                        ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    } else {
-                        ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    }
+                    ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
                 }
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
@@ -679,21 +594,18 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         @Override
         public void onFailure(Call<CommentListResponse> call, Throwable t) {
             if (isAdded()) {
-                if (currentActivity.equals("ParallelFeedActivity")) {
-                    ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                } else {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                }
+                ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
             }
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
-    public void deleteReply(int commentPos, int replyPos) {
+    void deleteReply(int commentPos, int replyPos) {
         deleteCommentPos = commentPos;
         deleteReplyPos = replyPos;
-        Call<CommentListResponse> call = articleDetailsAPI.deleteCommentOrReply(commentsList.get(commentPos).getReplies().get(replyPos).get_id());
+        Call<CommentListResponse> call = articleDetailsApi
+                .deleteCommentOrReply(commentsList.get(commentPos).getReplies().get(replyPos).get_id());
         call.enqueue(deleteReplyResponseListener);
     }
 
@@ -701,17 +613,11 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         @Override
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             removeProgressDialog();
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
-                }
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
                 if (isAdded()) {
-                    if (currentActivity.equals("ParallelFeedActivity")) {
-                        ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    } else {
-                        ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    }
+                    ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
                 }
                 return;
             }
@@ -719,7 +625,8 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 CommentListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     commentsList.get(deleteCommentPos).getReplies().remove(deleteReplyPos);
-                    commentsList.get(deleteCommentPos).setReplies_count(commentsList.get(deleteCommentPos).getReplies_count() - 1);
+                    commentsList.get(deleteCommentPos)
+                            .setReplies_count(commentsList.get(deleteCommentPos).getReplies_count() - 1);
                     if (articleCommentRepliesDialogFragment != null) {
                         articleCommentRepliesDialogFragment.updateRepliesList(commentsList.get(deleteCommentPos));
                         if (commentsList.get(deleteCommentPos).getReplies_count() == 0) {
@@ -727,24 +634,18 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                         }
                     }
                     articleCommentsRecyclerAdapter.notifyDataSetChanged();
-                    if (isAdded())
-                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId, articleId, "delete", "reply");
+                    if (isAdded()) {
+                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId,
+                                articleId, "delete", "reply");
+                    }
                 } else {
                     if (isAdded()) {
-                        if (currentActivity.equals("ParallelFeedActivity")) {
-                            ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                        } else {
-                            ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                        }
+                        ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
                     }
                 }
             } catch (Exception e) {
                 if (isAdded()) {
-                    if (currentActivity.equals("ParallelFeedActivity")) {
-                        ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    } else {
-                        ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                    }
+                    ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
                 }
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
@@ -755,11 +656,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         public void onFailure(Call<CommentListResponse> call, Throwable t) {
             removeProgressDialog();
             if (isAdded()) {
-                if (currentActivity.equals("ParallelFeedActivity")) {
-                    ((ParallelFeedActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                } else {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                }
+                ToastUtils.showToast(getActivity(), "Failed to add comment. Please try again");
             }
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
@@ -767,23 +664,23 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     };
 
     public void showProgressDialog(String bodyText) {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(getActivity());
-            mProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            mProgressDialog.setCancelable(false);
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            progressDialog.setCancelable(false);
         }
 
-        mProgressDialog.setMessage(bodyText);
+        progressDialog.setMessage(bodyText);
 
-        if (!mProgressDialog.isShowing()) {
-            mProgressDialog.show();
+        if (!progressDialog.isShowing()) {
+            progressDialog.show();
         }
     }
 
     public void removeProgressDialog() {
         try {
-            if (mProgressDialog != null && mProgressDialog.isShowing()) {
-                mProgressDialog.dismiss();
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -795,15 +692,14 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
             case R.id.commentRootLayout: {
+                Bundle args = new Bundle();
+                args.putInt("position", position);
+                args.putString("authorId", commentsList.get(position).getUserId());
+                args.putString("responseType", "COMMENT");
                 CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
-                FragmentManager fm = getChildFragmentManager();
-                //  commentOptionsDialogFragment.setTargetFragment(this, 0);
-                Bundle _args = new Bundle();
-                _args.putInt("position", position);
-                _args.putString("authorId", commentsList.get(position).getUserId());
-                _args.putString("responseType", "COMMENT");
-                commentOptionsDialogFragment.setArguments(_args);
+                commentOptionsDialogFragment.setArguments(args);
                 commentOptionsDialogFragment.setCancelable(true);
+                FragmentManager fm = getChildFragmentManager();
                 commentOptionsDialogFragment.show(fm, "Comment Options");
             }
             break;
@@ -812,27 +708,30 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             }
             break;
             case R.id.replyCountTextView: {
+                Bundle args = new Bundle();
+                args.putParcelable("commentReplies", commentsList.get(position));
+                args.putInt("totalRepliesCount", commentsList.get(position).getReplies_count());
+                args.putInt("position", position);
                 articleCommentRepliesDialogFragment = new ArticleCommentRepliesDialogFragment();
-                FragmentManager fm = getChildFragmentManager();
-                Bundle _args = new Bundle();
-                _args.putParcelable("commentReplies", commentsList.get(position));
-                _args.putInt("totalRepliesCount", commentsList.get(position).getReplies_count());
-                _args.putInt("position", position);
-                articleCommentRepliesDialogFragment.setArguments(_args);
+                articleCommentRepliesDialogFragment.setArguments(args);
                 articleCommentRepliesDialogFragment.setCancelable(true);
+                FragmentManager fm = getChildFragmentManager();
                 articleCommentRepliesDialogFragment.show(fm, "View Replies");
             }
             break;
+            default:
+                break;
         }
     }
 
-    public void openAddCommentReplyDialog(CommentListData cData) {
-        AddArticleCommentReplyDialogFragment addArticleCommentReplyDialogFragment = new AddArticleCommentReplyDialogFragment();
-        FragmentManager fm = getChildFragmentManager();
-        Bundle _args = new Bundle();
-        _args.putParcelable("parentCommentData", cData);
-        addArticleCommentReplyDialogFragment.setArguments(_args);
+    void openAddCommentReplyDialog(CommentListData commentData) {
+        Bundle args = new Bundle();
+        args.putParcelable("parentCommentData", commentData);
+        AddArticleCommentReplyDialogFragment addArticleCommentReplyDialogFragment =
+                new AddArticleCommentReplyDialogFragment();
+        addArticleCommentReplyDialogFragment.setArguments(args);
         addArticleCommentReplyDialogFragment.setCancelable(true);
+        FragmentManager fm = getChildFragmentManager();
         addArticleCommentReplyDialogFragment.show(fm, "Add Replies");
     }
 
@@ -848,7 +747,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         } else {
             addEditCommentOrReplyRequest.setType("article");
         }
-        Call<CommentListResponse> call = articleDetailsAPI.addCommentOrReply(addEditCommentOrReplyRequest);
+        Call<CommentListResponse> call = articleDetailsApi.addCommentOrReply(addEditCommentOrReplyRequest);
         call.enqueue(addCommentResponseListener);
 
     }
@@ -856,6 +755,5 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     @Override
     public void onDestroy() {
         super.onDestroy();
-
     }
 }
