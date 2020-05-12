@@ -464,9 +464,13 @@ public class SharedPrefUtils {
     }
 
     public static String getAppLocale(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        String language = (sharedPref.getString(LOCALE_LANGUAGE_KEY, Locale.getDefault().getLanguage()));
-        return language;
+        try {
+            SharedPreferences sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+            String language = Locale.getDefault().getLanguage();
+            return language;
+        } catch (Exception e) {
+            return "en";
+        }
     }
 
     public static boolean isUserAnonymous(Context context) {
