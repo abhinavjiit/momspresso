@@ -315,6 +315,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     }
 
     private void launchUploadInBackground() {
+        removeProgressDialog();
         MixPanelUtils.pushVideoUploadCTAClick(mixpanel, videoTitleEditText.getText().toString() + "~" + signIn);
         Intent intt = new Intent(this, VideoUploadProgressActivity.class);
         intt.putExtra("uri", contentUri);
