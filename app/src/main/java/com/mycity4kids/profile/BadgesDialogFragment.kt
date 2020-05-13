@@ -10,7 +10,6 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -45,6 +44,7 @@ import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.PermissionUtil
 import com.mycity4kids.utils.ToastUtils
 import com.squareup.picasso.Picasso
+import java.io.File
 import retrofit2.Call
 import retrofit2.Callback
 
@@ -317,7 +317,10 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
         }
         activity?.let {
             val uri =
-                Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/badge.jpg")
+                Uri.parse(
+                    "file://" + BaseApplication.getAppContext().getExternalFilesDir(null) +
+                        File.separator + "badge.jpg"
+                )
             if (AppUtils.shareImageWithInstagram(it, uri)) {
                 Utils.pushProfileEvents(
                     it, "CTA_IG_Share_Private_Badge_Detail",
@@ -348,14 +351,17 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
         }
         activity?.let {
             val uri =
-                Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/badge.jpg")
+                Uri.parse(
+                    "file://" + BaseApplication.getAppContext().getExternalFilesDir(null) +
+                        File.separator + "badge.jpg"
+                )
             if (AppUtils.shareImageWithWhatsApp(
                     it, uri, getString(
-                        R.string.badges_winner_share_text,
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).first_name,
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).last_name,
-                        badgeData?.badge_name, badgeData?.badge_sharing_url
-                    )
+                    R.string.badges_winner_share_text,
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).first_name,
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).last_name,
+                    badgeData?.badge_name, badgeData?.badge_sharing_url
+                )
                 )
             ) {
                 Utils.pushProfileEvents(

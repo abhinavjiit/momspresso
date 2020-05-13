@@ -277,9 +277,9 @@ public class AppUtils {
     }
 
 
-    public static void deleteDirectoryContent(String dirName) {
-        File dir = new File(Environment.getExternalStorageDirectory() + File.separator + dirName);
-        if (dir.isDirectory()) {
+    public static void deleteDirectoryContent() {
+        File dir = BaseApplication.getAppContext().getExternalFilesDir(null);
+        if (dir != null && dir.isDirectory()) {
             String[] children = dir.list();
             if (children != null) {
                 for (String child : children) {
@@ -691,8 +691,8 @@ public class AppUtils {
 
     private static void shareStoryWithWhatsApp(Context context, String shareUrl, String screenName, String userDynamoId,
             String articleId, String authorId, String authorName) {
-        Uri uri = Uri.parse(
-                "file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
+        Uri uri = Uri.parse("file://" + BaseApplication.getAppContext().getExternalFilesDir(null) + File.separator
+                + "image.jpg");
         if (shareImageWithWhatsApp(context, uri, shareUrl)) {
             Utils.pushShareStoryEvent(context, screenName, userDynamoId + "", articleId,
                     authorId + "~" + authorName, "Whatsapp");
@@ -724,8 +724,8 @@ public class AppUtils {
 
     public static void shareStoryWithInstagram(Context context, String screenName, String userDynamoId,
             String articleId, String authorId, String authorName) {
-        Uri uri = Uri.parse(
-                "file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
+        Uri uri = Uri.parse("file://" + BaseApplication.getAppContext().getExternalFilesDir(null) + File.separator
+                + "image.jpg");
         if (shareImageWithInstagram(context, uri)) {
             Utils.pushShareStoryEvent(context, screenName, userDynamoId + "", articleId,
                     authorId + "~" + authorName, "Instagram");
@@ -868,6 +868,15 @@ public class AppUtils {
     }
 
     public static Bitmap getBitmapFromView(View view, String filename) {
+        File appDir = BaseApplication.getAppContext().getExternalFilesDir(null);
+        if (appDir != null && appDir.isDirectory()) {
+            String[] children = appDir.list();
+            if (children != null) {
+                for (String child : children) {
+                    new File(appDir, child).delete();
+                }
+            }
+        }
         Bitmap returnedBitmap = Bitmap
                 .createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(returnedBitmap);
@@ -879,11 +888,9 @@ public class AppUtils {
         }
 
         view.draw(canvas);
-        AppUtils.createDirIfNotExists("MyCity4Kids/videos");
         try {
             returnedBitmap.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(
-                    Environment.getExternalStorageDirectory().toString() + "/MyCity4Kids/videos/" + filename
-                            + ".jpg"));
+                    BaseApplication.getAppContext().getExternalFilesDir(null) + File.separator + filename + ".jpg"));
         } catch (FileNotFoundException e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));

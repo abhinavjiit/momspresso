@@ -10,7 +10,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -76,6 +75,7 @@ import com.mycity4kids.utils.SharingUtils
 import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.widget.StoryShareCardWidget
+import java.io.File
 import java.util.ArrayList
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -1507,8 +1507,8 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
 
     private fun shareStory(tempName: String) {
         val uri = Uri.parse(
-            "file://" + Environment.getExternalStorageDirectory() +
-                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + tempName + ".jpg"
+            "file://" + BaseApplication.getAppContext().getExternalFilesDir(null) +
+                File.separator + AppConstants.STORY_SHARE_IMAGE_NAME + tempName + ".jpg"
         )
         if (isAdded) {
             when (shareMedium) {

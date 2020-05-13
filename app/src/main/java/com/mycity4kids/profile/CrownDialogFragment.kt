@@ -8,7 +8,6 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -36,6 +35,7 @@ import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.PermissionUtil
 import com.mycity4kids.utils.ToastUtils
 import com.squareup.picasso.Picasso
+import java.io.File
 
 class CrownDialogFragment : DialogFragment(), View.OnClickListener {
 
@@ -200,8 +200,8 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
         }
         activity?.let {
             val uri = Uri.parse(
-                "file://" + Environment.getExternalStorageDirectory() +
-                        "/MyCity4Kids/videos/" + sharableCrownImageName + ".jpg"
+                "file://" + BaseApplication.getAppContext().getExternalFilesDir(null) +
+                    File.separator + sharableCrownImageName + ".jpg"
             )
             if (AppUtils.shareImageWithInstagram(it, uri)) {
                 Utils.pushProfileEvents(
@@ -233,16 +233,16 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
         }
         activity?.let {
             val uri = Uri.parse(
-                "file://" + Environment.getExternalStorageDirectory() +
-                        "/MyCity4Kids/videos/" + sharableCrownImageName + ".jpg"
+                "file://" + BaseApplication.getAppContext().getExternalFilesDir(null) +
+                    File.separator + sharableCrownImageName + ".jpg"
             )
             if (AppUtils.shareImageWithWhatsApp(
                     it, uri, getString(
-                        R.string.badges_winner_share_text,
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).first_name,
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).last_name,
-                        crownData?.crown?.name, crownData?.sharing_url
-                    )
+                    R.string.badges_winner_share_text,
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).first_name,
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).last_name,
+                    crownData?.crown?.name, crownData?.sharing_url
+                )
                 )
             ) {
                 Utils.pushProfileEvents(

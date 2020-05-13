@@ -151,7 +151,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
             Crashlytics.logException(e);
             Log.d("MC4KException", Log.getStackTraceString(e));
         }
-        AppUtils.deleteDirectoryContent("MyCity4Kids/videos");
+        AppUtils.deleteDirectoryContent();
     }
 
     private void initializeTabsAndPager() {

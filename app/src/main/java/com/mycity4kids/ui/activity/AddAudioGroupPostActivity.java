@@ -9,7 +9,6 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -26,24 +25,20 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.AddGroupPostRequest;
 import com.mycity4kids.models.response.AddGroupPostResponse;
@@ -53,15 +48,11 @@ import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.AudioPostRecordView;
 import com.mycity4kids.utils.PermissionUtil;
-
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.app.ActivityCompat;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -78,36 +69,39 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
     private static final int REQUEST_INIT_PERMISSION_FOR_AUDIO = 2;
 
     private GroupResult selectedGroup;
-    static int count;
     private boolean isRequestRunning = false;
-    private View mLayout;
+    private View rootLayout;
     private ImageView anonymousImageView;
     private TextView publishTextView;
     private LinearLayout mediaContainer;
     private ImageView closeEditorImageView;
     private TextView anonymousTextView;
     private CheckBox anonymousCheckbox;
-    private MediaPlayer mMediaplayer;
+    private MediaPlayer mediaPlayer;
     private Uri downloadUri;
     private AudioPostRecordView audioRecordView;
     private long time;
-    private Handler mHandler;
-    private SeekBar audioSeekBarUpdate, audioSeekBar;
-    private long totalDuration, currentDuration;
-    private ImageView playAudio, pauseAudio;
-    private int pos;
+    private Handler handler;
+    private SeekBar audioSeekBarUpdate;
+    private SeekBar audioSeekBar;
+    private long totalDuration;
+    private long currentDuration;
+    private ImageView playAudio;
+    private ImageView pauseAudio;
     private boolean isPlayed = false;
     private boolean isPaused = false;
     private boolean isCommentPlay = false;
-    private LinearLayout playAudioLayout, timerLayout, dateContainermedia;
     private Uri originalUri;
-    private Uri contentURI;
+    private Uri contentUri;
     private long suffixName;
-    private FirebaseAuth mAuth;
-    private ImageView playAudioImageView, pauseAudioImageView, micImg;
-    private TextView audioTimeElapsed, audioTimeElapsedComment;
-    private MediaRecorder mRecorder;
-    private String mFileName;
+    private FirebaseAuth firebaseAuth;
+    private ImageView playAudioImageView;
+    private ImageView pauseAudioImageView;
+    private ImageView micImg;
+    private TextView audioTimeElapsed;
+    private TextView audioTimeElapsedComment;
+    private MediaRecorder mediaRecorder;
+    private String fileName;
     private Animation slideDownAnim;
     private HashMap<ImageView, String> audioUrlHashMap = new HashMap<>();
     private boolean isLocked = false;
@@ -122,8 +116,8 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
         setContentView(R.layout.add_audio_group_post_activity);
         ((BaseApplication) getApplication()).setActivity(this);
 
-        mLayout = findViewById(R.id.rootLayout);
-        mHandler = new Handler(this);
+        rootLayout = findViewById(R.id.rootLayout);
+        handler = new Handler(this);
         closeEditorImageView = (ImageView) findViewById(R.id.closeEditorImageView);
         anonymousImageView = (ImageView) findViewById(R.id.anonymousImageView);
         anonymousTextView = (TextView) findViewById(R.id.anonymousTextView);
@@ -133,20 +127,16 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
 
         audioRecordView = (AudioPostRecordView) findViewById(R.id.recordingView);
         slideDownAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_slide_down_from_top);
-        playAudioLayout = (LinearLayout) findViewById(R.id.playAudioLayout);
-        timerLayout = (LinearLayout) findViewById(R.id.timerLayout);
         playAudioImageView = (ImageView) findViewById(R.id.playAudioImageView);
         pauseAudioImageView = (ImageView) findViewById(R.id.pauseAudioImageView);
         audioSeekBar = (SeekBar) findViewById(R.id.audioSeekBar);
-        dateContainermedia = (LinearLayout) findViewById(R.id.dateContainermedia);
         audioTimeElapsedComment = (TextView) findViewById(R.id.audioTimeElapsed);
 
         selectedGroup = (GroupResult) getIntent().getParcelableExtra("groupItem");
-        mAuth = FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
 
-        AppUtils.createDirIfNotExists("MyCity4Kids/videos");
-        mFileName = Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/";
-        mFileName += "/audiorecordtest.m4a";
+        fileName = BaseApplication.getAppContext().getExternalFilesDir(null) + File.separator;
+        fileName += "audiorecordtest.m4a";
 
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -168,35 +158,44 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
     @Override
     protected void onResume() {
         super.onResume();
-        ((BaseApplication) getApplication()).setView(mLayout);
+        ((BaseApplication) getApplication()).setView(rootLayout);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.closeEditorImageView:
-                Utils.groupsEvent(AddAudioGroupPostActivity.this, "Create Audio", "Cancel X sign", "android", SharedPrefUtils.getAppLocale(AddAudioGroupPostActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", "");
+                Utils.groupsEvent(AddAudioGroupPostActivity.this, "Create Audio", "Cancel X sign", "android",
+                        SharedPrefUtils.getAppLocale(AddAudioGroupPostActivity.this),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        String.valueOf(System.currentTimeMillis()), "click", "", "");
                 onBackPressed();
                 break;
             case R.id.anonymousImageView:
             case R.id.anonymousTextView:
             case R.id.anonymousCheckbox:
-                Utils.groupsEvent(AddAudioGroupPostActivity.this, "Create Audio", "Cancel X sign", "android", SharedPrefUtils.getAppLocale(AddAudioGroupPostActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", "");
+                Utils.groupsEvent(AddAudioGroupPostActivity.this, "Create Audio", "Cancel X sign", "android",
+                        SharedPrefUtils.getAppLocale(AddAudioGroupPostActivity.this),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        String.valueOf(System.currentTimeMillis()), "click", "", "");
                 if (anonymousCheckbox.isChecked()) {
                     SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), true);
                 } else {
                     SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
                 }
 
-
-
                 break;
             case R.id.publishTextView:
-                Utils.groupsEvent(AddAudioGroupPostActivity.this, "Create Audio", "Anonymous", "android", SharedPrefUtils.getAppLocale(AddAudioGroupPostActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", "");
+                Utils.groupsEvent(AddAudioGroupPostActivity.this, "Create Audio", "Anonymous", "android",
+                        SharedPrefUtils.getAppLocale(AddAudioGroupPostActivity.this),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        String.valueOf(System.currentTimeMillis()), "click", "", "");
                 if (!isRequestRunning && validateParams()) {
                     isRequestRunning = true;
                     publishPost();
                 }
+                break;
+            default:
                 break;
         }
     }
@@ -210,9 +209,6 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
     }
 
     private void publishPost() {
-        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-
         AddGroupPostRequest addGroupPostRequest = new AddGroupPostRequest();
         addGroupPostRequest.setContent("");
         addGroupPostRequest.setType("0");
@@ -220,7 +216,8 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
         if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
             addGroupPostRequest.setAnnon(1);
         }
-        addGroupPostRequest.setUserId(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+        addGroupPostRequest
+                .setUserId(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
 
         LinkedHashMap<String, String> mediaMap = new LinkedHashMap<>();
         if (!audioUrlHashMap.isEmpty()) {
@@ -228,8 +225,9 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
             addGroupPostRequest.setType("3");
             addGroupPostRequest.setMediaUrls(mediaMap);
         }
-
-        Call<AddGroupPostResponse> call = groupsAPI.createPost(addGroupPostRequest);
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
+        Call<AddGroupPostResponse> call = groupsApi.createPost(addGroupPostRequest);
         call.enqueue(postAdditionResponseCallback);
     }
 
@@ -247,7 +245,6 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
             try {
                 if (response.isSuccessful()) {
                     SharedPrefUtils.clearSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId());
-                    AddGroupPostResponse responseModel = response.body();
                     setResult(RESULT_OK);
                     onBackPressed();
                 }
@@ -267,22 +264,18 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
         }
     };
 
-    /**
-     * Callback received when a permissions request has been completed.
-     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_INIT_PERMISSION_FOR_AUDIO) {
             if (PermissionUtil.verifyPermissions(grantResults)) {
-                Snackbar.make(mLayout, R.string.permision_available_init,
+                Snackbar.make(rootLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
                         .show();
-                AppUtils.createDirIfNotExists("MyCity4Kids/videos");
-                mFileName = Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/";
-                mFileName += "/audiorecordtest.m4a";
+                fileName = BaseApplication.getAppContext().getExternalFilesDir(null) + File.separator;
+                fileName += "audiorecordtest.m4a";
             } else {
-                Snackbar.make(mLayout, R.string.permissions_not_granted,
+                Snackbar.make(rootLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
                         .show();
             }
@@ -298,26 +291,29 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-        mHandler.removeCallbacks(mUpdateTimeTask);
+        handler.removeCallbacks(updateTimeTask);
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        mHandler.removeCallbacks(mUpdateTimeTask);
+        handler.removeCallbacks(updateTimeTask);
 
-        int totalDuration = mMediaplayer.getDuration();
+        int totalDuration = mediaPlayer.getDuration();
         int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
 
         // forward or backward to certain seconds
-        mMediaplayer.seekTo(currentPosition);
+        mediaPlayer.seekTo(currentPosition);
     }
 
     @Override
     public void onRecordingStarted() {
-        Utils.groupsEvent(AddAudioGroupPostActivity.this, "Create Audio", "Audio Button", "android", SharedPrefUtils.getAppLocale(AddAudioGroupPostActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", "");
-        if (mMediaplayer != null && isCommentPlay) {
-            mMediaplayer.release();
-            mMediaplayer = null;
+        Utils.groupsEvent(AddAudioGroupPostActivity.this, "Create Audio", "Audio Button", "android",
+                SharedPrefUtils.getAppLocale(AddAudioGroupPostActivity.this),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                String.valueOf(System.currentTimeMillis()), "click", "", "");
+        if (mediaPlayer != null && isCommentPlay) {
+            mediaPlayer.release();
+            mediaPlayer = null;
             playAudioImageView.setVisibility(View.VISIBLE);
             pauseAudioImageView.setVisibility(View.GONE);
             audioSeekBar.setProgress(0);
@@ -338,21 +334,24 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
         int recordTime = (int) ((System.currentTimeMillis() / (1000)) - time);
         if (recordTime < 1) {
             resetIcons();
-            mRecorder.release();
-            mRecorder = null;
+            mediaRecorder.release();
+            mediaRecorder = null;
             Toast.makeText(this, R.string.hold_to_release, Toast.LENGTH_SHORT).show();
         } else if (recordTime >= 4) {
             stopRecording();
-            originalUri = Uri.parse(mFileName);
-            contentURI = AppUtils.exportAudioToGallery(originalUri.getPath(), BaseApplication.getAppContext().getContentResolver(), this);
-            contentURI = AppUtils.getAudioUriFromMediaProvider(originalUri.getPath(), BaseApplication.getAppContext().getContentResolver());
-            uploadAudio(contentURI);
+            originalUri = Uri.parse(fileName);
+            contentUri = AppUtils
+                    .exportAudioToGallery(originalUri.getPath(), BaseApplication.getAppContext().getContentResolver(),
+                            this);
+            contentUri = AppUtils.getAudioUriFromMediaProvider(originalUri.getPath(),
+                    BaseApplication.getAppContext().getContentResolver());
+            uploadAudio(contentUri);
             Log.d("RecordTime", "" + recordTime);
         } else {
             audioRecordView.disableClick(false);
             resetIcons();
-            mRecorder.release();
-            mRecorder = null;
+            mediaRecorder.release();
+            mediaRecorder = null;
             Toast.makeText(this, R.string.please_hold_for_3_seconds, Toast.LENGTH_SHORT).show();
         }
     }
@@ -389,39 +388,40 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
     }
 
     private void startRecording() {
-        if (mRecorder != null) {
-            mRecorder.release();
+        if (mediaRecorder != null) {
+            mediaRecorder.release();
         }
         ViewGroup.LayoutParams params = audioRecordView.getLayoutParams();
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         audioRecordView.setLayoutParams(params);
-        mRecorder = new MediaRecorder();
+        mediaRecorder = new MediaRecorder();
         anonymousCheckbox.setVisibility(View.GONE);
         anonymousImageView.setVisibility(View.GONE);
         anonymousTextView.setVisibility(View.GONE);
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        mRecorder.setOutputFile(mFileName);
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        mediaRecorder.setOutputFile(fileName);
         time = System.currentTimeMillis() / (1000);
         try {
-            mRecorder.prepare();
-            mRecorder.start();
+            mediaRecorder.prepare();
+            mediaRecorder.start();
         } catch (IOException e) {
             Log.e("LOG_TAG", "prepare() failed");
         }
     }
 
     private void stopRecording() {
-        if (mRecorder != null) {
+        if (mediaRecorder != null) {
             try {
-                mRecorder.stop();
+                mediaRecorder.stop();
             } catch (RuntimeException e) {
-
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
             } finally {
-                mRecorder.release();
+                mediaRecorder.release();
                 showProgressDialog(getString(R.string.please_wait));
-                mRecorder = null;
+                mediaRecorder = null;
                 anonymousCheckbox.setVisibility(View.VISIBLE);
                 anonymousImageView.setVisibility(View.VISIBLE);
                 anonymousTextView.setVisibility(View.VISIBLE);
@@ -435,16 +435,13 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                anonymousCheckbox.setVisibility(View.VISIBLE);
-                                anonymousImageView.setVisibility(View.VISIBLE);
-                                anonymousTextView.setVisibility(View.VISIBLE);
-                                ViewGroup.LayoutParams params = audioRecordView.getLayoutParams();
-                                params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                                audioRecordView.setLayoutParams(params);
-                            }
+                        new Handler().postDelayed(() -> {
+                            anonymousCheckbox.setVisibility(View.VISIBLE);
+                            anonymousImageView.setVisibility(View.VISIBLE);
+                            anonymousTextView.setVisibility(View.VISIBLE);
+                            ViewGroup.LayoutParams params1 = audioRecordView.getLayoutParams();
+                            params1.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                            audioRecordView.setLayoutParams(params1);
                         }, 0);
                     }
 
@@ -458,21 +455,18 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
     }
 
     public void uploadAudio(Uri file) {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
-        mAuth.signInAnonymously()
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d("VideoUpload", "signInAnonymously:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            uploadAudioToFirebase(contentURI);
-                        } else {
-                            Log.w("VideoUpload", "signInAnonymously:failure", task.getException());
-                            Toast.makeText(AddAudioGroupPostActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+        firebaseAuth.signInAnonymously()
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        Log.d("VideoUpload", "signInAnonymously:success");
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        uploadAudioToFirebase(contentUri);
+                    } else {
+                        Log.w("VideoUpload", "signInAnonymously:failure", task.getException());
+                        Toast.makeText(AddAudioGroupPostActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -486,36 +480,22 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
         StorageMetadata metadata = new StorageMetadata.Builder()
                 .setContentType("audio/m4a")
                 .build();
-        final StorageReference riversRef = storageRef.child("user/" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()
-                + "/audio/" + file2.getLastPathSegment() + "_" + suffixName + ".m4a");
+        final StorageReference riversRef = storageRef
+                .child("user/" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()
+                        + "/audio/" + file2.getLastPathSegment() + "_" + suffixName + ".m4a");
         UploadTask uploadTask = riversRef.putFile(file2, metadata);
 
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
+        uploadTask.addOnFailureListener(exception -> {
 
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        downloadUri = uri;
-                        removeProgressDialog();
-                        audioRecordView.setVisibility(View.GONE);
-                        addAudioToContainer(contentURI.toString());
-                    }
-                });
-            }
-        });
+        }).addOnSuccessListener(taskSnapshot -> riversRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            downloadUri = uri;
+            removeProgressDialog();
+            audioRecordView.setVisibility(View.GONE);
+            addAudioToContainer(contentUri.toString());
+        }));
 
-        uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                Log.e("audio uploaded", "Bytes uploaded: " + taskSnapshot.getBytesTransferred());
-            }
-        });
+        uploadTask.addOnProgressListener(
+                taskSnapshot -> Log.e("audio uploaded", "Bytes uploaded: " + taskSnapshot.getBytesTransferred()));
     }
 
     private void addAudioToContainer(String url) {
@@ -529,104 +509,89 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
         mediaContainer.addView(rl);
         audioUrlHashMap.put(removeIV, url);
 
-        playAudio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mMediaplayer != null && isCommentPlay) {
-                    mMediaplayer.release();
-                    mMediaplayer = null;
-                    playAudioImageView.setVisibility(View.VISIBLE);
-                    pauseAudioImageView.setVisibility(View.GONE);
-                    audioSeekBar.setProgress(0);
-                    audioTimeElapsedComment.setVisibility(View.GONE);
-                }
-                pauseAudio.setVisibility(View.VISIBLE);
-                playAudio.setVisibility(View.GONE);
-                audioTimeElapsed.setVisibility(View.VISIBLE);
-                isCommentPlay = false;
-                if (mMediaplayer != null && isPaused) {
-                    mMediaplayer.start();
-                    updateProgressBar();
-                    micImg.setVisibility(View.VISIBLE);
-                    isPlayed = true;
-                    isPaused = false;
-                } else {
-                    mMediaplayer = new MediaPlayer();
-                    mMediaplayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    audioSeekBarUpdate.setProgress(0);
-                    audioSeekBarUpdate.setMax(100);
-                    try {
-                        mMediaplayer.setDataSource(mFileName);
-                        mMediaplayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                            @Override
-                            public void onPrepared(MediaPlayer mediaPlayer) {
-                                mMediaplayer.start();
-                                updateProgressBar();
-                                micImg.setVisibility(View.VISIBLE);
-                                isPlayed = true;
-                            }
-                        });
-                        mMediaplayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                            @Override
-                            public void onCompletion(MediaPlayer mediaPlayer) {
-                                if (isPlayed) {
-                                    isPlayed = false;
-                                    playAudio.setVisibility(View.VISIBLE);
-                                    pauseAudio.setVisibility(View.GONE);
-                                    mMediaplayer.stop();
-                                    mMediaplayer = null;
-//                                    audioSeekBarUpdate.setProgress(0);
-                                }
-                            }
-                        });
-                        mMediaplayer.prepare();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+        playAudio.setOnClickListener(view -> {
+            if (mediaPlayer != null && isCommentPlay) {
+                mediaPlayer.release();
+                mediaPlayer = null;
+                playAudioImageView.setVisibility(View.VISIBLE);
+                pauseAudioImageView.setVisibility(View.GONE);
+                audioSeekBar.setProgress(0);
+                audioTimeElapsedComment.setVisibility(View.GONE);
             }
-        });
-        pauseAudio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                playAudio.setVisibility(View.VISIBLE);
-                pauseAudio.setVisibility(View.GONE);
-                mMediaplayer.pause();
-                isPaused = true;
-                isCommentPlay = false;
+            pauseAudio.setVisibility(View.VISIBLE);
+            playAudio.setVisibility(View.GONE);
+            audioTimeElapsed.setVisibility(View.VISIBLE);
+            isCommentPlay = false;
+            if (mediaPlayer != null && isPaused) {
+                mediaPlayer.start();
+                updateProgressBar();
+                micImg.setVisibility(View.VISIBLE);
+                isPlayed = true;
+                isPaused = false;
+            } else {
+                mediaPlayer = new MediaPlayer();
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 audioSeekBarUpdate.setProgress(0);
+                audioSeekBarUpdate.setMax(100);
+                try {
+                    mediaPlayer.setDataSource(fileName);
+                    mediaPlayer.setOnPreparedListener(mediaPlayer -> {
+                        AddAudioGroupPostActivity.this.mediaPlayer.start();
+                        updateProgressBar();
+                        micImg.setVisibility(View.VISIBLE);
+                        isPlayed = true;
+                    });
+                    mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                        if (isPlayed) {
+                            isPlayed = false;
+                            playAudio.setVisibility(View.VISIBLE);
+                            pauseAudio.setVisibility(View.GONE);
+                            AddAudioGroupPostActivity.this.mediaPlayer.stop();
+                            AddAudioGroupPostActivity.this.mediaPlayer = null;
+                        }
+                    });
+                    mediaPlayer.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
-        removeIV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mMediaplayer != null) {
-                    mMediaplayer.stop();
-                    mMediaplayer.release();
-                    isCommentPlay = false;
-                    mMediaplayer = null;
-                }
-                audioUrlHashMap.remove(removeIV);
-                mediaContainer.removeView((View) removeIV.getParent());
-                audioRecordView.setVisibility(View.VISIBLE);
+        pauseAudio.setOnClickListener(view -> {
+            playAudio.setVisibility(View.VISIBLE);
+            pauseAudio.setVisibility(View.GONE);
+            mediaPlayer.pause();
+            isPaused = true;
+            isCommentPlay = false;
+            audioSeekBarUpdate.setProgress(0);
+        });
+        removeIV.setOnClickListener(v -> {
+            if (mediaPlayer != null) {
+                mediaPlayer.stop();
+                mediaPlayer.release();
+                isCommentPlay = false;
+                mediaPlayer = null;
             }
+            audioUrlHashMap.remove(removeIV);
+            mediaContainer.removeView((View) removeIV.getParent());
+            audioRecordView.setVisibility(View.VISIBLE);
         });
 
     }
 
     public void updateProgressBar() {
-        mHandler.postDelayed(mUpdateTimeTask, 100);
+        handler.postDelayed(updateTimeTask, 100);
     }
 
-    private Runnable mUpdateTimeTask = new Runnable() {
+    private Runnable updateTimeTask = new Runnable() {
         public void run() {
-            if (mMediaplayer != null && !isCommentPlay) {
-                totalDuration = mMediaplayer.getDuration();
-                currentDuration = mMediaplayer.getCurrentPosition();
-                audioTimeElapsed.setText(milliSecondsToTimer(currentDuration) + "/" + milliSecondsToTimer(totalDuration));
+            if (mediaPlayer != null && !isCommentPlay) {
+                totalDuration = mediaPlayer.getDuration();
+                currentDuration = mediaPlayer.getCurrentPosition();
+                audioTimeElapsed
+                        .setText(milliSecondsToTimer(currentDuration) + "/" + milliSecondsToTimer(totalDuration));
                 int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
                 audioSeekBarUpdate.setProgress(progress);
-                mHandler.postDelayed(this, 100);
+                handler.postDelayed(this, 100);
             }
         }
     };
@@ -682,27 +647,17 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
     private void requestPermissionsForAudio() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.RECORD_AUDIO)) {
-            Snackbar.make(mLayout, R.string.permission_audio_rationale,
+            Snackbar.make(rootLayout, R.string.permission_audio_rationale,
                     Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            requestUngrantedPermissionsForAudio();
-                        }
-                    })
+                    .setAction(R.string.ok, view -> requestUngrantedPermissionsForAudio())
                     .show();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Snackbar.make(mLayout, R.string.permission_storage_rationale,
+            Snackbar.make(rootLayout, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            requestUngrantedPermissionsForAudio();
-                        }
-                    })
+                    .setAction(R.string.ok, view -> requestUngrantedPermissionsForAudio())
                     .show();
         } else {
             requestUngrantedPermissionsForAudio();
@@ -712,7 +667,8 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
     private void requestUngrantedPermissionsForAudio() {
         ArrayList<String> permissionList = new ArrayList<>();
         for (int i = 0; i < PERMISSIONS_INIT_FOR_AUDIO.length; i++) {
-            if (ActivityCompat.checkSelfPermission(this, PERMISSIONS_INIT_FOR_AUDIO[i]) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, PERMISSIONS_INIT_FOR_AUDIO[i])
+                    != PackageManager.PERMISSION_GRANTED) {
                 permissionList.add(PERMISSIONS_INIT_FOR_AUDIO[i]);
             }
         }

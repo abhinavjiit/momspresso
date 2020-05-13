@@ -4,9 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Parcelable;
-import android.util.Log;
 import android.widget.Toast;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -58,11 +55,7 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
                 challengeName = extraIntent.getStringExtra("ChallengeName");
             }
         }
-        if (path != null && path.contains(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/")) {
-            Log.d("TRIM Video", "Video Picked from Mycity folder");
-        } else {
-            AppUtils.deleteDirectoryContent("MyCity4Kids/videos");
-        }
+        AppUtils.deleteDirectoryContent();
 
         //setting progressbar
         progressDialog = new ProgressDialog(this);
@@ -75,8 +68,7 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
         if (videoTrimmer != null && !StringUtils.isNullOrEmpty(duration)) {
             videoTrimmer.setMaxDuration(Integer.parseInt(duration));
             videoTrimmer.setOnTrimVideoListener(this);
-            AppUtils.createDirIfNotExists("MyCity4Kids/videos");
-            videoTrimmer.setDestinationPath(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/");
+            videoTrimmer.setDestinationPath(BaseApplication.getAppContext().getExternalFilesDir(null) + File.separator);
             try {
                 videoTrimmer.setVideoURI(Uri.parse(path));
             } catch (Exception e) {
@@ -107,23 +99,20 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
                 intent.putExtra("selectedCategory", selectedCategory);
             }
             intent.putExtra("thumbnailTime", "" + videoTrimmer.getTimeStampForIFrame());
-            if (uri.getPath().contains("/MyCity4Kids/videos/")) {
-                intent.putExtra("uriPath", uri.getPath());
-            } else {
+            if (uri.getPath() != null) {
                 File source = new File(uri.getPath());
                 File destination = new File(
-                        Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/videos.mp4");
+                        BaseApplication.getAppContext().getExternalFilesDir(null) + File.separator + "videos.mp4");
                 try {
                     FileUtils.copyFile(source, destination);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 intent.putExtra("uriPath",
-                        Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/videos.mp4");
+                        BaseApplication.getAppContext().getExternalFilesDir(null) + File.separator + "videos.mp4");
+                startActivity(intent);
+                finish();
             }
-
-            startActivity(intent);
-            finish();
         }
 
     }

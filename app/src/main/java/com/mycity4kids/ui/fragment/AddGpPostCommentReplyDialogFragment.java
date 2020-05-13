@@ -233,9 +233,8 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        AppUtils.createDirIfNotExists("MyCity4Kids/videos");
-        fileName = Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/";
-        fileName += "/audiorecordtest.m4a";
+        fileName = BaseApplication.getAppContext().getExternalFilesDir(null) + File.separator;
+        fileName += "audiorecordtest.m4a";
 
         commentReplyEditText.setOnTouchListener((v, event) -> {
             if (commentReplyEditText.hasFocus()) {
@@ -1088,9 +1087,8 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 Snackbar.make(mainLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
                         .show();
-                AppUtils.createDirIfNotExists("MyCity4Kids/videos");
-                fileName = Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/";
-                fileName += "/audiorecordtest.m4a";
+                fileName = BaseApplication.getAppContext().getExternalFilesDir(null) + File.separator;
+                fileName += "audiorecordtest.m4a";
             } else {
                 Log.i("Permissions", "storage permissions were NOT granted.");
                 Snackbar.make(mainLayout, R.string.permissions_not_granted,
@@ -1113,9 +1111,8 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 Snackbar.make(mainLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
                         .show();
-                AppUtils.createDirIfNotExists("MyCity4Kids/videos");
-                fileName = Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/";
-                fileName += "/audiorecordtest.m4a";
+                fileName = BaseApplication.getAppContext().getExternalFilesDir(null) + File.separator;
+                fileName += "audiorecordtest.m4a";
             } else {
                 Snackbar.make(mainLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)

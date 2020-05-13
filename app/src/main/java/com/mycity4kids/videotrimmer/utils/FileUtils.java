@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.mycity4kids.videotrimmer.utils;
 
 import android.annotation.SuppressLint;
@@ -37,34 +38,29 @@ import androidx.annotation.NonNull;
 public class FileUtils {
 
     /**
-     * Get a file path from a Uri. This will get the the path for Storage Access
-     * Framework Documents, as well as the _data field for the MediaStore and
-     * other file-based ContentProviders.<br>
+     * Get a file path from a Uri. This will get the the path for Storage Access Framework Documents, as well as the
+     * _data field for the MediaStore and other file-based ContentProviders.<br>
      * <br>
-     * Callers should check whether the path is local before assuming it
-     * represents a local file.
+     * Callers should check whether the path is local before assuming it represents a local file.
      *
      * @param context The context.
-     * @param uri     The Uri to query.
+     * @param uri The Uri to query.
      * @author paulburke
      */
     @SuppressLint("NewApi")
     public static String getPath(final Context context, final Uri uri) {
 
-        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+        final boolean isKitKat = true;
 
         // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+        if (DocumentsContract.isDocumentUri(context, uri)) {
             if (isExternalStorageDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
-
                 if ("primary".equalsIgnoreCase(type)) {
                     return Environment.getExternalStorageDirectory() + "/" + split[1];
                 }
-
-                // TODO handle non-primary volumes
             }
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
@@ -91,7 +87,7 @@ public class FileUtils {
                 }
 
                 final String selection = "_id=?";
-                final String[] selectionArgs = new String[]{
+                final String[] selectionArgs = new String[] {
                         split[1]
                 };
 
@@ -102,8 +98,9 @@ public class FileUtils {
         else if ("content".equalsIgnoreCase(uri.getScheme())) {
 
             // Return the remote address
-            if (isGooglePhotosUri(uri))
+            if (isGooglePhotosUri(uri)) {
                 return uri.getLastPathSegment();
+            }
 
             return getDataColumn(context, uri, null, null);
         }
@@ -116,12 +113,12 @@ public class FileUtils {
     }
 
     /**
-     * Get the value of the data column for this Uri. This is useful for
-     * MediaStore Uris, and other file-based ContentProviders.
+     * Get the value of the data column for this Uri. This is useful for MediaStore Uris, and other file-based
+     * ContentProviders.
      *
-     * @param context       The context.
-     * @param uri           The Uri to query.
-     * @param selection     (Optional) Filter used in the query.
+     * @param context The context.
+     * @param uri The Uri to query.
+     * @param selection (Optional) Filter used in the query.
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      * @author paulburke
@@ -139,8 +136,9 @@ public class FileUtils {
                 return cursor.getString(column_index);
             }
         } finally {
-            if (cursor != null)
+            if (cursor != null) {
                 cursor.close();
+            }
         }
         return null;
     }

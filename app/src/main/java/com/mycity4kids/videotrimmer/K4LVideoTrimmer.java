@@ -22,16 +22,16 @@ package com.mycity4kids.videotrimmer;/*
  * SOFTWARE.
  */
 
+import static com.mycity4kids.videotrimmer.utils.TrimVideoUtils.stringForTime;
+
+
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -45,8 +45,10 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.videotrimmer.interfaces.OnK4LVideoListener;
 import com.mycity4kids.videotrimmer.interfaces.OnProgressVideoListener;
 import com.mycity4kids.videotrimmer.interfaces.OnRangeSeekBarListener;
@@ -58,13 +60,10 @@ import com.mycity4kids.videotrimmer.view.ProgressBarView;
 import com.mycity4kids.videotrimmer.view.RangeSeekBarView;
 import com.mycity4kids.videotrimmer.view.Thumb;
 import com.mycity4kids.videotrimmer.view.TimeLineView;
-
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.mycity4kids.videotrimmer.utils.TrimVideoUtils.stringForTime;
 
 
 public class K4LVideoTrimmer extends FrameLayout {
@@ -179,8 +178,9 @@ public class K4LVideoTrimmer extends FrameLayout {
         mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mediaPlayer, int what, int extra) {
-                if (mOnTrimVideoListener != null)
+                if (mOnTrimVideoListener != null) {
                     mOnTrimVideoListener.onError("Something went wrong reason : " + what);
+                }
                 return false;
             }
         });
@@ -270,15 +270,17 @@ public class K4LVideoTrimmer extends FrameLayout {
         if (mEndPosition - mStartPosition < 5000) {
             mOnTrimVideoListener.onError("galat jawab");
         } else if (mStartPosition <= 0 && mEndPosition >= mDuration) {
-            if (mOnTrimVideoListener != null)
+            if (mOnTrimVideoListener != null) {
                 mOnTrimVideoListener.getResult(mSrc);
+            }
         } else {
             mPlayView.setVisibility(View.VISIBLE);
             mVideoView.pause();
 
             MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
             mediaMetadataRetriever.setDataSource(getContext(), mSrc);
-            long METADATA_KEY_DURATION = Long.parseLong(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+            long METADATA_KEY_DURATION = Long
+                    .parseLong(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
 
             final File file = new File(mSrc.getPath());
 
@@ -292,17 +294,20 @@ public class K4LVideoTrimmer extends FrameLayout {
             }
 
             //notify that video trimming started
-            if (mOnTrimVideoListener != null)
+            if (mOnTrimVideoListener != null) {
                 mOnTrimVideoListener.onTrimStarted();
+            }
 
             BackgroundExecutor.execute(
                     new BackgroundExecutor.Task("", 0L, "") {
                         @Override
                         public void execute() {
                             try {
-                                TrimVideoUtils.startTrim(file, getDestinationPath(), mStartPosition, mEndPosition, mOnTrimVideoListener);
+                                TrimVideoUtils.startTrim(file, getDestinationPath(), mStartPosition, mEndPosition,
+                                        mOnTrimVideoListener);
                             } catch (final Throwable e) {
-                                Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
+                                Thread.getDefaultUncaughtExceptionHandler()
+                                        .uncaughtException(Thread.currentThread(), e);
                             }
                         }
                     }
@@ -337,7 +342,7 @@ public class K4LVideoTrimmer extends FrameLayout {
 
     private String getDestinationPath() {
         if (mFinalPath == null) {
-            File folder = Environment.getExternalStorageDirectory();
+            File folder = BaseApplication.getAppContext().getExternalFilesDir(null);
             mFinalPath = folder.getPath() + File.separator;
             Log.d(TAG, "Using default path " + mFinalPath);
         }
@@ -434,7 +439,9 @@ public class K4LVideoTrimmer extends FrameLayout {
 
     private void setTimeFrames() {
         String seconds = getContext().getString(R.string.short_seconds);
-        mTextTimeFrame.setText(String.format("%s %s - %s %s", stringForTime(mStartPosition), seconds, stringForTime(mEndPosition), seconds));
+        mTextTimeFrame.setText(
+                String.format("%s %s - %s %s", stringForTime(mStartPosition), seconds, stringForTime(mEndPosition),
+                        seconds));
     }
 
     private void setTimeVideo(int position) {
@@ -489,7 +496,9 @@ public class K4LVideoTrimmer extends FrameLayout {
     }
 
     private void notifyProgressUpdate(boolean all) {
-        if (mDuration == 0) return;
+        if (mDuration == 0) {
+            return;
+        }
 
         int position = mVideoView.getCurrentPosition();
         if (all) {
@@ -529,8 +538,7 @@ public class K4LVideoTrimmer extends FrameLayout {
     }
 
     /**
-     * Set video information visibility.
-     * For now this is for debugging
+     * Set video information visibility. For now this is for debugging
      *
      * @param visible whether or not the videoInformation will be visible
      */
@@ -559,8 +567,7 @@ public class K4LVideoTrimmer extends FrameLayout {
     }
 
     /**
-     * Sets the path where the trimmed video will be saved
-     * Ex: /storage/emulated/0/MyAppFolder/
+     * Sets the path where the trimmed video will be saved Ex: /storage/emulated/0/MyAppFolder/
      *
      * @param finalPath the full path
      */
@@ -579,8 +586,8 @@ public class K4LVideoTrimmer extends FrameLayout {
     }
 
     /**
-     * Set the maximum duration of the trimmed video.
-     * The trimmer interface wont allow the user to set duration longer than maxDuration
+     * Set the maximum duration of the trimmed video. The trimmer interface wont allow the user to set duration longer
+     * than maxDuration
      *
      * @param maxDuration the maximum duration of the trimmed video in seconds
      */

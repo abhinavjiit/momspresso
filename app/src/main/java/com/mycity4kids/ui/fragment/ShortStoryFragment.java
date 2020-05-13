@@ -74,6 +74,7 @@ import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.widget.StoryShareCardWidget;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.SocketTimeoutException;
@@ -736,8 +737,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     }
 
     private void shareStory(String tempName) {
-        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory()
-                + "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + tempName + ".jpg");
+        Uri uri = Uri.parse("file://" + BaseApplication.getAppContext().getExternalFilesDir(null) + File.separator
+                + AppConstants.STORY_SHARE_IMAGE_NAME + tempName + ".jpg");
         if (isAdded()) {
             switch (shareMedium) {
                 case AppConstants.MEDIUM_FACEBOOK: {

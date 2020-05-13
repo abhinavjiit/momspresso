@@ -5,7 +5,6 @@ import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -43,24 +42,16 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.models.request.AddGroupPostRequest;
 import com.mycity4kids.models.response.AddGroupPostResponse;
@@ -115,54 +106,55 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
 
     public static final int ADD_IMAGE_GALLERY_ACTIVITY_REQUEST_CODE = 1111;
     public static final int ADD_IMAGE_CAMERA_ACTIVITY_REQUEST_CODE = 1112;
-    SharedPreferences.Editor editor;
-    private ProcessBitmapTaskFragment mProcessBitmapTaskFragment;
+    private ProcessBitmapTaskFragment processBitmapTaskFragment;
     private GroupResult selectedGroup;
     private LinkedHashMap<ImageView, String> imageUrlHashMap = new LinkedHashMap<>();
     private Uri imageUri;
     private File photoFile;
-    static int count;
-    static int TOOLTIP_SHOW_TIMES;
-    private String mCurrentPhotoPath, absoluteImagePath;
+    private String currentPhotoPath;
+    private String absoluteImagePath;
     private boolean isRequestRunning = false;
-    private View mLayout;
+    private View rootLayout;
     private EditText postContentEditText;
-    private ImageView addMediaImageView, anonymousImageView;
-    private ImageView postImageView;
-    SharedPreferences sharedpreferences;
+    private ImageView addMediaImageView;
+    private ImageView anonymousImageView;
     private TextView publishTextView;
-    private TextView imageCameraTextView, imageGalleryTextView, cancelTextView;
+    private TextView imageCameraTextView;
+    private TextView imageGalleryTextView;
+    private TextView cancelTextView;
     private RelativeLayout chooseMediaTypeContainer;
     private LinearLayout mediaContainer;
     private ImageView closeEditorImageView;
     private TextView anonymousTextView;
     private CheckBox anonymousCheckbox;
     private TextView addMediaTextView;
-    private MediaPlayer mMediaplayer;
+    private MediaPlayer mediaplayer;
     private Uri downloadUri;
     private AudioRecordView audioRecordView;
     private long time;
-    private Handler mHandler;
-    private SeekBar audioSeekBarUpdate, audioSeekBar;
-    private long totalDuration, currentDuration;
-    private ImageView playAudio, pauseAudio;
-    private int pos;
+    private Handler handler;
+    private SeekBar audioSeekBarUpdate;
+    private SeekBar audioSeekBar;
+    private long totalDuration;
+    private long currentDuration;
+    private ImageView playAudio;
+    private ImageView pauseAudio;
     private boolean isPlayed = false;
     private boolean isPaused = false;
     private boolean isCommentPlay = false;
-    private LinearLayout playAudioLayout, timerLayout, dateContainermedia;
     private Uri originalUri;
-    private Uri contentURI;
+    private Uri contentUri;
     private long suffixName;
-    private FirebaseAuth mAuth;
-    private ImageView playAudioImageView, pauseAudioImageView, micImg;
-    private ArrayList<String> audioCommentList;
-    private TextView audioTimeElapsed, audioTimeElapsedComment;
-    private MediaRecorder mRecorder;
-    private String mFileName;
+    private FirebaseAuth firebaseAuth;
+    private ImageView playAudioImageView;
+    private ImageView pauseAudioImageView;
+    private ImageView micImg;
+    private TextView audioTimeElapsed;
+    private TextView audioTimeElapsedComment;
+    private MediaRecorder mediaRecorder;
+    private String fileName;
     private Animation slideDownAnim;
     private HashMap<ImageView, String> audioUrlHashMap = new HashMap<>();
-    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private boolean isLocked = false;
 
     static {
@@ -175,8 +167,8 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         setContentView(R.layout.add_text_group_post_activity);
         ((BaseApplication) getApplication()).setActivity(this);
 
-        mLayout = findViewById(R.id.rootLayout);
-        mHandler = new Handler(this);
+        rootLayout = findViewById(R.id.rootLayout);
+        handler = new Handler(this);
         postContentEditText = (EditText) findViewById(R.id.postContentEditText);
         closeEditorImageView = (ImageView) findViewById(R.id.closeEditorImageView);
         anonymousImageView = (ImageView) findViewById(R.id.anonymousImageView);
@@ -184,7 +176,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         anonymousCheckbox = (CheckBox) findViewById(R.id.anonymousCheckbox);
         addMediaImageView = (ImageView) findViewById(R.id.addMediaImageView);
         addMediaTextView = (TextView) findViewById(R.id.addMediaTextView);
-        postImageView = (ImageView) findViewById(R.id.postImageView);
         publishTextView = (TextView) findViewById(R.id.publishTextView);
         chooseMediaTypeContainer = (RelativeLayout) findViewById(R.id.chooseMediaTypeContainer);
         mediaContainer = (LinearLayout) findViewById(R.id.mediaContainer);
@@ -194,20 +185,16 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
 
         audioRecordView = (AudioRecordView) findViewById(R.id.recordingView);
         slideDownAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_slide_down_from_top);
-        playAudioLayout = (LinearLayout) findViewById(R.id.playAudioLayout);
-        timerLayout = (LinearLayout) findViewById(R.id.timerLayout);
         playAudioImageView = (ImageView) findViewById(R.id.playAudioImageView);
         pauseAudioImageView = (ImageView) findViewById(R.id.pauseAudioImageView);
         audioSeekBar = (SeekBar) findViewById(R.id.audioSeekBar);
-        dateContainermedia = (LinearLayout) findViewById(R.id.dateContainermedia);
         audioTimeElapsedComment = (TextView) findViewById(R.id.audioTimeElapsed);
 
         selectedGroup = (GroupResult) getIntent().getParcelableExtra("groupItem");
-        mAuth = FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
 
-        AppUtils.createDirIfNotExists("MyCity4Kids/videos");
-        mFileName = Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/";
-        mFileName += "/audiorecordtest.m4a";
+        fileName = BaseApplication.getAppContext().getExternalFilesDir(null) + File.separator;
+        fileName += "audiorecordtest.m4a";
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         audioRecordView.setRecordingListener(this);
@@ -282,7 +269,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     @Override
     protected void onResume() {
         super.onResume();
-        ((BaseApplication) getApplication()).setView(mLayout);
+        ((BaseApplication) getApplication()).setView(rootLayout);
     }
 
     @Override
@@ -339,13 +326,15 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                     publishPost();
                 }
                 break;
+            default:
+                break;
         }
     }
 
     private boolean validateParams() {
         if (audioUrlHashMap.isEmpty() && ((postContentEditText.getText() == null || StringUtils
-                .isNullOrEmpty(postContentEditText.getText().toString())) &&
-                imageUrlHashMap.isEmpty())) {
+                .isNullOrEmpty(postContentEditText.getText().toString()))
+                && imageUrlHashMap.isEmpty())) {
             showToast("Please enter some content to continue");
             return false;
         }
@@ -353,19 +342,14 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     }
 
     private void publishPost() {
-        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-
         AddGroupPostRequest addGroupPostRequest = new AddGroupPostRequest();
         addGroupPostRequest.setContent(postContentEditText.getText().toString());
-        //   String str=postContentEditText.getText().toString();
         addGroupPostRequest.setType("0");
         addGroupPostRequest.setGroupId(selectedGroup.getId());
         if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
             addGroupPostRequest.setAnnon(1);
         }
         addGroupPostRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-
         LinkedHashMap<String, String> mediaMap = new LinkedHashMap<>();
         int i = 1;
         if (!imageUrlHashMap.isEmpty()) {
@@ -380,8 +364,9 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             addGroupPostRequest.setType("3");
             addGroupPostRequest.setMediaUrls(mediaMap);
         }
-
-        Call<AddGroupPostResponse> call = groupsAPI.createPost(addGroupPostRequest);
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
+        Call<AddGroupPostResponse> call = groupsApi.createPost(addGroupPostRequest);
         call.enqueue(postAdditionResponseCallback);
     }
 
@@ -389,22 +374,17 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         @Override
         public void onResponse(Call<AddGroupPostResponse> call, retrofit2.Response<AddGroupPostResponse> response) {
             isRequestRunning = false;
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
-                }
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
                 return;
             }
             try {
                 if (response.isSuccessful()) {
                     SharedPrefUtils.clearSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId());
-                    AddGroupPostResponse responseModel = response.body();
                     setResult(RESULT_OK);
                     postContentEditText.setText("");
                     onBackPressed();
-                } else {
-
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
@@ -429,15 +409,12 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     private void loadImageFromCamera() {
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
             photoFile = null;
             try {
                 photoFile = createImageFile();
             } catch (IOException ex) {
-                // Error occurred while creating the File
                 Log.i("TAG", "IOException");
             }
-            // Continue only if the File was successfully created
             if (photoFile != null) {
                 try {
                     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, GenericFileProvider
@@ -452,34 +429,17 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     }
 
     private File createImageFile() throws IOException {
-        // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
         File image = File.createTempFile(
-                imageFileName,  // prefix
-                ".jpg",         // suffix
-                dir      // directory
+                imageFileName,
+                ".jpg",
+                dir
         );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        currentPhotoPath = "file:" + image.getAbsolutePath();
         absoluteImagePath = image.getAbsolutePath();
         return image;
-    }
-
-    private void pickVideoFromGallery() {
-        try {
-            Intent intent = new Intent();
-            intent.setType("video/mp4");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)),
-                    AppConstants.REQUEST_VIDEO_TRIMMER);
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Log.d("MC4kException", Log.getStackTraceString(e));
-        }
     }
 
     @Override
@@ -493,27 +453,18 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                 imageUri = data.getData();
                 if (resultCode == Activity.RESULT_OK) {
                     try {
-//                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(AddTextOrMediaGroupPostActivity.this.getContentResolver(), imageUri);
-                        // If the Fragment is non-null, then it is currently being
-                        // retained across a configuration change.
                         FragmentManager fm = getFragmentManager();
-                        mProcessBitmapTaskFragment = (ProcessBitmapTaskFragment) fm
+                        processBitmapTaskFragment = (ProcessBitmapTaskFragment) fm
                                 .findFragmentByTag(TAG_TASK_FRAGMENT);
-                        if (mProcessBitmapTaskFragment == null) {
-                            mProcessBitmapTaskFragment = new ProcessBitmapTaskFragment();
+                        if (processBitmapTaskFragment == null) {
+                            processBitmapTaskFragment = new ProcessBitmapTaskFragment();
                             Bundle bundle = new Bundle();
                             bundle.putParcelable("uri", imageUri);
-                            mProcessBitmapTaskFragment.setArguments(bundle);
-                            fm.beginTransaction().add(mProcessBitmapTaskFragment, TAG_TASK_FRAGMENT).commit();
+                            processBitmapTaskFragment.setArguments(bundle);
+                            fm.beginTransaction().add(processBitmapTaskFragment, TAG_TASK_FRAGMENT).commit();
                         } else {
-                            mProcessBitmapTaskFragment.launchNewTask(imageUri);
+                            processBitmapTaskFragment.launchNewTask(imageUri);
                         }
-//                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                        imageBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
-//                        String path = MediaStore.Images.Media.insertImage(AddTextOrMediaGroupPostActivity.this.getContentResolver(), imageBitmap, "Title", null);
-//                        Uri imageUriTemp = Uri.parse(path);
-//                        File file2 = FileUtils.getFile(this, imageUriTemp);
-//                        sendUploadProfileImageRequest(file2);
                     } catch (Exception e) {
                         Crashlytics.logException(e);
                         e.printStackTrace();
@@ -524,11 +475,10 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                 if (resultCode == Activity.RESULT_OK) {
                     try {
                         Bitmap imageBitmap = MediaStore.Images.Media
-                                .getBitmap(getContentResolver(), Uri.parse(mCurrentPhotoPath));
+                                .getBitmap(getContentResolver(), Uri.parse(currentPhotoPath));
                         ExifInterface ei = new ExifInterface(absoluteImagePath);
                         int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                                 ExifInterface.ORIENTATION_UNDEFINED);
-
                         switch (orientation) {
                             case ExifInterface.ORIENTATION_ROTATE_90:
                                 imageBitmap = rotateImage(imageBitmap, 90);
@@ -543,12 +493,9 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                             default:
                                 break;
                         }
-
                         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 75, bytes);
                         byte[] bitmapData = bytes.toByteArray();
-
-                        //write the bytes in file
                         FileOutputStream fos = new FileOutputStream(photoFile);
                         fos.write(bitmapData);
                         fos.flush();
@@ -556,7 +503,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                         imageUri = Uri.fromFile(photoFile);
                         File file2 = FileUtils.getFile(this, imageUri);
                         sendUploadProfileImageRequest(file2);
-                        // compressImage(filePath);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -572,17 +518,10 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                     final Throwable cropError = UCrop.getError(data);
                 }
             }
+            default:
+                break;
         }
     }
-
-    //    private void startCropActivity(@NonNull Uri uri) {
-//        String destinationFileName = SAMPLE_CROPPED_IMAGE_NAME + ".jpg";
-//        Log.e("instartCropActivity", "test");
-//        UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(getCacheDir(), destinationFileName)));
-//        uCrop.withAspectRatio(16, 9);
-//        uCrop.withMaxResultSize(720, 405);
-//        uCrop.start(AddTextOrMediaGroupPostActivity.this);
-//    }
 
     public static Bitmap rotateImage(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
@@ -596,49 +535,44 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
         RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
         Log.e("requestBodyFile", new Gson().toJson(requestBodyFile.toString()));
-        //   RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), "" + userModel.getUser().getId());
         RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "2");
-        // prepare call in Retrofit 2.0
-
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        ImageUploadAPI imageUploadAPI = retro.create(ImageUploadAPI.class);
-        Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(//userId,
-                //  imageType,
+        ImageUploadAPI imageUploadApi = retro.create(ImageUploadAPI.class);
+        Call<ImageUploadResponse> call = imageUploadApi.uploadImage(//userId,
                 imageType,
                 requestBodyFile);
-        //asynchronous call
-        call.enqueue(new Callback<ImageUploadResponse>() {
-                         @Override
-                         public void onResponse(Call<ImageUploadResponse> call, retrofit2.Response<ImageUploadResponse> response) {
-                             removeProgressDialog();
-                             if (response == null || response.body() == null) {
-                                 showToast(getString(R.string.server_went_wrong));
-                                 return;
-                             }
+        call.enqueue(
+                new Callback<ImageUploadResponse>() {
+                    @Override
+                    public void onResponse(Call<ImageUploadResponse> call,
+                            retrofit2.Response<ImageUploadResponse> response) {
+                        removeProgressDialog();
+                        if (response.body() == null) {
+                            showToast(getString(R.string.server_went_wrong));
+                            return;
+                        }
 
-                             file.delete();
+                        file.delete();
 
-                             ImageUploadResponse responseModel = response.body();
-                             if (responseModel.getCode() != 200) {
-                                 showToast(getString(R.string.toast_response_error));
-                                 return;
-                             } else {
-                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getResult().getUrl())) {
-                                     Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
-                                 }
+                        ImageUploadResponse responseModel = response.body();
+                        if (responseModel.getCode() != 200) {
+                            showToast(getString(R.string.toast_response_error));
+                        } else {
+                            if (!StringUtils.isNullOrEmpty(responseModel.getData().getResult().getUrl())) {
+                                Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
+                            }
+                            addImageToContainer(responseModel.getData().getResult().getUrl());
+                            showToast(getString(R.string.image_upload_success));
+                        }
+                    }
 
-                                 addImageToContainer(responseModel.getData().getResult().getUrl());
-                                 showToast(getString(R.string.image_upload_success));
-                             }
-                         }
-
-                         @Override
-                         public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
-                             Crashlytics.logException(t);
-                             Log.d("MC4KException", Log.getStackTraceString(t));
-                             showToast(getString(R.string.went_wrong));
-                         }
-                     }
+                    @Override
+                    public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
+                        Crashlytics.logException(t);
+                        Log.d("MC4KException", Log.getStackTraceString(t));
+                        showToast(getString(R.string.went_wrong));
+                    }
+                }
         );
     }
 
@@ -649,50 +583,26 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         mediaContainer.addView(rl);
         imageUrlHashMap.put(removeIV, url);
         Picasso.get().load(url).error(R.drawable.default_article).into(uploadedIV);
-        removeIV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageUrlHashMap.remove(removeIV);
-                mediaContainer.removeView((View) removeIV.getParent());
-            }
+        removeIV.setOnClickListener(v -> {
+            imageUrlHashMap.remove(removeIV);
+            mediaContainer.removeView((View) removeIV.getParent());
         });
     }
 
     private void requestPermissions() {
-        // BEGIN_INCLUDE(contacts_permission_request)
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example, if the request has been denied previously.
-            Log.i("Permissions",
-                    "Displaying storage permission rationale to provide additional context.");
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
-            Snackbar.make(mLayout, R.string.permission_storage_rationale,
+            Snackbar.make(rootLayout, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            requestUngrantedPermissions();
-                        }
-                    })
+                    .setAction(R.string.ok, view -> requestUngrantedPermissions())
                     .show();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
-            Snackbar.make(mLayout, R.string.permission_camera_rationale,
+            Snackbar.make(rootLayout, R.string.permission_camera_rationale,
                     Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            requestUngrantedPermissions();
-                        }
-                    })
+                    .setAction(R.string.ok, view -> requestUngrantedPermissions())
                     .show();
         } else {
             requestUngrantedPermissions();
@@ -700,41 +610,20 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     }
 
     private void requestPermissionsForAudio() {
-        // BEGIN_INCLUDE(contacts_permission_request)
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.RECORD_AUDIO)) {
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
-            Snackbar.make(mLayout, R.string.permission_audio_rationale,
+            Snackbar.make(rootLayout, R.string.permission_audio_rationale,
                     Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            requestUngrantedPermissionsForAudio();
-                        }
-                    })
+                    .setAction(R.string.ok, view -> requestUngrantedPermissionsForAudio())
                     .show();
 
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example, if the request has been denied previously.
-            Log.i("Permissions",
-                    "Displaying storage permission rationale to provide additional context.");
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
-            Snackbar.make(mLayout, R.string.permission_storage_rationale,
+            Snackbar.make(rootLayout, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            requestUngrantedPermissionsForAudio();
-                        }
-                    })
+                    .setAction(R.string.ok, view -> requestUngrantedPermissionsForAudio())
                     .show();
         } else {
             requestUngrantedPermissionsForAudio();
@@ -764,41 +653,27 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         ActivityCompat.requestPermissions(this, requiredPermission, REQUEST_INIT_PERMISSION_FOR_AUDIO);
     }
 
-    /**
-     * Callback received when a permissions request has been completed.
-     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
             @NonNull int[] grantResults) {
-
         if (requestCode == REQUEST_INIT_PERMISSION) {
-            Log.i("Permissions", "Received response for storage permissions request.");
-
-            // We have requested multiple permissions for contacts, so all of them need to be
-            // checked.
             if (PermissionUtil.verifyPermissions(grantResults)) {
-                // All required permissions have been granted, display contacts fragment.
-                Snackbar.make(mLayout, R.string.permision_available_init,
+                Snackbar.make(rootLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
                         .show();
                 openMediaChooserDialog();
             } else {
-                Log.i("Permissions", "storage permissions were NOT granted.");
-                Snackbar.make(mLayout, R.string.permissions_not_granted,
+                Snackbar.make(rootLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
                         .show();
             }
         } else if (requestCode == REQUEST_INIT_PERMISSION_FOR_AUDIO) {
-            // We have requested multiple permissions for contacts, so all of them need to be
-            // checked.
             if (PermissionUtil.verifyPermissions(grantResults)) {
-                // All required permissions have been granted, display contacts fragment.
-                Snackbar.make(mLayout, R.string.permision_available_init,
+                Snackbar.make(rootLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
                         .show();
             } else {
-                Log.i("Permissions", "storage permissions were NOT granted.");
-                Snackbar.make(mLayout, R.string.permissions_not_granted,
+                Snackbar.make(rootLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
                         .show();
             }
@@ -836,7 +711,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             Uri imageUriTemp = Uri.parse(path);
             File file2 = FileUtils.getFile(this, imageUriTemp);
             sendUploadProfileImageRequest(file2);
-            mProcessBitmapTaskFragment = null;
+            processBitmapTaskFragment = null;
         } else {
             removeProgressDialog();
             Toast.makeText(this, R.string.unsupported_image, Toast.LENGTH_SHORT).show();
@@ -850,25 +725,24 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-        mHandler.removeCallbacks(mUpdateTimeTask);
+        handler.removeCallbacks(updateTimeTask);
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        mHandler.removeCallbacks(mUpdateTimeTask);
+        handler.removeCallbacks(updateTimeTask);
 
-        int totalDuration = mMediaplayer.getDuration();
+        int totalDuration = mediaplayer.getDuration();
         int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
-
         // forward or backward to certain seconds
-        mMediaplayer.seekTo(currentPosition);
+        mediaplayer.seekTo(currentPosition);
     }
 
     @Override
     public void onRecordingStarted() {
-        if (mMediaplayer != null && isCommentPlay) {
-            mMediaplayer.release();
-            mMediaplayer = null;
+        if (mediaplayer != null && isCommentPlay) {
+            mediaplayer.release();
+            mediaplayer = null;
             playAudioImageView.setVisibility(View.VISIBLE);
             pauseAudioImageView.setVisibility(View.GONE);
             audioSeekBar.setProgress(0);
@@ -885,31 +759,28 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
 
     @Override
     public void onRecordingCompleted() {
-//Stop Recording..
-//                String time = getHumanTimeText(recordTime);
         Log.d("RecordView", "onFinish");
         isLocked = false;
         int recordTime = (int) ((System.currentTimeMillis() / (1000)) - time);
         if (recordTime < 1) {
             resetIcons();
-            mRecorder.release();
-            mRecorder = null;
+            mediaRecorder.release();
+            mediaRecorder = null;
             Toast.makeText(this, R.string.hold_to_release, Toast.LENGTH_SHORT).show();
         } else if (recordTime >= 4) {
             stopRecording();
-            originalUri = Uri.parse(mFileName);
-            contentURI = AppUtils
+            originalUri = Uri.parse(fileName);
+            contentUri = AppUtils
                     .exportAudioToGallery(originalUri.getPath(), BaseApplication.getAppContext().getContentResolver(),
                             this);
-            contentURI = AppUtils.getAudioUriFromMediaProvider(originalUri.getPath(),
+            contentUri = AppUtils.getAudioUriFromMediaProvider(originalUri.getPath(),
                     BaseApplication.getAppContext().getContentResolver());
-            uploadAudio(contentURI);
-            Log.d("RecordTime", "" + recordTime);
+            uploadAudio(contentUri);
         } else {
             audioRecordView.disableClick(false);
             resetIcons();
-            mRecorder.release();
-            mRecorder = null;
+            mediaRecorder.release();
+            mediaRecorder = null;
             Toast.makeText(this, R.string.please_hold_for_3_seconds, Toast.LENGTH_SHORT).show();
         }
     }
@@ -933,58 +804,55 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
 
     private void resetIcons() {
         final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                postContentEditText.setVisibility(View.VISIBLE);
-                addMediaImageView.setVisibility(View.VISIBLE);
-                anonymousCheckbox.setVisibility(View.VISIBLE);
-                anonymousImageView.setVisibility(View.VISIBLE);
-                anonymousTextView.setVisibility(View.VISIBLE);
-                ViewGroup.LayoutParams params = audioRecordView.getLayoutParams();
-                params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                audioRecordView.setLayoutParams(params);
-                audioRecordView.disableClick(true);
-            }
+        handler.postDelayed(() -> {
+            postContentEditText.setVisibility(View.VISIBLE);
+            addMediaImageView.setVisibility(View.VISIBLE);
+            anonymousCheckbox.setVisibility(View.VISIBLE);
+            anonymousImageView.setVisibility(View.VISIBLE);
+            anonymousTextView.setVisibility(View.VISIBLE);
+            ViewGroup.LayoutParams params = audioRecordView.getLayoutParams();
+            params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            audioRecordView.setLayoutParams(params);
+            audioRecordView.disableClick(true);
         }, 500);
     }
 
     private void startRecording() {
-        if (mRecorder != null) {
-            mRecorder.release();
+        if (mediaRecorder != null) {
+            mediaRecorder.release();
         }
         ViewGroup.LayoutParams params = audioRecordView.getLayoutParams();
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         audioRecordView.setLayoutParams(params);
-        mRecorder = new MediaRecorder();
+        mediaRecorder = new MediaRecorder();
         postContentEditText.setVisibility(View.GONE);
         addMediaImageView.setVisibility(View.GONE);
         anonymousCheckbox.setVisibility(View.GONE);
         anonymousImageView.setVisibility(View.GONE);
         anonymousTextView.setVisibility(View.GONE);
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        mRecorder.setOutputFile(mFileName);
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        mediaRecorder.setOutputFile(fileName);
         time = System.currentTimeMillis() / (1000);
         try {
-            mRecorder.prepare();
-            mRecorder.start();
+            mediaRecorder.prepare();
+            mediaRecorder.start();
         } catch (IOException e) {
             Log.e("LOG_TAG", "prepare() failed");
         }
     }
 
     private void stopRecording() {
-        if (mRecorder != null) {
+        if (mediaRecorder != null) {
             try {
-                mRecorder.stop();
+                mediaRecorder.stop();
             } catch (RuntimeException e) {
-
+                Log.e("LOG_TAG", "prepare() failed");
             } finally {
-                mRecorder.release();
+                mediaRecorder.release();
                 showProgressDialog(getString(R.string.please_wait));
-                mRecorder = null;
+                mediaRecorder = null;
                 addMediaImageView.setEnabled(false);
                 addMediaTextView.setEnabled(false);
                 postContentEditText.setVisibility(View.VISIBLE);
@@ -1002,20 +870,17 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                addMediaImageView.setEnabled(false);
-                                addMediaTextView.setEnabled(false);
-                                postContentEditText.setVisibility(View.VISIBLE);
-                                addMediaImageView.setVisibility(View.VISIBLE);
-                                anonymousCheckbox.setVisibility(View.VISIBLE);
-                                anonymousImageView.setVisibility(View.VISIBLE);
-                                anonymousTextView.setVisibility(View.VISIBLE);
-                                ViewGroup.LayoutParams params = audioRecordView.getLayoutParams();
-                                params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                                audioRecordView.setLayoutParams(params);
-                            }
+                        new Handler().postDelayed(() -> {
+                            addMediaImageView.setEnabled(false);
+                            addMediaTextView.setEnabled(false);
+                            postContentEditText.setVisibility(View.VISIBLE);
+                            addMediaImageView.setVisibility(View.VISIBLE);
+                            anonymousCheckbox.setVisibility(View.VISIBLE);
+                            anonymousImageView.setVisibility(View.VISIBLE);
+                            anonymousTextView.setVisibility(View.VISIBLE);
+                            ViewGroup.LayoutParams params1 = audioRecordView.getLayoutParams();
+                            params1.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                            audioRecordView.setLayoutParams(params1);
                         }, 0);
                     }
 
@@ -1029,26 +894,20 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     }
 
     public void uploadAudio(Uri file) {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
-        mAuth.signInAnonymously()
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("VideoUpload", "signInAnonymously:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            uploadAudioToFirebase(contentURI);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("VideoUpload", "signInAnonymously:failure", task.getException());
-                            Toast.makeText(AddTextOrMediaGroupPostActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-//                            updateUI(null);
-                        }
-
-                        // ...
+        firebaseAuth.signInAnonymously()
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("VideoUpload", "signInAnonymously:success");
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        uploadAudioToFirebase(contentUri);
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w("VideoUpload", "signInAnonymously:failure", task.getException());
+                        Toast.makeText(AddTextOrMediaGroupPostActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -1059,7 +918,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         final StorageReference storageRef = storage.getReference();
 
         suffixName = System.currentTimeMillis();
-//        Uri file = Uri.fromFile(file2);
         StorageMetadata metadata = new StorageMetadata.Builder()
                 .setContentType("audio/m4a")
                 .build();
@@ -1068,41 +926,18 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                         + "/audio/" + file2.getLastPathSegment() + "_" + suffixName + ".m4a");
         com.google.firebase.storage.UploadTask uploadTask = riversRef.putFile(file2, metadata);
 
-// Register observers to listen for when the download is done or if it fails
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-//                MixPanelUtils.pushVideoUploadFailureEvent(mixpanel, title);
-//                createRowForFailedAttempt(exception.getMessage());
+        uploadTask.addOnFailureListener(exception -> {
+        }).addOnSuccessListener(taskSnapshot -> riversRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            downloadUri = uri;
+            removeProgressDialog();
+            audioRecordView.setVisibility(View.GONE);
+            addMediaImageView.setVisibility(View.GONE);
+            postContentEditText.setVisibility(View.GONE);
+            addAudioToContainer(contentUri.toString());
+        }));
 
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
-//                MixPanelUtils.pushVideoUploadSuccessEvent(mixpanel, title);
-                riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        downloadUri = uri;
-                        removeProgressDialog();
-                        audioRecordView.setVisibility(View.GONE);
-                        addMediaImageView.setVisibility(View.GONE);
-                        postContentEditText.setVisibility(View.GONE);
-                        addAudioToContainer(contentURI.toString());
-                    }
-                });
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                // ...
-            }
-        });
-
-        uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
-                Log.e("audio uploaded to firebase", "Bytes uploaded: " + taskSnapshot.getBytesTransferred());
-            }
-        });
+        uploadTask.addOnProgressListener(
+                taskSnapshot -> Log.e("audio uploaded", "Bytes uploaded: " + taskSnapshot.getBytesTransferred()));
     }
 
     private void addAudioToContainer(String url) {
@@ -1116,117 +951,98 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         mediaContainer.addView(rl);
         audioUrlHashMap.put(removeIV, url);
 
-        playAudio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mMediaplayer != null && isCommentPlay) {
-                    mMediaplayer.release();
-                    mMediaplayer = null;
-                    playAudioImageView.setVisibility(View.VISIBLE);
-                    pauseAudioImageView.setVisibility(View.GONE);
-                    audioSeekBar.setProgress(0);
-                    audioTimeElapsedComment.setVisibility(View.GONE);
-                }
-                pauseAudio.setVisibility(View.VISIBLE);
-                playAudio.setVisibility(View.GONE);
-                audioTimeElapsed.setVisibility(View.VISIBLE);
-                isCommentPlay = false;
-                if (mMediaplayer != null && isPaused) {
-                    mMediaplayer.start();
-                    updateProgressBar();
-                    micImg.setVisibility(View.VISIBLE);
-                    isPlayed = true;
-                    isPaused = false;
-                } else {
-                    mMediaplayer = new MediaPlayer();
-                    mMediaplayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    audioSeekBarUpdate.setProgress(0);
-                    audioSeekBarUpdate.setMax(100);
-                    try {
-                        mMediaplayer.setDataSource(mFileName);
-
-                        // wait for media player to get prepare
-                        mMediaplayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                            @Override
-                            public void onPrepared(MediaPlayer mediaPlayer) {
-                                mMediaplayer.start();
-                                updateProgressBar();
-                                micImg.setVisibility(View.VISIBLE);
-                                isPlayed = true;
-                            }
-                        });
-                        mMediaplayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                            @Override
-                            public void onCompletion(MediaPlayer mediaPlayer) {
-                                if (isPlayed) {
-                                    isPlayed = false;
-                                    playAudio.setVisibility(View.VISIBLE);
-                                    pauseAudio.setVisibility(View.GONE);
-                                    mMediaplayer.stop();
-                                    mMediaplayer = null;
-//                                    audioSeekBarUpdate.setProgress(0);
-                                }
-                            }
-                        });
-                        mMediaplayer.prepare();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+        playAudio.setOnClickListener(view -> {
+            if (mediaplayer != null && isCommentPlay) {
+                mediaplayer.release();
+                mediaplayer = null;
+                playAudioImageView.setVisibility(View.VISIBLE);
+                pauseAudioImageView.setVisibility(View.GONE);
+                audioSeekBar.setProgress(0);
+                audioTimeElapsedComment.setVisibility(View.GONE);
             }
-        });
-        pauseAudio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                playAudio.setVisibility(View.VISIBLE);
-                pauseAudio.setVisibility(View.GONE);
-                mMediaplayer.pause();
-                isPaused = true;
-                isCommentPlay = false;
+            pauseAudio.setVisibility(View.VISIBLE);
+            playAudio.setVisibility(View.GONE);
+            audioTimeElapsed.setVisibility(View.VISIBLE);
+            isCommentPlay = false;
+            if (mediaplayer != null && isPaused) {
+                mediaplayer.start();
+                updateProgressBar();
+                micImg.setVisibility(View.VISIBLE);
+                isPlayed = true;
+                isPaused = false;
+            } else {
+                mediaplayer = new MediaPlayer();
+                mediaplayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 audioSeekBarUpdate.setProgress(0);
+                audioSeekBarUpdate.setMax(100);
+                try {
+                    mediaplayer.setDataSource(fileName);
+
+                    // wait for media player to get prepare
+                    mediaplayer.setOnPreparedListener(mediaPlayer -> {
+                        mediaplayer.start();
+                        updateProgressBar();
+                        micImg.setVisibility(View.VISIBLE);
+                        isPlayed = true;
+                    });
+                    mediaplayer.setOnCompletionListener(mediaPlayer -> {
+                        if (isPlayed) {
+                            isPlayed = false;
+                            playAudio.setVisibility(View.VISIBLE);
+                            pauseAudio.setVisibility(View.GONE);
+                            mediaplayer.stop();
+                            mediaplayer = null;
+                        }
+                    });
+                    mediaplayer.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
-        removeIV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mMediaplayer != null) {
-                    mMediaplayer.stop();
-                    mMediaplayer.release();
-                    isCommentPlay = false;
-                    mMediaplayer = null;
-                }
-                audioUrlHashMap.remove(removeIV);
-                mediaContainer.removeView((View) removeIV.getParent());
-                postContentEditText.setVisibility(View.VISIBLE);
-                addMediaImageView.setEnabled(true);
-                addMediaTextView.setEnabled(true);
-                audioRecordView.setVisibility(View.VISIBLE);
-                addMediaImageView.setVisibility(View.VISIBLE);
+        pauseAudio.setOnClickListener(view -> {
+            playAudio.setVisibility(View.VISIBLE);
+            pauseAudio.setVisibility(View.GONE);
+            mediaplayer.pause();
+            isPaused = true;
+            isCommentPlay = false;
+            audioSeekBarUpdate.setProgress(0);
+        });
+        removeIV.setOnClickListener(v -> {
+            if (mediaplayer != null) {
+                mediaplayer.stop();
+                mediaplayer.release();
+                isCommentPlay = false;
+                mediaplayer = null;
             }
+            audioUrlHashMap.remove(removeIV);
+            mediaContainer.removeView((View) removeIV.getParent());
+            postContentEditText.setVisibility(View.VISIBLE);
+            addMediaImageView.setEnabled(true);
+            addMediaTextView.setEnabled(true);
+            audioRecordView.setVisibility(View.VISIBLE);
+            addMediaImageView.setVisibility(View.VISIBLE);
         });
 
     }
 
     public void updateProgressBar() {
-        mHandler.postDelayed(mUpdateTimeTask, 100);
+        handler.postDelayed(updateTimeTask, 100);
     }
 
-    private Runnable mUpdateTimeTask = new Runnable() {
+    private Runnable updateTimeTask = new Runnable() {
         public void run() {
-            if (mMediaplayer != null && !isCommentPlay) {
-                totalDuration = mMediaplayer.getDuration();
-                currentDuration = mMediaplayer.getCurrentPosition();
+            if (mediaplayer != null && !isCommentPlay) {
+                totalDuration = mediaplayer.getDuration();
+                currentDuration = mediaplayer.getCurrentPosition();
 
                 audioTimeElapsed
                         .setText(milliSecondsToTimer(currentDuration) + "/" + milliSecondsToTimer(totalDuration));
 
                 // Updating progress bar
                 int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
-                //Log.d("Progress", ""+progress);
                 audioSeekBarUpdate.setProgress(progress);
-
-                // Running this thread after 100 milliseconds
-                mHandler.postDelayed(this, 100);
+                handler.postDelayed(this, 100);
             }
         }
     };
@@ -1292,7 +1108,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             }
         }
     }
-
 
     @Override
     public boolean handleMessage(Message message) {

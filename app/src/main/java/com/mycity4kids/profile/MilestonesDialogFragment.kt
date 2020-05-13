@@ -10,7 +10,6 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
@@ -48,6 +47,7 @@ import com.mycity4kids.utils.AppUtils
 import com.mycity4kids.utils.PermissionUtil
 import com.mycity4kids.utils.ToastUtils
 import com.squareup.picasso.Picasso
+import java.io.File
 import retrofit2.Call
 import retrofit2.Callback
 
@@ -322,9 +322,9 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
             if (AppConstants.CONTENT_TYPE_MYMONEY == milestoneData?.item_type) {
                 if (AppUtils.shareGenericLinkWithSuccessStatus(
                         activity, getString(
-                            R.string.all_refer_url,
-                            milestoneData?.meta_data?.content_info?.referral_code
-                        )
+                        R.string.all_refer_url,
+                        milestoneData?.meta_data?.content_info?.referral_code
+                    )
                     )
                 ) {
                     Utils.pushProfileEvents(
@@ -353,7 +353,10 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
         }
         activity?.let {
             val uri =
-                Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/milestone.jpg")
+                Uri.parse(
+                    "file://" + BaseApplication.getAppContext().getExternalFilesDir(null) +
+                        File.separator + "milestone.jpg"
+                )
             if (AppUtils.shareImageWithInstagram(it, uri)) {
                 Utils.pushProfileEvents(
                     it, "CTA_IG_Share_Private_Milestone_Detail",
@@ -407,7 +410,7 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
         activity?.let {
             val username =
                 SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).first_name + " " +
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).last_name
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).last_name
             var contentType: String? = ""
             when (milestoneData?.item_type) {
                 AppConstants.CONTENT_TYPE_ARTICLE -> {
@@ -422,17 +425,20 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
                 else -> viewContentTextView.visibility = View.GONE
             }
             val uri =
-                Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/milestone.jpg")
+                Uri.parse(
+                    "file://" + BaseApplication.getAppContext().getExternalFilesDir(null) +
+                        File.separator + "milestone.jpg"
+                )
             if (AppConstants.CONTENT_TYPE_MYMONEY == milestoneData?.item_type) {
                 if (AppUtils.shareImageWithWhatsApp(
                         it, uri, getString(
-                            R.string.milestone_mm_share,
-                            milestoneData?.meta_data?.content_info?.payment_value?.toInt(),
-                            milestoneData?.meta_data?.content_info?.referral_code, getString(
-                                R.string.all_refer_url,
-                                milestoneData?.meta_data?.content_info?.referral_code
-                            )
-                        )
+                        R.string.milestone_mm_share,
+                        milestoneData?.meta_data?.content_info?.payment_value?.toInt(),
+                        milestoneData?.meta_data?.content_info?.referral_code, getString(
+                        R.string.all_refer_url,
+                        milestoneData?.meta_data?.content_info?.referral_code
+                    )
+                    )
                     )
                 ) {
                     Utils.pushProfileEvents(
@@ -443,13 +449,13 @@ class MilestonesDialogFragment : DialogFragment(), View.OnClickListener {
             } else {
                 if (AppUtils.shareImageWithWhatsApp(
                         it, uri, getString(
-                            R.string.milestones_share_text,
-                            username,
-                            contentType,
-                            milestoneData?.meta_data?.content_info?.title,
-                            milestoneData?.milestone_name,
-                            milestoneData?.milestone_sharing_url
-                        )
+                        R.string.milestones_share_text,
+                        username,
+                        contentType,
+                        milestoneData?.meta_data?.content_info?.title,
+                        milestoneData?.milestone_name,
+                        milestoneData?.milestone_sharing_url
+                    )
                     )
                 ) {
                     Utils.pushProfileEvents(

@@ -11,7 +11,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
 import android.util.Log
 import android.view.MenuItem
@@ -97,6 +96,7 @@ import com.mycity4kids.widget.BadgesProfileWidget
 import com.mycity4kids.widget.ResizableTextView
 import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
+import java.io.File
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import retrofit2.Call
@@ -1004,7 +1004,10 @@ class UserProfileActivity : BaseActivity(),
     private fun shareGenericImage() {
         try {
             val uri =
-                Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/profile.jpg")
+                Uri.parse(
+                    "file://" + BaseApplication.getAppContext().getExternalFilesDir(null) +
+                        File.separator + "profile.jpg"
+                )
             val shareText = getString(
                 R.string.profile_follow_author,
                 authorNameTextView.text.toString(),
@@ -1898,8 +1901,8 @@ class UserProfileActivity : BaseActivity(),
 
     private fun shareStory(tempName: String) {
         val uri = Uri.parse(
-            "file://" + Environment.getExternalStorageDirectory() +
-                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + tempName + ".jpg"
+            "file://" + BaseApplication.getAppContext().getExternalFilesDir(null) +
+                File.separator + AppConstants.STORY_SHARE_IMAGE_NAME + tempName + ".jpg"
         )
         when (shareMedium) {
             AppConstants.MEDIUM_FACEBOOK -> {

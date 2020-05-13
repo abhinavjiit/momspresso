@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
 import android.util.Log
 import android.view.MenuItem
@@ -33,6 +32,7 @@ import com.mycity4kids.utils.ToastUtils
 import com.mycity4kids.widget.ShareButtonWidget
 import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
+import java.io.File
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import org.apache.commons.lang3.text.WordUtils
@@ -207,8 +207,8 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
 
     private fun shareStory() {
         val uri = Uri.parse(
-            "file://" + Environment.getExternalStorageDirectory() +
-                "/MyCity4Kids/videos/" + AppConstants.STORY_SHARE_IMAGE_NAME + tempName + ".jpg"
+            "file://" + BaseApplication.getAppContext().getExternalFilesDir(null) +
+                File.separator + AppConstants.STORY_SHARE_IMAGE_NAME + tempName + ".jpg"
         )
         when (shareMedium) {
             AppConstants.MEDIUM_FACEBOOK -> {

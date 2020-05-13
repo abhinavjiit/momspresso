@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,14 +13,16 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.BadgeListResponse;
@@ -31,14 +32,10 @@ import com.mycity4kids.retrofitAPIsInterfaces.BadgeAPI;
 import com.mycity4kids.ui.adapter.BadgeListGridAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
-
+import com.mycity4kids.utils.StringUtils;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -51,28 +48,24 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
     private GridView gridview;
     private BadgeListGridAdapter adapter;
     private ArrayList<BadgeListResponse.BadgeListData.BadgeListResult> badgeList;
-    private int limit = 10;
     private int pageNumber = 1;
-    private boolean isLastPageReached = false;
-    private boolean isReuqestRunning = false;
-    private RelativeLayout mLodingView;
+    private RelativeLayout loadingView;
     private ProgressBar progressBar;
     private String userId;
     private TextView shareTextView;
-    private View mLayout;
+    private View rootLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_badge);
 
-        mLayout = findViewById(R.id.rootView);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        rootLayout = findViewById(R.id.rootView);
         gridview = (GridView) findViewById(R.id.gridview);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
+        loadingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         shareTextView = (TextView) findViewById(R.id.shareTextView);
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -102,8 +95,8 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
 
     private void getBadgeList() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        BadgeAPI badgeAPI = retrofit.create(BadgeAPI.class);
-        Call<BadgeListResponse> badgeListResponseCall = badgeAPI.getBadgeList(userId);
+        BadgeAPI badgeApi = retrofit.create(BadgeAPI.class);
+        Call<BadgeListResponse> badgeListResponseCall = badgeApi.getBadgeList(userId);
         badgeListResponseCall.enqueue(badgeListCall);
     }
 
@@ -111,19 +104,17 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
         @Override
         public void onResponse(Call<BadgeListResponse> call, retrofit2.Response<BadgeListResponse> response) {
             progressBar.setVisibility(View.GONE);
-            mLodingView.setVisibility(View.GONE);
+            loadingView.setVisibility(View.GONE);
             removeProgressDialog();
-            isReuqestRunning = false;
             if (response.body() == null) {
-                if (response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
-                }
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
                 return;
             }
             BadgeListResponse responseModel = response.body();
             if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
-                if (responseModel.getData() != null && !responseModel.getData().isEmpty() && responseModel.getData().get(0) != null) {
+                if (responseModel.getData() != null && !responseModel.getData().isEmpty()
+                        && responseModel.getData().get(0) != null) {
                     processResponse(responseModel.getData());
                 } else {
                     showToast(responseModel.getReason());
@@ -134,7 +125,7 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
         @Override
         public void onFailure(Call<BadgeListResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
-            mLodingView.setVisibility(View.GONE);
+            loadingView.setVisibility(View.GONE);
             removeProgressDialog();
             Crashlytics.logException(t);
             apiExceptions(t);
@@ -145,10 +136,7 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
     private void processResponse(List<BadgeListResponse.BadgeListData> data) {
         ArrayList<BadgeListResponse.BadgeListData.BadgeListResult> datalist = data.get(0).getResult();
         if (datalist == null || datalist.size() == 0) {
-            isLastPageReached = true;
-            if (null != badgeList && !badgeList.isEmpty()) {
-                // empty arraylist in subsequent api calls while pagination
-            } else {
+            if (null == badgeList || badgeList.isEmpty()) {
                 badgeList = datalist;
                 adapter.setDatalist(datalist);
                 adapter.notifyDataSetChanged();
@@ -169,8 +157,11 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.shareTextView:
-                if (badgeList.size() > 0)
+                if (badgeList.size() > 0) {
                     checkPermissionAndShareBadgeList();
+                }
+                break;
+            default:
                 break;
         }
     }
@@ -191,14 +182,9 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
     private void requestPermissions() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Snackbar.make(mLayout, R.string.permission_storage_rationale,
+            Snackbar.make(rootLayout, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            requestUngrantedPermissions();
-                        }
-                    })
+                    .setAction(R.string.ok, view -> requestUngrantedPermissions())
                     .show();
         } else {
             requestUngrantedPermissions();
@@ -211,15 +197,15 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull int[] grantResults) {
         if (requestCode == RC_STORAGE_PERM) {
             if (PermissionUtil.verifyPermissions(grantResults)) {
-                Snackbar.make(mLayout, R.string.permision_available_init,
+                Snackbar.make(rootLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
                         .show();
                 shareBadgeList();
             } else {
-                Snackbar.make(mLayout, R.string.permissions_not_granted,
+                Snackbar.make(rootLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
                         .show();
             }
@@ -230,7 +216,9 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
 
     private void shareBadgeList() {
         AppUtils.getBitmapFromView(gridview, FILENAME);
-        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/" + FILENAME + ".jpg");
+        Uri uri = Uri
+                .parse("file://" + BaseApplication.getAppContext().getExternalFilesDir(null) + File.separator + FILENAME
+                        + ".jpg");
         String shareUrl = getString(R.string.badges_list_share_text,
                 SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getFirst_name(),
                 "https://www.momspresso.com/user/" + userId + "/badges");
@@ -248,7 +236,7 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    public void onBadgeSelected(String image_url, String share_url, int position) {
+    public void onBadgeSelected(String imageUrl, String shareUrl, int position) {
         BadgesDialogFragment badgesDialogFragment = new BadgesDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.USER_ID, userId);
