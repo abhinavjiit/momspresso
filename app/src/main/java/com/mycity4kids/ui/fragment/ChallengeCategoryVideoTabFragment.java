@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
@@ -88,7 +88,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements O
                         retrofit2.Response<VlogsCategoryWiseChallengesResponse> response) {
                     if (null == response.body()) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         return;
                     }
                     if (response.isSuccessful()) {
@@ -98,7 +98,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements O
                                 processChallengesData(responseData.getData().getResult());
                             }
                         } catch (Exception e) {
-                            Crashlytics.logException(e);
+                            FirebaseCrashlytics.getInstance().recordException(e);
                             Log.d("MC4kException", Log.getStackTraceString(e));
                         }
                     }
@@ -154,7 +154,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements O
                     break;
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }

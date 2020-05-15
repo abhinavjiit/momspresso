@@ -2,21 +2,18 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.StringUtils;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.SearchResponse;
 import com.mycity4kids.models.response.SearchTopicResult;
@@ -24,9 +21,9 @@ import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.SearchAllActivity;
 import com.mycity4kids.ui.adapter.SearchTopicsListingAdapter;
-
+import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.utils.StringUtils;
 import java.util.ArrayList;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -34,7 +31,8 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant.parmar on 21-04-2016.
  */
-public class SearchAllTopicsTabFragment extends BaseFragment implements SearchTopicsListingAdapter.RecyclerViewClickListener {
+public class SearchAllTopicsTabFragment extends BaseFragment implements
+        SearchTopicsListingAdapter.RecyclerViewClickListener {
 
     private boolean isLastPageReached = true;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -50,7 +48,7 @@ public class SearchAllTopicsTabFragment extends BaseFragment implements SearchTo
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.search_common_tab_fragment, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -99,7 +97,6 @@ public class SearchAllTopicsTabFragment extends BaseFragment implements SearchTo
             }
         });
 
-
         return view;
     }
 
@@ -137,8 +134,9 @@ public class SearchAllTopicsTabFragment extends BaseFragment implements SearchTo
     public void searchTopicsAPI() {
 
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            if (isAdded())
+            if (isAdded()) {
                 ((SearchAllActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
+            }
             return;
         }
 
@@ -190,7 +188,7 @@ public class SearchAllTopicsTabFragment extends BaseFragment implements SearchTo
                 }
             } catch (Exception e) {
                 ((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -203,7 +201,7 @@ public class SearchAllTopicsTabFragment extends BaseFragment implements SearchTo
             if (getActivity() != null) {
                 ((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
             }
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };

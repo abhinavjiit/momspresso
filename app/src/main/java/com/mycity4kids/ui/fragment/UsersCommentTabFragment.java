@@ -9,16 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseFragment;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.parentingdetails.CommentsData;
@@ -29,9 +27,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.adapter.UsersCommentsRecycleAdapter;
 import com.mycity4kids.utils.ConnectivityUtils;
-
 import java.util.ArrayList;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -39,7 +35,8 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 3/8/17.
  */
-public class UsersCommentTabFragment extends BaseFragment implements UsersCommentsRecycleAdapter.RecyclerViewClickListener, AddEditCommentReplyDialogFragment.IAddCommentReply {
+public class UsersCommentTabFragment extends BaseFragment implements
+        UsersCommentsRecycleAdapter.RecyclerViewClickListener, AddEditCommentReplyDialogFragment.IAddCommentReply {
 
     private ArrayList<UserCommentsResult> commentsList;
     private String authorId;
@@ -57,7 +54,8 @@ public class UsersCommentTabFragment extends BaseFragment implements UsersCommen
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         View view = getActivity().getLayoutInflater().inflate(R.layout.users_comment_tab_fragment, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -121,7 +119,7 @@ public class UsersCommentTabFragment extends BaseFragment implements UsersCommen
             isReuqestRunning = false;
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
 //                showToast("Something went wrong from server");
                 return;
             }
@@ -133,7 +131,7 @@ public class UsersCommentTabFragment extends BaseFragment implements UsersCommen
 //                    showToast(responseData.getReason());
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
 //                showToast(getString(R.string.went_wrong));
             }
@@ -142,7 +140,7 @@ public class UsersCommentTabFragment extends BaseFragment implements UsersCommen
         @Override
         public void onFailure(Call<UserCommentsResponse> call, Throwable t) {
             mLodingView.setVisibility(View.GONE);
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -206,7 +204,8 @@ public class UsersCommentTabFragment extends BaseFragment implements UsersCommen
                         intent.putExtra(Constants.FROM_SCREEN, "PublicActivityScreen");
                     }
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                    intent.putExtra(Constants.AUTHOR, commentsList.get(position).getUserId() + "~" + commentsList.get(position).getUserName());
+                    intent.putExtra(Constants.AUTHOR,
+                            commentsList.get(position).getUserId() + "~" + commentsList.get(position).getUserName());
                     startActivity(intent);
                 }
                 break;
@@ -236,7 +235,7 @@ public class UsersCommentTabFragment extends BaseFragment implements UsersCommen
             commentFrag.show(fm, "Replies");
 
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }

@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
@@ -159,7 +159,7 @@ public class ContributorListAdapter extends BaseAdapter {
                         .placeholder(R.drawable.default_commentor_img).transform(new RoundedTransformation())
                         .into(holder.bloggerCover);
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 Picasso.get().load(R.drawable.blog_bgnew).fit().placeholder(R.drawable.blog_bgnew)
                         .transform(new RoundedTransformation()).into(holder.bloggerCover);

@@ -12,7 +12,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.utils.AppUtils
 
@@ -23,7 +23,11 @@ class ResizableTextView : CustomFontTextView {
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         init(context, attrs, defStyleAttr)
     }
 
@@ -34,42 +38,58 @@ class ResizableTextView : CustomFontTextView {
             try {
                 seeMore = activity as SeeMore
             } catch (e: ClassCastException) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
                 return
             }
         }
         this.userBio = userBio
 
-        viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 val obs = viewTreeObserver
                 val expandText = "See More"
                 obs.removeOnGlobalLayoutListener(this)
                 if (_maxLines == 0) {
                     val lineEndIndex = layout.getLineEnd(0)
-                    val text1 = text.subSequence(0, lineEndIndex - expandText.length + 1).toString() + " " + expandText
+                    val text1 = text.subSequence(
+                        0,
+                        lineEndIndex - expandText.length + 1
+                    ).toString() + " " + expandText
                     text = text1
                     movementMethod = LinkMovementMethod.getInstance()
                     setText(
-                            addClickablePartTextViewResizable(AppUtils.fromHtml(text.toString()), expandText,
-                                    userBio), BufferType.SPANNABLE)
+                        addClickablePartTextViewResizable(
+                            AppUtils.fromHtml(text.toString()), expandText,
+                            userBio
+                        ), BufferType.SPANNABLE
+                    )
                 } else if (_maxLines > 0 && lineCount > _maxLines) {
                     val lineEndIndex = layout.getLineEnd(_maxLines - 1)
                     if (lineEndIndex - expandText.length + 1 > 10) {
-                        val text1 = text.subSequence(0, lineEndIndex - expandText.length + 1).toString() + " " + expandText
+                        val text1 = text.subSequence(
+                            0,
+                            lineEndIndex - expandText.length + 1
+                        ).toString() + " " + expandText
                         text = text1
                         movementMethod = LinkMovementMethod.getInstance()
                         setText(
-                                addClickablePartTextViewResizable(AppUtils.fromHtml(text.toString()), expandText,
-                                        userBio), BufferType.SPANNABLE)
+                            addClickablePartTextViewResizable(
+                                AppUtils.fromHtml(text.toString()), expandText,
+                                userBio
+                            ), BufferType.SPANNABLE
+                        )
                     } else {
                         val text1 = text.subSequence(0, lineEndIndex).toString() + " " + expandText
                         text = text1
                         movementMethod = LinkMovementMethod.getInstance()
                         setText(
-                                addClickablePartTextViewResizable(AppUtils.fromHtml(text.toString()), expandText,
-                                        userBio), BufferType.SPANNABLE)
+                            addClickablePartTextViewResizable(
+                                AppUtils.fromHtml(text.toString()), expandText,
+                                userBio
+                            ), BufferType.SPANNABLE
+                        )
                     }
                 } else {
                 }

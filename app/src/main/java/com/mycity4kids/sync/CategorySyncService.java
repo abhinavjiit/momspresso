@@ -3,7 +3,7 @@ package com.mycity4kids.sync;
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -104,7 +104,7 @@ public class CategorySyncService extends IntentService {
 
                                                 @Override
                                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                                    Crashlytics.logException(t);
+                                                    FirebaseCrashlytics.getInstance().recordException(t);
                                                     Log.d("MC4kException", Log.getStackTraceString(t));
                                                 }
                                             });
@@ -141,7 +141,7 @@ public class CategorySyncService extends IntentService {
                                                 @Override
                                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                                                     Log.e("TAGA", "error");
-                                                    Crashlytics.logException(t);
+                                                    FirebaseCrashlytics.getInstance().recordException(t);
                                                     Log.d("MC4kException", Log.getStackTraceString(t));
                                                 }
                                             });
@@ -151,14 +151,14 @@ public class CategorySyncService extends IntentService {
                                 }
                             }
                         } catch (Exception e) {
-                            Crashlytics.logException(e);
+                            FirebaseCrashlytics.getInstance().recordException(e);
                             Log.d("MC4kException", Log.getStackTraceString(e));
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ConfigResponse> call, Throwable t) {
-                        Crashlytics.logException(t);
+                        FirebaseCrashlytics.getInstance().recordException(t);
                         Log.d("MC4kException", Log.getStackTraceString(t));
                     }
                 }

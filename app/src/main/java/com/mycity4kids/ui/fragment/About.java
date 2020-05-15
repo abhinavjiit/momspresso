@@ -1,5 +1,8 @@
 package com.mycity4kids.ui.fragment;
 
+import static com.mycity4kids.ui.rewards.fragment.RewardsPersonalInfoFragmentKt.REQUEST_SELECT_PLACE;
+
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -8,13 +11,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.widget.AppCompatSpinner;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,14 +22,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.crashlytics.android.Crashlytics;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
-import com.mycity4kids.utils.DateTimeUtils;
-import com.mycity4kids.utils.StringUtils;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
@@ -49,20 +47,18 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
 import com.mycity4kids.ui.activity.ChangePasswordActivity;
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter;
+import com.mycity4kids.utils.DateTimeUtils;
+import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.widget.KidsInfoNewCustomView;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
-
-import static com.mycity4kids.ui.rewards.fragment.RewardsPersonalInfoFragmentKt.REQUEST_SELECT_PLACE;
 
 public class About extends Fragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
@@ -97,7 +93,8 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.profile_about_layout, container, false);
         aboutEditText = (EditText) view.findViewById(R.id.aboutEditText);
         aboutprofilemaincontainer = (LinearLayout) view.findViewById(R.id.main_profile_About_layout);
@@ -123,7 +120,7 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
         genderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapter, View v,
-                                       int position, long id) {
+                    int position, long id) {
                 String item = adapter.getItemAtPosition(position).toString();
             }
 
@@ -219,7 +216,7 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
 
             childInfoContainer.addView(kidsInfo1);
         } catch (Exception ex) {
-            Crashlytics.logException(ex);
+            FirebaseCrashlytics.getInstance().recordException(ex);
             Log.d("MC4KException", Log.getStackTraceString(ex));
         }
     }
@@ -250,7 +247,8 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
                     fieldsArr.add(Place.Field.ID);
                     fieldsArr.add(Place.Field.NAME);
                     fieldsArr.add(Place.Field.LAT_LNG);
-                    Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fieldsArr).setTypeFilter(TypeFilter.CITIES)
+                    Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fieldsArr)
+                            .setTypeFilter(TypeFilter.CITIES)
                             .build(getActivity());
 
                     startActivityForResult(intent, REQUEST_SELECT_PLACE);
@@ -284,8 +282,10 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
     }
 
     private boolean validateKidsInfo() {
-        if (StringUtils.isNullOrEmpty(kidsDOBTextView.getText().toString()) || !DateTimeUtils.isValidDate(kidsDOBTextView.getText().toString())) {
-            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_incorrect_date), Toast.LENGTH_SHORT).show();
+        if (StringUtils.isNullOrEmpty(kidsDOBTextView.getText().toString()) || !DateTimeUtils
+                .isValidDate(kidsDOBTextView.getText().toString())) {
+            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_incorrect_date),
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -326,8 +326,10 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
             if (bdaytimestamp != 0) {
                 kmodel.setBirthDay(bdaytimestamp * 1000);
             } else {
-                if (isAdded())
-                    Toast.makeText(getActivity(), getString(R.string.complete_blogger_profile_incorrect_date), Toast.LENGTH_SHORT).show();
+                if (isAdded()) {
+                    Toast.makeText(getActivity(), getString(R.string.complete_blogger_profile_incorrect_date),
+                            Toast.LENGTH_SHORT).show();
+                }
                 return;
             }
             kmodel.setGender(ki.getGender());
@@ -374,8 +376,10 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
             if (bdaytimestamp != 0) {
                 kmodel.setBirthDay(bdaytimestamp * 1000);
             } else {
-                if (isAdded())
-                    Toast.makeText(getActivity(), getString(R.string.complete_blogger_profile_incorrect_date), Toast.LENGTH_SHORT).show();
+                if (isAdded()) {
+                    Toast.makeText(getActivity(), getString(R.string.complete_blogger_profile_incorrect_date),
+                            Toast.LENGTH_SHORT).show();
+                }
                 return;
             }
             kmodel.setGender(ki.getGender());
@@ -429,8 +433,10 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
             if (bdaytimestamp != 0) {
                 kmodel.setBirthDay(bdaytimestamp * 1000);
             } else {
-                if (isAdded())
-                    Toast.makeText(getActivity(), getString(R.string.complete_blogger_profile_incorrect_date), Toast.LENGTH_SHORT).show();
+                if (isAdded()) {
+                    Toast.makeText(getActivity(), getString(R.string.complete_blogger_profile_incorrect_date),
+                            Toast.LENGTH_SHORT).show();
+                }
                 return;
             }
             kmodel.setGender(ki.getGender());
@@ -486,14 +492,16 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
                         km.setGender(kidsModelArrayList.get(kidsModelArrayList.size() - 1).getGender());
                         addKidView(km, kidsModelArrayList.size());
                     }
-                    addNewKidTextView.setText(BaseApplication.getAppContext().getString(R.string.app_settings_edit_prefs_add));
+                    addNewKidTextView
+                            .setText(BaseApplication.getAppContext().getString(R.string.app_settings_edit_prefs_add));
                     kidNameEditText.setText("");
-                    kidsDOBTextView.setText(BaseApplication.getAppContext().getString(R.string.app_settings_edit_profile_dob));
+                    kidsDOBTextView
+                            .setText(BaseApplication.getAppContext().getString(R.string.app_settings_edit_profile_dob));
                 } else {
                     Toast.makeText(getActivity(), responseData.getReason(), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
                 if (isAdded()) {
                     Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
@@ -506,7 +514,7 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
             if (editKidInfoDialogFragment != null) {
                 editKidInfoDialogFragment.dismiss();
             }
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };
@@ -530,7 +538,8 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the current date as the default date in the picker
-            DatePickerDialog dlg = new DatePickerDialog(getActivity(), android.R.style.Theme_Holo_Light_Dialog_NoActionBar, this, curent_year, current_month, current_day);
+            DatePickerDialog dlg = new DatePickerDialog(getActivity(),
+                    android.R.style.Theme_Holo_Light_Dialog_NoActionBar, this, curent_year, current_month, current_day);
             dlg.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dlg.getDatePicker().setMaxDate(c.getTimeInMillis());
             return dlg;
@@ -552,8 +561,9 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
         boolean result = true;
 
         String currentime = "" + (System.currentTimeMillis() / 1000);
-        if (Integer.parseInt(currentime) < Integer.parseInt(convertDate(time)))
+        if (Integer.parseInt(currentime) < Integer.parseInt(convertDate(time))) {
             result = false;
+        }
 
         return result;
     }

@@ -8,11 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.RadioButton;
-
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.CityInfoItem;
-
 import java.util.ArrayList;
 
 /**
@@ -73,7 +71,7 @@ public class ChangeCityAdapter extends BaseAdapter {
                 holder.cityRadioButton.setChecked(false);
             }
         } catch (Exception ex) {
-            Crashlytics.logException(ex);
+            FirebaseCrashlytics.getInstance().recordException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));
         }
 
@@ -81,10 +79,12 @@ public class ChangeCityAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
+
         RadioButton cityRadioButton;
     }
 
     public interface IOtherCity {
+
         void onOtherCityAdd(String cityName);
     }
 }

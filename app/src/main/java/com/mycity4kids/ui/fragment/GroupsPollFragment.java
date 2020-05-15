@@ -1,5 +1,8 @@
 package com.mycity4kids.ui.fragment;
 
+import static android.app.Activity.RESULT_OK;
+
+
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,20 +18,18 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.internal.LinkedTreeMap;
-import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.GroupActionsPatchRequest;
@@ -55,23 +56,20 @@ import com.mycity4kids.ui.activity.GroupsEditPostActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.adapter.MyFeedPollGenericRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
-
 import okhttp3.ResponseBody;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-import static android.app.Activity.RESULT_OK;
-
-public class GroupsPollFragment extends BaseFragment implements MyFeedPollGenericRecyclerAdapter.RecyclerViewClickListener, GroupMembershipStatus.IMembershipStatus, View.OnClickListener {
+public class GroupsPollFragment extends BaseFragment implements
+        MyFeedPollGenericRecyclerAdapter.RecyclerViewClickListener, GroupMembershipStatus.IMembershipStatus,
+        View.OnClickListener {
 
     private static final int EDIT_POST_REQUEST_CODE = 1010;
     private boolean isRequestRunning = false;
@@ -99,12 +97,13 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         if (!SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getUserType().equals("1")) {
 
-
             if (getActivity().getWindow() != null) {
-                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+                getActivity().getWindow()
+                        .setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
             }
         }
         View fragmentView = inflater.inflate(R.layout.fragment_groupspoll, container, false);
@@ -151,7 +150,6 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
         pinPostTextView.setOnClickListener(this);
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
 
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -192,7 +190,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                 if (response != null && response.raw() != null) {
                     emptyListTextView.setVisibility(View.VISIBLE);
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -207,7 +205,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 emptyListTextView.setVisibility(View.VISIBLE);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
@@ -216,7 +214,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
         @Override
         public void onFailure(Call<GroupPostResponse> call, Throwable t) {
             isRequestRunning = false;
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -251,7 +249,8 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
 
     private void formatPostData(ArrayList<GroupPostResult> dataList) {
         for (int j = 0; j < dataList.size(); j++) {
-            if (dataList.get(j).getMediaUrls() != null && !((Map<String, String>) dataList.get(j).getMediaUrls()).isEmpty()) {
+            if (dataList.get(j).getMediaUrls() != null && !((Map<String, String>) dataList.get(j).getMediaUrls())
+                    .isEmpty()) {
                 if (((Map<String, String>) dataList.get(j).getMediaUrls()).get("audio") != null) {
                     dataList.get(j).setCommentType(AppConstants.COMMENT_TYPE_AUDIO);
                 }
@@ -270,19 +269,25 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                             break;
                         case "votesCount": {
                             for (int k = 0; k < dataList.get(j).getCounts().get(i).getCounts().size(); k++) {
-                                dataList.get(j).setTotalVotesCount(dataList.get(j).getTotalVotesCount() + dataList.get(j).getCounts().get(i).getCounts().get(k).getCount());
+                                dataList.get(j).setTotalVotesCount(
+                                        dataList.get(j).getTotalVotesCount() + dataList.get(j).getCounts().get(i)
+                                                .getCounts().get(k).getCount());
                                 switch (dataList.get(j).getCounts().get(i).getCounts().get(k).getName()) {
                                     case "option1":
-                                        dataList.get(j).setOption1VoteCount(dataList.get(j).getCounts().get(i).getCounts().get(k).getCount());
+                                        dataList.get(j).setOption1VoteCount(
+                                                dataList.get(j).getCounts().get(i).getCounts().get(k).getCount());
                                         break;
                                     case "option2":
-                                        dataList.get(j).setOption2VoteCount(dataList.get(j).getCounts().get(i).getCounts().get(k).getCount());
+                                        dataList.get(j).setOption2VoteCount(
+                                                dataList.get(j).getCounts().get(i).getCounts().get(k).getCount());
                                         break;
                                     case "option3":
-                                        dataList.get(j).setOption3VoteCount(dataList.get(j).getCounts().get(i).getCounts().get(k).getCount());
+                                        dataList.get(j).setOption3VoteCount(
+                                                dataList.get(j).getCounts().get(i).getCounts().get(k).getCount());
                                         break;
                                     case "option4":
-                                        dataList.get(j).setOption4VoteCount(dataList.get(j).getCounts().get(i).getCounts().get(k).getCount());
+                                        dataList.get(j).setOption4VoteCount(
+                                                dataList.get(j).getCounts().get(i).getCounts().get(k).getCount());
                                         break;
                                 }
                             }
@@ -311,8 +316,10 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                     }
 
                 }
-                if (data != null && data.getParcelableArrayListExtra("completeResponseList") != null && data.getIntExtra("postId", -1) != -1) {
-                    ArrayList<GroupPostCommentResult> completeCommentResponseList = data.getParcelableArrayListExtra("completeResponseList");
+                if (data != null && data.getParcelableArrayListExtra("completeResponseList") != null
+                        && data.getIntExtra("postId", -1) != -1) {
+                    ArrayList<GroupPostCommentResult> completeCommentResponseList = data
+                            .getParcelableArrayListExtra("completeResponseList");
                     int postId = data.getIntExtra("postId", -1);
 
                     for (int i = 0; i < postList.size(); i++) {
@@ -352,8 +359,10 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                 selectedPost.setContent(data.getStringExtra("updatedContent"));
                 myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();
             } else if (requestCode == 2222) {
-                if (data != null && data.getParcelableArrayListExtra("completeResponseList") != null && data.getIntExtra("postId", -1) != -1) {
-                    ArrayList<GroupPostCommentResult> completeCommentResponseList = data.getParcelableArrayListExtra("completeResponseList");
+                if (data != null && data.getParcelableArrayListExtra("completeResponseList") != null
+                        && data.getIntExtra("postId", -1) != -1) {
+                    ArrayList<GroupPostCommentResult> completeCommentResponseList = data
+                            .getParcelableArrayListExtra("completeResponseList");
                     int postId = data.getIntExtra("postId", -1);
 
                     for (int i = 0; i < postList.size(); i++) {
@@ -377,7 +386,8 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                 Intent intent = new Intent(getActivity(), GroupPostDetailActivity.class);
                 intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
                 intent.putExtra("postData", postList.get(position));
-                LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(position).getPollOptions();
+                LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(position)
+                        .getPollOptions();
                 intent.putExtra("pollOptions", linkedTreeMap);
                 intent.putExtra("postId", postList.get(position).getId());
                 intent.putExtra("groupId", postList.get(position).getGroupId());
@@ -387,7 +397,8 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
             case R.id.group_name:
 //                getGroupDetails(postList.get(position).getGroupId());
                 GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
-                groupMembershipStatus.checkMembershipStatus(postList.get(position).getGroupId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                groupMembershipStatus.checkMembershipStatus(postList.get(position).getGroupId(),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 break;
             case R.id.postSettingImageView:
                 selectedPost = postList.get(position);
@@ -416,7 +427,11 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                 }
                 break;
             case R.id.shareTextView:
-                Utils.groupsEvent(getActivity(), "Groups_Discussion_# comment", "Share", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "sharing options", "", postList.get(position).getId() + "");
+                Utils.groupsEvent(getActivity(), "Groups_Discussion_# comment", "Share", "android",
+                        SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        String.valueOf(System.currentTimeMillis()), "sharing options", "",
+                        postList.get(position).getId() + "");
 
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
@@ -427,9 +442,12 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                 break;
             case R.id.upvoteCommentContainer:
             case R.id.upvoteContainer:
-                Utils.groupsEvent(getActivity(), "Groups_Discussion", "Helpful", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postList.get(position).getGroupId()));
+                Utils.groupsEvent(getActivity(), "Groups_Discussion", "Helpful", "android",
+                        SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        String.valueOf(System.currentTimeMillis()), "click", "",
+                        String.valueOf(postList.get(position).getGroupId()));
                 if (postList.get(position).getMarkedHelpful() == 0) {
-
 
                     markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
 
@@ -441,7 +459,11 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                 }
                 break;
             case R.id.downvoteContainer:
-                Utils.groupsEvent(getActivity(), "Groups_Discussion", "not helpful", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postList.get(position).getGroupId()));
+                Utils.groupsEvent(getActivity(), "Groups_Discussion", "not helpful", "android",
+                        SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        String.valueOf(System.currentTimeMillis()), "click", "",
+                        String.valueOf(postList.get(position).getGroupId()));
 
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
                 break;
@@ -479,15 +501,19 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                             JSONObject jObject = new JSONObject(errorBody);
                             JSONArray dataArray = jObject.optJSONArray("data");
                             if (dataArray != null) {
-                                if (dataArray.getJSONObject(0).get("type").equals(dataArray.getJSONObject(1).get("type"))) {
+                                if (dataArray.getJSONObject(0).get("type")
+                                        .equals(dataArray.getJSONObject(1).get("type"))) {
                                     //Same Action Event
                                     if ("0".equals(dataArray.getJSONObject(0).get("type"))) {
-                                        Toast.makeText(getActivity(), "already marked unhelpful", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), "already marked unhelpful", Toast.LENGTH_SHORT)
+                                                .show();
                                     } else {
-                                        Toast.makeText(getActivity(), "already marked helpful", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), "already marked helpful", Toast.LENGTH_SHORT)
+                                                .show();
                                     }
                                 } else {
-                                    if (dataArray.getJSONObject(0).has("id") && !dataArray.getJSONObject(0).isNull("id")) {
+                                    if (dataArray.getJSONObject(0).has("id") && !dataArray.getJSONObject(0)
+                                            .isNull("id")) {
                                         patchActionId = dataArray.getJSONObject(0).getInt("id");
                                         patchActionType = dataArray.getJSONObject(1).getString("type");
                                     } else {
@@ -511,7 +537,8 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                     GroupsActionResponse groupsActionResponse = response.body();
                     if (groupsActionResponse.getData().getResult().size() == 1) {
                         for (int i = 0; i < postList.size(); i++) {
-                            if (postList.get(i).getId() == groupsActionResponse.getData().getResult().get(0).getPostId()) {
+                            if (postList.get(i).getId() == groupsActionResponse.getData().getResult().get(0)
+                                    .getPostId()) {
                                 if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
                                     postList.get(i).setHelpfullCount(postList.get(i).getHelpfullCount() + 1);
                                     postList.get(i).setMarkedHelpful(1);
@@ -531,14 +558,14 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -561,7 +588,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -570,7 +597,8 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                     GroupsActionResponse groupsActionResponse = response.body();
                     if (groupsActionResponse.getData().getResult().size() == 1) {
                         for (int i = 0; i < postList.size(); i++) {
-                            if (postList.get(i).getId() == groupsActionResponse.getData().getResult().get(0).getPostId()) {
+                            if (postList.get(i).getId() == groupsActionResponse.getData().getResult().get(0)
+                                    .getPostId()) {
                                 if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
                                     postList.get(i).setHelpfullCount(postList.get(i).getHelpfullCount() + 1);
                                     postList.get(i).setNotHelpfullCount(postList.get(i).getNotHelpfullCount() - 1);
@@ -592,7 +620,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -606,13 +634,14 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
 
     private Callback<UserPostSettingResponse> userPostSettingResponseCallback = new Callback<UserPostSettingResponse>() {
         @Override
-        public void onResponse(Call<UserPostSettingResponse> call, retrofit2.Response<UserPostSettingResponse> response) {
+        public void onResponse(Call<UserPostSettingResponse> call,
+                retrofit2.Response<UserPostSettingResponse> response) {
             progressBar.setVisibility(View.GONE);
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -630,7 +659,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
 //                showToast(getString(R.string.went_wrong));
             }
@@ -640,7 +669,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
         public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -676,7 +705,8 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
         }
 
         //No existing settings for this post for this user
-        if (userPostSettingResponse.getData().get(0).getResult() == null || userPostSettingResponse.getData().get(0).getResult().size() == 0) {
+        if (userPostSettingResponse.getData().get(0).getResult() == null
+                || userPostSettingResponse.getData().get(0).getResult().size() == 0) {
             savePostTextView.setText(getString(R.string.groups_save_post));
             notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
             currentPostPrefsForUser = null;
@@ -725,7 +755,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -737,14 +767,14 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupPostResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -766,7 +796,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -784,7 +814,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
 //                showToast(getString(R.string.went_wrong));
             }
@@ -792,7 +822,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
 
         @Override
         public void onFailure(Call<GroupPostResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -837,7 +867,8 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                 request.setIsBookmarked(currentPostPrefsForUser.getIsBookmarked());
                 request.setNotificationOff(0);
             }
-            Call<UserPostSettingResponse> call = groupsAPI.updatePostSettingsForUser(currentPostPrefsForUser.getId(), request);
+            Call<UserPostSettingResponse> call = groupsAPI
+                    .updatePostSettingsForUser(currentPostPrefsForUser.getId(), request);
             call.enqueue(updatePostSettingForUserResponseCallback);
         }
 
@@ -850,7 +881,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -874,7 +905,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
 //                showToast(getString(R.string.went_wrong));
             }
@@ -888,11 +919,12 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
 
     private Callback<UserPostSettingResponse> updatePostSettingForUserResponseCallback = new Callback<UserPostSettingResponse>() {
         @Override
-        public void onResponse(Call<UserPostSettingResponse> call, retrofit2.Response<UserPostSettingResponse> response) {
+        public void onResponse(Call<UserPostSettingResponse> call,
+                retrofit2.Response<UserPostSettingResponse> response) {
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -914,7 +946,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
 //                showToast(getString(R.string.went_wrong));
             }
@@ -970,11 +1002,12 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
 
     private Callback<GroupsMembershipResponse> getMembershipDetailsReponseCallback = new Callback<GroupsMembershipResponse>() {
         @Override
-        public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
+        public void onResponse(Call<GroupsMembershipResponse> call,
+                retrofit2.Response<GroupsMembershipResponse> response) {
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -987,31 +1020,34 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                     UpdateGroupMembershipRequest updateGroupMembershipRequest = new UpdateGroupMembershipRequest();
                     updateGroupMembershipRequest.setUserId(selectedPost.getUserId());
                     updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED);
-                    Call<GroupsMembershipResponse> call1 = groupsAPI.updateMember(membershipResponse.getData().getResult().get(0).getId(), updateGroupMembershipRequest);
+                    Call<GroupsMembershipResponse> call1 = groupsAPI
+                            .updateMember(membershipResponse.getData().getResult().get(0).getId(),
+                                    updateGroupMembershipRequest);
                     call1.enqueue(updateGroupMembershipResponseCallback);
                 } else {
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
     private Callback<GroupsMembershipResponse> updateGroupMembershipResponseCallback = new Callback<GroupsMembershipResponse>() {
         @Override
-        public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
+        public void onResponse(Call<GroupsMembershipResponse> call,
+                retrofit2.Response<GroupsMembershipResponse> response) {
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -1023,14 +1059,14 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -1041,7 +1077,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -1070,14 +1106,14 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupPostResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -1096,13 +1132,17 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
             }
         }
 
-        if (!AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(userType) && !AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(userType)) {
-            if ("male".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender()) ||
-                    "m".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())) {
+        if (!AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(userType) && !AppConstants.GROUP_MEMBER_TYPE_ADMIN
+                .equals(userType)) {
+            if ("male".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())
+                    ||
+                    "m".equalsIgnoreCase(
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())) {
                 if (isAdded()) {
                     Toast.makeText(getActivity(), getString(R.string.women_only), Toast.LENGTH_SHORT).show();
                 }
-                if (BuildConfig.DEBUG || AppConstants.DEBUGGING_USER_ID.contains(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
+                if (BuildConfig.DEBUG || AppConstants.DEBUGGING_USER_ID
+                        .contains(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
 
                 } else {
                     return;
@@ -1118,14 +1158,16 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {
-            if (isAdded())
+            if (isAdded()) {
                 Toast.makeText(getActivity(), getString(R.string.groups_user_blocked_msg), Toast.LENGTH_SHORT).show();
+            }
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
             Intent intent = new Intent(getActivity(), GroupDetailsActivity.class);
             intent.putExtra("groupId", groupId);
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
-        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION
+                .equals(body.getData().getResult().get(0).getStatus())) {
             Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
             intent.putExtra("groupId", groupId);
             intent.putExtra("pendingMembershipFlag", true);

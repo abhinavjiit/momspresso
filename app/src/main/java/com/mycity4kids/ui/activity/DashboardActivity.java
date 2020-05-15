@@ -37,12 +37,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
@@ -284,7 +284,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         try {
             frequency = Integer.parseInt(firebaseRemoteConfig.getString(UPDATE_APP_FREQUENCY_KEY));
         } catch (NumberFormatException e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         Intent intent = getIntent();
@@ -677,12 +677,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         if (Constants.PROFILE_FRAGMENT.equals(fragmentToLoad)) {
             Intent profileIntent = new Intent(this, UserProfileActivity.class);
             Bundle notificationExtras = getIntent().getParcelableExtra("notificationExtras");
-            profileIntent.putExtra(Constants.USER_ID,
-                    SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-            profileIntent.putExtra(AppConstants.BADGE_ID,
-                    notificationExtras.getString(AppConstants.BADGE_ID));
-            profileIntent.putExtra(AppConstants.MILESTONE_ID,
-                    notificationExtras.getString(AppConstants.MILESTONE_ID));
+            if (notificationExtras != null) {
+                profileIntent.putExtra(Constants.USER_ID,
+                        SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+                profileIntent.putExtra(AppConstants.BADGE_ID,
+                        notificationExtras.getString(AppConstants.BADGE_ID));
+                profileIntent.putExtra(AppConstants.MILESTONE_ID,
+                        notificationExtras.getString(AppConstants.MILESTONE_ID));
+            }
             startActivity(profileIntent);
         } else if (Constants.SUGGESTED_TOPICS_FRAGMENT.equals(fragmentToLoad)) {
             Intent suggestedIntent = new Intent(this, SuggestedTopicsActivity.class);
@@ -783,14 +785,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     }
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             apiExceptions(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
@@ -805,7 +807,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(
                         response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 createLabelTextView.setVisibility(View.VISIBLE);
                 createTextImageVIew.setVisibility(View.VISIBLE);
                 return;
@@ -882,7 +884,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     showToast(jsonObject.getString("reason"));
                 }
             } catch (JSONException jsonexception) {
-                Crashlytics.logException(jsonexception);
+                FirebaseCrashlytics.getInstance().recordException(jsonexception);
                 Log.d("JSONException", Log.getStackTraceString(jsonexception));
                 showToast("Something went wrong while parsing response from server");
             } catch (IOException e) {
@@ -892,7 +894,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
             apiExceptions(t);
             draftsShimmerLayout.setVisibility(View.GONE);
@@ -926,7 +928,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                     .get(key) : "NULL"));
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
             }
             String notificationType = notificationExtras.getString("type");
@@ -1561,7 +1563,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
             }
         } catch (FileNotFoundException e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsApi = retro.create(TopicsCategoryAPI.class);
@@ -1617,23 +1619,23 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             }
                         }
                     } catch (FileNotFoundException e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4KException", Log.getStackTraceString(e));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     apiExceptions(t);
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
             });
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4KException", Log.getStackTraceString(e));
         }
     }
@@ -1658,7 +1660,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(intent);
             } catch (Exception e) {
                 removeProgressDialog();
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
 
@@ -1667,7 +1669,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         @Override
         public void onFailure(Call<ShortStoryDetailResult> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             apiExceptions(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
@@ -1691,7 +1693,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(
                         response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             BlogPageResponse responseModel = response.body();
@@ -2189,7 +2191,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             public void onFailure(Call<DeepLinkingResposnse> call, Throwable t) {
                 removeProgressDialog();
                 showToast(getString(R.string.server_went_wrong));
-                Crashlytics.logException(t);
+                FirebaseCrashlytics.getInstance().recordException(t);
                 apiExceptions(t);
                 Log.d("MC4kException", Log.getStackTraceString(t));
             }
@@ -2745,7 +2747,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 return true;
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         return false;

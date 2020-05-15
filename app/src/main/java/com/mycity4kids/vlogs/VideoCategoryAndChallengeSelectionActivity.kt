@@ -17,8 +17,8 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.crashlytics.android.Crashlytics
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
@@ -113,7 +113,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
         override fun onResponse(call: Call<Topics>, response: Response<Topics>) {
             if (null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
-                Crashlytics.logException(nee)
+                FirebaseCrashlytics.getInstance().recordException(nee)
                 return
             }
             if (response.isSuccessful) {
@@ -125,7 +125,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
                         processTopicsData(it)
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d(
                         "MC4kException", Log.getStackTraceString(e)
                     )
@@ -134,7 +134,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
         }
 
         override fun onFailure(call: Call<Topics>, t: Throwable) {
-            Crashlytics.logException(t)
+            FirebaseCrashlytics.getInstance().recordException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
         }
     }
@@ -147,7 +147,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
             ) {
                 if (null == response.body()) {
                     val nee = NetworkErrorException(response.raw().toString())
-                    Crashlytics.logException(nee)
+                    FirebaseCrashlytics.getInstance().recordException(nee)
                     return
                 }
                 if (response.isSuccessful) {
@@ -167,7 +167,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
                             }
                         }
                     } catch (e: Exception) {
-                        Crashlytics.logException(e)
+                        FirebaseCrashlytics.getInstance().recordException(e)
                         Log.d(
                             "MC4kException", Log.getStackTraceString(e)
                         )
@@ -176,7 +176,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
             }
 
             override fun onFailure(call: Call<VlogsCategoryWiseChallengesResponse>, t: Throwable) {
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
@@ -224,7 +224,7 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
                 duration = selectedCategory?.extraData?.get(0)?.max_duration!!
             }
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d(
                 "MC4kException", Log.getStackTraceString(e)
             )

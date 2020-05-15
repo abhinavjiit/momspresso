@@ -26,8 +26,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.MessageEvent;
 import com.mycity4kids.R;
@@ -141,7 +141,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 campaignId = data.getString("campaign_id");
                 url = data.getString("url");
             } catch (JSONException e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         });
@@ -151,7 +151,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 Snackbar snackbar = showCustomSnackbar();
                 snackbar.show();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         });
@@ -214,7 +214,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "article_details");
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase("momsights_screen")) {
@@ -227,7 +227,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "momsights_screen");
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase("campaign_listing")) {
@@ -241,7 +241,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "campaign_listing");
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase("campaign_detail")) {
@@ -257,7 +257,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "campaign_detail");
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase("campaign_submit_proof")) {
@@ -272,7 +272,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "campaign_submit_proof");
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase("mymoney_bankdetails")) {
@@ -290,7 +290,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "campaign_submit_proof");
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase("mymoney_pancard")) {
@@ -308,7 +308,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "campaign_submit_proof");
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase("shortStoryDetails")) {
@@ -329,7 +329,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "shortStoryDetails");
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase("video_details")) {
@@ -347,7 +347,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "video_details");
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase("group_membership")
@@ -364,7 +364,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "" + type);
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase("group_new_response")) {
@@ -380,7 +380,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "group_new_response");
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase("group_new_reply")) {
@@ -396,7 +396,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "group_new_reply");
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase("group_admin_membership")) {
@@ -410,7 +410,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "group_admin_membership");
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase("group_admin_reported")) {
@@ -424,7 +424,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "group_admin_reported");
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase("webView")) {
@@ -439,7 +439,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "webView");
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase("write_blog")) {
@@ -450,7 +450,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "write_blog");
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase("profile")) {
@@ -467,7 +467,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "profile");
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase("upcoming_event_list")) {
@@ -478,7 +478,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "upcoming_event_list");
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase("suggested_topics")) {
@@ -489,7 +489,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "suggested_topics");
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase(AppConstants.APP_SETTINGS_DEEPLINK)) {
@@ -504,7 +504,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", AppConstants.APP_SETTINGS_DEEPLINK);
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase("shortStoryListing")) {
@@ -515,7 +515,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "shortStoryListing");
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else if (type.equalsIgnoreCase("group_listing")) {
@@ -526,7 +526,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 jsonObject.put("type", "group_listing");
                 dialog.dismiss();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -604,7 +604,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                     ft.commit();
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         });
@@ -627,7 +627,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                     ft.commit();
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         });
@@ -648,7 +648,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                     ft.commit();
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         });
@@ -680,7 +680,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                     ft.commit();
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         });
@@ -754,7 +754,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
@@ -795,7 +795,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
             try {
                 progressDialog.show();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -807,7 +807,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
                 progressDialog.dismiss();
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
@@ -858,7 +858,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GroupMem
         } else {
             showToast(getString(R.string.server_went_wrong));
         }
-        Crashlytics.logException(t);
+        FirebaseCrashlytics.getInstance().recordException(t);
         Log.d("MC4kException", Log.getStackTraceString(t));
     }
 }

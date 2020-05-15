@@ -22,11 +22,11 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.DialogFragment
-import com.crashlytics.android.Crashlytics
 import com.facebook.share.model.ShareLinkContent
 import com.facebook.share.widget.ShareDialog
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -152,7 +152,7 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
                     badgesShimmerContainer.visibility = View.GONE
                     if (response.body() == null) {
                         val nee = NetworkErrorException(response.raw().toString())
-                        Crashlytics.logException(nee)
+                        FirebaseCrashlytics.getInstance().recordException(nee)
                         return
                     }
                     val responseModel = response.body() as BadgeListResponse
@@ -163,14 +163,14 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
                         }
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onFailure(call: Call<BadgeListResponse>, t: Throwable) {
                 badgesShimmerContainer.visibility = View.GONE
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 activity?.let {
                     (it as BaseActivity).apiExceptions(t)
                 }
@@ -400,7 +400,7 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
         try {
             AppUtils.getBitmapFromView(badgesSharableCard, sharableBadgeImageName)
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
             return true
         }
@@ -469,7 +469,7 @@ class BadgesDialogFragment : DialogFragment(), View.OnClickListener {
                         }
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             } else {

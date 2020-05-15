@@ -2,8 +2,6 @@ package com.mycity4kids.ui.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -14,8 +12,8 @@ import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.crashlytics.android.Crashlytics;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -29,6 +27,7 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
@@ -42,7 +41,6 @@ import com.mycity4kids.ui.activity.RankingActivity;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.widget.MyMarkerView;
 import com.mycity4kids.widget.PageViewsDatePickerFragment;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,7 +48,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -58,7 +55,8 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 28/7/17.
  */
-public class RankingStatsTabFragment extends BaseFragment implements OnChartGestureListener, OnChartValueSelectedListener, View.OnClickListener, PageViewsDatePickerFragment.IDateSelection {
+public class RankingStatsTabFragment extends BaseFragment implements OnChartGestureListener,
+        OnChartValueSelectedListener, View.OnClickListener, PageViewsDatePickerFragment.IDateSelection {
 
     private static String userId;
     private LineChart mChart;
@@ -87,7 +85,8 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.ranking_stats_tab_fragment, container, false);
 
 //        daysCountTextView = (TextView) view.findViewById(R.id.daysCount);
@@ -206,7 +205,8 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
         toCal.getTimeInMillis();
         init_to_date = new SimpleDateFormat("dd-MM-yyyy").format(toCal.getTime());
 
-        Call<BloggerAnalyticsResponse> callAnalytics = bloggerDashboardAPI.getAnalyticsReport(userId, "" + fromCal.getTimeInMillis() / 1000, "" + toCal.getTimeInMillis() / 1000);
+        Call<BloggerAnalyticsResponse> callAnalytics = bloggerDashboardAPI
+                .getAnalyticsReport(userId, "" + fromCal.getTimeInMillis() / 1000, "" + toCal.getTimeInMillis() / 1000);
         callAnalytics.enqueue(analyticsResponseListener);
     }
 
@@ -260,7 +260,8 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
 
     private Callback<BloggerAnalyticsResponse> analyticsResponseListener = new Callback<BloggerAnalyticsResponse>() {
         @Override
-        public void onResponse(Call<BloggerAnalyticsResponse> call, retrofit2.Response<BloggerAnalyticsResponse> response) {
+        public void onResponse(Call<BloggerAnalyticsResponse> call,
+                retrofit2.Response<BloggerAnalyticsResponse> response) {
             if (response == null || null == response.body()) {
 //                showToast("Something went wrong from server");
                 return;
@@ -271,19 +272,22 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
                     if (null == responseData.getData().getSocial().getLikes()) {
                         likesCountTextView.setText("0" + " " + getString(R.string.ranking_stats_like));
                     } else {
-                        likesCountTextView.setText(responseData.getData().getSocial().getLikes() + " " + getString(R.string.ranking_stats_like));
+                        likesCountTextView.setText(responseData.getData().getSocial().getLikes() + " " + getString(
+                                R.string.ranking_stats_like));
                     }
 
                     if (null == responseData.getData().getSocial().getShare()) {
                         shareCountTextView.setText("0" + " " + getString(R.string.ranking_stats_shares));
                     } else {
-                        shareCountTextView.setText(responseData.getData().getSocial().getShare() + " " + getString(R.string.ranking_stats_shares));
+                        shareCountTextView.setText(responseData.getData().getSocial().getShare() + " " + getString(
+                                R.string.ranking_stats_shares));
                     }
 
                     if (null == responseData.getData().getSocial().getComment()) {
                         commentsCountTextView.setText("0" + " " + getString(R.string.ranking_stats_comments));
                     } else {
-                        commentsCountTextView.setText(responseData.getData().getSocial().getComment() + " " + getString(R.string.ranking_stats_comments));
+                        commentsCountTextView.setText(responseData.getData().getSocial().getComment() + " " + getString(
+                                R.string.ranking_stats_comments));
                     }
 
                     int totalViews = 0;
@@ -306,14 +310,14 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
                     }
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<BloggerAnalyticsResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -330,7 +334,8 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
         return datesList;
     }
 
-    public void changeDataset(BloggerAnalyticsResponse bloggerAnalyticsResponse, final List<String> dList, String viewsDateType) {
+    public void changeDataset(BloggerAnalyticsResponse bloggerAnalyticsResponse, final List<String> dList,
+            String viewsDateType) {
 
         ArrayList<BloggerAnalyticsViews> list = bloggerAnalyticsResponse.getData().getViews();
         if (null == list || list.isEmpty()) {
@@ -432,7 +437,8 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
 
     private Callback<BloggerAnalyticsResponse> analyticsResponseListener1 = new Callback<BloggerAnalyticsResponse>() {
         @Override
-        public void onResponse(Call<BloggerAnalyticsResponse> call, retrofit2.Response<BloggerAnalyticsResponse> response) {
+        public void onResponse(Call<BloggerAnalyticsResponse> call,
+                retrofit2.Response<BloggerAnalyticsResponse> response) {
             if (response == null || null == response.body()) {
                 return;
             }
@@ -447,14 +453,14 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
                     }
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<BloggerAnalyticsResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -517,7 +523,7 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
                 break;
             case R.id.fromDateTextView: {
                 PageViewsDatePickerFragment fromFragment = new PageViewsDatePickerFragment();
-     //          fromFragment.setTargetFragment(this, 0);
+                //          fromFragment.setTargetFragment(this, 0);
                 Bundle b1 = new Bundle();
                 b1.putString("type", "from");
                 fromFragment.setArguments(b1);
@@ -526,7 +532,7 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
             break;
             case R.id.toDateTextView: {
                 PageViewsDatePickerFragment toFragment = new PageViewsDatePickerFragment();
-    //           toFragment.setTargetFragment(this, 0);
+                //           toFragment.setTargetFragment(this, 0);
                 Bundle b1 = new Bundle();
                 b1.putString("type", "to");
                 toFragment.setArguments(b1);

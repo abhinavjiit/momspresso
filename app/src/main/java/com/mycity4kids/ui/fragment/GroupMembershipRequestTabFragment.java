@@ -2,18 +2,17 @@ package com.mycity4kids.ui.fragment;
 
 import android.accounts.NetworkErrorException;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseFragment;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
@@ -21,9 +20,7 @@ import com.mycity4kids.models.response.GroupsMembershipResult;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.activity.GroupMembershipActivity;
 import com.mycity4kids.ui.adapter.GroupsMembershipRequestRecyclerAdapter;
-
 import java.util.ArrayList;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -32,7 +29,8 @@ import retrofit2.Retrofit;
  * Created by hemant on 26/7/18.
  */
 
-public class GroupMembershipRequestTabFragment extends BaseFragment implements GroupsMembershipRequestRecyclerAdapter.RecyclerViewClickListener {
+public class GroupMembershipRequestTabFragment extends BaseFragment implements
+        GroupsMembershipRequestRecyclerAdapter.RecyclerViewClickListener {
 
     private int nextPageNumber = 1;
     private int totalPostCount;
@@ -49,7 +47,8 @@ public class GroupMembershipRequestTabFragment extends BaseFragment implements G
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.group_membership_request_tab_fragment, null);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -92,17 +91,19 @@ public class GroupMembershipRequestTabFragment extends BaseFragment implements G
     private void getAllPendingMembersForGroup() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-        Call<GroupsMembershipResponse> call = groupsAPI.getGroupMembersByStatus(groupId, AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION, skip, limit);
+        Call<GroupsMembershipResponse> call = groupsAPI
+                .getGroupMembersByStatus(groupId, AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION, skip, limit);
         call.enqueue(memberShipReponseCallback);
     }
 
     private Callback<GroupsMembershipResponse> memberShipReponseCallback = new Callback<GroupsMembershipResponse>() {
         @Override
-        public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
+        public void onResponse(Call<GroupsMembershipResponse> call,
+                retrofit2.Response<GroupsMembershipResponse> response) {
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -114,7 +115,7 @@ public class GroupMembershipRequestTabFragment extends BaseFragment implements G
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
 //                showToast(getString(R.string.went_wrong));
             }
@@ -128,7 +129,8 @@ public class GroupMembershipRequestTabFragment extends BaseFragment implements G
 
     private void processGroupsPendingMembers(GroupsMembershipResponse responseModel) {
         totalPostCount = responseModel.getTotal();
-        ArrayList<GroupsMembershipResult> dataList = (ArrayList<GroupsMembershipResult>) responseModel.getData().getResult();
+        ArrayList<GroupsMembershipResult> dataList = (ArrayList<GroupsMembershipResult>) responseModel.getData()
+                .getResult();
         if (dataList.size() == 0) {
             isLastPageReached = false;
             if (null != membersList && !membersList.isEmpty()) {
@@ -165,7 +167,8 @@ public class GroupMembershipRequestTabFragment extends BaseFragment implements G
                 UpdateGroupMembershipRequest updateGroupMembershipRequest = new UpdateGroupMembershipRequest();
                 updateGroupMembershipRequest.setUserId(membersList.get(position).getUserId());
                 updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER);
-                Call<GroupsMembershipResponse> call1 = groupsAPI.updateMember(membersList.get(position).getId(), updateGroupMembershipRequest);
+                Call<GroupsMembershipResponse> call1 = groupsAPI
+                        .updateMember(membersList.get(position).getId(), updateGroupMembershipRequest);
                 call1.enqueue(updateGroupMembershipResponseCallback);
             }
             break;
@@ -174,7 +177,8 @@ public class GroupMembershipRequestTabFragment extends BaseFragment implements G
                 UpdateGroupMembershipRequest updateGroupMembershipRequest = new UpdateGroupMembershipRequest();
                 updateGroupMembershipRequest.setUserId(membersList.get(position).getUserId());
                 updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_REJECTED);
-                Call<GroupsMembershipResponse> call1 = groupsAPI.updateMember(membersList.get(position).getId(), updateGroupMembershipRequest);
+                Call<GroupsMembershipResponse> call1 = groupsAPI
+                        .updateMember(membersList.get(position).getId(), updateGroupMembershipRequest);
                 call1.enqueue(updateGroupMembershipResponseCallback);
             }
             break;
@@ -183,12 +187,13 @@ public class GroupMembershipRequestTabFragment extends BaseFragment implements G
 
     private Callback<GroupsMembershipResponse> updateGroupMembershipResponseCallback = new Callback<GroupsMembershipResponse>() {
         @Override
-        public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
+        public void onResponse(Call<GroupsMembershipResponse> call,
+                retrofit2.Response<GroupsMembershipResponse> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -207,7 +212,7 @@ public class GroupMembershipRequestTabFragment extends BaseFragment implements G
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
 //                showToast(getString(R.string.went_wrong));
             }
@@ -216,7 +221,7 @@ public class GroupMembershipRequestTabFragment extends BaseFragment implements G
         @Override
         public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };

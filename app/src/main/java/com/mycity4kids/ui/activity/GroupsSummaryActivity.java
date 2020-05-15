@@ -14,7 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.internal.LinkedTreeMap;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
@@ -140,7 +140,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -158,14 +158,14 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                     getGroupPosts();
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupDetailResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -182,7 +182,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
         public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -191,14 +191,14 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                     processPostListingResponse(groupPostResponse);
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupPostResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -360,7 +360,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                             }
                         }
                     } catch (IOException | JSONException e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 } else if (response.code() == 409) {
@@ -385,7 +385,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                             call1.enqueue(groupRejoinResponseCallback);
                         }
                     } catch (IOException | JSONException e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -415,7 +415,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                     }
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -423,7 +423,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
         @Override
         public void onFailure(Call<BaseResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -435,7 +435,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
             progressBar.setVisibility(View.GONE);
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -461,7 +461,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                     }
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -469,7 +469,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
         @Override
         public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -491,7 +491,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                         retrofit2.Response<GroupsMembershipResponse> response) {
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         showToast("Failed to update membership");
                         return;
                     }
@@ -511,7 +511,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                             showToast("Group Join Fail");
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -519,7 +519,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                 @Override
                 public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
                     showToast("Failed to update membership");
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };

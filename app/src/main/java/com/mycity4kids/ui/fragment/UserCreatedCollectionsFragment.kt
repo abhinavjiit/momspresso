@@ -12,8 +12,8 @@ import android.widget.AbsListView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.RelativeLayout
 import android.widget.TextView
-import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
@@ -46,14 +46,23 @@ class UserCreatedCollectionsFragment : BaseFragment() {
     private var dataList = ArrayList<UserCollectionsModel>()
     private var bottomLoadingView: RelativeLayout? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.user_created_collections_fragment, container, false)
         bottomLoadingView = view.findViewById(R.id.bottomLoadingView)
         collectionGridView = view.findViewById(R.id.collectionGridView)
         mLodingView = view.findViewById(R.id.relativeLoadingView)
         shimmer1 = view.findViewById(R.id.shimmer1)
         notCreatedTextView = view.findViewById(R.id.notCreatedTextView)
-        view.findViewById<View>(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(activity, R.anim.rotate_indefinitely))
+        view.findViewById<View>(R.id.imgLoader).startAnimation(
+            AnimationUtils.loadAnimation(
+                activity,
+                R.anim.rotate_indefinitely
+            )
+        )
         val bundle = arguments
         userId = bundle?.getString("userId")
         getUserCreatedCollections()
@@ -69,7 +78,12 @@ class UserCreatedCollectionsFragment : BaseFragment() {
         collectionGridView.setOnScrollListener(object : AbsListView.OnScrollListener {
             override fun onScrollStateChanged(absListView: AbsListView, i: Int) {}
 
-            override fun onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
+            override fun onScroll(
+                view: AbsListView,
+                firstVisibleItem: Int,
+                visibleItemCount: Int,
+                totalItemCount: Int
+            ) {
                 val loadMore = firstVisibleItem + visibleItemCount >= totalItemCount
                 if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
                     bottomLoadingView?.visibility = View.VISIBLE
@@ -83,35 +97,41 @@ class UserCreatedCollectionsFragment : BaseFragment() {
 
     private fun getUserCreatedCollections() {
         userId?.let {
-            BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getUserCollectionList(it, pageNumber, 10, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
-                override fun onComplete() {
-                }
+            BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getUserCollectionList(
+                it,
+                pageNumber,
+                10,
+                null
+            ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
+                    override fun onComplete() {
+                    }
 
-                override fun onSubscribe(d: Disposable) {
-                }
+                    override fun onSubscribe(d: Disposable) {
+                    }
 
-                override fun onNext(response: BaseResponseGeneric<UserCollectionsListModel>) {
-                    isReuqestRunning = false
-                    try {
-                        if (response.code == 200 && response.status == Constants.SUCCESS && response.data?.result != null) {
-                            shimmer1.stopShimmerAnimation()
-                            shimmer1.visibility = View.GONE
-                            bottomLoadingView?.visibility = View.GONE
-                            processResponse(response.data?.result!!)
-                        } else {
-                            ToastUtils.showToast(activity, response.data?.msg)
+                    override fun onNext(response: BaseResponseGeneric<UserCollectionsListModel>) {
+                        isReuqestRunning = false
+                        try {
+                            if (response.code == 200 && response.status == Constants.SUCCESS && response.data?.result != null) {
+                                shimmer1.stopShimmerAnimation()
+                                shimmer1.visibility = View.GONE
+                                bottomLoadingView?.visibility = View.GONE
+                                processResponse(response.data?.result!!)
+                            } else {
+                                ToastUtils.showToast(activity, response.data?.msg)
+                            }
+                        } catch (e: Exception) {
+                            FirebaseCrashlytics.getInstance().recordException(e)
+                            Log.d("MC4KException", Log.getStackTraceString(e))
                         }
-                    } catch (e: Exception) {
-                        Crashlytics.logException(e)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        FirebaseCrashlytics.getInstance().recordException(e)
                         Log.d("MC4KException", Log.getStackTraceString(e))
                     }
-                }
-
-                override fun onError(e: Throwable) {
-                    Crashlytics.logException(e)
-                    Log.d("MC4KException", Log.getStackTraceString(e))
-                }
-            })
+                })
         }
     }
 
@@ -158,10 +178,12 @@ class UserCreatedCollectionsFragment : BaseFragment() {
                     for (i in 0 until dataList.size) {
                         if (dataList[i].userCollectionId == collectionId) {
                             if (data.hasExtra(AppConstants.COLLECTION_EDIT_TYPE)) {
-                                val comingFor = data.getStringExtra(AppConstants.COLLECTION_EDIT_TYPE)
+                                val comingFor =
+                                    data.getStringExtra(AppConstants.COLLECTION_EDIT_TYPE)
                                 if (!comingFor.isNullOrBlank()) {
                                     if ("editCollection" == comingFor) {
-                                        dataList[i].imageUrl = data.getStringExtra("collectionImage")
+                                        dataList[i].imageUrl =
+                                            data.getStringExtra("collectionImage")
                                         dataList[i].name = data.getStringExtra("collectionName")
                                     } else if ("deleteCollection" == comingFor) {
                                         dataList.removeAt(i)

@@ -1,7 +1,6 @@
 package com.mycity4kids.ui.fragment;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,17 +8,16 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.utils.StringUtils;
+import androidx.annotation.Nullable;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.request.ChangePasswordRequest;
 import com.mycity4kids.models.response.ChangePasswordResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
-
+import com.mycity4kids.utils.StringUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -36,7 +34,8 @@ public class ChangePasswordTabFragment extends BaseFragment implements View.OnCl
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.change_password_tab_fragment, container, false);
 
         currentPasswordEditText = (EditText) view.findViewById(R.id.currentPasswordEditText);
@@ -80,29 +79,34 @@ public class ChangePasswordTabFragment extends BaseFragment implements View.OnCl
             }
             ChangePasswordResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                Toast.makeText(getActivity(), getString(R.string.app_settings_change_pass_pass_update_success), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.app_settings_change_pass_pass_update_success),
+                        Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getActivity(), getString(R.string.app_settings_change_pass_pass_update_fail), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.app_settings_change_pass_pass_update_fail),
+                        Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onFailure(Call<ChangePasswordResponse> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
     private boolean validateFields() {
         if (StringUtils.isNullOrEmpty(currentPasswordEditText.getText().toString().trim())) {
-            Toast.makeText(getActivity(), getString(R.string.app_settings_change_pass_toast_current_pass_empty), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.app_settings_change_pass_toast_current_pass_empty),
+                    Toast.LENGTH_SHORT).show();
             return false;
         } else if (StringUtils.isNullOrEmpty(newPasswordEditText.getText().toString().trim())) {
-            Toast.makeText(getActivity(), getString(R.string.app_settings_change_pass_toast_new_pass_empty), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.app_settings_change_pass_toast_new_pass_empty),
+                    Toast.LENGTH_SHORT).show();
             return false;
         } else if (!newPasswordEditText.getText().toString().equals(confirmPasswordEditText.getText().toString())) {
-            Toast.makeText(getActivity(), getString(R.string.app_settings_change_pass_toast_confirm_pass_match), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.app_settings_change_pass_toast_confirm_pass_match),
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

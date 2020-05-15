@@ -2,9 +2,6 @@ package com.mycity4kids.ui.fragment;
 
 import android.accounts.NetworkErrorException;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +11,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseFragment;
+import androidx.annotation.Nullable;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.request.NotificationReadRequest;
 import com.mycity4kids.models.response.NotificationCenterListResponse;
@@ -26,9 +23,7 @@ import com.mycity4kids.models.response.NotificationCenterResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
 import com.mycity4kids.ui.adapter.NotificationCenterListAdapter;
-
 import java.util.ArrayList;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -55,7 +50,8 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         notificationCenterResultArrayList = new ArrayList<>();
         notificationListView = (ListView) view.findViewById(R.id.notificationListView);
-        notificationCenterListAdapter = new NotificationCenterListAdapter(getActivity(), notificationCenterResultArrayList);
+        notificationCenterListAdapter = new NotificationCenterListAdapter(getActivity(),
+                notificationCenterResultArrayList);
         notificationListView.setAdapter(notificationCenterListAdapter);
 
         getNotificationFromAPI();
@@ -68,7 +64,8 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
+                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning
+                        && !isLastPageReached) {
                     getNotificationFromAPI();
                     isReuqestRunning = true;
                 }
@@ -88,7 +85,8 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
     private void getNotificationFromAPI() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         NotificationsAPI notificationsAPI = retrofit.create(NotificationsAPI.class);
-        Call<NotificationCenterListResponse> call = notificationsAPI.getNotificationCenterList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), 10, paginationValue);
+        Call<NotificationCenterListResponse> call = notificationsAPI.getNotificationCenterList(
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), 10, paginationValue);
         progressBar.setVisibility(View.VISIBLE);
         call.enqueue(notificationCenterResponseCallback);
 
@@ -96,12 +94,13 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
 
     private Callback<NotificationCenterListResponse> notificationCenterResponseCallback = new Callback<NotificationCenterListResponse>() {
         @Override
-        public void onResponse(Call<NotificationCenterListResponse> call, retrofit2.Response<NotificationCenterListResponse> response) {
+        public void onResponse(Call<NotificationCenterListResponse> call,
+                retrofit2.Response<NotificationCenterListResponse> response) {
             progressBar.setVisibility(View.GONE);
             isReuqestRunning = false;
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -111,7 +110,7 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
                 } else {
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -119,7 +118,7 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
         @Override
         public void onFailure(Call<NotificationCenterListResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -156,7 +155,8 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
                     notificationCenterResultArrayList.clear();
                     notificationCenterResultArrayList.addAll(dataList);
                     if (notificationCenterResultArrayList != null && !notificationCenterResultArrayList.isEmpty()) {
-                        SharedPrefUtils.setLastNotificationIdForUnreadFlag(BaseApplication.getAppContext(), notificationCenterResultArrayList.get(0).getId());
+                        SharedPrefUtils.setLastNotificationIdForUnreadFlag(BaseApplication.getAppContext(),
+                                notificationCenterResultArrayList.get(0).getId());
                     }
                 } else {
                     notificationCenterResultArrayList.addAll(dataList);
@@ -166,12 +166,13 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
                     isLastPageReached = true;
                     paginationValue = "";
                 } else {
-                    paginationValue = responseData.getData().getPagination().getId() + "_" + responseData.getData().getPagination().getCreatedTime();
+                    paginationValue = responseData.getData().getPagination().getId() + "_" + responseData.getData()
+                            .getPagination().getCreatedTime();
                 }
                 notificationCenterListAdapter.notifyDataSetChanged();
             }
         } catch (Exception ex) {
-            Crashlytics.logException(ex);
+            FirebaseCrashlytics.getInstance().recordException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));
         }
     }
@@ -191,10 +192,11 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
 
     private Callback<NotificationCenterListResponse> allNotificationReadResponseListener = new Callback<NotificationCenterListResponse>() {
         @Override
-        public void onResponse(Call<NotificationCenterListResponse> call, retrofit2.Response<NotificationCenterListResponse> response) {
+        public void onResponse(Call<NotificationCenterListResponse> call,
+                retrofit2.Response<NotificationCenterListResponse> response) {
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -205,14 +207,14 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
                 } else {
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<NotificationCenterListResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };

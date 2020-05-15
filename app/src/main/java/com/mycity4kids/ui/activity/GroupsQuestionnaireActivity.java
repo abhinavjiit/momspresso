@@ -8,17 +8,14 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.StringUtils;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.request.JoinGroupRequest;
 import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
@@ -30,15 +27,13 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.adapter.GroupsQuestionnaireRecyclerAdapter;
 import com.mycity4kids.ui.fragment.GroupJoinConfirmationFragment;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import com.mycity4kids.utils.StringUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
+import org.json.JSONException;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -47,7 +42,8 @@ import retrofit2.Retrofit;
  * Created by hemant on 10/4/18.
  */
 
-public class GroupsQuestionnaireActivity extends BaseActivity implements View.OnClickListener, GroupsQuestionnaireRecyclerAdapter.RecyclerViewClickListener {
+public class GroupsQuestionnaireActivity extends BaseActivity implements View.OnClickListener,
+        GroupsQuestionnaireRecyclerAdapter.RecyclerViewClickListener {
 
     private ArrayList<String> questionList;
     private GroupResult selectedGroup;
@@ -127,7 +123,7 @@ public class GroupsQuestionnaireActivity extends BaseActivity implements View.On
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -139,7 +135,7 @@ public class GroupsQuestionnaireActivity extends BaseActivity implements View.On
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
 //                showToast(getString(R.string.went_wrong));
             }
@@ -148,13 +144,14 @@ public class GroupsQuestionnaireActivity extends BaseActivity implements View.On
         @Override
         public void onFailure(Call<GroupsSettingResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
     private void processGroupsQuestionnaire(GroupsSettingResponse responseModel) {
-        for (Map.Entry<String, String> entry : responseModel.getData().get(0).getResult().get(0).getQuestionnaire().entrySet()) {
+        for (Map.Entry<String, String> entry : responseModel.getData().get(0).getResult().get(0).getQuestionnaire()
+                .entrySet()) {
             questionList.add(entry.getValue());
         }
         groupsQuestionnaireRecyclerAdapter.setData(questionList);
@@ -173,7 +170,6 @@ public class GroupsQuestionnaireActivity extends BaseActivity implements View.On
                 updateUsersMembership();
                 break;
         }
-
 
 //        GroupJoinConfirmationFragment groupJoinConfirmationFragment = new GroupJoinConfirmationFragment();
 //        FragmentManager fm = getSupportFragmentManager();
@@ -214,11 +210,14 @@ public class GroupsQuestionnaireActivity extends BaseActivity implements View.On
                             JSONObject jObject = new JSONObject(errorBody);
                             String reason = jObject.getString("reason");
                             if (!StringUtils.isNullOrEmpty(reason) && "already member".equals(reason)) {
-                                String status = jObject.getJSONObject("data").getJSONArray("data").getJSONObject(0).getString("status");
+                                String status = jObject.getJSONObject("data").getJSONArray("data").getJSONObject(0)
+                                        .getString("status");
                                 if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(status)) {
                                     showToast(getString(R.string.groups_user_blocked_msg));
                                 } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_LEFT.equals(status)) {
-                                    patchMembershipRequest(jObject.getJSONObject("data").getJSONArray("data").getJSONObject(0).getInt("id"));
+                                    patchMembershipRequest(
+                                            jObject.getJSONObject("data").getJSONArray("data").getJSONObject(0)
+                                                    .getInt("id"));
                                 } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_REJECTED.equals(status)) {
                                     showToast(getString(R.string.groups_user_membership_rejected_msg));
                                 }
@@ -248,7 +247,7 @@ public class GroupsQuestionnaireActivity extends BaseActivity implements View.On
                     showToast("Group Join Fail");
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
 //                showToast(getString(R.string.went_wrong));
             }
@@ -258,7 +257,7 @@ public class GroupsQuestionnaireActivity extends BaseActivity implements View.On
         public void onFailure(Call<BaseResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
             showToast("Group Join Request wrong");
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -275,11 +274,12 @@ public class GroupsQuestionnaireActivity extends BaseActivity implements View.On
 
     private Callback<GroupsMembershipResponse> updateGroupMemberRoleResponseCallback = new Callback<GroupsMembershipResponse>() {
         @Override
-        public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
+        public void onResponse(Call<GroupsMembershipResponse> call,
+                retrofit2.Response<GroupsMembershipResponse> response) {
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 showToast("Failed to update membership");
                 return;
@@ -300,7 +300,7 @@ public class GroupsQuestionnaireActivity extends BaseActivity implements View.On
                     showToast("Group Join Fail");
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
 //                showToast(getString(R.string.went_wrong));
             }
@@ -309,7 +309,7 @@ public class GroupsQuestionnaireActivity extends BaseActivity implements View.On
         @Override
         public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
             showToast("Failed to update membership");
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };

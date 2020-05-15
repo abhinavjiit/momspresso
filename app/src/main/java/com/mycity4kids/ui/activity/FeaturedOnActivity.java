@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
@@ -110,7 +110,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
             removeProgressDialog();
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
 
@@ -118,7 +118,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
                 MixFeedResponse userCollectionsListModel = response.body();
                 showFeatureList(userCollectionsListModel.getData().getResult().get(0).getCollectionList());
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -130,7 +130,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
             if (loadingView.getVisibility() == View.VISIBLE) {
                 loadingView.setVisibility(View.GONE);
             }
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -227,7 +227,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
                 featureOnRecyclerAdapter.setListUpdate(updateFollowPos, finalFeaturedDataList);
             } catch (Exception e) {
                 showToast(getString(R.string.server_went_wrong));
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -236,7 +236,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
         public void onFailure(Call<FollowUnfollowUserResponse> call, Throwable t) {
             showToast(getString(R.string.server_went_wrong));
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -269,7 +269,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
                 featureOnRecyclerAdapter.setListUpdate(updateFollowPos, finalFeaturedDataList);
             } catch (Exception e) {
                 showToast(getString(R.string.server_went_wrong));
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -278,7 +278,7 @@ public class FeaturedOnActivity extends BaseActivity implements View.OnClickList
         public void onFailure(Call<FollowUnfollowUserResponse> call, Throwable t) {
             showToast(getString(R.string.server_went_wrong));
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };

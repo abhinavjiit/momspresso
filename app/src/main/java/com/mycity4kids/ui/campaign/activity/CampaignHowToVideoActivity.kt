@@ -8,7 +8,7 @@ import android.view.Window
 import android.widget.ImageView
 import android.widget.MediaController
 import android.widget.VideoView
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
@@ -36,7 +36,7 @@ class CampaignHowToVideoActivity : BaseActivity() {
         }
 
         SharedPrefUtils.setDemoVideoSeen(BaseApplication.getAppContext(), true)
-//        playVideo()
+        //        playVideo()
     }
 
     override fun onResume() {
@@ -74,7 +74,7 @@ class CampaignHowToVideoActivity : BaseActivity() {
             videoView.setVideoURI(video)
             setController()
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
         videoView.start()

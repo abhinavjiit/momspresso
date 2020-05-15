@@ -37,8 +37,8 @@ import androidx.core.app.ShareCompat
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
@@ -172,7 +172,7 @@ class CampaignDetailFragment : BaseFragment() {
     )
 
     val handler = CoroutineExceptionHandler { _, exception ->
-        Crashlytics.logException(exception)
+        FirebaseCrashlytics.getInstance().recordException(exception)
         Log.d("MC4kException", Log.getStackTraceString(exception))
     }
 
@@ -230,7 +230,7 @@ class CampaignDetailFragment : BaseFragment() {
                     )
                     activity!!.onBackPressed()
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -250,7 +250,7 @@ class CampaignDetailFragment : BaseFragment() {
                         }
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -261,7 +261,7 @@ class CampaignDetailFragment : BaseFragment() {
                         "defaultCampaign"
                     )
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -275,7 +275,7 @@ class CampaignDetailFragment : BaseFragment() {
                     )
                     startActivity(Intent.createChooser(emailIntent, "Send email..."))
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -290,7 +290,7 @@ class CampaignDetailFragment : BaseFragment() {
                     intent.putExtra("image_url", apiGetResponse?.brandDetails?.imageUrl)
                     startActivity(intent)
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -299,7 +299,7 @@ class CampaignDetailFragment : BaseFragment() {
                 try {
                     applyCode()
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -308,7 +308,7 @@ class CampaignDetailFragment : BaseFragment() {
                 try {
                     defaultCampaignPopUp.visibility = View.GONE
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -318,7 +318,7 @@ class CampaignDetailFragment : BaseFragment() {
                     SharedPrefUtils.setDemoVideoSeen(BaseApplication.getAppContext(), true)
                     playVideo()
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -327,7 +327,7 @@ class CampaignDetailFragment : BaseFragment() {
                 try {
                     playVideo()
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -343,7 +343,7 @@ class CampaignDetailFragment : BaseFragment() {
                 }
             })
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
         return containerView
@@ -443,7 +443,7 @@ class CampaignDetailFragment : BaseFragment() {
                         bottomLayout.visibility = View.VISIBLE
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -452,7 +452,7 @@ class CampaignDetailFragment : BaseFragment() {
                 activity?.let {
                     ToastUtils.showToast(it, "something went wrong")
                 }
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.e("exception in error", e.message.toString())
             }
         })
@@ -520,7 +520,7 @@ class CampaignDetailFragment : BaseFragment() {
                 val popupwindow_obj = popupDisplay()
                 popupwindow_obj.showAsDropDown(unapplyCampaign, -140, -140)
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
@@ -529,7 +529,7 @@ class CampaignDetailFragment : BaseFragment() {
             try {
                 setClickAction()
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
@@ -722,7 +722,7 @@ class CampaignDetailFragment : BaseFragment() {
             removeProgressDialog()
             if (null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
-                Crashlytics.logException(nee)
+                FirebaseCrashlytics.getInstance().recordException(nee)
                 return
             }
             try {
@@ -746,7 +746,7 @@ class CampaignDetailFragment : BaseFragment() {
                                     removeProgressDialog()
                                     fetchCampaignDetail()
                                 } catch (e: Exception) {
-                                    Crashlytics.logException(e)
+                                    FirebaseCrashlytics.getInstance().recordException(e)
                                     Log.d("MC4kException", Log.getStackTraceString(e))
                                 }
                             }, 5000)
@@ -772,14 +772,14 @@ class CampaignDetailFragment : BaseFragment() {
                     ).show()
                 }
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
 
         override fun onFailure(call: Call<ParticipateCampaignResponse>, t: Throwable) {
             removeProgressDialog()
-            Crashlytics.logException(t)
+            FirebaseCrashlytics.getInstance().recordException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
         }
     }
@@ -809,7 +809,7 @@ class CampaignDetailFragment : BaseFragment() {
                 override fun onNext(response: BaseResponseGeneric<CampaignDetailResult>) {
                     if (response == null) {
                         val nee = NetworkErrorException(response.toString())
-                        Crashlytics.logException(nee)
+                        FirebaseCrashlytics.getInstance().recordException(nee)
                         return
                     }
                     if (response != null && response.code == 200 && response.status == Constants.SUCCESS && response.data?.result != null) {
@@ -823,7 +823,7 @@ class CampaignDetailFragment : BaseFragment() {
 
                 override fun onError(e: Throwable) {
                     removeProgressDialog()
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             })
@@ -853,7 +853,7 @@ class CampaignDetailFragment : BaseFragment() {
             removeProgressDialog()
             if (null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
-                Crashlytics.logException(nee)
+                FirebaseCrashlytics.getInstance().recordException(nee)
                 return
             }
             try {
@@ -864,14 +864,14 @@ class CampaignDetailFragment : BaseFragment() {
                     Toast.makeText(context, responseData.reason, Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
 
         override fun onFailure(call: Call<ParticipateCampaignResponse>, t: Throwable) {
             removeProgressDialog()
-            Crashlytics.logException(t)
+            FirebaseCrashlytics.getInstance().recordException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
         }
     }
@@ -884,7 +884,7 @@ class CampaignDetailFragment : BaseFragment() {
             removeProgressDialog()
             if (null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
-                Crashlytics.logException(nee)
+                FirebaseCrashlytics.getInstance().recordException(nee)
                 return
             }
             try {
@@ -906,14 +906,14 @@ class CampaignDetailFragment : BaseFragment() {
                     }
                 }
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
 
         override fun onFailure(call: Call<ParticipateCampaignResponse>, t: Throwable) {
             removeProgressDialog()
-            Crashlytics.logException(t)
+            FirebaseCrashlytics.getInstance().recordException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
         }
     }
@@ -1361,7 +1361,7 @@ class CampaignDetailFragment : BaseFragment() {
                     count++
                 updateLoaderTextHandler.postDelayed(this, TIME_DELAY)
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }

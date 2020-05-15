@@ -16,8 +16,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
@@ -271,7 +271,7 @@ class CampaignListFragment : BaseFragment() {
             override fun onNext(response: BaseResponseGeneric<CampaignDetailResult>) {
                 if (response == null) {
                     val nee = NetworkErrorException(response.toString())
-                    Crashlytics.logException(nee)
+                    FirebaseCrashlytics.getInstance().recordException(nee)
                     return
                 }
                 if (response != null && response.code == 200 && response.status == Constants.SUCCESS && response.data?.result != null) {
@@ -285,7 +285,7 @@ class CampaignListFragment : BaseFragment() {
 
             override fun onError(e: Throwable) {
                 removeProgressDialog()
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         })
@@ -299,7 +299,7 @@ class CampaignListFragment : BaseFragment() {
             //   removeProgressDialog()
             if (null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
-                Crashlytics.logException(nee)
+                FirebaseCrashlytics.getInstance().recordException(nee)
                 return
             }
             try {
@@ -314,14 +314,14 @@ class CampaignListFragment : BaseFragment() {
                 } else {
                 }
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
 
         override fun onFailure(call: Call<AllCampaignDataResponse>, t: Throwable) {
             //  removeProgressDialog()
-            Crashlytics.logException(t)
+            FirebaseCrashlytics.getInstance().recordException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
         }
     }
@@ -477,14 +477,14 @@ class CampaignListFragment : BaseFragment() {
                         }
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onFailure(call: Call<TotalPayoutResponse>, t: Throwable) {
                 loader.visibility = View.GONE
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }

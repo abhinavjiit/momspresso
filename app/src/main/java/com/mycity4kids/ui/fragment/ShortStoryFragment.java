@@ -12,7 +12,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
@@ -31,11 +30,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.crashlytics.android.Crashlytics;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mycity4kids.R;
@@ -200,7 +199,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             }
         } catch (Exception e) {
             removeProgressDialog();
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         viewAllTextView.setOnClickListener(this);
@@ -285,7 +284,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 }
             } catch (Exception e) {
                 removeProgressDialog();
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 getShortStoryDetailsFallback();
             }
@@ -322,7 +321,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 updateGtmEvent(responseData.getData().getLang());
             } catch (Exception e) {
                 removeProgressDialog();
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -352,7 +351,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                         authorId + "~" + author, languageConfigModel.getDisplay_name());
             }
         } catch (FileNotFoundException e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
@@ -368,7 +367,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             isReuqestRunning = false;
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException("Trending Article API failure");
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -378,7 +377,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 }
                 showComments(shortStoryCommentListResponse.getData());
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -386,7 +385,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         @Override
         public void onFailure(Call<CommentListResponse> call, Throwable t) {
             isReuqestRunning = false;
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -429,14 +428,14 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     adapter.notifyDataSetChanged();
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<ViewCountResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -491,7 +490,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -538,7 +537,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                                     .showToast(getString(R.string.server_went_wrong));
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                         if (isAdded()) {
                             ((ShortStoryContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
@@ -561,7 +560,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 ((ShortStoryContainerActivity) getActivity()).showToast(getString(R.string.connection_timeout));
             }
         }
-        Crashlytics.logException(t);
+        FirebaseCrashlytics.getInstance().recordException(t);
         Log.d("MC4kException", Log.getStackTraceString(t));
     }
 
@@ -592,7 +591,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                             ((ShortStoryContainerActivity) getActivity()).setToolbarTitle("Comments");
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                         if (isAdded() && getActivity() != null) {
                             ((ShortStoryContainerActivity) getActivity())
@@ -604,7 +603,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     break;
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
@@ -669,7 +668,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 try {
                     filterTags(headerModel.getSsResult().getTags());
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
                 getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM);
@@ -795,7 +794,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 try {
                     createBitmapForSharingStory();
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
             }
@@ -803,7 +802,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             try {
                 createBitmapForSharingStory();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -837,7 +836,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             removeProgressDialog();
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 if (isAdded()) {
                     ((ShortStoryContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
                 }
@@ -888,7 +887,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 if (isAdded()) {
                     ((ShortStoryContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
                 }
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -899,7 +898,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             if (isAdded()) {
                 ((ShortStoryContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
             }
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -923,7 +922,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             if (response.body() == null) {
                 if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 if (isAdded()) {
                     ((ShortStoryContainerActivity) getActivity()).showToast("Failed to edit comment. Please try again");
@@ -953,7 +952,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 if (isAdded()) {
                     ((ShortStoryContainerActivity) getActivity()).showToast("Failed to edit comment. Please try again");
                 }
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -964,7 +963,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             if (isAdded()) {
                 ((ShortStoryContainerActivity) getActivity()).showToast("Failed to edit comment. Please try again");
             }
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -987,7 +986,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             if (response.body() == null) {
                 if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 if (isAdded()) {
                     ((ShortStoryContainerActivity) getActivity()).showToast("Failed to add reply. Please try again");
@@ -1034,7 +1033,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 if (isAdded()) {
                     ((ShortStoryContainerActivity) getActivity()).showToast("Failed to add reply. Please try again");
                 }
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -1045,7 +1044,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             if (isAdded()) {
                 ((ShortStoryContainerActivity) getActivity()).showToast("Failed to add reply. Please try again");
             }
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -1070,7 +1069,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             if (response.body() == null) {
                 if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 if (isAdded()) {
                     ((ShortStoryContainerActivity) getActivity()).showToast("Failed to edit reply. Please try again");
@@ -1115,7 +1114,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 if (isAdded()) {
                     ((ShortStoryContainerActivity) getActivity()).showToast("Failed to edit reply. Please try again");
                 }
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -1125,7 +1124,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             if (isAdded()) {
                 ((ShortStoryContainerActivity) getActivity()).showToast("Failed to edit reply. Please try again");
             }
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -1145,7 +1144,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             if (response.body() == null) {
                 if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 if (isAdded()) {
                     ((ShortStoryContainerActivity) getActivity()).showToast("Failed to delete reply. Please try again");
@@ -1181,7 +1180,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 if (isAdded()) {
                     ((ShortStoryContainerActivity) getActivity()).showToast("Failed to delete reply. Please try again");
                 }
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -1192,7 +1191,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             if (isAdded()) {
                 ((ShortStoryContainerActivity) getActivity()).showToast("Failed to delete reply. Please try again");
             }
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -1212,7 +1211,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             if (response.body() == null) {
                 if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 if (isAdded()) {
                     ((ShortStoryContainerActivity) getActivity())
@@ -1244,7 +1243,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     ((ShortStoryContainerActivity) getActivity())
                             .showToast("Failed to delete comment. Please try again");
                 }
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -1255,7 +1254,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             if (isAdded()) {
                 ((ShortStoryContainerActivity) getActivity()).showToast("Failed to delete comment. Please try again");
             }
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -1418,7 +1417,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                             ((ArticleDetailsContainerActivity) getActivity())
                                     .showToast(getString(R.string.server_went_wrong));
                         }
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -1428,7 +1427,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     if (isAdded()) {
                         ((ShortStoryContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                     }
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -1458,7 +1457,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                             ((ArticleDetailsContainerActivity) getActivity())
                                     .showToast(getString(R.string.server_went_wrong));
                         }
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -1468,7 +1467,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     if (isAdded()) {
                         ((ShortStoryContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                     }
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -1530,7 +1529,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     Utils.pushProfileEvents(getActivity(), "CTA_100WS_Add_To_Collection",
                             "ShortStoryFragment", "Add to Collection", "-");
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
                 return true;

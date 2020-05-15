@@ -27,9 +27,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
-import com.crashlytics.android.Crashlytics
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
@@ -396,14 +396,14 @@ class ShortStoriesCardActivity : BaseActivity() {
                 }
             } catch (e: Exception) {
                 removeProgressDialog()
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
 
         override fun onFailure(call: Call<ArticleDraftResponse>, t: Throwable) {
             removeProgressDialog()
-            Crashlytics.logException(t)
+            FirebaseCrashlytics.getInstance().recordException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
         }
     }
@@ -468,7 +468,7 @@ class ShortStoriesCardActivity : BaseActivity() {
 
             override fun onFailure(call: Call<UserDetailResponse>, t: Throwable) {
                 removeProgressDialog()
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
@@ -525,7 +525,7 @@ class ShortStoriesCardActivity : BaseActivity() {
         try {
             finalBitmap = AppUtils.getBitmapFromView(rlLayout, "shortStory")
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
 
@@ -583,7 +583,7 @@ class ShortStoriesCardActivity : BaseActivity() {
 
         override fun onFailure(call: Call<ImageUploadResponse>, t: Throwable) {
             removeProgressDialog()
-            Crashlytics.logException(t)
+            FirebaseCrashlytics.getInstance().recordException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
             showToast(getString(R.string.went_wrong))
         }
@@ -666,7 +666,7 @@ class ShortStoriesCardActivity : BaseActivity() {
 
             override fun onFailure(call: Call<ArticleDraftResponse>, t: Throwable) {
                 removeProgressDialog()
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4KException", Log.getStackTraceString(t))
                 showToast(getString(R.string.went_wrong))
             }
@@ -722,7 +722,7 @@ class ShortStoriesCardActivity : BaseActivity() {
 
         override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
             removeProgressDialog()
-            Crashlytics.logException(t)
+            FirebaseCrashlytics.getInstance().recordException(t)
             Log.d("MC4KException", Log.getStackTraceString(t))
             showToast(getString(R.string.went_wrong))
         }
@@ -754,7 +754,7 @@ class ShortStoriesCardActivity : BaseActivity() {
         ) {
             if (null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
-                Crashlytics.logException(nee)
+                FirebaseCrashlytics.getInstance().recordException(nee)
                 return
             }
             try {
@@ -774,13 +774,13 @@ class ShortStoriesCardActivity : BaseActivity() {
                     }
                 }
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
 
         override fun onFailure(call: Call<ShortStoryConfigData>, t: Throwable) {
-            Crashlytics.logException(t)
+            FirebaseCrashlytics.getInstance().recordException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
         }
     }
@@ -800,7 +800,7 @@ class ShortStoriesCardActivity : BaseActivity() {
                 return Color.argb((alpha * 255).toInt(), red, green, blue)
             }
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
         return 0

@@ -28,10 +28,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -238,7 +238,7 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
             if (response.body() == null) {
                 if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -249,7 +249,7 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
                     onBackPressed();
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
@@ -259,7 +259,7 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
         public void onFailure(Call<AddGroupPostResponse> call, Throwable t) {
             isRequestRunning = false;
             showToast(getString(R.string.went_wrong));
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -416,7 +416,7 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
             try {
                 mediaRecorder.stop();
             } catch (RuntimeException e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             } finally {
                 mediaRecorder.release();

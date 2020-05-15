@@ -9,12 +9,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseActivity;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.appcompat.widget.Toolbar;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.request.GroupNotificationToggleRequest;
 import com.mycity4kids.models.request.UpdateUsersGpLevelNotificationSettingRequest;
@@ -25,12 +26,8 @@ import com.mycity4kids.models.response.UserPostSettingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONObject;
-
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.appcompat.widget.Toolbar;
 import okhttp3.ResponseBody;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -110,7 +107,6 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
             getNotificationSettingForCurrentUser();
         }
 
-
         memberCountTextView.setText("" + groupItem.getMemberCount());
 
         groupNameTextView.setText(groupItem.getTitle());
@@ -122,17 +118,19 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
-        Call<UserPostSettingResponse> call = groupsAPI.getGroupNotificationSettingForUser(groupItem.getId(), 0, SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        Call<UserPostSettingResponse> call = groupsAPI.getGroupNotificationSettingForUser(groupItem.getId(), 0,
+                SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         call.enqueue(userGpNotificationSettingResponseCallback);
     }
 
     private Callback<UserPostSettingResponse> userGpNotificationSettingResponseCallback = new Callback<UserPostSettingResponse>() {
         @Override
-        public void onResponse(Call<UserPostSettingResponse> call, retrofit2.Response<UserPostSettingResponse> response) {
+        public void onResponse(Call<UserPostSettingResponse> call,
+                retrofit2.Response<UserPostSettingResponse> response) {
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -153,7 +151,7 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
 //                showToast(getString(R.string.went_wrong));
             }
@@ -161,7 +159,7 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
 
         @Override
         public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -170,10 +168,12 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.inviteMemberContainer: {
-                MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+                MixpanelAPI mixpanel = MixpanelAPI
+                        .getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
                 try {
                     JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("userId",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                     jsonObject.put("groupId", "" + groupItem.getId());
                     mixpanel.track("GroupInvite", jsonObject);
                 } catch (Exception e) {
@@ -184,7 +184,9 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
                 shareIntent.setType("text/plain");
 
                 String shareUrl = AppConstants.GROUPS_BASE_SHARE_URL + groupItem.getUrl();
-                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, groupItem.getDescription() + "\n\n" + "Join " + groupItem.getTitle() + " support group\n" + shareUrl);
+                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+                        groupItem.getDescription() + "\n\n" + "Join " + groupItem.getTitle() + " support group\n"
+                                + shareUrl);
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"));
             }
             break;
@@ -203,10 +205,12 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
             case R.id.disableNotificationSwitch:
                 Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
                 GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-                if (AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType) || AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(memberType)) {
+                if (AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType) || AppConstants.GROUP_MEMBER_TYPE_MODERATOR
+                        .equals(memberType)) {
                     GroupNotificationToggleRequest groupNotificationToggleRequest = new GroupNotificationToggleRequest();
                     groupNotificationToggleRequest.setNotificationOn(disableNotificationSwitch.isChecked() ? 0 : 1);
-                    Call<GroupDetailResponse> call = groupsAPI.updateGroupNotification(groupItem.getId(), groupNotificationToggleRequest);
+                    Call<GroupDetailResponse> call = groupsAPI
+                            .updateGroupNotification(groupItem.getId(), groupNotificationToggleRequest);
                     call.enqueue(notificationUpdateResponseCallback);
                 } else {
                     UpdateUsersGpLevelNotificationSettingRequest request = new UpdateUsersGpLevelNotificationSettingRequest();
@@ -221,7 +225,8 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
                         Call<ResponseBody> call = groupsAPI.createNewGpSettingsForUser(request);
                         call.enqueue(gpLevelNotificationResponseCallback);
                     } else {
-                        Call<UserPostSettingResponse> call = groupsAPI.updateNotificationSettingsOfGpForUser(currentGpPrefsForUser.getId(), request);
+                        Call<UserPostSettingResponse> call = groupsAPI
+                                .updateNotificationSettingsOfGpForUser(currentGpPrefsForUser.getId(), request);
                         call.enqueue(patchGpLevelNotificationResponseCallback);
                     }
                 }
@@ -233,10 +238,12 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
             }
             break;
             case R.id.leaveGroupContainer: {
-                MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+                MixpanelAPI mixpanel = MixpanelAPI
+                        .getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
                 try {
                     JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("userId",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                     jsonObject.put("groupId", "" + groupItem.getId());
                     mixpanel.track("LeaveGroup", jsonObject);
                 } catch (Exception e) {
@@ -253,11 +260,12 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
 
     private Callback<UserPostSettingResponse> patchGpLevelNotificationResponseCallback = new Callback<UserPostSettingResponse>() {
         @Override
-        public void onResponse(Call<UserPostSettingResponse> call, retrofit2.Response<UserPostSettingResponse> response) {
+        public void onResponse(Call<UserPostSettingResponse> call,
+                retrofit2.Response<UserPostSettingResponse> response) {
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -269,7 +277,7 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
 //                showToast(getString(R.string.went_wrong));
             }
@@ -277,7 +285,7 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
 
         @Override
         public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -288,7 +296,7 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -302,14 +310,14 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -324,7 +332,7 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -335,14 +343,14 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupDetailResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };

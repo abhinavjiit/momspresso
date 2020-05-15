@@ -21,8 +21,8 @@ import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.mycity4kids.R
@@ -222,13 +222,13 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener,
                             )
                         }
                     } catch (e: Exception) {
-                        Crashlytics.logException(e)
+                        FirebaseCrashlytics.getInstance().recordException(e)
                         Log.d("MC4KException", Log.getStackTraceString(e))
                     }
                 }
 
                 override fun onError(e: Throwable) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4KException", Log.getStackTraceString(e))
                 }
             })
@@ -269,7 +269,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener,
 
                 override fun onError(e: Throwable) {
                     removeProgressDialog()
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4KException", Log.getStackTraceString(e))
                 }
             })
@@ -347,7 +347,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener,
                             ToastUtils.showToast(this@UserCollectionItemListActivity, reason)
                         }
                     } catch (e: Exception) {
-                        Crashlytics.logException(e)
+                        FirebaseCrashlytics.getInstance().recordException(e)
                         Log.d("MC4KException", Log.getStackTraceString(e))
                         ToastUtils.showToast(
                             this@UserCollectionItemListActivity,
@@ -357,7 +357,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener,
                 }
 
                 override fun onError(e: Throwable) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4KException", Log.getStackTraceString(e))
                     val code = (e as retrofit2.HttpException).code()
                     if (code == 402) {
@@ -497,7 +497,7 @@ class UserCollectionItemListActivity : BaseActivity(), View.OnClickListener,
                 }
             }
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4KException", Log.getStackTraceString(e))
         }
     }

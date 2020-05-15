@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.Gson
 import com.mycity4kids.R
 import com.mycity4kids.constants.AppConstants
@@ -47,7 +47,7 @@ class MilestonesListAdapter(
             }
         } catch (e: Exception) {
             holder.milestoneBgImageView?.setBackgroundResource(R.drawable.default_article)
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
 
@@ -60,7 +60,7 @@ class MilestonesListAdapter(
             }
         } catch (e: Exception) {
             holder.milestoneImageView?.setImageResource(R.drawable.default_article)
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
 
@@ -76,7 +76,7 @@ class MilestonesListAdapter(
                     Picasso.get().load(imageUrl?.thumbMin).into(holder.contentImageView)
                 } catch (e: Exception) {
                     holder.contentImageView?.setImageResource(R.drawable.default_article)
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -89,7 +89,7 @@ class MilestonesListAdapter(
                     Picasso.get().load(imageUrl).into(holder.contentImageView)
                 } catch (e: Exception) {
                     holder.contentImageView?.setImageResource(R.drawable.default_article)
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -102,7 +102,7 @@ class MilestonesListAdapter(
                     ).into(holder.contentImageView)
                 } catch (e: Exception) {
                     holder.contentImageView?.setImageResource(R.drawable.default_article)
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -116,7 +116,7 @@ class MilestonesListAdapter(
                     Picasso.get().load(imageUrl).into(holder.contentImageView)
                 } catch (e: Exception) {
                     holder.contentImageView?.setImageResource(R.drawable.default_article)
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -132,7 +132,7 @@ class MilestonesListAdapter(
                 holder.dateTextView?.visibility = View.VISIBLE
             } catch (e: Exception) {
                 holder.dateTextView?.visibility = View.GONE
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         } else {
@@ -147,7 +147,7 @@ class MilestonesListAdapter(
                 holder.dateTextView?.visibility = View.VISIBLE
             } catch (e: Exception) {
                 holder.dateTextView?.visibility = View.GONE
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }

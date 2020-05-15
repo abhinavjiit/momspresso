@@ -3,22 +3,19 @@ package com.mycity4kids.ui.fragment;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.StringUtils;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
@@ -34,9 +31,9 @@ import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.UserActivitiesActivity;
 import com.mycity4kids.ui.adapter.UsersBookmarksRecycleAdapter;
 import com.mycity4kids.utils.AppUtils;
-
+import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.utils.StringUtils;
 import java.util.ArrayList;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -44,7 +41,8 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 3/8/17.
  */
-public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookmarksRecycleAdapter.RecyclerViewClickListener {
+public class UsersBookmarkTabFragment extends BaseFragment implements
+        UsersBookmarksRecycleAdapter.RecyclerViewClickListener {
 
     private ArrayList<ArticleListingResult> bookmarksList;
     private String userId;
@@ -63,7 +61,8 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         View view = getActivity().getLayoutInflater().inflate(R.layout.users_bookmark_tab_fragment, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
@@ -102,7 +101,6 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
             }
         });
 
-
         return view;
     }
 
@@ -125,7 +123,7 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
             isReuqestRunning = false;
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
 //                showToast("Something went wrong from server");
                 return;
             }
@@ -137,7 +135,7 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
 //                    showToast(responseData.getReason());
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
 //                showToast(getString(R.string.went_wrong));
             }
@@ -146,7 +144,7 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
             mLodingView.setVisibility(View.GONE);
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -188,7 +186,7 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
 //                adapter.notifyDataSetChanged();
 //            }
 //        } catch (Exception ex) {
-//            Crashlytics.logException(ex);
+//            FirebaseCrashlytics.getInstance().recordException(ex);
 //            Log.d("MC4kException", Log.getStackTraceString(ex));
 //        }
 //    }
@@ -220,7 +218,7 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
                 adapter.notifyDataSetChanged();
             }
         } catch (Exception ex) {
-            Crashlytics.logException(ex);
+            FirebaseCrashlytics.getInstance().recordException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));
         }
     }
@@ -238,10 +236,12 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
                     String shareMessage;
                     if (StringUtils.isNullOrEmpty(shareUrl)) {
                         shareMessage = getString(R.string.check_out_short_story) + "\"" +
-                                bookmarksList.get(position).getTitle() + "\" by " + bookmarksList.get(position).getUserName() + ".";
+                                bookmarksList.get(position).getTitle() + "\" by " + bookmarksList.get(position)
+                                .getUserName() + ".";
                     } else {
                         shareMessage = getString(R.string.check_out_short_story) + "\"" +
-                                bookmarksList.get(position).getTitle() + "\" by " + bookmarksList.get(position).getUserName() + ".\nRead Here: " + shareUrl;
+                                bookmarksList.get(position).getTitle() + "\" by " + bookmarksList.get(position)
+                                .getUserName() + ".\nRead Here: " + shareUrl;
                     }
                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
                     startActivity(Intent.createChooser(shareIntent, "Momspresso"));
@@ -260,15 +260,20 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
                     String shareMessage;
                     if (StringUtils.isNullOrEmpty(shareUrl)) {
                         shareMessage = getString(R.string.check_out_blog) + "\"" +
-                                bookmarksList.get(position).getTitle() + "\" by " + bookmarksList.get(position).getUserName() + ".";
+                                bookmarksList.get(position).getTitle() + "\" by " + bookmarksList.get(position)
+                                .getUserName() + ".";
                     } else {
                         shareMessage = getString(R.string.check_out_blog) + "\"" +
-                                bookmarksList.get(position).getTitle() + "\" by " + bookmarksList.get(position).getUserName() + ".\nRead Here: " + shareUrl;
+                                bookmarksList.get(position).getTitle() + "\" by " + bookmarksList.get(position)
+                                .getUserName() + ".\nRead Here: " + shareUrl;
                     }
                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
                     startActivity(Intent.createChooser(shareIntent, "Momspresso"));
-                    Utils.pushShareArticleEvent(getActivity(), "BookmarkedScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", bookmarksList.get(position).getId(),
-                            bookmarksList.get(position).getUserId() + "~" + bookmarksList.get(position).getUserName(), "-");
+                    Utils.pushShareArticleEvent(getActivity(), "BookmarkedScreen",
+                            SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
+                            bookmarksList.get(position).getId(),
+                            bookmarksList.get(position).getUserId() + "~" + bookmarksList.get(position).getUserName(),
+                            "-");
                 }
                 break;
             case R.id.removeBookmarkTextView:
@@ -284,10 +289,13 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
                     intent.putExtra(Constants.TITLE_SLUG, bookmarksList.get(position).getTitleSlug());
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "BookmarkList");
                     intent.putExtra(Constants.FROM_SCREEN, "PrivateActivityScreen");
-                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(bookmarksList, AppConstants.CONTENT_TYPE_SHORT_STORY);
+                    ArrayList<ArticleListingResult> filteredResult = AppUtils
+                            .getFilteredContentList(bookmarksList, AppConstants.CONTENT_TYPE_SHORT_STORY);
                     intent.putParcelableArrayListExtra("pagerListData", filteredResult);
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, bookmarksList, AppConstants.CONTENT_TYPE_SHORT_STORY));
-                    intent.putExtra(Constants.AUTHOR, bookmarksList.get(position).getUserId() + "~" + bookmarksList.get(position).getUserName());
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils
+                            .getFilteredPosition(position, bookmarksList, AppConstants.CONTENT_TYPE_SHORT_STORY));
+                    intent.putExtra(Constants.AUTHOR,
+                            bookmarksList.get(position).getUserId() + "~" + bookmarksList.get(position).getUserName());
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
@@ -297,10 +305,13 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
                     intent.putExtra(Constants.TITLE_SLUG, bookmarksList.get(position).getTitleSlug());
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "BookmarkList");
                     intent.putExtra(Constants.FROM_SCREEN, "PrivateActivityScreen");
-                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(bookmarksList, AppConstants.CONTENT_TYPE_ARTICLE);
+                    ArrayList<ArticleListingResult> filteredResult = AppUtils
+                            .getFilteredContentList(bookmarksList, AppConstants.CONTENT_TYPE_ARTICLE);
                     intent.putParcelableArrayListExtra("pagerListData", filteredResult);
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, bookmarksList, AppConstants.CONTENT_TYPE_ARTICLE));
-                    intent.putExtra(Constants.AUTHOR, bookmarksList.get(position).getUserId() + "~" + bookmarksList.get(position).getUserName());
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils
+                            .getFilteredPosition(position, bookmarksList, AppConstants.CONTENT_TYPE_ARTICLE));
+                    intent.putExtra(Constants.AUTHOR,
+                            bookmarksList.get(position).getUserId() + "~" + bookmarksList.get(position).getUserName());
                     startActivity(intent);
                 }
                 break;
@@ -334,7 +345,7 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
 
         @Override
         public void onFailure(Call<AddBookmarkResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("RemoveBookmarkException", Log.getStackTraceString(t));
         }
     };

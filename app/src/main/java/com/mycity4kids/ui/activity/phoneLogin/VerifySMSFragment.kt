@@ -18,10 +18,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import com.crashlytics.android.Crashlytics
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
@@ -219,7 +219,7 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                 }
                 if (response.raw() != null) {
                     val nee = NetworkErrorException(response.raw().toString())
-                    Crashlytics.logException(nee)
+                    FirebaseCrashlytics.getInstance().recordException(nee)
                 }
                 return
             }
@@ -232,14 +232,14 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                 } else {
                 }
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
 
         override fun onFailure(call: Call<ResponseBody>, e: Throwable) {
             removeProgressDialog()
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
@@ -275,7 +275,7 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                     }
                     if (response.raw() != null) {
                         val nee = NetworkErrorException(response.raw().toString())
-                        Crashlytics.logException(nee)
+                        FirebaseCrashlytics.getInstance().recordException(nee)
                     }
                     return
                 }
@@ -317,13 +317,13 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                         }
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onFailure(call: Call<ResponseBody>, e: Throwable) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         })
@@ -439,7 +439,7 @@ class VerifySMSFragment : BaseFragment(), View.OnClickListener {
                 otpEditText6?.setText(otp?.get(5)?.toString())
             }
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }

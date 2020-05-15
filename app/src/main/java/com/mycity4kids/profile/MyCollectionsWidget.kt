@@ -13,8 +13,8 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
@@ -148,14 +148,14 @@ class MyCollectionsWidget : RelativeLayout, OnClickListener {
                             }
                         } catch (e: Exception) {
                             this@MyCollectionsWidget.visibility = View.GONE
-                            Crashlytics.logException(e)
+                            FirebaseCrashlytics.getInstance().recordException(e)
                             Log.d("MC4kException", Log.getStackTraceString(e))
                         }
                     }
 
                     override fun onError(e: Throwable) {
                         this@MyCollectionsWidget.visibility = View.GONE
-                        Crashlytics.logException(e)
+                        FirebaseCrashlytics.getInstance().recordException(e)
                         Log.d("MC4kException", Log.getStackTraceString(e))
                     }
                 })
@@ -183,7 +183,7 @@ class MyCollectionsWidget : RelativeLayout, OnClickListener {
                 }
             }
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }

@@ -24,8 +24,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.internal.LinkedTreeMap;
@@ -247,7 +247,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -311,14 +311,14 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     }
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupPostResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -402,7 +402,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             isRequestRunning = false;
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -411,7 +411,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     processRepliesListingResponse(groupPostResponse);
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -420,7 +420,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         public void onFailure(Call<GroupPostCommentResponse> call, Throwable t) {
             isRequestRunning = false;
             loadingView.setVisibility(View.GONE);
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -620,7 +620,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -629,14 +629,14 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     setAdminPostPreferences(groupPostResponse);
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupPostResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -750,14 +750,14 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -778,7 +778,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         public void onResponse(Call<GroupsActionResponse> call, retrofit2.Response<GroupsActionResponse> response) {
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -825,14 +825,14 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -857,7 +857,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         return;
                     }
                     try {
@@ -866,7 +866,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                             setPostCurrentPreferences(userPostSettingResponse);
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -875,7 +875,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
                     progressBar.setVisibility(View.GONE);
                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -1056,7 +1056,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -1065,14 +1065,14 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     onBackPressed();
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupPostResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -1092,7 +1092,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         retrofit2.Response<GroupsMembershipResponse> response) {
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         return;
                     }
                     try {
@@ -1111,14 +1111,14 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                             call1.enqueue(updateGroupMembershipResponseCallback);
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -1130,7 +1130,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         retrofit2.Response<GroupsMembershipResponse> response) {
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         return;
                     }
                     try {
@@ -1139,14 +1139,14 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                             postSettingsContainerMain.setVisibility(View.GONE);
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -1168,7 +1168,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -1188,14 +1188,14 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     }
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupPostResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -1251,7 +1251,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -1273,7 +1273,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     }
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -1291,7 +1291,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         retrofit2.Response<UserPostSettingResponse> response) {
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         return;
                     }
                     try {
@@ -1309,14 +1309,14 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                             }
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -1356,7 +1356,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         retrofit2.Response<AddGpPostCommentReplyResponse> response) {
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         showToast("Failed to add comment. Please try again");
                         return;
                     }
@@ -1414,7 +1414,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         }
                     } catch (Exception e) {
                         showToast("Failed to add comment. Please try again");
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -1422,7 +1422,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 @Override
                 public void onFailure(Call<AddGpPostCommentReplyResponse> call, Throwable t) {
                     showToast("Failed to add comment. Please try again");
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -1446,7 +1446,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         retrofit2.Response<AddGpPostCommentReplyResponse> response) {
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         showToast("Failed to edit comment. Please try again");
                         return;
                     }
@@ -1464,7 +1464,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         }
                     } catch (Exception e) {
                         showToast("Failed to edit comment. Please try again");
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -1472,7 +1472,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 @Override
                 public void onFailure(Call<AddGpPostCommentReplyResponse> call, Throwable t) {
                     showToast("Failed to edit comment. Please try again");
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -1502,7 +1502,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         retrofit2.Response<AddGpPostCommentReplyResponse> response) {
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         showToast("Failed to add reply. Please try again");
                         return;
                     }
@@ -1559,7 +1559,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         }
                     } catch (Exception e) {
                         showToast("Failed to add reply. Please try again");
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -1567,7 +1567,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 @Override
                 public void onFailure(Call<AddGpPostCommentReplyResponse> call, Throwable t) {
                     showToast("Failed to add reply. Please try again");
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -1594,7 +1594,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     removeProgressDialog();
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         showToast("Failed to edit reply. Please try again");
 
                         return;
@@ -1627,7 +1627,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         }
                     } catch (Exception e) {
                         showToast("Failed to edit reply. Please try again");
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -1635,7 +1635,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 @Override
                 public void onFailure(Call<AddGpPostCommentReplyResponse> call, Throwable t) {
                     showToast("Failed to edit reply. Please try again");
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -1686,7 +1686,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         public void onResponse(Call<GroupsMembershipResponse> call, Response<GroupsMembershipResponse> response) {
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -1694,14 +1694,14 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     showToast(getString(R.string.groups_user_block_success));
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -1737,7 +1737,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     removeProgressDialog();
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         showToast("Failed to edit reply. Please try again");
                         return;
                     }
@@ -1756,7 +1756,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         }
                     } catch (Exception e) {
                         showToast("Failed to edit reply. Please try again");
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -1764,7 +1764,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 @Override
                 public void onFailure(Call<AddGpPostCommentReplyResponse> call, Throwable t) {
                     showToast("Failed to edit reply. Please try again");
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -1776,7 +1776,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     removeProgressDialog();
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         showToast("Failed to edit reply. Please try again");
                         return;
                     }
@@ -1800,7 +1800,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         }
                     } catch (Exception e) {
                         showToast("Failed to edit reply. Please try again");
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -1808,7 +1808,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 @Override
                 public void onFailure(Call<AddGpPostCommentReplyResponse> call, Throwable t) {
                     showToast("Failed to edit reply. Please try again");
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };

@@ -18,10 +18,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.gtmutils.Utils;
@@ -152,7 +152,6 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
                 ((NewVideoChallengeActivity) getActivity()).chooseAndpermissionDialog(maxDuration);
             } else {
                 ToastUtils.showToast(getActivity(), "duration should be greater than 0.0");
-                Crashlytics.log("max_duration is :" + String.valueOf(maxDuration));
                 Log.i("ERROR", String.valueOf(maxDuration));
             }
         });
@@ -190,7 +189,7 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
                 }
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }

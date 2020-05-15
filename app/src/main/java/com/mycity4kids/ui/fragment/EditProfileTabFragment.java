@@ -24,17 +24,13 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.utils.DateTimeUtils;
-import com.mycity4kids.utils.StringUtils;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.city.MetroCity;
@@ -50,15 +46,15 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
+import com.mycity4kids.utils.DateTimeUtils;
+import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.widget.KidsInfoNewCustomView;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -66,7 +62,8 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 19/7/17.
  */
-public class EditProfileTabFragment extends BaseFragment implements View.OnClickListener, CityListingDialogFragment.IChangeCity {
+public class EditProfileTabFragment extends BaseFragment implements View.OnClickListener,
+        CityListingDialogFragment.IChangeCity {
 
     private static final int MAX_WORDS = 200;
     private static final int MAX_CHARACTER = 200;
@@ -104,7 +101,8 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.edit_profile_tab_fragment, container, false);
 
         scrollView = (ScrollView) view.findViewById(R.id.scrollView);
@@ -174,7 +172,8 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
-        Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId());
+        Call<UserDetailResponse> call = bloggerDashboardAPI
+                .getBloggerData(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId());
         call.enqueue(getUserDetailsResponseCallback);
 
         ConfigAPIs cityConfigAPI = retrofit.create(ConfigAPIs.class);
@@ -186,8 +185,9 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
 
     private int countWords(String s) {
         String trim = s.trim();
-        if (trim.isEmpty())
+        if (trim.isEmpty()) {
             return 0;
+        }
         return trim.split("\\s+").length; // separate string around spaces
     }
 
@@ -241,7 +241,8 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
                 blogTitleEditText.setText(responseData.getData().get(0).getResult().getBlogTitle());
                 describeSelfEditText.setText(responseData.getData().get(0).getResult().getUserBio());
 
-                if (null == responseData.getData().get(0).getResult().getPhone() || StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getPhone().getMobile())) {
+                if (null == responseData.getData().get(0).getResult().getPhone() || StringUtils
+                        .isNullOrEmpty(responseData.getData().get(0).getResult().getPhone().getMobile())) {
                 } else {
                     phoneEditText.setText(responseData.getData().get(0).getResult().getPhone().getMobile());
                 }
@@ -251,7 +252,7 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
 
         @Override
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -262,7 +263,7 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
         public void onResponse(Call<CityConfigResponse> call, retrofit2.Response<CityConfigResponse> response) {
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -274,12 +275,16 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
                     }
                     MetroCity currentCity = SharedPrefUtils.getCurrentCityModel(getActivity());
                     for (int i = 0; i < responseData.getData().getResult().getCityData().size(); i++) {
-                        if (!AppConstants.ALL_CITY_NEW_ID.equals(responseData.getData().getResult().getCityData().get(i).getId())) {
+                        if (!AppConstants.ALL_CITY_NEW_ID
+                                .equals(responseData.getData().getResult().getCityData().get(i).getId())) {
                             mDatalist.add(responseData.getData().getResult().getCityData().get(i));
                         }
-                        if (AppConstants.OTHERS_NEW_CITY_ID.equals(responseData.getData().getResult().getCityData().get(i).getId())) {
-                            if (currentCity.getName() != null && !"Others".equals(currentCity.getName()) && currentCity.getId() == AppConstants.OTHERS_CITY_ID) {
-                                mDatalist.get(mDatalist.size() - 1).setCityName("Others(" + currentCity.getName() + ")");
+                        if (AppConstants.OTHERS_NEW_CITY_ID
+                                .equals(responseData.getData().getResult().getCityData().get(i).getId())) {
+                            if (currentCity.getName() != null && !"Others".equals(currentCity.getName())
+                                    && currentCity.getId() == AppConstants.OTHERS_CITY_ID) {
+                                mDatalist.get(mDatalist.size() - 1)
+                                        .setCityName("Others(" + currentCity.getName() + ")");
                             }
                         }
                     }
@@ -296,14 +301,14 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
                 } else {
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<CityConfigResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -340,7 +345,7 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
             });
             childInfoContainer.addView(kidsInfo1);
         } catch (Exception ex) {
-            Crashlytics.logException(ex);
+            FirebaseCrashlytics.getInstance().recordException(ex);
             Log.d("MC4KException", Log.getStackTraceString(ex));
         }
     }
@@ -420,7 +425,7 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
                     Toast.makeText(getActivity(), responseData.getReason(), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
                 if (null != getActivity()) {
                     Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
@@ -432,7 +437,7 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
             Log.d("MC4kException", Log.getStackTraceString(t));
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
 //            gotToProfile();
         }
@@ -473,7 +478,8 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the current date as the default date in the picker
-            DatePickerDialog dlg = new DatePickerDialog(getActivity(), android.R.style.Theme_Holo_Light_Dialog_NoActionBar, this, curent_year, current_month, current_day);
+            DatePickerDialog dlg = new DatePickerDialog(getActivity(),
+                    android.R.style.Theme_Holo_Light_Dialog_NoActionBar, this, curent_year, current_month, current_day);
             dlg.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dlg.getDatePicker().setMaxDate(c.getTimeInMillis());
             return dlg;
@@ -495,8 +501,9 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
         boolean result = true;
 
         String currentime = "" + (System.currentTimeMillis() / 1000);
-        if (Integer.parseInt(currentime) < Integer.parseInt(convertDate(time)))
+        if (Integer.parseInt(currentime) < Integer.parseInt(convertDate(time))) {
             result = false;
+        }
 
         return result;
     }
@@ -546,15 +553,19 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
 
     private boolean validateKidsInfo() {
         if (kidNameEditText.getText() == null || kidNameEditText.getText().toString().isEmpty()) {
-            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_empty_name_kid), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_empty_name_kid),
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (StringUtils.isNullOrEmpty(kidsDOBTextView.getText().toString()) || !DateTimeUtils.isValidDate(kidsDOBTextView.getText().toString())) {
-            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_incorrect_date), Toast.LENGTH_SHORT).show();
+        if (StringUtils.isNullOrEmpty(kidsDOBTextView.getText().toString()) || !DateTimeUtils
+                .isValidDate(kidsDOBTextView.getText().toString())) {
+            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_incorrect_date),
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
         if (!maleRadioButton.isChecked() && !femaleRadioButton.isChecked()) {
-            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_choose_gender), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_choose_gender),
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -584,8 +595,10 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
             if (bdaytimestamp != 0) {
                 kmodel.setBirthDay(bdaytimestamp * 1000);
             } else {
-                if (isAdded())
-                    Toast.makeText(getActivity(), getString(R.string.complete_blogger_profile_incorrect_date), Toast.LENGTH_SHORT).show();
+                if (isAdded()) {
+                    Toast.makeText(getActivity(), getString(R.string.complete_blogger_profile_incorrect_date),
+                            Toast.LENGTH_SHORT).show();
+                }
                 return;
             }
             kmodel.setGender(ki.getGender());
@@ -628,8 +641,10 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
             if (bdaytimestamp != 0) {
                 kmodel.setBirthDay(bdaytimestamp * 1000);
             } else {
-                if (isAdded())
-                    Toast.makeText(getActivity(), getString(R.string.complete_blogger_profile_incorrect_date), Toast.LENGTH_SHORT).show();
+                if (isAdded()) {
+                    Toast.makeText(getActivity(), getString(R.string.complete_blogger_profile_incorrect_date),
+                            Toast.LENGTH_SHORT).show();
+                }
                 return;
             }
             kmodel.setGender(ki.getGender());
@@ -673,14 +688,16 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
                         km.setGender(kidsModelArrayList.get(kidsModelArrayList.size() - 1).getGender());
                         addKidView(km, kidsModelArrayList.size());
                     }
-                    addNewKidTextView.setText(BaseApplication.getAppContext().getString(R.string.app_settings_edit_prefs_add));
+                    addNewKidTextView
+                            .setText(BaseApplication.getAppContext().getString(R.string.app_settings_edit_prefs_add));
                     kidNameEditText.setText("");
-                    kidsDOBTextView.setText(BaseApplication.getAppContext().getString(R.string.app_settings_edit_profile_dob));
+                    kidsDOBTextView
+                            .setText(BaseApplication.getAppContext().getString(R.string.app_settings_edit_profile_dob));
                 } else {
                     Toast.makeText(getActivity(), responseData.getReason(), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
                 if (isAdded()) {
                     Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
@@ -693,31 +710,37 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
             if (editKidInfoDialogFragment != null) {
                 editKidInfoDialogFragment.dismiss();
             }
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };
 
     private boolean validateFields() {
         if (StringUtils.isNullOrEmpty(firstNameEditText.getText().toString().trim())) {
-            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_fn_empty), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_fn_empty),
+                    Toast.LENGTH_SHORT).show();
             return false;
         } else if (StringUtils.isNullOrEmpty(describeSelfEditText.getText().toString().trim())) {
-            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_user_bio_empty), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_user_bio_empty),
+                    Toast.LENGTH_SHORT).show();
             return false;
         } else if (StringUtils.isNullOrEmpty(blogTitleEditText.getText().toString().trim())) {
-            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_blog_title_empty), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_blog_title_empty),
+                    Toast.LENGTH_SHORT).show();
             return false;
         } else if (countWords(describeSelfEditText.getText().toString()) > MAX_WORDS) {
             Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_user_bio_max)
-                    + " " + MAX_WORDS + " " + getString(R.string.app_settings_edit_profile_toast_user_bio_words), Toast.LENGTH_SHORT).show();
+                            + " " + MAX_WORDS + " " + getString(R.string.app_settings_edit_profile_toast_user_bio_words),
+                    Toast.LENGTH_SHORT).show();
             return false;
         } else {
             for (int position = 0; position < childInfoContainer.getChildCount(); position++) {
                 View innerLayout = childInfoContainer.getChildAt(position);
                 TextView dobOfKidSpn = (TextView) innerLayout.findViewById(R.id.kidsDOBTextView);
-                if (StringUtils.isNullOrEmpty(dobOfKidSpn.getText().toString()) || !DateTimeUtils.isValidDate(dobOfKidSpn.getText().toString())) {
-                    Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_incorrect_date), Toast.LENGTH_SHORT).show();
+                if (StringUtils.isNullOrEmpty(dobOfKidSpn.getText().toString()) || !DateTimeUtils
+                        .isValidDate(dobOfKidSpn.getText().toString())) {
+                    Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_incorrect_date),
+                            Toast.LENGTH_SHORT).show();
                     return false;
                 }
             }
@@ -759,7 +782,8 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
             UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 if (isAdded()) {
-                    Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_update_success), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_update_success),
+                            Toast.LENGTH_SHORT).show();
                 }
                 UserInfo model = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext());
                 model.setFirst_name(firstNameEditText.getText().toString());
@@ -772,7 +796,7 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
 
         @Override
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };

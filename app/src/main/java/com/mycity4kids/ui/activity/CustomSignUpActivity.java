@@ -6,13 +6,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.annotations.SerializedName;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.request.LoginRegistrationRequest;
 import com.mycity4kids.models.request.UpdateUserDetailsRequest;
@@ -21,7 +19,7 @@ import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
-
+import com.mycity4kids.utils.StringUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -81,7 +79,7 @@ public class CustomSignUpActivity extends BaseActivity implements View.OnClickLi
                 }
             } catch (Exception e) {
                 removeProgressDialog();
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
@@ -91,7 +89,7 @@ public class CustomSignUpActivity extends BaseActivity implements View.OnClickLi
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
             removeProgressDialog();
             Log.d("MC4kException", Log.getStackTraceString(t));
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             showToast(getString(R.string.went_wrong));
         }
     };
@@ -134,7 +132,8 @@ public class CustomSignUpActivity extends BaseActivity implements View.OnClickLi
                     model.setIsNewUser(responseData.getData().get(0).getResult().getIsNewUser());
 
                     SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), model);
-                    SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
+                    SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(),
+                            responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
 
                     if (null == responseData.getData().get(0).getResult().getSocialTokens()) {
                         //token already expired or not yet connected with facebook
@@ -149,7 +148,7 @@ public class CustomSignUpActivity extends BaseActivity implements View.OnClickLi
                     showToast(responseData.getReason());
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
@@ -159,7 +158,7 @@ public class CustomSignUpActivity extends BaseActivity implements View.OnClickLi
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
             removeProgressDialog();
             Log.d("MC4kException", Log.getStackTraceString(t));
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             showToast(getString(R.string.went_wrong));
         }
     };
@@ -194,7 +193,7 @@ public class CustomSignUpActivity extends BaseActivity implements View.OnClickLi
                 }
             } catch (Exception e) {
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 showToast(getString(R.string.went_wrong));
             }
         }
@@ -203,7 +202,7 @@ public class CustomSignUpActivity extends BaseActivity implements View.OnClickLi
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
             removeProgressDialog();
             Log.d("MC4kException", Log.getStackTraceString(t));
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             showToast(getString(R.string.went_wrong));
         }
     };

@@ -24,10 +24,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ui.PlaybackControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -167,7 +167,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             removeProgressDialog();
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException("Vlog API failure");
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -181,7 +181,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 }
             } catch (Exception e) {
                 removeProgressDialog();
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -255,7 +255,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                     showToast(getString(R.string.server_went_wrong));
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
@@ -301,7 +301,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         } else {
             showToast(getString(R.string.server_went_wrong));
         }
-        Crashlytics.logException(t);
+        FirebaseCrashlytics.getInstance().recordException(t);
         Log.d("MC4kException", Log.getStackTraceString(t));
     }
 
@@ -362,14 +362,14 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                     finalList.get(updateFollowPos).setFollowed(false);
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<FollowUnfollowUserResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -387,14 +387,14 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                     finalList.get(updateFollowPos).setFollowed(true);
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<FollowUnfollowUserResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -428,7 +428,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -556,7 +556,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                             showToast(getString(R.string.server_went_wrong));
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                         showToast(getString(R.string.went_wrong));
                     }
@@ -580,7 +580,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             ViewAllCommentsFragment commentFrag = new ViewAllCommentsFragment();
             this.addFragment(commentFrag, args);
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
@@ -730,7 +730,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                                 ""
                         );
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                     return true;

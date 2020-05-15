@@ -12,8 +12,8 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.crashlytics.android.Crashlytics
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.preference.SharedPrefUtils
 
@@ -65,7 +65,7 @@ class FetchAdvertisementInfoService :
                 AdvertisingIdClient.getAdvertisingIdInfo(applicationContext)
             SharedPrefUtils.setAdvertisementId(applicationContext, advertisingIdInfo.id)
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }

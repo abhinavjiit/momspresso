@@ -8,13 +8,15 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
-import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
@@ -23,14 +25,9 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.LeafTopicsPagerAdapter;
 import com.mycity4kids.ui.fragment.LeafTopicArticlesTabFragment;
 import com.mycity4kids.utils.AppUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
 public class LeafNodeTopicArticlesActivity extends BaseActivity {
 
@@ -68,7 +65,6 @@ public class LeafNodeTopicArticlesActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             jsonMyObject = extras.getString("leafTopicParent");
@@ -77,10 +73,10 @@ public class LeafNodeTopicArticlesActivity extends BaseActivity {
         leafTopic = new Gson().fromJson(jasonMyObject1, Topics.class);
         leafTopicParent = new Gson().fromJson(jsonMyObject, Topics.class);
 
-
         toolbarTitleTextView.setText(leafTopicParent.getDisplay_name());
 
-        Utils.pushOpenScreenEvent(this, "LeafTopicArticlesScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(this, "LeafTopicArticlesScreen",
+                SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
 //        if (subTopicsList.size() == 0) {
         Topics mainTopic = new Topics();
@@ -103,7 +99,8 @@ public class LeafNodeTopicArticlesActivity extends BaseActivity {
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         AppUtils.changeTabsFont(tabLayout);
 
-        pagerAdapter = new LeafTopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), leafTopicParent.getChild());
+        pagerAdapter = new LeafTopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(),
+                leafTopicParent.getChild());
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -152,7 +149,8 @@ public class LeafNodeTopicArticlesActivity extends BaseActivity {
                 for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
                     ArrayList<Topics> tempList = new ArrayList<>();
                     for (int k = 0; k < responseData.getData().get(i).getChild().get(j).getChild().size(); k++) {
-                        if ("1".equals(responseData.getData().get(i).getChild().get(j).getChild().get(k).getShowInMenu())) {
+                        if ("1".equals(
+                                responseData.getData().get(i).getChild().get(j).getChild().get(k).getShowInMenu())) {
                             //Adding All sub-subcategories
                             responseData.getData().get(i).getChild().get(j).getChild().get(k)
                                     .setParentId(responseData.getData().get(i).getId());
@@ -164,7 +162,8 @@ public class LeafNodeTopicArticlesActivity extends BaseActivity {
                     responseData.getData().get(i).getChild().get(j).setChild(tempList);
                 }
 
-                if ("1".equals(responseData.getData().get(i).getShowInMenu()) && !AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())) {
+                if ("1".equals(responseData.getData().get(i).getShowInMenu()) && !AppConstants.SHORT_STORY_CATEGORYID
+                        .equals(responseData.getData().get(i).getId())) {
                     for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
                         if ("1".equals(responseData.getData().get(i).getChild().get(k).getShowInMenu())) {
                             //Adding All subcategories
@@ -181,12 +180,18 @@ public class LeafNodeTopicArticlesActivity extends BaseActivity {
                                 Topics dupChildTopic = new Topics();
                                 dupChildTopic.setChild(new ArrayList<Topics>());
                                 dupChildTopic.setId(responseData.getData().get(i).getChild().get(k).getId());
-                                dupChildTopic.setIsSelected(responseData.getData().get(i).getChild().get(k).isSelected());
-                                dupChildTopic.setParentId(responseData.getData().get(i).getChild().get(k).getParentId());
-                                dupChildTopic.setDisplay_name(responseData.getData().get(i).getChild().get(k).getDisplay_name());
-                                dupChildTopic.setParentName(responseData.getData().get(i).getChild().get(k).getParentName());
-                                dupChildTopic.setPublicVisibility(responseData.getData().get(i).getChild().get(k).getPublicVisibility());
-                                dupChildTopic.setShowInMenu(responseData.getData().get(i).getChild().get(k).getShowInMenu());
+                                dupChildTopic
+                                        .setIsSelected(responseData.getData().get(i).getChild().get(k).isSelected());
+                                dupChildTopic
+                                        .setParentId(responseData.getData().get(i).getChild().get(k).getParentId());
+                                dupChildTopic.setDisplay_name(
+                                        responseData.getData().get(i).getChild().get(k).getDisplay_name());
+                                dupChildTopic
+                                        .setParentName(responseData.getData().get(i).getChild().get(k).getParentName());
+                                dupChildTopic.setPublicVisibility(
+                                        responseData.getData().get(i).getChild().get(k).getPublicVisibility());
+                                dupChildTopic
+                                        .setShowInMenu(responseData.getData().get(i).getChild().get(k).getShowInMenu());
                                 dupChildTopic.setSlug(responseData.getData().get(i).getChild().get(k).getSlug());
                                 dupChildTopic.setTitle(responseData.getData().get(i).getChild().get(k).getTitle());
                                 duplicateEntry.add(dupChildTopic);
@@ -204,7 +209,7 @@ public class LeafNodeTopicArticlesActivity extends BaseActivity {
             BaseApplication.setTopicList(allTopicsList);
             BaseApplication.setTopicsMap(allTopicsMap);
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }

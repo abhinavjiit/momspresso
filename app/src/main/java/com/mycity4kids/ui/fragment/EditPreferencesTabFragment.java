@@ -4,11 +4,6 @@ import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,14 +11,16 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.crashlytics.android.Crashlytics;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.facebook.FacebookUtils;
@@ -51,17 +48,14 @@ import com.mycity4kids.ui.adapter.NotificationSubscriptionAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.ConnectivityUtils;
-
-import org.apmem.tools.layouts.FlowLayout;
-import org.json.JSONObject;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import okhttp3.ResponseBody;
+import org.apmem.tools.layouts.FlowLayout;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -88,7 +82,8 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.edit_preferences_tab_fragment, container, false);
 
         subscriptionSettingsList = new ArrayList<>();
@@ -124,7 +119,6 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
         notificationSettingRecyclerView.setLayoutManager(notificationLayoutManager);
         notificationSettingRecyclerView.setAdapter(notificationSettingsListAdapter);
 
-
         checkNotificationsStatus();
         checkSubscriptionStatus();
         getFollowedTopics();
@@ -143,20 +137,23 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
         showProgressDialog("Please wait ...");
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         SubscriptionsAPI subscriptionsAPI = retrofit.create(SubscriptionsAPI.class);
-        Call<SubscriptionSettingsResponse> call = subscriptionsAPI.getSubscriptionList(SharedPrefUtils.getUserDetailModel(getActivity()).getEmail());
+        Call<SubscriptionSettingsResponse> call = subscriptionsAPI
+                .getSubscriptionList(SharedPrefUtils.getUserDetailModel(getActivity()).getEmail());
         call.enqueue(subscriptionSettingsResponseCallback);
     }
 
     private void getFollowedTopics() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI followListAPI = retrofit.create(TopicsCategoryAPI.class);
-        Call<FollowUnfollowCategoriesResponse> categoriesResponseCall = followListAPI.getFollowedCategories(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId());
+        Call<FollowUnfollowCategoriesResponse> categoriesResponseCall = followListAPI
+                .getFollowedCategories(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId());
         categoriesResponseCall.enqueue(getFollowedTopicsResponseCallback);
     }
 
     private Callback<SubscriptionSettingsResponse> subscriptionSettingsResponseCallback = new Callback<SubscriptionSettingsResponse>() {
         @Override
-        public void onResponse(Call<SubscriptionSettingsResponse> call, retrofit2.Response<SubscriptionSettingsResponse> response) {
+        public void onResponse(Call<SubscriptionSettingsResponse> call,
+                retrofit2.Response<SubscriptionSettingsResponse> response) {
 
             removeProgressDialog();
             if (response == null || response.body() == null) {
@@ -176,24 +173,29 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                             subscriptionAndLanguageSettingsModel.setName(entry.getKey());
                             switch (entry.getKey()) {
                                 case "newsletters":
-                                    subscriptionAndLanguageSettingsModel.setDisplayName(getString(R.string.app_settings_edit_prefs_subscribe_top_reads));
+                                    subscriptionAndLanguageSettingsModel.setDisplayName(
+                                            getString(R.string.app_settings_edit_prefs_subscribe_top_reads));
                                     break;
                                 case "trending":
-                                    subscriptionAndLanguageSettingsModel.setDisplayName(getString(R.string.app_settings_edit_prefs_subscribe_trending_blog));
+                                    subscriptionAndLanguageSettingsModel.setDisplayName(
+                                            getString(R.string.app_settings_edit_prefs_subscribe_trending_blog));
                                     break;
                                 case "momspresso":
-                                    subscriptionAndLanguageSettingsModel.setDisplayName(getString(R.string.app_settings_edit_prefs_subscribe_momspresso));
+                                    subscriptionAndLanguageSettingsModel.setDisplayName(
+                                            getString(R.string.app_settings_edit_prefs_subscribe_momspresso));
                                     break;
                                 case "editorial":
-                                    subscriptionAndLanguageSettingsModel.setDisplayName(getString(R.string.app_settings_edit_prefs_subscribe_city_best));
+                                    subscriptionAndLanguageSettingsModel.setDisplayName(
+                                            getString(R.string.app_settings_edit_prefs_subscribe_city_best));
                                     break;
                                 default:
                                     subscriptionAndLanguageSettingsModel.setDisplayName(entry.getKey());
                             }
                             subscriptionSettingsList.add(subscriptionAndLanguageSettingsModel);
                         } else if (entry.getValue() instanceof Map) {
-                            Map<String, String> retMap = new Gson().fromJson(entry.getValue().toString(), new TypeToken<HashMap<String, String>>() {
-                            }.getType());
+                            Map<String, String> retMap = new Gson()
+                                    .fromJson(entry.getValue().toString(), new TypeToken<HashMap<String, String>>() {
+                                    }.getType());
 
                             for (Map.Entry<String, String> langEntry : retMap.entrySet()) {
                                 SubscriptionAndLanguageSettingsModel subscriptionAndLanguageSettingsModel = new SubscriptionAndLanguageSettingsModel();
@@ -211,21 +213,22 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                 }
             } catch (Exception e) {
                 removeProgressDialog();
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<SubscriptionSettingsResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
     private Callback<NotificationSettingsResponse> notificationSettingsResponseCallback = new Callback<NotificationSettingsResponse>() {
         @Override
-        public void onResponse(Call<NotificationSettingsResponse> call, retrofit2.Response<NotificationSettingsResponse> response) {
+        public void onResponse(Call<NotificationSettingsResponse> call,
+                retrofit2.Response<NotificationSettingsResponse> response) {
 
             removeProgressDialog();
             if (response == null || response.body() == null) {
@@ -239,7 +242,8 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                     for (Map.Entry<String, String> entry : responseData.getData().getResult().entrySet()) {
                         NotificationSettingsModel notificationSettingsModel = new NotificationSettingsModel();
                         notificationSettingsModel.setId(entry.getKey());
-                        notificationSettingsModel.setName(SharedPrefUtils.getNotificationConfig(BaseApplication.getAppContext(), entry.getKey()));
+                        notificationSettingsModel.setName(
+                                SharedPrefUtils.getNotificationConfig(BaseApplication.getAppContext(), entry.getKey()));
                         notificationSettingsModel.setStatus(entry.getValue());
                         notificationSettingsList.add(notificationSettingsModel);
                         Log.d("Notification Items = ", entry.getKey() + "/" + entry.getValue());
@@ -250,25 +254,26 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                 }
             } catch (Exception e) {
                 removeProgressDialog();
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<NotificationSettingsResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
     private Callback<FollowUnfollowCategoriesResponse> getFollowedTopicsResponseCallback = new Callback<FollowUnfollowCategoriesResponse>() {
         @Override
-        public void onResponse(Call<FollowUnfollowCategoriesResponse> call, retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
+        public void onResponse(Call<FollowUnfollowCategoriesResponse> call,
+                retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
             removeProgressDialog();
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
 //                showToast("Something went wrong from server");
                 return;
             }
@@ -277,13 +282,14 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     mDatalist = (ArrayList<String>) responseData.getData();
                     try {
-                        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
+                        FileInputStream fileInputStream = BaseApplication.getAppContext()
+                                .openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
                         String fileContent = AppUtils.convertStreamToString(fileInputStream);
                         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                         FollowTopics[] res = gson.fromJson(fileContent, FollowTopics[].class);
                         checkCurrentCategoryExists(res, mDatalist);
                     } catch (FileNotFoundException e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
                         Retrofit retro = BaseApplication.getInstance().getRetrofit();
                         final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
@@ -296,7 +302,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
 //                    showToast(responseData.getReason());
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
 //                showToast(getString(R.string.went_wrong));
             }
@@ -305,7 +311,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
         @Override
         public void onFailure(Call<FollowUnfollowCategoriesResponse> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
 //            showToast(getString(R.string.went_wrong));
         }
@@ -324,35 +330,39 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
 
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-                String popularURL = jsonObject.getJSONObject("data").getJSONObject("result").getJSONObject("category").getString("popularLocation");
+                String popularURL = jsonObject.getJSONObject("data").getJSONObject("result").getJSONObject("category")
+                        .getString("popularLocation");
                 Call<ResponseBody> caller = topicsAPI.downloadTopicsListForFollowUnfollow(popularURL);
 
                 caller.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE, response.body());
+                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(),
+                                AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE, response.body());
                         Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
 
                         try {
-                            FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
+                            FileInputStream fileInputStream = BaseApplication.getAppContext()
+                                    .openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
                             String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory())
+                                    .create();
                             FollowTopics[] res = gson.fromJson(fileContent, FollowTopics[].class);
                             checkCurrentCategoryExists(res, mDatalist);
                         } catch (FileNotFoundException e) {
-                            Crashlytics.logException(e);
+                            FirebaseCrashlytics.getInstance().recordException(e);
                             Log.d("FileNotFoundException", Log.getStackTraceString(e));
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Crashlytics.logException(t);
+                        FirebaseCrashlytics.getInstance().recordException(t);
                         Log.d("MC4KException", Log.getStackTraceString(t));
                     }
                 });
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
 //                showToast(getString(R.string.went_wrong));
             }
@@ -361,7 +371,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
 //            showToast(getString(R.string.went_wrong));
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };
@@ -386,7 +396,8 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
         }
         for (int i = 0; i < followedSubSubTopicList.size(); i++) {
             followedSubSubTopicList.get(i).setIsSelected(true);
-            final LinearLayout subsubLL = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.topic_follow_unfollow_item, null);
+            final LinearLayout subsubLL = (LinearLayout) LayoutInflater.from(getActivity())
+                    .inflate(R.layout.topic_follow_unfollow_item, null);
             final TextView catTextView = ((TextView) subsubLL.getChildAt(0));
             catTextView.setText(followedSubSubTopicList.get(i).getDisplay_name());
             catTextView.setSelected(true);
@@ -426,27 +437,30 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
         if (!updateTopicList.isEmpty()) {
             followUnfollowCategoriesRequest.setCategories(updateTopicList);
             Call<FollowUnfollowCategoriesResponse> categoriesResponseCall =
-                    topicsCategoryAPI.followCategories(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), followUnfollowCategoriesRequest);
+                    topicsCategoryAPI.followCategories(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
+                            followUnfollowCategoriesRequest);
             categoriesResponseCall.enqueue(followUnfollowCategoriesResponseCallback);
         }
     }
 
     private Callback<FollowUnfollowCategoriesResponse> followUnfollowCategoriesResponseCallback = new Callback<FollowUnfollowCategoriesResponse>() {
         @Override
-        public void onResponse(Call<FollowUnfollowCategoriesResponse> call, retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
+        public void onResponse(Call<FollowUnfollowCategoriesResponse> call,
+                retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
             removeProgressDialog();
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
                 FollowUnfollowCategoriesResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    SharedPrefUtils.setFollowedTopicsCount(BaseApplication.getAppContext(), responseData.getData().size());
+                    SharedPrefUtils
+                            .setFollowedTopicsCount(BaseApplication.getAppContext(), responseData.getData().size());
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -454,7 +468,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
         @Override
         public void onFailure(Call<FollowUnfollowCategoriesResponse> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -469,7 +483,8 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
         Call<NotificationSettingsResponse> call = notificationsAPI.updateNotificationSettings(map);
         call.enqueue(new Callback<NotificationSettingsResponse>() {
             @Override
-            public void onResponse(Call<NotificationSettingsResponse> call, retrofit2.Response<NotificationSettingsResponse> response) {
+            public void onResponse(Call<NotificationSettingsResponse> call,
+                    retrofit2.Response<NotificationSettingsResponse> response) {
                 if (response == null || response.body() == null) {
 //                showToast("Something went wrong from server");
                     return;
@@ -482,15 +497,17 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                         }
                     } else {
                         if (null != getActivity()) {
-                            Toast.makeText(getActivity(), "Error while updating notification settings", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Error while updating notification settings",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 } catch (Exception e) {
                     if (null != getActivity()) {
-                        Toast.makeText(getActivity(), "Error while updating notification settings", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Error while updating notification settings", Toast.LENGTH_SHORT)
+                                .show();
                     }
                     removeProgressDialog();
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
             }
@@ -498,9 +515,10 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
             @Override
             public void onFailure(Call<NotificationSettingsResponse> call, Throwable t) {
                 if (null != getActivity()) {
-                    Toast.makeText(getActivity(), "Error while updating notification settings", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Error while updating notification settings", Toast.LENGTH_SHORT)
+                            .show();
                 }
-                Crashlytics.logException(t);
+                FirebaseCrashlytics.getInstance().recordException(t);
                 Log.d("MC4kException", Log.getStackTraceString(t));
             }
         });
@@ -527,11 +545,16 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
         call.enqueue(updateSubscriptionsReponseListener);
         Log.d("GTM Subscription", ":" + map.values());
         for (int i = 0; i < subscriptionSettingsList.size(); i++) {
-            if (!subscriptionSettingsList.get(i).getStatus().equals(subscriptionSettingsList.get(i).getOriginalStatus())) {
+            if (!subscriptionSettingsList.get(i).getStatus()
+                    .equals(subscriptionSettingsList.get(i).getOriginalStatus())) {
                 if ("1".equals(subscriptionSettingsList.get(i).getStatus())) {
-                    Utils.pushEnableSubscriptionEvent(getActivity(), "SettingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), subscriptionSettingsList.get(i).getName());
+                    Utils.pushEnableSubscriptionEvent(getActivity(), "SettingScreen",
+                            SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
+                            subscriptionSettingsList.get(i).getName());
                 } else {
-                    Utils.pushDisableSubscriptionEvent(getActivity(), "SettingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), subscriptionSettingsList.get(i).getName());
+                    Utils.pushDisableSubscriptionEvent(getActivity(), "SettingScreen",
+                            SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
+                            subscriptionSettingsList.get(i).getName());
                 }
             }
             subscriptionSettingsList.get(i).setOriginalStatus(subscriptionSettingsList.get(i).getStatus());
@@ -541,7 +564,8 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
 
     private Callback<SubscriptionSettingsResponse> updateSubscriptionsReponseListener = new Callback<SubscriptionSettingsResponse>() {
         @Override
-        public void onResponse(Call<SubscriptionSettingsResponse> call, retrofit2.Response<SubscriptionSettingsResponse> response) {
+        public void onResponse(Call<SubscriptionSettingsResponse> call,
+                retrofit2.Response<SubscriptionSettingsResponse> response) {
             if (response == null || response.body() == null) {
                 return;
             }
@@ -553,15 +577,17 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                     }
                 } else {
                     if (null != getActivity()) {
-                        Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT)
+                                .show();
                     }
                 }
             } catch (Exception e) {
                 if (null != getActivity()) {
-                    Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT)
+                            .show();
                 }
                 removeProgressDialog();
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -571,7 +597,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
             if (null != getActivity()) {
                 Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
             }
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -580,7 +606,8 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.showMoreFollowedTopicsTextView:
-                flowLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                flowLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT));
                 showMoreFollowedTopicsTextView.setVisibility(View.GONE);
                 break;
             case R.id.addTopicsBtn:
@@ -595,7 +622,8 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                 updateFollowedUnfollowedTopics();
                 break;
             case R.id.fbConnectBtn:
-                if (getString(R.string.app_settings_edit_prefs_add).equals(facebookConnectTextView.getText().toString())) {
+                if (getString(R.string.app_settings_edit_prefs_add)
+                        .equals(facebookConnectTextView.getText().toString())) {
                     FacebookUtils.facebookLogin(getActivity(), this);
                 }
                 break;
@@ -653,14 +681,14 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                 }
             } catch (Exception e) {
                 removeProgressDialog();
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<BaseResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };

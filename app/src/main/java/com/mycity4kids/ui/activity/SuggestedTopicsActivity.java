@@ -4,18 +4,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
-
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
@@ -29,13 +27,11 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.SuggestedTopicsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ConnectivityUtils;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -65,7 +61,8 @@ public class SuggestedTopicsActivity extends BaseActivity {
         ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
-        Utils.pushOpenScreenEvent(this, "SuggestedTopicScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(this, "SuggestedTopicScreen",
+                SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         languagesTabLayout = (TabLayout) findViewById(R.id.languagesTabLayout);
@@ -88,7 +85,8 @@ public class SuggestedTopicsActivity extends BaseActivity {
 
     private Callback<SuggestedTopicsResponse> suggestedTopicsResponseCallback = new Callback<SuggestedTopicsResponse>() {
         @Override
-        public void onResponse(Call<SuggestedTopicsResponse> call, retrofit2.Response<SuggestedTopicsResponse> response) {
+        public void onResponse(Call<SuggestedTopicsResponse> call,
+                retrofit2.Response<SuggestedTopicsResponse> response) {
             if (response == null || response.body() == null) {
                 showToast(getString(R.string.server_went_wrong));
                 return;
@@ -103,7 +101,7 @@ public class SuggestedTopicsActivity extends BaseActivity {
                     showToast(getString(R.string.went_wrong));
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
@@ -112,7 +110,7 @@ public class SuggestedTopicsActivity extends BaseActivity {
 
         @Override
         public void onFailure(Call<SuggestedTopicsResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };
@@ -125,7 +123,8 @@ public class SuggestedTopicsActivity extends BaseActivity {
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         BloggerDashboardAPI userpublishedArticlesAPI = retro.create(BloggerDashboardAPI.class);
-        final Call<ArticleListingResponse> call = userpublishedArticlesAPI.getAuthorsPublishedArticles(SharedPrefUtils.getUserDetailModel(this).getDynamoId(), 0, 1, 1);
+        final Call<ArticleListingResponse> call = userpublishedArticlesAPI
+                .getAuthorsPublishedArticles(SharedPrefUtils.getUserDetailModel(this).getDynamoId(), 0, 1, 1);
         call.enqueue(userPublishedArticleResponseListener);
     }
 
@@ -144,14 +143,14 @@ public class SuggestedTopicsActivity extends BaseActivity {
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -174,7 +173,8 @@ public class SuggestedTopicsActivity extends BaseActivity {
 
     private void populateLanguagesTabs(SuggestedTopicsResponse response) {
         try {
-            FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.LANGUAGES_JSON_FILE);
+            FileInputStream fileInputStream = BaseApplication.getAppContext()
+                    .openFileInput(AppConstants.LANGUAGES_JSON_FILE);
             String fileContent = AppUtils.convertStreamToString(fileInputStream);
 //            ConfigResult res = new Gson().fromJson(fileContent, ConfigResult.class);
             LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(
@@ -185,15 +185,18 @@ public class SuggestedTopicsActivity extends BaseActivity {
             ArrayList<ArrayList<String>> languageConfigModelArrayList = new ArrayList<>();
             languageTagList = new ArrayList<>();
             languageKeyList = new ArrayList<>();
-            if (response.getData().get(0).getResult().get("0") != null && !response.getData().get(0).getResult().get("0").isEmpty()) {
+            if (response.getData().get(0).getResult().get("0") != null && !response.getData().get(0).getResult()
+                    .get("0").isEmpty()) {
                 languagesTabLayout.addTab(languagesTabLayout.newTab().setText("ENGLISH"));
                 languageNameList.add("ENGLISH");
                 languageConfigModelArrayList.add(response.getData().get(0).getResult().get("0"));
                 languageKeyList.add("0");
             }
             for (final Map.Entry<String, LanguageConfigModel> entry : retMap.entrySet()) {
-                if (response.getData().get(0).getResult().get(entry.getKey()) != null && !response.getData().get(0).getResult().get(entry.getKey()).isEmpty()) {
-                    languagesTabLayout.addTab(languagesTabLayout.newTab().setText(entry.getValue().getDisplay_name().toUpperCase()));
+                if (response.getData().get(0).getResult().get(entry.getKey()) != null && !response.getData().get(0)
+                        .getResult().get(entry.getKey()).isEmpty()) {
+                    languagesTabLayout.addTab(languagesTabLayout.newTab()
+                            .setText(entry.getValue().getDisplay_name().toUpperCase()));
                     languageNameList.add(entry.getValue().getDisplay_name().toUpperCase());
                     languageConfigModelArrayList.add(response.getData().get(0).getResult().get(entry.getKey()));
                     languageKeyList.add(entry.getKey());
@@ -209,7 +212,8 @@ public class SuggestedTopicsActivity extends BaseActivity {
             }
 
             AppUtils.changeTabsFont(languagesTabLayout);
-            final SuggestedTopicsPagerAdapter adapter = new SuggestedTopicsPagerAdapter(getSupportFragmentManager(), languagesTabLayout.getTabCount(), languageConfigModelArrayList, languageNameList);
+            final SuggestedTopicsPagerAdapter adapter = new SuggestedTopicsPagerAdapter(getSupportFragmentManager(),
+                    languagesTabLayout.getTabCount(), languageConfigModelArrayList, languageNameList);
             languagesViewPager.setAdapter(adapter);
 
             languagesViewPager.setCurrentItem(tabPosition);
@@ -224,7 +228,6 @@ public class SuggestedTopicsActivity extends BaseActivity {
 
             }*/
 
-
             languagesTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
@@ -233,7 +236,6 @@ public class SuggestedTopicsActivity extends BaseActivity {
 
                 @Override
                 public void onTabUnselected(TabLayout.Tab tab) {
-
 
                 }
 
@@ -244,7 +246,7 @@ public class SuggestedTopicsActivity extends BaseActivity {
                 }
             });
         } catch (FileNotFoundException ffe) {
-            Crashlytics.logException(ffe);
+            FirebaseCrashlytics.getInstance().recordException(ffe);
             Log.d("MC4kException", Log.getStackTraceString(ffe));
         }
     }

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.models.response.FacebookInviteFriendsData
 import com.squareup.picasso.Picasso
@@ -61,7 +61,7 @@ class FBInviteFriendsAdapter(private val mListener: RecyclerViewClickListener) :
                     position
                 ) { list?.first() }?.lastName
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
 
@@ -70,7 +70,7 @@ class FBInviteFriendsAdapter(private val mListener: RecyclerViewClickListener) :
                 R.drawable.default_article
             ).error(R.drawable.default_article).fit().into(holder.userImageView)
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
         if (list?.get(position)?.isFollowing == "1") {

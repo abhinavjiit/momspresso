@@ -35,8 +35,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -172,7 +172,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                                 } catch (Exception e) {
                                     vlogsListingAndDetailResults.get(position).setCarouselRequestRunning(false);
                                     vlogsListingAndDetailResults.get(position).setResponseReceived(false);
-                                    Crashlytics.logException(e);
+                                    FirebaseCrashlytics.getInstance().recordException(e);
                                     Log.d("MC4kException", Log.getStackTraceString(e));
                                 }
                             }
@@ -386,7 +386,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                             String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
             });
@@ -403,7 +403,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                     Utils.pushProfileEvents(context, "CTA_Vlog_Add_To_Collection",
                             "VideoRecyclerViewAdapter", "Add to Collection", "-");
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
             });
@@ -448,7 +448,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                                 context.getString(R.string.moderation_or_share_whatsapp_not_installed),
                                 Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -464,7 +464,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                                     responseData.getAuthor().getFirstName() + " " + responseData.getAuthor()
                                             .getLastName(), responseData.getId(), responseData.getTitleSlug());
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
             });
@@ -484,7 +484,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                                     responseData.getAuthor().getFirstName() + " " + responseData.getAuthor()
                                             .getLastName(), responseData.getId(), responseData.getTitleSlug());
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
             });

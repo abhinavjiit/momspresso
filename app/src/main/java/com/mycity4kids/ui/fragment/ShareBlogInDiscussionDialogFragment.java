@@ -2,15 +2,14 @@ package com.mycity4kids.ui.fragment;
 
 import android.accounts.NetworkErrorException;
 import android.os.Bundle;
-import androidx.fragment.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
+import androidx.fragment.app.DialogFragment;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.request.AddGroupPostRequest;
@@ -18,7 +17,6 @@ import com.mycity4kids.models.response.AddGroupPostResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -36,7 +34,7 @@ public class ShareBlogInDiscussionDialogFragment extends DialogFragment implemen
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.share_blog_discussion_fragment_dialog, container,
                 false);
@@ -78,7 +76,8 @@ public class ShareBlogInDiscussionDialogFragment extends DialogFragment implemen
         addGroupPostRequest.setContent(articleUrl);
         addGroupPostRequest.setType("0");
         addGroupPostRequest.setGroupId(groupId);
-        addGroupPostRequest.setUserId(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+        addGroupPostRequest
+                .setUserId(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
 
         Call<AddGroupPostResponse> call = groupsAPI.createPost(addGroupPostRequest);
         call.enqueue(postAdditionResponseCallback);
@@ -91,7 +90,7 @@ public class ShareBlogInDiscussionDialogFragment extends DialogFragment implemen
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -105,19 +104,21 @@ public class ShareBlogInDiscussionDialogFragment extends DialogFragment implemen
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                if (isAdded())
+                if (isAdded()) {
                     ((GroupDetailsActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                }
 //                showToast(getString(R.string.went_wrong));
             }
         }
 
         @Override
         public void onFailure(Call<AddGroupPostResponse> call, Throwable t) {
-            if (isAdded())
+            if (isAdded()) {
                 ((GroupDetailsActivity) getActivity()).showToast(getString(R.string.went_wrong));
-            Crashlytics.logException(t);
+            }
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -127,6 +128,7 @@ public class ShareBlogInDiscussionDialogFragment extends DialogFragment implemen
     }
 
     public interface IForYourArticleRemove {
+
         void onForYouArticleRemoved(int position);
     }
 }

@@ -21,20 +21,17 @@ import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
-
-import com.crashlytics.android.Crashlytics;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.snackbar.Snackbar;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.StringUtils;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
@@ -49,14 +46,11 @@ import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
 import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.RoundedTransformation;
+import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -65,10 +59,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import org.json.JSONException;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -81,7 +76,8 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
     private static final int REQUEST_SELECT_PLACE = 1000;
     private static final int REQUEST_CAMERA = 0;
     private static final int REQUEST_EDIT_PICTURE = 1;
-    private static String[] PERMISSIONS_EDIT_PICTURE = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
+    private static String[] PERMISSIONS_EDIT_PICTURE = {Manifest.permission.CAMERA,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     public static final int ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111;
@@ -160,7 +156,8 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         changeProfilePicImageView.setOnClickListener(this);
 
         if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))) {
-            Picasso.get().load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(R.drawable.family_xxhdpi)
+            Picasso.get().load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))
+                    .placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(profilePicImageView);
         }
 
@@ -173,7 +170,8 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         }
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
-        Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        Call<UserDetailResponse> call = bloggerDashboardAPI
+                .getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         call.enqueue(getUserDetailsResponseCallback);
 
         if (comingFrom.equals("Videos")) {
@@ -198,21 +196,26 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 if (comingFrom.equals("ShortStoryAndArticle")) {
                     if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitle())) {
-                        blogTitleEditText.setText(SharedPrefUtils.getUserDetailModel(BlogSetupActivity.this).getDynamoId());
+                        blogTitleEditText
+                                .setText(SharedPrefUtils.getUserDetailModel(BlogSetupActivity.this).getDynamoId());
                     } else {
                         blogTitleEditText.setText(responseData.getData().get(0).getResult().getBlogTitle());
                     }
-                    if (responseData.getData().get(0).getResult().getEmail() != null && !responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+                    if (responseData.getData().get(0).getResult().getEmail() != null && !responseData.getData().get(0)
+                            .getResult().getEmail().isEmpty()) {
                         emailEditText.setText(responseData.getData().get(0).getResult().getEmail());
                     }
                 }
-                if (responseData.getData().get(0).getResult().getUserBio() != null && !responseData.getData().get(0).getResult().getUserBio().isEmpty()) {
+                if (responseData.getData().get(0).getResult().getUserBio() != null && !responseData.getData().get(0)
+                        .getResult().getUserBio().isEmpty()) {
                     aboutSelfEditText.setText(responseData.getData().get(0).getResult().getUserBio());
                 }
-                if (null == responseData.getData().get(0).getResult().getPhone() || StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getPhone().getMobile())) {
+                if (null == responseData.getData().get(0).getResult().getPhone() || StringUtils
+                        .isNullOrEmpty(responseData.getData().get(0).getResult().getPhone().getMobile())) {
                 } else {
                     if (responseData.getData().get(0).getResult().getPhone().getMobile().contains("+91")) {
-                        phoneEditText.setText(responseData.getData().get(0).getResult().getPhone().getMobile().replace("+91", ""));
+                        phoneEditText.setText(
+                                responseData.getData().get(0).getResult().getPhone().getMobile().replace("+91", ""));
                     } else {
                         phoneEditText.setText(responseData.getData().get(0).getResult().getPhone().getMobile());
                     }
@@ -227,7 +230,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         @Override
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -251,7 +254,8 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                 startActivityForResult(intent, REQUEST_SELECT_PLACE);
                 break;
             case R.id.savePublishTextView:
-                Utils.pushBlogSetupSubmitEvent(BlogSetupActivity.this, "BlogSetupScreen", SharedPrefUtils.getUserDetailModel(BlogSetupActivity.this).getDynamoId());
+                Utils.pushBlogSetupSubmitEvent(BlogSetupActivity.this, "BlogSetupScreen",
+                        SharedPrefUtils.getUserDetailModel(BlogSetupActivity.this).getDynamoId());
                 if (validateFields()) {
                     saveUserDetails();
                 }
@@ -261,16 +265,20 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (ActivityCompat.checkSelfPermission(BlogSetupActivity.this, Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(BlogSetupActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                            && ActivityCompat
+                            .checkSelfPermission(BlogSetupActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(BlogSetupActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            && ActivityCompat
+                            .checkSelfPermission(BlogSetupActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED) {
                         requestCameraAndStoragePermissions();
                     } else if (ActivityCompat.checkSelfPermission(BlogSetupActivity.this, Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(BlogSetupActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                            && ActivityCompat
+                            .checkSelfPermission(BlogSetupActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
                             == PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(BlogSetupActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            && ActivityCompat
+                            .checkSelfPermission(BlogSetupActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                             == PackageManager.PERMISSION_GRANTED) {
                         requestCameraPermission();
                     } else {
@@ -315,20 +323,20 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                         @Override
                         public void onClick(View view) {
                             ActivityCompat.requestPermissions(BlogSetupActivity.this,
-                                    new String[]{Manifest.permission.CAMERA},
+                                    new String[] {Manifest.permission.CAMERA},
                                     REQUEST_CAMERA);
                         }
                     })
                     .show();
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA},
                     REQUEST_CAMERA);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CAMERA) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Snackbar.make(mLayout, R.string.permision_available_camera,
@@ -373,7 +381,10 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                         }
                         if (photoFile != null) {
                             try {
-                                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, GenericFileProvider.getUriForFile(BlogSetupActivity.this, getApplicationContext().getPackageName() + ".my.package.name.provider", createImageFile()));
+                                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, GenericFileProvider
+                                        .getUriForFile(BlogSetupActivity.this,
+                                                getApplicationContext().getPackageName() + ".my.package.name.provider",
+                                                createImageFile()));
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -411,18 +422,21 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
     private boolean validateFields() {
         if (comingFrom.equals("ShortStoryAndArticle")) {
             if (StringUtils.isNullOrEmpty(aboutSelfEditText.getText().toString().trim())) {
-                Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_user_bio_empty), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_user_bio_empty),
+                        Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
         if (StringUtils.isNullOrEmpty(blogTitleEditText.getText().toString().trim())) {
-            Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_blog_title_empty), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_blog_title_empty),
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
         if (comingFrom.equals("ShortStoryAndArticle")) {
             if (countWords(aboutSelfEditText.getText().toString()) > MAX_WORDS) {
                 Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_user_bio_max)
-                        + " " + MAX_WORDS + " " + getString(R.string.app_settings_edit_profile_toast_user_bio_words), Toast.LENGTH_SHORT).show();
+                                + " " + MAX_WORDS + " " + getString(R.string.app_settings_edit_profile_toast_user_bio_words),
+                        Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
@@ -439,8 +453,9 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
 
     private int countWords(String s) {
         String trim = s.trim();
-        if (trim.isEmpty())
+        if (trim.isEmpty()) {
             return 0;
+        }
         return trim.split("\\s+").length; // separate string around spaces
     }
 
@@ -492,14 +507,15 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                 int code = blogUpdateJson.getInt("code");
                 String status = blogUpdateJson.getString("status");
                 if (code == 200 && Constants.SUCCESS.equals(status)) {
-                    Utils.pushBlogSetupSuccessEvent(BlogSetupActivity.this, "BlogSetupScreen", SharedPrefUtils.getUserDetailModel(BlogSetupActivity.this).getDynamoId());
+                    Utils.pushBlogSetupSuccessEvent(BlogSetupActivity.this, "BlogSetupScreen",
+                            SharedPrefUtils.getUserDetailModel(BlogSetupActivity.this).getDynamoId());
                     finish();
                 } else {
                     showToast("" + blogUpdateJson.getString("reason"));
                 }
             } catch (IOException | JSONException e) {
                 showToast(getString(R.string.went_wrong));
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -507,7 +523,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -588,9 +604,12 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                                  setProfileImage(responseModel.getData().getResult().getUrl());
                                  Picasso.get().invalidate(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()));
                                  Picasso.get().load(responseModel.getData().getResult().getUrl())
-                                         .memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.family_xxhdpi)
-                                         .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(profilePicImageView);
-                                 SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), responseModel.getData().getResult().getUrl());
+                                         .memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE)
+                                         .placeholder(R.drawable.family_xxhdpi)
+                                         .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation())
+                                         .into(profilePicImageView);
+                                 SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(),
+                                         responseModel.getData().getResult().getUrl());
                                  showToast(getString(R.string.image_upload_success));
                              }
                          }
@@ -598,7 +617,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                          @Override
                          public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
                              showToast(getString(R.string.image_upload_fail));
-                             Crashlytics.logException(t);
+                             FirebaseCrashlytics.getInstance().recordException(t);
                              Log.d("MC4kException", Log.getStackTraceString(t));
                          }
                      }
@@ -623,7 +642,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onFailure(Call<UserDetailResponse> call, Throwable t) {
-                Crashlytics.logException(t);
+                FirebaseCrashlytics.getInstance().recordException(t);
                 Log.d("MC4kException", Log.getStackTraceString(t));
             }
         });

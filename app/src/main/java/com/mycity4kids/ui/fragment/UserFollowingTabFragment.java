@@ -10,7 +10,7 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
@@ -118,7 +118,7 @@ public class UserFollowingTabFragment extends BaseFragment {
                         FollowersFollowingResponse responseData = response.body();
                         processFollowersListResponse(responseData);
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -128,7 +128,7 @@ public class UserFollowingTabFragment extends BaseFragment {
                     progressBar.setVisibility(View.INVISIBLE);
                     isRequestRunning = false;
                     noResultTextView.setVisibility(View.VISIBLE);
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };

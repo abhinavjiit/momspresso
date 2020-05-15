@@ -5,9 +5,6 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +15,15 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.utils.DateTimeUtils;
-import com.mycity4kids.utils.StringUtils;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.response.CommentListData;
+import com.mycity4kids.utils.DateTimeUtils;
+import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -52,7 +51,7 @@ public class AddShortStoryCommentReplyDialogFragment extends DialogFragment impl
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.add_ss_comment_reply_fragment, container,
                 false);
@@ -88,14 +87,16 @@ public class AddShortStoryCommentReplyDialogFragment extends DialogFragment impl
                     Picasso.get().load(commentOrReplyData.getUserPic().getClientAppMin())
                             .placeholder(R.drawable.default_commentor_img).into((commentorImageView));
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
-                    if (isAdded())
+                    if (isAdded()) {
                         Picasso.get().load(R.drawable.default_commentor_img).into(commentorImageView);
+                    }
                 }
                 commentorUsernameTextView.setText(commentOrReplyData.getUserName());
                 commentDataTextView.setText(commentOrReplyData.getMessage());
-                commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(commentOrReplyData.getCreatedTime())));
+                commentDateTextView.setText(DateTimeUtils
+                        .getDateFromNanoMilliTimestamp(Long.parseLong(commentOrReplyData.getCreatedTime())));
             }
         }
 
@@ -130,24 +131,34 @@ public class AddShortStoryCommentReplyDialogFragment extends DialogFragment impl
             case R.id.postCommentReplyTextView:
                 if (isValid()) {
                     if ("EDIT_COMMENT".equals(actionType)) {
-                        ((ShortStoryFragment) getParentFragment()).editComment(commentReplyEditText.getText().toString(), commentOrReplyData.get_id(), position);
+                        ((ShortStoryFragment) getParentFragment())
+                                .editComment(commentReplyEditText.getText().toString(), commentOrReplyData.get_id(),
+                                        position);
                     } else if ("EDIT_REPLY".equals(actionType)) {
                         Fragment parentFragment = getParentFragment();
                         if (parentFragment != null) {
                             if (parentFragment instanceof ShortStoryFragment) {
-                                ((ShortStoryFragment) getParentFragment()).editReply(commentReplyEditText.getText().toString(), commentOrReplyData.getParentCommentId(), commentOrReplyData.get_id());
+                                ((ShortStoryFragment) getParentFragment())
+                                        .editReply(commentReplyEditText.getText().toString(),
+                                                commentOrReplyData.getParentCommentId(), commentOrReplyData.get_id());
                             } else if (parentFragment instanceof ShortStoryCommentRepliesDialogFragment) {
                                 Fragment parentOfParentFragment = parentFragment.getParentFragment();
-                                if (parentOfParentFragment != null && parentOfParentFragment instanceof ShortStoryFragment) {
-                                    ((ShortStoryFragment) parentOfParentFragment).editReply(commentReplyEditText.getText().toString(), commentOrReplyData.getParentCommentId(), commentOrReplyData.get_id());
+                                if (parentOfParentFragment != null
+                                        && parentOfParentFragment instanceof ShortStoryFragment) {
+                                    ((ShortStoryFragment) parentOfParentFragment)
+                                            .editReply(commentReplyEditText.getText().toString(),
+                                                    commentOrReplyData.getParentCommentId(),
+                                                    commentOrReplyData.get_id());
                                 }
                             }
                         }
                     } else {
                         if (commentOrReplyData == null) {
-                            ((ShortStoryFragment) getParentFragment()).addComment(commentReplyEditText.getText().toString());
+                            ((ShortStoryFragment) getParentFragment())
+                                    .addComment(commentReplyEditText.getText().toString());
                         } else {
-                            ((ShortStoryFragment) getParentFragment()).addReply(commentReplyEditText.getText().toString(), commentOrReplyData.get_id());
+                            ((ShortStoryFragment) getParentFragment())
+                                    .addReply(commentReplyEditText.getText().toString(), commentOrReplyData.get_id());
                         }
                     }
 
@@ -190,8 +201,10 @@ public class AddShortStoryCommentReplyDialogFragment extends DialogFragment impl
 
     private boolean isValid() {
         if (StringUtils.isNullOrEmpty(commentReplyEditText.getText().toString())) {
-            if (isAdded())
-                Toast.makeText(getActivity(), getString(R.string.ad_comments_toast_empty_comment), Toast.LENGTH_LONG).show();
+            if (isAdded()) {
+                Toast.makeText(getActivity(), getString(R.string.ad_comments_toast_empty_comment), Toast.LENGTH_LONG)
+                        .show();
+            }
             return false;
         }
         return true;

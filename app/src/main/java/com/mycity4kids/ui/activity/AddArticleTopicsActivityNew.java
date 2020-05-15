@@ -11,8 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mycity4kids.R;
@@ -106,7 +106,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                         selectedTopicsIdList.add((String) keys.next());
                     }
                 } catch (JSONException e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("JSONException", Log.getStackTraceString(e));
                 }
             }
@@ -119,7 +119,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
             TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
             createTopicsData(res);
         } catch (FileNotFoundException e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsApi = retro.create(TopicsCategoryAPI.class);
@@ -138,17 +138,17 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                         TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
                         createTopicsData(res);
                     } catch (FileNotFoundException e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4KException", Log.getStackTraceString(e));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     apiExceptions(t);
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
@@ -179,7 +179,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                 }
                 startActivity(intent);
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
             }
         });
@@ -188,7 +188,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
             try {
                 clearTopicsSelection();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
             }
         });
@@ -213,7 +213,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                 jsonArray.put(jsonObject);
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         tags = jsonArray.toString();
@@ -284,7 +284,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
             createTopicsTabPages();
         } catch (Exception e) {
             progressBar.setVisibility(View.GONE);
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
             showToast(getString(R.string.went_wrong));
         }

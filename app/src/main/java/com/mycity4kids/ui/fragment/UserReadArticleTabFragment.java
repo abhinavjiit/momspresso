@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.gson.Gson;
 import com.mycity4kids.R;
@@ -185,7 +185,7 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
                     }
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -193,7 +193,7 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
             bottomLoadingView.setVisibility(View.GONE);
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -335,7 +335,7 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
                 ArticleDetailResult responseData = response.body();
                 getResponseUpdateUi(responseData);
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -343,7 +343,7 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
         @Override
         public void onFailure(Call<ArticleDetailResult> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -473,7 +473,7 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
                 startActivity(intent);
             } catch (Exception e) {
                 removeProgressDialog();
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
 
@@ -482,7 +482,7 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
         @Override
         public void onFailure(Call<ShortStoryDetailResult> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };

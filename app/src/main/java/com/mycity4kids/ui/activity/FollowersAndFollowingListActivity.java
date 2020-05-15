@@ -13,7 +13,7 @@ import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
@@ -191,7 +191,7 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
                         processCollectionFollowersListResponse(responseData);
                     } catch (Exception e) {
                         showToast(getString(R.string.server_went_wrong));
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -200,7 +200,7 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
                 public void onFailure(Call<FollowersFollowingResponse> call, Throwable t) {
                     progressBar.setVisibility(View.INVISIBLE);
                     noResultTextView.setVisibility(View.VISIBLE);
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -221,7 +221,7 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
                         processFollowersListResponse(responseData);
                     } catch (Exception e) {
                         showToast(getString(R.string.server_went_wrong));
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -231,7 +231,7 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
                     progressBar.setVisibility(View.INVISIBLE);
                     isRequestRunning = false;
                     noResultTextView.setVisibility(View.VISIBLE);
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };

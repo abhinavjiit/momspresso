@@ -1,7 +1,7 @@
 package com.mycity4kids.utils;
 
 import android.util.Log;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
@@ -44,7 +44,7 @@ public class ArrayAdapter<T> extends TypeAdapter<List<T>> {
                 reader.skipValue();
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4KException", Log.getStackTraceString(e));
         }
 

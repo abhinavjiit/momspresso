@@ -8,10 +8,8 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.widget.Toolbar;
-
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
@@ -21,7 +19,6 @@ import com.mycity4kids.models.response.ChangePasswordResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.utils.StringUtils;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -93,36 +90,43 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
             }
             ChangePasswordResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                Toast.makeText(ChangePasswordActivity.this, getString(R.string.app_settings_change_pass_pass_update_success), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChangePasswordActivity.this,
+                        getString(R.string.app_settings_change_pass_pass_update_success), Toast.LENGTH_SHORT).show();
                 onBackPressed();
             } else {
-                Toast.makeText(ChangePasswordActivity.this, getString(R.string.app_settings_change_pass_pass_update_fail), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChangePasswordActivity.this,
+                        getString(R.string.app_settings_change_pass_pass_update_fail), Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onFailure(Call<ChangePasswordResponse> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
     private boolean validateFields() {
         if (StringUtils.isNullOrEmpty(currentPasswordEditText.getText().toString().trim())) {
-            Toast.makeText(ChangePasswordActivity.this, getString(R.string.app_settings_change_pass_toast_current_pass_empty), Toast.LENGTH_SHORT).show();
+            Toast.makeText(ChangePasswordActivity.this,
+                    getString(R.string.app_settings_change_pass_toast_current_pass_empty), Toast.LENGTH_SHORT).show();
             return false;
         } else if (StringUtils.isNullOrEmpty(newPasswordEditText.getText().toString().trim())) {
-            Toast.makeText(ChangePasswordActivity.this, getString(R.string.app_settings_change_pass_toast_new_pass_empty), Toast.LENGTH_SHORT).show();
+            Toast.makeText(ChangePasswordActivity.this,
+                    getString(R.string.app_settings_change_pass_toast_new_pass_empty), Toast.LENGTH_SHORT).show();
             return false;
         } else if (currentPasswordEditText.getText().toString().equals(newPasswordEditText.getText().toString())) {
-            Toast.makeText(ChangePasswordActivity.this, getString(R.string.app_settings_change_pass_toast_same_pass), Toast.LENGTH_SHORT).show();
+            Toast.makeText(ChangePasswordActivity.this, getString(R.string.app_settings_change_pass_toast_same_pass),
+                    Toast.LENGTH_SHORT).show();
             return false;
         } else if (newPasswordEditText.getText().toString().trim().length() < 6) {
-            Toast.makeText(ChangePasswordActivity.this, getString(R.string.app_settings_change_pass_toast_new_pass_min_length), Toast.LENGTH_SHORT).show();
+            Toast.makeText(ChangePasswordActivity.this,
+                    getString(R.string.app_settings_change_pass_toast_new_pass_min_length), Toast.LENGTH_SHORT).show();
             return false;
         } else if (!newPasswordEditText.getText().toString().equals(confirmPasswordEditText.getText().toString())) {
-            Toast.makeText(ChangePasswordActivity.this, getString(R.string.app_settings_change_pass_toast_confirm_pass_match), Toast.LENGTH_SHORT).show();
+            Toast.makeText(ChangePasswordActivity.this,
+                    getString(R.string.app_settings_change_pass_toast_confirm_pass_match), Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

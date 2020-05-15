@@ -49,10 +49,10 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -384,7 +384,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         Picasso.get().load(commentOrReplyData.getUserInfo().getProfilePicUrl().getClientApp())
                                 .placeholder(R.drawable.default_commentor_img).into((commentorImageView));
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                         if (isAdded()) {
                             Picasso.get().load(R.drawable.default_commentor_img).into(commentorImageView);
@@ -1157,7 +1157,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                             }
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         e.printStackTrace();
                     }
                 }
@@ -1305,7 +1305,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
 
                     @Override
                     public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
-                        Crashlytics.logException(t);
+                        FirebaseCrashlytics.getInstance().recordException(t);
                         Log.d("MC4KException", Log.getStackTraceString(t));
                         if (isAdded()) {
                             ((BaseActivity) getActivity()).apiExceptions(t);
@@ -1480,7 +1480,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             try {
                 mediaRecorder.stop();
             } catch (RuntimeException e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             } finally {
                 mediaRecorder.release();

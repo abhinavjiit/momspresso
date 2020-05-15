@@ -10,11 +10,10 @@ import android.os.StrictMode;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.libraries.places.api.Places;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mycity4kids.BuildConfig;
@@ -28,7 +27,6 @@ import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.yariksoffice.lingver.Lingver;
 import io.branch.referral.Branch;
-import io.fabric.sdk.android.Fabric;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -180,12 +178,9 @@ public class BaseApplication extends Application {
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         Places.initialize(getApplicationContext(), AppConstants.PLACES_API_KEY);
-
-        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build();
-        Fabric.with(this, new Crashlytics.Builder().core(core).build());
-        Crashlytics.setUserIdentifier("" + SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-        Crashlytics.setUserEmail("" + SharedPrefUtils.getUserDetailModel(this).getEmail());
-
+        FirebaseCrashlytics.getInstance().setUserId("" + SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        FirebaseCrashlytics.getInstance()
+                .setCustomKey("email", "" + SharedPrefUtils.getUserDetailModel(this).getEmail());
         setInstance(this);
 
         createRetrofitInstance(AppConstants.LIVE_URL);

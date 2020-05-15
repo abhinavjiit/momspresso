@@ -31,8 +31,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
@@ -165,7 +165,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             try {
                 showDraftSaveStatus(draftObject.getUpdatedTime() * 1000);
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -567,7 +567,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                             }
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                         showToast(getString(R.string.went_wrong));
                     }
@@ -575,7 +575,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
                 @Override
                 public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                     showToast(getString(R.string.went_wrong));
                 }
@@ -611,7 +611,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                             }
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                         showToast(getString(R.string.went_wrong));
                     }
@@ -619,7 +619,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
                 @Override
                 public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                     showToast(getString(R.string.went_wrong));
                 }
@@ -658,7 +658,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
                 @Override
                 public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             });
@@ -685,7 +685,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
                 @Override
                 public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             });
@@ -856,7 +856,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                          @Override
                          public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
                              removeProgressDialog();
-                             Crashlytics.logException(t);
+                             FirebaseCrashlytics.getInstance().recordException(t);
                              Toast.makeText(EditorPostActivity.this, "Error while uploading image", Toast.LENGTH_SHORT).show();
                              Log.d("MC4kException", Log.getStackTraceString(t));
                          }
@@ -965,7 +965,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     }
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
@@ -973,7 +973,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
         @Override
         public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
             showToast(getString(R.string.went_wrong));
         }

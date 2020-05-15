@@ -15,8 +15,8 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
@@ -195,7 +195,7 @@ class UserContentAdapter(
                                         mixFeedList?.get(pos)?.responseReceived = true
                                     }
                                 } catch (e: Exception) {
-                                    Crashlytics.logException(e)
+                                    FirebaseCrashlytics.getInstance().recordException(e)
                                     Log.d(
                                         "MC4kException",
                                         Log.getStackTraceString(e)
@@ -368,7 +368,7 @@ class UserContentAdapter(
                         }
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -720,7 +720,7 @@ class UserContentAdapter(
                 }
             }
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
@@ -816,7 +816,7 @@ class UserContentAdapter(
                 }
             }
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
@@ -883,7 +883,7 @@ class UserContentAdapter(
                 winnerLayout.visibility = View.GONE
             }
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
@@ -923,7 +923,7 @@ class UserContentAdapter(
                 }
             }
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }

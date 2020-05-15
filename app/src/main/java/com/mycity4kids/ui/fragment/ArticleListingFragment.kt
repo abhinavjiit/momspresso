@@ -31,11 +31,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
-import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.gms.analytics.HitBuilders.ScreenViewBuilder
 import com.google.android.gms.analytics.Tracker
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mixpanel.android.mpmetrics.MixpanelAPI
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -248,7 +248,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     //                } catch (Exception e) {
     //                    mixfeedAdapter.setTorcaiAdSlotData(false, "");
     //                    mixfeedAdapter.notifyDataSetChanged();
-    //                    Crashlytics.logException(e);
+    //                    FirebaseCrashlytics.getInstance().recordException(e);
     //                    Log.d("FileNotFoundException", Log.getStackTraceString(e));
     //                }
     //            }
@@ -257,7 +257,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     //            public void onFailure(Call<ResponseBody> call, Throwable t) {
     //                mixfeedAdapter.setTorcaiAdSlotData(false, "");
     //                mixfeedAdapter.notifyDataSetChanged();
-    //                Crashlytics.logException(t);
+    //                FirebaseCrashlytics.getInstance().recordException(t);
     //                Log.d("FileNotFoundException", Log.getStackTraceString(t));
     //            }
     //        });
@@ -356,7 +356,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 if (null == response.body()) {
                     val nee =
                         NetworkErrorException(response.raw().toString())
-                    Crashlytics.logException(nee)
+                    FirebaseCrashlytics.getInstance().recordException(nee)
                     activity?.let {
                         ToastUtils.showToast(
                             it,
@@ -383,7 +383,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                         }
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                     activity?.let {
                         ToastUtils.showToast(
@@ -401,7 +401,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 progressBar.visibility = View.GONE
                 loadingView.visibility = View.GONE
                 isRequestRunning = false
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
                 activity?.let {
                     ToastUtils.showToast(
@@ -454,7 +454,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             }
         } catch (ex: Exception) {
             loadingView.visibility = View.GONE
-            Crashlytics.logException(ex)
+            FirebaseCrashlytics.getInstance().recordException(ex)
             Log.d("MC4kException", Log.getStackTraceString(ex))
         }
     }
@@ -475,7 +475,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                         processCampaignListingResponse(allCampaignDataResponse)
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4KException", Log.getStackTraceString(e))
                 }
             }
@@ -484,7 +484,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 call: Call<AllCampaignDataResponse?>,
                 e: Throwable
             ) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
             }
         }
@@ -509,7 +509,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                         shimmerFrameLayout.visibility = View.GONE
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4KException", Log.getStackTraceString(e))
                 }
             }
@@ -521,7 +521,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 loadingView.visibility = View.GONE
                 isRequestRunning = false
                 progressBar.visibility = View.GONE
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4KException", Log.getStackTraceString(t))
             }
         }
@@ -608,7 +608,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                             "CTA_Campaign_Carousel"
                         )
                     } catch (e: Exception) {
-                        Crashlytics.logException(e)
+                        FirebaseCrashlytics.getInstance().recordException(e)
                         Log.d("MC4KException", Log.getStackTraceString(e))
                     }
                     val campaignIntent =
@@ -825,7 +825,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                     try {
                         filterTags(mixfeedList!![position].tags)
                     } catch (e: Exception) {
-                        Crashlytics.logException(e)
+                        FirebaseCrashlytics.getInstance().recordException(e)
                         Log.d("MC4kException", Log.getStackTraceString(e))
                     }
                     getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM)
@@ -1031,7 +1031,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 }
             }
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
@@ -1131,7 +1131,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                         }
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                     if (isAdded) {
                         ToastUtils.showToast(
@@ -1147,7 +1147,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 t: Throwable
             ) {
                 isRecommendRequestRunning = false
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
@@ -1213,7 +1213,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 tracker!!.send(ScreenViewBuilder().build())
             }
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
@@ -1289,7 +1289,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                         "ArticleListingFragment", "Add to Collection", "-"
                     )
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
                 return@setOnMenuItemClickListener true
@@ -1375,7 +1375,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 call: Call<ResponseBody?>,
                 t: Throwable
             ) {
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
@@ -1435,7 +1435,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 try {
                     createBitmapForSharingStory()
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -1443,7 +1443,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             try {
                 createBitmapForSharingStory()
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
@@ -1583,7 +1583,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 try {
                     filterTags(mixfeedList?.get(position)?.tags!!)
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
                 getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM)
@@ -1736,7 +1736,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                     activity?.let {
                         ToastUtils.showToast(it, getString(R.string.server_went_wrong))
                     }
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             })
@@ -1776,7 +1776,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                     activity?.let {
                         ToastUtils.showToast(it, getString(R.string.server_went_wrong))
                     }
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             })
@@ -1798,7 +1798,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                     activity?.let {
                         ToastUtils.showToast(it, getString(R.string.server_went_wrong))
                     }
-                    Crashlytics.logException(t)
+                    FirebaseCrashlytics.getInstance().recordException(t)
                     Log.d("MC4kException", Log.getStackTraceString(t))
                 }
 
@@ -1839,7 +1839,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                     activity?.let {
                         ToastUtils.showToast(it, getString(R.string.server_went_wrong))
                     }
-                    Crashlytics.logException(t)
+                    FirebaseCrashlytics.getInstance().recordException(t)
                     Log.d("MC4kException", Log.getStackTraceString(t))
                 }
 

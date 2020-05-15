@@ -36,9 +36,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
-import com.crashlytics.android.Crashlytics;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -325,7 +325,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     try {
                         getDeepLinkData(request.getUrl());
                     } catch (Exception anfe) {
-                        Crashlytics.logException(anfe);
+                        FirebaseCrashlytics.getInstance().recordException(anfe);
                         Log.d("FileNotFoundException", Log.getStackTraceString(anfe));
                     }
                     return true;
@@ -370,7 +370,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     whatsappShareTextView
                             .setCompoundDrawablesWithIntrinsicBounds(null, myDrawable, null, null);
                 } catch (NullPointerException e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("NullPointerException", Log.getStackTraceString(e));
                 }
                 try {
@@ -380,7 +380,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     emailShareTextView
                             .setCompoundDrawablesWithIntrinsicBounds(null, myDrawable, null, null);
                 } catch (NullPointerException e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("NullPointerException", Log.getStackTraceString(e));
                 }
 
@@ -391,7 +391,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     bookmarkArticleTextView
                             .setCompoundDrawablesWithIntrinsicBounds(null, myDrawable, null, null);
                 } catch (NullPointerException e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("NullPointerException", Log.getStackTraceString(e));
                 }
                 try {
@@ -401,7 +401,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     likeArticleTextView
                             .setCompoundDrawablesWithIntrinsicBounds(null, myDrawable, null, null);
                 } catch (NullPointerException e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("NullPointerException", Log.getStackTraceString(e));
                 }
             }
@@ -427,7 +427,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 }
             } catch (FileNotFoundException e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("FileNotFoundException", Log.getStackTraceString(e));
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 final TopicsCategoryAPI topicsApi = retro.create(TopicsCategoryAPI.class);
@@ -453,17 +453,17 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             }
 
                         } catch (FileNotFoundException e) {
-                            Crashlytics.logException(e);
+                            FirebaseCrashlytics.getInstance().recordException(e);
                             Log.d("FileNotFoundException", Log.getStackTraceString(e));
                         } catch (Exception e) {
-                            Crashlytics.logException(e);
+                            FirebaseCrashlytics.getInstance().recordException(e);
                             Log.d("MC4KException", Log.getStackTraceString(e));
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Crashlytics.logException(t);
+                        FirebaseCrashlytics.getInstance().recordException(t);
                         Log.d("MC4KException", Log.getStackTraceString(t));
                     }
                 });
@@ -527,7 +527,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             observableScrollView.getHitRect(scrollBounds);
         } catch (Exception e) {
             removeProgressDialog();
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         return fragmentView;
@@ -552,7 +552,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
             } catch (Exception e) {
                 topAdSlotWebView.setVisibility(View.GONE);
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("FileNotFoundException", Log.getStackTraceString(e));
             }
         }
@@ -560,7 +560,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
             topAdSlotWebView.setVisibility(View.GONE);
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("FileNotFoundException", Log.getStackTraceString(t));
         }
     };
@@ -584,7 +584,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
             } catch (Exception e) {
                 bottomAdSlotWebView.setVisibility(View.GONE);
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("FileNotFoundException", Log.getStackTraceString(e));
             }
         }
@@ -592,7 +592,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
             bottomAdSlotWebView.setVisibility(View.GONE);
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("FileNotFoundException", Log.getStackTraceString(t));
         }
     };
@@ -630,7 +630,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         }
                     }
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
             }
@@ -638,7 +638,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             @Override
             public void onFailure(Call<DeepLinkingResposnse> call, Throwable t) {
                 removeProgressDialog();
-                Crashlytics.logException(t);
+                FirebaseCrashlytics.getInstance().recordException(t);
                 Log.d("MC4kException", Log.getStackTraceString(t));
             }
         });
@@ -898,7 +898,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
 
@@ -1136,7 +1136,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 ((ArticleDetailsContainerActivity) getActivity()).showPlayArticleAudioButton();
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
@@ -1370,7 +1370,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         Utils.pushProfileEvents(getActivity(), "CTA_Article_Add_To_Collection",
                                 "ArticleDetailsFragment", "Add to Collection", "-");
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                     /*  Intent sendIntent = new Intent();
@@ -1389,7 +1389,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     break;
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
@@ -1410,7 +1410,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             ((ArticleDetailsContainerActivity) getActivity())
                     .addFragment(commentFrag, null, "topToBottom");
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
@@ -1438,7 +1438,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             ((ArticleDetailsContainerActivity) getActivity())
                     .addFragment(commentFrag, null, "topToBottom");
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
             if (isAdded()) {
                 ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.unable_to_load_comment));
@@ -1829,7 +1829,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
             } catch (Exception e) {
                 removeProgressDialog();
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 getArticleDetailsWebserviceApi();
             }
@@ -1885,14 +1885,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<ViewCountResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -1911,14 +1911,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     setCrownData(responseData.getData().getResult().getImage_url());
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<CrownDataResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -1961,7 +1961,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         }
                     } catch (Exception e) {
                         removeProgressDialog();
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -1984,7 +1984,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(
                                 "Trending Article API failure");
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         return;
                     }
 
@@ -2047,10 +2047,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         } else {
                             NetworkErrorException nee = new NetworkErrorException(
                                     "Trending Article Error Response");
-                            Crashlytics.logException(nee);
+                            FirebaseCrashlytics.getInstance().recordException(nee);
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -2071,7 +2071,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(
                         "Category related Article API failure");
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsApi
                         .getPublishedArticles(authorId, 0, 1, 4);
                 callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
@@ -2146,13 +2146,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 } else {
                     NetworkErrorException nee = new NetworkErrorException(
                             "Category related Article Error Response");
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                     Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsApi
                             .getPublishedArticles(authorId, 0, 1, 4);
                     callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsApi
                         .getPublishedArticles(authorId, 0, 1, 4);
@@ -2246,7 +2246,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 if (isAdded()) {
                     ((ArticleDetailsContainerActivity) getActivity())
@@ -2268,7 +2268,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
                     if (null == response.body()) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         if (isAdded()) {
                             ((ArticleDetailsContainerActivity) getActivity())
                                     .showToast(getString(R.string.server_went_wrong));
@@ -2301,22 +2301,22 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                             createArticleTags(previouslyFollowedTopics, tagsList,
                                                     sponsoredList);
                                         } catch (FileNotFoundException e) {
-                                            Crashlytics.logException(e);
+                                            FirebaseCrashlytics.getInstance().recordException(e);
                                             Log.d("FileNotFoundException", Log.getStackTraceString(e));
                                         } catch (Exception e) {
-                                            Crashlytics.logException(e);
+                                            FirebaseCrashlytics.getInstance().recordException(e);
                                             Log.d("MC4KException", Log.getStackTraceString(e));
                                         }
                                     }
 
                                     @Override
                                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                        Crashlytics.logException(t);
+                                        FirebaseCrashlytics.getInstance().recordException(t);
                                         Log.d("MC4KException", Log.getStackTraceString(t));
                                     }
                                 });
                             } catch (Exception e) {
-                                Crashlytics.logException(e);
+                                FirebaseCrashlytics.getInstance().recordException(e);
                                 Log.d("MC4KException", Log.getStackTraceString(e));
                             }
                         } else {
@@ -2325,14 +2325,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             }
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<FollowUnfollowCategoriesResponse> call, Throwable t) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -2425,7 +2425,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     tagsLayout.addView(topicView);
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -2525,7 +2525,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     removeProgressDialog();
                     if (null == response.body()) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         if (isAdded()) {
                             ((ArticleDetailsContainerActivity) getActivity())
                                     .showToast(getString(R.string.server_went_wrong));
@@ -2545,7 +2545,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             }
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                         if (isAdded()) {
                             ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
@@ -2556,7 +2556,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 @Override
                 public void onFailure(Call<FollowUnfollowCategoriesResponse> call, Throwable t) {
                     removeProgressDialog();
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                     if (isAdded()) {
                         ((ArticleDetailsContainerActivity) getActivity())
@@ -2685,7 +2685,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -2773,7 +2773,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                     .showToast(getString(R.string.server_went_wrong));
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                         if (isAdded()) {
                             ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
@@ -2807,7 +2807,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         .showToast(getString(R.string.connection_timeout));
             }
         }
-        Crashlytics.logException(t);
+        FirebaseCrashlytics.getInstance().recordException(t);
         Log.d("MC4kException", Log.getStackTraceString(t));
     }
 
@@ -2836,7 +2836,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             ((ArticleDetailsContainerActivity) getActivity())
                                     .showToast(getString(R.string.server_went_wrong));
                         }
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -2847,7 +2847,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         ((ArticleDetailsContainerActivity) getActivity())
                                 .showToast(getString(R.string.server_went_wrong));
                     }
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -2877,7 +2877,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             ((ArticleDetailsContainerActivity) getActivity())
                                     .showToast(getString(R.string.server_went_wrong));
                         }
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -2888,7 +2888,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         ((ArticleDetailsContainerActivity) getActivity())
                                 .showToast(getString(R.string.server_went_wrong));
                     }
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -2943,7 +2943,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         try {
             swipeRelated = (ISwipeRelated) activity;
         } catch (ClassCastException e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
@@ -2957,7 +2957,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         try {
             Picasso.get().load(detailData.getProfilePic().getClientApp()).into(authorImageViewFollowPopUp);
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
         }
         authorNameFollowPopUp.setText(detailData.getUserName());

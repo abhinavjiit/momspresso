@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
@@ -22,7 +22,6 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.ShortStoryPagerAdapter;
 import com.mycity4kids.ui.fragment.ViewAllCommentsFragment;
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * Created by hemant on 6/6/17.
@@ -180,7 +179,7 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
                 toolbarTitle.setText("");
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         super.onBackPressed();

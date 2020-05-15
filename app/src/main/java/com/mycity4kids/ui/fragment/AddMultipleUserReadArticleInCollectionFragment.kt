@@ -10,8 +10,8 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
@@ -27,7 +27,8 @@ import com.mycity4kids.utils.ConnectivityUtils
 import retrofit2.Call
 import retrofit2.Callback
 
-class AddMultipleUserReadArticleInCollectionFragment : BaseFragment(), AddMultipleCollectionAdapter.RecyclerViewClick, View.OnClickListener {
+class AddMultipleUserReadArticleInCollectionFragment : BaseFragment(),
+    AddMultipleCollectionAdapter.RecyclerViewClick, View.OnClickListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var bottomLoadingView: RelativeLayout
@@ -44,13 +45,23 @@ class AddMultipleUserReadArticleInCollectionFragment : BaseFragment(), AddMultip
     private var visibleItemCount: Int = 0
     private var totalItemCount: Int = 0
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.add_mutilple_read_articles_fragment, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val rootView =
+            inflater.inflate(R.layout.add_mutilple_read_articles_fragment, container, false)
         recyclerView = rootView.findViewById(R.id.recyclerView)
         bottomLoadingView = rootView.findViewById(R.id.bottomLoadingView)
         noBlogsTextView = rootView.findViewById(R.id.noBlogsTextView)
         shimmer1 = rootView.findViewById(R.id.shimmer1)
-        rootView.findViewById<View>(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(activity, R.anim.rotate_indefinitely))
+        rootView.findViewById<View>(R.id.imgLoader).startAnimation(
+            AnimationUtils.loadAnimation(
+                activity,
+                R.anim.rotate_indefinitely
+            )
+        )
         articleDataModelsNew = ArrayList()
         getReadArticles()
         val llm = LinearLayoutManager(activity)
@@ -83,7 +94,8 @@ class AddMultipleUserReadArticleInCollectionFragment : BaseFragment(), AddMultip
     }
 
     override fun onclick(position: Int) {
-        articleDataModelsNew[position].isCollectionItemSelected = !articleDataModelsNew[position].isCollectionItemSelected
+        articleDataModelsNew[position].isCollectionItemSelected =
+            !articleDataModelsNew[position].isCollectionItemSelected
         addMultipleCollectionAdapter.notifyDataSetChanged()
         multipleCollectionList.clear()
         for (i in 0 until articleDataModelsNew.size) {
@@ -106,14 +118,22 @@ class AddMultipleUserReadArticleInCollectionFragment : BaseFragment(), AddMultip
 
         val retro = BaseApplication.getInstance().retrofit
         val userpublishedArticlesAPI = retro.create(BloggerDashboardAPI::class.java)
-        val call = userpublishedArticlesAPI.getAuthorsReadArticles(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, 10, chunk, "articles")
+        val call = userpublishedArticlesAPI.getAuthorsReadArticles(
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+            10,
+            chunk,
+            "articles"
+        )
         call.enqueue(object : Callback<ArticleListingResponse> {
             override fun onFailure(call: Call<ArticleListingResponse>, t: Throwable) {
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
 
-            override fun onResponse(call: Call<ArticleListingResponse>, response: retrofit2.Response<ArticleListingResponse>) {
+            override fun onResponse(
+                call: Call<ArticleListingResponse>,
+                response: retrofit2.Response<ArticleListingResponse>
+            ) {
                 shimmer1.stopShimmerAnimation()
                 shimmer1.visibility = View.GONE
                 bottomLoadingView.visibility = View.GONE
@@ -129,7 +149,7 @@ class AddMultipleUserReadArticleInCollectionFragment : BaseFragment(), AddMultip
                     } else {
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }

@@ -1,5 +1,8 @@
 package com.mycity4kids.ui.fragment;
 
+import static android.app.Activity.RESULT_OK;
+
+
 import android.Manifest;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
@@ -9,10 +12,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,12 +20,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.utils.StringUtils;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.models.Topics;
@@ -39,21 +40,17 @@ import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.ui.activity.EditGroupActivity;
 import com.mycity4kids.ui.activity.GroupCategoriesSelectionActivity;
 import com.mycity4kids.utils.PermissionUtil;
+import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
-
-import org.apmem.tools.layouts.FlowLayout;
-
 import java.io.File;
 import java.util.ArrayList;
-
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import org.apmem.tools.layouts.FlowLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by hemant on 6/7/18.
@@ -85,7 +82,8 @@ public class EditGpDescTabFragment extends BaseFragment implements View.OnClickL
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.edit_gp_desc_tab_fragment, null);
 
@@ -104,7 +102,7 @@ public class EditGpDescTabFragment extends BaseFragment implements View.OnClickL
         try {
             Picasso.get().load(groupItem.getHeaderImage()).placeholder(R.drawable.default_article).into(groupImageView);
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
             Picasso.get().load(R.drawable.default_article).into(groupImageView);
         }
@@ -123,31 +121,33 @@ public class EditGpDescTabFragment extends BaseFragment implements View.OnClickL
 
     private Callback<GroupsCategoryMappingResponse> groupsCategoryResponseCallback = new Callback<GroupsCategoryMappingResponse>() {
         @Override
-        public void onResponse(Call<GroupsCategoryMappingResponse> call, retrofit2.Response<GroupsCategoryMappingResponse> response) {
+        public void onResponse(Call<GroupsCategoryMappingResponse> call,
+                retrofit2.Response<GroupsCategoryMappingResponse> response) {
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
             try {
                 if (response.isSuccessful()) {
                     GroupsCategoryMappingResponse groupsCategoryMappingResponse = response.body();
-                    groupMappedCategories = (ArrayList<GroupsCategoryMappingResult>) groupsCategoryMappingResponse.getData().getResult();
+                    groupMappedCategories = (ArrayList<GroupsCategoryMappingResult>) groupsCategoryMappingResponse
+                            .getData().getResult();
                     inflateFollowedTopics();
                 } else {
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupsCategoryMappingResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -160,7 +160,8 @@ public class EditGpDescTabFragment extends BaseFragment implements View.OnClickL
         flowLayout.removeAllViews();
         for (int i = 0; i < groupMappedCategories.size(); i++) {
             groupMappedCategories.get(i).setSelected(true);
-            final LinearLayout subsubLL = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.topic_follow_unfollow_item, null);
+            final LinearLayout subsubLL = (LinearLayout) LayoutInflater.from(getActivity())
+                    .inflate(R.layout.topic_follow_unfollow_item, null);
             final TextView catTextView = ((TextView) subsubLL.getChildAt(0));
             catTextView.setText(groupMappedCategories.get(i).getCategoryName());
             catTextView.setSelected(true);
@@ -200,9 +201,11 @@ public class EditGpDescTabFragment extends BaseFragment implements View.OnClickL
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED
-                            || ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                            != PackageManager.PERMISSION_GRANTED
-                            || ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            ||
+                            ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                                    != PackageManager.PERMISSION_GRANTED
+                            || ActivityCompat
+                            .checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED) {
                         requestPermissions();
                     } else {
@@ -259,7 +262,8 @@ public class EditGpDescTabFragment extends BaseFragment implements View.OnClickL
     private void requestUngrantedPermissions() {
         ArrayList<String> permissionList = new ArrayList<>();
         for (int i = 0; i < PERMISSIONS_INIT.length; i++) {
-            if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_INIT[i]) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_INIT[i])
+                    != PackageManager.PERMISSION_GRANTED) {
                 permissionList.add(PERMISSIONS_INIT[i]);
             }
         }
@@ -272,7 +276,7 @@ public class EditGpDescTabFragment extends BaseFragment implements View.OnClickL
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull int[] grantResults) {
 
         if (requestCode == REQUEST_INIT_PERMISSION) {
             Log.i("Permissions", "Received response for storage permissions request.");
@@ -310,12 +314,14 @@ public class EditGpDescTabFragment extends BaseFragment implements View.OnClickL
                 if (resultCode == RESULT_OK) {
                     try {
                         Log.e("inImagePick", "test");
-                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+                        Bitmap imageBitmap = MediaStore.Images.Media
+                                .getBitmap(getActivity().getContentResolver(), imageUri);
                         float actualHeight = imageBitmap.getHeight();
                         float actualWidth = imageBitmap.getWidth();
                         if (actualHeight < 405 || actualWidth < 720) {
-                            if (isAdded())
+                            if (isAdded()) {
                                 ((EditGroupActivity) getActivity()).showToast(getString(R.string.upload_bigger_image));
+                            }
                             return;
                         }
                         startCropActivity(imageUri);
@@ -354,7 +360,8 @@ public class EditGpDescTabFragment extends BaseFragment implements View.OnClickL
     private void startCropActivity(@NonNull Uri uri) {
         String destinationFileName = SAMPLE_CROPPED_IMAGE_NAME + ".jpg";
         Log.e("instartCropActivity", "test");
-        UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(BaseApplication.getAppContext().getCacheDir(), destinationFileName)));
+        UCrop uCrop = UCrop
+                .of(uri, Uri.fromFile(new File(BaseApplication.getAppContext().getCacheDir(), destinationFileName)));
         uCrop.withAspectRatio(16, 9);
         uCrop.withMaxResultSize(720, 405);
         uCrop.start(getActivity(), this);
@@ -376,28 +383,35 @@ public class EditGpDescTabFragment extends BaseFragment implements View.OnClickL
                          public void onResponse(Call<ImageUploadResponse> call, retrofit2.Response<ImageUploadResponse> response) {
                              removeProgressDialog();
                              if (response == null || response.body() == null) {
-                                 if (isAdded())
-                                     ((EditGroupActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                                 if (isAdded()) {
+                                     ((EditGroupActivity) getActivity())
+                                             .showToast(getString(R.string.server_went_wrong));
+                                 }
                                  return;
                              }
                              ImageUploadResponse responseModel = response.body();
                              if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                                  uploadImageURL = (responseModel.getData().getResult().getUrl());
-                                 Picasso.get().load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(groupImageView);
-                                 if (isAdded())
-                                     ((EditGroupActivity) getActivity()).showToast(getString(R.string.image_upload_success));
+                                 Picasso.get().load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article)
+                                         .into(groupImageView);
+                                 if (isAdded()) {
+                                     ((EditGroupActivity) getActivity())
+                                             .showToast(getString(R.string.image_upload_success));
+                                 }
                              } else {
-                                 if (isAdded())
+                                 if (isAdded()) {
                                      ((EditGroupActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                                 }
                              }
                          }
 
                          @Override
                          public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
-                             Crashlytics.logException(t);
+                             FirebaseCrashlytics.getInstance().recordException(t);
                              Log.d("MC4KException", Log.getStackTraceString(t));
-                             if (isAdded())
+                             if (isAdded()) {
                                  ((EditGroupActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                             }
                          }
                      }
         );
@@ -405,8 +419,9 @@ public class EditGpDescTabFragment extends BaseFragment implements View.OnClickL
 
     public GroupResult getUpdatedDetails() {
         if (StringUtils.isNullOrEmpty(groupDescEditText.getText().toString())) {
-            if (isAdded())
+            if (isAdded()) {
                 ((EditGroupActivity) getActivity()).showToast("Empty Description");
+            }
             return null;
         }
         groupItem.setHeaderImage(uploadImageURL);

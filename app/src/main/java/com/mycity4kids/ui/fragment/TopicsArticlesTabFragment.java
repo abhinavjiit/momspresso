@@ -22,10 +22,10 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.gson.Gson;
 import com.mycity4kids.BuildConfig;
@@ -305,7 +305,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             try {
                 isHeaderVisible = true;
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
             }
         }
@@ -409,7 +409,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                     shimmerFrameLayout.setVisibility(View.GONE);
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
             }
         }
@@ -419,7 +419,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             if (loadingView.getVisibility() == View.VISIBLE) {
                 loadingView.setVisibility(View.GONE);
             }
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };

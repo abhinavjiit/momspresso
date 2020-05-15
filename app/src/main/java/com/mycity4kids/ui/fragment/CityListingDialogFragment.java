@@ -1,5 +1,8 @@
 package com.mycity4kids.ui.fragment;
 
+import static android.app.Activity.RESULT_CANCELED;
+
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -9,14 +12,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,29 +20,25 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
-import com.mycity4kids.utils.StringUtils;
-import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.CityInfoItem;
-import com.mycity4kids.ui.activity.BlogSetupActivity;
 import com.mycity4kids.ui.adapter.ChangeCityAdapter;
-
+import com.mycity4kids.utils.StringUtils;
+import com.mycity4kids.utils.ToastUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static android.app.Activity.RESULT_CANCELED;
-import static com.crashlytics.android.core.CrashlyticsCore.TAG;
 
 /**
  * Created by user on 08-06-2015.
@@ -68,7 +59,7 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.city_list_dialog, container,
                 false);
@@ -76,7 +67,8 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
         toolbarTitleTextView = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
 
         Drawable upArrow = ContextCompat.getDrawable(getActivity(), R.drawable.back_arroow);
-        upArrow.setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorControlNormal), PorterDuff.Mode.SRC_ATOP);
+        upArrow.setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorControlNormal),
+                PorterDuff.Mode.SRC_ATOP);
         mToolbar.setNavigationIcon(upArrow);
         mToolbar.setNavigationOnClickListener(new OnClickListener() {
             @Override
@@ -170,7 +162,6 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
             dismiss();
         } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
             Status status = Autocomplete.getStatusFromIntent(data);
-            Log.i(TAG, status.getStatusMessage());
         } else if (resultCode == RESULT_CANCELED) {
             // The user canceled the operation.
         }
@@ -230,6 +221,7 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
     }
 
     public interface IChangeCity {
+
         void onCitySelect(CityInfoItem cityItem);
 
         void onOtherCitySelect(int pos, String cityName);

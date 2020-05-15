@@ -8,29 +8,26 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.utils.DateTimeUtils;
-import com.mycity4kids.utils.StringUtils;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.ui.fragment.ShortStoryFragment;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.DateTimeUtils;
+import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.widget.StoryShareCardWidget;
 import com.squareup.picasso.Picasso;
-
-import org.apache.commons.lang3.text.WordUtils;
-
 import java.util.ArrayList;
-
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
+import org.apache.commons.lang3.text.WordUtils;
 
 /**
  * Created by hemant on 30/5/18.
  */
 
 public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
     private static final int HEADER = 0;
     private static final int COMMENT_LEVEL_ROOT = 1;
     private Context mContext;
@@ -83,16 +80,19 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
             if (holder instanceof ShortStoriesViewHolder) {
                 ShortStoriesViewHolder ssViewHolder = (ShortStoriesViewHolder) holder;
                 try {
-                    Picasso.get().load(datalist.get(position).getSsResult().getStoryImage().trim()).placeholder(R.drawable.default_article).into(ssViewHolder.storyImage);
+                    Picasso.get().load(datalist.get(position).getSsResult().getStoryImage().trim())
+                            .placeholder(R.drawable.default_article).into(ssViewHolder.storyImage);
                 } catch (Exception e) {
                     ssViewHolder.storyImage.setImageResource(R.drawable.default_article);
                 }
                 try {
-                    Picasso.get().load(datalist.get(position).getSsResult().getStoryImage()).into(ssViewHolder.shareStoryImageView);
+                    Picasso.get().load(datalist.get(position).getSsResult().getStoryImage())
+                            .into(ssViewHolder.shareStoryImageView);
                     ssViewHolder.storyAuthorTextView.setText(datalist.get(position).getSsResult().getUserName());
-                    AppUtils.populateLogoImageLanguageWise(holder.itemView.getContext(), ssViewHolder.logoImageView, datalist.get(position).getSsResult().getLang());
+                    AppUtils.populateLogoImageLanguageWise(holder.itemView.getContext(), ssViewHolder.logoImageView,
+                            datalist.get(position).getSsResult().getLang());
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
                 ssViewHolder.authorNameTextView.setText(datalist.get(position).getSsResult().getUserName());
@@ -100,52 +100,64 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
                     ssViewHolder.followAuthorTextView.setVisibility(View.GONE);
                 } else if (AppConstants.STATUS_FOLLOWING.equals(followingStatus)) {
                     ssViewHolder.followAuthorTextView.setVisibility(View.VISIBLE);
-                    ssViewHolder.followAuthorTextView.setText(WordUtils.capitalizeFully(mContext.getString(R.string.ad_following_author)));
+                    ssViewHolder.followAuthorTextView
+                            .setText(WordUtils.capitalizeFully(mContext.getString(R.string.ad_following_author)));
                 } else {
                     ssViewHolder.followAuthorTextView.setVisibility(View.VISIBLE);
-                    ssViewHolder.followAuthorTextView.setText(WordUtils.capitalizeFully(mContext.getString(R.string.ad_follow_author)));
+                    ssViewHolder.followAuthorTextView
+                            .setText(WordUtils.capitalizeFully(mContext.getString(R.string.ad_follow_author)));
                 }
                 if (null == datalist.get(position).getSsResult().getCommentCount()) {
                     ssViewHolder.storyCommentCountTextView.setText("0");
                 } else {
                     ssViewHolder.storyCommentCountTextView.setVisibility(View.VISIBLE);
-                    ssViewHolder.storyCommentCountTextView.setText(datalist.get(position).getSsResult().getCommentCount());
+                    ssViewHolder.storyCommentCountTextView
+                            .setText(datalist.get(position).getSsResult().getCommentCount());
                 }
 
                 if (null == datalist.get(position).getSsResult().getLikeCount()) {
                     ssViewHolder.storyRecommendationCountTextView.setText("0");
                 } else {
                     ssViewHolder.storyRecommendationCountTextView.setVisibility(View.VISIBLE);
-                    ssViewHolder.storyRecommendationCountTextView.setText(datalist.get(position).getSsResult().getLikeCount());
+                    ssViewHolder.storyRecommendationCountTextView
+                            .setText(datalist.get(position).getSsResult().getLikeCount());
                 }
 
                 if (datalist.get(position).getSsResult().isLiked()) {
-                    ssViewHolder.likeImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_recommended));
+                    ssViewHolder.likeImageView
+                            .setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_recommended));
                 } else {
-                    ssViewHolder.likeImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_ss_like));
+                    ssViewHolder.likeImageView
+                            .setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_ss_like));
                 }
             } else {
                 SSCommentViewHolder ssCommentViewHolder = (SSCommentViewHolder) holder;
-                ssCommentViewHolder.commentorUsernameTextView.setText(datalist.get(position).getSsComment().getUserName());
+                ssCommentViewHolder.commentorUsernameTextView
+                        .setText(datalist.get(position).getSsComment().getUserName());
                 ssCommentViewHolder.commentDataTextView.setText(datalist.get(position).getSsComment().getMessage());
-                ssCommentViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(datalist.get(position).getSsComment().getCreatedTime())));
-                if (datalist.get(position).getSsComment().getReplies() == null || datalist.get(position).getSsComment().getReplies().isEmpty()) {
+                ssCommentViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(
+                        Long.parseLong(datalist.get(position).getSsComment().getCreatedTime())));
+                if (datalist.get(position).getSsComment().getReplies() == null || datalist.get(position).getSsComment()
+                        .getReplies().isEmpty()) {
                     ssCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
                 } else {
                     ssCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
-                    ssCommentViewHolder.replyCountTextView.setText(mContext.getString(R.string.short_s_view_replies) + "(" + datalist.get(position).getSsComment().getReplies_count() + ")");
+                    ssCommentViewHolder.replyCountTextView.setText(
+                            mContext.getString(R.string.short_s_view_replies) + "(" + datalist.get(position)
+                                    .getSsComment().getReplies_count() + ")");
                 }
                 try {
                     Picasso.get().load(datalist.get(position).getSsComment().getUserPic().getClientAppMin())
-                            .placeholder(R.drawable.default_commentor_img).into((ssCommentViewHolder.commentorImageView));
+                            .placeholder(R.drawable.default_commentor_img)
+                            .into((ssCommentViewHolder.commentorImageView));
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                     Picasso.get().load(R.drawable.default_commentor_img).into(ssCommentViewHolder.commentorImageView);
                 }
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
@@ -207,7 +219,8 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
         }
     }
 
-    public class SSCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    public class SSCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+            View.OnLongClickListener {
 
         ImageView commentorImageView, menuItem;
         TextView commentorUsernameTextView;
@@ -247,6 +260,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
     }
 
     public interface RecyclerViewClickListener {
+
         void onClick(View view, int position, View whatsappShare);
     }
 

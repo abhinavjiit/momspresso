@@ -12,7 +12,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.fragment.app.DialogFragment;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
@@ -117,7 +117,7 @@ public class ReportContentDialogFragment extends DialogFragment implements View.
                 Response<ReportStoryOrCommentResponse> response) {
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 if (isAdded()) {
                     Toast.makeText(getActivity(), "Failed to report. Please try again", Toast.LENGTH_SHORT).show();
                 }
@@ -138,7 +138,7 @@ public class ReportContentDialogFragment extends DialogFragment implements View.
                 if (isAdded()) {
                     Toast.makeText(getActivity(), "Failed to report. Please try again", Toast.LENGTH_SHORT).show();
                 }
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 dismiss();
             }
@@ -149,7 +149,7 @@ public class ReportContentDialogFragment extends DialogFragment implements View.
             if (isAdded()) {
                 Toast.makeText(getActivity(), "Failed to report. Please try again", Toast.LENGTH_SHORT).show();
             }
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
             dismiss();
         }

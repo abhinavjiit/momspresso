@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.models.Topics
 import java.util.ArrayList
@@ -76,7 +76,7 @@ class MomVlogHorizontalRecyclerAdapter(
                     clickListener.onRecyclerClick(position)
                 }
             } catch (t: Exception) {
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4KException", Log.getStackTraceString(t))
             }
         }

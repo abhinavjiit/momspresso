@@ -14,7 +14,7 @@ import android.widget.Toast;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -207,17 +207,17 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
                     processDraftResponse(draftListResponse);
                 }
             } catch (JSONException jsonexception) {
-                Crashlytics.logException(jsonexception);
+                FirebaseCrashlytics.getInstance().recordException(jsonexception);
                 Log.d("JSONException", Log.getStackTraceString(jsonexception));
             } catch (Exception ex) {
-                Crashlytics.logException(ex);
+                FirebaseCrashlytics.getInstance().recordException(ex);
                 Log.d("MC4kException", Log.getStackTraceString(ex));
             }
         }
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -315,7 +315,7 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
 
                     @Override
                     public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
-                        Crashlytics.logException(t);
+                        FirebaseCrashlytics.getInstance().recordException(t);
                         Log.d("MC4kException", Log.getStackTraceString(t));
                     }
                 }

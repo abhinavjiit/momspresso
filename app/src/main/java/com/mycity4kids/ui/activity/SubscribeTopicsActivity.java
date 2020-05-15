@@ -3,22 +3,20 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
+import androidx.appcompat.widget.Toolbar;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mycity4kids.base.BaseActivity;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
@@ -32,17 +30,14 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.SubscribeTopicsTabAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
-
-import org.json.JSONObject;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-
 import okhttp3.ResponseBody;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -131,11 +126,12 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
 
     private Callback<FollowUnfollowCategoriesResponse> getFollowedTopicsResponseCallback = new Callback<FollowUnfollowCategoriesResponse>() {
         @Override
-        public void onResponse(Call<FollowUnfollowCategoriesResponse> call, retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
+        public void onResponse(Call<FollowUnfollowCategoriesResponse> call,
+                retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
             removeProgressDialog();
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -150,7 +146,7 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                 } else {
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -158,7 +154,7 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
         @Override
         public void onFailure(Call<FollowUnfollowCategoriesResponse> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -171,7 +167,7 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
             FollowTopics[] res = gson.fromJson(fileContent, FollowTopics[].class);
             createTopicsData(res);
         } catch (FileNotFoundException e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
 
             showProgressDialog("Please wait");
@@ -196,24 +192,28 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
 
                 Retrofit retro = BaseApplication.getInstance().getConfigurableTimeoutRetrofit(3);
                 final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-                String popularURL = jsonObject.getJSONObject("data").getJSONObject("result").getJSONObject("category").getString("popularLocation");
+                String popularURL = jsonObject.getJSONObject("data").getJSONObject("result").getJSONObject("category")
+                        .getString("popularLocation");
                 Call<ResponseBody> caller = topicsAPI.downloadTopicsListForFollowUnfollow(popularURL);
 
                 caller.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                         removeProgressDialog();
-                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(SubscribeTopicsActivity.this, AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE, response.body());
+                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(SubscribeTopicsActivity.this,
+                                AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE, response.body());
                         Log.d("TopicsSplashActivity", "file download was a success? " + writtenToDisk);
 
                         try {
-                            FileInputStream fileInputStream = openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
+                            FileInputStream fileInputStream = openFileInput(
+                                    AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
                             String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory())
+                                    .create();
                             FollowTopics[] res = gson.fromJson(fileContent, FollowTopics[].class);
                             createTopicsData(res);
                         } catch (FileNotFoundException e) {
-                            Crashlytics.logException(e);
+                            FirebaseCrashlytics.getInstance().recordException(e);
                             Log.d("FileNotFoundException", Log.getStackTraceString(e));
                         }
                     }
@@ -221,13 +221,13 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
                         removeProgressDialog();
-                        Crashlytics.logException(t);
+                        FirebaseCrashlytics.getInstance().recordException(t);
                         Log.d("MC4KException", Log.getStackTraceString(t));
                     }
                 });
             } catch (Exception e) {
                 removeProgressDialog();
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
             }
         }
@@ -235,7 +235,7 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };
@@ -256,8 +256,10 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                     for (int k = 0; k < previouslyFollowedTopics.size(); k++) {
                         if (responseData[i].getChild().get(j).getId().equals(previouslyFollowedTopics.get(k))) {
                             //highlight previously selected topics in the current data.
-                            selectedTopicsMap.put(responseData[i].getChild().get(j).getId(), responseData[i].getChild().get(j));
-                            initSelectedTopicsMap.put(responseData[i].getChild().get(j).getId(), responseData[i].getChild().get(j));
+                            selectedTopicsMap
+                                    .put(responseData[i].getChild().get(j).getId(), responseData[i].getChild().get(j));
+                            initSelectedTopicsMap
+                                    .put(responseData[i].getChild().get(j).getId(), responseData[i].getChild().get(j));
                             responseData[i].getChild().get(j).setIsSelected(true);
                         }
                     }
@@ -289,20 +291,22 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                 if (categoryIdList.contains(selectTopic.get(i).getId())) {
 
                 } else {
-                    if (selectTopic.get(i).getChildTopics() != null)
+                    if (selectTopic.get(i).getChildTopics() != null) {
                         otherTopicsChildList.addAll(selectTopic.get(i).getChildTopics());
+                    }
                 }
             }
             selectTopicNew.setChildTopics(otherTopicsChildList);
             filteredTopicList.add(selectTopicNew);
-            searchTopicsSplashAdapter = new SubscribeTopicsTabAdapter(this, filteredTopicList, BaseApplication.getSelectedTopicsMap(), 0);
+            searchTopicsSplashAdapter = new SubscribeTopicsTabAdapter(this, filteredTopicList,
+                    BaseApplication.getSelectedTopicsMap(), 0);
             popularTopicsListView.setAdapter(searchTopicsSplashAdapter);
             if (BaseApplication.getSelectedTopicsMap() == null || BaseApplication.getSelectedTopicsMap().isEmpty()) {
                 saveTextView.setEnabled(false);
             }
 //            processTrendingResponse();
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
 //            showToast(getString(R.string.went_wrong));
         }
@@ -344,14 +348,16 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
             case R.id.saveTextView:
                 try {
                     JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("userId",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                     jsonObject.put("ScreenName", screen);
                     mixpanel.track("SaveTopicSelection", jsonObject);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 ArrayList<Topics> topicsList = new ArrayList<>();
-                if (BaseApplication.getSelectedTopicsMap().values() != null && BaseApplication.getSelectedTopicsMap().values().size() != 0) {
+                if (BaseApplication.getSelectedTopicsMap().values() != null
+                        && BaseApplication.getSelectedTopicsMap().values().size() != 0) {
                     topicsList.addAll(BaseApplication.getSelectedTopicsMap().values());
                 } else {
                     populateTopicsList();
@@ -396,7 +402,8 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
             case R.id.cancelTextView:
                 try {
                     JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("userId",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                     jsonObject.put("ScreenName", screen);
                     mixpanel.track("CancelTopicSelection", jsonObject);
                 } catch (Exception e) {
@@ -409,11 +416,12 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
 
     private Callback<FollowUnfollowCategoriesResponse> followUnfollowCategoriesResponseCallback = new Callback<FollowUnfollowCategoriesResponse>() {
         @Override
-        public void onResponse(Call<FollowUnfollowCategoriesResponse> call, retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
+        public void onResponse(Call<FollowUnfollowCategoriesResponse> call,
+                retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
             removeProgressDialog();
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 showToast(getString(R.string.server_went_wrong));
                 return;
             }
@@ -427,8 +435,11 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                         for (int i = 0; i < followCategoriesArrayList.size(); i++) {
                             try {
                                 JSONObject jsonObject = new JSONObject();
-                                jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                                jsonObject.put("Topic", followCategoriesArrayList.get(i) + "~" + selectedTopicsMap.get(followCategoriesArrayList.get(i)).getDisplay_name().toUpperCase());
+                                jsonObject.put("userId",
+                                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext())
+                                                .getDynamoId());
+                                jsonObject.put("Topic", followCategoriesArrayList.get(i) + "~" + selectedTopicsMap
+                                        .get(followCategoriesArrayList.get(i)).getDisplay_name().toUpperCase());
                                 jsonObject.put("ScreenName", screen);
                                 jsonObject.put("isFirstTimeUser", followTopicChangeNewUser);
                                 Log.d("FollowTopics", jsonObject.toString());
@@ -439,8 +450,10 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                         }
                         for (int i = 0; i < unfollowCategoriesArrayList.size(); i++) {
                             JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                            jsonObject.put("Topic", unfollowCategoriesArrayList.get(i) + "~" + initSelectedTopicsMap.get(unfollowCategoriesArrayList.get(i)).getDisplay_name().toUpperCase());
+                            jsonObject.put("userId",
+                                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                            jsonObject.put("Topic", unfollowCategoriesArrayList.get(i) + "~" + initSelectedTopicsMap
+                                    .get(unfollowCategoriesArrayList.get(i)).getDisplay_name().toUpperCase());
                             jsonObject.put("ScreenName", screen);
                             jsonObject.put("isFirstTimeUser", followTopicChangeNewUser);
                             Log.d("UnfollowTopics", jsonObject.toString());
@@ -450,7 +463,8 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                         e.printStackTrace();
                     }
                     SharedPrefUtils.setTopicSelectionChanged(BaseApplication.getAppContext(), true);
-                    SharedPrefUtils.setFollowedTopicsCount(BaseApplication.getAppContext(), responseData.getData().size());
+                    SharedPrefUtils
+                            .setFollowedTopicsCount(BaseApplication.getAppContext(), responseData.getData().size());
                     showToast(getString(R.string.subscribe_topics_toast_topic_updated));
                     Intent intent = getIntent();
                     intent.putStringArrayListExtra("updatedTopicList", updateTopicList);
@@ -460,7 +474,7 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                     showToast(responseData.getReason());
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
@@ -469,7 +483,7 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
         @Override
         public void onFailure(Call<FollowUnfollowCategoriesResponse> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
             showToast(getString(R.string.went_wrong));
         }

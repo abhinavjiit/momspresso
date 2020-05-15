@@ -14,7 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mycity4kids.R;
@@ -169,7 +169,7 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
                 languageConfigModelArrayList.add(entry.getValue());
             }
         } catch (FileNotFoundException ffe) {
-            Crashlytics.logException(ffe);
+            FirebaseCrashlytics.getInstance().recordException(ffe);
             Log.d("MC4kException", Log.getStackTraceString(ffe));
         }
 
@@ -257,7 +257,7 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
                             processResponse(responseModel);
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -265,7 +265,7 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
                 @Override
                 public void onFailure(Call<ContributorListResponse> call, Throwable t) {
                     removeProgressDialog();
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };

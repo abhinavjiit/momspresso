@@ -15,7 +15,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
@@ -37,10 +36,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
@@ -287,7 +286,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                     processArticleListingResponse(responseData);
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
             }
         }
@@ -297,7 +296,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             if (lodingView.getVisibility() == View.VISIBLE) {
                 lodingView.setVisibility(View.GONE);
             }
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };
@@ -443,7 +442,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 try {
                     filterTags(articleListingResults.get(position).getTags());
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
                 getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM);
@@ -538,7 +537,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 if (isAdded()) {
                     ToastUtils.showToast(getActivity(), "some thing went wrong at the server ");
                 }
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -548,7 +547,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             if (isAdded()) {
                 ToastUtils.showToast(getActivity(), "some thing went wrong at the server ");
             }
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -581,7 +580,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 if (isAdded()) {
                     ToastUtils.showToast(getActivity(), "some thing went wrong at the server ");
                 }
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -591,7 +590,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             if (isAdded()) {
                 ToastUtils.showToast(getActivity(), "some thing went wrong at the server ");
             }
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -609,7 +608,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 try {
                     createBitmapForSharingStory();
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
             }
@@ -617,7 +616,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             try {
                 createBitmapForSharingStory();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -753,7 +752,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                             }
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                         if (isAdded()) {
                             ((ShortStoriesListingContainerActivity) getActivity())
@@ -765,7 +764,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 @Override
                 public void onFailure(Call<RecommendUnrecommendArticleResponse> call, Throwable t) {
                     isRecommendRequestRunning = false;
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -829,7 +828,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                                     updateViewCount(viewsViewed.get(trackedViewsCount));
                                     viewedStoriesSet.add(viewsViewed.get(trackedViewsCount));
                                 } catch (Exception e) {
-                                    Crashlytics.logException(e);
+                                    FirebaseCrashlytics.getInstance().recordException(e);
                                     Log.d("MC4KException", Log.getStackTraceString(e));
                                 }
 
@@ -875,7 +874,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                         updateViewCount(viewsViewed.get(trackedViewsCount));
                         viewedStoriesSet.add(viewsViewed.get(trackedViewsCount));
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4KException", Log.getStackTraceString(e));
                     }
                 }
@@ -1083,7 +1082,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                     Utils.pushProfileEvents(getActivity(), "CTA_100WS_Add_To_Collection",
                             "TopicsShortStoriesTabFragment", "Add to Collection", "-");
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
                 return true;

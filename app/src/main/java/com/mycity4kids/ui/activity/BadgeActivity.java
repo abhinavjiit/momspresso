@@ -17,8 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -108,7 +108,7 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
             removeProgressDialog();
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             BadgeListResponse responseModel = response.body();
@@ -127,7 +127,7 @@ public class BadgeActivity extends BaseActivity implements View.OnClickListener,
             progressBar.setVisibility(View.GONE);
             loadingView.setVisibility(View.GONE);
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             apiExceptions(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }

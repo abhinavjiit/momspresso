@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
@@ -63,7 +63,18 @@ class RewardsTabFragment : BaseFragment() {
         // val isRewardAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
 
         textPersonalInfo.setOnClickListener {
-            Utils.campaignEvent(activity, "personalInfo", "reward_tab", "personalInfoText", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "personal_info_detail")
+            Utils.campaignEvent(
+                activity,
+                "personalInfo",
+                "reward_tab",
+                "personalInfoText",
+                "",
+                "android",
+                SharedPrefUtils.getAppLocale(activity),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                System.currentTimeMillis().toString(),
+                "personal_info_detail"
+            )
             var intent = Intent(activity, RewardsContainerActivity::class.java)
             intent.putExtra("pageLimit", 1)
             intent.putExtra("pageNumber", 1)
@@ -72,15 +83,30 @@ class RewardsTabFragment : BaseFragment() {
 
         relativeShareReferralCode.setOnClickListener {
             activity?.let {
-                Utils.pushGenericEvent(activity, "CTA_MyMoney_Profile_Refer",
-                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, "Home Screen")
+                Utils.pushGenericEvent(
+                    activity,
+                    "CTA_MyMoney_Profile_Refer",
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                    "Home Screen"
+                )
             }
             var intent = Intent(activity, RewardsShareReferralCodeActivity::class.java)
             startActivity(intent)
         }
 
         textSocial.setOnClickListener {
-            Utils.campaignEvent(activity, "socialInfo", "reward_tab", "socialText", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "social_info_detail")
+            Utils.campaignEvent(
+                activity,
+                "socialInfo",
+                "reward_tab",
+                "socialText",
+                "",
+                "android",
+                SharedPrefUtils.getAppLocale(activity),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                System.currentTimeMillis().toString(),
+                "social_info_detail"
+            )
 
             var intent = Intent(activity, RewardsContainerActivity::class.java)
             intent.putExtra("pageNumber", 3)
@@ -89,7 +115,18 @@ class RewardsTabFragment : BaseFragment() {
         }
 
         textPaymentModes.setOnClickListener {
-            Utils.campaignEvent(activity, "paymentModeOptions", "rewards_tab", "paymentText", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "payment_option_selection")
+            Utils.campaignEvent(
+                activity,
+                "paymentModeOptions",
+                "rewards_tab",
+                "paymentText",
+                "",
+                "android",
+                SharedPrefUtils.getAppLocale(activity),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                System.currentTimeMillis().toString(),
+                "payment_option_selection"
+            )
 
             var intent = Intent(activity, RewardsContainerActivity::class.java)
             intent.putExtra("pageNumber", 4)
@@ -98,7 +135,18 @@ class RewardsTabFragment : BaseFragment() {
         }
 
         textPanDetails.setOnClickListener {
-            Utils.campaignEvent(activity, "panDetailAdd", "rewards_tab", "panDetailText", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "show_pan_detail")
+            Utils.campaignEvent(
+                activity,
+                "panDetailAdd",
+                "rewards_tab",
+                "panDetailText",
+                "",
+                "android",
+                SharedPrefUtils.getAppLocale(activity),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                System.currentTimeMillis().toString(),
+                "show_pan_detail"
+            )
 
             var intent = Intent(activity, RewardsContainerActivity::class.java)
             intent.putExtra("pageNumber", 5)
@@ -135,7 +183,8 @@ class RewardsTabFragment : BaseFragment() {
 
     private fun fetchTotalEarning() {
         showProgressDialog(resources.getString(R.string.please_wait))
-        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+        var userId =
+            com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         val retro = BaseApplication.getInstance().retrofit
         val campaignAPI = retro.create(CampaignAPI::class.java)
         val call = campaignAPI.getTotalPayout(userId)
@@ -143,11 +192,14 @@ class RewardsTabFragment : BaseFragment() {
     }
 
     private val getTotalPayout = object : Callback<TotalPayoutResponse> {
-        override fun onResponse(call: Call<TotalPayoutResponse>, response: retrofit2.Response<TotalPayoutResponse>) {
+        override fun onResponse(
+            call: Call<TotalPayoutResponse>,
+            response: retrofit2.Response<TotalPayoutResponse>
+        ) {
             removeProgressDialog()
             if (response == null || null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
-                Crashlytics.logException(nee)
+                FirebaseCrashlytics.getInstance().recordException(nee)
                 return
             }
             try {
@@ -164,14 +216,14 @@ class RewardsTabFragment : BaseFragment() {
                     textTotalPayout.visibility = View.GONE
                 }
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
 
         override fun onFailure(call: Call<TotalPayoutResponse>, t: Throwable) {
             removeProgressDialog()
-            Crashlytics.logException(t)
+            FirebaseCrashlytics.getInstance().recordException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
         }
     }

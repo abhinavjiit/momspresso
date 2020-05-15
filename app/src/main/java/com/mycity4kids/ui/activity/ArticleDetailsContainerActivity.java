@@ -16,7 +16,7 @@ import android.widget.RelativeLayout;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -274,7 +274,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                         articleDetailsFragment.getGtmLanguage(), "" + duration);
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
 
@@ -420,7 +420,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException("Category related Article API failure");
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsApi
                         .getPublishedArticles(authorId, 0, 1, 6);
                 callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
@@ -449,13 +449,13 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                     }
                 } else {
                     NetworkErrorException nee = new NetworkErrorException("Category related Article Error Response");
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                     Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsApi
                             .getPublishedArticles(authorId, 0, 1, 6);
                     callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsApi
                         .getPublishedArticles(authorId, 0, 1, 6);
@@ -465,7 +465,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
             Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsApi
                     .getPublishedArticles(authorId, 0, 1, 6);
@@ -505,7 +505,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                     filterCall.enqueue(articleListingResponseCallback);
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 Call<ArticleListingResponse> filterCall = topicsApi.getTrendingArticles(1, 6, preferredLang);
                 filterCall.enqueue(articleListingResponseCallback);
@@ -546,7 +546,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                     initializeViewPager();
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
                 initializeViewPager();
             }
@@ -554,7 +554,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
             initializeViewPager();
         }

@@ -16,7 +16,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.mycity4kids.R
@@ -48,9 +48,15 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
     var type: String? = null
     lateinit var addCollectionInterface: AddCollectionInterface
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.add_collection_name_pop_up, container,
-                false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val rootView = inflater.inflate(
+            R.layout.add_collection_name_pop_up, container,
+            false
+        )
         confirmTextView = rootView.findViewById(R.id.confirmTextView)
         collectionNameEditTextView = rootView.findViewById(R.id.collectionNameEditTextView)
         cancel = rootView.findViewById(R.id.cancel)
@@ -87,7 +93,7 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
             try {
                 addCollectionInterface = context
             } catch (e: ClassCastException) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
             }
         }
@@ -104,9 +110,13 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
     private fun addCollection() {
         var addCollectionRequestModel = AddCollectionRequestModel()
         addCollectionRequestModel.name = collectionNameEditTextView.text.toString().trim()
-        addCollectionRequestModel.userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
+        addCollectionRequestModel.userId =
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
 
-        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).addCollection(addCollectionRequestModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).addCollection(
+            addCollectionRequestModel
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
             override fun onComplete() {
             }
 
@@ -118,10 +128,14 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
                     if (t.code == 200 && t.status == Constants.SUCCESS && t.data?.result != null) {
                         var addCollectionRequestModell: AddCollectionRequestModel = t.data!!.result
                         collectionId = addCollectionRequestModell.userCollectionId
-                        Utils.pushGenericEvent(activity, "CTA_Collection_Creation",
-                                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-                                "AddCollectionPopUpDialogFragment")
-                        if (!StringUtils.isNullOrEmpty(collectionId) && !StringUtils.isNullOrEmpty(articleId)) {
+                        Utils.pushGenericEvent(
+                            activity, "CTA_Collection_Creation",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+                            "AddCollectionPopUpDialogFragment"
+                        )
+                        if (!StringUtils.isNullOrEmpty(collectionId) && !StringUtils.isNullOrEmpty(
+                                articleId
+                            )) {
                             addCollectionItem()
                         } else {
                             addMultipleCollectionItemsInCollection(collectionId)
@@ -135,24 +149,25 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
                         ToastUtils.showToast(activity, t.data?.msg)
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4KException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onError(e: Throwable) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
                 try {
                     //    Log.d("CODE", code.toString())
                     var data = (e as HttpException).response()?.errorBody()!!.byteStream()
                     var jsonParser = JsonParser()
                     var jsonObject = jsonParser.parse(
-                            InputStreamReader(data, "UTF-8")) as JsonObject
+                        InputStreamReader(data, "UTF-8")
+                    ) as JsonObject
                     var reason = jsonObject.get("reason")
                     Toast.makeText(activity, reason.asString, Toast.LENGTH_SHORT).show()
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.e("exception in error", e.message.toString())
                 }
             }
@@ -161,13 +176,17 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
 
     fun addCollectionItem() {
         val addCollectionRequestModel1 = UpdateCollectionRequestModel()
-        addCollectionRequestModel1.userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
+        addCollectionRequestModel1.userId =
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
         addCollectionRequestModel1.itemType = type
         val List = ArrayList<String>()
         List.add(collectionId)
         addCollectionRequestModel1.userCollectionId = List
         addCollectionRequestModel1.item = articleId
-        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).addCollectionItem(addCollectionRequestModel1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).addCollectionItem(
+            addCollectionRequestModel1
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
             override fun onComplete() {
             }
 
@@ -184,23 +203,24 @@ class AddCollectionPopUpDialogFragment : DialogFragment() {
                         ToastUtils.showToast(activity, t.data?.msg)
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4KException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onError(e: Throwable) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
                 try {
                     val data = (e as HttpException).response()?.errorBody()!!.byteStream()
                     val jsonParser = JsonParser()
                     val jsonObject = jsonParser.parse(
-                            InputStreamReader(data, "UTF-8")) as JsonObject
+                        InputStreamReader(data, "UTF-8")
+                    ) as JsonObject
                     val reason = jsonObject.get("reason")
                     Toast.makeText(activity, reason.asString, Toast.LENGTH_SHORT).show()
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.e("exception in error", e.message.toString())
                 }
             }

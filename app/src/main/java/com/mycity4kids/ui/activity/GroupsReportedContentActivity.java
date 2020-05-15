@@ -2,9 +2,6 @@ package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,11 +10,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.request.ReportedContentModerationRequest;
 import com.mycity4kids.models.response.GroupReportedContentResult;
@@ -25,9 +24,7 @@ import com.mycity4kids.models.response.GroupsReportedContentResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.adapter.GroupsReportedContentRecyclerAdapter;
-
 import java.util.ArrayList;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,7 +34,8 @@ import retrofit2.Retrofit;
  * Created by hemant on 9/7/18.
  */
 
-public class GroupsReportedContentActivity extends BaseActivity implements View.OnClickListener, GroupsReportedContentRecyclerAdapter.RecyclerViewClickListener {
+public class GroupsReportedContentActivity extends BaseActivity implements View.OnClickListener,
+        GroupsReportedContentRecyclerAdapter.RecyclerViewClickListener {
 
     private int totalPostCount;
     private int skip = 0;
@@ -95,7 +93,6 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
-
         postList = new ArrayList<>();
         groupsReportedContentRecyclerAdapter = new GroupsReportedContentRecyclerAdapter(this, this);
         groupsReportedContentRecyclerAdapter.setData(postList);
@@ -131,11 +128,12 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
 
     Callback<GroupsReportedContentResponse> reportedContentResponseCallback = new Callback<GroupsReportedContentResponse>() {
         @Override
-        public void onResponse(Call<GroupsReportedContentResponse> call, retrofit2.Response<GroupsReportedContentResponse> response) {
+        public void onResponse(Call<GroupsReportedContentResponse> call,
+                retrofit2.Response<GroupsReportedContentResponse> response) {
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -147,14 +145,14 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupsReportedContentResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -202,7 +200,8 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
                         dataList.get(j).setNotInterestingCount(dataList.get(j).getCounts().get(i).getCount());
                         break;
                     case "itHurtsReligiousSentiment":
-                        dataList.get(j).setItHurtsReligiousSentimentCount(dataList.get(j).getCounts().get(i).getCount());
+                        dataList.get(j)
+                                .setItHurtsReligiousSentimentCount(dataList.get(j).getCounts().get(i).getCount());
                         break;
                     case "other":
                         dataList.get(j).setOtherCount(dataList.get(j).getCounts().get(i).getCount());
@@ -249,7 +248,7 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -263,14 +262,14 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };

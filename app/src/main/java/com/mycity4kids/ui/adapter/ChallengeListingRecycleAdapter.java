@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.utils.AppUtils;
@@ -93,7 +93,7 @@ public class ChallengeListingRecycleAdapter extends
             AppUtils.populateLogoImageLanguageWise(holder.itemView.getContext(), holder.logoImageView,
                     articleDataModelsNew.get(position).getLang());
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         if (null == articleDataModelsNew.get(position).getCommentsCount()) {
@@ -138,7 +138,7 @@ public class ChallengeListingRecycleAdapter extends
         ImageView logoImageView;
 
 
-         ChallengeListingViewHolder(View itemView, RecyclerViewClickListener recyclerViewClickListener) {
+        ChallengeListingViewHolder(View itemView, RecyclerViewClickListener recyclerViewClickListener) {
             super(itemView);
             challengeNameImage = (ImageView) itemView.findViewById(R.id.ChallengeNameImage);
             challengeHeaderText = (RelativeLayout) itemView.findViewById(R.id.challenge_header_text);

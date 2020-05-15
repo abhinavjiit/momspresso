@@ -9,7 +9,7 @@ import android.widget.Filterable
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.models.ContactModel
 import java.util.Locale
@@ -71,7 +71,7 @@ class PhoneContactsAdapter(private val mListener: RecyclerViewClickListener) :
 
             holder.selectCheckbox.tag = filteredList?.get(position)
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
@@ -123,7 +123,7 @@ class PhoneContactsAdapter(private val mListener: RecyclerViewClickListener) :
                     filteredList = filterResults.values as List<ContactModel>
                     notifyDataSetChanged()
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }

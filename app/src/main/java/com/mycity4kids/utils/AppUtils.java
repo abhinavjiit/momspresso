@@ -38,8 +38,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -152,7 +152,7 @@ public class AppUtils {
             }
             reader.close();
         } catch (IOException e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("IOException", Log.getStackTraceString(e));
         }
         return sb.toString();
@@ -388,7 +388,7 @@ public class AppUtils {
                     outputStream.flush();
                     return true;
                 } catch (IOException e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4KException", Log.getStackTraceString(e));
                     return false;
                 } finally {
@@ -400,7 +400,7 @@ public class AppUtils {
                     }
                 }
             } catch (IOException e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
                 return false;
             }
@@ -770,7 +770,7 @@ public class AppUtils {
             context.startActivity(Intent.createChooser(shareIntent, "Momspresso"));
             return true;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
             return false;
         }
@@ -892,7 +892,7 @@ public class AppUtils {
             returnedBitmap.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(
                     BaseApplication.getAppContext().getExternalFilesDir(null) + File.separator + filename + ".jpg"));
         } catch (FileNotFoundException e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         return returnedBitmap;
@@ -1057,7 +1057,7 @@ public class AppUtils {
                 }
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4KException", Log.getStackTraceString(e));
         }
         return "";
@@ -1073,7 +1073,7 @@ public class AppUtils {
                 return true;
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4KException", Log.getStackTraceString(e));
         }
         return false;

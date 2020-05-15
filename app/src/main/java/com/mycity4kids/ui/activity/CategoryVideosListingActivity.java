@@ -13,9 +13,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
@@ -138,7 +138,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
 
             @Override
             public void onFailure(@NonNull Call<Topics> call, @NonNull Throwable t) {
-                Crashlytics.logException(t);
+                FirebaseCrashlytics.getInstance().recordException(t);
                 Log.d("MC4KException", Log.getStackTraceString(t));
             }
         });

@@ -541,9 +541,6 @@
     <meta-data
       android:name="com.google.android.gms.ads.APPLICATION_ID"
       android:value="@string/admob_id" />
-    <meta-data
-      android:name="io.fabric.ApiKey"
-      android:value="0955a2855f4c5641b7994b98f58aef7eadbf4cd5" />
 
     <service android:name=".fcm.MyFcmListenerService">
       <intent-filter>

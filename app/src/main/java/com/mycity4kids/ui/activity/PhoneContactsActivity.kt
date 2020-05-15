@@ -13,7 +13,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
@@ -68,7 +68,7 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
                 )
             }
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d(
                 "FileNotFoundException",
                 Log.getStackTraceString(e)
@@ -153,7 +153,7 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
                 val contactSyncCall = contactSyncAPI.syncContacts(contactSynRequest)
                 contactSyncCall.enqueue(object : Callback<ResponseBody> {
                     override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Crashlytics.logException(t)
+                        FirebaseCrashlytics.getInstance().recordException(t)
                         Log.d(
                             "FileNotFoundException",
                             Log.getStackTraceString(t)
@@ -171,7 +171,7 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
             adapter.setListData(contactModelArrayList)
             adapter.notifyDataSetChanged()
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d(
                 "FileNotFoundException",
                 Log.getStackTraceString(e)
@@ -235,7 +235,7 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
                     if (response.body() == null) {
                         val nee =
                             NetworkErrorException(response.raw().toString())
-                        Crashlytics.logException(nee)
+                        FirebaseCrashlytics.getInstance().recordException(nee)
                         showToast(getString(R.string.error_network))
                         return
                     }
@@ -246,14 +246,14 @@ class PhoneContactsActivity : BaseActivity(), EasyPermissions.PermissionCallback
                         }
                     } catch (e: Exception) {
                         showToast(getString(R.string.toast_response_error))
-                        Crashlytics.logException(e)
+                        FirebaseCrashlytics.getInstance().recordException(e)
                         Log.d("MC4kException", Log.getStackTraceString(e))
                     }
                 }
 
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     showToast(getString(R.string.toast_response_error))
-                    Crashlytics.logException(t)
+                    FirebaseCrashlytics.getInstance().recordException(t)
                     Log.d(
                         "FileNotFoundException",
                         Log.getStackTraceString(t)

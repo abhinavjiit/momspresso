@@ -3,8 +3,8 @@ package com.mycity4kids.ui.activity.collection
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import com.crashlytics.android.Crashlytics
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
@@ -66,7 +66,8 @@ class AddMultipleCollectionItemActivity : BaseActivity(), View.OnClickListener {
                     val list = ArrayList<String>()
                     list.add(collectionId)
                     updateCollectionRequestModel.userCollectionId = list
-                    updateCollectionRequestModel.userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
+                    updateCollectionRequestModel.userId =
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
                     updateCollectionRequestModel.item = data.id
                     updateCollectionRequestModel.itemType = data.itemType
                     val dataList = ArrayList<UpdateCollectionRequestModel>()
@@ -80,7 +81,8 @@ class AddMultipleCollectionItemActivity : BaseActivity(), View.OnClickListener {
                     val list = ArrayList<String>()
                     list.add(collectionId)
                     updateCollectionRequestModel.userCollectionId = list
-                    updateCollectionRequestModel.userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
+                    updateCollectionRequestModel.userId =
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
                     updateCollectionRequestModel.item = data.id
                     updateCollectionRequestModel.itemType = AppConstants.ARTICLE_COLLECTION_TYPE
                     val dataList = ArrayList<UpdateCollectionRequestModel>()
@@ -114,13 +116,19 @@ class AddMultipleCollectionItemActivity : BaseActivity(), View.OnClickListener {
         val collectionApi = retro.create(CollectionsAPI::class.java)
         val call = collectionApi.addMultipleCollectionItem(listData)
         call.enqueue(object : Callback<BaseResponseGeneric<AddCollectionRequestModel>> {
-            override fun onFailure(call: Call<BaseResponseGeneric<AddCollectionRequestModel>>, t: Throwable) {
+            override fun onFailure(
+                call: Call<BaseResponseGeneric<AddCollectionRequestModel>>,
+                t: Throwable
+            ) {
                 removeProgressDialog()
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
 
-            override fun onResponse(call: Call<BaseResponseGeneric<AddCollectionRequestModel>>, response: retrofit2.Response<BaseResponseGeneric<AddCollectionRequestModel>>) {
+            override fun onResponse(
+                call: Call<BaseResponseGeneric<AddCollectionRequestModel>>,
+                response: retrofit2.Response<BaseResponseGeneric<AddCollectionRequestModel>>
+            ) {
                 removeProgressDialog()
                 if (response.body() == null) {
                     return
@@ -128,13 +136,19 @@ class AddMultipleCollectionItemActivity : BaseActivity(), View.OnClickListener {
                 try {
                     val responsee = response.body()
                     if (responsee?.code == 200 && responsee.status == "success" && !responsee.data?.result?.listItemId.isNullOrEmpty()) {
-                        ToastUtils.showToast(this@AddMultipleCollectionItemActivity, responsee.data?.msg)
+                        ToastUtils.showToast(
+                            this@AddMultipleCollectionItemActivity,
+                            responsee.data?.msg
+                        )
                         finish()
                     } else {
-                        ToastUtils.showToast(this@AddMultipleCollectionItemActivity, responsee?.data?.msg)
+                        ToastUtils.showToast(
+                            this@AddMultipleCollectionItemActivity,
+                            responsee?.data?.msg
+                        )
                     }
                 } catch (t: Exception) {
-                    Crashlytics.logException(t)
+                    FirebaseCrashlytics.getInstance().recordException(t)
                     Log.d("MC4kException", Log.getStackTraceString(t))
                 }
             }
@@ -148,11 +162,14 @@ class AddMultipleCollectionItemActivity : BaseActivity(), View.OnClickListener {
         val call = bloggerDashboardAPI.getBloggerData(authorId)
         call.enqueue(object : Callback<UserDetailResponse> {
             override fun onFailure(call: Call<UserDetailResponse>, e: Throwable) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
 
-            override fun onResponse(call: Call<UserDetailResponse>, response: retrofit2.Response<UserDetailResponse>) {
+            override fun onResponse(
+                call: Call<UserDetailResponse>,
+                response: retrofit2.Response<UserDetailResponse>
+            ) {
                 removeProgressDialog()
                 if (null == response.body()) {
                     return
@@ -160,21 +177,30 @@ class AddMultipleCollectionItemActivity : BaseActivity(), View.OnClickListener {
                 try {
                     val responseData = response.body() as UserDetailResponse
                     if (responseData.code == 200 && Constants.SUCCESS == responseData.status) {
-                        multipleCollectionItemPagerAdapter = if (responseData.data[0].result.totalArticles != "0") {
-                            tabLayout.apply {
-                                addTab(tabLayout.newTab().setText("READ"))
-                                addTab(tabLayout.newTab().setText("CREATED"))
+                        multipleCollectionItemPagerAdapter =
+                            if (responseData.data[0].result.totalArticles != "0") {
+                                tabLayout.apply {
+                                    addTab(tabLayout.newTab().setText("READ"))
+                                    addTab(tabLayout.newTab().setText("CREATED"))
+                                }
+                                MultipleCollectionItemPagerAdapter(
+                                    supportFragmentManager,
+                                    isCreatedArticle = true,
+                                    collectionId = collectionId
+                                )
+                            } else {
+                                tabLayout.visibility = View.GONE
+                                MultipleCollectionItemPagerAdapter(
+                                    supportFragmentManager,
+                                    isCreatedArticle = false,
+                                    collectionId = collectionId
+                                )
                             }
-                            MultipleCollectionItemPagerAdapter(supportFragmentManager, isCreatedArticle = true, collectionId = collectionId)
-                        } else {
-                            tabLayout.visibility = View.GONE
-                            MultipleCollectionItemPagerAdapter(supportFragmentManager, isCreatedArticle = false, collectionId = collectionId)
-                        }
                         viewPager.adapter = multipleCollectionItemPagerAdapter
                     }
                 } catch (e: Exception) {
                     removeProgressDialog()
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
