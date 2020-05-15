@@ -9,13 +9,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.utils.StringUtils;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.UserDetailResult;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 
 /**
@@ -67,7 +64,8 @@ public class ChooseLoginAccountAdapter extends BaseAdapter {
             }
             try {
                 Picasso.get().load(userDetailList.get(position).getProfilePicUrl().getClientApp())
-                        .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(holder.userImageView);
+                        .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img)
+                        .into(holder.userImageView);
             } catch (Exception e) {
                 Picasso.get().load(R.drawable.default_commentor_img).into(holder.userImageView);
             }
@@ -75,7 +73,7 @@ public class ChooseLoginAccountAdapter extends BaseAdapter {
             holder.userNameTextView.setText(userDetailList.get(position).getFirstName());
 
         } catch (Exception ex) {
-            Crashlytics.logException(ex);
+            FirebaseCrashlytics.getInstance().recordException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));
         }
 
@@ -83,11 +81,13 @@ public class ChooseLoginAccountAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
+
         ImageView userImageView;
         TextView userNameTextView;
     }
 
     public interface IOtherCity {
+
         void onOtherCityAdd(String cityName);
     }
 }

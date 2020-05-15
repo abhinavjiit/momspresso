@@ -16,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
@@ -99,14 +99,14 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                 Log.e("PUSH_DATA", "***---***--msg--" + msg);
                 Log.e("PUSH_DATA", "***---***--remoteMsg--" + remoteMessage.getData().toString());
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
             }
             try {
                 pushNotificationModel = new Gson()
                         .fromJson(new Gson().toJson(remoteMessage.getData()), PushNotificationModel.class);
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
                 return;
             }
@@ -554,7 +554,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
             URL url = new URL(imageUrl);
             bitmap = BitmapFactory.decodeStream((InputStream) url.getContent());
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4KException", Log.getStackTraceString(e));
         }
 

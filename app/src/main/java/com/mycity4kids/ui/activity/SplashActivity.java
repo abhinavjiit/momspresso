@@ -9,9 +9,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import com.crashlytics.android.Crashlytics;
 import com.facebook.applinks.AppLinkData;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -201,7 +201,7 @@ public class SplashActivity extends BaseActivity {
                 prop.put("lang", Locale.getDefault().getLanguage());
                 mixpanel.registerSuperProperties(prop);
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
 
@@ -240,7 +240,7 @@ public class SplashActivity extends BaseActivity {
                     removeProgressDialog();
                     if (null == response.body()) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         showToast(getString(R.string.server_went_wrong));
                         gotoDashboard();
                         return;
@@ -256,7 +256,7 @@ public class SplashActivity extends BaseActivity {
                             showToast(responseData.getReason());
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                         gotoDashboard();
                     }
@@ -265,7 +265,7 @@ public class SplashActivity extends BaseActivity {
                 @Override
                 public void onFailure(Call<FollowUnfollowCategoriesResponse> call, Throwable t) {
                     removeProgressDialog();
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                     gotoDashboard();
                     apiExceptions(t);
@@ -338,7 +338,7 @@ public class SplashActivity extends BaseActivity {
                 }
             } catch (Exception e) {
                 showToast(getString(R.string.went_wrong));
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
                 //Uncomment to run on phoenix
                 SharedPrefUtils.setAppUgrade(BaseApplication.getAppContext(), false);

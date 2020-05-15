@@ -8,8 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
-import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
@@ -74,7 +74,7 @@ class BadgesProfileWidget : LinearLayout {
                 try {
                     if (response.body() == null) {
                         val nee = NetworkErrorException(response.raw().toString())
-                        Crashlytics.logException(nee)
+                        FirebaseCrashlytics.getInstance().recordException(nee)
                         return
                     }
                     val responseModel = response.body() as BadgeListResponse
@@ -87,14 +87,14 @@ class BadgesProfileWidget : LinearLayout {
                     }
                 } catch (e: Exception) {
                     visibility = View.GONE
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onFailure(call: Call<BadgeListResponse>, t: Throwable) {
                 visibility = View.GONE
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         })

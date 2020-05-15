@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.models.Topics;
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ public class ShortStoryChallengesRecyclerAdapter extends
             }
         } catch (Exception e) {
             articleDataModels = new ArrayList<>();
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4KException", Log.getStackTraceString(e));
         }
     }
@@ -163,7 +163,7 @@ public class ShortStoryChallengesRecyclerAdapter extends
                                 articleDataModels.get(getAdapterPosition()).getExtraData().get(0).getChallenge()
                                         .getImageUrl());
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
             }
         }

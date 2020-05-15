@@ -15,8 +15,8 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.mycity4kids.R
@@ -92,7 +92,7 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(),
                     "AddCollectionAndCollectionItemDialogFragment", "New collection", "-"
                 )
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
@@ -163,13 +163,13 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(),
                         Log.d("Error", response.toString())
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4KException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onError(e: Throwable) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
             }
         })
@@ -203,13 +203,13 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(),
                         ToastUtils.showToast(activity, t.data?.msg)
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4KException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onError(e: Throwable) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
                 try {
                     var data = (e as HttpException).response()?.errorBody()!!.byteStream()
@@ -220,7 +220,7 @@ class AddCollectionAndCollectionItemDialogFragment : DialogFragment(),
                     var reason = jsonObject.get("reason")
                     Toast.makeText(activity, reason.asString, Toast.LENGTH_SHORT).show()
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.e("exception in error", e.message.toString())
                 }
             }

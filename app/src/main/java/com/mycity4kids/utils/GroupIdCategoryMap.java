@@ -2,15 +2,12 @@ package com.mycity4kids.utils;
 
 import android.accounts.NetworkErrorException;
 import android.util.Log;
-
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.response.GroupIdCategoryIdMappingResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -34,7 +31,8 @@ public class GroupIdCategoryMap {
         this.position = position;
     }
 
-    public GroupIdCategoryMap(ArrayList<String> categoriesList, GroupCategoryInterface groupCategoryInterface, String position) {
+    public GroupIdCategoryMap(ArrayList<String> categoriesList, GroupCategoryInterface groupCategoryInterface,
+            String position) {
         this.categoriesList = categoriesList;
         this.groupCategoryInterface = groupCategoryInterface;
         this.position = position;
@@ -44,7 +42,8 @@ public class GroupIdCategoryMap {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
-        Call<GroupIdCategoryIdMappingResponse> mappingCall = groupsAPI.getGroupIdForSingleCategory("android", categoryId, position);
+        Call<GroupIdCategoryIdMappingResponse> mappingCall = groupsAPI
+                .getGroupIdForSingleCategory("android", categoryId, position);
         mappingCall.enqueue(groupIdResponseCallback);
     }
 
@@ -52,18 +51,20 @@ public class GroupIdCategoryMap {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
-        Call<GroupIdCategoryIdMappingResponse> mappingCall = groupsAPI.getGroupIdForMultipleCategories("android", categoriesList, position);
+        Call<GroupIdCategoryIdMappingResponse> mappingCall = groupsAPI
+                .getGroupIdForMultipleCategories("android", categoriesList, position);
         mappingCall.enqueue(groupIdResponseCallback);
     }
 
     private Callback<GroupIdCategoryIdMappingResponse> groupIdResponseCallback = new Callback<GroupIdCategoryIdMappingResponse>() {
 
         @Override
-        public void onResponse(Call<GroupIdCategoryIdMappingResponse> call, retrofit2.Response<GroupIdCategoryIdMappingResponse> response) {
+        public void onResponse(Call<GroupIdCategoryIdMappingResponse> call,
+                retrofit2.Response<GroupIdCategoryIdMappingResponse> response) {
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 groupCategoryInterface.onGroupMappingResult(0, "", "", "");
                 return;
@@ -82,7 +83,7 @@ public class GroupIdCategoryMap {
                 }
             } catch (Exception e) {
                 groupCategoryInterface.onGroupMappingResult(0, "", "", "");
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -90,12 +91,13 @@ public class GroupIdCategoryMap {
         @Override
         public void onFailure(Call<GroupIdCategoryIdMappingResponse> call, Throwable t) {
             groupCategoryInterface.onGroupMappingResult(0, "", "", "");
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
     public interface GroupCategoryInterface {
+
         void onGroupMappingResult(int groupId, String gpHeading, String gpSubHeading, String gpImageUrl);
     }
 }

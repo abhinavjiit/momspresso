@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentManager;
-import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
@@ -19,6 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -157,7 +157,7 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
                     showToast(responseData.getReason());
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
@@ -450,7 +450,7 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
                     showToast(responseData.getReason());
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
@@ -460,7 +460,7 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
             removeProgressDialog();
             Log.d("MC4kException", Log.getStackTraceString(t));
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             apiExceptions(t);
 //            showToast(getString(R.string.went_wrong));
         }
@@ -515,7 +515,7 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
                     showToast(responseData.getReason());
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -523,7 +523,7 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
         @Override
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
             Log.d("MC4kException", Log.getStackTraceString(t));
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             apiExceptions(t);
 //            showToast(getString(R.string.went_wrong));
         }
@@ -569,7 +569,7 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
                     showToast(responseData.getReason());
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("Exception", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
@@ -578,7 +578,7 @@ public class ActivityLogin extends BaseActivity implements IFacebookUser {
         @Override
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
             Log.d("MC4kException", Log.getStackTraceString(t));
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             apiExceptions(t);
 //            showToast(getString(R.string.went_wrong));
         }

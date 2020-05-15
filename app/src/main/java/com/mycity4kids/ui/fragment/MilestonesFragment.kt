@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -81,7 +81,7 @@ class MilestonesFragment : BaseFragment(), View.OnClickListener, MilestonesListA
                 progressBar?.visibility = View.GONE
                 if (null == response.body()) {
                     val nee = NetworkErrorException(response.raw().toString())
-                    Crashlytics.logException(nee)
+                    FirebaseCrashlytics.getInstance().recordException(nee)
                     return
                 }
                 val responseData = response.body()
@@ -94,13 +94,13 @@ class MilestonesFragment : BaseFragment(), View.OnClickListener, MilestonesListA
                 } else {
                 }
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
 
         override fun onFailure(call: Call<MilestonesResponse>, e: Throwable) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }

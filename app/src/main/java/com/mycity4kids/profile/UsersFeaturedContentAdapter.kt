@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.models.response.MixFeedResult
@@ -103,7 +103,7 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
         try {
             populateCollectionsForEachItem(position, holder)
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
@@ -168,10 +168,10 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
                 }
             }
         } catch (e: IndexOutOfBoundsException) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
@@ -189,7 +189,7 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
                 }
             }
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
@@ -204,7 +204,7 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
             }
         } catch (e: Exception) {
             holder.contentImageView.setBackgroundResource(R.drawable.default_article)
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
@@ -226,7 +226,7 @@ class UsersFeaturedContentAdapter(private val mListener: RecyclerViewClickListen
             }
         } catch (e: Exception) {
             holder.contentImageView.setBackgroundResource(R.drawable.default_article)
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }

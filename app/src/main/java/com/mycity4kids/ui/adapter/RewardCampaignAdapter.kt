@@ -16,7 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ShareCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
@@ -335,7 +335,7 @@ class RewardCampaignAdapter(
                 (context as CampaignContainerActivity).removeProgressDialog()
                 if (response == null || null == response.body()) {
                     val nee = NetworkErrorException(response.raw().toString())
-                    Crashlytics.logException(nee)
+                    FirebaseCrashlytics.getInstance().recordException(nee)
                     return
                 }
                 try {
@@ -350,14 +350,14 @@ class RewardCampaignAdapter(
                         Toast.makeText(context, responseData.reason, Toast.LENGTH_SHORT).show()
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onFailure(call: Call<ParticipateCampaignResponse>, t: Throwable) {
                 (context as CampaignContainerActivity).removeProgressDialog()
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }

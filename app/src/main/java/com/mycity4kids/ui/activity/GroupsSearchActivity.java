@@ -5,10 +5,6 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,12 +15,15 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.GroupResult;
@@ -35,10 +34,8 @@ import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.adapter.GroupsRecyclerGridAdapter;
 import com.mycity4kids.widget.SpacesItemDecoration;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -46,7 +43,8 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 19/4/16.
  */
-public class GroupsSearchActivity extends BaseActivity implements View.OnClickListener, GroupsRecyclerGridAdapter.RecyclerViewClickListener, GroupMembershipStatus.IMembershipStatus {
+public class GroupsSearchActivity extends BaseActivity implements View.OnClickListener,
+        GroupsRecyclerGridAdapter.RecyclerViewClickListener, GroupMembershipStatus.IMembershipStatus {
 
     private GroupsRecyclerGridAdapter adapter;
 
@@ -70,7 +68,8 @@ public class GroupsSearchActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.pushOpenScreenEvent(this, "GroupSearchScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(this, "GroupSearchScreen",
+                SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         setContentView(R.layout.groups_search_activity);
         root = findViewById(R.id.root);
@@ -139,7 +138,8 @@ public class GroupsSearchActivity extends BaseActivity implements View.OnClickLi
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
-        Call<GroupsListingResponse> call = groupsAPI.searchGroups(toolbarTitle.getText().toString(), "group", 1, skip, limit);
+        Call<GroupsListingResponse> call = groupsAPI
+                .searchGroups(toolbarTitle.getText().toString(), "group", 1, skip, limit);
         call.enqueue(getSearchResultReponseCallback);
     }
 
@@ -151,7 +151,7 @@ public class GroupsSearchActivity extends BaseActivity implements View.OnClickLi
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -163,7 +163,7 @@ public class GroupsSearchActivity extends BaseActivity implements View.OnClickLi
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -172,7 +172,7 @@ public class GroupsSearchActivity extends BaseActivity implements View.OnClickLi
         public void onFailure(Call<GroupsListingResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
             isReuqestRunning = false;
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -229,7 +229,8 @@ public class GroupsSearchActivity extends BaseActivity implements View.OnClickLi
     public void onRecyclerItemClick(View view, int position, boolean isMember) {
         selectedGroup = groupList.get(position);
         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
-        groupMembershipStatus.checkMembershipStatus(groupList.get(position).getId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+        groupMembershipStatus.checkMembershipStatus(groupList.get(position).getId(),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
     }
 
     @Override
@@ -245,11 +246,15 @@ public class GroupsSearchActivity extends BaseActivity implements View.OnClickLi
             }
         }
 
-        if (!AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(userType) && !AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(userType)) {
-            if ("male".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender()) ||
-                    "m".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())) {
+        if (!AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(userType) && !AppConstants.GROUP_MEMBER_TYPE_ADMIN
+                .equals(userType)) {
+            if ("male".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())
+                    ||
+                    "m".equalsIgnoreCase(
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())) {
                 Toast.makeText(this, getString(R.string.women_only), Toast.LENGTH_SHORT).show();
-                if (BuildConfig.DEBUG || AppConstants.DEBUGGING_USER_ID.contains(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
+                if (BuildConfig.DEBUG || AppConstants.DEBUGGING_USER_ID
+                        .contains(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
 
                 } else {
                     return;
@@ -271,7 +276,8 @@ public class GroupsSearchActivity extends BaseActivity implements View.OnClickLi
             intent.putExtra("groupId", selectedGroup.getId());
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
-        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION
+                .equals(body.getData().getResult().get(0).getStatus())) {
             Intent intent = new Intent(this, GroupsSummaryActivity.class);
             intent.putExtra("groupId", selectedGroup.getId());
             intent.putExtra("pendingMembershipFlag", true);

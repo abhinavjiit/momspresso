@@ -5,17 +5,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
-
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.ExploreTopicsResponse;
 import com.mycity4kids.models.Topics;
@@ -23,18 +21,16 @@ import com.mycity4kids.retrofitAPIsInterfaces.ArticlePublishAPI;
 import com.mycity4kids.ui.adapter.ArticleChallengesRecyclerAdapter;
 import com.mycity4kids.ui.adapter.ChallengeListingRecycleAdapter;
 import com.mycity4kids.utils.ArrayAdapterFactory;
-
+import java.util.ArrayList;
+import okhttp3.ResponseBody;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class ArticleChallengesActivity extends BaseActivity implements ChallengeListingRecycleAdapter.RecyclerViewClickListener {
+public class ArticleChallengesActivity extends BaseActivity implements
+        ChallengeListingRecycleAdapter.RecyclerViewClickListener {
 
 
     //    private ArrayList<String> activeArticleChallengeList;
@@ -65,7 +61,6 @@ public class ArticleChallengesActivity extends BaseActivity implements Challenge
         getActiveChallenge(AppConstants.ARTICLE_CHALLENGES_ID);
         progressBar.setVisibility(View.VISIBLE);
 
-
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(RecyclerView.VERTICAL);
         challengeArticleRecyclerView.setLayoutManager(llm);
@@ -86,7 +81,7 @@ public class ArticleChallengesActivity extends BaseActivity implements Challenge
             progressBar.setVisibility(View.GONE);
             if (null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             if (response.isSuccessful()) {
@@ -95,7 +90,8 @@ public class ArticleChallengesActivity extends BaseActivity implements Challenge
                     JSONObject jsonObject = new JSONObject(strResponse);
 
                     Gson gson1 = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-                    ExploreTopicsResponse exploreTopicsResponse = gson1.fromJson(strResponse, ExploreTopicsResponse.class);
+                    ExploreTopicsResponse exploreTopicsResponse = gson1
+                            .fromJson(strResponse, ExploreTopicsResponse.class);
 
                     JSONArray arr = jsonObject.getJSONArray("child");
                     Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
@@ -112,12 +108,13 @@ public class ArticleChallengesActivity extends BaseActivity implements Challenge
                             Log.d("ARTICLECHALLENGE", "GHANTA ------- " + i);
                         }
                     }
-                    articleChallengesRecyclerAdapter = new ArticleChallengesRecyclerAdapter(ArticleChallengesActivity.this, mDatalist);
+                    articleChallengesRecyclerAdapter = new ArticleChallengesRecyclerAdapter(
+                            ArticleChallengesActivity.this, mDatalist);
                     challengeArticleRecyclerView.setAdapter(articleChallengesRecyclerAdapter);
                     articleChallengesRecyclerAdapter.notifyDataSetChanged();
                 } catch (Exception e) {
                     progressBar.setVisibility(View.GONE);
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("FileNotFoundException", Log.getStackTraceString(e));
                 }
             }
@@ -127,7 +124,7 @@ public class ArticleChallengesActivity extends BaseActivity implements Challenge
         public void onFailure(Call<ResponseBody> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
             Log.d("REQUEST", "REQUEST BODY -- " + call.request());
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("FileNotFoundException", Log.getStackTraceString(t));
         }
     };

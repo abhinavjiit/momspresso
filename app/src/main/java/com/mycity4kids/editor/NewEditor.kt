@@ -44,8 +44,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.crashlytics.android.Crashlytics
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -480,7 +480,7 @@ class NewEditor : BaseActivity(),
             try {
                 showDraftSaveStatus(draftObject!!.updatedTime * 1000)
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
@@ -1125,7 +1125,7 @@ class NewEditor : BaseActivity(),
                         "Error while uploading image",
                         Toast.LENGTH_SHORT
                     ).show()
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -1135,7 +1135,7 @@ class NewEditor : BaseActivity(),
                 t: Throwable
             ) {
                 removeProgressDialog()
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Toast.makeText(
                     this@NewEditor,
                     "Error while uploading image",
@@ -1337,7 +1337,7 @@ class NewEditor : BaseActivity(),
                             }
                         }
                     } catch (e: Exception) {
-                        Crashlytics.logException(e)
+                        FirebaseCrashlytics.getInstance().recordException(e)
                         Log.d("MC4kException", Log.getStackTraceString(e))
                         showToast(getString(R.string.went_wrong))
                     }
@@ -1347,7 +1347,7 @@ class NewEditor : BaseActivity(),
                     call: Call<ArticleDraftResponse?>,
                     t: Throwable
                 ) {
-                    Crashlytics.logException(t)
+                    FirebaseCrashlytics.getInstance().recordException(t)
                     Log.d("MC4kException", Log.getStackTraceString(t))
                     showToast(getString(R.string.went_wrong))
                 }
@@ -1385,7 +1385,7 @@ class NewEditor : BaseActivity(),
                             }
                         }
                     } catch (e: Exception) {
-                        Crashlytics.logException(e)
+                        FirebaseCrashlytics.getInstance().recordException(e)
                         Log.d("MC4kException", Log.getStackTraceString(e))
                         showToast(getString(R.string.went_wrong))
                     }
@@ -1395,7 +1395,7 @@ class NewEditor : BaseActivity(),
                     call: Call<ArticleDraftResponse?>,
                     t: Throwable
                 ) {
-                    Crashlytics.logException(t)
+                    FirebaseCrashlytics.getInstance().recordException(t)
                     Log.d("MC4kException", Log.getStackTraceString(t))
                     showToast(getString(R.string.went_wrong))
                 }
@@ -1443,7 +1443,7 @@ class NewEditor : BaseActivity(),
                     call: Call<ArticleDraftResponse?>,
                     t: Throwable
                 ) {
-                    Crashlytics.logException(t)
+                    FirebaseCrashlytics.getInstance().recordException(t)
                     Log.d("MC4kException", Log.getStackTraceString(t))
                 }
             })
@@ -1474,7 +1474,7 @@ class NewEditor : BaseActivity(),
                     call: Call<ArticleDraftResponse?>,
                     t: Throwable
                 ) {
-                    Crashlytics.logException(t)
+                    FirebaseCrashlytics.getInstance().recordException(t)
                     Log.d("MC4kException", Log.getStackTraceString(t))
                 }
             })
@@ -1644,7 +1644,7 @@ class NewEditor : BaseActivity(),
                         }
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                     showToast(getString(R.string.went_wrong))
                 }
@@ -1654,7 +1654,7 @@ class NewEditor : BaseActivity(),
                 call: Call<ArticleDraftResponse?>,
                 t: Throwable
             ) {
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
                 showToast(getString(R.string.went_wrong))
             }

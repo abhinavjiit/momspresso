@@ -11,8 +11,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.mycity4kids.R
@@ -38,11 +38,14 @@ import io.reactivex.schedulers.Schedulers
 import java.io.InputStreamReader
 import retrofit2.HttpException
 
-class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerViewClickListener, CollectionThumbnailImageChangeDialogFragmnet.SendImage {
+class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerViewClickListener,
+    CollectionThumbnailImageChangeDialogFragmnet.SendImage {
     override fun onsendData(imageUrl: String) {
         try {
             Picasso.get().load(imageUrl)
-                    .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageView)
+                .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(
+                    collectionImageView
+                )
             userCollectionsListModel.imageUrl = imageUrl
         } catch (e: Exception) {
             collectionImageView.setImageResource(R.drawable.default_article)
@@ -83,7 +86,8 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
         val bundle = intent
         collectionId = bundle.getStringExtra("collectionId")
         val linearLayoutManager = LinearLayoutManager(this)
-        collectionItemsListAdapter = AddCollectionAdapter(this@EditCollectionActivity, this, adapterViewType = true)
+        collectionItemsListAdapter =
+            AddCollectionAdapter(this@EditCollectionActivity, this, adapterViewType = true)
         collectionItemRecyclerView.layoutManager = linearLayoutManager
         collectionItemRecyclerView.adapter = collectionItemsListAdapter
         getUserCollectionItems(0)
@@ -99,15 +103,17 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
         }
         collectionImageChangeTextView.setOnClickListener {
             try {
-                val collectionThumbnailImageChangeDialogFragmnet = CollectionThumbnailImageChangeDialogFragmnet()
+                val collectionThumbnailImageChangeDialogFragmnet =
+                    CollectionThumbnailImageChangeDialogFragmnet()
                 val fm = supportFragmentManager
                 collectionThumbnailImageChangeDialogFragmnet.show(fm, "collectionThumbnail")
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
-        collectionItemRecyclerView.addOnScrollListener(object : EndlessScrollListener(linearLayoutManager) {
+        collectionItemRecyclerView.addOnScrollListener(object :
+            EndlessScrollListener(linearLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
                 getUserCollectionItems(totalItemsCount)
             }
@@ -123,7 +129,12 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
     }
 
     private fun getUserCollectionItems(start: Int) {
-        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getUserCollectionItems(collectionId, start, 10).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getUserCollectionItems(
+            collectionId,
+            start,
+            10
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<UserCollectionsListModel>> {
             override fun onComplete() {
             }
 
@@ -141,11 +152,17 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                                 itemNotAddedTextView.visibility = View.GONE
                             }
                             collectionNameChangeEditTextView.setText(userCollectionsListModel.name)
-                            userCollectionsListModel.summary?.let { descriptionEditTextView?.setText(userCollectionsListModel.summary) }
+                            userCollectionsListModel.summary?.let {
+                                descriptionEditTextView?.setText(
+                                    userCollectionsListModel.summary
+                                )
+                            }
                             try {
 
                                 Picasso.get().load(userCollectionsListModel.imageUrl)
-                                        .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(collectionImageView)
+                                    .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(
+                                        collectionImageView
+                                    )
                             } catch (e: Exception) {
                                 collectionImageView.setImageResource(R.drawable.default_article)
                             }
@@ -159,13 +176,13 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                         ToastUtils.showToast(this@EditCollectionActivity, response.data?.msg)
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4KException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onError(e: Throwable) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
             }
         })
@@ -181,7 +198,10 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
         addCollectionRequestModel.userCollectionId = dataList[position].userCollectionId
         addCollectionRequestModel.userId = dataList[position].userId
 
-        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).editCollectionItem(addCollectionRequestModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).editCollectionItem(
+            addCollectionRequestModel
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
             override fun onComplete() {
             }
 
@@ -204,23 +224,28 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                         ToastUtils.showToast(this@EditCollectionActivity, t.data?.msg)
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4KException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onError(e: Throwable) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
                 try {
                     var data = (e as HttpException).response()?.errorBody()!!.byteStream()
                     var jsonParser = JsonParser()
                     var jsonObject = jsonParser.parse(
-                            InputStreamReader(data, "UTF-8")) as JsonObject
+                        InputStreamReader(data, "UTF-8")
+                    ) as JsonObject
                     var reason = jsonObject.get("reason")
-                    Toast.makeText(this@EditCollectionActivity, reason.asString, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@EditCollectionActivity,
+                        reason.asString,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.e("exception in error", e.message.toString())
                 }
             }
@@ -236,7 +261,10 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
         updateCollectionRequestModel.imageUrl = userCollectionsListModel.imageUrl
         updateCollectionRequestModel.summary = descriptionEditTextView?.text.toString()
 
-        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).editCollection(updateCollectionRequestModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).editCollection(
+            updateCollectionRequestModel
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<AddCollectionRequestModel>> {
             override fun onComplete() {
             }
 
@@ -249,32 +277,43 @@ class EditCollectionActivity : BaseActivity(), AddCollectionAdapter.RecyclerView
                         ToastUtils.showToast(this@EditCollectionActivity, t.data?.msg)
                         val bundle = Intent()
                         bundle.putExtra("deletedItemPosition", deletedItemPosition)
-                        bundle.putExtra("collectionName", collectionNameChangeEditTextView.text.toString())
+                        bundle.putExtra(
+                            "collectionName",
+                            collectionNameChangeEditTextView.text.toString()
+                        )
                         bundle.putExtra("collectionImage", userCollectionsListModel.imageUrl)
-                        bundle.putExtra("collectionDescription", descriptionEditTextView?.text.toString())
+                        bundle.putExtra(
+                            "collectionDescription",
+                            descriptionEditTextView?.text.toString()
+                        )
                         setResult(Activity.RESULT_OK, bundle)
                         finish()
                     } else {
                         ToastUtils.showToast(this@EditCollectionActivity, t.data?.msg)
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4KException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onError(e: Throwable) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
                 try {
                     var data = (e as HttpException).response()?.errorBody()!!.byteStream()
                     var jsonParser = JsonParser()
                     var jsonObject = jsonParser.parse(
-                            InputStreamReader(data, "UTF-8")) as JsonObject
+                        InputStreamReader(data, "UTF-8")
+                    ) as JsonObject
                     val reason = jsonObject.get("reason")
-                    Toast.makeText(this@EditCollectionActivity, reason.asString, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@EditCollectionActivity,
+                        reason.asString,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.e("exception in error", e.message.toString())
                 }
             }

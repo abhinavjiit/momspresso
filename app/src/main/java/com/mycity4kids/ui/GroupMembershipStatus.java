@@ -2,12 +2,10 @@ package com.mycity4kids.ui;
 
 import android.accounts.NetworkErrorException;
 import android.util.Log;
-
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,22 +35,18 @@ public class GroupMembershipStatus {
     private Callback<GroupsMembershipResponse> membershipDetailsResponseCallback = new Callback<GroupsMembershipResponse>() {
         @Override
         public void onResponse(Call<GroupsMembershipResponse> call, Response<GroupsMembershipResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
-                }
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 iMembershipStatus.onMembershipStatusFetchFail();
                 return;
             }
             try {
                 if (response.isSuccessful()) {
                     iMembershipStatus.onMembershipStatusFetchSuccess(response.body(), groupId);
-                } else {
-
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 iMembershipStatus.onMembershipStatusFetchFail();
             }
@@ -60,13 +54,14 @@ public class GroupMembershipStatus {
 
         @Override
         public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
             iMembershipStatus.onMembershipStatusFetchFail();
         }
     };
 
     public interface IMembershipStatus {
+
         void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId);
 
         void onMembershipStatusFetchFail();

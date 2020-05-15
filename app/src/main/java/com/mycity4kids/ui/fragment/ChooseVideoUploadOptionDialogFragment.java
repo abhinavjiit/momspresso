@@ -18,8 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -213,7 +213,7 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                 (getActivity()).startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
@@ -244,7 +244,7 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
 
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }

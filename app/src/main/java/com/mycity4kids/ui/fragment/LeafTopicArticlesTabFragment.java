@@ -16,9 +16,9 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -145,7 +145,7 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setNewListData(mDatalist);
         recyclerView.setAdapter(recyclerAdapter);
-        
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -200,7 +200,7 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
                     processArticleListingResponse(responseData);
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
             }
         }
@@ -210,7 +210,7 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };

@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
@@ -113,7 +113,7 @@ class MyTotalEarningActivity : BaseActivity() {
             removeProgressDialog()
             if (response == null || null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
-                Crashlytics.logException(nee)
+                FirebaseCrashlytics.getInstance().recordException(nee)
                 return
             }
             try {
@@ -139,14 +139,14 @@ class MyTotalEarningActivity : BaseActivity() {
                     startCampaignText.visibility = View.VISIBLE
                 }
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
 
         override fun onFailure(call: Call<AllCampaignTotalPayoutResponse>, t: Throwable) {
             removeProgressDialog()
-            Crashlytics.logException(t)
+            FirebaseCrashlytics.getInstance().recordException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
         }
     }

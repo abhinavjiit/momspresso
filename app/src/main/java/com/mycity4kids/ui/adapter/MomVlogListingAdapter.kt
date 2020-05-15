@@ -14,8 +14,8 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
@@ -174,7 +174,7 @@ class MomVlogListingAdapter(val mContext: Context) :
                                 momVlogVideosOrCarousalList[pos].isResponseReceived = true
                             }
                         } catch (e: Exception) {
-                            Crashlytics.logException(e)
+                            FirebaseCrashlytics.getInstance().recordException(e)
                             Log.d(
                                 "MC4kException",
                                 Log.getStackTraceString(e)

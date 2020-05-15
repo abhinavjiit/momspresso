@@ -19,7 +19,7 @@ import android.widget.Toast;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -308,7 +308,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 position, viewHolder);
                     }
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
             } else {
@@ -565,7 +565,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             Picasso.get().load(data.getStoryImage()).into(shareStoryImageView);
             storyAuthorTextView.setText(data.getUserName());
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }

@@ -2,7 +2,6 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -14,13 +13,13 @@ import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
+import androidx.appcompat.widget.Toolbar;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
@@ -30,14 +29,11 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ParentTopicsGridAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
-
-import org.json.JSONObject;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-
 import okhttp3.ResponseBody;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -115,7 +111,8 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
             exploreCategoriesLabel.setText(getString(R.string.search_topics_title));
             exploreCategoriesLabel.setVisibility(View.GONE);
             try {
-                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
+                FileInputStream fileInputStream = BaseApplication.getAppContext()
+                        .openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
                 String fileContent = AppUtils.convertStreamToString(fileInputStream);
                 Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                 ExploreTopicsModel[] res = gson.fromJson(fileContent, ExploreTopicsModel[].class);
@@ -124,7 +121,7 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
                 gridview.setAdapter(adapter);
                 adapter.setDatalist(mainTopicsList);
             } catch (FileNotFoundException e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("FileNotFoundException", Log.getStackTraceString(e));
 
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
@@ -178,12 +175,12 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
 
             @Override
             public void beforeTextChanged(CharSequence arg0, int arg1,
-                                          int arg2, int arg3) {
+                    int arg2, int arg3) {
             }
 
             @Override
             public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-                                      int arg3) {
+                    int arg3) {
             }
         });
     }
@@ -200,19 +197,23 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
 
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-                String popularURL = jsonObject.getJSONObject("data").getJSONObject("result").getJSONObject("category").getString("popularLocation");
+                String popularURL = jsonObject.getJSONObject("data").getJSONObject("result").getJSONObject("category")
+                        .getString("popularLocation");
                 Call<ResponseBody> caller = topicsAPI.downloadTopicsListForFollowUnfollow(popularURL);
 
                 caller.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE, response.body());
+                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(),
+                                AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE, response.body());
                         Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
 
                         try {
-                            FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
+                            FileInputStream fileInputStream = BaseApplication.getAppContext()
+                                    .openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
                             String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory())
+                                    .create();
                             ExploreTopicsModel[] res = gson.fromJson(fileContent, ExploreTopicsModel[].class);
                             createTopicsDataForFollow(res);
                             adapter = new ParentTopicsGridAdapter(fragType);
@@ -220,26 +221,26 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
                             adapter.setDatalist(mainTopicsList);
                             initializeTopicSearch();
                         } catch (FileNotFoundException e) {
-                            Crashlytics.logException(e);
+                            FirebaseCrashlytics.getInstance().recordException(e);
                             Log.d("FileNotFoundException", Log.getStackTraceString(e));
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Crashlytics.logException(t);
+                        FirebaseCrashlytics.getInstance().recordException(t);
                         Log.d("MC4KException", Log.getStackTraceString(t));
                     }
                 });
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };
@@ -250,13 +251,15 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
 
             //Prepare structure for multi-expandable listview.
             for (int i = 0; i < responseData.length; i++) {
-                if ("1".equals(responseData[i].getShowInMenu()) && responseData[i].getChild() != null && !responseData[i].getChild().isEmpty()) {
+                if ("1".equals(responseData[i].getShowInMenu()) && responseData[i].getChild() != null
+                        && !responseData[i].getChild().isEmpty()) {
                     mainTopicsList.add(responseData[i]);
                 }
             }
             if (!"search".equals(fragType)) {
                 ExploreTopicsModel contributorListModel = new ExploreTopicsModel();
-                contributorListModel.setDisplay_name(getString(R.string.explore_listing_explore_categories_meet_contributor));
+                contributorListModel
+                        .setDisplay_name(getString(R.string.explore_listing_explore_categories_meet_contributor));
                 contributorListModel.setId(MEET_CONTRIBUTOR_ID);
                 mainTopicsList.add(contributorListModel);
 
@@ -266,7 +269,7 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
                 mainTopicsList.add(exploreSectionModel);
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
@@ -303,30 +306,36 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
                 SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics", true);
                 break;
             case R.id.todaysBestTextView: {
-                Utils.pushOpenScreenEvent(ExploreArticleListingTypeActivity.this, "TodaysBestScreen", dynamoUserId + "");
-                Utils.pushViewQuickLinkArticlesEvent(ExploreArticleListingTypeActivity.this, "TopicScreen", dynamoUserId + "", "TodaysBestScreen");
+                Utils.pushOpenScreenEvent(ExploreArticleListingTypeActivity.this, "TodaysBestScreen",
+                        dynamoUserId + "");
+                Utils.pushViewQuickLinkArticlesEvent(ExploreArticleListingTypeActivity.this, "TopicScreen",
+                        dynamoUserId + "", "TodaysBestScreen");
                 Intent intent = new Intent(ExploreArticleListingTypeActivity.this, ArticleListingActivity.class);
                 intent.putExtra(Constants.SORT_TYPE, Constants.KEY_TODAYS_BEST);
                 startActivity(intent);
             }
             break;
             case R.id.editorsPickTextView: {
-                Utils.pushOpenScreenEvent(ExploreArticleListingTypeActivity.this, "EditorsPickScreen", dynamoUserId + "");
-                Utils.pushViewQuickLinkArticlesEvent(ExploreArticleListingTypeActivity.this, "TopicScreen", dynamoUserId + "", "EditorsPickScreen");
+                Utils.pushOpenScreenEvent(ExploreArticleListingTypeActivity.this, "EditorsPickScreen",
+                        dynamoUserId + "");
+                Utils.pushViewQuickLinkArticlesEvent(ExploreArticleListingTypeActivity.this, "TopicScreen",
+                        dynamoUserId + "", "EditorsPickScreen");
                 Intent intent = new Intent(ExploreArticleListingTypeActivity.this, ArticleListingActivity.class);
                 intent.putExtra(Constants.SORT_TYPE, Constants.KEY_EDITOR_PICKS);
                 startActivity(intent);
             }
             break;
             case R.id.shortStoryTextView: {
-                Intent intent = new Intent(ExploreArticleListingTypeActivity.this, ShortStoriesListingContainerActivity.class);
+                Intent intent = new Intent(ExploreArticleListingTypeActivity.this,
+                        ShortStoriesListingContainerActivity.class);
                 intent.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
                 startActivity(intent);
             }
             break;
             case R.id.forYouTextView: {
                 Utils.pushOpenScreenEvent(ExploreArticleListingTypeActivity.this, "ForYouScreen", dynamoUserId + "");
-                Utils.pushViewQuickLinkArticlesEvent(ExploreArticleListingTypeActivity.this, "TopicScreen", dynamoUserId + "", "ForYouScreen");
+                Utils.pushViewQuickLinkArticlesEvent(ExploreArticleListingTypeActivity.this, "TopicScreen",
+                        dynamoUserId + "", "ForYouScreen");
                 Intent intent = new Intent(ExploreArticleListingTypeActivity.this, ArticleListingActivity.class);
                 intent.putExtra(Constants.SORT_TYPE, Constants.KEY_FOR_YOU);
                 startActivity(intent);
@@ -334,7 +343,8 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
             break;
             case R.id.recentTextView: {
                 Utils.pushOpenScreenEvent(ExploreArticleListingTypeActivity.this, "RecentScreen", dynamoUserId + "");
-                Utils.pushViewQuickLinkArticlesEvent(ExploreArticleListingTypeActivity.this, "TopicScreen", dynamoUserId + "", "RecentScreen");
+                Utils.pushViewQuickLinkArticlesEvent(ExploreArticleListingTypeActivity.this, "TopicScreen",
+                        dynamoUserId + "", "RecentScreen");
                 Intent intent = new Intent(ExploreArticleListingTypeActivity.this, ArticleListingActivity.class);
                 intent.putExtra(Constants.SORT_TYPE, Constants.KEY_RECENT);
                 startActivity(intent);
@@ -368,6 +378,7 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        this.overridePendingTransition(R.anim.activity_drawer_slide_in_from_right, R.anim.activity_drawer_slide_out_to_left);
+        this.overridePendingTransition(R.anim.activity_drawer_slide_in_from_right,
+                R.anim.activity_drawer_slide_out_to_left);
     }
 }

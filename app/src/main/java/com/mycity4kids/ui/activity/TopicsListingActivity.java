@@ -15,9 +15,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mycity4kids.R;
@@ -147,7 +147,7 @@ public class TopicsListingActivity extends BaseActivity {
             }
             getCurrentParentTopicCategoriesAndSubCategories();
         } catch (FileNotFoundException e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
@@ -171,22 +171,22 @@ public class TopicsListingActivity extends BaseActivity {
                         createTopicsData(res);
                         getCurrentParentTopicCategoriesAndSubCategories();
                     } catch (FileNotFoundException e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4KException", Log.getStackTraceString(e));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
             });
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4KException", Log.getStackTraceString(e));
         }
         if (subTopicsList.size() == 0) {
@@ -321,7 +321,7 @@ public class TopicsListingActivity extends BaseActivity {
             BaseApplication.setTopicList(allTopicsList);
             BaseApplication.setTopicsMap(allTopicsMap);
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }

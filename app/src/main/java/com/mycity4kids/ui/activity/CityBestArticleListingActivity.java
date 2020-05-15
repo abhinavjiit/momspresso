@@ -12,21 +12,17 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.ToastUtils;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
@@ -35,9 +31,9 @@ import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
-
+import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.utils.ToastUtils;
 import java.util.ArrayList;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -45,7 +41,8 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 4/8/16.
  */
-public class CityBestArticleListingActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener, /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
+public class CityBestArticleListingActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener,
+        View.OnClickListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     private MainArticleRecyclerViewAdapter recyclerAdapter;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
@@ -223,7 +220,9 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
-        Call<ArticleListingResponse> filterCall = topicsAPI.getBestArticlesForCity("" + SharedPrefUtils.getCurrentCityModel(this).getId(), sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+        Call<ArticleListingResponse> filterCall = topicsAPI
+                .getBestArticlesForCity("" + SharedPrefUtils.getCurrentCityModel(this).getId(), sortType, from,
+                        from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
         filterCall.enqueue(articleListingResponseCallback);
 
     }
@@ -251,7 +250,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
                     showToast(getString(R.string.went_wrong));
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
@@ -259,7 +258,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
 
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             cityshimmerFragment.startShimmerAnimation();
             Log.d("MC4KException", Log.getStackTraceString(t));
             showToast(getString(R.string.went_wrong));
@@ -334,7 +333,8 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
             case R.id.recentSortFAB:
                 cityshimmerFragment.startShimmerAnimation();
                 cityshimmerFragment.setVisibility(View.VISIBLE);
-                Utils.pushSortListingEvent(CityBestArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(CityBestArticleListingActivity.this).getDynamoId(),
+                Utils.pushSortListingEvent(CityBestArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT,
+                        SharedPrefUtils.getUserDetailModel(CityBestArticleListingActivity.this).getDynamoId(),
                         "Best of City Listing", "recent");
                 sortBgLayout.setVisibility(View.GONE);
                 fabMenu.collapse();
@@ -347,7 +347,8 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
             case R.id.popularSortFAB:
                 cityshimmerFragment.startShimmerAnimation();
                 cityshimmerFragment.setVisibility(View.VISIBLE);
-                Utils.pushSortListingEvent(CityBestArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(CityBestArticleListingActivity.this).getDynamoId(),
+                Utils.pushSortListingEvent(CityBestArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT,
+                        SharedPrefUtils.getUserDetailModel(CityBestArticleListingActivity.this).getDynamoId(),
                         "Best of City Listing", "popular");
                 sortBgLayout.setVisibility(View.GONE);
                 fabMenu.collapse();
@@ -368,11 +369,14 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
         intent.putExtra(Constants.ARTICLE_COVER_IMAGE, articleDataModelsNew.get(position).getImageUrl());
         intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
         intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
-        intent.putExtra(Constants.ARTICLE_OPENED_FROM, Constants.KEY_IN_YOUR_CITY + "~" + SharedPrefUtils.getCurrentCityModel(CityBestArticleListingActivity.this).getName());
+        intent.putExtra(Constants.ARTICLE_OPENED_FROM, Constants.KEY_IN_YOUR_CITY + "~" + SharedPrefUtils
+                .getCurrentCityModel(CityBestArticleListingActivity.this).getName());
         intent.putExtra(Constants.FROM_SCREEN, "BestOfCityScreen");
         intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
         intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
-        intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
+        intent.putExtra(Constants.AUTHOR,
+                articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position)
+                        .getUserName());
         startActivity(intent);
     }
 

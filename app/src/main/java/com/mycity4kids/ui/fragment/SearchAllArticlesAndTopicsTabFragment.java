@@ -2,20 +2,17 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.StringUtils;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.SearchArticleResult;
@@ -27,10 +24,10 @@ import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.SearchAllActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.SearchAllArticlesTopicsListingAdapter;
+import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.widget.NpaLinearLayoutManager;
-
 import java.util.ArrayList;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -38,7 +35,8 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant.parmar on 21-04-2016.
  */
-public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implements View.OnClickListener, SearchAllArticlesTopicsListingAdapter.RecyclerViewClickListener {
+public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implements View.OnClickListener,
+        SearchAllArticlesTopicsListingAdapter.RecyclerViewClickListener {
 
     ArrayList<SearchArticleResult> articleDataModelsNew;
     RecyclerView recyclerView;
@@ -60,7 +58,7 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.search_all_article_topic_tab_fragment, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -89,8 +87,9 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
 
     private void newSearchTopicArticleListingApi(String searchName, String type) {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            if (isAdded())
+            if (isAdded()) {
                 ((SearchAllActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
+            }
             return;
         }
 
@@ -120,8 +119,9 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
         public void onResponse(Call<SearchResponse> call, retrofit2.Response<SearchResponse> response) {
             isReuqestRunning = false;
             if (response == null || response.body() == null) {
-                if (isAdded())
+                if (isAdded()) {
                     ((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                }
                 return;
             }
             try {
@@ -143,9 +143,10 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
                     ((SearchAllActivity) getActivity()).showToast(responseData.getReason());
                 }
             } catch (Exception e) {
-                if (isAdded())
+                if (isAdded()) {
                     ((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-                Crashlytics.logException(e);
+                }
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
 
@@ -158,7 +159,7 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
             }
             isShowMoreArticleRequest = false;
             isShowMoreTopicRequest = false;
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -181,7 +182,8 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
                 data.add(obj);
                 articleShowMoreIndex = 1;
             } else {
-                if (AppConstants.SEARCH_ITEM_TYPE_ARTICLE_SHOW_MORE.equals(data.get(articleShowMoreIndex).getListType())) {
+                if (AppConstants.SEARCH_ITEM_TYPE_ARTICLE_SHOW_MORE
+                        .equals(data.get(articleShowMoreIndex).getListType())) {
                     data.remove(articleShowMoreIndex);
                 }
             }
@@ -216,7 +218,8 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
         ArrayList<SearchTopicResult> topicList = responseData.getData().getResult().getTopic();
 
         if (topicList != null && topicList.size() > 0) {
-            if (data.isEmpty() || AppConstants.SEARCH_ITEM_TYPE_ARTICLE_SHOW_MORE.equals(data.get(data.size() - 1).getListType())) {
+            if (data.isEmpty() || AppConstants.SEARCH_ITEM_TYPE_ARTICLE_SHOW_MORE
+                    .equals(data.get(data.size() - 1).getListType())) {
                 SearchArticleTopicResult obj = new SearchArticleTopicResult();
                 obj.setTitle(getString(R.string.search_topic_label));
                 obj.setListType(AppConstants.SEARCH_ITEM_TYPE_TOPIC_HEADER);
@@ -249,8 +252,9 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
             Log.d("FastSearch", "data cleared");
             data.clear();
         }
-        if (noBlogsTextView != null)
+        if (noBlogsTextView != null) {
             noBlogsTextView.setVisibility(View.GONE);
+        }
         nextPageNumber = 1;
         isShowMoreArticleRequest = false;
         isShowMoreTopicRequest = false;
@@ -329,12 +333,13 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
                 break;
             }
         } catch (Exception t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     }
 
     public class SearchArticleTopicResult {
+
         private String id;
         private String userId;
         private String titleSlug;

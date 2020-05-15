@@ -3,22 +3,18 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
+import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.models.request.CreateUpdateGroupRequest;
 import com.mycity4kids.models.request.GroupsCategoryUpdateRequest;
 import com.mycity4kids.models.response.GroupDetailResponse;
@@ -29,9 +25,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.adapter.EditGroupPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
-
 import java.util.ArrayList;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -91,7 +85,7 @@ public class EditGroupActivity extends BaseActivity implements View.OnClickListe
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -103,14 +97,14 @@ public class EditGroupActivity extends BaseActivity implements View.OnClickListe
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupDetailResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -119,7 +113,8 @@ public class EditGroupActivity extends BaseActivity implements View.OnClickListe
         groupItem = groupDetailResponse.getData().getResult();
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.groups_sections_about)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.groups_join_form)));
-        adapter = new EditGroupPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), groupDetailResponse.getData().getResult());
+        adapter = new EditGroupPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(),
+                groupDetailResponse.getData().getResult());
 
         AppUtils.changeTabsFont(tabLayout);
         viewPager.setAdapter(adapter);
@@ -181,7 +176,7 @@ public class EditGroupActivity extends BaseActivity implements View.OnClickListe
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -204,7 +199,8 @@ public class EditGroupActivity extends BaseActivity implements View.OnClickListe
                         }
                     }
 
-                    Call<GroupsCategoryMappingResponse> call1 = groupsAPI.addGroupCategory(groupsCategoryUpdateRequestList);
+                    Call<GroupsCategoryMappingResponse> call1 = groupsAPI
+                            .addGroupCategory(groupsCategoryUpdateRequestList);
                     call1.enqueue(categoryUpdateResponseCallback);
 
                     GroupResult groupResult = adapter.getAllUpdatedFields();
@@ -223,32 +219,34 @@ public class EditGroupActivity extends BaseActivity implements View.OnClickListe
                         createUpdateGroupRequest.setHeaderImage(groupResult.getHeaderImage());
                         createUpdateGroupRequest.setQuestionnaire(groupResult.getQuestionnaire());
 
-                        Call<GroupDetailResponse> call2 = groupsAPI.updateGroup(groupItem.getId(), createUpdateGroupRequest);
+                        Call<GroupDetailResponse> call2 = groupsAPI
+                                .updateGroup(groupItem.getId(), createUpdateGroupRequest);
                         call2.enqueue(updateGroupResponseCallback);
                     }
                 } else {
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
     private Callback<GroupsCategoryMappingResponse> categoryUpdateResponseCallback = new Callback<GroupsCategoryMappingResponse>() {
         @Override
-        public void onResponse(Call<GroupsCategoryMappingResponse> call, retrofit2.Response<GroupsCategoryMappingResponse> response) {
+        public void onResponse(Call<GroupsCategoryMappingResponse> call,
+                retrofit2.Response<GroupsCategoryMappingResponse> response) {
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -259,14 +257,14 @@ public class EditGroupActivity extends BaseActivity implements View.OnClickListe
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupsCategoryMappingResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -277,7 +275,7 @@ public class EditGroupActivity extends BaseActivity implements View.OnClickListe
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -289,14 +287,14 @@ public class EditGroupActivity extends BaseActivity implements View.OnClickListe
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupDetailResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };

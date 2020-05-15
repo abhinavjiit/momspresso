@@ -12,8 +12,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
@@ -163,7 +163,7 @@ public class GroupMembershipActivity extends BaseActivity implements View.OnClic
                         retrofit2.Response<GroupsMembershipResponse> response) {
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         showToast("Failed to update membership");
                         return;
                     }
@@ -176,7 +176,7 @@ public class GroupMembershipActivity extends BaseActivity implements View.OnClic
                         }
                     } catch (Exception e) {
                         showToast("Failed to update membership");
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -184,7 +184,7 @@ public class GroupMembershipActivity extends BaseActivity implements View.OnClic
                 @Override
                 public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
                     showToast("Failed to update membership");
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };

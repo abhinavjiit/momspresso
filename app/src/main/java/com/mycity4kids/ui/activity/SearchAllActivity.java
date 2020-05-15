@@ -15,17 +15,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
-
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.tabs.TabLayout;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.StringUtils;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.SaveSearchQueryRequest;
@@ -34,7 +31,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
 import com.mycity4kids.ui.adapter.SearchAllPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
-
+import com.mycity4kids.utils.StringUtils;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -112,7 +109,8 @@ public class SearchAllActivity extends BaseActivity implements View.OnClickListe
         searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId
+                        == EditorInfo.IME_ACTION_DONE)) {
                     requestSearch();
                 }
                 return false;
@@ -134,7 +132,8 @@ public class SearchAllActivity extends BaseActivity implements View.OnClickListe
 
     private Callback<SearchTrendsAndHistoryResponse> searchHistoryResponseCallback = new Callback<SearchTrendsAndHistoryResponse>() {
         @Override
-        public void onResponse(Call<SearchTrendsAndHistoryResponse> call, retrofit2.Response<SearchTrendsAndHistoryResponse> response) {
+        public void onResponse(Call<SearchTrendsAndHistoryResponse> call,
+                retrofit2.Response<SearchTrendsAndHistoryResponse> response) {
             if (response == null || response.body() == null) {
                 showToast(getString(R.string.server_went_wrong));
                 return;
@@ -151,20 +150,26 @@ public class SearchAllActivity extends BaseActivity implements View.OnClickListe
                             underline4.setVisibility(View.VISIBLE);
                             trendingSearch3TextView.setVisibility(View.VISIBLE);
                             underline5.setVisibility(View.VISIBLE);
-                            trendingSearch1TextView.setText(responseData.getData().getResult().getTrendingResult().get(0));
-                            trendingSearch2TextView.setText(responseData.getData().getResult().getTrendingResult().get(1));
-                            trendingSearch3TextView.setText(responseData.getData().getResult().getTrendingResult().get(2));
+                            trendingSearch1TextView
+                                    .setText(responseData.getData().getResult().getTrendingResult().get(0));
+                            trendingSearch2TextView
+                                    .setText(responseData.getData().getResult().getTrendingResult().get(1));
+                            trendingSearch3TextView
+                                    .setText(responseData.getData().getResult().getTrendingResult().get(2));
                         } else if (responseData.getData().getResult().getTrendingResult().size() == 2) {
                             trendingSearch1TextView.setVisibility(View.VISIBLE);
                             underline3.setVisibility(View.VISIBLE);
                             trendingSearch2TextView.setVisibility(View.VISIBLE);
                             underline4.setVisibility(View.VISIBLE);
-                            trendingSearch1TextView.setText(responseData.getData().getResult().getTrendingResult().get(0));
-                            trendingSearch2TextView.setText(responseData.getData().getResult().getTrendingResult().get(1));
+                            trendingSearch1TextView
+                                    .setText(responseData.getData().getResult().getTrendingResult().get(0));
+                            trendingSearch2TextView
+                                    .setText(responseData.getData().getResult().getTrendingResult().get(1));
                         } else if (responseData.getData().getResult().getTrendingResult().size() == 1) {
                             trendingSearch1TextView.setVisibility(View.VISIBLE);
                             underline3.setVisibility(View.VISIBLE);
-                            trendingSearch1TextView.setText(responseData.getData().getResult().getTrendingResult().get(0));
+                            trendingSearch1TextView
+                                    .setText(responseData.getData().getResult().getTrendingResult().get(0));
                         } else {
                             searchHistoryAndTrendContainer.setVisibility(View.GONE);
                         }
@@ -177,12 +182,15 @@ public class SearchAllActivity extends BaseActivity implements View.OnClickListe
                             underline3.setVisibility(View.VISIBLE);
                             trendingSearch2TextView.setVisibility(View.VISIBLE);
                             underline4.setVisibility(View.VISIBLE);
-                            trendingSearch1TextView.setText(responseData.getData().getResult().getTrendingResult().get(0));
-                            trendingSearch2TextView.setText(responseData.getData().getResult().getTrendingResult().get(1));
+                            trendingSearch1TextView
+                                    .setText(responseData.getData().getResult().getTrendingResult().get(0));
+                            trendingSearch2TextView
+                                    .setText(responseData.getData().getResult().getTrendingResult().get(1));
                         } else if (responseData.getData().getResult().getTrendingResult().size() == 1) {
                             trendingSearch1TextView.setVisibility(View.VISIBLE);
                             underline3.setVisibility(View.VISIBLE);
-                            trendingSearch1TextView.setText(responseData.getData().getResult().getTrendingResult().get(0));
+                            trendingSearch1TextView
+                                    .setText(responseData.getData().getResult().getTrendingResult().get(0));
                         } else {
 
                         }
@@ -196,7 +204,8 @@ public class SearchAllActivity extends BaseActivity implements View.OnClickListe
                         if (responseData.getData().getResult().getTrendingResult().size() >= 1) {
                             trendingSearch1TextView.setVisibility(View.VISIBLE);
                             underline3.setVisibility(View.VISIBLE);
-                            trendingSearch1TextView.setText(responseData.getData().getResult().getTrendingResult().get(0));
+                            trendingSearch1TextView
+                                    .setText(responseData.getData().getResult().getTrendingResult().get(0));
                         } else {
 
                         }
@@ -207,14 +216,14 @@ public class SearchAllActivity extends BaseActivity implements View.OnClickListe
                 }
             } catch (Exception e) {
                 showToast(getString(R.string.server_went_wrong));
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<SearchTrendsAndHistoryResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };

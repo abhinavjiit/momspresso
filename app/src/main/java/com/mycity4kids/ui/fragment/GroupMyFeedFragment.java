@@ -20,8 +20,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.internal.LinkedTreeMap;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.BuildConfig;
@@ -204,7 +204,7 @@ public class GroupMyFeedFragment extends BaseFragment implements
             if (response.body() == null) {
                 emptyListTextView.setVisibility(View.VISIBLE);
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -216,7 +216,7 @@ public class GroupMyFeedFragment extends BaseFragment implements
                     processPostListingResponse(groupPostResponse);
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 emptyListTextView.setVisibility(View.VISIBLE);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
@@ -225,7 +225,7 @@ public class GroupMyFeedFragment extends BaseFragment implements
         @Override
         public void onFailure(Call<GroupPostResponse> call, Throwable t) {
             isRequestRunning = false;
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -523,14 +523,14 @@ public class GroupMyFeedFragment extends BaseFragment implements
                     myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -550,7 +550,7 @@ public class GroupMyFeedFragment extends BaseFragment implements
         public void onResponse(Call<GroupsActionResponse> call, retrofit2.Response<GroupsActionResponse> response) {
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -575,14 +575,14 @@ public class GroupMyFeedFragment extends BaseFragment implements
                     myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -597,7 +597,7 @@ public class GroupMyFeedFragment extends BaseFragment implements
                     getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         return;
                     }
                     try {
@@ -611,7 +611,7 @@ public class GroupMyFeedFragment extends BaseFragment implements
                             overlayView.setVisibility(View.VISIBLE);
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -620,7 +620,7 @@ public class GroupMyFeedFragment extends BaseFragment implements
                 public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
                     progressBar.setVisibility(View.GONE);
                     getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -699,7 +699,7 @@ public class GroupMyFeedFragment extends BaseFragment implements
         public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -708,14 +708,14 @@ public class GroupMyFeedFragment extends BaseFragment implements
                     setAdminPostPreferences(groupPostResponse);
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupPostResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -737,7 +737,7 @@ public class GroupMyFeedFragment extends BaseFragment implements
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -753,14 +753,14 @@ public class GroupMyFeedFragment extends BaseFragment implements
                     }
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupPostResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -818,7 +818,7 @@ public class GroupMyFeedFragment extends BaseFragment implements
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -840,14 +840,14 @@ public class GroupMyFeedFragment extends BaseFragment implements
                     }
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -859,7 +859,7 @@ public class GroupMyFeedFragment extends BaseFragment implements
                         retrofit2.Response<UserPostSettingResponse> response) {
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         return;
                     }
                     try {
@@ -878,14 +878,14 @@ public class GroupMyFeedFragment extends BaseFragment implements
                             }
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -938,7 +938,7 @@ public class GroupMyFeedFragment extends BaseFragment implements
                         retrofit2.Response<GroupsMembershipResponse> response) {
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         return;
                     }
                     try {
@@ -957,14 +957,14 @@ public class GroupMyFeedFragment extends BaseFragment implements
                             call1.enqueue(updateGroupMembershipResponseCallback);
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -976,7 +976,7 @@ public class GroupMyFeedFragment extends BaseFragment implements
                         retrofit2.Response<GroupsMembershipResponse> response) {
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         return;
                     }
                     try {
@@ -985,14 +985,14 @@ public class GroupMyFeedFragment extends BaseFragment implements
                             postSettingsContainerMain.setVisibility(View.GONE);
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -1002,7 +1002,7 @@ public class GroupMyFeedFragment extends BaseFragment implements
         public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -1026,14 +1026,14 @@ public class GroupMyFeedFragment extends BaseFragment implements
                     myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupPostResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };

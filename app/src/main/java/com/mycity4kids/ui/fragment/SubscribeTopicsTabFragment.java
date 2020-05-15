@@ -1,22 +1,20 @@
 package com.mycity4kids.ui.fragment;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseFragment;
+import androidx.annotation.Nullable;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.newmodels.SelectTopic;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.SubscribeTopicsTabAdapter;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -54,10 +52,11 @@ public class SubscribeTopicsTabFragment extends BaseFragment {
 
     private void createTopicsData() {
         try {
-            searchTopicsSplashAdapter = new SubscribeTopicsTabAdapter(getActivity(), selectTopic, BaseApplication.getSelectedTopicsMap(), position);
+            searchTopicsSplashAdapter = new SubscribeTopicsTabAdapter(getActivity(), selectTopic,
+                    BaseApplication.getSelectedTopicsMap(), position);
             popularTopicsListView.setAdapter(searchTopicsSplashAdapter);
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }

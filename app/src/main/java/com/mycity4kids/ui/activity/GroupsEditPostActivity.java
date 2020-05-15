@@ -30,8 +30,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -422,7 +422,7 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
             startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)),
                     AppConstants.REQUEST_VIDEO_TRIMMER);
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
@@ -460,7 +460,7 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
 //                        File file2 = FileUtils.getFile(this, imageUriTemp);
 //                        sendUploadProfileImageRequest(file2);
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         e.printStackTrace();
                     }
                 }
@@ -542,7 +542,7 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -560,14 +560,14 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupPostResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -615,7 +615,7 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
 
                          @Override
                          public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
-                             Crashlytics.logException(t);
+                             FirebaseCrashlytics.getInstance().recordException(t);
                              Log.d("MC4KException", Log.getStackTraceString(t));
                              showToast(getString(R.string.went_wrong));
                          }

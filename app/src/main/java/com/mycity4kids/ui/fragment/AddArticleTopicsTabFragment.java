@@ -2,31 +2,28 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseFragment;
+import androidx.annotation.Nullable;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.AddArticleTopicsTabAdapter;
-
-import org.apmem.tools.layouts.FlowLayout;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import org.apmem.tools.layouts.FlowLayout;
 
 /**
  * Created by hemant on 17/7/17.
  */
-public class AddArticleTopicsTabFragment extends BaseFragment implements AddArticleTopicsTabAdapter.RecyclerViewClickListener {
+public class AddArticleTopicsTabFragment extends BaseFragment implements
+        AddArticleTopicsTabAdapter.RecyclerViewClickListener {
 
     private String userId;
     private ArrayList<Topics> selectTopic;
@@ -77,7 +74,8 @@ public class AddArticleTopicsTabFragment extends BaseFragment implements AddArti
             }
             for (int j = 0; j < selectTopic.get(i).getChild().size(); j++) {
                 if (selectTopic.get(i).getChild().get(j).isSelected()) {
-                    selectedTopicsMap.put(selectTopic.get(i).getChild().get(j).getId(), selectTopic.get(i).getChild().get(j));
+                    selectedTopicsMap
+                            .put(selectTopic.get(i).getChild().get(j).getId(), selectTopic.get(i).getChild().get(j));
                 }
             }
 
@@ -121,7 +119,7 @@ public class AddArticleTopicsTabFragment extends BaseFragment implements AddArti
                 }
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
 
@@ -144,7 +142,7 @@ public class AddArticleTopicsTabFragment extends BaseFragment implements AddArti
                 }
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
 

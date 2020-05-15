@@ -3,7 +3,7 @@ package com.mycity4kids.ui.mymoneytracker.activity
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.base.BaseActivity
 import com.mycity4kids.ui.mymoneytracker.fragment.TrackerFragment
@@ -58,7 +58,7 @@ class TrackerActivity : BaseActivity() {
 
             initializeXML()
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }

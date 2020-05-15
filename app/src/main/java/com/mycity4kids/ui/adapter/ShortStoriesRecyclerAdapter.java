@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.utils.AppUtils;
@@ -61,7 +61,7 @@ public class ShortStoriesRecyclerAdapter extends
             AppUtils.populateLogoImageLanguageWise(holder.itemView.getContext(), holder.logoImageView,
                     articleDataModelsNew.get(position).getLang());
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         try {
@@ -69,7 +69,7 @@ public class ShortStoriesRecyclerAdapter extends
                     .placeholder(R.drawable.default_article).into(holder.storyImage);
         } catch (Exception e) {
             holder.storyImage.setImageResource(R.drawable.default_article);
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
 

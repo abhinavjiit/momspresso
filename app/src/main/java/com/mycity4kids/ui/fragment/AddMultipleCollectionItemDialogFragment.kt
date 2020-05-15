@@ -15,8 +15,8 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
@@ -183,7 +183,7 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(),
                 call: Call<BaseResponseGeneric<AddCollectionRequestModel>>,
                 t: Throwable
             ) {
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
 
@@ -203,7 +203,7 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(),
                         ToastUtils.showToast(activity, responsee?.data?.msg)
                     }
                 } catch (t: Exception) {
-                    Crashlytics.logException(t)
+                    FirebaseCrashlytics.getInstance().recordException(t)
                     Log.d("MC4kException", Log.getStackTraceString(t))
                 }
             }
@@ -228,7 +228,7 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(),
         )
         call.enqueue(object : Callback<ArticleListingResponse> {
             override fun onFailure(call: Call<ArticleListingResponse>, t: Throwable) {
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
 
@@ -250,7 +250,7 @@ class AddMultipleCollectionItemDialogFragment : DialogFragment(),
                     } else {
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }

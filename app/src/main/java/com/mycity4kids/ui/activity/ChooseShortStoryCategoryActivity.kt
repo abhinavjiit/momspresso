@@ -6,7 +6,7 @@ import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.GsonBuilder
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -153,14 +153,14 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
                 break
             }
         } catch (e: FileNotFoundException) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("FileNotFoundException", Log.getStackTraceString(e))
             val retrofit = BaseApplication.getInstance().retrofit
             val topicsAPI = retrofit.create(TopicsCategoryAPI::class.java)
             val caller = topicsAPI.downloadTopicsJSON()
             caller.enqueue(object : Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    Crashlytics.logException(t)
+                    FirebaseCrashlytics.getInstance().recordException(t)
                     Log.d("MC4KException", Log.getStackTraceString(t))
                 }
 
@@ -233,13 +233,13 @@ class ChooseShortStoryCategoryActivity : BaseActivity(),
                             break
                         }
                     } catch (e: Exception) {
-                        Crashlytics.logException(e)
+                        FirebaseCrashlytics.getInstance().recordException(e)
                         Log.d("MC4KException", Log.getStackTraceString(e))
                     }
                 }
             })
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4KException", Log.getStackTraceString(e))
         }
     }

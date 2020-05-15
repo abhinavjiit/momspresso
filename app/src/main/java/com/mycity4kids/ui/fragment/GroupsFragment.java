@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
@@ -158,7 +158,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
                     progressBar.setVisibility(View.GONE);
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         return;
                     }
                     try {
@@ -186,7 +186,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
                             getAllGroupListApi(dataList);
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
 
@@ -195,7 +195,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
                 @Override
                 public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
                     progressBar.setVisibility(View.GONE);
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -206,7 +206,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
             progressBar.setVisibility(View.GONE);
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -230,7 +230,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
                     }
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
 
@@ -239,7 +239,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
         @Override
         public void onFailure(Call<GroupsListingResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
 
         }

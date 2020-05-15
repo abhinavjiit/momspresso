@@ -18,19 +18,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
-
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
-import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.DateTimeUtils;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.parentingdetails.CommentsData;
@@ -43,14 +38,14 @@ import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.utils.DateTimeUtils;
+import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
-
+import java.util.ArrayList;
+import okhttp3.ResponseBody;
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import java.util.ArrayList;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -58,7 +53,8 @@ import retrofit2.Retrofit;
 /**
  * Created by user on 08-06-2015.
  */
-public class MyCityCommentsFragment extends BaseFragment implements OnClickListener, ObservableScrollViewCallbacks, AddEditCommentReplyFragment.IAddCommentReply, AddEditCommentReplyDialogFragment.IAddCommentReply {
+public class MyCityCommentsFragment extends BaseFragment implements OnClickListener, ObservableScrollViewCallbacks,
+        AddEditCommentReplyFragment.IAddCommentReply, AddEditCommentReplyDialogFragment.IAddCommentReply {
 
     private final static int REPLY_LEVEL_PARENT = 1;
     private final static int REPLY_LEVEL_CHILD = 2;
@@ -89,7 +85,7 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.view_all_comment_fragment, container,
                 false);
@@ -127,7 +123,8 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
         Rect scrollBounds = new Rect();
         mScrollView.getHitRect(scrollBounds);
         int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
-        if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http") && !AppConstants.PAGINATION_END_VALUE.equals(pagination)) {
+        if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")
+                && !AppConstants.PAGINATION_END_VALUE.equals(pagination)) {
             getMoreComments();
         }
     }
@@ -208,7 +205,7 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
                 ((ArticleDetailsContainerActivity) getActivity()).hideToolbarPerm();
                 ((ArticleDetailsContainerActivity) getActivity()).addFragment(commentFrag, null, "topToBottom");
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         } else {
@@ -227,7 +224,7 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
                 FragmentManager fm = getChildFragmentManager();
                 commentFrag.show(fm, "Replies");
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -270,6 +267,7 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
     }
 
     public interface IAddCommentReply {
+
         void onCommentAddition(CommentsData cd);
 
         void onCommentReplyEditSuccess(CommentsData cd);
@@ -306,9 +304,10 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
             removeProgressDialog();
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
-                if (isAdded())
+                FirebaseCrashlytics.getInstance().recordException(nee);
+                if (isAdded()) {
                     ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                }
                 ;
                 isLoading = false;
                 commentType = "fb";
@@ -346,13 +345,14 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
                 }
 
             } catch (JSONException jsonexception) {
-                Crashlytics.logException(jsonexception);
+                FirebaseCrashlytics.getInstance().recordException(jsonexception);
                 Log.d("JSONException", Log.getStackTraceString(jsonexception));
-                if (isAdded())
+                if (isAdded()) {
                     ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                }
                 ;
             } catch (Exception ex) {
-                Crashlytics.logException(ex);
+                FirebaseCrashlytics.getInstance().recordException(ex);
                 Log.d("MC4kException", Log.getStackTraceString(ex));
                 if (isAdded()) {
                     ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
@@ -373,8 +373,9 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
         public void onResponse(Call<FBCommentResponse> call, retrofit2.Response<FBCommentResponse> response) {
             removeProgressDialog();
             if (response == null || null == response.body()) {
-                if (isAdded())
+                if (isAdded()) {
                     ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                }
                 ;
                 return;
             }
@@ -395,8 +396,10 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
                             TextView textView = new TextView(getActivity());
                             textView.setText(getString(R.string.ad_comments_fb_comment));
                             textView.setTextColor(ContextCompat.getColor(getActivity(), R.color.ad_comment_title));
-                            Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/oswald_regular.ttf");
-                            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.ad_comments_heading));
+                            Typeface face = Typeface
+                                    .createFromAsset(getActivity().getAssets(), "fonts/oswald_regular.ttf");
+                            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                                    getResources().getDimension(R.dimen.ad_comments_heading));
                             textView.setTypeface(face);
                             int paddingVal = AppUtils.dpTopx(10);
                             textView.setPadding(paddingVal, paddingVal, paddingVal, paddingVal);
@@ -412,14 +415,17 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
                         }
                     }
                 } else {
-                    if (isAdded())
-                        ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                    if (isAdded()) {
+                        ((ArticleDetailsContainerActivity) getActivity())
+                                .showToast(getString(R.string.server_went_wrong));
+                    }
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                if (isAdded())
+                if (isAdded()) {
                     ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                }
             }
         }
 
@@ -431,7 +437,7 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
     };
 
     private void displayComments(ViewHolder holder, CommentsData commentList,
-                                 boolean isNewComment) {
+            boolean isNewComment) {
         if (holder != null) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             View view = inflater.inflate(R.layout.custom_comment_cell, null);
@@ -476,16 +482,19 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
                 holder.commentDescription.setText(commentList.getBody());
             }
             if (!StringUtils.isNullOrEmpty(commentList.getCreate())) {
-                holder.dateTxt.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(commentList.getCreate())));
+                holder.dateTxt
+                        .setText(DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(commentList.getCreate())));
             } else {
                 holder.dateTxt.setText("NA");
             }
 
-            if (commentList.getProfile_image() != null && !StringUtils.isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
+            if (commentList.getProfile_image() != null && !StringUtils
+                    .isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
                 try {
-                    Picasso.get().load(commentList.getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img).into(holder.commentorsImage);
+                    Picasso.get().load(commentList.getProfile_image().getClientAppMin())
+                            .placeholder(R.drawable.default_commentor_img).into(holder.commentorsImage);
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                     Picasso.get().load(R.drawable.default_commentor_img).into(holder.commentorsImage);
                 }
@@ -505,7 +514,8 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
                     if ("fb".equals(commentList.getComment_type())) {
                         commentList.getReplies().get(j).setComment_type("fb");
                     }
-                    displayReplies(replyViewholder, commentList.getReplies().get(j), holder.replyCommentView, REPLY_LEVEL_PARENT, j);
+                    displayReplies(replyViewholder, commentList.getReplies().get(j), holder.replyCommentView,
+                            REPLY_LEVEL_PARENT, j);
                 }
             } else {
                 holder.replyCommentView.setVisibility(View.GONE);
@@ -513,7 +523,8 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
         }
     }
 
-    private void displayReplies(ViewHolder replyViewholder, CommentsData replies, LinearLayout parentView, int replyLevel, int replyPos) {
+    private void displayReplies(ViewHolder replyViewholder, CommentsData replies, LinearLayout parentView,
+            int replyLevel, int replyPos) {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View view = inflater.inflate(R.layout.custom_reply_cell, null);
         replyViewholder.replyIndicatorImageView = (ImageView) view.findViewById(R.id.replyIndicatorImageView);
@@ -556,7 +567,6 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
             replyViewholder.replyIndicatorImageView.setVisibility(View.INVISIBLE);
         }
 
-
         view.setTag(replies);
 
         if (!StringUtils.isNullOrEmpty(replies.getName())) {
@@ -568,16 +578,19 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
             replyViewholder.commentDescription.setText(replies.getBody());
         }
         if (!StringUtils.isNullOrEmpty(replies.getCreate())) {
-            replyViewholder.dateTxt.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(replies.getCreate())));
+            replyViewholder.dateTxt
+                    .setText(DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(replies.getCreate())));
         } else {
             replyViewholder.dateTxt.setText("NA");
         }
 
-        if (replies.getProfile_image() != null && !StringUtils.isNullOrEmpty(replies.getProfile_image().getClientAppMin())) {
+        if (replies.getProfile_image() != null && !StringUtils
+                .isNullOrEmpty(replies.getProfile_image().getClientAppMin())) {
             try {
-                Picasso.get().load(replies.getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img).into(replyViewholder.commentorsImage);
+                Picasso.get().load(replies.getProfile_image().getClientAppMin())
+                        .placeholder(R.drawable.default_commentor_img).into(replyViewholder.commentorsImage);
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 Picasso.get().load(R.drawable.default_commentor_img).into(replyViewholder.commentorsImage);
             }
@@ -601,6 +614,7 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
     }
 
     private class ViewHolder {
+
         private ImageView commentorsImage;
         private TextView commentName;
         private TextView commentDescription;
@@ -663,7 +677,7 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
     }
 
     private void displayCommentsAtPosition(ViewHolder holder, CommentsData commentList,
-                                           boolean isNewComment, int position) {
+            boolean isNewComment, int position) {
         if (holder != null) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             View view = inflater.inflate(R.layout.custom_comment_cell, null);
@@ -712,16 +726,19 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
                 holder.commentDescription.setText(commentList.getBody());
             }
             if (!StringUtils.isNullOrEmpty(commentList.getCreate())) {
-                holder.dateTxt.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(commentList.getCreate())));
+                holder.dateTxt
+                        .setText(DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(commentList.getCreate())));
             } else {
                 holder.dateTxt.setText("NA");
             }
 
-            if (commentList.getProfile_image() != null && !StringUtils.isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
+            if (commentList.getProfile_image() != null && !StringUtils
+                    .isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
                 try {
-                    Picasso.get().load(commentList.getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img).into(holder.commentorsImage);
+                    Picasso.get().load(commentList.getProfile_image().getClientAppMin())
+                            .placeholder(R.drawable.default_commentor_img).into(holder.commentorsImage);
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                     Picasso.get().load(R.drawable.default_commentor_img).into(holder.commentorsImage);
                 }
@@ -735,7 +752,8 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
                 holder.replyCommentView.setVisibility(View.VISIBLE);
                 ViewHolder replyViewholder = new ViewHolder();
                 for (int j = 0; j < commentList.getReplies().size(); j++) {
-                    displayReplies(replyViewholder, commentList.getReplies().get(j), holder.replyCommentView, REPLY_LEVEL_PARENT, j);
+                    displayReplies(replyViewholder, commentList.getReplies().get(j), holder.replyCommentView,
+                            REPLY_LEVEL_PARENT, j);
                 }
             } else {
                 holder.replyCommentView.setVisibility(View.GONE);

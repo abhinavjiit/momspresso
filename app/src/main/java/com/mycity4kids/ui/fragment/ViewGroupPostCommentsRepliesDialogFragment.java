@@ -8,15 +8,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,9 +17,15 @@ import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.crashlytics.android.Crashlytics;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -41,15 +38,12 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.adapter.GroupPostCommentRepliesRecyclerAdapter;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
-
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,7 +52,8 @@ import retrofit2.Retrofit;
 /**
  * Created by user on 08-06-2015.
  */
-public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment implements OnClickListener, GroupPostCommentRepliesRecyclerAdapter.RecyclerViewClickListener {
+public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment implements OnClickListener,
+        GroupPostCommentRepliesRecyclerAdapter.RecyclerViewClickListener {
 
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private boolean isReuqestRunning = false;
@@ -85,7 +80,7 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.group_post_comment_replies_dialog, container,
                 false);
@@ -95,9 +90,9 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
         openAddReplyDialog = (FloatingActionButton) rootView.findViewById(R.id.openAddReplyDialog);
         commentLayout = (RelativeLayout) rootView.findViewById(R.id.commentLayout);
 
-
         Drawable upArrow = ContextCompat.getDrawable(getActivity(), R.drawable.back_arroow);
-        upArrow.setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorControlNormal), PorterDuff.Mode.SRC_ATOP);
+        upArrow.setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorControlNormal),
+                PorterDuff.Mode.SRC_ATOP);
         mToolbar.setNavigationIcon(upArrow);
         mToolbar.setNavigationOnClickListener(new OnClickListener() {
             @Override
@@ -179,7 +174,8 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
     private void getCommentReplies() {
         Retrofit retro = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retro.create(GroupsAPI.class);
-        Call<GroupPostCommentResponse> call = groupsAPI.getPostCommentReplies(data.getGroupId(), data.getPostId(), data.getId(), skip, limit);
+        Call<GroupPostCommentResponse> call = groupsAPI
+                .getPostCommentReplies(data.getGroupId(), data.getPostId(), data.getId(), skip, limit);
         call.enqueue(postCommentRepliesCallback);
     }
 
@@ -190,7 +186,7 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
             if (response.body() == null) {
                 if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -202,7 +198,7 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -215,7 +211,8 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
 
     private void processRepliesListingResponse(GroupPostCommentResponse response) {
         totalPostCount = response.getTotal();
-        ArrayList<GroupPostCommentResult> dataList = (ArrayList<GroupPostCommentResult>) response.getData().get(0).getResult();
+        ArrayList<GroupPostCommentResult> dataList = (ArrayList<GroupPostCommentResult>) response.getData().get(0)
+                .getResult();
         if (dataList.size() == 0) {
             isLastPageReached = false;
             if (null != repliesList && !repliesList.isEmpty()) {
@@ -237,7 +234,8 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
 
     private void formatCommentData(ArrayList<GroupPostCommentResult> dataList) {
         for (int j = 0; j < dataList.size(); j++) {
-            if (dataList.get(j).getMediaUrls() != null && !((Map<String, String>) dataList.get(j).getMediaUrls()).isEmpty()) {
+            if (dataList.get(j).getMediaUrls() != null && !((Map<String, String>) dataList.get(j).getMediaUrls())
+                    .isEmpty()) {
                 if (((Map<String, String>) dataList.get(j).getMediaUrls()).get("audio") != null) {
                     dataList.get(j).setCommentType(AppConstants.COMMENT_TYPE_AUDIO);
                 }
@@ -373,7 +371,8 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
         groupActionsRequest.setGroupId(repliesList.get(position).getGroupId());
         groupActionsRequest.setPostId(repliesList.get(position).getPostId());
         groupActionsRequest.setResponseId(repliesList.get(position).getId());
-        groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+        groupActionsRequest
+                .setUserId(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         groupActionsRequest.setType(markType);//AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY
         Call<GroupsActionResponse> call = groupsAPI.addCommentAction(groupActionsRequest);
         call.enqueue(groupActionResponseCallback);
@@ -395,9 +394,11 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
                             if (dataArray.getJSONObject(0).get("type").equals(dataArray.getJSONObject(1).get("type"))) {
                                 //Same Action Event
                                 if ("0".equals(dataArray.getJSONObject(0).get("type"))) {
-                                    Toast.makeText(BaseApplication.getAppContext(), "already marked unhelpful", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(BaseApplication.getAppContext(), "already marked unhelpful",
+                                            Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(BaseApplication.getAppContext(), "already marked helpful", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(BaseApplication.getAppContext(), "already marked helpful",
+                                            Toast.LENGTH_SHORT).show();
                                 }
                             } else {
                                 if (dataArray.getJSONObject(0).has("id") && !dataArray.getJSONObject(0).isNull("id")) {
@@ -410,13 +411,13 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
                                 sendUpvoteDownvotePatchRequest(patchActionId, patchActionType);
                             }
                         } catch (IOException e) {
-                            Crashlytics.logException(e);
+                            FirebaseCrashlytics.getInstance().recordException(e);
                             Log.d("MC4kException", Log.getStackTraceString(e));
                         } catch (JSONException e) {
-                            Crashlytics.logException(e);
+                            FirebaseCrashlytics.getInstance().recordException(e);
                             Log.d("MC4kException", Log.getStackTraceString(e));
                         } catch (Exception e) {
-                            Crashlytics.logException(e);
+                            FirebaseCrashlytics.getInstance().recordException(e);
                             Log.d("MC4kException", Log.getStackTraceString(e));
                         }
                     }
@@ -428,12 +429,14 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
                     GroupsActionResponse groupsActionResponse = response.body();
                     if (groupsActionResponse.getData().getResult().size() == 1) {
                         for (int i = 0; i < repliesList.size(); i++) {
-                            if (repliesList.get(i).getId() == groupsActionResponse.getData().getResult().get(0).getResponseId()) {
+                            if (repliesList.get(i).getId() == groupsActionResponse.getData().getResult().get(0)
+                                    .getResponseId()) {
                                 if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
                                     repliesList.get(i).setHelpfullCount(repliesList.get(i).getHelpfullCount() + 1);
                                     repliesList.get(i).setMarkedHelpful(1);
                                 } else {
-                                    repliesList.get(i).setNotHelpfullCount(repliesList.get(i).getNotHelpfullCount() + 1);
+                                    repliesList.get(i)
+                                            .setNotHelpfullCount(repliesList.get(i).getNotHelpfullCount() + 1);
                                     repliesList.get(i).setMarkedHelpful(0);
 
                                 }
@@ -445,14 +448,14 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -474,7 +477,7 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
             if (response.body() == null) {
                 if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -483,13 +486,16 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
                     GroupsActionResponse groupsActionResponse = response.body();
                     if (groupsActionResponse.getData().getResult().size() == 1) {
                         for (int i = 0; i < repliesList.size(); i++) {
-                            if (repliesList.get(i).getId() == groupsActionResponse.getData().getResult().get(0).getResponseId()) {
+                            if (repliesList.get(i).getId() == groupsActionResponse.getData().getResult().get(0)
+                                    .getResponseId()) {
                                 if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
                                     repliesList.get(i).setHelpfullCount(repliesList.get(i).getHelpfullCount() + 1);
-                                    repliesList.get(i).setNotHelpfullCount(repliesList.get(i).getNotHelpfullCount() - 1);
+                                    repliesList.get(i)
+                                            .setNotHelpfullCount(repliesList.get(i).getNotHelpfullCount() - 1);
                                     repliesList.get(i).setMarkedHelpful(1);
                                 } else {
-                                    repliesList.get(i).setNotHelpfullCount(repliesList.get(i).getNotHelpfullCount() + 1);
+                                    repliesList.get(i)
+                                            .setNotHelpfullCount(repliesList.get(i).getNotHelpfullCount() + 1);
                                     repliesList.get(i).setHelpfullCount(repliesList.get(i).getHelpfullCount() - 1);
                                     repliesList.get(i).setMarkedHelpful(0);
 
@@ -502,7 +508,7 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -555,6 +561,7 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
     }
 
     public interface replyUpdate {
+
         public void replyDataUpdate(ArrayList<GroupPostCommentResult> repliesList, int position);
     }
 

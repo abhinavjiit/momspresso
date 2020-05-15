@@ -21,10 +21,10 @@ import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
@@ -227,7 +227,7 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
             isReuqestRunning = false;
             if (null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -239,7 +239,7 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
                 }
             } catch (Exception e) {
                 removeProgressDialog();
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -247,7 +247,7 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
         @Override
         public void onFailure(Call<VlogsListingResponse> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };

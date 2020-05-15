@@ -17,8 +17,8 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseActivity;
@@ -102,7 +102,7 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
             removeProgressDialog();
             if (null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             if (response.isSuccessful()) {
@@ -139,7 +139,7 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
                             .addToBackStack(null).commit();
 
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
             }
@@ -148,7 +148,7 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         @Override
         public void onFailure(Call<Topics> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };

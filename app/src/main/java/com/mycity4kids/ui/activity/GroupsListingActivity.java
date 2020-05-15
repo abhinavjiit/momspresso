@@ -3,14 +3,6 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,14 +12,18 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.crashlytics.android.Crashlytics;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.internal.LinkedTreeMap;
-import com.mycity4kids.base.BaseActivity;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.GroupResult;
@@ -39,10 +35,8 @@ import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.adapter.GroupsRecyclerGridAdapter;
 import com.mycity4kids.widget.SpacesItemDecoration;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -51,7 +45,8 @@ import retrofit2.Retrofit;
  * Created by hemant on 17/5/18.
  */
 
-public class GroupsListingActivity extends BaseActivity implements GroupsRecyclerGridAdapter.RecyclerViewClickListener, GroupMembershipStatus.IMembershipStatus, View.OnClickListener {
+public class GroupsListingActivity extends BaseActivity implements GroupsRecyclerGridAdapter.RecyclerViewClickListener,
+        GroupMembershipStatus.IMembershipStatus, View.OnClickListener {
 
     private GroupsRecyclerGridAdapter adapter;
     private boolean isReuqestRunning = false;
@@ -162,11 +157,13 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         if (isMember) {
             getJoinedGroupListApi(skip, limit);
             toolbarTitle.setText(getString(R.string.groups_join_label));
-            Utils.pushOpenScreenEvent(this, "JoinedGroupsListingScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+            Utils.pushOpenScreenEvent(this, "JoinedGroupsListingScreen",
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         } else {
             getAllGroupListApi(skip, limit);
             toolbarTitle.setText(getString(R.string.groups_all_groups));
-            Utils.pushOpenScreenEvent(this, "AllGroupsListingScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+            Utils.pushOpenScreenEvent(this, "AllGroupsListingScreen",
+                    SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         }
     }
 
@@ -180,20 +177,22 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
-        Call<GroupsMembershipResponse> call = groupsAPI.getJoinedGroupList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
-                AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER, skip, limit);
+        Call<GroupsMembershipResponse> call = groupsAPI
+                .getJoinedGroupList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER, skip, limit);
         call.enqueue(joinedGroupListResponseCallback);
     }
 
     private Callback<GroupsMembershipResponse> joinedGroupListResponseCallback = new Callback<GroupsMembershipResponse>() {
         @Override
-        public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
+        public void onResponse(Call<GroupsMembershipResponse> call,
+                retrofit2.Response<GroupsMembershipResponse> response) {
             progressBar.setVisibility(View.GONE);
             isReuqestRunning = false;
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -205,7 +204,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
 
@@ -215,7 +214,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
             isReuqestRunning = false;
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -272,7 +271,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -284,7 +283,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -293,7 +292,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         public void onFailure(Call<GroupsListingResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
             isReuqestRunning = false;
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -342,7 +341,6 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
                             .filter(e -> joinList.stream().map(GroupResult::getId).noneMatch(id -> id.equals(e.getId())))
                             .collect(Collectors.toList());*/
 
-
             adapter.setNewListData((ArrayList<GroupResult>) listOutput1);
             //  Observable.merge(Observable.just(groupList), Observable.just(joinList)).flatMap(Observable::fromIterable).toList();
             skip = skip + limit;
@@ -362,7 +360,8 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
             selectedGroup = listOutput1.get(position);
             selectedQuestionnaire = (LinkedTreeMap<String, String>) listOutput1.get(position).getQuestionnaire();
         }
-        groupMembershipStatus.checkMembershipStatus(selectedGroup.getId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+        groupMembershipStatus.checkMembershipStatus(selectedGroup.getId(),
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
     }
 
     @Override
@@ -377,11 +376,15 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
                 userType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR;
             }
         }
-        if (!AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(userType) && !AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(userType)) {
-            if ("male".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender()) ||
-                    "m".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())) {
+        if (!AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(userType) && !AppConstants.GROUP_MEMBER_TYPE_ADMIN
+                .equals(userType)) {
+            if ("male".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())
+                    ||
+                    "m".equalsIgnoreCase(
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())) {
                 Toast.makeText(this, getString(R.string.women_only), Toast.LENGTH_SHORT).show();
-                if (BuildConfig.DEBUG || AppConstants.DEBUGGING_USER_ID.contains(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
+                if (BuildConfig.DEBUG || AppConstants.DEBUGGING_USER_ID
+                        .contains(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
 
                 } else {
                     return;
@@ -410,9 +413,13 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
                 intent.putExtra("groupId", selectedGroup.getId());
                 intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
                 startActivity(intent);
-                Utils.groupsEvent(GroupsListingActivity.this, "Groups you are member of_listing", "group card", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Groups_Discussion", "", "");
+                Utils.groupsEvent(GroupsListingActivity.this, "Groups you are member of_listing", "group card",
+                        "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        String.valueOf(System.currentTimeMillis()), "Groups_Discussion", "", "");
             }
-        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION
+                .equals(body.getData().getResult().get(0).getStatus())) {
             Intent intent = new Intent(this, GroupsSummaryActivity.class);
             intent.putExtra("groupId", selectedGroup.getId());
             intent.putExtra("pendingMembershipFlag", true);
@@ -512,7 +519,6 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
 
             @Override
             public void onSlide(@NonNull View view, float v) {
-
 
             }
         });

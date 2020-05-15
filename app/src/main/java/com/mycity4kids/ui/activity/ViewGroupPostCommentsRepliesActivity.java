@@ -18,8 +18,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -187,7 +187,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
             isReuqestRunning = false;
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -196,7 +196,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                     processRepliesListingResponse1(groupPostResponse);
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -266,7 +266,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
             isReuqestRunning = false;
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -275,7 +275,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                     processRepliesListingResponse(groupPostResponse);
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -427,14 +427,14 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                     groupPostCommentRepliesRecyclerAdapter.notifyDataSetChanged();
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -455,7 +455,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
         public void onResponse(Call<GroupsActionResponse> call, retrofit2.Response<GroupsActionResponse> response) {
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -482,7 +482,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                     groupPostCommentRepliesRecyclerAdapter.notifyDataSetChanged();
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -586,7 +586,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
         public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -601,14 +601,14 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                     getSinglePostComments();
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupPostResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -637,7 +637,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                         retrofit2.Response<AddGpPostCommentReplyResponse> response) {
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         showToast("Failed to edit comment. Please try again");
                         return;
                     }
@@ -651,7 +651,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                         }
                     } catch (Exception e) {
                         showToast("Failed to edit comment. Please try again");
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -659,7 +659,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                 @Override
                 public void onFailure(Call<AddGpPostCommentReplyResponse> call, Throwable t) {
                     showToast("Failed to edit comment. Please try again");
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -688,7 +688,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                         retrofit2.Response<AddGpPostCommentReplyResponse> response) {
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         showToast("Failed to add reply. Please try again");
                         return;
                     }
@@ -728,7 +728,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                         }
                     } catch (Exception e) {
                         showToast("Failed to add reply. Please try again");
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -736,7 +736,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                 @Override
                 public void onFailure(Call<AddGpPostCommentReplyResponse> call, Throwable t) {
                     showToast("Failed to add reply. Please try again");
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -764,7 +764,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                     if (response == null || response.body() == null) {
                         if (response != null && response.raw() != null) {
                             NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                            Crashlytics.logException(nee);
+                            FirebaseCrashlytics.getInstance().recordException(nee);
                         }
                         showToast("Failed to edit reply. Please try again");
 
@@ -794,7 +794,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                         }
                     } catch (Exception e) {
                         showToast("Failed to edit reply. Please try again");
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -802,7 +802,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                 @Override
                 public void onFailure(Call<AddGpPostCommentReplyResponse> call, Throwable t) {
                     showToast("Failed to edit reply. Please try again");
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -830,7 +830,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
         public void onResponse(Call<GroupsMembershipResponse> call, Response<GroupsMembershipResponse> response) {
             if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -838,14 +838,14 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                     showToast(getString(R.string.groups_user_block_success));
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -879,7 +879,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                     removeProgressDialog();
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         showToast("Failed to edit reply. Please try again");
 
                         return;
@@ -894,7 +894,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                         }
                     } catch (Exception e) {
                         showToast("Failed to edit reply. Please try again");
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -902,7 +902,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                 @Override
                 public void onFailure(Call<AddGpPostCommentReplyResponse> call, Throwable t) {
                     showToast("Failed to edit reply. Please try again");
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -914,7 +914,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                     removeProgressDialog();
                     if (response.body() == null) {
                         NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                        Crashlytics.logException(nee);
+                        FirebaseCrashlytics.getInstance().recordException(nee);
                         showToast("Failed to edit reply. Please try again");
 
                         return;
@@ -931,7 +931,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                         }
                     } catch (Exception e) {
                         showToast("Failed to edit reply. Please try again");
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
@@ -939,7 +939,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                 @Override
                 public void onFailure(Call<AddGpPostCommentReplyResponse> call, Throwable t) {
                     showToast("Failed to edit reply. Please try again");
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };

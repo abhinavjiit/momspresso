@@ -12,11 +12,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import com.crashlytics.android.Crashlytics
 import com.google.android.gms.auth.api.credentials.Credential
 import com.google.android.gms.auth.api.credentials.Credentials
 import com.google.android.gms.auth.api.credentials.HintRequest
 import com.google.android.gms.auth.api.phone.SmsRetriever
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
@@ -34,7 +34,11 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
     var useSmsTextView: TextView? = null
     private val CREDENTIAL_PICKER_REQUEST = 1
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_send_sms, container, false)
         phoneEditText = view.findViewById(R.id.phoneEditText)
         useSmsTextView = view.findViewById(R.id.useSmsTextView)
@@ -63,15 +67,15 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
 
     private fun requestHint() {
         val hintRequest = HintRequest.Builder()
-                .setPhoneNumberIdentifierSupported(true)
-                .build()
+            .setPhoneNumberIdentifierSupported(true)
+            .build()
         activity?.let {
             val credentialsClient = Credentials.getClient(it)
             val intent = credentialsClient.getHintPickerIntent(hintRequest)
             startIntentSenderForResult(
-                    intent.intentSender,
-                    CREDENTIAL_PICKER_REQUEST,
-                    null, 0, 0, 0, null
+                intent.intentSender,
+                CREDENTIAL_PICKER_REQUEST,
+                null, 0, 0, 0, null
             )
         }
     }
@@ -85,18 +89,21 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
                 val retrofit = BaseApplication.getInstance().retrofit
                 val loginRegistrationAPI = retrofit.create(LoginRegistrationAPI::class.java)
                 val call = loginRegistrationAPI.triggerSMS(phoneLoginRequest)
-//                launchVerifySMSFragment("dwdwdw")
+                //                launchVerifySMSFragment("dwdwdw")
                 call.enqueue(triggerSMSResponseCallback)
             }
         }
     }
 
     val triggerSMSResponseCallback = object : Callback<ResponseBody> {
-        override fun onResponse(call: Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {
+        override fun onResponse(
+            call: Call<ResponseBody>,
+            response: retrofit2.Response<ResponseBody>
+        ) {
             if (response.body() == null) {
                 if (response.raw() != null) {
                     val nee = NetworkErrorException(response.raw().toString())
-                    Crashlytics.logException(nee)
+                    FirebaseCrashlytics.getInstance().recordException(nee)
                 }
                 return
             }
@@ -104,7 +111,8 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
                 if (response.isSuccessful) {
                     val resData = String(response.body()!!.bytes())
                     val jObject = JSONObject(resData)
-                    val sms_token = jObject.getJSONObject("data").getJSONObject("result").getString("sms_token")
+                    val sms_token =
+                        jObject.getJSONObject("data").getJSONObject("result").getString("sms_token")
                     activity?.let {
                         val task = SmsRetriever.getClient(it).startSmsUserConsent(null)
                     }
@@ -112,13 +120,13 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
                 } else {
                 }
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
 
         override fun onFailure(call: Call<ResponseBody>, e: Throwable) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
@@ -129,14 +137,16 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
         bundle.putString("smsToken", sms_token)
         bundle.putString("phoneNumber", phoneEditText?.text?.toString())
         verifySMSFragment.arguments = bundle
-//        (activity as ActivityLogin).addFragment(verifySMSFragment, bundle, true, null)
+        //        (activity as ActivityLogin).addFragment(verifySMSFragment, bundle, true, null)
 
         if (activity?.javaClass?.simpleName.equals("ActivityLogin")) {
             (activity as ActivityLogin).addFragment(verifySMSFragment, bundle, null)
         } else if (activity?.javaClass?.simpleName.equals("OTPActivity")) {
             (activity as OTPActivity).supportFragmentManager.popBackStack()
-            activity!!.supportFragmentManager.beginTransaction().replace(R.id.container, verifySMSFragment,
-                VerifySMSFragment::class.java.simpleName).addToBackStack(null)
+            activity!!.supportFragmentManager.beginTransaction().replace(
+                R.id.container, verifySMSFragment,
+                VerifySMSFragment::class.java.simpleName
+            ).addToBackStack(null)
                 .commit()
         }
     }
@@ -154,7 +164,7 @@ class SendSMSFragment : BaseFragment(), View.OnClickListener {
                             phoneEditText?.setText(credential.id)
                         }
                     } catch (e: Exception) {
-                        Crashlytics.logException(e)
+                        FirebaseCrashlytics.getInstance().recordException(e)
                         Log.d("MC4kException", Log.getStackTraceString(e))
                     }
                 }

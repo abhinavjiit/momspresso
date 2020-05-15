@@ -6,22 +6,19 @@ import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RelativeLayout;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.StringUtils;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
-
+import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.utils.StringUtils;
 import java.util.ArrayList;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -37,7 +34,8 @@ public class LoadingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.pushGenericEvent(this, "Post_signup_singin_loading_event", SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "LoadingActivity");
+        Utils.pushGenericEvent(this, "Post_signup_singin_loading_event",
+                SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "LoadingActivity");
         setContentView(R.layout.fetch_pincode_config);
         root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setView(root);
@@ -54,17 +52,19 @@ public class LoadingActivity extends BaseActivity {
     public void navigateToDashboard() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsCategoryAPI = retrofit.create(TopicsCategoryAPI.class);
-        Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.getFollowedCategories(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+        Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.getFollowedCategories(
+                SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         call.enqueue(getFollowedTopicsResponseCallback);
     }
 
     private Callback<FollowUnfollowCategoriesResponse> getFollowedTopicsResponseCallback = new Callback<FollowUnfollowCategoriesResponse>() {
         @Override
-        public void onResponse(Call<FollowUnfollowCategoriesResponse> call, retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
+        public void onResponse(Call<FollowUnfollowCategoriesResponse> call,
+                retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
             removeProgressDialog();
             if (null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 showToast(getString(R.string.server_went_wrong));
                 return;
             }
@@ -93,7 +93,7 @@ public class LoadingActivity extends BaseActivity {
                 startActivity(intent);
                 finish();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
                 if (!StringUtils.isNullOrEmpty(type) && type.equals("true")) {
@@ -108,7 +108,7 @@ public class LoadingActivity extends BaseActivity {
         @Override
         public void onFailure(Call<FollowUnfollowCategoriesResponse> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
             Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
             if (!StringUtils.isNullOrEmpty(type) && type.equals("true")) {

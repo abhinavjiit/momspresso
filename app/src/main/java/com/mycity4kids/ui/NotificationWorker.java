@@ -22,7 +22,7 @@ import androidx.core.content.ContextCompat;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -95,7 +95,7 @@ public class NotificationWorker extends Worker {
                             .getLastPathSegment() + "_" + suffixName);
             uploadTask = riversRef.putFile(file2);
             uploadTask.addOnFailureListener(exception -> {
-                Crashlytics.logException(exception);
+                FirebaseCrashlytics.getInstance().recordException(exception);
                 Log.d("MC4kException", Log.getStackTraceString(exception));
                 MixPanelUtils.pushVideoUploadFailureEvent(mixpanel, title, "" + Log.getStackTraceString(exception));
                 createForegroundInfo(0, "failed");
@@ -138,7 +138,7 @@ public class NotificationWorker extends Worker {
                 }
             });
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
@@ -178,7 +178,7 @@ public class NotificationWorker extends Worker {
                     }
                 } else {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -188,14 +188,14 @@ public class NotificationWorker extends Worker {
                     createForegroundInfo(100, "Successfully Uploaded");
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
 
         @Override
         public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };

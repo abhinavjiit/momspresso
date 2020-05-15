@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
@@ -141,14 +141,14 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
                             ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4KException", Log.getStackTraceString(e));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<NotificationCenterListResponse> call, Throwable t) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
             };

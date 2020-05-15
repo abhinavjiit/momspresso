@@ -8,14 +8,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -23,12 +15,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.StringUtils;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.models.request.AddGroupPostRequest;
 import com.mycity4kids.models.response.AddGroupPostResponse;
@@ -40,15 +37,14 @@ import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.ui.adapter.AddImagePollRecyclerGridAdapter;
 import com.mycity4kids.ui.adapter.AddTextPollRecyclerGridAdapter;
 import com.mycity4kids.utils.PermissionUtil;
+import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.widget.SpacesItemDecoration;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -59,7 +55,9 @@ import retrofit2.Retrofit;
  * Created by hemant on 24/4/18.
  */
 
-public class AddPollGroupPostActivity extends BaseActivity implements View.OnClickListener, AddImagePollRecyclerGridAdapter.ImagePollRecyclerViewClickListener, AddTextPollRecyclerGridAdapter.TextPollRecyclerViewClickListener {
+public class AddPollGroupPostActivity extends BaseActivity implements View.OnClickListener,
+        AddImagePollRecyclerGridAdapter.ImagePollRecyclerViewClickListener,
+        AddTextPollRecyclerGridAdapter.TextPollRecyclerViewClickListener {
 
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
@@ -116,7 +114,6 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
         anonymousCheckbox = (CheckBox) findViewById(R.id.anonymousCheckbox);
         anonymousImageView = (ImageView) findViewById(R.id.anonymousImageView);
 
-
         selectedGroup = (GroupResult) getIntent().getParcelableExtra("groupItem");
 
         togglePollOptionImageView.setOnClickListener(this);
@@ -129,7 +126,8 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
         anonymousTextView.setOnClickListener(this);
         anonymousCheckbox.setOnClickListener(this);
 
-        pollQuestionEditText.setText(SharedPrefUtils.getSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId()));
+        pollQuestionEditText
+                .setText(SharedPrefUtils.getSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId()));
 
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.groups_column_spacing);
         recyclerGridView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
@@ -239,7 +237,8 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                                      Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
                                  }
 
-                                 Picasso.get().load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(currentImageView);
+                                 Picasso.get().load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article)
+                                         .into(currentImageView);
 //                                 currentImageView.setVisibility(View.VISIBLE);
                                  urlList.set(currentImagePosition, responseModel.getData().getResult().getUrl());
                                  imagePollAdapter.notifyDataSetChanged();
@@ -249,7 +248,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
 
                          @Override
                          public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
-                             Crashlytics.logException(t);
+                             FirebaseCrashlytics.getInstance().recordException(t);
                              Log.d("MC4KException", Log.getStackTraceString(t));
                              apiExceptions(t);
 //                             showToast(getString(R.string.went_wrong));
@@ -316,7 +315,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull int[] grantResults) {
 
         if (requestCode == REQUEST_INIT_PERMISSION) {
             Log.i("Permissions", "Received response for storage permissions request.");
@@ -385,12 +384,14 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                     recyclerView.setVisibility(View.GONE);
                     recyclerGridView.setVisibility(View.VISIBLE);
                     togglePollOptionTextView.setText(getString(R.string.groups_text_poll));
-                    togglePollOptionImageView.setImageDrawable(ContextCompat.getDrawable(AddPollGroupPostActivity.this, R.drawable.tab3));
+                    togglePollOptionImageView.setImageDrawable(
+                            ContextCompat.getDrawable(AddPollGroupPostActivity.this, R.drawable.tab3));
                 } else {
                     recyclerView.setVisibility(View.VISIBLE);
                     recyclerGridView.setVisibility(View.GONE);
                     togglePollOptionTextView.setText(getString(R.string.groups_image_poll));
-                    togglePollOptionImageView.setImageDrawable(ContextCompat.getDrawable(AddPollGroupPostActivity.this, R.drawable.ic_incognito));
+                    togglePollOptionImageView.setImageDrawable(
+                            ContextCompat.getDrawable(AddPollGroupPostActivity.this, R.drawable.ic_incognito));
                 }
                 break;
         }
@@ -443,7 +444,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
@@ -457,7 +458,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
 
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
@@ -466,14 +467,15 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
         @Override
         public void onFailure(Call<AddGroupPostResponse> call, Throwable t) {
             isRequestRunning = false;
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
             showToast(getString(R.string.went_wrong));
         }
     };
 
     private boolean validateParams() {
-        if (pollQuestionEditText.getText() == null || StringUtils.isNullOrEmpty(pollQuestionEditText.getText().toString())) {
+        if (pollQuestionEditText.getText() == null || StringUtils
+                .isNullOrEmpty(pollQuestionEditText.getText().toString())) {
             showToast("Please enter question to continue");
             return false;
         }
@@ -525,9 +527,11 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (ActivityCompat.checkSelfPermission(AddPollGroupPostActivity.this, Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED
-                            || ActivityCompat.checkSelfPermission(AddPollGroupPostActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                            || ActivityCompat.checkSelfPermission(AddPollGroupPostActivity.this,
+                            Manifest.permission.READ_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED
-                            || ActivityCompat.checkSelfPermission(AddPollGroupPostActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            || ActivityCompat.checkSelfPermission(AddPollGroupPostActivity.this,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED) {
                         requestPermissions();
                     } else {
@@ -543,8 +547,10 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (null != pollQuestionEditText.getText() && !StringUtils.isNullOrEmpty(pollQuestionEditText.getText().toString())) {
-            SharedPrefUtils.setSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId(), pollQuestionEditText.getText().toString());
+        if (null != pollQuestionEditText.getText() && !StringUtils
+                .isNullOrEmpty(pollQuestionEditText.getText().toString())) {
+            SharedPrefUtils.setSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId(),
+                    pollQuestionEditText.getText().toString());
         }
     }
 }

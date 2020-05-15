@@ -10,8 +10,8 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
 import com.facebook.CallbackManager
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseActivity
@@ -124,13 +124,13 @@ class UserInviteFBSuggestionActivity : BaseActivity(), View.OnClickListener,
                     }
                 } catch (e: Exception) {
                     //                    showToast(getString(R.string.server_went_wrong))
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onFailure(call: Call<FacebookInviteFriendsResponse>, t: Throwable) {
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
@@ -197,7 +197,7 @@ class UserInviteFBSuggestionActivity : BaseActivity(), View.OnClickListener,
                         showToast(getString(R.string.follow_invite))
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }

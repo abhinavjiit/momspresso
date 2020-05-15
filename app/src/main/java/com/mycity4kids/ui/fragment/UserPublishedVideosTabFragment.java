@@ -28,7 +28,7 @@ import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.FragmentManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.base.BaseFragment;
@@ -217,7 +217,7 @@ public class UserPublishedVideosTabFragment extends BaseFragment implements View
             isReuqestRunning = false;
             if (null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 if (isAdded()) {
                     ((UserPublishedContentActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                 }
@@ -233,7 +233,7 @@ public class UserPublishedVideosTabFragment extends BaseFragment implements View
                     }
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 if (isAdded()) {
                     ((UserPublishedContentActivity) getActivity()).showToast(getString(R.string.went_wrong));
@@ -251,7 +251,7 @@ public class UserPublishedVideosTabFragment extends BaseFragment implements View
                 noBlogsTextView.setVisibility(View.VISIBLE);
             }
             progressBar.setVisibility(View.INVISIBLE);
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };

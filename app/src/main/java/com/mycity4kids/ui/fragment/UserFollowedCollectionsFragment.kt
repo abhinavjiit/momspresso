@@ -11,8 +11,8 @@ import android.widget.AbsListView
 import android.widget.AdapterView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
@@ -45,7 +45,11 @@ class UserFollowedCollectionsFragment : BaseFragment() {
     private var bottomLoadingView: RelativeLayout? = null
     private var dataList = ArrayList<UserCollectionsModel>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.user_followed_collections_fragment, container, false)
         bottomLoadingView = view.findViewById(R.id.bottomLoadingView)
         collectionGridView = view.findViewById(R.id.collectionGridView)
@@ -55,10 +59,20 @@ class UserFollowedCollectionsFragment : BaseFragment() {
             userCreatedFollowedCollectionAdapter = CollectionsAdapter(context!!)
             collectionGridView.adapter = userCreatedFollowedCollectionAdapter
         }
-        view.findViewById<View>(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(activity, R.anim.rotate_indefinitely))
+        view.findViewById<View>(R.id.imgLoader).startAnimation(
+            AnimationUtils.loadAnimation(
+                activity,
+                R.anim.rotate_indefinitely
+            )
+        )
         getFollowedCollections()
         collectionGridView.setOnItemClickListener(object : AdapterView.OnItemClickListener {
-            override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemClick(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 val intent = Intent(activity, UserCollectionItemListActivity::class.java)
                 intent.putExtra("id", dataList[position].userCollectionId)
                 startActivity(intent)
@@ -68,7 +82,12 @@ class UserFollowedCollectionsFragment : BaseFragment() {
         collectionGridView.setOnScrollListener(object : AbsListView.OnScrollListener {
             override fun onScrollStateChanged(absListView: AbsListView, i: Int) {}
 
-            override fun onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
+            override fun onScroll(
+                view: AbsListView,
+                firstVisibleItem: Int,
+                visibleItemCount: Int,
+                totalItemCount: Int
+            ) {
                 val loadMore = firstVisibleItem + visibleItemCount >= totalItemCount
                 if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
                     bottomLoadingView?.visibility = View.VISIBLE
@@ -81,7 +100,12 @@ class UserFollowedCollectionsFragment : BaseFragment() {
     }
 
     private fun getFollowedCollections() {
-        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getFollowedCollection(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, pageNumber, 10).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserCollectionsListModel>> {
+        BaseApplication.getInstance().retrofit.create(CollectionsAPI::class.java).getFollowedCollection(
+            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
+            pageNumber,
+            10
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object :
+            Observer<BaseResponseGeneric<UserCollectionsListModel>> {
             override fun onComplete() {
             }
 
@@ -99,13 +123,13 @@ class UserFollowedCollectionsFragment : BaseFragment() {
                         ToastUtils.showToast(activity, response.data?.msg)
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4KException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onError(e: Throwable) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4KException", Log.getStackTraceString(e))
             }
         })

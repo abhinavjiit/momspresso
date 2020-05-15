@@ -20,10 +20,10 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
-import com.crashlytics.android.Crashlytics
 import com.facebook.share.model.ShareLinkContent
 import com.facebook.share.widget.ShareDialog
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -271,7 +271,7 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
                     try {
                         AppUtils.getBitmapFromView(crownSharableCard, sharableCrownImageName)
                     } catch (e: Exception) {
-                        Crashlytics.logException(e)
+                        FirebaseCrashlytics.getInstance().recordException(e)
                         Log.d("MC4kException", Log.getStackTraceString(e))
                         return true
                     }
@@ -280,7 +280,7 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
                 try {
                     AppUtils.getBitmapFromView(crownSharableCard, sharableCrownImageName)
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                     return true
                 }
@@ -351,7 +351,7 @@ class CrownDialogFragment : DialogFragment(), View.OnClickListener {
                         }
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             } else {

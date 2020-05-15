@@ -15,7 +15,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.BuildConfig
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -130,7 +130,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
                 processTags(responseData?.tags)
             } catch (e: Exception) {
                 removeProgressDialog()
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
@@ -157,7 +157,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
         } else if (t is SocketTimeoutException) {
             showToast(getString(R.string.connection_timeout))
         }
-        Crashlytics.logException(t)
+        FirebaseCrashlytics.getInstance().recordException(t)
         Log.d("MC4kException", Log.getStackTraceString(t))
     }
 
@@ -183,7 +183,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
                     AppUtils.copyToClipboard(hashtags)
                     ToastUtils.showToast(this, getString(R.string.all_insta_share_clipboard_msg))
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
                 shareMedium = AppConstants.MEDIUM_INSTAGRAM
@@ -294,7 +294,7 @@ class ShortStoryModerationOrShareActivity : BaseActivity(), View.OnClickListener
                 AppConstants.STORY_SHARE_IMAGE_NAME + tempName
             )
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
             return false
         }

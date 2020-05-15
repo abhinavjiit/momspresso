@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.viewpager.widget.ViewPager;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mycity4kids.R;
@@ -114,7 +114,7 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
             getCurrentParentTopicCategoriesAndSubCategories();
             initializeTabsAndPager();
         } catch (FileNotFoundException e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsApi = retro.create(TopicsCategoryAPI.class);
@@ -134,22 +134,22 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
                         getCurrentParentTopicCategoriesAndSubCategories();
                         initializeTabsAndPager();
                     } catch (FileNotFoundException e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4KException", Log.getStackTraceString(e));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
             });
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4KException", Log.getStackTraceString(e));
         }
 
@@ -285,7 +285,7 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
             }
             BaseApplication.setShortStoryTopicList(shortStoriesTopicList);
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
@@ -315,7 +315,7 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
                     .instantiateItem(viewPager, viewPager.getCurrentItem()));
             topicsShortStoriesTabFragment.stopTracking();
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }

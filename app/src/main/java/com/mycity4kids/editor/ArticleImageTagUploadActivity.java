@@ -23,19 +23,15 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
@@ -54,21 +50,20 @@ import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.ui.activity.ArticleModerationOrShareActivity;
 import com.mycity4kids.ui.activity.BlogSetupActivity;
 import com.mycity4kids.ui.adapter.ArticleTagsImagesGridAdapter;
+import com.mycity4kids.utils.ConnectivityUtils;
 import com.mycity4kids.utils.PermissionUtil;
+import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import org.json.JSONArray;
+import org.json.JSONException;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -76,7 +71,8 @@ import retrofit2.Retrofit;
 /**
  * Created by anshul on 3/18/16.
  */
-public class ArticleImageTagUploadActivity extends BaseActivity implements View.OnClickListener, ArticleTagsImagesGridAdapter.ITagImageSelect {
+public class ArticleImageTagUploadActivity extends BaseActivity implements View.OnClickListener,
+        ArticleTagsImagesGridAdapter.ITagImageSelect {
 
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
@@ -141,7 +137,8 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
 
         setTagsList();
         Utils.pushOpenScreenEvent(this, "AddImageScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-        if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList"))) {
+        if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from")
+                .equals("publishedList"))) {
             String thumbnailUrl = getIntent().getStringExtra("imageUrl");
             uploadImageCardView.setVisibility(View.GONE);
             articleImage.setVisibility(View.VISIBLE);
@@ -177,7 +174,8 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
+                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning
+                        && !isLastPageReached) {
                     mLodingView.setVisibility(View.VISIBLE);
                     getImagesForCategories();
                     isReuqestRunning = true;
@@ -189,26 +187,29 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
     private void getImagesForCategories() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         ArticlePublishAPI articlePublishAPI = retrofit.create(ArticlePublishAPI.class);
-        Call<ArticleTagsImagesResponse> tagImagesCall = articlePublishAPI.getImagesForCategories(TextUtils.join(",", tagsKeyList), limit, pageNumber);
+        Call<ArticleTagsImagesResponse> tagImagesCall = articlePublishAPI
+                .getImagesForCategories(TextUtils.join(",", tagsKeyList), limit, pageNumber);
         tagImagesCall.enqueue(tagsImagesResponseCallback);
     }
 
     private Callback<ArticleTagsImagesResponse> tagsImagesResponseCallback = new Callback<ArticleTagsImagesResponse>() {
         @Override
-        public void onResponse(Call<ArticleTagsImagesResponse> call, retrofit2.Response<ArticleTagsImagesResponse> response) {
+        public void onResponse(Call<ArticleTagsImagesResponse> call,
+                retrofit2.Response<ArticleTagsImagesResponse> response) {
             progressBar.setVisibility(View.GONE);
             mLodingView.setVisibility(View.GONE);
             isReuqestRunning = false;
             if (response.body() == null) {
                 if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    FirebaseCrashlytics.getInstance().recordException(nee);
                 }
                 return;
             }
             ArticleTagsImagesResponse responseModel = response.body();
             if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
-                if (responseModel.getData() != null && !responseModel.getData().isEmpty() && responseModel.getData().get(0) != null) {
+                if (responseModel.getData() != null && !responseModel.getData().isEmpty()
+                        && responseModel.getData().get(0) != null) {
                     processResponse(responseModel.getData());
                 } else {
                     showToast(responseModel.getReason().toString());
@@ -220,13 +221,14 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
         public void onFailure(Call<ArticleTagsImagesResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
             mLodingView.setVisibility(View.GONE);
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
     private void processResponse(List<ArticleTagsImagesResponse.ArticleTagsImagesData> data) {
-        ArrayList<ArticleTagsImagesResponse.ArticleTagsImagesData.ArticleTagsImagesResult> datalist = data.get(0).getResult();
+        ArrayList<ArticleTagsImagesResponse.ArticleTagsImagesData.ArticleTagsImagesResult> datalist = data.get(0)
+                .getResult();
         if (datalist == null || datalist.size() == 0) {
             isLastPageReached = true;
             if (null != tagsImageList && !tagsImageList.isEmpty()) {
@@ -261,7 +263,8 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                 if (resultCode == Activity.RESULT_OK) {
                     try {
                         Log.e("inImagePick", "test");
-                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(ArticleImageTagUploadActivity.this.getContentResolver(), imageUri);
+                        Bitmap imageBitmap = MediaStore.Images.Media
+                                .getBitmap(ArticleImageTagUploadActivity.this.getContentResolver(), imageUri);
                         float actualHeight = imageBitmap.getHeight();
                         float actualWidth = imageBitmap.getWidth();
                         if (actualHeight < 405 || actualWidth < 720) {
@@ -345,12 +348,13 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             //asynchronous call
             call.enqueue(new Callback<ArticleDraftResponse>() {
                              @Override
-                             public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
+                             public void onResponse(Call<ArticleDraftResponse> call,
+                                     retrofit2.Response<ArticleDraftResponse> response) {
                                  removeProgressDialog();
                                  ArticleDraftResponse responseModel = response.body();
                                  if (response == null || response.body() == null) {
                                      NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                                     Crashlytics.logException(nee);
+                                     FirebaseCrashlytics.getInstance().recordException(nee);
                                      showToast(getString(R.string.went_wrong));
                                      return;
                                  }
@@ -358,11 +362,16 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                                      if (!StringUtils.isNullOrEmpty(responseModel.getData().get(0).getMsg())) {
                                          Log.i("Retro Publish Message", responseModel.getData().get(0).getMsg());
                                          if (StringUtils.isNullOrEmpty(responseModel.getData().get(0).getResult().getUrl())) {
-                                             Utils.pushPublishArticleEvent(ArticleImageTagUploadActivity.this, "AddImageScreen", SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getDynamoId(), "moderation");
+                                             Utils.pushPublishArticleEvent(ArticleImageTagUploadActivity.this, "AddImageScreen",
+                                                     SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this)
+                                                             .getDynamoId(), "moderation");
                                          } else {
-                                             Utils.pushPublishArticleEvent(ArticleImageTagUploadActivity.this, "AddImageScreen", SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getDynamoId(), "published");
+                                             Utils.pushPublishArticleEvent(ArticleImageTagUploadActivity.this, "AddImageScreen",
+                                                     SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this)
+                                                             .getDynamoId(), "published");
                                          }
-                                         Intent intent = new Intent(ArticleImageTagUploadActivity.this, ArticleModerationOrShareActivity.class);
+                                         Intent intent = new Intent(ArticleImageTagUploadActivity.this,
+                                                 ArticleModerationOrShareActivity.class);
                                          intent.putExtra("shareUrl", "" + responseModel.getData().get(0).getResult().getUrl());
                                          intent.putExtra("source", "addArticle");
                                          startActivity(intent);
@@ -377,7 +386,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                              @Override
                              public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
                                  removeProgressDialog();
-                                 Crashlytics.logException(t);
+                                 FirebaseCrashlytics.getInstance().recordException(t);
                                  Log.d("MC4kException", Log.getStackTraceString(t));
                              }
                          }
@@ -411,10 +420,12 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                 articleDraftRequest.setUserAgent1(userAgent);
             }
             Log.e("publish request", new Gson().toJson(articleDraftRequest));
-            Call<ArticleDraftResponse> call1 = articlePublishAPI.updateArticle(draftObject.getId(), articleDraftRequest);
+            Call<ArticleDraftResponse> call1 = articlePublishAPI
+                    .updateArticle(draftObject.getId(), articleDraftRequest);
             call1.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
-                public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
+                public void onResponse(Call<ArticleDraftResponse> call,
+                        retrofit2.Response<ArticleDraftResponse> response) {
                     removeProgressDialog();
                     if (response.body() == null) {
                         showToast(getString(R.string.server_went_wrong));
@@ -424,18 +435,25 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                     if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                         id = responseModel.getData().get(0).getResult().getId() + "";
                         if (StringUtils.isNullOrEmpty(responseModel.getData().get(0).getResult().getUrl())) {
-                            Utils.pushPublishArticleEvent(ArticleImageTagUploadActivity.this, "AddImageScreen", SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getDynamoId(), "moderation");
+                            Utils.pushPublishArticleEvent(ArticleImageTagUploadActivity.this, "AddImageScreen",
+                                    SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this)
+                                            .getDynamoId(), "moderation");
                         } else {
-                            Utils.pushPublishArticleEvent(ArticleImageTagUploadActivity.this, "AddImageScreen", SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getDynamoId(), "published");
+                            Utils.pushPublishArticleEvent(ArticleImageTagUploadActivity.this, "AddImageScreen",
+                                    SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this)
+                                            .getDynamoId(), "published");
                         }
-                        Intent intent = new Intent(ArticleImageTagUploadActivity.this, ArticleModerationOrShareActivity.class);
+                        Intent intent = new Intent(ArticleImageTagUploadActivity.this,
+                                ArticleModerationOrShareActivity.class);
                         intent.putExtra("shareUrl", "" + responseModel.getData().get(0).getResult().getUrl());
                         intent.putExtra("source", "addArticle");
                         startActivity(intent);
                     } else {
                         if (!StringUtils.isNullOrEmpty(responseModel.getReason())) {
-                            if (responseModel.getReason().equalsIgnoreCase("Can't update article which is under moderation !!")) {
-                                Intent intent = new Intent(ArticleImageTagUploadActivity.this, ArticleModerationOrShareActivity.class);
+                            if (responseModel.getReason()
+                                    .equalsIgnoreCase("Can't update article which is under moderation !!")) {
+                                Intent intent = new Intent(ArticleImageTagUploadActivity.this,
+                                        ArticleModerationOrShareActivity.class);
                                 intent.putExtra("shareUrl", "" + "");
                                 intent.putExtra("source", "addArticle");
                                 startActivity(intent);
@@ -452,7 +470,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                 @Override
                 public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
                     removeProgressDialog();
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4KException", Log.getStackTraceString(t));
                     showToast(getString(R.string.went_wrong));
                 }
@@ -464,7 +482,8 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
         showProgressDialog(getResources().getString(R.string.please_wait));
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
-        Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        Call<UserDetailResponse> call = bloggerDashboardAPI
+                .getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         call.enqueue(getUserDetailsResponseCallback);
     }
 
@@ -496,7 +515,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
         @Override
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -547,14 +566,15 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                                      }
                                  }
                                  adapter.notifyDataSetChanged();
-                                 Picasso.get().load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(articleImage);
+                                 Picasso.get().load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article)
+                                         .into(articleImage);
                                  showToast(getString(R.string.image_upload_success));
                              }
                          }
 
                          @Override
                          public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
-                             Crashlytics.logException(t);
+                             FirebaseCrashlytics.getInstance().recordException(t);
                              Log.d("MC4KException", Log.getStackTraceString(t));
                              showToast(getString(R.string.went_wrong));
                          }
@@ -580,11 +600,14 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                 Intent intent1 = new Intent(Intent.ACTION_PICK);
                 intent1.setType("image/*");
                 if (Build.VERSION.SDK_INT >= 23) {
-                    if (ActivityCompat.checkSelfPermission(ArticleImageTagUploadActivity.this, Manifest.permission.CAMERA)
+                    if (ActivityCompat
+                            .checkSelfPermission(ArticleImageTagUploadActivity.this, Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED
-                            || ActivityCompat.checkSelfPermission(ArticleImageTagUploadActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                            || ActivityCompat.checkSelfPermission(ArticleImageTagUploadActivity.this,
+                            Manifest.permission.READ_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED
-                            || ActivityCompat.checkSelfPermission(ArticleImageTagUploadActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            || ActivityCompat.checkSelfPermission(ArticleImageTagUploadActivity.this,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED) {
                         requestPermissions();
                     } else {
@@ -599,7 +622,9 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                     showToast(getString(R.string.publish_article_upload_image_please_upload_or_choose_image));
                     return;
                 }
-                Utils.pushEvent(ArticleImageTagUploadActivity.this, GTMEventType.PUBLISH_ARTICLE_BUTTON_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getDynamoId() + "", "Article Image Upload");
+                Utils.pushEvent(ArticleImageTagUploadActivity.this, GTMEventType.PUBLISH_ARTICLE_BUTTON_CLICKED_EVENT,
+                        SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getDynamoId() + "",
+                        "Article Image Upload");
                 getBlogPage();
                 break;
         }
@@ -648,7 +673,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_INIT_PERMISSION) {
             if (PermissionUtil.verifyPermissions(grantResults)) {
                 Snackbar.make(mLayout, R.string.permision_available_init,

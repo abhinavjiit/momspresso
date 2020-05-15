@@ -18,16 +18,13 @@ import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
-
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.StringUtils;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
@@ -39,17 +36,16 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
 import com.mycity4kids.utils.GenericFileProvider;
+import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -64,7 +60,8 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
 
     private static final int REQUEST_CAMERA = 0;
     private static final int REQUEST_EDIT_PICTURE = 1;
-    private static String[] PERMISSIONS_EDIT_PICTURE = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
+    private static String[] PERMISSIONS_EDIT_PICTURE = {Manifest.permission.CAMERA,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     public static final int ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111;
@@ -87,7 +84,8 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.phone_login_user_details_activity);
-        Utils.pushGenericEvent(this, "Phone_login_add_user_details_screen_event", SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "PhoneLoginUserDetailActivity");
+        Utils.pushGenericEvent(this, "Phone_login_add_user_details_screen_event",
+                SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "PhoneLoginUserDetailActivity");
         root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
@@ -140,7 +138,8 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
 
     private boolean validateFields() {
         if (StringUtils.isNullOrEmpty(fullNameEditText.getText().toString().trim())) {
-            Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_fn_empty), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_fn_empty), Toast.LENGTH_SHORT)
+                    .show();
             return false;
         }
         return true;
@@ -172,7 +171,8 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
             }
             UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                Toast.makeText(PhoneLoginUserDetailActivity.this, getString(R.string.app_settings_edit_profile_update_success), Toast.LENGTH_SHORT).show();
+                Toast.makeText(PhoneLoginUserDetailActivity.this,
+                        getString(R.string.app_settings_edit_profile_update_success), Toast.LENGTH_SHORT).show();
 
                 UserInfo model = SharedPrefUtils.getUserDetailModel(PhoneLoginUserDetailActivity.this);
                 String[] nameArr = fullNameEditText.getText().toString().trim().split("\\s+");
@@ -192,7 +192,7 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
 
         @Override
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -201,8 +201,9 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
         if (ActivityCompat.shouldShowRequestPermissionRationale(PhoneLoginUserDetailActivity.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 || ActivityCompat.shouldShowRequestPermissionRationale(PhoneLoginUserDetailActivity.this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(PhoneLoginUserDetailActivity.this,
-                Manifest.permission.CAMERA)) {
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) || ActivityCompat
+                .shouldShowRequestPermissionRationale(PhoneLoginUserDetailActivity.this,
+                        Manifest.permission.CAMERA)) {
 
             Snackbar.make(root, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
@@ -229,13 +230,13 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
                         @Override
                         public void onClick(View view) {
                             ActivityCompat.requestPermissions(PhoneLoginUserDetailActivity.this,
-                                    new String[]{Manifest.permission.CAMERA},
+                                    new String[] {Manifest.permission.CAMERA},
                                     REQUEST_CAMERA);
                         }
                     })
                     .show();
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA},
                     REQUEST_CAMERA);
         }
     }
@@ -260,7 +261,10 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
                         // Continue only if the File was successfully created
                         if (photoFile != null) {
                             try {
-                                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, GenericFileProvider.getUriForFile(PhoneLoginUserDetailActivity.this, BaseApplication.getAppContext().getApplicationContext().getPackageName() + ".my.package.name.provider", createImageFile()));
+                                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, GenericFileProvider
+                                        .getUriForFile(PhoneLoginUserDetailActivity.this,
+                                                BaseApplication.getAppContext().getApplicationContext().getPackageName()
+                                                        + ".my.package.name.provider", createImageFile()));
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -337,9 +341,11 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
                                  setProfileImage(responseModel.getData().getResult().getUrl());
                                  Picasso.get().invalidate(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()));
                                  Picasso.get().load(responseModel.getData().getResult().getUrl())
-                                         .memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.family_xxhdpi)
+                                         .memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE)
+                                         .placeholder(R.drawable.family_xxhdpi)
                                          .error(R.drawable.family_xxhdpi).into(profileImageView);
-                                 SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), responseModel.getData().getResult().getUrl());
+                                 SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(),
+                                         responseModel.getData().getResult().getUrl());
 
 //                                 showToast("Image successfully uploaded!");
                                  // ((BaseActivity) this()).showSnackbar(getView().findViewById(R.id.root), "You have successfully uploaded an image.");
@@ -349,7 +355,7 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
                          @Override
                          public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
 //                             showToast("unable to upload image, please try again later");
-                             Crashlytics.logException(t);
+                             FirebaseCrashlytics.getInstance().recordException(t);
                              Log.d("MC4kException", Log.getStackTraceString(t));
                          }
                      }
@@ -375,7 +381,7 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
 
             @Override
             public void onFailure(Call<UserDetailResponse> call, Throwable t) {
-                Crashlytics.logException(t);
+                FirebaseCrashlytics.getInstance().recordException(t);
                 Log.d("MC4kException", Log.getStackTraceString(t));
             }
         });

@@ -6,29 +6,27 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-
 import androidx.appcompat.widget.Toolbar;
-
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.JsonSyntaxException;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.StringUtils;
-import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.LoginRegistrationRequest;
 import com.mycity4kids.models.response.ForgotPasswordResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
-
+import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.utils.StringUtils;
+import com.mycity4kids.utils.ToastUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 public class ForgotPasswordActivity extends BaseActivity {
+
     private EditText mEmailId;
     private Toolbar mToolbar;
     private LinearLayout root;
@@ -41,7 +39,8 @@ public class ForgotPasswordActivity extends BaseActivity {
         ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
-        Utils.pushOpenScreenEvent(ForgotPasswordActivity.this, "ForgotPasswordScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(ForgotPasswordActivity.this, "ForgotPasswordScreen",
+                SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -112,7 +111,7 @@ public class ForgotPasswordActivity extends BaseActivity {
                     showToast(responseData.getReason());
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
@@ -125,7 +124,7 @@ public class ForgotPasswordActivity extends BaseActivity {
                 Log.d("dawd", "dwad");
             }
             Log.d("MC4kException", Log.getStackTraceString(t));
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             showToast(getString(R.string.went_wrong));
         }
     };

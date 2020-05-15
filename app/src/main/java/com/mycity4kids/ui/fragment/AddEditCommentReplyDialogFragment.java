@@ -15,13 +15,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseActivity;
-import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.StringUtils;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseActivity;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.parentingdetails.CommentsData;
@@ -31,11 +30,9 @@ import com.mycity4kids.models.response.ProfilePic;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
-
+import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.utils.StringUtils;
 import java.util.ArrayList;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -61,7 +58,7 @@ public class AddEditCommentReplyDialogFragment extends DialogFragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.add_comment_fragment, container,
                 false);
@@ -126,7 +123,8 @@ public class AddEditCommentReplyDialogFragment extends DialogFragment implements
             case R.id.addCommentTextView:
 
                 if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-                    ((BaseActivity) getActivity()).showSnackbar(getView().findViewById(R.id.root), getString(R.string.error_network));
+                    ((BaseActivity) getActivity())
+                            .showSnackbar(getView().findViewById(R.id.root), getString(R.string.error_network));
                     return;
                 }
 
@@ -140,10 +138,12 @@ public class AddEditCommentReplyDialogFragment extends DialogFragment implements
                         addCommentRequest.setUserComment(contentData);
                         if (commentsData != null) {
                             addCommentRequest.setParentId(commentsData.getId());
-                            Utils.pushReplyCommentArticleEvent(getActivity(), "DetailArticleScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
+                            Utils.pushReplyCommentArticleEvent(getActivity(), "DetailArticleScreen",
+                                    SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
                                     articleId, author);
                         } else {
-                            Utils.pushCommentArticleEvent(getActivity(), "DetailArticleScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
+                            Utils.pushCommentArticleEvent(getActivity(), "DetailArticleScreen",
+                                    SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
                                     articleId, author);
                         }
                         Call<AddCommentResponse> callBookmark = articleDetailsAPI.addComment(addCommentRequest);
@@ -155,7 +155,8 @@ public class AddEditCommentReplyDialogFragment extends DialogFragment implements
                         ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
                         AddCommentRequest addCommentRequest = new AddCommentRequest();
                         addCommentRequest.setUserComment(commentReplyEditText.getText().toString());
-                        Call<AddCommentResponse> callBookmark = articleDetailsAPI.editComment(commentsData.getId(), addCommentRequest);
+                        Call<AddCommentResponse> callBookmark = articleDetailsAPI
+                                .editComment(commentsData.getId(), addCommentRequest);
                         callBookmark.enqueue(editCommentsResponseCallback);
                         showProgressDialog("Please wait ...");
 
@@ -176,7 +177,7 @@ public class AddEditCommentReplyDialogFragment extends DialogFragment implements
             removeProgressDialog();
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
 
@@ -217,8 +218,9 @@ public class AddEditCommentReplyDialogFragment extends DialogFragment implements
         @Override
         public void onFailure(Call<AddCommentResponse> call, Throwable t) {
             removeProgressDialog();
-            if(isAdded())
+            if (isAdded()) {
                 ((BaseActivity) getActivity()).apiExceptions(t);
+            }
 //            handleExceptions(t);
         }
     };
@@ -270,8 +272,9 @@ public class AddEditCommentReplyDialogFragment extends DialogFragment implements
         @Override
         public void onFailure(Call<AddCommentResponse> call, Throwable t) {
             removeProgressDialog();
-            if(isAdded())
+            if (isAdded()) {
                 ((BaseActivity) getActivity()).apiExceptions(t);
+            }
 //            if ("article".equals(type)) {
 //                ((ArticlesAndBlogsDetailsActivity) getActivity()).handleExceptions(t);
 //            } else {
@@ -315,6 +318,7 @@ public class AddEditCommentReplyDialogFragment extends DialogFragment implements
     }
 
     public interface IAddCommentReply {
+
         void onCommentAddition(CommentsData cd);
 
         void onCommentReplyEditSuccess(CommentsData cd);

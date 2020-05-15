@@ -2,17 +2,10 @@ package com.mycity4kids.utils;
 
 import android.content.Context;
 import android.util.Log;
-
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.gtmutils.GTMEventType;
-import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.ArticleReadTimeRequest;
-import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
-
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -23,6 +16,7 @@ import retrofit2.Retrofit;
  * Created by hemant on 25/11/16.
  */
 public class TrackArticleReadTime {
+
     private long startTime = 0;
     private long timeSpent = 0;
     private long initStartTime = 0;
@@ -65,7 +59,9 @@ public class TrackArticleReadTime {
     public void updateTimeAtBackendAndGA(String articleURL, String articleId, long estimatedTime) {
         try {
             timeSpent = timeSpent + System.currentTimeMillis() - startTime;
-            Log.d("updateTimeBackendAndGA", " timeSpent = " + timeSpent + " initStartTime=" + initStartTime + " estimatedtime=" + estimatedTime);
+            Log.d("updateTimeBackendAndGA",
+                    " timeSpent = " + timeSpent + " initStartTime=" + initStartTime + " estimatedtime="
+                            + estimatedTime);
 //            Utils.pushArticleDetailsTimeSpent(mContext, GTMEventType.ARTICLE_TIME_SPENT_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(),
 //                    "Blog Detail", articleURL, "" + timeSpent, "" + estimatedTime);
 
@@ -92,13 +88,13 @@ public class TrackArticleReadTime {
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             });
         } catch (Exception ex) {
             Log.d("ChronosException", "ChronosException");
-            Crashlytics.logException(ex);
+            FirebaseCrashlytics.getInstance().recordException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));
         }
 //        }

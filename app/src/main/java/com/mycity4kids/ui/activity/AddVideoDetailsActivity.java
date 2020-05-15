@@ -19,9 +19,9 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import com.afollestad.easyvideoplayer.EasyVideoCallback;
 import com.afollestad.easyvideoplayer.EasyVideoPlayer;
-import com.crashlytics.android.Crashlytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -159,7 +159,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                     saveUploadTextView.setEnabled(true);
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -167,7 +167,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         @Override
         public void onFailure(Call<Topics> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -403,7 +403,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         @Override
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
 
         }

@@ -7,19 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
@@ -35,14 +31,14 @@ import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.LanguageSettingsAPI;
 import com.mycity4kids.ui.adapter.PreferredLanguagesAdapter;
 import com.mycity4kids.utils.AppUtils;
-
+import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.utils.StringUtils;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -61,7 +57,8 @@ public class EditLangPrefsTabFragment extends BaseFragment implements View.OnCli
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.edit_lang_prefs_tab_fragment, container, false);
 
         languagesList = new ArrayList<>();
@@ -91,7 +88,8 @@ public class EditLangPrefsTabFragment extends BaseFragment implements View.OnCli
 
     private Callback<LanguageSettingsResponse> languageSettingsResponseCallback = new Callback<LanguageSettingsResponse>() {
         @Override
-        public void onResponse(Call<LanguageSettingsResponse> call, retrofit2.Response<LanguageSettingsResponse> response) {
+        public void onResponse(Call<LanguageSettingsResponse> call,
+                retrofit2.Response<LanguageSettingsResponse> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
                 return;
@@ -121,7 +119,7 @@ public class EditLangPrefsTabFragment extends BaseFragment implements View.OnCli
                 }
             } catch (Exception e) {
                 removeProgressDialog();
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -129,7 +127,7 @@ public class EditLangPrefsTabFragment extends BaseFragment implements View.OnCli
         @Override
         public void onFailure(Call<LanguageSettingsResponse> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -160,12 +158,16 @@ public class EditLangPrefsTabFragment extends BaseFragment implements View.OnCli
             if (!languagesList.get(i).getStatus().equals(languagesList.get(i).getOriginalStatus())) {
                 if ("1".equals(languagesList.get(i).getStatus())) {
                     Log.d("GTM Launguage Added", ":" + languagesList.get(i).getName());
-                    Utils.pushEnableLanguageEvent(getActivity(), "SettingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), languagesList.get(i).getName());
+                    Utils.pushEnableLanguageEvent(getActivity(), "SettingScreen",
+                            SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
+                            languagesList.get(i).getName());
 //                    Utils.pushEventFeedLanguage(getActivity(), GTMEventType.FEED_LANGUAGE_ADD_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
 //                            "Launguage Settings", languagesList.get(i).getName());
                 } else {
                     Log.d("GTM Launguage Remove", ":" + languagesList.get(i).getName());
-                    Utils.pushDisableLanguageEvent(getActivity(), "SettingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), languagesList.get(i).getName());
+                    Utils.pushDisableLanguageEvent(getActivity(), "SettingScreen",
+                            SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
+                            languagesList.get(i).getName());
 //                    Utils.pushEventFeedLanguage(getActivity(), GTMEventType.FEED_LANGUAGE_REMOVE_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
 //                            "Launguage Settings", languagesList.get(i).getName());
                 }
@@ -176,7 +178,8 @@ public class EditLangPrefsTabFragment extends BaseFragment implements View.OnCli
 
     Callback<UpdateLanguageSettingsResponse> updateLanguageSettingsCallback = new Callback<UpdateLanguageSettingsResponse>() {
         @Override
-        public void onResponse(Call<UpdateLanguageSettingsResponse> call, retrofit2.Response<UpdateLanguageSettingsResponse> response) {
+        public void onResponse(Call<UpdateLanguageSettingsResponse> call,
+                retrofit2.Response<UpdateLanguageSettingsResponse> response) {
             if (response == null || response.body() == null) {
 //                showToast("Something went wrong from server");
                 return;
@@ -193,8 +196,8 @@ public class EditLangPrefsTabFragment extends BaseFragment implements View.OnCli
                         Map<String, String> subscribedContentLanguages = responseData.getData();
                         String filter = "";
 
-
-                        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.LANGUAGES_JSON_FILE);
+                        FileInputStream fileInputStream = BaseApplication.getAppContext()
+                                .openFileInput(AppConstants.LANGUAGES_JSON_FILE);
                         String fileContent = AppUtils.convertStreamToString(fileInputStream);
                         LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(
                                 fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {
@@ -230,19 +233,21 @@ public class EditLangPrefsTabFragment extends BaseFragment implements View.OnCli
                     }
                 } else {
                     if (null != getActivity()) {
-                        Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT)
+                                .show();
                     }
                 }
             } catch (FileNotFoundException fnfe) {
-                Crashlytics.logException(fnfe);
+                FirebaseCrashlytics.getInstance().recordException(fnfe);
                 Log.d("MC4kException", Log.getStackTraceString(fnfe));
                 updateConfigSettings();
             } catch (Exception e) {
                 if (null != getActivity()) {
-                    Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT)
+                            .show();
                 }
                 removeProgressDialog();
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -252,7 +257,7 @@ public class EditLangPrefsTabFragment extends BaseFragment implements View.OnCli
             if (null != getActivity()) {
                 Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
             }
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -279,12 +284,13 @@ public class EditLangPrefsTabFragment extends BaseFragment implements View.OnCli
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     updateLanguageSubscription();
                 } else {
-                    Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT)
+                            .show();
                 }
             } catch (Exception e) {
                 Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
                 removeProgressDialog();
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
 
@@ -295,7 +301,7 @@ public class EditLangPrefsTabFragment extends BaseFragment implements View.OnCli
         public void onFailure(Call<ConfigResponse> call, Throwable t) {
             Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };

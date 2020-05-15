@@ -11,11 +11,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import com.crashlytics.android.Crashlytics
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mixpanel.android.mpmetrics.MixpanelAPI
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -78,14 +78,14 @@ class ProfileSetting : BaseActivity(), GoogleApiClient.OnConnectionFailedListene
                     }
                 } catch (e: Exception) {
                     showToast(getString(R.string.server_went_wrong))
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onFailure(call: Call<TotalPayoutResponse>, t: Throwable) {
                 showToast(getString(R.string.server_went_wrong))
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 apiExceptions(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }

@@ -12,7 +12,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,10 +33,10 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mycity4kids.R;
@@ -285,22 +284,22 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                         createTopicsData(res);
                         addShortStoryCategories(chooseoptionradioButton);
                     } catch (FileNotFoundException e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4KException", Log.getStackTraceString(e));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
             });
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4KException", Log.getStackTraceString(e));
         }
 
@@ -351,7 +350,7 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                 }
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
@@ -388,7 +387,7 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                     processArticleListingResponse(responseData);
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
             }
         }
@@ -398,7 +397,7 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
             if (lodingView.getVisibility() == View.VISIBLE) {
                 lodingView.setVisibility(View.GONE);
             }
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };
@@ -526,7 +525,7 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                 try {
                     filterTags(articleListingResults.get(position).getTags());
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
                 getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM);
@@ -614,7 +613,7 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                 }
             } catch (Exception e) {
                 ToastUtils.showToast(ShortStoryChallengeDetailActivity.this, "some thing went wrong at the server ");
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -622,7 +621,7 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
             ToastUtils.showToast(ShortStoryChallengeDetailActivity.this, "some thing went wrong at the server ");
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -651,7 +650,7 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                 }
             } catch (Exception e) {
                 ToastUtils.showToast(ShortStoryChallengeDetailActivity.this, "some thing went wrong at the server ");
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -659,7 +658,7 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
             ToastUtils.showToast(ShortStoryChallengeDetailActivity.this, "some thing went wrong at the server ");
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -717,7 +716,7 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                             showToast("" + responseData.getReason());
                         }
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                         showToast(getString(R.string.server_went_wrong));
 
@@ -727,7 +726,7 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                 @Override
                 public void onFailure(Call<RecommendUnrecommendArticleResponse> call, Throwable t) {
                     isRecommendRequestRunning = false;
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };
@@ -826,7 +825,7 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                     Utils.pushProfileEvents(this, "CTA_100WS_Add_To_Collection",
                             "ShortStoryChallengeDetailActivity", "Add to Collection", "-");
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
                 return true;
@@ -937,7 +936,7 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
                 try {
                     createBitmapForSharingStory();
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
             }
@@ -945,7 +944,7 @@ public class ShortStoryChallengeDetailActivity extends BaseActivity implements V
             try {
                 createBitmapForSharingStory();
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }

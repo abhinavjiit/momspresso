@@ -24,9 +24,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mycity4kids.R;
@@ -239,7 +239,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             sortBgLayout.setVisibility(View.GONE);
             bottomOptionMenu.setVisibility(View.GONE);
         } catch (FileNotFoundException e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
@@ -259,22 +259,22 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                         sortBgLayout.setVisibility(View.GONE);
                         bottomOptionMenu.setVisibility(View.GONE);
                     } catch (FileNotFoundException e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4KException", Log.getStackTraceString(e));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4KException", Log.getStackTraceString(t));
                 }
             });
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4KException", Log.getStackTraceString(e));
         }
 
@@ -408,7 +408,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                     showToast(getString(R.string.went_wrong));
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
@@ -420,7 +420,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 mLodingView.setVisibility(View.GONE);
             }
             progressBar.setVisibility(View.INVISIBLE);
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
             showToast(getString(R.string.went_wrong));
         }
@@ -548,7 +548,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 return;
             }
         } catch (FileNotFoundException e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
@@ -556,7 +556,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
             call.enqueue(downloadFollowTopicsJSONCallback);
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("Exception", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
@@ -656,20 +656,20 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                             FollowTopics[] res = gson.fromJson(fileContent, FollowTopics[].class);
                             checkCurrentCategoryExists(res);
                         } catch (FileNotFoundException e) {
-                            Crashlytics.logException(e);
+                            FirebaseCrashlytics.getInstance().recordException(e);
                             Log.d("FileNotFoundException", Log.getStackTraceString(e));
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Crashlytics.logException(t);
+                        FirebaseCrashlytics.getInstance().recordException(t);
                         Log.d("MC4KException", Log.getStackTraceString(t));
                     }
                 });
             } catch (Exception e) {
                 progressBar.setVisibility(View.GONE);
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
@@ -679,7 +679,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         public void onFailure(Call<ResponseBody> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
             showToast(getString(R.string.went_wrong));
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };
@@ -710,7 +710,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
         @Override
         public void onFailure(Call<TopicsFollowingStatusResponse> call, Throwable t) {
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };
@@ -774,7 +774,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             removeProgressDialog();
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 showToast(getString(R.string.went_wrong));
                 return;
             }
@@ -786,7 +786,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                     showToast(responseData.getReason());
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
@@ -795,7 +795,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         @Override
         public void onFailure(Call<FollowUnfollowCategoriesResponse> call, Throwable t) {
             removeProgressDialog();
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
             showToast(getString(R.string.went_wrong));
         }
@@ -829,7 +829,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             }
             reader.close();
         } catch (IOException e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("IOException", Log.getStackTraceString(e));
         }
         return sb.toString();
@@ -909,7 +909,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             BaseApplication.setTopicsMap(allTopicsMap);
         } catch (Exception e) {
             progressBar.setVisibility(View.GONE);
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
             showToast(getString(R.string.went_wrong));
         }

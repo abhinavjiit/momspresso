@@ -8,22 +8,21 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -31,15 +30,14 @@ import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.models.response.CommentListResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.ui.adapter.CommentRepliesRecyclerAdapter;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class ArticleCommentRepliesDialogFragment extends DialogFragment implements View.OnClickListener, CommentRepliesRecyclerAdapter.RecyclerViewClickListener,
+public class ArticleCommentRepliesDialogFragment extends DialogFragment implements View.OnClickListener,
+        CommentRepliesRecyclerAdapter.RecyclerViewClickListener,
         CommentOptionsDialogFragment.ICommentOptionAction {
 
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -62,7 +60,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.short_story_comment_replies_dialog, container,
                 false);
@@ -72,7 +70,8 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
         openAddReplyDialog = (FloatingActionButton) rootView.findViewById(R.id.openAddReplyDialog);
 
         Drawable upArrow = ContextCompat.getDrawable(getActivity(), R.drawable.back_arroow);
-        upArrow.setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorControlNormal), PorterDuff.Mode.SRC_ATOP);
+        upArrow.setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorControlNormal),
+                PorterDuff.Mode.SRC_ATOP);
         mToolbar.setNavigationIcon(upArrow);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,7 +137,8 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
     private void getCommentReplies() {
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-        Call<CommentListResponse> call = articleDetailsAPI.getArticleCommentReplies(data.getPostId(), "reply", data.get_id(), paginationReplyId);
+        Call<CommentListResponse> call = articleDetailsAPI
+                .getArticleCommentReplies(data.getPostId(), "reply", data.get_id(), paginationReplyId);
         call.enqueue(articleCommentRepliesCallback);
     }
 
@@ -148,7 +148,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
             isReuqestRunning = false;
             if (response == null || response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException("Trending Article API failure");
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
 
@@ -156,7 +156,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
                 CommentListResponse commentListResponse = response.body();
                 showReplies(commentListResponse.getData());
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
@@ -164,7 +164,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
         @Override
         public void onFailure(Call<CommentListResponse> call, Throwable t) {
             isReuqestRunning = false;
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -250,7 +250,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
             case R.id.commentRootLayout: {
                 CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
-              //  commentOptionsDialogFragment.setTargetFragment(this, 0);
+                //  commentOptionsDialogFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
                 _args.putString("responseType", "COMMENT");
@@ -263,7 +263,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
             case R.id.replyRootView: {
                 CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
-               // commentOptionsDialogFragment.setTargetFragment(this, 0);
+                // commentOptionsDialogFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
                 _args.putString("responseType", "REPLY");
@@ -331,7 +331,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
         _args.putParcelable("parentCommentData", repliesList.get(position));
         addArticleCommentReplyDialogFragment.setArguments(_args);
         addArticleCommentReplyDialogFragment.setCancelable(true);
-       // addArticleCommentReplyDialogFragment.setTargetFragment(getParentFragment(), 0);
+        // addArticleCommentReplyDialogFragment.setTargetFragment(getParentFragment(), 0);
         addArticleCommentReplyDialogFragment.show(fm, "Add Comment");
     }
 

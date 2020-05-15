@@ -10,8 +10,8 @@ import android.widget.AbsListView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.RelativeLayout
 import androidx.fragment.app.FragmentTransaction
-import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
@@ -41,7 +41,11 @@ class ShortStoryThumbnailListFragment : BaseFragment() {
     private lateinit var shimmer1: ShimmerFrameLayout
     private var bottomLoadingView: RelativeLayout? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.short_story_thumbnail_list_fragment, container, false)
         collectionGridView = view.findViewById(R.id.collectionGridView)
         bottomLoadingView = view.findViewById(R.id.bottomLoadingView)
@@ -70,14 +74,31 @@ class ShortStoryThumbnailListFragment : BaseFragment() {
             } else {
                 (context as ShortStoriesCardActivity).setEnabledDisabled(false)
                 (context as ShortStoriesCardActivity).currentFragment(this)
-                dataList?.get(position - 1)?.image_url?.let { dataList?.get(position - 1)?.font_colour?.let { it1 -> dataList?.get(position - 1)?.id?.let { it2 -> (context as ShortStoriesCardActivity).setBackground(it, it1, it2) } } }
+                dataList?.get(position - 1)?.image_url?.let {
+                    dataList?.get(position - 1)?.font_colour?.let { it1 ->
+                        dataList?.get(
+                            position - 1
+                        )?.id?.let { it2 ->
+                            (context as ShortStoriesCardActivity).setBackground(
+                                it,
+                                it1,
+                                it2
+                            )
+                        }
+                    }
+                }
             }
         }
 
         collectionGridView.setOnScrollListener(object : AbsListView.OnScrollListener {
             override fun onScrollStateChanged(absListView: AbsListView, i: Int) {}
 
-            override fun onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
+            override fun onScroll(
+                view: AbsListView,
+                firstVisibleItem: Int,
+                visibleItemCount: Int,
+                totalItemCount: Int
+            ) {
                 val loadMore = firstVisibleItem + visibleItemCount >= totalItemCount
                 if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
                     bottomLoadingView?.visibility = View.VISIBLE
@@ -109,11 +130,14 @@ class ShortStoryThumbnailListFragment : BaseFragment() {
     }
 
     private val getThumbnailList = object : Callback<ShortStoryImageData> {
-        override fun onResponse(call: Call<ShortStoryImageData>, response: retrofit2.Response<ShortStoryImageData>) {
-//            removeProgressDialog()
+        override fun onResponse(
+            call: Call<ShortStoryImageData>,
+            response: retrofit2.Response<ShortStoryImageData>
+        ) {
+            //            removeProgressDialog()
             if (null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
-                Crashlytics.logException(nee)
+                FirebaseCrashlytics.getInstance().recordException(nee)
                 return
             }
             try {
@@ -124,17 +148,29 @@ class ShortStoryThumbnailListFragment : BaseFragment() {
                 categoriesList = responseData?.categories
                 count = responseData?.images?.count!!
                 if (pageNumber == 1)
-                    responseData?.images?.results?.get(0)?.image_url?.let { responseData?.images?.results?.get(0)?.font_colour?.let { it1 -> responseData?.images?.results?.get(0)?.id?.let { it2 -> (context as ShortStoriesCardActivity).setBackground(it, it1, it2) } } }
+                    responseData?.images?.results?.get(0)?.image_url?.let {
+                        responseData?.images?.results?.get(
+                            0
+                        )?.font_colour?.let { it1 ->
+                            responseData?.images?.results?.get(0)?.id?.let { it2 ->
+                                (context as ShortStoriesCardActivity).setBackground(
+                                    it,
+                                    it1,
+                                    it2
+                                )
+                            }
+                        }
+                    }
                 processResponse(responseData)
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }
 
         override fun onFailure(call: Call<ShortStoryImageData>, t: Throwable) {
             removeProgressDialog()
-            Crashlytics.logException(t)
+            FirebaseCrashlytics.getInstance().recordException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
         }
     }

@@ -11,12 +11,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.utils.StringUtils;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
@@ -26,12 +27,8 @@ import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.SearchAllActivity;
 import com.mycity4kids.ui.activity.UserReadArticlesContentActivity;
 import com.mycity4kids.ui.adapter.SeenVideosAdapter;
-
+import com.mycity4kids.utils.StringUtils;
 import java.util.ArrayList;
-
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -39,7 +36,8 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 13/1/17.
  */
-public class UserSeenFunnyVideosTabFragment extends BaseFragment implements View.OnClickListener, SeenVideosAdapter.RecyclerViewClickListener {
+public class UserSeenFunnyVideosTabFragment extends BaseFragment implements View.OnClickListener,
+        SeenVideosAdapter.RecyclerViewClickListener {
 
     private SeenVideosAdapter articlesListingAdapter;
     private ArrayList<VlogsListingAndDetailResult> articleDataModelsNew;
@@ -56,7 +54,8 @@ public class UserSeenFunnyVideosTabFragment extends BaseFragment implements View
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.user_seen_videos, container, false);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
@@ -65,7 +64,8 @@ public class UserSeenFunnyVideosTabFragment extends BaseFragment implements View
         seenVideosRecyclerView = (RecyclerView) view.findViewById(R.id.seenVideos);
         authorId = getArguments().getString(Constants.AUTHOR_ID);
         seenVideosRecyclerView.setVisibility(View.VISIBLE);
-        view.findViewById(R.id.relativeLoadingView).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
+        view.findViewById(R.id.relativeLoadingView)
+                .startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
         if (StringUtils.isNullOrEmpty(authorId)) {
             authorId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
@@ -108,7 +108,8 @@ public class UserSeenFunnyVideosTabFragment extends BaseFragment implements View
     private void hitArticleListingApi() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
-        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getAuthorsSeenVideos(authorId, 10, chunk, "videos");
+        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI
+                .getAuthorsSeenVideos(authorId, 10, chunk, "videos");
         callRecentVideoArticles.enqueue(userVideosListResponseCallback);
         progressBar.setVisibility(View.VISIBLE);
     }
@@ -121,9 +122,10 @@ public class UserSeenFunnyVideosTabFragment extends BaseFragment implements View
             isReuqestRunning = false;
             if (null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
-                if (isAdded())
+                FirebaseCrashlytics.getInstance().recordException(nee);
+                if (isAdded()) {
                     ((UserReadArticlesContentActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                }
                 return;
             }
             try {
@@ -132,14 +134,16 @@ public class UserSeenFunnyVideosTabFragment extends BaseFragment implements View
                     chunk = responseData.getData().get(0).getChunks();
                     processResponse(responseData);
                 } else {
-                    if (isAdded())
+                    if (isAdded()) {
                         ((UserReadArticlesContentActivity) getActivity()).showToast(responseData.getReason());
+                    }
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                if (isAdded())
+                if (isAdded()) {
                     ((UserReadArticlesContentActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                }
             }
         }
 
@@ -149,7 +153,7 @@ public class UserSeenFunnyVideosTabFragment extends BaseFragment implements View
                 mLodingView.setVisibility(View.GONE);
             }
             progressBar.setVisibility(View.INVISIBLE);
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };
@@ -210,10 +214,13 @@ public class UserSeenFunnyVideosTabFragment extends BaseFragment implements View
             String shareMessage;
             if (StringUtils.isNullOrEmpty(shareUrl)) {
                 shareMessage = getString(R.string.check_out_blog) + "\"" +
-                        articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew.get(position).getAuthor().getFirstName() + ".";
+                        articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew.get(position)
+                        .getAuthor().getFirstName() + ".";
             } else {
                 shareMessage = getString(R.string.check_out_blog) + "\"" +
-                        articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew.get(position).getAuthor().getFirstName() + ".\nRead Here: " + articleDataModelsNew.get(position).getSharing_url();
+                        articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew.get(position)
+                        .getAuthor().getFirstName() + ".\nRead Here: " + articleDataModelsNew.get(position)
+                        .getSharing_url();
             }
             shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
             startActivity(Intent.createChooser(shareIntent, "Momspresso"));

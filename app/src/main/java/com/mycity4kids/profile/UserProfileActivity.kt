@@ -30,10 +30,10 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.Gson
 import com.mycity4kids.BuildConfig
@@ -376,13 +376,13 @@ class UserProfileActivity : BaseActivity(),
                         )
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onFailure(call: Call<UserDetailResponse>, e: Throwable) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         })
@@ -428,7 +428,7 @@ class UserProfileActivity : BaseActivity(),
                     is SocketTimeoutException -> showToast(getString(R.string.connection_timeout))
                     else -> showToast(getString(R.string.server_went_wrong))
                 }
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         })
@@ -480,7 +480,7 @@ class UserProfileActivity : BaseActivity(),
                     }
                 } catch (e: Exception) {
                     showToast(getString(R.string.server_went_wrong))
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -488,7 +488,7 @@ class UserProfileActivity : BaseActivity(),
             override fun onFailure(call: Call<FollowUnfollowUserResponse>, t: Throwable) {
                 isFollowUnFollowRequestRunning = false
                 showToast(getString(R.string.server_went_wrong))
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
@@ -513,7 +513,7 @@ class UserProfileActivity : BaseActivity(),
                     }
                 } catch (e: Exception) {
                     showToast(getString(R.string.server_went_wrong))
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -521,7 +521,7 @@ class UserProfileActivity : BaseActivity(),
             override fun onFailure(call: Call<FollowUnfollowUserResponse>, t: Throwable) {
                 isFollowUnFollowRequestRunning = false
                 showToast(getString(R.string.server_went_wrong))
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
@@ -650,7 +650,7 @@ class UserProfileActivity : BaseActivity(),
                     bottomLoadingView.visibility = View.GONE
                     if (null == response.body()) {
                         val nee = NetworkErrorException(response.raw().toString())
-                        Crashlytics.logException(nee)
+                        FirebaseCrashlytics.getInstance().recordException(nee)
                         return
                     }
                     val responseData = response.body()
@@ -667,14 +667,14 @@ class UserProfileActivity : BaseActivity(),
                     } else {
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onFailure(call: Call<MixFeedResponse>, e: Throwable) {
                 bottomLoadingView.visibility = View.GONE
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         })
@@ -713,7 +713,7 @@ class UserProfileActivity : BaseActivity(),
                     bottomLoadingView.visibility = View.GONE
                     if (null == response.body()) {
                         val nee = NetworkErrorException(response.raw().toString())
-                        Crashlytics.logException(nee)
+                        FirebaseCrashlytics.getInstance().recordException(nee)
                         return
                     }
                     val responseData = response.body()
@@ -722,14 +722,14 @@ class UserProfileActivity : BaseActivity(),
                     } else {
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
 
             override fun onFailure(call: Call<MixFeedResponse>, e: Throwable) {
                 bottomLoadingView.visibility = View.GONE
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         })
@@ -767,7 +767,7 @@ class UserProfileActivity : BaseActivity(),
                     try {
                         if (null == response.body()) {
                             val nee = NetworkErrorException(response.raw().toString())
-                            Crashlytics.logException(nee)
+                            FirebaseCrashlytics.getInstance().recordException(nee)
                             return
                         }
                         isRequestRunning = false
@@ -778,14 +778,14 @@ class UserProfileActivity : BaseActivity(),
                         } else {
                         }
                     } catch (e: Exception) {
-                        Crashlytics.logException(e)
+                        FirebaseCrashlytics.getInstance().recordException(e)
                         Log.d("MC4kException", Log.getStackTraceString(e))
                     }
                 }
 
                 override fun onFailure(call: Call<FeaturedOnModel>, t: Throwable) {
                     bottomLoadingView.visibility = View.GONE
-                    Crashlytics.logException(t)
+                    FirebaseCrashlytics.getInstance().recordException(t)
                     Log.d("MC4kException", Log.getStackTraceString(t))
                 }
             })
@@ -1026,7 +1026,7 @@ class UserProfileActivity : BaseActivity(),
                 )
             }
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
@@ -1090,7 +1090,7 @@ class UserProfileActivity : BaseActivity(),
                 try {
                     filterTags(userContentList?.get(position)?.tags!!)
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
                 getSharableViewForPosition(position, AppConstants.MEDIUM_INSTAGRAM)
@@ -1223,7 +1223,7 @@ class UserProfileActivity : BaseActivity(),
                     val responseData = response.body()
                     launchArticleEditor(responseData)
                 } catch (e: java.lang.Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -1233,7 +1233,7 @@ class UserProfileActivity : BaseActivity(),
                 if (t is UnknownHostException) {
                 } else if (t is SocketTimeoutException) {
                 } else {
-                    Crashlytics.logException(t)
+                    FirebaseCrashlytics.getInstance().recordException(t)
                     Log.d("MC4kException", Log.getStackTraceString(t))
                 }
             }
@@ -1255,7 +1255,7 @@ class UserProfileActivity : BaseActivity(),
 
             override fun onFailure(call: Call<ShortStoryDetailResult>, t: Throwable) {
                 removeProgressDialog()
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
@@ -1329,7 +1329,7 @@ class UserProfileActivity : BaseActivity(),
             startActivity(intent)
         } catch (e: java.lang.Exception) {
             removeProgressDialog()
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }
@@ -1423,7 +1423,7 @@ class UserProfileActivity : BaseActivity(),
                         )
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                     ToastUtils.showToast(this@UserProfileActivity, getString(R.string.went_wrong))
                 }
@@ -1431,7 +1431,7 @@ class UserProfileActivity : BaseActivity(),
 
             override fun onFailure(call: Call<RecommendUnrecommendArticleResponse>, t: Throwable) {
                 isRecommendRequestRunning = false
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
         }
@@ -1468,7 +1468,7 @@ class UserProfileActivity : BaseActivity(),
                             "UserProfileActivity", "Add to Collection", "-"
                         )
                     } catch (e: Exception) {
-                        Crashlytics.logException(e)
+                        FirebaseCrashlytics.getInstance().recordException(e)
                         Log.d("MC4kException", Log.getStackTraceString(e))
                     }
                     return true
@@ -1532,7 +1532,7 @@ class UserProfileActivity : BaseActivity(),
 
                 override fun onFailure(call: Call<AddBookmarkResponse>, e: Throwable) {
                     showToast(getString(R.string.server_went_wrong))
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             })
@@ -1563,7 +1563,7 @@ class UserProfileActivity : BaseActivity(),
 
                 override fun onFailure(call: Call<AddBookmarkResponse>, e: Throwable) {
                     showToast(getString(R.string.server_went_wrong))
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             })
@@ -1737,7 +1737,7 @@ class UserProfileActivity : BaseActivity(),
                         createBitmapForSharingStory()
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                     return true
                 }
@@ -1750,7 +1750,7 @@ class UserProfileActivity : BaseActivity(),
                     createBitmapForSharingStory()
                 }
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
                 return true
             }
@@ -1808,7 +1808,7 @@ class UserProfileActivity : BaseActivity(),
                         createBitmapForSharingStory()
                     }
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             } else {
@@ -1868,7 +1868,7 @@ class UserProfileActivity : BaseActivity(),
                 try {
                     createBitmapForSharingStory()
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -1876,7 +1876,7 @@ class UserProfileActivity : BaseActivity(),
             try {
                 createBitmapForSharingStory()
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
         }

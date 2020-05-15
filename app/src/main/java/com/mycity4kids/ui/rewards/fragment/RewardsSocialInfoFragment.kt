@@ -13,7 +13,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatSpinner
-import com.crashlytics.android.Crashlytics
 import com.facebook.CallbackManager
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -21,6 +20,7 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.Scopes
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Scope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.Gson
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -235,7 +235,7 @@ class RewardsSocialInfoFragment : BaseFragment(),
                 apiGetResponse.socialAccounts = localListSocialAccount
             }
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            FirebaseCrashlytics.getInstance().recordException(e)
             Log.d("MC4kException", Log.getStackTraceString(e))
         }
     }

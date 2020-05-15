@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.core.content.ContextCompat;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
@@ -578,14 +578,14 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     try {
                         NotificationCenterListResponse responseData = response.body();
                     } catch (Exception e) {
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<NotificationCenterListResponse> call, Throwable t) {
-                    Crashlytics.logException(t);
+                    FirebaseCrashlytics.getInstance().recordException(t);
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             };

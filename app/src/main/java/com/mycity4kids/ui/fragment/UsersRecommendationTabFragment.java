@@ -3,22 +3,19 @@ package com.mycity4kids.ui.fragment;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.crashlytics.android.Crashlytics;
-import com.mycity4kids.base.BaseFragment;
-import com.mycity4kids.utils.ConnectivityUtils;
-import com.mycity4kids.utils.StringUtils;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.base.BaseFragment;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
@@ -31,9 +28,9 @@ import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.UserActivitiesActivity;
 import com.mycity4kids.ui.adapter.UsersRecommendationsRecycleAdapter;
 import com.mycity4kids.utils.AppUtils;
-
+import com.mycity4kids.utils.ConnectivityUtils;
+import com.mycity4kids.utils.StringUtils;
 import java.util.ArrayList;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -41,7 +38,8 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 3/8/17.
  */
-public class UsersRecommendationTabFragment extends BaseFragment implements UsersRecommendationsRecycleAdapter.RecyclerViewClickListener {
+public class UsersRecommendationTabFragment extends BaseFragment implements
+        UsersRecommendationsRecycleAdapter.RecyclerViewClickListener {
 
     private ArrayList<ArticleListingResult> recommendationsList;
     //    private String userId;
@@ -54,8 +52,10 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.users_recommendation_tab_fragment, container, false);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
+        View view = getActivity().getLayoutInflater()
+                .inflate(R.layout.users_recommendation_tab_fragment, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
@@ -96,7 +96,7 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
             progressBar.setVisibility(View.GONE);
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
+                FirebaseCrashlytics.getInstance().recordException(nee);
 //                showToast("Something went wrong from server");
                 return;
             }
@@ -108,7 +108,7 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
 //                    showToast(responseData.getReason());
                 }
             } catch (Exception e) {
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
 //                showToast(getString(R.string.went_wrong));
             }
@@ -117,7 +117,7 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
-            Crashlytics.logException(t);
+            FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -143,14 +143,17 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
                     shareIntent.setType("text/plain");
 
                     String shareUrl = AppUtils.getShortStoryShareUrl(recommendationsList.get(position).getUserType(),
-                            recommendationsList.get(position).getBlogPageSlug(), recommendationsList.get(position).getTitleSlug());
+                            recommendationsList.get(position).getBlogPageSlug(),
+                            recommendationsList.get(position).getTitleSlug());
                     String shareMessage;
                     if (StringUtils.isNullOrEmpty(shareUrl)) {
                         shareMessage = getString(R.string.check_out_short_story) + "\"" +
-                                recommendationsList.get(position).getTitle() + "\" by " + recommendationsList.get(position).getUserName() + ".";
+                                recommendationsList.get(position).getTitle() + "\" by " + recommendationsList
+                                .get(position).getUserName() + ".";
                     } else {
                         shareMessage = getString(R.string.check_out_short_story) + "\"" +
-                                recommendationsList.get(position).getTitle() + "\" by " + recommendationsList.get(position).getUserName() + ".\nRead Here: " + shareUrl;
+                                recommendationsList.get(position).getTitle() + "\" by " + recommendationsList
+                                .get(position).getUserName() + ".\nRead Here: " + shareUrl;
                     }
                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
                     startActivity(Intent.createChooser(shareIntent, "Momspresso"));
@@ -165,23 +168,32 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
                     Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                     shareIntent.setType("text/plain");
                     String shareUrl = AppUtils.getShareUrl(recommendationsList.get(position).getUserType(),
-                            recommendationsList.get(position).getBlogPageSlug(), recommendationsList.get(position).getTitleSlug());
+                            recommendationsList.get(position).getBlogPageSlug(),
+                            recommendationsList.get(position).getTitleSlug());
                     String shareMessage;
                     if (StringUtils.isNullOrEmpty(shareUrl)) {
                         shareMessage = getString(R.string.check_out_blog) + "\"" +
-                                recommendationsList.get(position).getTitle() + "\" by " + recommendationsList.get(position).getUserName() + ".";
+                                recommendationsList.get(position).getTitle() + "\" by " + recommendationsList
+                                .get(position).getUserName() + ".";
                     } else {
                         shareMessage = getString(R.string.check_out_blog) + "\"" +
-                                recommendationsList.get(position).getTitle() + "\" by " + recommendationsList.get(position).getUserName() + ".\nRead Here: " + shareUrl;
+                                recommendationsList.get(position).getTitle() + "\" by " + recommendationsList
+                                .get(position).getUserName() + ".\nRead Here: " + shareUrl;
                     }
                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
                     startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                     if (authorId.equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())) {
-                        Utils.pushShareArticleEvent(getActivity(), "PrivateLikedScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", recommendationsList.get(position).getId(),
-                                recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName(), "-");
+                        Utils.pushShareArticleEvent(getActivity(), "PrivateLikedScreen",
+                                SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
+                                recommendationsList.get(position).getId(),
+                                recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position)
+                                        .getUserName(), "-");
                     } else {
-                        Utils.pushShareArticleEvent(getActivity(), "PublicLikedScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", recommendationsList.get(position).getId(),
-                                recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName(), "-");
+                        Utils.pushShareArticleEvent(getActivity(), "PublicLikedScreen",
+                                SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
+                                recommendationsList.get(position).getId(),
+                                recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position)
+                                        .getUserName(), "-");
                     }
                 }
                 break;
@@ -199,10 +211,14 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
                         intent.putExtra(Constants.ARTICLE_OPENED_FROM, "PublicPublishedArticles");
                         intent.putExtra(Constants.FROM_SCREEN, "PublicUserArticlesScreen");
                     }
-                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(recommendationsList, AppConstants.CONTENT_TYPE_SHORT_STORY);
+                    ArrayList<ArticleListingResult> filteredResult = AppUtils
+                            .getFilteredContentList(recommendationsList, AppConstants.CONTENT_TYPE_SHORT_STORY);
                     intent.putParcelableArrayListExtra("pagerListData", filteredResult);
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, recommendationsList, AppConstants.CONTENT_TYPE_SHORT_STORY));
-                    intent.putExtra(Constants.AUTHOR, recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName());
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils
+                            .getFilteredPosition(position, recommendationsList, AppConstants.CONTENT_TYPE_SHORT_STORY));
+                    intent.putExtra(Constants.AUTHOR,
+                            recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position)
+                                    .getUserName());
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
@@ -210,7 +226,9 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
                     intent.putExtra(Constants.AUTHOR_ID, recommendationsList.get(position).getUserId());
                     intent.putExtra(Constants.BLOG_SLUG, recommendationsList.get(position).getBlogPageSlug());
                     intent.putExtra(Constants.TITLE_SLUG, recommendationsList.get(position).getTitleSlug());
-                    intent.putExtra(Constants.AUTHOR, recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName());
+                    intent.putExtra(Constants.AUTHOR,
+                            recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position)
+                                    .getUserName());
                     if (authorId.equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())) {
                         intent.putExtra(Constants.ARTICLE_OPENED_FROM, "UserPrivateLikes");
                         intent.putExtra(Constants.FROM_SCREEN, "PrivateProfileScreen");
@@ -218,9 +236,11 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
                         intent.putExtra(Constants.ARTICLE_OPENED_FROM, "UserPublicLikes");
                         intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
                     }
-                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(recommendationsList, AppConstants.CONTENT_TYPE_ARTICLE);
+                    ArrayList<ArticleListingResult> filteredResult = AppUtils
+                            .getFilteredContentList(recommendationsList, AppConstants.CONTENT_TYPE_ARTICLE);
                     intent.putParcelableArrayListExtra("pagerListData", filteredResult);
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, recommendationsList, AppConstants.CONTENT_TYPE_ARTICLE));
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils
+                            .getFilteredPosition(position, recommendationsList, AppConstants.CONTENT_TYPE_ARTICLE));
 
                     startActivity(intent);
                 }

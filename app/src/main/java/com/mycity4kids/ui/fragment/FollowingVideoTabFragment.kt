@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.base.BaseFragment
@@ -190,7 +190,7 @@ class FollowingVideoTabFragment : BaseFragment(),
         )
         call.enqueue(object : Callback<MomVlogListingResponse> {
             override fun onFailure(call: Call<MomVlogListingResponse>, t: Throwable) {
-                Crashlytics.logException(t)
+                FirebaseCrashlytics.getInstance().recordException(t)
                 Log.d("MC4kException", Log.getStackTraceString(t))
             }
 
@@ -204,7 +204,7 @@ class FollowingVideoTabFragment : BaseFragment(),
                     val responseData = response.body()?.data?.result
                     processData(responseData as ArrayList<VlogsListingAndDetailResult>?)
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
@@ -259,7 +259,7 @@ class FollowingVideoTabFragment : BaseFragment(),
         )
         call.enqueue(object : Callback<MomVlogersDetailResponse> {
             override fun onFailure(call: Call<MomVlogersDetailResponse>, e: Throwable) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
             }
 
@@ -273,7 +273,7 @@ class FollowingVideoTabFragment : BaseFragment(),
                     val responseVlogersData = response.body()?.data?.result
                     processVlogersData(responseVlogersData as ArrayList<UserDetailResult>?)
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                     Log.d("MC4kException", Log.getStackTraceString(e))
                 }
             }
