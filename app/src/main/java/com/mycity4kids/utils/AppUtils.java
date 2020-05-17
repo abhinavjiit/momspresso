@@ -762,7 +762,6 @@ public class AppUtils {
     public static boolean shareGenericImageAndOrLink(Context context, Uri uri,
             String shareTextAndLink) {
         try {
-            Log.e("storyShareCard", "cardURL = " + uri.toString());
             Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
             shareIntent.setType("image/jpeg");
             shareIntent.putExtra(Intent.EXTRA_STREAM, uri);

@@ -67,7 +67,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
         subTopicsList = new ArrayList<>();
         fabAdd.setVisibility(View.VISIBLE);
-        getAllMomVlolgCategries();
+        getAllMomVlogCategories();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         topLayerGuideLayout = (FrameLayout) findViewById(R.id.topLayerGuideLayout);
@@ -99,14 +99,16 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         selectedTabCategoryId = getIntent().getStringExtra("categoryId");
+        if (StringUtils.isNullOrEmpty(selectedTabCategoryId)) {
+            selectedTabCategoryId = "category-eed5fd2777a24bd48ba9a7e1e4dd4b47";
+        }
 
         toolbarTitleTextView.setText(getString(R.string.myprofile_section_videos_label));
         Utils.pushOpenScreenEvent(this, "TopicArticlesListingScreen",
                 SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-
     }
 
-    private void getAllMomVlolgCategries() {
+    private void getAllMomVlogCategories() {
         showProgressDialog("Please wait");
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsCategoryApi = retrofit.create(TopicsCategoryAPI.class);
@@ -120,9 +122,9 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 if (response.isSuccessful() && response.body() != null) {
                     categoriesList = response.body().getChild();
                     for (int i = 0; i < categoriesList.size(); i++) {
-                        //                        if ("1".equals(categoriesList.get(i).getShowInMenu())) {
-//                            subTopicsList.add(categoriesList.get(i));
-//                        }
+                        // if ("1".equals(categoriesList.get(i).getShowInMenu())) {
+                        // subTopicsList.add(categoriesList.get(i));
+                        // }
                         if (("category-eed5fd2777a24bd48ba9a7e1e4dd4b47").equals(categoriesList.get(i).getId())
                                 || ("category-958b29175e174f578c2d92a925451d4f").equals(categoriesList.get(i).getId())
                                 || ("category-2ce9257cbf4c4794acacacb173feda13").equals(categoriesList.get(i).getId())
@@ -142,8 +144,6 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 Log.d("MC4KException", Log.getStackTraceString(t));
             }
         });
-
-
     }
 
     private void moveChallengeTabToLast() {
@@ -209,11 +209,9 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         }
 
         AppUtils.changeTabsFontInMomVlog(tabLayout, this);
-
         pagerAdapter = new VideoTopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), subTopicsList);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -223,7 +221,6 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                         String.valueOf(System.currentTimeMillis()), "Show_vlogs_tab",
                         subTopicsList.get(tab.getPosition()).getId(), "");
-
                 Fragment fragment = pagerAdapter.getItem(tab.getPosition());
                 if (fragment != null) {
                     if (fragment instanceof ChallengeCategoryVideoTabFragment) {
@@ -247,18 +244,6 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             }
         });
         viewPager.setCurrentItem(selectedTabIndex);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d("TopicListingFragment", "onStop");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d("TopicListingFragment", "onDestroy");
     }
 
     @Override

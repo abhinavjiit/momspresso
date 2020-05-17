@@ -10,20 +10,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
-import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.material.appbar.AppBarLayout;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -41,33 +38,23 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class ChallengeDetailFragment extends Fragment implements View.OnClickListener {
 
-    VideoChallengePagerAdapter videoChallengePagerAdapter;
-    AppBarLayout appBarLayout;
-    RelativeLayout challengeHeaderRelative;
-    RelativeLayout mainMediaFrameLayout;
-    PlayerView exoplayerChallengeDetailListing;
-    LinearLayout submitButtonLinearLayout;
-    TextView challengeNameText;
-    TextView submitStoryText;
-    TextView toolbarTitleTextView;
-    com.getbase.floatingactionbutton.FloatingActionButton saveTextView;
-    TabLayout tabs;
+    private VideoChallengePagerAdapter videoChallengePagerAdapter;
+    private TextView toolbarTitleTextView;
+    private FloatingActionButton saveTextView;
+    private TabLayout tabs;
     private ViewPager viewPager;
-    private Toolbar toolbar;
+    private ImageView shareChallengeImageView;
     private String selectedId;
     private String mappedId;
-    String screen;
     private String selectedName;
     private String selectedActiveUrl;
     private String selectedStreamUrl;
-    String challengeRules = "";
+    private String challengeRules = "";
     private Topics topic;
-    private CoordinatorLayout rootLayout;
     private int maxDuration;
     private ImageView thumbNail;
     private ImageView back;
     private String comingFrom = "";
-    private CoordinatorLayout momVlogCoachMark;
 
     @Nullable
     @Override
@@ -76,25 +63,16 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
         View view = inflater.inflate(R.layout.challenge_detail_fragment_layout, container, false);
 
         saveTextView = view.findViewById(R.id.saveTextView);
-        appBarLayout = (AppBarLayout) view.findViewById(R.id.id_appbar);
-        rootLayout = (CoordinatorLayout) view.findViewById(R.id.mainprofile_parent_layout);
-        challengeHeaderRelative = (RelativeLayout) view.findViewById(R.id.challengeHeaderRelative);
-        mainMediaFrameLayout = (RelativeLayout) view.findViewById(R.id.main_media_frame);
-        exoplayerChallengeDetailListing = (PlayerView) view.findViewById(R.id.exoplayerChallengeDetailListing);
-        submitButtonLinearLayout = (LinearLayout) view.findViewById(R.id.submit_challenge_relative_Layout);
-        challengeNameText = (TextView) view.findViewById(R.id.ChallengeNameText);
-        submitStoryText = (TextView) view.findViewById(R.id.submit_story_text);
         tabs = (TabLayout) view.findViewById(R.id.id_tabs);
         back = view.findViewById(R.id.back);
         thumbNail = (ImageView) view.findViewById(R.id.thumbNail);
+        shareChallengeImageView = view.findViewById(R.id.shareChallengeImageView);
         viewPager = (ViewPager) view.findViewById(R.id.id_viewpager);
-        toolbar = (Toolbar) view.findViewById(R.id.id_toolbar);
-        momVlogCoachMark = view.findViewById(R.id.momVlogCoachMark);
         toolbarTitleTextView = (TextView) view.findViewById(R.id.toolbarTitleTextView);
         toolbarTitleTextView.setText(getString(R.string.myprofile_section_videos_label));
         back.setOnClickListener(this);
         thumbNail.setOnClickListener(this);
-
+        shareChallengeImageView.setOnClickListener(this);
         if (getArguments() != null) {
             selectedName = getArguments().getString("selected_Name");
             selectedActiveUrl = getArguments().getString("selectedActiveUrl");
@@ -105,7 +83,7 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
             maxDuration = getArguments().getInt("max_Duration");
             topic = getArguments().getParcelable("topic");
             comingFrom = getArguments().getString("comingFrom");
-            if (comingFrom.equals("chooseVideoCategory")) {
+            if ("chooseVideoCategory".equals(comingFrom)) {
                 saveTextView.setVisibility(View.VISIBLE);
             }
         }
@@ -131,7 +109,6 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
             tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
-
                     viewPager.setCurrentItem(tab.getPosition());
                 }
 
@@ -181,12 +158,13 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
                         SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                         String.valueOf(System.currentTimeMillis()), "Show_Video_Detail", "", "");
-            }
-
-            if (v.getId() == R.id.back) {
+            } else if (v.getId() == R.id.back) {
                 if (getActivity() != null) {
                     getActivity().finish();
                 }
+            } else if (v.getId() == R.id.shareChallengeImageView) {
+                AppUtils.shareGenericLinkWithSuccessStatus(v.getContext(),
+                        AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL + selectedId);
             }
         } catch (Exception e) {
             FirebaseCrashlytics.getInstance().recordException(e);
@@ -198,7 +176,6 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
     public void onEvent(String click) {
         if (click.equals("showDialogBox")) {
             showDialogBox();
-
         }
     }
 
@@ -206,7 +183,9 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
         if (comingFrom.equals("chooseVideoCategory")) {
             viewPager.setCurrentItem(0);
             saveTextView.setVisibility(View.VISIBLE);
-            ((NewVideoChallengeActivity) getActivity()).chooseAndpermissionDialog(maxDuration);
+            if (getActivity() != null) {
+                ((NewVideoChallengeActivity) getActivity()).chooseAndpermissionDialog(maxDuration);
+            }
         } else if ("notification".equals(comingFrom)) {
             viewPager.setCurrentItem(0);
             saveTextView.setVisibility(View.VISIBLE);
@@ -226,6 +205,5 @@ public class ChallengeDetailFragment extends Fragment implements View.OnClickLis
     public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
-
     }
 }
