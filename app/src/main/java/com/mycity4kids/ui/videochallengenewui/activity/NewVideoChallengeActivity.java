@@ -42,7 +42,6 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
     private static String[] PERMISSIONS_STORAGE_CAMERA = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
     private String selectedId;
-    String screen;
     private String selectedName;
     private String selectedActiveUrl;
     private String selectedStreamUrl;
@@ -158,12 +157,6 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
 
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_OK) {
@@ -195,23 +188,13 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             Snackbar.make(rootLayout, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            requestUngrantedPermissions(imageFrom);
-                        }
-                    })
+                    .setAction(R.string.ok, view -> requestUngrantedPermissions(imageFrom))
                     .show();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
             Snackbar.make(rootLayout, R.string.permission_camera_rationale,
                     Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            requestUngrantedPermissions(imageFrom);
-                        }
-                    })
+                    .setAction(R.string.ok, view -> requestUngrantedPermissions(imageFrom))
                     .show();
         } else {
             requestUngrantedPermissions(imageFrom);
@@ -281,6 +264,11 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         chooseVideoUploadOptionDialogFragment.setCancelable(true);
         FragmentManager fm = getSupportFragmentManager();
         chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }
 

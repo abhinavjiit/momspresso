@@ -231,7 +231,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -293,64 +292,64 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.addOnBackStackChangedListener(this);
-        rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
-        langTextView = (TextView) findViewById(R.id.langTextView);
-        mainToolbar = (Toolbar) findViewById(R.id.toolbar);
-        downArrowImageView = (ImageView) findViewById(R.id.downArrowImageView);
+        rootLayout = findViewById(R.id.rootLayout);
+        langTextView = findViewById(R.id.langTextView);
+        mainToolbar = findViewById(R.id.toolbar);
+        downArrowImageView = findViewById(R.id.downArrowImageView);
         toolbarUnderline = findViewById(R.id.toolbarUnderline);
-        bottomNavigationView = (BottomNavigationViewEx) findViewById(R.id.navigation);
-        toolbarRelativeLayout = (RelativeLayout) mainToolbar.findViewById(R.id.toolbarRelativeLayout);
-        toolbarTitleTextView = (TextView) mainToolbar.findViewById(R.id.toolbarTitle);
-        searchAllImageView = (ImageView) mainToolbar.findViewById(R.id.searchAllImageView);
-        notificationImg = (ImageView) mainToolbar.findViewById(R.id.notification);
-        selectOptToolbarTitle = (TextView) findViewById(R.id.selectOptToolbarTitle);
-        langTextView = (TextView) findViewById(R.id.langTextView);
-        selectedLangTextView = (TextView) findViewById(R.id.selectedLangtext);
-        selectedlangGuideTextView = (TextView) findViewById(R.id.selectedlangGuideTextView);
-        groupCoachmark = (RelativeLayout) findViewById(R.id.groupCoachmark);
-        firstCoachmark = (RelativeLayout) findViewById(R.id.firstCoachmark);
-        secondCoachmark = (RelativeLayout) findViewById(R.id.secondCoachmark);
-        transparentLayerToolbar = (FrameLayout) findViewById(R.id.transparentLayerToolbar);
-        transparentLayerNavigation = (FrameLayout) findViewById(R.id.transparentLayerNavigation);
-        bookmarkInfoView = (RelativeLayout) findViewById(R.id.bookmarkInfoView);
-        viewBookmarkedArticleTextView = (TextView) findViewById(R.id.viewBookmarkedArticleTextView);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        profileImageView = (ImageView) findViewById(R.id.profileImageView);
-        actionItemContainer = (LinearLayout) findViewById(R.id.actionItemContainer);
-        createContentContainer = (RelativeLayout) findViewById(R.id.createContentContainer);
+        bottomNavigationView = findViewById(R.id.navigation);
+        toolbarRelativeLayout = mainToolbar.findViewById(R.id.toolbarRelativeLayout);
+        toolbarTitleTextView = mainToolbar.findViewById(R.id.toolbarTitle);
+        searchAllImageView = mainToolbar.findViewById(R.id.searchAllImageView);
+        notificationImg = mainToolbar.findViewById(R.id.notification);
+        selectOptToolbarTitle = findViewById(R.id.selectOptToolbarTitle);
+        langTextView = findViewById(R.id.langTextView);
+        selectedLangTextView = findViewById(R.id.selectedLangtext);
+        selectedlangGuideTextView = findViewById(R.id.selectedlangGuideTextView);
+        groupCoachmark = findViewById(R.id.groupCoachmark);
+        firstCoachmark = findViewById(R.id.firstCoachmark);
+        secondCoachmark = findViewById(R.id.secondCoachmark);
+        transparentLayerToolbar = findViewById(R.id.transparentLayerToolbar);
+        transparentLayerNavigation = findViewById(R.id.transparentLayerNavigation);
+        bookmarkInfoView = findViewById(R.id.bookmarkInfoView);
+        viewBookmarkedArticleTextView = findViewById(R.id.viewBookmarkedArticleTextView);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        profileImageView = findViewById(R.id.profileImageView);
+        actionItemContainer = findViewById(R.id.actionItemContainer);
+        createContentContainer = findViewById(R.id.createContentContainer);
         overlayView = findViewById(R.id.overlayView);
-        articleContainer = (LinearLayout) findViewById(R.id.articleContainer);
-        videoContainer = (LinearLayout) findViewById(R.id.videoContainer);
-        storyContainer = (LinearLayout) findViewById(R.id.storyContainer);
-        videosTextView = (TextView) findViewById(R.id.videosTextView);
-        shortStoryTextView = (TextView) findViewById(R.id.shortStoryTextView);
-        momspressoTextView = (TextView) findViewById(R.id.momspressoTextView);
-        groupsTextView = (TextView) findViewById(R.id.groupsTextView);
-        rewardsTextView = (LinearLayout) findViewById(R.id.rewardsTextView);
-        bookmarksTextView = (TextView) findViewById(R.id.bookmarksTextView);
-        settingTextView = (TextView) findViewById(R.id.settingTextView);
-        usernameTextView = (TextView) findViewById(R.id.usernameTextView);
-        coachUsernameTextView = (TextView) findViewById(R.id.coachUsernameTextView);
-        homeTextView = (TextView) findViewById(R.id.homeTextView);
-        drawerTopContainer = (LinearLayout) findViewById(R.id.topContainer);
-        drawerContainer = (LinearLayout) findViewById(R.id.drawerProfileContainer);
-        drawerMyMoneyContainer = (RelativeLayout) findViewById(R.id.drawerMyMoneyContainer);
-        drawerSettingsContainer = (RelativeLayout) findViewById(R.id.drawerSettingsContainer);
-        homeCoachmark = (RelativeLayout) findViewById(R.id.homeCoachmark);
-        exploreCoachmark = (RelativeLayout) findViewById(R.id.exploreCoachmark);
-        createCoachmark = (RelativeLayout) findViewById(R.id.createCoachmark);
-        vlogsCoachmark = (RelativeLayout) findViewById(R.id.vlogsCoachmark);
-        menuCoachmark = (RelativeLayout) findViewById(R.id.menuCoachmark);
-        drawerProfileCoachmark = (RelativeLayout) findViewById(R.id.drawerProfileCoachmark);
-        drawerSettingsCoachmark = (RelativeLayout) findViewById(R.id.drawerSettingsCoachmark);
-        drawerMyMoneyCoachmark = (RelativeLayout) findViewById(R.id.drawerMyMoneyCoachmark);
-        draftsRecyclerView = (RecyclerView) findViewById(R.id.draftsRecyclerView);
-        draftsShimmerLayout = (ShimmerFrameLayout) findViewById(R.id.draftsShimmerLayout);
-        createLabelTextView = (TextView) findViewById(R.id.createLabelTextView);
-        createTextImageVIew = (ImageView) findViewById(R.id.createTextImageVIew);
-        languageLayout = (RelativeLayout) findViewById(R.id.languageLayout);
+        articleContainer = findViewById(R.id.articleContainer);
+        videoContainer = findViewById(R.id.videoContainer);
+        storyContainer = findViewById(R.id.storyContainer);
+        videosTextView = findViewById(R.id.videosTextView);
+        shortStoryTextView = findViewById(R.id.shortStoryTextView);
+        momspressoTextView = findViewById(R.id.momspressoTextView);
+        groupsTextView = findViewById(R.id.groupsTextView);
+        rewardsTextView = findViewById(R.id.rewardsTextView);
+        bookmarksTextView = findViewById(R.id.bookmarksTextView);
+        settingTextView = findViewById(R.id.settingTextView);
+        usernameTextView = findViewById(R.id.usernameTextView);
+        coachUsernameTextView = findViewById(R.id.coachUsernameTextView);
+        homeTextView = findViewById(R.id.homeTextView);
+        drawerTopContainer = findViewById(R.id.topContainer);
+        drawerContainer = findViewById(R.id.drawerProfileContainer);
+        drawerMyMoneyContainer = findViewById(R.id.drawerMyMoneyContainer);
+        drawerSettingsContainer = findViewById(R.id.drawerSettingsContainer);
+        homeCoachmark = findViewById(R.id.homeCoachmark);
+        exploreCoachmark = findViewById(R.id.exploreCoachmark);
+        createCoachmark = findViewById(R.id.createCoachmark);
+        vlogsCoachmark = findViewById(R.id.vlogsCoachmark);
+        menuCoachmark = findViewById(R.id.menuCoachmark);
+        drawerProfileCoachmark = findViewById(R.id.drawerProfileCoachmark);
+        drawerSettingsCoachmark = findViewById(R.id.drawerSettingsCoachmark);
+        drawerMyMoneyCoachmark = findViewById(R.id.drawerMyMoneyCoachmark);
+        draftsRecyclerView = findViewById(R.id.draftsRecyclerView);
+        draftsShimmerLayout = findViewById(R.id.draftsShimmerLayout);
+        createLabelTextView = findViewById(R.id.createLabelTextView);
+        createTextImageVIew = findViewById(R.id.createTextImageVIew);
+        languageLayout = findViewById(R.id.languageLayout);
         referral = findViewById(R.id.referral);
-        langView = (View) findViewById(R.id.langView);
+        langView = findViewById(R.id.langView);
         homeCoachmark.setOnClickListener(this);
         langView.setOnClickListener(this);
         languageLayout.setOnClickListener(this);
@@ -437,7 +436,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
         });
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(
                 menuItem -> {
                     // set item as selected to persist highlight
@@ -1244,6 +1243,19 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         .equals(AppConstants.SHORT_STORY_LISTING_SCREEN)) {
                     Intent intent = new Intent(this, ShortStoriesListingContainerActivity.class);
                     startActivity(intent);
+                } else if (tempDeepLinkUrl.equals(AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL) || tempDeepLinkUrl
+                        .equals(AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL
+                                .substring(0, AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL.length() - 1))) {
+                    Intent intent = new Intent(this, CategoryVideosListingActivity.class);
+                    intent.putExtra("categoryId", AppConstants.VIDEO_CHALLENGE_ID);
+                    startActivity(intent);
+                } else if (tempDeepLinkUrl.startsWith(AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL)) {
+                    String challengeId = tempDeepLinkUrl.replace(AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL, "")
+                            .replace("/", "");
+                    Intent intent = new Intent(this, NewVideoChallengeActivity.class);
+                    intent.putExtra(Constants.CHALLENGE_ID, challengeId);
+                    intent.putExtra("comingFrom", "deeplink");
+                    startActivity(intent);
                 } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_EDITOR_URL)
                         || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_EDITOR_URL)) {
                     final String bloggerId = tempDeepLinkUrl
@@ -1255,16 +1267,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 "Logged in as " + SharedPrefUtils.getUserDetailModel(this)
                                         .getFirst_name() + " " + SharedPrefUtils
                                         .getUserDetailModel(this).getLast_name(),
-                                new OnButtonClicked() {
-                                    @Override
-                                    public void onButtonCLick(int buttonId) {
-                                        Utils.pushEvent(DashboardActivity.this,
-                                                GTMEventType.ADD_BLOG_CLICKED_EVENT,
-                                                SharedPrefUtils
-                                                        .getUserDetailModel(DashboardActivity.this)
-                                                        .getDynamoId() + "", "Mobile Deep Link");
-                                        launchEditor();
-                                    }
+                                buttonId -> {
+                                    Utils.pushEvent(DashboardActivity.this,
+                                            GTMEventType.ADD_BLOG_CLICKED_EVENT,
+                                            SharedPrefUtils
+                                                    .getUserDetailModel(DashboardActivity.this)
+                                                    .getDynamoId() + "", "Mobile Deep Link");
+                                    launchEditor();
                                 });
                     } else {
                         Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT,
@@ -1745,8 +1754,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         } else if (topFragmentt instanceof GroupsViewFragment) {
             menu.findItem(R.id.action_location).setChecked(true);
         }
-
-
     }
 
     @Override
@@ -1755,12 +1762,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         createContentContainer.setVisibility(View.INVISIBLE);
         actionItemContainer.setVisibility(View.INVISIBLE);
         overlayView.setVisibility(View.INVISIBLE);
-
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 
     public void refreshMenu() {
@@ -1772,14 +1773,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         return true;
     }
 
-    public void updateUnreadNotificationCount(String unreadNotifCount) {
-        if (StringUtils.isNullOrEmpty(unreadNotifCount) || "0".equals(unreadNotifCount)) {
-            addBadgeAt(3, "0");
-        } else {
-            addBadgeAt(3, unreadNotifCount);
-        }
-    }
-
     public void showHideNotificationCenterMark(boolean flag) {
         if (flag) {
             addBadgeAt(3, "1");
@@ -1789,14 +1782,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     }
 
     @Override
-    public void setTitle(CharSequence title) {
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Pass the event to ActionBarDrawerToggle, if it returns
-        // true, then it has handled the app icon touch event
-        Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         switch (item.getItemId()) {
             case android.R.id.home: {
                 drawerLayout.openDrawer(GravityCompat.START);
@@ -2160,7 +2146,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void getDeepLinkData(final String deepLinkUrl) {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        // prepare call in Retrofit 2.0
         showProgressDialog("");
         DeepLinkingAPI deepLinkingApi = retrofit.create(DeepLinkingAPI.class);
         if (!ConnectivityUtils.isNetworkEnabled(this)) {

@@ -32,6 +32,7 @@ public class AppConstants {
     public static final String VIDEO_ARTICLE_SHARE_URL = "https://www.momspresso.com/" + "parenting/";
     public static final String BLOG_SHARE_BASE_URL = "https://www.momspresso.com";
     public static final String USER_PROFILE_SHARE_BASE_URL = "https://www.momspresso.com/parenting/user/";
+    public static final String VLOG_CHALLENGES_BASE_SHARE_URL = "https://www.momspresso.com/parenting/videos/challenges/";
 
     public static final int REQUEST_AUTHORIZATION = 1001;
     public static final int REQUEST_VIDEO_TRIMMER = 1019;
