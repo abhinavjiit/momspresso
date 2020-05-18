@@ -4,21 +4,22 @@
   android:id="@+id/videoItemView"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_margin="5dp"
-  android:background="@drawable/short_story_border_bg">
+  android:background="#f9f9f9">
 
   <androidx.cardview.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="8dp"
-    android:layout_marginTop="4dp"
-    android:layout_marginRight="8dp"
+    android:layout_marginLeft="12dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginRight="12dp"
+    android:layout_marginBottom="2dp"
     card_view:cardCornerRadius="0dp"
     card_view:cardElevation="0dp">
 
     <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:background="@drawable/article_listing_item_border_bg"
       android:orientation="vertical">
 
       <com.mycity4kids.widget.CustomFontTextView
@@ -44,44 +45,13 @@
         <ImageView
           android:id="@+id/articleImageView"
           android:layout_width="match_parent"
-          android:layout_height="@dimen/article_listing.article_image"
+          android:layout_height="wrap_content"
+          android:adjustViewBounds="true"
           android:layout_alignParentTop="true"
           android:layout_alignParentEnd="true"
           android:layout_centerVertical="true"
           android:contentDescription="@string/author_img"
           android:src="@drawable/default_article" />
-
-        <RelativeLayout
-          android:id="@+id/winnerLayout"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignBottom="@id/articleImageView"
-          android:layout_margin="@dimen/space_10"
-          android:background="@drawable/update_profile_bg">
-
-          <ImageView
-            android:id="@+id/imageWinner"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/space_5"
-            android:tint="@color/white_color"
-            card_view:srcCompat="@drawable/ic_winner_cup" />
-
-          <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/winner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="@dimen/space_5"
-            android:layout_toEndOf="@+id/imageWinner"
-            android:text="WINNER"
-            android:textColor="#fff"
-            android:textSize="14sp"
-            card_view:fontName="oswald.ttf" />
-        </RelativeLayout>
 
         <View
           android:layout_width="match_parent"
@@ -104,6 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:clickable="true"
+            android:focusable="true"
             android:gravity="bottom"
             android:paddingStart="10dp"
             android:paddingTop="8dp"
@@ -111,9 +82,9 @@
             android:paddingBottom="5dp"
             android:singleLine="true"
             android:text="@string/author_name"
-            android:textColor="@color/article_listing.author_name"
+            android:textColor="#E98394"
             android:textSize="12sp"
-            card_view:fontName="open_sans.ttf" />
+            android:textStyle="bold" />
 
           <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/viewCountTextView"
@@ -165,25 +136,32 @@
             android:textSize="12sp"
             card_view:fontName="open_sans.ttf" />
 
-          <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/goldLogo"
+          <ImageView
+            android:id="@+id/goldVlogImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/recommendCountTextView"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginTop="@dimen/space_5"
-            android:background="@drawable/border_for_gold_logo_video_listing"
-            android:drawableTint="@color/gold_color_video_listing"
             android:gravity="center_vertical"
             android:paddingStart="5dp"
             android:paddingEnd="10dp"
-            android:text=" Gold"
-            android:textAllCaps="true"
-            android:textColor="@color/gold_color_video_listing"
-            android:tint="@color/gold_color_video_listing"
-            android:visibility="visible"
-            card_view:fontName="oswald.ttf" />
+            android:src="@drawable/ic_star_yellow"
+            android:visibility="visible" />
+
+          <ImageView
+            android:id="@+id/winnerVlogImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/space_5"
+            android:layout_toStartOf="@+id/goldVlogImageView"
+            android:gravity="center_vertical"
+            android:paddingStart="5dp"
+            android:paddingEnd="10dp"
+            android:src="@drawable/ic_trophy"
+            android:visibility="visible" />
         </RelativeLayout>
 
         <ImageView
