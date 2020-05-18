@@ -32,6 +32,7 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI
 import com.mycity4kids.utils.AppUtils
+import com.mycity4kids.utils.ImageKitUtils
 import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.widget.StoryShareCardWidget
 import com.squareup.picasso.Picasso
@@ -116,14 +117,14 @@ class UserContentAdapter(
                 isPrivate
             )
             is VideosViewHolder -> addVideoItem(
-                holder.winnerLayout,
+                holder.winnerVlogImageView,
                 holder.txvArticleTitle,
                 holder.txvAuthorName,
                 holder.articleImageView,
                 holder.viewCountTextView,
                 holder.commentCountTextView,
                 holder.recommendCountTextView,
-                holder.goldLogo,
+                holder.goldVlogImageView,
                 mixFeedList?.get(position),
                 holder,
                 isPrivate
@@ -536,26 +537,24 @@ class UserContentAdapter(
 
     inner class VideosViewHolder(itemView: View, val listener: RecyclerViewClickListener) :
         RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        internal var winnerLayout: RelativeLayout
+        internal var winnerVlogImageView: ImageView
         internal var txvArticleTitle: TextView
         internal var txvAuthorName: TextView
         internal var articleImageView: ImageView
         internal var viewCountTextView: TextView
         internal var commentCountTextView: TextView
         internal var recommendCountTextView: TextView
-        internal var goldLogo: TextView
+        internal var goldVlogImageView: ImageView
 
         init {
-            winnerLayout = itemView.findViewById<View>(R.id.winnerLayout) as RelativeLayout
-            goldLogo = itemView.findViewById<View>(R.id.goldLogo) as TextView
-            txvArticleTitle = itemView.findViewById<View>(R.id.txvArticleTitle) as TextView
-            txvAuthorName = itemView.findViewById<View>(R.id.txvAuthorName) as TextView
-            articleImageView = itemView.findViewById<View>(R.id.articleImageView) as ImageView
-            viewCountTextView = itemView.findViewById<View>(R.id.viewCountTextView) as TextView
-            commentCountTextView =
-                itemView.findViewById<View>(R.id.commentCountTextView) as TextView
-            recommendCountTextView =
-                itemView.findViewById<View>(R.id.recommendCountTextView) as TextView
+            winnerVlogImageView = itemView.findViewById(R.id.winnerVlogImageView)
+            goldVlogImageView = itemView.findViewById(R.id.goldVlogImageView)
+            txvArticleTitle = itemView.findViewById(R.id.txvArticleTitle)
+            txvAuthorName = itemView.findViewById(R.id.txvAuthorName)
+            articleImageView = itemView.findViewById(R.id.articleImageView)
+            viewCountTextView = itemView.findViewById(R.id.viewCountTextView)
+            commentCountTextView = itemView.findViewById(R.id.commentCountTextView)
+            recommendCountTextView = itemView.findViewById(R.id.recommendCountTextView)
 
             var drawable =
                 ContextCompat.getDrawable(itemView.context, R.drawable.ic_star_gold_videos)
@@ -567,7 +566,7 @@ class UserContentAdapter(
                 )
                 DrawableCompat.setTintMode(it, PorterDuff.Mode.SRC_IN)
             }
-            goldLogo.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+            //            goldLogo.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
             itemView.setOnClickListener(this)
         }
 
@@ -822,14 +821,14 @@ class UserContentAdapter(
     }
 
     private fun addVideoItem(
-        winnerLayout: RelativeLayout,
+        winnerVlogImageView: ImageView,
         txvArticleTitle: TextView,
         txvAuthorName: TextView,
         articleImageView: ImageView,
         viewCountTextView: TextView,
         commentCountTextView: TextView,
         recommendCountTextView: TextView,
-        goldLogo: TextView,
+        goldVlogImageView: ImageView,
         data: MixFeedResult?,
         holder: RecyclerView.ViewHolder,
         private: Boolean
@@ -865,22 +864,28 @@ class UserContentAdapter(
             }
 
             try {
-                Picasso.get().load(data?.thumbnail)
-                    .placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                    .into(articleImageView)
+                Picasso.get().load(data?.thumbnail?.let {
+                    ImageKitUtils(
+                        it,
+                        0,
+                        0
+                    ).getVlogsCardImage()
+                }).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(
+                    articleImageView
+                )
             } catch (e: Exception) {
                 articleImageView.setImageResource(R.drawable.default_article)
             }
 
             if (data?.is_gold != null && data.is_gold) {
-                goldLogo.visibility = View.VISIBLE
+                goldVlogImageView.visibility = View.VISIBLE
             } else {
-                goldLogo.visibility = View.GONE
+                goldVlogImageView.visibility = View.GONE
             }
             if (data?.winner != null && data.winner as Boolean) {
-                winnerLayout.visibility = View.VISIBLE
+                winnerVlogImageView.visibility = View.VISIBLE
             } else {
-                winnerLayout.visibility = View.GONE
+                winnerVlogImageView.visibility = View.GONE
             }
         } catch (e: Exception) {
             FirebaseCrashlytics.getInstance().recordException(e)
