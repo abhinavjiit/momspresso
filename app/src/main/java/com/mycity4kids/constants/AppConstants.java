@@ -26,7 +26,7 @@ public class AppConstants {
     public static final String GROUPS_TEST_LIVE_URL = "https://groups.momspresso.com/";
     public static final String AZURE_LIVE_URL = "https://api.cognitive.microsoft.com/";
 
-    public static final String GROUPS_BASE_SHARE_URL = "https://www.momspresso.com/";
+    public static final String WEB_URL = "https://www.momspresso.com/";
     public static final String ARTICLE_SHARE_URL = "https://www.momspresso.com/" + "parenting/";
     public static final String ARTICLE_WEBVIEW_URL = "http://article.momspresso.com/parenting/";
     public static final String VIDEO_ARTICLE_SHARE_URL = "https://www.momspresso.com/" + "parenting/";

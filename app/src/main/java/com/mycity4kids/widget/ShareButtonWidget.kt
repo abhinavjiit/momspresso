@@ -86,6 +86,9 @@ class ShareButtonWidget : CardView {
 
     override fun onFinishInflate() {
         super.onFinishInflate()
+        if (shareImage == null) {
+            shareImageView.visibility = View.GONE
+        }
         shareTextView.text = shareText
         shareTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize.toFloat())
         shareTextView.setTypeface(null, textStyle)

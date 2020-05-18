@@ -796,6 +796,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="report.religious">It hurts religious feeling</string>
   <string name="report.inappro">It\'s Inappropriate</string>
   <string name="report.spam">It\'s Spam</string>
+  <string name="report.incorrect_lang">Incorrect Language</string>
   <string name="report.not_relevant">Any other</string>
   <string name="reply">Reply</string>
   <string name="reported.spam">Reported as Spam</string>

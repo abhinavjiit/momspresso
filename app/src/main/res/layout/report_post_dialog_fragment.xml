@@ -62,9 +62,17 @@
             android:id="@+id/reason5RadioButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/report.not_relevant"
+            android:text="@string/report.incorrect_lang"
             android:textColor="@color/short_story.light_black_color"
             app:buttonTint="@color/app_red" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+          android:id="@+id/reason6RadioButton"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/report.not_relevant"
+          android:textColor="@color/short_story.light_black_color"
+          app:buttonTint="@color/app_red" />
     </RadioGroup>
 
 </LinearLayout>

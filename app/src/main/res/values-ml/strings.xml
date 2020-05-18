@@ -832,6 +832,7 @@
   <string name="report.religious">ഇത് മതവികാരം വൃണപ്പെടുത്തുന്നതാണ്</string>
   <string name="report.inappro">ഇത് അനുചിതമാണ്</string>
   <string name="report.spam">ഇത് അനാവശ്യമാണ്</string>
+  <string name="report.incorrect_lang">Incorrect Language</string>
   <string name="report.not_relevant">മറ്റെന്തെങ്കിലും</string>
   <string name="reply">മറുപടി</string>
 

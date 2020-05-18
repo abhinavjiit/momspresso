@@ -45,6 +45,7 @@ public class ReportContentDialogFragment extends DialogFragment implements View.
         final AppCompatRadioButton reason3RadioButton = rootView.findViewById(R.id.reason3RadioButton);
         final AppCompatRadioButton reason4RadioButton = rootView.findViewById(R.id.reason4RadioButton);
         final AppCompatRadioButton reason5RadioButton = rootView.findViewById(R.id.reason5RadioButton);
+        final AppCompatRadioButton reason6RadioButton = rootView.findViewById(R.id.reason6RadioButton);
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         final ShortStoryAPI shortStoryApi = retrofit.create(ShortStoryAPI.class);
@@ -105,6 +106,17 @@ public class ReportContentDialogFragment extends DialogFragment implements View.
                     Utils.pushReportShortStoryEvent(getActivity(), "ReportDialog",
                             SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                             postId, reason5RadioButton.getText().toString(), "" + type);
+                }
+            }
+            if (reason6RadioButton.isChecked()) {
+                reportStoryOrCommentRequest.setReason(reason6RadioButton.getText().toString());
+                Call<ReportStoryOrCommentResponse> call = shortStoryApi
+                        .reportStoryOrComment(reportStoryOrCommentRequest);
+                call.enqueue(reportCallback);
+                if (isAdded()) {
+                    Utils.pushReportShortStoryEvent(getActivity(), "ReportDialog",
+                            SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                            postId, reason6RadioButton.getText().toString(), "" + type);
                 }
             }
         });

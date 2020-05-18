@@ -414,7 +414,7 @@ public class GroupMyFeedFragment extends BaseFragment implements
                         String.valueOf(System.currentTimeMillis()), "sharing options", "", "");
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
-                String shareUrl = AppConstants.GROUPS_BASE_SHARE_URL + postList.get(position).getUrl();
+                String shareUrl = AppConstants.WEB_URL + postList.get(position).getUrl();
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 break;
@@ -440,7 +440,7 @@ public class GroupMyFeedFragment extends BaseFragment implements
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
                 break;
             case R.id.whatsappShare:
-                String shareUrlWhatsapp = AppConstants.GROUPS_BASE_SHARE_URL + postList.get(position).getUrl();
+                String shareUrlWhatsapp = AppConstants.WEB_URL + postList.get(position).getUrl();
                 AppUtils.shareCampaignWithWhatsApp(getActivity(), shareUrlWhatsapp, "", "", "", "", "");
                 break;
             default:

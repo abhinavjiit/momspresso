@@ -59,6 +59,7 @@ import com.mycity4kids.utils.AppUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 import okhttp3.ResponseBody;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -82,15 +83,26 @@ public class GroupsPollFragment extends BaseFragment implements
     private RecyclerView recyclerView;
     private int totalPostCount;
     private String action = "";
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private int pastVisiblesItems;
+    private int visibleItemCount;
+    private int totalItemCount;
     GroupResult selectedGroup;
-    private String memberType, userDynamoId;
+    private String memberType;
     private GroupPostResult selectedPost;
     private LinearLayout postSettingsContainer;
     private RelativeLayout postSettingsContainerMain;
-    private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView, editPostTextView, deletePostTextView, blockUserTextView, pinPostTextView, emptyListTextView;
+    private TextView savePostTextView;
+    private TextView notificationToggleTextView;
+    private TextView commentToggleTextView;
+    private TextView reportPostTextView;
+    private TextView editPostTextView;
+    private TextView deletePostTextView;
+    private TextView blockUserTextView;
+    private TextView pinPostTextView;
+    private TextView emptyListTextView;
     private View overlayView;
-    private Animation slideAnim, fadeAnim;
+    private Animation slideAnim;
+    private Animation fadeAnim;
     private UserPostSettingResult currentPostPrefsForUser;
     private ProgressBar progressBar;
     private ShimmerFrameLayout shimmer1;
@@ -101,7 +113,7 @@ public class GroupsPollFragment extends BaseFragment implements
             @Nullable Bundle savedInstanceState) {
         if (!SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getUserType().equals("1")) {
 
-            if (getActivity().getWindow() != null) {
+            if (getActivity() != null && getActivity().getWindow() != null) {
                 getActivity().getWindow()
                         .setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
             }
@@ -148,17 +160,14 @@ public class GroupsPollFragment extends BaseFragment implements
         deletePostTextView.setOnClickListener(this);
         blockUserTextView.setOnClickListener(this);
         pinPostTextView.setOnClickListener(this);
-        userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0) //check for scroll down
-                {
+                if (dy > 0) {
                     visibleItemCount = llm.getChildCount();
                     totalItemCount = llm.getItemCount();
                     pastVisiblesItems = llm.findFirstVisibleItemPosition();
-
                     if (!isRequestRunning && !isLastPageReached) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             isRequestRunning = true;
@@ -176,9 +185,8 @@ public class GroupsPollFragment extends BaseFragment implements
 
     private void getFilteredGroupPosts() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-
-        Call<GroupPostResponse> call = groupsAPI.getAllPollPosts(skip, limit, 1, postType);
+        GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
+        Call<GroupPostResponse> call = groupsApi.getAllPollPosts(skip, limit, 1, postType);
         call.enqueue(groupPostResponseCallback);
     }
 
@@ -186,12 +194,10 @@ public class GroupsPollFragment extends BaseFragment implements
         @Override
         public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
             isRequestRunning = false;
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    emptyListTextView.setVisibility(View.VISIBLE);
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
-                }
+            if (response.body() == null) {
+                emptyListTextView.setVisibility(View.VISIBLE);
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -201,8 +207,6 @@ public class GroupsPollFragment extends BaseFragment implements
                     emptyListTextView.setVisibility(View.GONE);
                     GroupPostResponse groupPostResponse = response.body();
                     processPostListingResponse(groupPostResponse);
-                } else {
-
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
@@ -229,14 +233,11 @@ public class GroupsPollFragment extends BaseFragment implements
             if (null != postList && !postList.isEmpty()) {
                 //No more next results for search from pagination
                 isLastPageReached = true;
-            } else {
-                // No results
             }
         } else {
             emptyListTextView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
             formatPostData(dataList);
-//            noPostsTextView.setVisibility(View.GONE);
             postList.addAll(dataList);
             myFeedPollGenericRecyclerAdapter.setData(postList);
             skip = skip + limit;
@@ -289,10 +290,14 @@ public class GroupsPollFragment extends BaseFragment implements
                                         dataList.get(j).setOption4VoteCount(
                                                 dataList.get(j).getCounts().get(i).getCounts().get(k).getCount());
                                         break;
+                                    default:
+                                        break;
                                 }
                             }
                         }
                         break;
+                        default:
+                            break;
                     }
                 }
             }
@@ -330,27 +335,6 @@ public class GroupsPollFragment extends BaseFragment implements
                             break;
                         }
                     }
-                } else {
-                    /*MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                        jsonObject.put("groupId", "" + groupId);
-                        mixpanel.track("GroupPostCreation", jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    if (addPostContainer.getVisibility() == View.VISIBLE) {
-                        addPostContainer.setVisibility(View.GONE);
-                    }
-                    isLastPageReached = false;
-                    skip = 0;
-                    limit = 10;
-                    postList.clear();
-                    myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();
-                    TabLayout.Tab tab = groupPostTabLayout.getTabAt(1);
-                    tab.select();*/
                 }
             } else if (requestCode == EDIT_POST_REQUEST_CODE) {
                 if (postSettingsContainerMain.getVisibility() == View.VISIBLE) {
@@ -395,7 +379,6 @@ public class GroupsPollFragment extends BaseFragment implements
                 startActivityForResult(intent, 2222);
                 break;
             case R.id.group_name:
-//                getGroupDetails(postList.get(position).getGroupId());
                 GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
                 groupMembershipStatus.checkMembershipStatus(postList.get(position).getGroupId(),
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
@@ -412,18 +395,13 @@ public class GroupsPollFragment extends BaseFragment implements
                 } else {
                     commentToggleTextView.setText(getString(R.string.groups_disable_comment));
                 }
-//                postSettingsContainer.startAnimation(slideAnim);
-//                overlayView.startAnimation(fadeAnim);
-//                postSettingsContainerMain.setVisibility(View.VISIBLE);
-//                postSettingsContainer.setVisibility(View.VISIBLE);
-//                overlayView.setVisibility(View.VISIBLE);
                 break;
             case R.id.userImageView:
             case R.id.usernameTextView:
                 if (postList.get(position).getIsAnnon() == 0) {
-                    Intent pIntent = new Intent(getActivity(), UserProfileActivity.class);
-                    pIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, postList.get(position).getUserId());
-                    startActivity(pIntent);
+                    Intent pintent = new Intent(getActivity(), UserProfileActivity.class);
+                    pintent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, postList.get(position).getUserId());
+                    startActivity(pintent);
                 }
                 break;
             case R.id.shareTextView:
@@ -432,11 +410,9 @@ public class GroupsPollFragment extends BaseFragment implements
                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                         String.valueOf(System.currentTimeMillis()), "sharing options", "",
                         postList.get(position).getId() + "");
-
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
-
-                String shareUrl = AppConstants.GROUPS_BASE_SHARE_URL + postList.get(position).getUrl();
+                String shareUrl = AppConstants.WEB_URL + postList.get(position).getUrl();
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 break;
@@ -448,13 +424,9 @@ public class GroupsPollFragment extends BaseFragment implements
                         String.valueOf(System.currentTimeMillis()), "click", "",
                         String.valueOf(postList.get(position).getGroupId()));
                 if (postList.get(position).getMarkedHelpful() == 0) {
-
                     markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
-
-
                 }
                 if (postList.get(position).getMarkedHelpful() == 1) {
-
                     markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
                 }
                 break;
@@ -467,67 +439,64 @@ public class GroupsPollFragment extends BaseFragment implements
 
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
                 break;
-
             case R.id.whatsappShare:
-                String shareUrlWhatsapp = AppConstants.GROUPS_BASE_SHARE_URL + postList.get(position).getUrl();
+                String shareUrlWhatsapp = AppConstants.WEB_URL + postList.get(position).getUrl();
                 AppUtils.shareCampaignWithWhatsApp(getActivity(), shareUrlWhatsapp, "", "", "", "", "");
-
+                break;
+            default:
+                break;
         }
     }
 
     private void markAsHelpfulOrUnhelpful(String markType, int position) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
         GroupActionsRequest groupActionsRequest = new GroupActionsRequest();
         groupActionsRequest.setGroupId(postList.get(position).getGroupId());
         groupActionsRequest.setPostId(postList.get(position).getId());
         groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId());
-        groupActionsRequest.setType(markType);//AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY
-        Call<GroupsActionResponse> call = groupsAPI.addAction(groupActionsRequest);
+        groupActionsRequest.setType(markType);
+        Call<GroupsActionResponse> call = groupsApi.addAction(groupActionsRequest);
         call.enqueue(groupActionResponseCallback);
     }
 
     private Callback<GroupsActionResponse> groupActionResponseCallback = new Callback<GroupsActionResponse>() {
         @Override
         public void onResponse(Call<GroupsActionResponse> call, retrofit2.Response<GroupsActionResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    if (response.code() == 400) {
-                        try {
-                            int patchActionId = 0;
-                            String patchActionType = null;
+            if (response.body() == null) {
+                if (response.code() == 400) {
+                    try {
+                        int patchActionId = 0;
+                        String patchActionType = null;
 
-                            String errorBody = new String(response.errorBody().bytes());
-                            JSONObject jObject = new JSONObject(errorBody);
-                            JSONArray dataArray = jObject.optJSONArray("data");
-                            if (dataArray != null) {
-                                if (dataArray.getJSONObject(0).get("type")
-                                        .equals(dataArray.getJSONObject(1).get("type"))) {
-                                    //Same Action Event
-                                    if ("0".equals(dataArray.getJSONObject(0).get("type"))) {
-                                        Toast.makeText(getActivity(), "already marked unhelpful", Toast.LENGTH_SHORT)
-                                                .show();
-                                    } else {
-                                        Toast.makeText(getActivity(), "already marked helpful", Toast.LENGTH_SHORT)
-                                                .show();
-                                    }
+                        String errorBody = new String(response.errorBody().bytes());
+                        JSONObject jsonObject = new JSONObject(errorBody);
+                        JSONArray dataArray = jsonObject.optJSONArray("data");
+                        if (dataArray != null) {
+                            if (dataArray.getJSONObject(0).get("type")
+                                    .equals(dataArray.getJSONObject(1).get("type"))) {
+                                //Same Action Event
+                                if ("0".equals(dataArray.getJSONObject(0).get("type"))) {
+                                    Toast.makeText(getActivity(), "already marked unhelpful", Toast.LENGTH_SHORT)
+                                            .show();
                                 } else {
-                                    if (dataArray.getJSONObject(0).has("id") && !dataArray.getJSONObject(0)
-                                            .isNull("id")) {
-                                        patchActionId = dataArray.getJSONObject(0).getInt("id");
-                                        patchActionType = dataArray.getJSONObject(1).getString("type");
-                                    } else {
-                                        patchActionType = dataArray.getJSONObject(0).getString("type");
-                                        patchActionId = dataArray.getJSONObject(1).getInt("id");
-                                    }
-                                    sendUpvoteDownvotePatchRequest(patchActionId, patchActionType);
+                                    Toast.makeText(getActivity(), "already marked helpful", Toast.LENGTH_SHORT)
+                                            .show();
                                 }
+                            } else {
+                                if (dataArray.getJSONObject(0).has("id") && !dataArray.getJSONObject(0)
+                                        .isNull("id")) {
+                                    patchActionId = dataArray.getJSONObject(0).getInt("id");
+                                    patchActionType = dataArray.getJSONObject(1).getString("type");
+                                } else {
+                                    patchActionType = dataArray.getJSONObject(0).getString("type");
+                                    patchActionId = dataArray.getJSONObject(1).getInt("id");
+                                }
+                                sendUpvoteDownvotePatchRequest(patchActionId, patchActionType);
                             }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
+                    } catch (IOException | JSONException e) {
+                        e.printStackTrace();
                     }
                 }
                 return;
@@ -542,20 +511,14 @@ public class GroupsPollFragment extends BaseFragment implements
                                 if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
                                     postList.get(i).setHelpfullCount(postList.get(i).getHelpfullCount() + 1);
                                     postList.get(i).setMarkedHelpful(1);
-
                                 } else {
                                     postList.get(i).setNotHelpfullCount(postList.get(i).getNotHelpfullCount() + 1);
                                     postList.get(i).setMarkedHelpful(0);
-
                                 }
                             }
                         }
                     }
                     myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();
-//                    groupPostResult.setVoted(true);
-//                    notifyDataSetChanged();
-                } else {
-
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
@@ -573,23 +536,21 @@ public class GroupsPollFragment extends BaseFragment implements
 
     private void sendUpvoteDownvotePatchRequest(int patchActionId, String patchActionType) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
 
         GroupActionsPatchRequest groupActionsRequest = new GroupActionsPatchRequest();
         groupActionsRequest.setType(patchActionType);
 
-        Call<GroupsActionResponse> call = groupsAPI.patchAction(patchActionId, groupActionsRequest);
+        Call<GroupsActionResponse> call = groupsApi.patchAction(patchActionId, groupActionsRequest);
         call.enqueue(patchActionResponseCallback);
     }
 
     private Callback<GroupsActionResponse> patchActionResponseCallback = new Callback<GroupsActionResponse>() {
         @Override
         public void onResponse(Call<GroupsActionResponse> call, retrofit2.Response<GroupsActionResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
-                }
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -614,10 +575,6 @@ public class GroupsPollFragment extends BaseFragment implements
                         }
                     }
                     myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();
-//                    groupPostResult.setVoted(true);
-//                    notifyDataSetChanged();
-                } else {
-
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
@@ -627,68 +584,66 @@ public class GroupsPollFragment extends BaseFragment implements
 
         @Override
         public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
-
-        }
-    };
-
-
-    private Callback<UserPostSettingResponse> userPostSettingResponseCallback = new Callback<UserPostSettingResponse>() {
-        @Override
-        public void onResponse(Call<UserPostSettingResponse> call,
-                retrofit2.Response<UserPostSettingResponse> response) {
-            progressBar.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
-                }
-                return;
-            }
-            try {
-                if (response.isSuccessful()) {
-                    UserPostSettingResponse userPostSettingResponse = response.body();
-                    setPostCurrentPreferences(userPostSettingResponse);
-
-                    postSettingsContainer.startAnimation(slideAnim);
-                    overlayView.startAnimation(fadeAnim);
-                    postSettingsContainerMain.setVisibility(View.VISIBLE);
-                    postSettingsContainer.setVisibility(View.VISIBLE);
-                    overlayView.setVisibility(View.VISIBLE);
-                } else {
-
-                }
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
-            progressBar.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             FirebaseCrashlytics.getInstance().recordException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
 
+    private Callback<UserPostSettingResponse> userPostSettingResponseCallback =
+            new Callback<UserPostSettingResponse>() {
+                @Override
+                public void onResponse(Call<UserPostSettingResponse> call,
+                        retrofit2.Response<UserPostSettingResponse> response) {
+                    progressBar.setVisibility(View.GONE);
+                    Objects.requireNonNull(getActivity()).getWindow()
+                            .clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    if (response.body() == null) {
+                        NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                        FirebaseCrashlytics.getInstance().recordException(nee);
+                        return;
+                    }
+                    try {
+                        if (response.isSuccessful()) {
+                            UserPostSettingResponse userPostSettingResponse = response.body();
+                            setPostCurrentPreferences(userPostSettingResponse);
+                            postSettingsContainer.startAnimation(slideAnim);
+                            overlayView.startAnimation(fadeAnim);
+                            postSettingsContainerMain.setVisibility(View.VISIBLE);
+                            postSettingsContainer.setVisibility(View.VISIBLE);
+                            overlayView.setVisibility(View.VISIBLE);
+                        }
+                    } catch (Exception e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
+                    progressBar.setVisibility(View.GONE);
+                    Objects.requireNonNull(getActivity()).getWindow()
+                            .clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    FirebaseCrashlytics.getInstance().recordException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
+                }
+            };
+
+
     private void getCurrentUserPostSettingsStatus(GroupPostResult selectedPost) {
         progressBar.setVisibility(View.VISIBLE);
-        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+        Objects.requireNonNull(getActivity()).getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-
-        Call<UserPostSettingResponse> call = groupsAPI.getPostSettingForUser(selectedPost.getId());
+        GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
+        Call<UserPostSettingResponse> call = groupsApi.getPostSettingForUser(selectedPost.getId());
         call.enqueue(userPostSettingResponseCallback);
     }
 
     private void setPostCurrentPreferences(UserPostSettingResponse userPostSettingResponse) {
 
-        if (selectedPost.getUserId().equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())
+        if (selectedPost.getUserId()
+                .equals(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())
                 || AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)
                 || AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(memberType)) {
             commentToggleTextView.setVisibility(View.VISIBLE);
@@ -696,7 +651,8 @@ public class GroupsPollFragment extends BaseFragment implements
             commentToggleTextView.setVisibility(View.GONE);
         }
 
-        if (selectedPost.getUserId().equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())) {
+        if (selectedPost.getUserId()
+                .equals(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
             editPostTextView.setVisibility(View.VISIBLE);
             deletePostTextView.setVisibility(View.VISIBLE);
         } else {
@@ -732,39 +688,33 @@ public class GroupsPollFragment extends BaseFragment implements
         blockUserTextView.setVisibility(View.GONE);
         deletePostTextView.setVisibility(View.GONE);
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-        Call<GroupPostResponse> call = groupsAPI.getSinglePost(selectedPost.getId());
+        GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
+        Call<GroupPostResponse> call = groupsApi.getSinglePost(selectedPost.getId());
         call.enqueue(postDetailsResponseCallback);
     }
 
     private void updatePostCommentSettings(int status) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-
+        GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
         UpdateGroupPostRequest updateGroupPostRequest = new UpdateGroupPostRequest();
         updateGroupPostRequest.setGroupId(selectedGroup.getId());
         updateGroupPostRequest.setDisableComments(status);
-
-        Call<GroupPostResponse> call = groupsAPI.disablePostComment(selectedPost.getId(), updateGroupPostRequest);
+        Call<GroupPostResponse> call = groupsApi.disablePostComment(selectedPost.getId(), updateGroupPostRequest);
         call.enqueue(postUpdateResponseListener);
     }
 
     private Callback<GroupPostResponse> postDetailsResponseCallback = new Callback<GroupPostResponse>() {
         @Override
         public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
-                }
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
                 if (response.isSuccessful()) {
                     GroupPostResponse groupPostResponse = response.body();
                     setAdminPostPreferences(groupPostResponse);
-                } else {
-
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
@@ -793,11 +743,9 @@ public class GroupsPollFragment extends BaseFragment implements
     private Callback<GroupPostResponse> postUpdateResponseListener = new Callback<GroupPostResponse>() {
         @Override
         public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
-                }
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -810,13 +758,10 @@ public class GroupsPollFragment extends BaseFragment implements
                         commentToggleTextView.setText(getString(R.string.groups_disable_comment));
                         selectedPost.setDisableComments(0);
                     }
-                } else {
-
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -827,16 +772,13 @@ public class GroupsPollFragment extends BaseFragment implements
         }
     };
 
-
     private void updateUserPostPreferences(String action) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-
+        GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
         UpdateUserPostSettingsRequest request = new UpdateUserPostSettingsRequest();
         request.setPostId(selectedPost.getId());
         request.setIsAnno(selectedPost.getIsAnnon());
-        request.setUserId(SharedPrefUtils.getUserDetailModel(getContext()).getDynamoId());
-
+        request.setUserId(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         if (currentPostPrefsForUser == null) {
             if ("savePost".equals(action)) {
                 request.setIsBookmarked(1);
@@ -851,7 +793,7 @@ public class GroupsPollFragment extends BaseFragment implements
                 request.setIsBookmarked(0);
                 request.setNotificationOff(0);
             }
-            Call<ResponseBody> call = groupsAPI.createNewPostSettingsForUser(request);
+            Call<ResponseBody> call = groupsApi.createNewPostSettingsForUser(request);
             call.enqueue(createPostSettingForUserResponseCallback);
         } else {
             if ("savePost".equals(action)) {
@@ -867,7 +809,7 @@ public class GroupsPollFragment extends BaseFragment implements
                 request.setIsBookmarked(currentPostPrefsForUser.getIsBookmarked());
                 request.setNotificationOff(0);
             }
-            Call<UserPostSettingResponse> call = groupsAPI
+            Call<UserPostSettingResponse> call = groupsApi
                     .updatePostSettingsForUser(currentPostPrefsForUser.getId(), request);
             call.enqueue(updatePostSettingForUserResponseCallback);
         }
@@ -878,86 +820,79 @@ public class GroupsPollFragment extends BaseFragment implements
     private Callback<ResponseBody> createPostSettingForUserResponseCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
-                }
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
                 if (response.isSuccessful()) {
                     String resData = new String(response.body().bytes());
-                    JSONObject jObject = new JSONObject(resData);
+                    JSONObject jsonObject = new JSONObject(resData);
                     currentPostPrefsForUser = new UserPostSettingResult();
-                    currentPostPrefsForUser.setId(jObject.getJSONObject("data").getJSONObject("result").getInt("id"));
-                    if (jObject.getJSONObject("data").getJSONObject("result").getBoolean("notificationOff")) {
+                    currentPostPrefsForUser
+                            .setId(jsonObject.getJSONObject("data").getJSONObject("result").getInt("id"));
+                    if (jsonObject.getJSONObject("data").getJSONObject("result").getBoolean("notificationOff")) {
                         notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
                     } else {
                         notificationToggleTextView.setText("DISABLE NOTIFICATION");
                     }
-                    if (jObject.getJSONObject("data").getJSONObject("result").getBoolean("isBookmarked")) {
+                    if (jsonObject.getJSONObject("data").getJSONObject("result").getBoolean("isBookmarked")) {
                         savePostTextView.setText(getString(R.string.groups_remove_post));
                     } else {
                         savePostTextView.setText(getString(R.string.groups_save_post));
                     }
-                } else {
-
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
             }
         }
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+            FirebaseCrashlytics.getInstance().recordException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
-    private Callback<UserPostSettingResponse> updatePostSettingForUserResponseCallback = new Callback<UserPostSettingResponse>() {
-        @Override
-        public void onResponse(Call<UserPostSettingResponse> call,
-                retrofit2.Response<UserPostSettingResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
-                }
-                return;
-            }
-            try {
-                if (response.isSuccessful()) {
-                    UserPostSettingResponse userPostSettingResponse = response.body();
-                    currentPostPrefsForUser = userPostSettingResponse.getData().get(0).getResult().get(0);
-                    if (userPostSettingResponse.getData().get(0).getResult().get(0).getNotificationOff() == 1) {
-                        notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
-                    } else {
-                        notificationToggleTextView.setText("DISABLE NOTIFICATION");
+    private Callback<UserPostSettingResponse> updatePostSettingForUserResponseCallback =
+            new Callback<UserPostSettingResponse>() {
+                @Override
+                public void onResponse(Call<UserPostSettingResponse> call,
+                        retrofit2.Response<UserPostSettingResponse> response) {
+                    if (response.body() == null) {
+                        NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                        FirebaseCrashlytics.getInstance().recordException(nee);
+                        return;
                     }
-                    if (userPostSettingResponse.getData().get(0).getResult().get(0).getIsBookmarked() == 1) {
-                        savePostTextView.setText(getString(R.string.groups_remove_post));
-                    } else {
-                        savePostTextView.setText(getString(R.string.groups_save_post));
+                    try {
+                        if (response.isSuccessful()) {
+                            UserPostSettingResponse userPostSettingResponse = response.body();
+                            currentPostPrefsForUser = userPostSettingResponse.getData().get(0).getResult().get(0);
+                            if (userPostSettingResponse.getData().get(0).getResult().get(0).getNotificationOff() == 1) {
+                                notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
+                            } else {
+                                notificationToggleTextView.setText("DISABLE NOTIFICATION");
+                            }
+                            if (userPostSettingResponse.getData().get(0).getResult().get(0).getIsBookmarked() == 1) {
+                                savePostTextView.setText(getString(R.string.groups_remove_post));
+                            } else {
+                                savePostTextView.setText(getString(R.string.groups_save_post));
+                            }
+                        }
+                    } catch (Exception e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
                     }
-                } else {
-
                 }
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
-            }
-        }
 
-        @Override
-        public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
-
-        }
-    };
-
+                @Override
+                public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
+                    FirebaseCrashlytics.getInstance().recordException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
+                }
+            };
 
     private void openEditPostOption() {
         Intent intent = new Intent(getActivity(), GroupsEditPostActivity.class);
@@ -965,20 +900,19 @@ public class GroupsPollFragment extends BaseFragment implements
         startActivityForResult(intent, EDIT_POST_REQUEST_CODE);
     }
 
-
     private void updateAdminLevelPostPrefs(String actionType) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
 
         UpdatePostSettingsRequest request = new UpdatePostSettingsRequest();
         if ("pinPost".equals(actionType)) {
             request.setIsPinned(1);
             request.setIsActive(1);
-            request.setPinnedBy(SharedPrefUtils.getUserDetailModel(getContext()).getDynamoId());
+            request.setPinnedBy(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         } else if ("unpinPost".equals(actionType)) {
             request.setIsPinned(0);
             request.setIsActive(1);
-            request.setPinnedBy(SharedPrefUtils.getUserDetailModel(getContext()).getDynamoId());
+            request.setPinnedBy(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         } else if ("blockUser".equals(actionType)) {
             getPostingUsersMembershipDetails(selectedPost.getGroupId(), selectedPost.getUserId());
             return;
@@ -987,98 +921,89 @@ public class GroupsPollFragment extends BaseFragment implements
             request.setIsPinned(0);
             action = actionType;
         }
-
-        Call<GroupPostResponse> call = groupsAPI.updatePost(selectedPost.getId(), request);
+        Call<GroupPostResponse> call = groupsApi.updatePost(selectedPost.getId(), request);
         call.enqueue(updateAdminLvlPostSettingResponseCallback);
     }
 
     private void getPostingUsersMembershipDetails(int groupId, String postsUserId) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-
-        Call<GroupsMembershipResponse> call = groupsAPI.getUsersMembershipDetailsForGroup(groupId, postsUserId);
+        GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
+        Call<GroupsMembershipResponse> call = groupsApi.getUsersMembershipDetailsForGroup(groupId, postsUserId);
         call.enqueue(getMembershipDetailsReponseCallback);
     }
 
-    private Callback<GroupsMembershipResponse> getMembershipDetailsReponseCallback = new Callback<GroupsMembershipResponse>() {
-        @Override
-        public void onResponse(Call<GroupsMembershipResponse> call,
-                retrofit2.Response<GroupsMembershipResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
+    private Callback<GroupsMembershipResponse> getMembershipDetailsReponseCallback =
+            new Callback<GroupsMembershipResponse>() {
+                @Override
+                public void onResponse(Call<GroupsMembershipResponse> call,
+                        retrofit2.Response<GroupsMembershipResponse> response) {
+                    if (response.body() == null) {
+                        NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                        FirebaseCrashlytics.getInstance().recordException(nee);
+                        return;
+                    }
+                    try {
+                        if (response.isSuccessful()) {
+                            GroupsMembershipResponse membershipResponse = response.body();
+                            Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+                            GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
+
+                            UpdateGroupMembershipRequest updateGroupMembershipRequest =
+                                    new UpdateGroupMembershipRequest();
+                            updateGroupMembershipRequest.setUserId(selectedPost.getUserId());
+                            updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED);
+                            Call<GroupsMembershipResponse> call1 = groupsApi
+                                    .updateMember(membershipResponse.getData().getResult().get(0).getId(),
+                                            updateGroupMembershipRequest);
+                            call1.enqueue(updateGroupMembershipResponseCallback);
+                        }
+                    } catch (Exception e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                    }
                 }
-                return;
-            }
-            try {
-                if (response.isSuccessful()) {
-                    GroupsMembershipResponse membershipResponse = response.body();
-                    Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-                    GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
-                    UpdateGroupMembershipRequest updateGroupMembershipRequest = new UpdateGroupMembershipRequest();
-                    updateGroupMembershipRequest.setUserId(selectedPost.getUserId());
-                    updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED);
-                    Call<GroupsMembershipResponse> call1 = groupsAPI
-                            .updateMember(membershipResponse.getData().getResult().get(0).getId(),
-                                    updateGroupMembershipRequest);
-                    call1.enqueue(updateGroupMembershipResponseCallback);
-                } else {
-
+                @Override
+                public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
+                    FirebaseCrashlytics.getInstance().recordException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
                 }
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        }
+            };
 
-        @Override
-        public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
-            FirebaseCrashlytics.getInstance().recordException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
-
-    private Callback<GroupsMembershipResponse> updateGroupMembershipResponseCallback = new Callback<GroupsMembershipResponse>() {
-        @Override
-        public void onResponse(Call<GroupsMembershipResponse> call,
-                retrofit2.Response<GroupsMembershipResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
+    private Callback<GroupsMembershipResponse> updateGroupMembershipResponseCallback =
+            new Callback<GroupsMembershipResponse>() {
+                @Override
+                public void onResponse(Call<GroupsMembershipResponse> call,
+                        retrofit2.Response<GroupsMembershipResponse> response) {
+                    if (response.body() == null) {
+                        NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                        FirebaseCrashlytics.getInstance().recordException(nee);
+                        return;
+                    }
+                    try {
+                        if (response.isSuccessful()) {
+                            GroupsMembershipResponse groupsMembershipResponse = response.body();
+                            postSettingsContainerMain.setVisibility(View.GONE);
+                        }
+                    } catch (Exception e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                    }
                 }
-                return;
-            }
-            try {
-                if (response.isSuccessful()) {
-                    GroupsMembershipResponse groupsMembershipResponse = response.body();
-                    postSettingsContainerMain.setVisibility(View.GONE);
-                } else {
 
+                @Override
+                public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
+                    FirebaseCrashlytics.getInstance().recordException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
                 }
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
-            FirebaseCrashlytics.getInstance().recordException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
+            };
 
     private Callback<GroupPostResponse> updateAdminLvlPostSettingResponseCallback = new Callback<GroupPostResponse>() {
         @Override
         public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
-                }
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
@@ -1100,10 +1025,6 @@ public class GroupsPollFragment extends BaseFragment implements
                         }
                     }
                     myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();
-//                    TabLayout.Tab tab = groupPostTabLayout.getTabAt(1);
-//                    tab.select();
-                } else {
-
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
@@ -1122,9 +1043,7 @@ public class GroupsPollFragment extends BaseFragment implements
     @Override
     public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {
         String userType = null;
-        if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
-
-        } else {
+        if (body.getData().getResult() != null && !body.getData().getResult().isEmpty()) {
             if (body.getData().getResult().get(0).getIsAdmin() == 1) {
                 userType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
             } else if (body.getData().getResult().get(0).getIsModerator() == 1) {
@@ -1141,14 +1060,10 @@ public class GroupsPollFragment extends BaseFragment implements
                 if (isAdded()) {
                     Toast.makeText(getActivity(), getString(R.string.women_only), Toast.LENGTH_SHORT).show();
                 }
-                if (BuildConfig.DEBUG || AppConstants.DEBUGGING_USER_ID
+                if (!BuildConfig.DEBUG && !AppConstants.DEBUGGING_USER_ID
                         .contains(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
-
-                } else {
                     return;
                 }
-            } else {
-
             }
         }
 
@@ -1234,21 +1149,22 @@ public class GroupsPollFragment extends BaseFragment implements
                 break;
             case R.id.reportPostTextView:
                 Log.d("reportPostTextView", "" + selectedPost.getId());
+                Bundle args = new Bundle();
+                args.putInt("groupId", selectedPost.getGroupId());
+                args.putInt("postId", selectedPost.getId());
+                args.putString("type", AppConstants.GROUP_REPORT_TYPE_POST);
                 GroupPostReportDialogFragment groupPostReportDialogFragment = new GroupPostReportDialogFragment();
-                FragmentManager fm = getChildFragmentManager();
-                Bundle _args = new Bundle();
-                _args.putInt("groupId", selectedPost.getGroupId());
-                _args.putInt("postId", selectedPost.getId());
-                _args.putString("type", AppConstants.GROUP_REPORT_TYPE_POST);
-                groupPostReportDialogFragment.setArguments(_args);
+                groupPostReportDialogFragment.setArguments(args);
                 groupPostReportDialogFragment.setCancelable(true);
+                FragmentManager fm = getChildFragmentManager();
                 groupPostReportDialogFragment.show(fm, "Choose video report option");
-//                reportPostTextView.setText("UNREPORT");
                 break;
             case R.id.overlayView:
                 postSettingsContainerMain.setVisibility(View.GONE);
                 overlayView.setVisibility(View.GONE);
                 postSettingsContainer.setVisibility(View.GONE);
+                break;
+            default:
                 break;
         }
     }

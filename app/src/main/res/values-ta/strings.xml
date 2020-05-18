@@ -821,6 +821,7 @@
   <string name="report.reason">Inappropriate because</string>
   <string name="report.abuse">Its abusive</string>
   <string name="report.spam">It hurts religious sentiments</string>
+  <string name="report.incorrect_lang">Incorrect Language</string>
   <string name="report.not_relevant">Any other</string>
   <string name="reply">பதில்</string>
 

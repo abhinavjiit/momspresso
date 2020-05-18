@@ -34,6 +34,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import com.facebook.share.model.ShareLinkContent;
@@ -88,11 +89,17 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TorcaiAdsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
+import com.mycity4kids.ui.activity.BadgeActivity;
+import com.mycity4kids.ui.activity.CategoryVideosListingActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
+import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity;
+import com.mycity4kids.ui.activity.collection.CollectionsActivity;
+import com.mycity4kids.ui.activity.collection.UserCollectionItemListActivity;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
+import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.DateTimeUtils;
@@ -112,6 +119,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import okhttp3.ResponseBody;
 import org.apmem.tools.layouts.FlowLayout;
 import org.json.JSONArray;
@@ -323,10 +332,21 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                     try {
-                        getDeepLinkData(request.getUrl());
-                    } catch (Exception anfe) {
-                        FirebaseCrashlytics.getInstance().recordException(anfe);
-                        Log.d("FileNotFoundException", Log.getStackTraceString(anfe));
+                        if (request.getUrl() == null || request.getUrl().toString().isEmpty()) {
+                            return true;
+                        }
+                        if (request.getUrl().toString().startsWith(AppConstants.WEB_URL)) {
+                            handleDeeplinks(request.getUrl().toString());
+                        } else {
+                            if (getActivity() != null) {
+                                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                                CustomTabsIntent customTabsIntent = builder.build();
+                                customTabsIntent.launchUrl(getActivity(), request.getUrl());
+                            }
+                        }
+                    } catch (Exception e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.d("MC4KException", Log.getStackTraceString(e));
                     }
                     return true;
                 }
@@ -531,6 +551,127 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         return fragmentView;
+    }
+
+    private void handleDeeplinks(String tempDeepLinkUrl) {
+        String tempDeepLinkUrlWithoutSlash = "";
+        if ((tempDeepLinkUrl.endsWith("/"))) {
+            tempDeepLinkUrlWithoutSlash = tempDeepLinkUrl.substring(0, tempDeepLinkUrl.lastIndexOf("/"));
+        }
+        if (matchRegex(tempDeepLinkUrl)) {
+            // need to optimize this code
+        } else if (tempDeepLinkUrl.equals(AppConstants.MOM_VLOG_LISTING_SCREEN) || tempDeepLinkUrlWithoutSlash
+                .equals(AppConstants.MOM_VLOG_LISTING_SCREEN)) {
+            Intent intent = new Intent(getActivity(), CategoryVideosListingActivity.class);
+            startActivity(intent);
+        } else if (tempDeepLinkUrl.equals(AppConstants.SHORT_STORY_LISTING_SCREEN)
+                || tempDeepLinkUrlWithoutSlash
+                .equals(AppConstants.SHORT_STORY_LISTING_SCREEN)) {
+            Intent intent = new Intent(getActivity(), ShortStoriesListingContainerActivity.class);
+            startActivity(intent);
+        } else if (tempDeepLinkUrl.equals(AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL) || tempDeepLinkUrl
+                .equals(AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL
+                        .substring(0, AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL.length() - 1))) {
+            Intent intent = new Intent(getActivity(), CategoryVideosListingActivity.class);
+            intent.putExtra("categoryId", AppConstants.VIDEO_CHALLENGE_ID);
+            startActivity(intent);
+        } else if (tempDeepLinkUrl.startsWith(AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL)) {
+            String challengeId = tempDeepLinkUrl.replace(AppConstants.VLOG_CHALLENGES_BASE_SHARE_URL, "")
+                    .replace("/", "");
+            Intent intent = new Intent(getActivity(), NewVideoChallengeActivity.class);
+            intent.putExtra(Constants.CHALLENGE_ID, challengeId);
+            intent.putExtra("comingFrom", "deeplink");
+            startActivity(intent);
+        } else if (tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_1)
+                || tempDeepLinkUrl.endsWith(AppConstants.DEEPLINK_SELF_PROFILE_URL_2)) {
+            Intent profileIntent = new Intent(getActivity(), UserProfileActivity.class);
+            startActivity(profileIntent);
+        }
+    }
+
+    private Boolean matchRegex(String tempDeepLinkUrl) {
+        try {
+            String urlWithNoParams = tempDeepLinkUrl.split("\\?")[0];
+            if (urlWithNoParams.endsWith("/")) {
+                urlWithNoParams = urlWithNoParams.substring(0, urlWithNoParams.length() - 1);
+            }
+            Pattern pattern = Pattern.compile(AppConstants.COLLECTION_LIST_REGEX);
+            Matcher matcher = pattern.matcher(urlWithNoParams);
+            if (matcher.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(getActivity(), CollectionsActivity.class);
+                intent.putExtra("userId", separated[separated.length - 2]);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern1 = Pattern.compile(AppConstants.COLLECTION_DETAIL_REGEX);
+            Matcher matcher1 = pattern1.matcher(urlWithNoParams);
+            if (matcher1.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(getActivity(), UserCollectionItemListActivity.class);
+                intent.putExtra("id", separated[separated.length - 1]);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern2 = Pattern.compile(AppConstants.BADGES_LISTING_REGEX);
+            Matcher matcher2 = pattern2.matcher(urlWithNoParams);
+            if (matcher2.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(getActivity(), BadgeActivity.class);
+                intent.putExtra(Constants.USER_ID, separated[separated.length - 2]);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern3 = Pattern.compile(AppConstants.BADGES_DETAIL_REGEX);
+            Matcher matcher3 = pattern3.matcher(urlWithNoParams);
+            if (matcher3.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+                intent.putExtra(AppConstants.BADGE_ID, separated[separated.length - 1]);
+                intent.putExtra(Constants.USER_ID, separated[separated.length - 3]);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern4 = Pattern.compile(AppConstants.MILESTONE_DETAIL_REGEX);
+            Matcher matcher4 = pattern4.matcher(urlWithNoParams);
+            if (matcher4.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+                intent.putExtra(AppConstants.MILESTONE_ID, separated[separated.length - 1]);
+                intent.putExtra(Constants.USER_ID, separated[separated.length - 3]);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern5 = Pattern.compile(AppConstants.USER_PROFILE_REGEX);
+            Matcher matcher5 = pattern5.matcher(urlWithNoParams);
+            if (matcher5.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+                intent.putExtra(Constants.USER_ID, separated[separated.length - 1]);
+                startActivity(intent);
+                return true;
+            }
+
+            Pattern pattern6 = Pattern.compile(AppConstants.USER_ANALYTICS_REGEX);
+            Matcher matcher6 = pattern6.matcher(urlWithNoParams);
+            if (matcher6.matches()) {
+                String[] separated = urlWithNoParams.split("/");
+                Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+                intent.putExtra("detail", "rank");
+                intent.putExtra(Constants.USER_ID, separated[separated.length - 2]);
+                startActivity(intent);
+                return true;
+            }
+        } catch (Exception e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+        return false;
     }
 
     private Callback<ResponseBody> torcaiTopAdResponseCallback = new Callback<ResponseBody>() {
@@ -2385,8 +2526,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     ((TextView) topicView.getChildAt(0)).measure(0, 0);
                     width = width - ((TextView) topicView.getChildAt(0)).getMeasuredWidth() - AppUtils
                             .dpTopx(1)
-                            - relatedImageWidth - topicView.getPaddingLeft() - topicView
-                            .getPaddingRight();
+                            - relatedImageWidth - topicView.getPaddingStart() - topicView
+                            .getPaddingEnd();
                     if (width < 0) {
                         viewAllTagsTextView.setVisibility(View.VISIBLE);
                     }

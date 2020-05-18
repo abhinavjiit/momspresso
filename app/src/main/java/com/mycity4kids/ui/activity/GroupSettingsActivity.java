@@ -39,9 +39,9 @@ import retrofit2.Retrofit;
 public class GroupSettingsActivity extends BaseActivity implements View.OnClickListener {
 
     private UserPostSettingResult currentGpPrefsForUser;
-    GroupResult groupItem;
-
-    private RelativeLayout leaveGroupContainer, reportedContentContainer;
+    private GroupResult groupItem;
+    private RelativeLayout leaveGroupContainer;
+    private RelativeLayout reportedContentContainer;
     private SwitchCompat disableNotificationSwitch;
     private ImageView editGroupImageView;
     private TextView memberCountTextView;
@@ -50,7 +50,6 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
     private ImageView groupImageView;
     private TextView groupNameTextView;
     private RelativeLayout inviteMemberContainer;
-    private MixpanelAPI mixpanel;
     private RelativeLayout root;
 
     @Override
@@ -116,53 +115,50 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
 
     private void getNotificationSettingForCurrentUser() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
 
-        Call<UserPostSettingResponse> call = groupsAPI.getGroupNotificationSettingForUser(groupItem.getId(), 0,
+        Call<UserPostSettingResponse> call = groupsApi.getGroupNotificationSettingForUser(groupItem.getId(), 0,
                 SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         call.enqueue(userGpNotificationSettingResponseCallback);
     }
 
-    private Callback<UserPostSettingResponse> userGpNotificationSettingResponseCallback = new Callback<UserPostSettingResponse>() {
-        @Override
-        public void onResponse(Call<UserPostSettingResponse> call,
-                retrofit2.Response<UserPostSettingResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
-                }
-                return;
-            }
-            try {
-                if (response.isSuccessful()) {
-                    UserPostSettingResponse userPostSettingResponse = response.body();
-                    if (userPostSettingResponse.getData().get(0).getResult().isEmpty()) {
-                        disableNotificationSwitch.setChecked(true);
-                        currentGpPrefsForUser = null;
-                    } else if (userPostSettingResponse.getData().get(0).getResult().get(0).getNotificationOff() == 1) {
-                        disableNotificationSwitch.setChecked(true);
-                        currentGpPrefsForUser = userPostSettingResponse.getData().get(0).getResult().get(0);
-                    } else {
-                        disableNotificationSwitch.setChecked(false);
-                        currentGpPrefsForUser = userPostSettingResponse.getData().get(0).getResult().get(0);
+    private Callback<UserPostSettingResponse> userGpNotificationSettingResponseCallback =
+            new Callback<UserPostSettingResponse>() {
+                @Override
+                public void onResponse(Call<UserPostSettingResponse> call,
+                        retrofit2.Response<UserPostSettingResponse> response) {
+                    if (response.body() == null) {
+                        NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                        FirebaseCrashlytics.getInstance().recordException(nee);
+                        return;
                     }
-                } else {
-
+                    try {
+                        if (response.isSuccessful()) {
+                            UserPostSettingResponse userPostSettingResponse = response.body();
+                            if (userPostSettingResponse.getData().get(0).getResult().isEmpty()) {
+                                disableNotificationSwitch.setChecked(true);
+                                currentGpPrefsForUser = null;
+                            } else if (userPostSettingResponse.getData().get(0).getResult().get(0).getNotificationOff()
+                                    == 1) {
+                                disableNotificationSwitch.setChecked(true);
+                                currentGpPrefsForUser = userPostSettingResponse.getData().get(0).getResult().get(0);
+                            } else {
+                                disableNotificationSwitch.setChecked(false);
+                                currentGpPrefsForUser = userPostSettingResponse.getData().get(0).getResult().get(0);
+                            }
+                        }
+                    } catch (Exception e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                    }
                 }
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
-            }
-        }
 
-        @Override
-        public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
-            FirebaseCrashlytics.getInstance().recordException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
+                @Override
+                public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
+                    FirebaseCrashlytics.getInstance().recordException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
+                }
+            };
 
     @Override
     public void onClick(View v) {
@@ -183,7 +179,7 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
 
-                String shareUrl = AppConstants.GROUPS_BASE_SHARE_URL + groupItem.getUrl();
+                String shareUrl = AppConstants.WEB_URL + groupItem.getUrl();
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT,
                         groupItem.getDescription() + "\n\n" + "Join " + groupItem.getTitle() + " support group\n"
                                 + shareUrl);
@@ -204,16 +200,18 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
             break;
             case R.id.disableNotificationSwitch:
                 Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-                GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+                GroupsAPI groupsApi = retrofit.create(GroupsAPI.class);
                 if (AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType) || AppConstants.GROUP_MEMBER_TYPE_MODERATOR
                         .equals(memberType)) {
-                    GroupNotificationToggleRequest groupNotificationToggleRequest = new GroupNotificationToggleRequest();
+                    GroupNotificationToggleRequest groupNotificationToggleRequest =
+                            new GroupNotificationToggleRequest();
                     groupNotificationToggleRequest.setNotificationOn(disableNotificationSwitch.isChecked() ? 0 : 1);
-                    Call<GroupDetailResponse> call = groupsAPI
+                    Call<GroupDetailResponse> call = groupsApi
                             .updateGroupNotification(groupItem.getId(), groupNotificationToggleRequest);
                     call.enqueue(notificationUpdateResponseCallback);
                 } else {
-                    UpdateUsersGpLevelNotificationSettingRequest request = new UpdateUsersGpLevelNotificationSettingRequest();
+                    UpdateUsersGpLevelNotificationSettingRequest request =
+                            new UpdateUsersGpLevelNotificationSettingRequest();
                     request.setPostId(0);
                     request.setIsAnno(0);
                     request.setIsBookmarked(0);
@@ -222,10 +220,10 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
                     request.setNotificationOff(disableNotificationSwitch.isChecked() ? 1 : 0);
 
                     if (currentGpPrefsForUser == null) {
-                        Call<ResponseBody> call = groupsAPI.createNewGpSettingsForUser(request);
+                        Call<ResponseBody> call = groupsApi.createNewGpSettingsForUser(request);
                         call.enqueue(gpLevelNotificationResponseCallback);
                     } else {
-                        Call<UserPostSettingResponse> call = groupsAPI
+                        Call<UserPostSettingResponse> call = groupsApi
                                 .updateNotificationSettingsOfGpForUser(currentGpPrefsForUser.getId(), request);
                         call.enqueue(patchGpLevelNotificationResponseCallback);
                     }
@@ -255,59 +253,39 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
                 startActivity(intent);
             }
             break;
+            default:
+                break;
         }
     }
 
-    private Callback<UserPostSettingResponse> patchGpLevelNotificationResponseCallback = new Callback<UserPostSettingResponse>() {
-        @Override
-        public void onResponse(Call<UserPostSettingResponse> call,
-                retrofit2.Response<UserPostSettingResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
+    private Callback<UserPostSettingResponse> patchGpLevelNotificationResponseCallback =
+            new Callback<UserPostSettingResponse>() {
+                @Override
+                public void onResponse(Call<UserPostSettingResponse> call,
+                        retrofit2.Response<UserPostSettingResponse> response) {
                 }
-                return;
-            }
-            try {
-                if (response.isSuccessful()) {
-                    UserPostSettingResponse userPostSettingResponse = response.body();
 
-                } else {
-
+                @Override
+                public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
+                    FirebaseCrashlytics.getInstance().recordException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
                 }
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
-            FirebaseCrashlytics.getInstance().recordException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
+            };
 
     private Callback<ResponseBody> gpLevelNotificationResponseCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
-                }
+            if (response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
                 return;
             }
             try {
                 if (response.isSuccessful()) {
                     String resData = new String(response.body().bytes());
-                    JSONObject jObject = new JSONObject(resData);
+                    JSONObject jsonObject = new JSONObject(resData);
                     currentGpPrefsForUser = new UserPostSettingResult();
-                    currentGpPrefsForUser.setId(jObject.getJSONObject("data").getJSONObject("result").getInt("id"));
-                } else {
-
+                    currentGpPrefsForUser.setId(jsonObject.getJSONObject("data").getJSONObject("result").getInt("id"));
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
@@ -322,30 +300,9 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
         }
     };
 
-    private void patchNotificationSettingForGroup(int patchActionId, String patchActionType) {
-
-    }
-
     private Callback<GroupDetailResponse> notificationUpdateResponseCallback = new Callback<GroupDetailResponse>() {
         @Override
         public void onResponse(Call<GroupDetailResponse> call, retrofit2.Response<GroupDetailResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    FirebaseCrashlytics.getInstance().recordException(nee);
-                }
-                return;
-            }
-            try {
-                if (response.isSuccessful()) {
-                    GroupDetailResponse groupPostResponse = response.body();
-                } else {
-
-                }
-            } catch (Exception e) {
-                FirebaseCrashlytics.getInstance().recordException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
         }
 
         @Override
