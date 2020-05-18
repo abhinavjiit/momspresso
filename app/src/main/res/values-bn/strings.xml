@@ -831,6 +831,7 @@
   <string name="report.religious">এটা ধর্মীয় ভাবনাকে আঘাত করছে</string>
   <string name="report.inappro">অসঙ্গত</string>
   <string name="report.spam">স্প্যাম</string>
+  <string name="report.incorrect_lang">Incorrect Language</string>
   <string name="report.not_relevant">অন্য কিছু</string>
   <string name="reply">উত্তর</string>
 

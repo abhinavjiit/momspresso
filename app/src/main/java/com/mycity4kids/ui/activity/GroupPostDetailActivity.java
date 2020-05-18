@@ -570,12 +570,12 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         String.valueOf(System.currentTimeMillis()), "sharing options", "", String.valueOf(groupId));
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
-                String shareUrl = AppConstants.GROUPS_BASE_SHARE_URL + postData.getUrl();
+                String shareUrl = AppConstants.WEB_URL + postData.getUrl();
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 break;
             case R.id.whatsappShare:
-                String shareUrlWhatsapp = AppConstants.GROUPS_BASE_SHARE_URL + postData.getUrl();
+                String shareUrlWhatsapp = AppConstants.WEB_URL + postData.getUrl();
                 AppUtils.shareCampaignWithWhatsApp(GroupPostDetailActivity.this, shareUrlWhatsapp, "", "", "", "", "");
                 break;
             default:

@@ -789,7 +789,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
 
-                String shareUrl = AppConstants.GROUPS_BASE_SHARE_URL + selectedGroup.getUrl();
+                String shareUrl = AppConstants.WEB_URL + selectedGroup.getUrl();
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT,
                         selectedGroup.getDescription() + "\n\n" + "Join " + selectedGroup.getTitle()
                                 + " support group\n" + shareUrl);
@@ -1659,13 +1659,13 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             case R.id.shareTextView:
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
-                String shareUrl = AppConstants.GROUPS_BASE_SHARE_URL + postList.get(position).getUrl();
+                String shareUrl = AppConstants.WEB_URL + postList.get(position).getUrl();
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 break;
 
             case R.id.whatsappShare:
-                String shareUrlWhatsapp = AppConstants.GROUPS_BASE_SHARE_URL + postList.get(position).getUrl();
+                String shareUrlWhatsapp = AppConstants.WEB_URL + postList.get(position).getUrl();
                 AppUtils.shareCampaignWithWhatsApp(GroupDetailsActivity.this, shareUrlWhatsapp, "", "", "", "", "");
                 break;
             default:

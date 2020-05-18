@@ -1259,8 +1259,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_EDITOR_URL)
                         || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_EDITOR_URL)) {
                     final String bloggerId = tempDeepLinkUrl
-                            .substring(tempDeepLinkUrl.lastIndexOf("/") + 1,
-                                    tempDeepLinkUrl.length());
+                            .substring(tempDeepLinkUrl.lastIndexOf("/") + 1);
                     if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId
                             .equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
                         showAlertDialog("Message",
@@ -1285,20 +1284,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         || tempDeepLinkUrl
                         .contains(AppConstants.DEEPLINK_MOMSPRESSO_ADD_FUNNY_VIDEO_URL)) {
                     final String bloggerId = tempDeepLinkUrl
-                            .substring(tempDeepLinkUrl.lastIndexOf("/") + 1,
-                                    tempDeepLinkUrl.length());
+                            .substring(tempDeepLinkUrl.lastIndexOf("/") + 1);
                     if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId
                             .equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
                         showAlertDialog("Message",
                                 "Logged in as " + SharedPrefUtils.getUserDetailModel(this)
                                         .getFirst_name() + " " + SharedPrefUtils
                                         .getUserDetailModel(this).getLast_name(),
-                                new OnButtonClicked() {
-                                    @Override
-                                    public void onButtonCLick(int buttonId) {
-                                        launchAddVideoOptions();
-                                    }
-                                });
+                                buttonId -> launchAddVideoOptions());
                     } else {
                         launchAddVideoOptions();
                     }
@@ -1308,27 +1301,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_PROFILE_URL)
                         || tempDeepLinkUrl.contains(AppConstants.DEEPLINK_MOMSPRESSO_PROFILE_URL)) {
                     final String bloggerId = tempDeepLinkUrl
-                            .substring(tempDeepLinkUrl.lastIndexOf("/") + 1,
-                                    tempDeepLinkUrl.length());
+                            .substring(tempDeepLinkUrl.lastIndexOf("/") + 1);
                     if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId
                             .equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
                         showAlertDialog("Message",
                                 "Logged in as " + SharedPrefUtils.getUserDetailModel(this)
                                         .getFirst_name() + " " + SharedPrefUtils
                                         .getUserDetailModel(this).getLast_name(),
-                                new OnButtonClicked() {
-                                    @Override
-                                    public void onButtonCLick(int buttonId) {
-                                        fragmentToLoad = Constants.PROFILE_FRAGMENT;
-                                    }
-                                });
+                                buttonId -> fragmentToLoad = Constants.PROFILE_FRAGMENT);
                     } else {
                         fragmentToLoad = Constants.PROFILE_FRAGMENT;
                     }
                 } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_ADD_SHORT_STORY_URL)) {
                     final String deepLinkChallengeId = tempDeepLinkUrl
-                            .substring(tempDeepLinkUrl.lastIndexOf("/") + 1,
-                                    tempDeepLinkUrl.length());
+                            .substring(tempDeepLinkUrl.lastIndexOf("/") + 1);
                     if (StringUtils.isNullOrEmpty(deepLinkChallengeId)) {
                         Intent ssIntent = new Intent(this, AddShortStoryActivity.class);
                         startActivity(ssIntent);
@@ -1386,8 +1372,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         || tempDeepLinkUrl
                         .contains(AppConstants.DEEPLINK_MOMSPRESSO_SUGGESTED_TOPIC_URL)) {
                     fragmentToLoad = Constants.SUGGESTED_TOPICS_FRAGMENT;
-                } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_UPCOMING_EVENTS)) {
-                    fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
                 } else if (tempDeepLinkUrl.contains(AppConstants.DEEPLINK_SETUP_BLOG)) {
                     SharedPreferences pref = getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
                     boolean blogSetup = pref.getBoolean("blogSetup", false);

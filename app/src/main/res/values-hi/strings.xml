@@ -827,6 +827,7 @@
   <string name="report.religious">यह धार्मिक भावनाओं को नुकसान पहुंचाता है</string>
   <string name="report.inappro">यह अनुचित है</string>
   <string name="report.spam">यह स्पैम है</string>
+  <string name="report.incorrect_lang">Incorrect Language</string>
   <string name="report.not_relevant">कोई  अन्य</string>
   <string name="reply">जवाब</string>
 

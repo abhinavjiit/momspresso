@@ -63,23 +63,26 @@ public interface TopicsCategoryAPI {
             @Query("end") int end,
             @Query("lang") String lang);
 
-//    @GET("/v1/articles/handpicked/mixed/")
-//    Call<MixFeedResponse> getTodaysBestFeed(
-//            @Query("publicationDate") String categoryId,
-//            @Query("start") int start,
-//            @Query("end") int end,
-//            @Query("lang") String lang
-//    );
+    @GET("/v1/articles/handpicked/mixed/")
+    Call<MixFeedResponse> getTodaysBestMixedFeed(
+            @Query("publicationDate") String categoryId,
+            @Query("start") int start,
+            @Query("end") int end,
+            @Query("lang") String lang,
+            @Query("itemTypes") String itemType
+    );
 
     @GET("/v1/trending/mixfeed/{start}/{size}")
     Call<MixFeedResponse> getTrendingFeed(@Path("start") int start,
             @Path("size") int size,
-            @Query("lang") String lang);
+            @Query("lang") String lang,
+            @Query("itemTypes") String itemType);
 
     @GET("/v1/articles/recent/mixed/{start}/{end}")
     Call<MixFeedResponse> getRecentFeed(@Path("start") int start,
             @Path("end") int end,
-            @Query("lang") String lang);
+            @Query("lang") String lang,
+            @Query("itemTypes") String itemType);
 
     @GET("/v1/articles/cities/{cityId}")
     Call<ArticleListingResponse> getBestArticlesForCity(@Path("cityId") String cityId,

@@ -26,6 +26,7 @@ import android.widget.Toast
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.appcompat.widget.PopupMenu
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -74,6 +75,7 @@ import com.mycity4kids.utils.PermissionUtil
 import com.mycity4kids.utils.SharingUtils
 import com.mycity4kids.utils.StringUtils
 import com.mycity4kids.utils.ToastUtils
+import com.mycity4kids.widget.MomspressoButtonWidget
 import com.mycity4kids.widget.StoryShareCardWidget
 import java.io.File
 import java.util.ArrayList
@@ -118,6 +120,10 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
     private lateinit var sharedStoryItem: MixFeedResult
     private lateinit var shareMedium: String
     private lateinit var mixfeedAdapter: UserContentAdapter
+    private lateinit var articleFilterTextView: MomspressoButtonWidget
+    private lateinit var storyFilterTextView: MomspressoButtonWidget
+    private lateinit var vlogsFilterTextView: MomspressoButtonWidget
+    private lateinit var filterContentContainer: ConstraintLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -141,6 +147,20 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
         pullToRefresh = rootView.findViewById(R.id.pullToRefresh)
         rootLayout =
             rootView.findViewById(R.id.rootLayout)
+
+        filterContentContainer = rootView.findViewById(R.id.filterContentContainer)
+        articleFilterTextView = rootView.findViewById(R.id.articleFilterTextView)
+        storyFilterTextView = rootView.findViewById(R.id.storyFilterTextView)
+        vlogsFilterTextView = rootView.findViewById(R.id.vlogsFilterTextView)
+
+        articleFilterTextView.setOnClickListener(this)
+        storyFilterTextView.setOnClickListener(this)
+        vlogsFilterTextView.setOnClickListener(this)
+
+        articleFilterTextView.isSelected = true
+        storyFilterTextView.isSelected = false
+        vlogsFilterTextView.isSelected = false
+
         mixpanel =
             MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN)
         userDynamoId =
@@ -209,60 +229,6 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
         return rootView
     }
 
-    //    private void loadTorcaiAd() {
-    //        Retrofit retro = BaseApplication.getInstance().getRetrofit();
-    //        TorcaiAdsAPI torcaiAdsApi = retro.create(TorcaiAdsAPI.class);
-    //        Call<ResponseBody> adsCall;
-    //        if (BuildConfig.DEBUG) {
-    //            adsCall = torcaiAdsApi.getTorcaiAd();
-    //        } else {
-    //            adsCall = torcaiAdsApi.getTorcaiAd(AppUtils.getAdSlotId("CAT", ""),
-    //                    "www.momspresso.com",
-    //                    AppUtils.getIpAddress(true),
-    //                    "1",
-    //                    "Momspresso",
-    //                    AppUtils.getAppVersion(BaseApplication.getAppContext()),
-    //                    "https://play.google.com/store/apps/details?id=com.mycity4kids&hl=en_IN",
-    //                    "mobile",
-    //                    SharedPrefUtils.getAdvertisementId(BaseApplication.getAppContext()),
-    //                    "" + System.getProperty("http.agent"));
-    //        }
-    //        adsCall.enqueue(new Callback<ResponseBody>() {
-    //            @Override
-    //            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-    //                String resData = null;
-    //                try {
-    //                    if (response.body() != null) {
-    //                        resData = new String(response.body().bytes());
-    //                        JSONObject jsonObject = new JSONObject(resData);
-    //                        JSONArray jsonArray = jsonObject.getJSONArray("response");
-    //                        String html = jsonArray.getJSONObject(0).getJSONObject("response").getString("adm")
-    //                                .replaceAll("\"//", "\"https://");
-    //                        Log.e("HTML CONTENT", "html == " + html);
-    //                        mixfeedAdapter.setTorcaiAdSlotData(true, html);
-    //                        mixfeedAdapter.notifyDataSetChanged();
-    //                    } else {
-    //                        mixfeedAdapter.setTorcaiAdSlotData(false, "");
-    //                        mixfeedAdapter.notifyDataSetChanged();
-    //                    }
-    //                } catch (Exception e) {
-    //                    mixfeedAdapter.setTorcaiAdSlotData(false, "");
-    //                    mixfeedAdapter.notifyDataSetChanged();
-    //                    FirebaseCrashlytics.getInstance().recordException(e);
-    //                    Log.d("FileNotFoundException", Log.getStackTraceString(e));
-    //                }
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<ResponseBody> call, Throwable t) {
-    //                mixfeedAdapter.setTorcaiAdSlotData(false, "");
-    //                mixfeedAdapter.notifyDataSetChanged();
-    //                FirebaseCrashlytics.getInstance().recordException(t);
-    //                Log.d("FileNotFoundException", Log.getStackTraceString(t));
-    //            }
-    //        });
-    //    }
-
     private fun hitArticleListingApi(sortKey: String?) {
         activity?.let {
             if (!ConnectivityUtils.isNetworkEnabled(it)) {
@@ -276,6 +242,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
         }
 
         if (Constants.KEY_FOLLOWING == sortKey) {
+            filterContentContainer.visibility = View.GONE
             val retrofit = BaseApplication.getInstance().retrofit
             val recommendationApi = retrofit.create(
                 RecommendationAPI::class.java
@@ -293,30 +260,22 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             progressBar.visibility = View.VISIBLE
             call.enqueue(followingFeedResponseCallback)
         } else if (Constants.KEY_TODAYS_BEST == sortKey) {
+            filterContentContainer.visibility = View.VISIBLE
             val retrofit = BaseApplication.getInstance().retrofit
             val topicsApi = retrofit.create(
                 TopicsCategoryAPI::class.java
             )
             val campaignApi = retrofit.create(CampaignAPI::class.java)
             val from = (nextPageNumber - 1) * LIMIT + 1
-            val filterCall = topicsApi.getTodaysBestFeed(
+            val filterCall = topicsApi.getTodaysBestMixedFeed(
                 DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + System.currentTimeMillis()),
                 from, from + LIMIT - 1,
-                SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext())
+                SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()),
+                getContentFilters()
             )
-            //            val filterCall = topicsApi.getTodaysBestFeed()
             filterCall.enqueue(articleListingResponseCallback)
-            //            if (SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext()) != "1") {
-            //                val campaignListCall =
-            //                    campaignApi.getCampaignList(
-            //                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId,
-            //                        0,
-            //                        1,
-            //                        3.0
-            //                    )
-            //                campaignListCall.enqueue(getCampaignList)
-            //            }
         } else if (Constants.KEY_TRENDING == sortKey) {
+            filterContentContainer.visibility = View.VISIBLE
             val retrofit = BaseApplication.getInstance().retrofit
             val topicsApi = retrofit.create(
                 TopicsCategoryAPI::class.java
@@ -324,10 +283,12 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             val from = (nextPageNumber - 1) * LIMIT
             val filterCall = topicsApi.getTrendingFeed(
                 from, LIMIT,
-                SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext())
+                SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()),
+                getContentFilters()
             )
             filterCall.enqueue(articleListingResponseCallback)
         } else {
+            filterContentContainer.visibility = View.VISIBLE
             val retrofit = BaseApplication.getInstance().retrofit
             val topicsApi = retrofit.create(
                 TopicsCategoryAPI::class.java
@@ -335,10 +296,37 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
             val from = (nextPageNumber - 1) * LIMIT + 1
             val filterCall = topicsApi.getRecentFeed(
                 from, from + LIMIT - 1,
-                SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext())
+                SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()),
+                getContentFilters()
             )
             filterCall.enqueue(articleListingResponseCallback)
         }
+    }
+
+    private fun getContentFilters(): String {
+        var filter: String = ""
+        if (articleFilterTextView.isSelected) {
+            if (filter.isEmpty()) {
+                filter = "0"
+            } else {
+                filter = "$filter,0"
+            }
+        }
+        if (storyFilterTextView.isSelected) {
+            if (filter.isEmpty()) {
+                filter = "1"
+            } else {
+                filter = "$filter,1"
+            }
+        }
+        if (vlogsFilterTextView.isSelected) {
+            if (filter.isEmpty()) {
+                filter = "2"
+            } else {
+                filter = "$filter,2"
+            }
+        }
+        return filter
     }
 
     private val followingFeedResponseCallback: Callback<MixFeedResponse?> =
@@ -621,16 +609,10 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                     startActivity(campaignIntent)
                 }
                 R.id.headerArticleView, R.id.fbAdArticleView, R.id.storyHeaderView, R.id.storyImageView1 -> {
-                    val limit: Int
-                    limit = if (Constants.KEY_FOR_YOU == sortType) {
-                        FORYOU_LIMIT
-                    } else {
-                        LIMIT
-                    }
-                    val page = position / limit
-                    val posSubList = position % limit
-                    val startIndex = page * limit
-                    val endIndex = startIndex + limit
+                    val page = position / LIMIT
+                    val posSubList = position % LIMIT
+                    val startIndex = page * LIMIT
+                    val endIndex = startIndex + LIMIT
                     val articleDataModelsSubList =
                         ArrayList(
                             mixfeedList!!.subList(startIndex, endIndex)
@@ -640,15 +622,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                             activity,
                             ShortStoryContainerActivity::class.java
                         )
-                        if (Constants.KEY_FOR_YOU.equals(
-                                sortType,
-                                ignoreCase = true
-                            )) {
-                            intent.putExtra(
-                                Constants.ARTICLE_OPENED_FROM,
-                                "ForYouScreen"
-                            )
-                        } else if (Constants.KEY_RECENT.equals(
+                        if (Constants.KEY_RECENT.equals(
                                 sortType,
                                 ignoreCase = true
                             )) {
@@ -724,15 +698,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                             activity,
                             ArticleDetailsContainerActivity::class.java
                         )
-                        if (Constants.KEY_FOR_YOU.equals(
-                                sortType,
-                                ignoreCase = true
-                            )) {
-                            intent.putExtra(
-                                Constants.ARTICLE_OPENED_FROM,
-                                "ForYouScreen"
-                            )
-                        } else if (Constants.KEY_RECENT.equals(
+                        if (Constants.KEY_RECENT.equals(
                                 sortType,
                                 ignoreCase = true
                             )) {
@@ -839,7 +805,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                     if (!mixfeedList!![position].isLiked) {
                         likeStatus = "1"
                         currentShortStoryPosition = position
-                        recommendUnrecommentArticleApi(
+                        recommendUnrecommendArticleApi(
                             "1", mixfeedList!![position].id,
                             mixfeedList!![position].userId,
                             mixfeedList!![position].userName
@@ -847,12 +813,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                     }
                 }
                 else -> {
-                    val limit: Int
-                    limit = if (Constants.KEY_FOR_YOU == sortType) {
-                        FORYOU_LIMIT
-                    } else {
-                        LIMIT
-                    }
+                    val limit = LIMIT
                     val page = position / limit
                     val posSubList = position % limit
                     val startIndex = page * limit
@@ -866,15 +827,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                             activity,
                             ShortStoryContainerActivity::class.java
                         )
-                        if (Constants.KEY_FOR_YOU.equals(
-                                sortType,
-                                ignoreCase = true
-                            )) {
-                            intent.putExtra(
-                                Constants.ARTICLE_OPENED_FROM,
-                                "ForYouScreen"
-                            )
-                        } else if (Constants.KEY_RECENT.equals(
+                        if (Constants.KEY_RECENT.equals(
                                 sortType,
                                 ignoreCase = true
                             )) {
@@ -1055,7 +1008,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
         }
     }
 
-    private fun recommendUnrecommentArticleApi(
+    private fun recommendUnrecommendArticleApi(
         status: String,
         articleId: String,
         authorId: String,
@@ -1163,9 +1116,36 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                 intent1.putExtra("source", "foryou")
                 startActivity(intent1)
             }
+            R.id.articleFilterTextView -> {
+                articleFilterTextView.isSelected = true
+                storyFilterTextView.isSelected = false
+                vlogsFilterTextView.isSelected = false
+                filterCurrentFeed()
+            }
+            R.id.storyFilterTextView -> {
+                articleFilterTextView.isSelected = false
+                storyFilterTextView.isSelected = true
+                vlogsFilterTextView.isSelected = false
+                filterCurrentFeed()
+            }
+            R.id.vlogsFilterTextView -> {
+                articleFilterTextView.isSelected = false
+                storyFilterTextView.isSelected = false
+                vlogsFilterTextView.isSelected = true
+                filterCurrentFeed()
+            }
             else -> {
             }
         }
+    }
+
+    private fun filterCurrentFeed() {
+        mixfeedList!!.clear()
+        mixfeedAdapter.notifyDataSetChanged()
+        shimmerFrameLayout.visibility = View.VISIBLE
+        shimmerFrameLayout.startShimmerAnimation()
+        nextPageNumber = 1
+        hitArticleListingApi(sortType)
     }
 
     override fun onResume() {
@@ -1635,7 +1615,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                         if (it) {
                             likeStatus = "0"
                             currentShortStoryPosition = position
-                            recommendUnrecommentArticleApi(
+                            recommendUnrecommendArticleApi(
                                 "0",
                                 mixfeedList?.get(position)?.id!!,
                                 mixfeedList?.get(position)?.userId!!,
@@ -1644,7 +1624,7 @@ class ArticleListingFragment : BaseFragment(), View.OnClickListener,
                         } else {
                             likeStatus = "1"
                             currentShortStoryPosition = position
-                            recommendUnrecommentArticleApi(
+                            recommendUnrecommendArticleApi(
                                 "1",
                                 mixfeedList?.get(position)?.id!!,
                                 mixfeedList?.get(position)?.userId!!,

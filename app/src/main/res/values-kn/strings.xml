@@ -764,6 +764,7 @@
   <string name="report.religious">ಇದು ಧಾರ್ಮಿಕ ಭಾವನೆಗಳನ್ನು ನೋಯಿಸುತ್ತದೆ</string>
   <string name="report.inappro">ಇದು ಸೂಕ್ತವಲ್ಲ</string>
   <string name="report.spam">ಇದು ಸ್ಪ್ಯಾಮ್ ಆಗಿದೆ</string>
+  <string name="report.incorrect_lang">Incorrect Language</string>
   <string name="report.not_relevant">ಮತ್ತೇನಾದರೂ</string>
   <string name="reply">ಪ್ರತಿಕ್ರಿಯಿಸು</string>
   <string name="reported.spam">Reported as Spam</string>

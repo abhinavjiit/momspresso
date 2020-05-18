@@ -873,6 +873,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
   <string name="report.religious">ਇਹ ਧਾਰਮਿਕ ਭਾਵਨਾਵਾਂ ਨੂੰ ਠੇਸ ਪਹੁੰਚਾਉਂਦਾ ਹੈ</string>
   <string name="report.inappro">ਇਹ ਅਣਉਚਿਤ ਹੈe</string>
   <string name="report.spam">ਇਹ ਸਪੈਮ ਹੈ</string>
+  <string name="report.incorrect_lang">Incorrect Language</string>
   <string name="report.not_relevant">ਹੋਰ ਕੋਈ ਵੀ</string>
   <string name="reply">ਜਵਾਬ ਦਿਉ</string>
 
