@@ -234,21 +234,7 @@
         android:textColor="@color/black_color"
         android:visibility="gone" />
 
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/shimmer1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white_color"
-        android:visibility="visible"
-        app:duration="1000">
 
-
-        <include
-            layout="@layout/collection_detail_shimmer_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </com.facebook.shimmer.ShimmerFrameLayout>
 
     <FrameLayout
         android:id="@+id/deleteCollectionMainLayout"

@@ -404,7 +404,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 consolidatedList.add(commentModel);
             }
             adapter.setListData(consolidatedList);
-            paginationCommentId = commentList.get(commentList.size() - 1).get_id();
+            paginationCommentId = commentList.get(commentList.size() - 1).getId();
             downloadedComment = downloadedComment + commentList.size();
             if (downloadedComment >= totalCommentCount) {
                 isLastPageReached = true;
@@ -634,7 +634,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 shortStoryCommentRepliesDialogFragment = new ShortStoryCommentRepliesDialogFragment();
                 Bundle args = new Bundle();
                 args.putParcelable("commentReplies", consolidatedList.get(position).getSsComment());
-                args.putInt("totalRepliesCount", consolidatedList.get(position).getSsComment().getReplies_count());
+                args.putInt("totalRepliesCount", consolidatedList.get(position).getSsComment().getRepliesCount());
                 args.putInt("position", position);
                 shortStoryCommentRepliesDialogFragment.setArguments(args);
                 shortStoryCommentRepliesDialogFragment.setCancelable(true);
@@ -846,13 +846,13 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 CommentListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     CommentListData shortStoryCommentListData = new CommentListData();
-                    shortStoryCommentListData.set_id(responseData.getData().get(0).get_id());
+                    shortStoryCommentListData.setId(responseData.getData().get(0).getId());
                     shortStoryCommentListData.setMessage(responseData.getData().get(0).getMessage());
                     shortStoryCommentListData.setCreatedTime(responseData.getData().get(0).getCreatedTime());
                     shortStoryCommentListData.setPostId(responseData.getData().get(0).getPostId());
                     shortStoryCommentListData.setParentCommentId("0");
                     shortStoryCommentListData.setReplies(new ArrayList<CommentListData>());
-                    shortStoryCommentListData.setReplies_count(0);
+                    shortStoryCommentListData.setRepliesCount(0);
                     shortStoryCommentListData.setUserPic(responseData.getData().get(0).getUserPic());
                     shortStoryCommentListData.setUserName(responseData.getData().get(0).getUserName());
                     shortStoryCommentListData.setUserId(responseData.getData().get(0).getUserId());
@@ -997,7 +997,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 CommentListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     CommentListData shortStoryCommentListData = new CommentListData();
-                    shortStoryCommentListData.set_id(responseData.getData().get(0).get_id());
+                    shortStoryCommentListData.setId(responseData.getData().get(0).getId());
                     shortStoryCommentListData.setMessage(responseData.getData().get(0).getMessage());
                     shortStoryCommentListData.setCreatedTime(responseData.getData().get(0).getCreatedTime());
                     shortStoryCommentListData.setPostId(responseData.getData().get(0).getPostId());
@@ -1006,11 +1006,11 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     shortStoryCommentListData.setUserName(responseData.getData().get(0).getUserName());
                     shortStoryCommentListData.setUserId(responseData.getData().get(0).getUserId());
                     for (int i = 1; i < consolidatedList.size(); i++) {
-                        if (consolidatedList.get(i).getSsComment().get_id()
+                        if (consolidatedList.get(i).getSsComment().getId()
                                 .equals(responseData.getData().get(0).getParentCommentId())) {
                             consolidatedList.get(i).getSsComment().getReplies().add(0, shortStoryCommentListData);
                             consolidatedList.get(i).getSsComment()
-                                    .setReplies_count(consolidatedList.get(i).getSsComment().getReplies_count() + 1);
+                                    .setRepliesCount(consolidatedList.get(i).getSsComment().getRepliesCount() + 1);
                             if (shortStoryCommentRepliesDialogFragment != null) {
                                 shortStoryCommentRepliesDialogFragment
                                         .updateRepliesList(consolidatedList.get(i).getSsComment());
@@ -1081,9 +1081,9 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     boolean isReplyUpdated = false;
                     for (int i = 1; i < consolidatedList.size(); i++) {
-                        if (consolidatedList.get(i).getSsComment().get_id().equals(editReplyParentCommentId)) {
+                        if (consolidatedList.get(i).getSsComment().getId().equals(editReplyParentCommentId)) {
                             for (int j = 0; j < consolidatedList.get(i).getSsComment().getReplies().size(); j++) {
-                                if (consolidatedList.get(i).getSsComment().getReplies().get(j).get_id()
+                                if (consolidatedList.get(i).getSsComment().getReplies().get(j).getId()
                                         .equals(editReplyId)) {
                                     consolidatedList.get(i).getSsComment().getReplies().get(j).setMessage(editContent);
                                     if (shortStoryCommentRepliesDialogFragment != null) {
@@ -1133,7 +1133,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         deleteCommentPos = commentPos;
         deleteReplyPos = replyPos;
         Call<CommentListResponse> call = shortStoryApi.deleteCommentOrReply(
-                consolidatedList.get(commentPos).getSsComment().getReplies().get(replyPos).get_id());
+                consolidatedList.get(commentPos).getSsComment().getReplies().get(replyPos).getId());
         call.enqueue(deleteReplyResponseListener);
     }
 
@@ -1156,12 +1156,12 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 CommentListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     consolidatedList.get(deleteCommentPos).getSsComment().getReplies().remove(deleteReplyPos);
-                    consolidatedList.get(deleteCommentPos).getSsComment().setReplies_count(
-                            consolidatedList.get(deleteCommentPos).getSsComment().getReplies_count() - 1);
+                    consolidatedList.get(deleteCommentPos).getSsComment().setRepliesCount(
+                            consolidatedList.get(deleteCommentPos).getSsComment().getRepliesCount() - 1);
                     if (shortStoryCommentRepliesDialogFragment != null) {
                         shortStoryCommentRepliesDialogFragment
                                 .updateRepliesList(consolidatedList.get(deleteCommentPos).getSsComment());
-                        if (consolidatedList.get(deleteCommentPos).getSsComment().getReplies_count() == 0) {
+                        if (consolidatedList.get(deleteCommentPos).getSsComment().getRepliesCount() == 0) {
                             shortStoryCommentRepliesDialogFragment.dismiss();
                         }
                     }
@@ -1199,7 +1199,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onResponseDelete(int position, String responseType) {
         Call<CommentListResponse> call = shortStoryApi
-                .deleteCommentOrReply(consolidatedList.get(position).getSsComment().get_id());
+                .deleteCommentOrReply(consolidatedList.get(position).getSsComment().getId());
         call.enqueue(deleteCommentResponseListener);
         actionItemPosition = position;
     }
@@ -1277,7 +1277,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     public void onResponseReport(int position, String responseType) {
         ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
         Bundle args = new Bundle();
-        args.putString("postId", consolidatedList.get(position).getSsComment().get_id());
+        args.putString("postId", consolidatedList.get(position).getSsComment().getId());
         args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
         reportContentDialogFragment.setArguments(args);
         reportContentDialogFragment.setCancelable(true);

@@ -6,6 +6,7 @@
   android:fitsSystemWindows="true"
   android:orientation="vertical">
 
+
   <com.mycity4kids.observablescrollview.ObservableScrollView
     android:id="@+id/scroll_view"
     android:layout_width="match_parent"
@@ -25,28 +26,103 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
+
+      <ImageView
+        android:id="@+id/badge"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/article_title"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:translationZ="5dp"
+        android:visibility="gone" />
+
+
+      <RelativeLayout
+        android:id="@+id/headerImageOrYoutubeViewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/topAdSlotWebView"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+          android:id="@+id/cover_image"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/article_details_app_bar_height"
+          android:scaleType="fitXY"
+          android:src="@drawable/default_article" />
+
+        <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+          android:id="@+id/youtube_player_view"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:visibility="gone"
+          app:autoPlay="false"
+          app:showFullScreenButton="false"
+          app:useWebUi="false" />
+      </RelativeLayout>
+
+      <RelativeLayout
+        android:id="@+id/sponseredLayoutContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/headerImageOrYoutubeViewContainer"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:visibility="gone">
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/sponseredText"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_marginLeft="10dp"
+          android:textColor="@color/ad.author_name.text"
+          android:textSize="12sp"
+          app:fontName="open_sans.ttf" />
+
+        <ImageView
+          android:id="@+id/sponseredImage"
+          android:layout_width="80dp"
+          android:layout_height="80dp"
+          android:layout_alignParentRight="true" />
+
+
+      </RelativeLayout>
       <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/article_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/topAdSlotWebView"
+        android:layout_below="@+id/sponseredLayoutContainer"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:gravity="center_vertical"
         android:lineSpacingExtra="-4dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:text=""
-        android:textColor="@color/ad.title"
-        android:textSize="18sp"
-        app:fontName="oswald_regular.ttf" />
-
-      <org.apmem.tools.layouts.FlowLayout
-        android:id="@+id/statsFlowLayout"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textColor="#524D4D"
+        android:textSize="22sp"
+        app:fontName="Oswald-Medium.ttf" />
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/authorName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/article_title"
+        android:layout_toStartOf="@+id/statsFlowLayout"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="#A5A7A9"
+        app:fontName="open_sans.ttf" />
+      <org.apmem.tools.layouts.FlowLayout
+        android:id="@+id/statsFlowLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/article_title"
-        android:layout_marginStart="10dp">
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
+        android:paddingStart="@dimen/space_16"
+        android:paddingEnd="@dimen/space_16">
 
         <com.mycity4kids.widget.CustomFontTextView
           android:id="@+id/article_date"
@@ -58,6 +134,7 @@
           android:text=""
           android:textColor="@color/ad.stats.text"
           android:textSize="12sp"
+          android:visibility="gone"
           app:fontName="open_sans.ttf" />
 
         <com.mycity4kids.widget.CustomFontTextView
@@ -102,78 +179,14 @@
 
       </org.apmem.tools.layouts.FlowLayout>
 
-      <ImageView
-        android:id="@+id/badge"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_below="@+id/article_title"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
-        android:translationZ="5dp"
-        android:visibility="gone" />
-
-
-      <RelativeLayout
-        android:id="@+id/headerImageOrYoutubeViewContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/statsFlowLayout">
-
-        <ImageView
-          android:id="@+id/cover_image"
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/article_details_app_bar_height"
-          android:paddingLeft="10dp"
-          android:paddingRight="10dp"
-          android:scaleType="fitXY"
-          android:src="@drawable/default_article" />
-
-        <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
-          android:id="@+id/youtube_player_view"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:visibility="gone"
-          app:autoPlay="false"
-          app:showFullScreenButton="false"
-          app:useWebUi="false" />
-      </RelativeLayout>
-
-      <RelativeLayout
-        android:id="@+id/sponseredLayoutContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/headerImageOrYoutubeViewContainer"
-        android:layout_marginRight="10dp"
-        android:gravity="center"
-        android:paddingTop="10dp"
-        android:visibility="gone">
-
-        <com.mycity4kids.widget.CustomFontTextView
-          android:id="@+id/sponseredText"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_centerVertical="true"
-          android:layout_marginLeft="10dp"
-          android:textColor="@color/ad.author_name.text"
-          android:textSize="12sp"
-          app:fontName="open_sans.ttf" />
-
-        <ImageView
-          android:id="@+id/sponseredImage"
-          android:layout_width="80dp"
-          android:layout_height="80dp"
-          android:layout_alignParentRight="true" />
-
-
-      </RelativeLayout>
-
       <RelativeLayout
         android:id="@+id/image_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/sponseredLayoutContainer"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:visibility="gone">
 
         <com.mikhaellopez.circularimageview.CircularImageView
           android:id="@+id/user_image"
@@ -213,6 +226,7 @@
         android:text="author name"
         android:textColor="@color/ad.author_name.text"
         android:textSize="12sp"
+        android:visibility="gone"
         app:fontName="open_sans.ttf" />
 
       <com.mycity4kids.widget.CustomFontTextView
@@ -226,6 +240,7 @@
         android:text="EDITOR"
         android:textColor="@color/ad.author_type.text"
         android:textSize="12sp"
+        android:visibility="gone"
         app:fontName="open_sans.ttf" />
 
       <com.mycity4kids.widget.CustomFontTextView
@@ -240,16 +255,18 @@
         android:text="@string/ad.follow_author"
         android:textColor="@color/app_red"
         android:textSize="14sp"
+        android:visibility="gone"
         app:fontName="oswald_regular.ttf" />
 
       <View
         android:id="@+id/webViewSeparator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/image_layout"
+        android:layout_below="@+id/statsFlowLayout"
         android:layout_marginTop="9dp"
         android:layout_marginBottom="10dp"
-        android:background="@color/light_grey1" />
+        android:background="@color/light_grey1"
+        android:visibility="gone" />
 
       <LinearLayout
         android:id="@+id/progressBarContainer"
@@ -306,6 +323,7 @@
           android:text="@string/ad.tags_title.text"
           android:textColor="@color/ad.tags_title.text"
           android:textSize="15sp"
+          android:visibility="gone"
           app:fontName="oswald_regular.ttf" />
 
         <com.mycity4kids.widget.CustomFontTextView
@@ -320,29 +338,44 @@
           android:text="@string/ad.tags_subtitle.text"
           android:textColor="@color/ad.tags_subtitle.text"
           android:textSize="14sp"
+          android:visibility="gone"
           app:fontName="open_sans.ttf" />
 
         <RelativeLayout
           android:id="@+id/rl"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_below="@+id/tagsSubtitleTextView">
+          android:layout_below="@+id/tagsSubtitleTextView"
+          android:layout_marginTop="10dp">
+          <RelativeLayout
+            android:id="@+id/tagsContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <com.mycity4kids.widget.CustomFontTextView
+              android:id="@+id/tagsIndicatorView"
+              android:layout_width="20dp"
+              android:layout_height="20dp"
+              android:layout_centerVertical="true"
+              android:layout_marginStart="12dp"
+              android:background="#D1415A" />
 
-          <org.apmem.tools.layouts.FlowLayout
-            android:id="@+id/tagsLayout"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@color/white_color">
+            <org.apmem.tools.layouts.FlowLayout
+              android:id="@+id/tagsLayout"
+              android:layout_width="match_parent"
+              android:layout_height="50dp"
+              android:layout_marginLeft="10dp"
+              android:layout_marginRight="10dp"
+              android:layout_toEndOf="@+id/tagsIndicatorView"
+              android:background="@color/white_color">
 
-          </org.apmem.tools.layouts.FlowLayout>
+            </org.apmem.tools.layouts.FlowLayout>
+          </RelativeLayout>
 
           <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/viewAllTagsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tagsLayout"
+            android:layout_below="@+id/tagsContainer"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:paddingLeft="10dp"
@@ -355,11 +388,208 @@
             app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
 
+
+        <RelativeLayout
+          android:id="@+id/userFollowView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/rl"
+          android:layout_marginTop="25dp"
+          android:background="#0DE997A8"
+          android:paddingStart="@dimen/space_10"
+          android:paddingTop="@dimen/space_20"
+          android:paddingEnd="@dimen/space_10"
+          android:paddingBottom="@dimen/space_20">
+
+
+          <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/authorImageViewFollowContainer"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/default_commentor_img" />
+
+          <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/space_10"
+            android:layout_toLeftOf="@+id/followTextViewFollowContainer"
+            android:layout_toRightOf="@id/authorImageViewFollowContainer">
+
+            <com.mycity4kids.widget.CustomFontTextView
+              android:id="@+id/authorNameTextViewFollowContainer"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginStart="@dimen/space_12"
+              android:textColor="#4A4A4A"
+              android:textSize="18sp"
+              app:fontName="OpenSans-SemiBold.ttf" />
+
+            <RelativeLayout
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_below="@id/authorNameTextViewFollowContainer">
+
+              <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/postsCountTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_12"
+                android:textSize="12sp" />
+
+              <ImageView
+                android:id="@+id/dot"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/postsCountTextView"
+                android:background="@drawable/update_profile_bg"
+                android:backgroundTint="#979797" />
+
+
+              <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/likeCountTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_toRightOf="@id/dot"
+                android:textSize="12sp" />
+            </RelativeLayout>
+          </RelativeLayout>
+
+
+          <com.mycity4kids.widget.ShareButtonWidget
+            android:id="@+id/followTextViewFollowContainer"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/space_5"
+            android:layout_marginEnd="@dimen/space_5"
+            android:layout_marginBottom="@dimen/space_5"
+            android:elevation="0dp"
+            app:borderColor="@color/app_red"
+            app:borderthickness="1dp"
+            app:elevation="0dp"
+            app:gravity="center"
+            app:radius="5dp"
+            app:shareBgColor="@color/white"
+            app:shareText="FOLLOW"
+            app:shareTextColor="@color/app_red"
+            app:textStyle="bold" />
+        </RelativeLayout>
+
+        <View
+          android:id="@+id/followAndCommentsContainerDivider"
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:layout_below="@+id/userFollowView"
+          android:layout_marginStart="@dimen/space_10"
+          android:layout_marginTop="@dimen/space_10"
+          android:layout_marginEnd="@dimen/space_10"
+          android:background="#EBEBEB" />
+
+        <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/followAndCommentsContainerDivider">
+
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/commentsHeaderTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:text="Comments"
+            android:textAllCaps="true"
+            android:textColor="#515151"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:fontName="oswald_regular.ttf" />
+
+
+          <include
+            android:id="@+id/commentContainer"
+            layout="@layout/commentator_comment_container_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/commentsHeaderTextView"
+            android:layout_marginTop="@dimen/space_10"
+            android:visibility="gone" />
+
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/viewMoreTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/commentContainer"
+            android:layout_marginTop="@dimen/space_10"
+            android:layout_marginBottom="30dp"
+            android:gravity="center"
+            android:text="View More"
+            android:textColor="@color/app_red"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:fontName="oswald_regular.ttf" />
+
+          <RelativeLayout
+            android:id="@+id/beTheFirstOneCommentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:paddingStart="@dimen/space_10"
+            android:visibility="gone">
+            <RelativeLayout
+              android:id="@+id/writeCommentConatiner"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content">
+              <com.mycity4kids.widget.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="Comment"
+                android:textAllCaps="true"
+                android:textColor="#515151"
+                android:textSize="16sp"
+                app:fontName="oswald_regular.ttf" />
+
+              <com.mycity4kids.widget.ShareButtonWidget
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="30dp"
+                android:elevation="0dp"
+                android:textSize="14sp"
+                app:radius="4dp"
+                app:shareBgColor="#F7F7F7"
+                app:shareText="Write a Comment…"
+                app:shareTextColor="#C1C1C1" />
+            </RelativeLayout>
+            <com.mycity4kids.widget.CustomFontTextView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_below="@+id/writeCommentConatiner"
+              android:layout_marginTop="@dimen/space_16"
+              android:gravity="center"
+              android:text="Be the first one to comment"
+              android:textColor="#515151"
+              android:textSize="12sp" />
+
+
+          </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
         <com.mycity4kids.widget.CustomFontTextView
           android:id="@+id/viewCommentsTextView"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_below="@+id/rl"
+          android:layout_below="@+id/userFollowView"
           android:layout_marginStart="20dp"
           android:layout_marginLeft="20dp"
           android:layout_marginTop="20dp"
@@ -375,6 +605,7 @@
           android:text="@string/ad.comments.view_comment"
           android:textColor="@color/app_red"
           android:textSize="16sp"
+          android:visibility="gone"
           app:fontName="oswald_regular.ttf" />
       </RelativeLayout>
 
@@ -487,6 +718,53 @@
         android:layout_below="@+id/groupHeaderView"
         android:background="#f2f2f2" />
 
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/moreFromAuthorTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/groupHeaderView"
+        android:gravity="center_vertical"
+        android:padding="@dimen/space_16"
+        android:textAllCaps="true"
+        android:textColor="#515151"
+        android:textSize="18sp"
+        app:fontName="oswald_regular.ttf" />
+
+
+      <HorizontalScrollView
+        android:id="@+id/relatedArticleHorizontalScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/moreFromAuthorTextView"
+        android:layout_marginBottom="@dimen/space_10"
+        android:visibility="visible">
+        <include
+          layout="@layout/more_from_author_sub_layout_article_detail_fragment"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content" />
+      </HorizontalScrollView>
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/todaysBestHeaderTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relatedArticleHorizontalScrollView"
+        android:padding="@dimen/space_16"
+        android:text="Today’s Best"
+        android:textAllCaps="true"
+        android:textColor="#515151"
+        android:textSize="20sp"
+        app:fontName="oswald_regular.ttf" />
+      <include
+        android:id="@+id/todaysBestContainerLayout"
+        layout="@layout/today_best_layout_article_detail_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/todaysBestHeaderTextView"
+        android:layout_marginBottom="@dimen/space_20"/>
+
+
       <LinearLayout
         android:id="@+id/recentAuthorArticles"
         android:layout_width="match_parent"
@@ -546,16 +824,16 @@
           app:articleImage="@drawable/progress_spinner"
           app:articleTitle="" />
 
-      </LinearLayout>
 
+      </LinearLayout>
       <View
         android:id="@+id/relatedTrendingSeparator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/recentAuthorArticles"
         android:layout_marginTop="4dp"
-        android:background="#f2f2f2" />
-
+        android:background="#f2f2f2"
+        android:visibility="gone" />
       <LinearLayout
         android:id="@+id/trendingArticles"
         android:layout_width="match_parent"
@@ -614,42 +892,13 @@
           app:articleTitle="" />
 
       </LinearLayout>
-
       <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/trendingArticles"
         android:layout_marginTop="5dp"
-        android:background="#f2f2f2" />
-
-      <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/viewCommentsTextView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/trendingArticles"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/follow_topic_author_bg"
-        android:foregroundGravity="center"
-        android:gravity="center"
-        android:paddingLeft="10dp"
-        android:paddingTop="12dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="12dp"
-        android:text="@string/ad.comments.view_comment"
-        android:textColor="@color/app_red"
-        android:textSize="16sp"
-        android:visibility="gone"
-        app:fontName="oswald_regular.ttf" />
-
-
-      <TextView
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_below="@+id/viewCommentsTextView1" />
+        android:background="#f2f2f2"
+        android:visibility="gone" />
     </RelativeLayout>
   </com.mycity4kids.observablescrollview.ObservableScrollView>
 
@@ -731,35 +980,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="horizontal"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp">
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
-        <com.mycity4kids.widget.CustomFontTextView
-          android:id="@+id/facebookShareTextView"
-          android:layout_width="0dp"
-          android:layout_height="40dp"
-          android:layout_weight="1"
-          android:drawablePadding="2dp"
-          android:drawableTint="@color/app_red"
-          android:gravity="center"
-          android:text="@string/ad.bottom_bar.facebook"
-          android:textColor="@color/app_grey"
-          android:textSize="11sp"
-          app:fontName="oswald.ttf" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-          android:id="@+id/whatsappShareTextView"
-          android:layout_width="0dp"
-          android:layout_height="40dp"
-          android:layout_weight="1"
-          android:drawableTop="@drawable/ic_whats_app"
-          android:drawablePadding="2dp"
-          android:drawableTint="@color/app_red"
-          android:gravity="center"
-          android:text="@string/ad.bottom_bar.whatsapp"
-          android:textColor="@color/app_grey"
-          android:textSize="11sp"
-          app:fontName="oswald.ttf" />
 
         <com.mycity4kids.widget.CustomFontTextView
           android:id="@+id/emailShareTextView"
@@ -773,6 +996,7 @@
           android:text="@string/collection"
           android:textColor="@color/app_grey"
           android:textSize="11sp"
+          android:visibility="gone"
           app:fontName="oswald.ttf"
           app:textAllCaps="true" />
 
@@ -788,21 +1012,55 @@
           android:text="@string/ad.bottom_bar.bookmark"
           android:textColor="@color/app_grey"
           android:textSize="11sp"
+          android:visibility="gone"
           app:fontName="oswald.ttf" />
 
-        <com.mycity4kids.widget.CustomFontTextView
+        <androidx.appcompat.widget.AppCompatImageView
           android:id="@+id/likeTextView"
-          android:layout_width="0dp"
-          android:layout_height="40dp"
-          android:layout_weight="1"
-          android:drawableTop="@drawable/ic_recommend"
-          android:drawablePadding="2dp"
-          android:drawableTint="@color/app_red"
-          android:gravity="center"
-          android:text="@string/ad.bottom_bar.like"
-          android:textColor="@color/app_grey"
-          android:textSize="11sp"
-          app:fontName="oswald.ttf" />
+          android:layout_width="20dp"
+          android:layout_height="20dp"
+          android:layout_gravity="center_vertical"
+          android:layout_marginStart="20dp"
+          android:tint="@color/app_red"
+          app:fontName="oswald.ttf"
+          app:srcCompat="@drawable/ic_recommend" />
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/whatsappShareTextView"
+          android:layout_width="20dp"
+          android:layout_height="20dp"
+          android:layout_gravity="center_vertical"
+          android:layout_marginStart="30dp"
+          android:tint="@color/campaign_listing_light_green_bottom"
+          app:fontName="oswald.ttf"
+          app:srcCompat="@drawable/ic_whats_app" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/facebookShareTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:layout_marginStart="30dp"
+          app:fontName="oswald.ttf"
+          app:srcCompat="@drawable/ic_fb_article_detail" />
+
+        <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical">
+
+          <com.mycity4kids.widget.ShareButtonWidget
+            android:id="@+id/writeCommentTextView"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="30dp"
+            android:elevation="0dp"
+            android:textSize="14sp"
+            app:radius="4dp"
+            app:shareBgColor="#F7F7F7"
+            app:shareText="Write a Comment…"
+            app:shareTextColor="#C1C1C1" />
+        </RelativeLayout>
 
       </LinearLayout>
     </LinearLayout>
@@ -820,4 +1078,33 @@
     android:layout_marginEnd="@dimen/space_10"
     android:layout_marginBottom="@dimen/space_10"
     android:visibility="gone" />
+
+  <RelativeLayout
+    android:id="@+id/bookmarkOrMenuBarContainer"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentEnd="true"
+    android:layout_marginTop="@dimen/space_5"
+    android:background="@drawable/left_both_corner_rounded_article_detail_layout"
+    android:visibility="visible">
+
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/bookmarkImageViewNew"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:padding="@dimen/space_16"
+      android:tint="@color/app_red"
+      app:srcCompat="@drawable/ic_group_bookmark_article_detail"
+      app:tint="@color/grey" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/menuItemImageView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_toRightOf="@id/bookmarkImageViewNew"
+      android:padding="@dimen/space_16"
+      app:srcCompat="@drawable/ic_three_verticle_dot_rounded" />
+  </RelativeLayout>
 </RelativeLayout>

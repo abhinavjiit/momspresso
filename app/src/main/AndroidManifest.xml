@@ -247,7 +247,8 @@
     <activity
       android:name=".ui.activity.ArticleDetailsContainerActivity"
       android:configChanges="uiMode"
-      android:screenOrientation="portrait" />
+      android:screenOrientation="portrait"
+      android:theme="@style/EditorTheme" />
     <activity
       android:name=".ui.activity.CityBestArticleListingActivity"
       android:screenOrientation="portrait" />

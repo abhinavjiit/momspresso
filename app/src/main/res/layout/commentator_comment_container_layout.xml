@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+  <RelativeLayout
+    android:id="@+id/commentContainer1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/space_10">
+    <com.mikhaellopez.circularimageview.CircularImageView
+      android:id="@+id/commentatorImageView"
+      android:layout_width="34dp"
+      android:layout_height="34dp"
+      android:src="@drawable/default_commentor_img" />
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_toRightOf="@id/commentatorImageView">
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/commentatorNameAndCommentTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/space_10"
+        android:textColor="@color/campaign_4A4A4A"
+        android:textSize="12sp" />
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/commentDateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/commentatorNameAndCommentTextView"
+        android:paddingStart="@dimen/space_10"
+        android:layout_marginTop="@dimen/space_5"
+        android:textColor="#979797"
+        android:textSize="12sp" />
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/likeCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/commentDateTextView"
+        android:drawablePadding="6dp"
+        android:padding="5dp"
+        android:textColor="#979797" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/replyCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/commentDateTextView"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="@dimen/space_5"
+        android:layout_toRightOf="@id/likeCount"
+        android:drawableLeft="@drawable/ic_shape"
+        android:drawablePadding="@dimen/space_6"
+        android:padding="5dp"
+        android:textColor="#979797" />
+
+
+      <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/reportCommentContent1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/commentDateTextView"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="@dimen/space_5"
+        android:layout_marginEnd="@dimen/space_20"
+        android:padding="5dp"
+        app:srcCompat="@drawable/ic_three_verticle_dot_rounded" />
+
+
+    </RelativeLayout>
+  </RelativeLayout>
+
+  <RelativeLayout
+    android:id="@+id/commentContainer2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/commentContainer1"
+    android:paddingStart="@dimen/space_10">
+    <com.mikhaellopez.circularimageview.CircularImageView
+      android:id="@+id/commentatorImageView2"
+      android:layout_width="34dp"
+      android:layout_height="34dp"
+      android:src="@drawable/default_commentor_img" />
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_toRightOf="@id/commentatorImageView2">
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/commentatorNameAndCommentTextView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/space_10"
+        android:textSize="12sp" />
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/commentDateTextView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/commentatorNameAndCommentTextView2"
+        android:paddingStart="10dp"
+        android:textColor="#979797"
+        android:textSize="12sp" />
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/likeCount2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/commentDateTextView2"
+        android:drawablePadding="6dp"
+        android:padding="5dp"
+        android:layout_marginTop="@dimen/space_5"
+        android:paddingStart="@dimen/space_10"
+        android:textColor="#979797"
+        app:drawableTint="#979797" />
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/replyCount2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/commentDateTextView2"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="@dimen/space_5"
+        android:layout_toRightOf="@id/likeCount2"
+        android:drawableLeft="@drawable/ic_shape"
+        android:drawablePadding="@dimen/space_6"
+        android:textColor="#979797"
+        android:padding="5dp" />
+
+      <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/reportCommentContent2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/commentDateTextView2"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="@dimen/space_5"
+        android:layout_marginEnd="@dimen/space_20"
+        android:padding="5dp"
+        app:srcCompat="@drawable/ic_three_verticle_dot_rounded" />
+
+    </RelativeLayout>
+  </RelativeLayout>
+
+</RelativeLayout>

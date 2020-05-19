@@ -105,7 +105,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
                 isLastPageReached = true;
             } else {
                 downloadedReplies = data.getReplies().size();
-                paginationReplyId = data.getReplies().get(data.getReplies().size() - 1).get_id();
+                paginationReplyId = data.getReplies().get(data.getReplies().size() - 1).getId();
             }
         } else {
             isLastPageReached = true;
@@ -137,8 +137,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
     private void getCommentReplies() {
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-        Call<CommentListResponse> call = articleDetailsAPI
-                .getArticleCommentReplies(data.getPostId(), "reply", data.get_id(), paginationReplyId);
+        Call<CommentListResponse> call = articleDetailsAPI.getArticleCommentReplies(data.getPostId(), "reply", data.getId(), paginationReplyId);
         call.enqueue(articleCommentRepliesCallback);
     }
 
@@ -180,7 +179,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
         } else {
             repliesList.addAll(replyList);
             commentRepliesRecyclerAdapter.setData(repliesList);
-            paginationReplyId = replyList.get(replyList.size() - 1).get_id();
+            paginationReplyId = replyList.get(replyList.size() - 1).getId();
             downloadedReplies = downloadedReplies + replyList.size();
             if (downloadedReplies >= totalRepliesCount) {
                 isLastPageReached = true;
@@ -340,7 +339,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
         ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
         FragmentManager fm = getChildFragmentManager();
         Bundle _args = new Bundle();
-        _args.putString("postId", repliesList.get(position).get_id());
+        _args.putString("postId", repliesList.get(position).getId());
         _args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
         reportContentDialogFragment.setArguments(_args);
         reportContentDialogFragment.setCancelable(true);

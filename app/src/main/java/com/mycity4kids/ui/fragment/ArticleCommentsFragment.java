@@ -187,7 +187,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 commentsList.add(commentList.get(i));
             }
             articleCommentsRecyclerAdapter.setData(commentsList);
-            paginationCommentId = commentList.get(commentList.size() - 1).get_id();
+            paginationCommentId = commentList.get(commentList.size() - 1).getId();
             downloadedComment = downloadedComment + commentList.size();
             if (downloadedComment >= totalCommentCount) {
                 isLastPageReached = true;
@@ -247,13 +247,13 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                     CommentListData commentModel = new CommentListData();
-                    commentModel.set_id(responseData.getData().get(0).get_id());
+                    commentModel.setId(responseData.getData().get(0).getId());
                     commentModel.setMessage(responseData.getData().get(0).getMessage());
                     commentModel.setCreatedTime(responseData.getData().get(0).getCreatedTime());
                     commentModel.setPostId(responseData.getData().get(0).getPostId());
                     commentModel.setParentCommentId("0");
                     commentModel.setReplies(new ArrayList<CommentListData>());
-                    commentModel.setReplies_count(0);
+                    commentModel.setRepliesCount(0);
                     commentModel.setUserPic(responseData.getData().get(0).getUserPic());
                     commentModel.setUserName(responseData.getData().get(0).getUserName());
                     commentModel.setUserId(responseData.getData().get(0).getUserId());
@@ -365,7 +365,9 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
 
     @Override
     public void onResponseDelete(int position, String responseType) {
-        Call<CommentListResponse> call = articleDetailsApi.deleteCommentOrReply(commentsList.get(position).get_id());
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
+        Call<CommentListResponse> call = articleDetailsAPI.deleteCommentOrReply(commentsList.get(position).getId());
         call.enqueue(deleteCommentResponseListener);
         actionItemPosition = position;
     }
@@ -386,13 +388,13 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
 
     @Override
     public void onResponseReport(int position, String responseType) {
-        Bundle args = new Bundle();
-        args.putString("postId", commentsList.get(position).get_id());
-        args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
         ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
-        reportContentDialogFragment.setArguments(args);
-        reportContentDialogFragment.setCancelable(true);
         FragmentManager fm = getChildFragmentManager();
+        Bundle _args = new Bundle();
+        _args.putString("postId", commentsList.get(position).getId());
+        _args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
+        reportContentDialogFragment.setArguments(_args);
+        reportContentDialogFragment.setCancelable(true);
         reportContentDialogFragment.show(fm, "Report Content");
     }
 
@@ -477,7 +479,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                     CommentListData commentListData = new CommentListData();
-                    commentListData.set_id(responseData.getData().get(0).get_id());
+                    commentListData.setId(responseData.getData().get(0).getId());
                     commentListData.setMessage(responseData.getData().get(0).getMessage());
                     commentListData.setCreatedTime(responseData.getData().get(0).getCreatedTime());
                     commentListData.setPostId(responseData.getData().get(0).getPostId());
@@ -487,9 +489,9 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                     commentListData.setUserId(responseData.getData().get(0).getUserId());
 
                     for (int i = 0; i < commentsList.size(); i++) {
-                        if (commentsList.get(i).get_id().equals(responseData.getData().get(0).getParentCommentId())) {
+                        if (commentsList.get(i).getId().equals(responseData.getData().get(0).getParentCommentId())) {
                             commentsList.get(i).getReplies().add(0, commentListData);
-                            commentsList.get(i).setReplies_count(commentsList.get(i).getReplies_count() + 1);
+                            commentsList.get(i).setRepliesCount(commentsList.get(i).getRepliesCount() + 1);
                             if (articleCommentRepliesDialogFragment != null) {
                                 articleCommentRepliesDialogFragment.updateRepliesList(commentsList.get(i));
                             }
@@ -556,9 +558,9 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     boolean isReplyUpdated = false;
                     for (int i = 0; i < commentsList.size(); i++) {
-                        if (commentsList.get(i).get_id().equals(editReplyParentCommentId)) {
+                        if (commentsList.get(i).getId().equals(editReplyParentCommentId)) {
                             for (int j = 0; j < commentsList.get(i).getReplies().size(); j++) {
-                                if (commentsList.get(i).getReplies().get(j).get_id().equals(editReplyId)) {
+                                if (commentsList.get(i).getReplies().get(j).getId().equals(editReplyId)) {
                                     commentsList.get(i).getReplies().get(j).setMessage(editContent);
                                     if (articleCommentRepliesDialogFragment != null) {
                                         articleCommentRepliesDialogFragment.updateRepliesList(commentsList.get(i));
@@ -604,8 +606,10 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     void deleteReply(int commentPos, int replyPos) {
         deleteCommentPos = commentPos;
         deleteReplyPos = replyPos;
-        Call<CommentListResponse> call = articleDetailsApi
-                .deleteCommentOrReply(commentsList.get(commentPos).getReplies().get(replyPos).get_id());
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
+        Call<CommentListResponse> call = articleDetailsAPI
+                .deleteCommentOrReply(commentsList.get(commentPos).getReplies().get(replyPos).getId());
         call.enqueue(deleteReplyResponseListener);
     }
 
@@ -626,10 +630,10 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     commentsList.get(deleteCommentPos).getReplies().remove(deleteReplyPos);
                     commentsList.get(deleteCommentPos)
-                            .setReplies_count(commentsList.get(deleteCommentPos).getReplies_count() - 1);
+                            .setRepliesCount(commentsList.get(deleteCommentPos).getRepliesCount() - 1);
                     if (articleCommentRepliesDialogFragment != null) {
                         articleCommentRepliesDialogFragment.updateRepliesList(commentsList.get(deleteCommentPos));
-                        if (commentsList.get(deleteCommentPos).getReplies_count() == 0) {
+                        if (commentsList.get(deleteCommentPos).getRepliesCount() == 0) {
                             articleCommentRepliesDialogFragment.dismiss();
                         }
                     }
@@ -708,12 +712,12 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             }
             break;
             case R.id.replyCountTextView: {
-                Bundle args = new Bundle();
-                args.putParcelable("commentReplies", commentsList.get(position));
-                args.putInt("totalRepliesCount", commentsList.get(position).getReplies_count());
-                args.putInt("position", position);
                 articleCommentRepliesDialogFragment = new ArticleCommentRepliesDialogFragment();
-                articleCommentRepliesDialogFragment.setArguments(args);
+                Bundle _args = new Bundle();
+                _args.putParcelable("commentReplies", commentsList.get(position));
+                _args.putInt("totalRepliesCount", commentsList.get(position).getRepliesCount());
+                _args.putInt("position", position);
+                articleCommentRepliesDialogFragment.setArguments(_args);
                 articleCommentRepliesDialogFragment.setCancelable(true);
                 FragmentManager fm = getChildFragmentManager();
                 articleCommentRepliesDialogFragment.show(fm, "View Replies");

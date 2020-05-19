@@ -142,9 +142,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
                     ssCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
                 } else {
                     ssCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
-                    ssCommentViewHolder.replyCountTextView.setText(
-                            mContext.getString(R.string.short_s_view_replies) + "(" + datalist.get(position)
-                                    .getSsComment().getReplies_count() + ")");
+                    ssCommentViewHolder.replyCountTextView.setText(mContext.getString(R.string.short_s_view_replies) + "(" + datalist.get(position).getSsComment().getRepliesCount() + ")");
                 }
                 try {
                     Picasso.get().load(datalist.get(position).getSsComment().getUserPic().getClientAppMin())

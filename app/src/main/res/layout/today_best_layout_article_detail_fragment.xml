@@ -1,0 +1,792 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+      android:id="@+id/todaysBestContainer1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:visibility="gone">
+      <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/todaysBestImageView1"
+          android:layout_width="match_parent"
+          android:layout_height="214dp"
+          android:adjustViewBounds="true"
+          android:scaleType="fitXY"
+          android:src="@drawable/default_article" />
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/todaysBestArticleTextView1"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/todaysBestImageView1"
+          android:layout_marginTop="@dimen/space_12"
+          android:ellipsize="end"
+          android:maxLines="2"
+          android:paddingStart="@dimen/space_16"
+          android:paddingEnd="@dimen/space_16"
+          android:textColor="#524D4D"
+          android:textSize="22sp"
+          app:fontName="Oswald-Medium.ttf" />
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/authorName1"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/todaysBestArticleTextView1"
+          android:layout_marginTop="10dp"
+          android:layout_toStartOf="@+id/statsFlowLayout1"
+          android:paddingStart="16dp"
+          android:paddingEnd="16dp"
+          android:textColor="#A5A7A9"
+          app:fontName="open_sans.ttf" />
+
+        <org.apmem.tools.layouts.FlowLayout
+          android:id="@+id/statsFlowLayout1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/todaysBestArticleTextView1"
+          android:layout_alignParentEnd="true"
+          android:layout_marginStart="10dp"
+          android:layout_marginTop="@dimen/space_10"
+          android:paddingStart="@dimen/space_16"
+          android:paddingEnd="@dimen/space_16">
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/article_date1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/article_title"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:text=""
+            android:textColor="@color/ad.stats.text"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:fontName="open_sans.ttf" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/articleViewCountTextView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:drawableLeft="@drawable/ic_views"
+            android:drawablePadding="3dp"
+            android:text=""
+            android:textColor="@color/ad.stats.text"
+            android:textSize="12sp"
+            app:fontName="open_sans.ttf" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/articleCommentCountTextView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/article_title"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:drawableLeft="@drawable/ic_comments"
+            android:drawablePadding="3dp"
+            android:text=""
+            android:textColor="@color/ad.stats.text"
+            android:textSize="12sp"
+            app:fontName="open_sans.ttf" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/articleRecommendationCountTextView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/article_title"
+            android:layout_marginBottom="10dp"
+            android:drawableLeft="@drawable/ic_likes"
+            android:drawablePadding="3dp"
+            android:text=""
+            android:textColor="@color/ad.stats.text"
+            android:textSize="12sp"
+            app:fontName="open_sans.ttf" />
+
+        </org.apmem.tools.layouts.FlowLayout>
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/bodyTextView1"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/statsFlowLayout1"
+          android:layout_marginTop="@dimen/space_10"
+          android:paddingStart="@dimen/space_16"
+          android:paddingEnd="@dimen/space_16"
+          app:fontName="georgia.ttf"
+          android:textColor="#524D4D"
+          android:textSize="16sp" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/shareTodayBestArticle1"
+          android:layout_width="25dp"
+          android:layout_height="25dp"
+          android:layout_below="@id/bodyTextView1"
+          android:layout_marginStart="@dimen/space_16"
+          android:layout_marginTop="@dimen/space_30"
+          android:layout_marginBottom="@dimen/space_10"
+          app:srcCompat="@drawable/sharee"
+          app:tint="@color/grey" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/bookmarkTodaysBestArticle1"
+          android:layout_width="20dp"
+          android:layout_height="25dp"
+          android:layout_below="@id/bodyTextView1"
+          android:layout_marginStart="30dp"
+          android:layout_marginTop="@dimen/space_30"
+          android:layout_marginBottom="@dimen/space_10"
+          android:layout_toRightOf="@id/shareTodayBestArticle1"
+          app:srcCompat="@drawable/ic_bookmark"
+          app:tint="@color/grey" />
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/continueReadingTextView1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/bodyTextView1"
+          android:layout_alignParentEnd="true"
+          android:layout_marginTop="@dimen/space_30"
+          android:layout_marginEnd="@dimen/space_16"
+          android:layout_marginBottom="@dimen/space_20"
+          android:text="Continue Reading"
+          android:textColor="@color/app_red"
+          android:textSize="18sp"
+          app:fontName="oswald.ttf" />
+
+
+      </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+      android:id="@+id/todaysBestContainer2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/todaysBestContainer1"
+      android:layout_marginTop="25dp"
+      android:visibility="gone">
+      <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/todaysBestImageView2"
+          android:layout_width="match_parent"
+          android:layout_height="214dp"
+          android:adjustViewBounds="true"
+          android:scaleType="fitXY"
+          android:src="@drawable/default_article" />
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/todaysBestArticleTextView2"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/todaysBestImageView2"
+          android:layout_marginTop="@dimen/space_12"
+          android:ellipsize="end"
+          android:maxLines="2"
+          android:paddingStart="@dimen/space_16"
+          android:paddingEnd="@dimen/space_16"
+          android:textColor="#524D4D"
+          android:textSize="22sp"
+          app:fontName="Oswald-Medium.ttf" />
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/authorName2"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/todaysBestArticleTextView2"
+          android:layout_marginTop="10dp"
+          android:layout_toStartOf="@+id/statsFlowLayout2"
+          android:paddingStart="16dp"
+          android:paddingEnd="16dp"
+          android:textColor="#A5A7A9"
+          app:fontName="open_sans.ttf" />
+        <org.apmem.tools.layouts.FlowLayout
+          android:id="@+id/statsFlowLayout2"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/todaysBestArticleTextView2"
+          android:layout_alignParentEnd="true"
+          android:layout_marginStart="10dp"
+          android:layout_marginTop="@dimen/space_10"
+          android:paddingStart="@dimen/space_16"
+          android:paddingEnd="@dimen/space_16">
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/article_date2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/article_title"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:text=""
+            android:textColor="@color/ad.stats.text"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:fontName="open_sans.ttf" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/articleViewCountTextView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:drawableLeft="@drawable/ic_views"
+            android:drawablePadding="3dp"
+            android:text=""
+            android:textColor="@color/ad.stats.text"
+            android:textSize="12sp"
+            app:fontName="open_sans.ttf" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/articleCommentCountTextView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/article_title"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:drawableLeft="@drawable/ic_comments"
+            android:drawablePadding="3dp"
+            android:text=""
+            android:textColor="@color/ad.stats.text"
+            android:textSize="12sp"
+            app:fontName="open_sans.ttf" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/articleRecommendationCountTextView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/article_title"
+            android:layout_marginBottom="10dp"
+            android:drawableLeft="@drawable/ic_likes"
+            android:drawablePadding="3dp"
+            android:text=""
+            android:textColor="@color/ad.stats.text"
+            android:textSize="12sp"
+            app:fontName="open_sans.ttf" />
+
+        </org.apmem.tools.layouts.FlowLayout>
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/bodyTextView2"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/statsFlowLayout2"
+          android:layout_marginTop="@dimen/space_10"
+          android:paddingStart="@dimen/space_16"
+          android:paddingEnd="@dimen/space_16"
+          app:fontName="georgia.ttf"
+          android:textColor="#524D4D"
+          android:textSize="16sp" />
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/shareTodayBestArticle2"
+          android:layout_width="25dp"
+          android:layout_height="25dp"
+          android:layout_below="@id/bodyTextView2"
+          android:layout_marginStart="@dimen/space_16"
+          android:layout_marginTop="@dimen/space_30"
+          app:srcCompat="@drawable/sharee"
+          app:tint="@color/grey" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/bookmarkTodaysBestArticle2"
+          android:layout_width="20dp"
+          android:layout_height="25dp"
+          android:layout_below="@id/bodyTextView2"
+          android:layout_marginStart="30dp"
+          android:layout_marginTop="@dimen/space_30"
+          android:layout_toRightOf="@id/shareTodayBestArticle2"
+          app:srcCompat="@drawable/ic_bookmark"
+          app:tint="@color/grey" />
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/continueReadingTextView2"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/bodyTextView2"
+          android:layout_alignParentEnd="true"
+          android:layout_marginTop="@dimen/space_30"
+          android:layout_marginEnd="@dimen/space_16"
+          android:layout_marginBottom="@dimen/space_20"
+          android:text="Continue Reading"
+          android:textColor="@color/app_red"
+          android:textSize="18sp"
+          app:fontName="oswald.ttf" />
+      </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+      android:id="@+id/todaysBestContainer3"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/todaysBestContainer2"
+      android:layout_marginTop="@dimen/space_25"
+      android:visibility="gone">
+      <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/todaysBestImageView3"
+          android:layout_width="match_parent"
+          android:layout_height="214dp"
+          android:adjustViewBounds="true"
+          android:scaleType="fitXY"
+          android:src="@drawable/default_article" />
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/todaysBestArticleTextView3"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/todaysBestImageView3"
+          android:layout_marginTop="@dimen/space_12"
+          android:ellipsize="end"
+          android:maxLines="2"
+          android:paddingStart="@dimen/space_16"
+          android:paddingEnd="@dimen/space_16"
+          android:textColor="#524D4D"
+          android:textSize="22sp"
+          app:fontName="Oswald-Medium.ttf" />
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/authorName3"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/todaysBestArticleTextView3"
+          android:layout_marginTop="10dp"
+          android:layout_toStartOf="@+id/statsFlowLayout3"
+          android:paddingStart="16dp"
+          android:paddingEnd="16dp"
+          android:textColor="#A5A7A9"
+          app:fontName="open_sans.ttf" />
+        <org.apmem.tools.layouts.FlowLayout
+          android:id="@+id/statsFlowLayout3"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/todaysBestArticleTextView3"
+          android:layout_alignParentEnd="true"
+          android:layout_marginStart="10dp"
+          android:layout_marginTop="@dimen/space_10"
+          android:paddingStart="@dimen/space_16"
+          android:paddingEnd="@dimen/space_16">
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/article_date3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/article_title"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:text=""
+            android:textColor="@color/ad.stats.text"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:fontName="open_sans.ttf" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/articleViewCountTextView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:drawableLeft="@drawable/ic_views"
+            android:drawablePadding="3dp"
+            android:text=""
+            android:textColor="@color/ad.stats.text"
+            android:textSize="12sp"
+            app:fontName="open_sans.ttf" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/articleCommentCountTextView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/article_title"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:drawableLeft="@drawable/ic_comments"
+            android:drawablePadding="3dp"
+            android:text=""
+            android:textColor="@color/ad.stats.text"
+            android:textSize="12sp"
+            app:fontName="open_sans.ttf" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/articleRecommendationCountTextView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/article_title"
+            android:layout_marginBottom="10dp"
+            android:drawableLeft="@drawable/ic_likes"
+            android:drawablePadding="3dp"
+            android:text=""
+            android:textColor="@color/ad.stats.text"
+            android:textSize="12sp"
+            app:fontName="open_sans.ttf" />
+
+        </org.apmem.tools.layouts.FlowLayout>
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/bodyTextView3"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/statsFlowLayout3"
+          android:layout_marginTop="@dimen/space_10"
+          android:paddingStart="@dimen/space_16"
+          android:paddingEnd="@dimen/space_16"
+          android:textColor="#524D4D"
+          app:fontName="georgia.ttf"
+          android:textSize="16sp" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/shareTodayBestArticle3"
+          android:layout_width="25dp"
+          android:layout_height="25dp"
+          android:layout_below="@id/bodyTextView3"
+          android:layout_marginStart="@dimen/space_16"
+          android:layout_marginTop="@dimen/space_30"
+          app:srcCompat="@drawable/sharee"
+          app:tint="@color/grey" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/bookmarkTodaysBestArticle3"
+          android:layout_width="20dp"
+          android:layout_height="25dp"
+          android:layout_below="@id/bodyTextView3"
+          android:layout_marginStart="30dp"
+          android:layout_marginTop="@dimen/space_30"
+          android:layout_toRightOf="@id/shareTodayBestArticle3"
+          app:srcCompat="@drawable/ic_bookmark"
+          app:tint="@color/grey" />
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/continueReadingTextView3"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/bodyTextView3"
+          android:layout_alignParentEnd="true"
+          android:layout_marginTop="@dimen/space_30"
+          android:layout_marginEnd="@dimen/space_16"
+          android:layout_marginBottom="@dimen/space_20"
+          android:text="Continue Reading"
+          android:textColor="@color/app_red"
+          android:textSize="18sp"
+          app:fontName="oswald.ttf" />
+
+
+      </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+      android:id="@+id/todaysBestContainer4"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/todaysBestContainer3"
+      android:layout_marginTop="@dimen/space_25"
+      android:visibility="gone">
+      <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/todaysBestImageView4"
+          android:layout_width="match_parent"
+          android:layout_height="214dp"
+          android:adjustViewBounds="true"
+          android:scaleType="fitXY"
+          android:src="@drawable/default_article" />
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/todaysBestArticleTextView4"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/todaysBestImageView4"
+          android:layout_marginTop="@dimen/space_12"
+          android:ellipsize="end"
+          android:maxLines="2"
+          android:paddingStart="@dimen/space_16"
+          android:paddingEnd="@dimen/space_16"
+          android:textColor="#524D4D"
+          android:textSize="22sp"
+          app:fontName="Oswald-Medium.ttf" />
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/authorName4"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/todaysBestArticleTextView4"
+          android:layout_marginTop="10dp"
+          android:layout_toStartOf="@+id/statsFlowLayout4"
+          android:paddingStart="16dp"
+          android:paddingEnd="16dp"
+          android:textColor="#A5A7A9"
+          app:fontName="open_sans.ttf" />
+        <org.apmem.tools.layouts.FlowLayout
+          android:id="@+id/statsFlowLayout4"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/todaysBestArticleTextView4"
+          android:layout_alignParentEnd="true"
+          android:layout_marginStart="10dp"
+          android:layout_marginTop="@dimen/space_10"
+          android:paddingStart="@dimen/space_16"
+          android:paddingEnd="@dimen/space_16">
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/article_date4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/article_title"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:text=""
+            android:textColor="@color/ad.stats.text"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:fontName="open_sans.ttf" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/articleViewCountTextView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:drawableLeft="@drawable/ic_views"
+            android:drawablePadding="3dp"
+            android:text=""
+            android:textColor="@color/ad.stats.text"
+            android:textSize="12sp"
+            app:fontName="open_sans.ttf" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/articleCommentCountTextView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/article_title"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:drawableLeft="@drawable/ic_comments"
+            android:drawablePadding="3dp"
+            android:text=""
+            android:textColor="@color/ad.stats.text"
+            android:textSize="12sp"
+            app:fontName="open_sans.ttf" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/articleRecommendationCountTextView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/article_title"
+            android:layout_marginBottom="10dp"
+            android:drawableLeft="@drawable/ic_likes"
+            android:drawablePadding="3dp"
+            android:text=""
+            android:textColor="@color/ad.stats.text"
+            android:textSize="12sp"
+            app:fontName="open_sans.ttf" />
+
+        </org.apmem.tools.layouts.FlowLayout>
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/bodyTextView4"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/statsFlowLayout4"
+          android:layout_marginTop="@dimen/space_10"
+          android:paddingStart="@dimen/space_16"
+          android:paddingEnd="@dimen/space_16"
+          app:fontName="georgia.ttf"
+          android:textColor="#524D4D"
+          android:textSize="16sp" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/shareTodayBestArticle4"
+          android:layout_width="25dp"
+          android:layout_height="25dp"
+          android:layout_below="@id/bodyTextView4"
+          android:layout_marginStart="@dimen/space_16"
+          android:layout_marginTop="@dimen/space_30"
+          app:srcCompat="@drawable/sharee"
+          app:tint="@color/grey" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/bookmarkTodaysBestArticle4"
+          android:layout_width="20dp"
+          android:layout_height="25dp"
+          android:layout_below="@id/bodyTextView4"
+          android:layout_marginStart="30dp"
+          android:layout_marginTop="@dimen/space_30"
+          android:layout_toRightOf="@id/shareTodayBestArticle4"
+          app:srcCompat="@drawable/ic_bookmark"
+          app:tint="@color/grey" />
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/continueReadingTextView4"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/bodyTextView4"
+          android:layout_alignParentEnd="true"
+          android:layout_marginTop="@dimen/space_30"
+          android:layout_marginEnd="@dimen/space_16"
+          android:layout_marginBottom="@dimen/space_20"
+          android:text="Continue Reading"
+          android:textColor="@color/app_red"
+          android:textSize="18sp"
+          app:fontName="oswald.ttf" />
+      </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+      android:id="@+id/todaysBestContainer5"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/todaysBestContainer4"
+      android:layout_marginTop="@dimen/space_25"
+      android:visibility="gone">
+      <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/todaysBestImageView5"
+          android:layout_width="match_parent"
+          android:layout_height="214dp"
+          android:adjustViewBounds="true"
+          android:scaleType="fitXY"
+          android:src="@drawable/default_article" />
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/todaysBestArticleTextView5"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/todaysBestImageView5"
+          android:layout_marginTop="@dimen/space_12"
+          android:ellipsize="end"
+          android:maxLines="2"
+          android:paddingStart="@dimen/space_16"
+          android:paddingEnd="@dimen/space_16"
+          android:textColor="#524D4D"
+          android:textSize="22sp"
+          app:fontName="Oswald-Medium.ttf" />
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/authorName5"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/todaysBestArticleTextView5"
+          android:layout_marginTop="10dp"
+          android:layout_toStartOf="@+id/statsFlowLayout5"
+          android:paddingStart="16dp"
+          android:paddingEnd="16dp"
+          android:textColor="#A5A7A9"
+          app:fontName="open_sans.ttf" />
+        <org.apmem.tools.layouts.FlowLayout
+          android:id="@+id/statsFlowLayout5"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/todaysBestArticleTextView5"
+          android:layout_alignParentEnd="true"
+          android:layout_marginStart="10dp"
+          android:layout_marginTop="@dimen/space_10"
+          android:paddingStart="@dimen/space_16"
+          android:paddingEnd="@dimen/space_16">
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/article_date5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/article_title"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:text=""
+            android:textColor="@color/ad.stats.text"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:fontName="open_sans.ttf" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/articleViewCountTextView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:drawableLeft="@drawable/ic_views"
+            android:drawablePadding="3dp"
+            android:text=""
+            android:textColor="@color/ad.stats.text"
+            android:textSize="12sp"
+            app:fontName="open_sans.ttf" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/articleCommentCountTextView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/article_title"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:drawableLeft="@drawable/ic_comments"
+            android:drawablePadding="3dp"
+            android:text=""
+            android:textColor="@color/ad.stats.text"
+            android:textSize="12sp"
+            app:fontName="open_sans.ttf" />
+
+          <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/articleRecommendationCountTextView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/article_title"
+            android:layout_marginBottom="10dp"
+            android:drawableLeft="@drawable/ic_likes"
+            android:drawablePadding="3dp"
+            android:text=""
+            android:textColor="@color/ad.stats.text"
+            android:textSize="12sp"
+            app:fontName="open_sans.ttf" />
+
+        </org.apmem.tools.layouts.FlowLayout>
+
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/bodyTextView5"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/statsFlowLayout5"
+          android:layout_marginTop="@dimen/space_10"
+          android:paddingStart="@dimen/space_16"
+          android:paddingEnd="@dimen/space_16"
+          android:textColor="#524D4D"
+          app:fontName="georgia.ttf"
+          android:textSize="16sp" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/shareTodayBestArticle5"
+          android:layout_width="25dp"
+          android:layout_height="25dp"
+          android:layout_below="@id/bodyTextView5"
+          android:layout_marginStart="@dimen/space_16"
+          android:layout_marginTop="@dimen/space_30"
+          app:srcCompat="@drawable/sharee"
+          app:tint="@color/grey" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/bookmarkTodaysBestArticle5"
+          android:layout_width="20dp"
+          android:layout_height="25dp"
+          android:layout_below="@id/bodyTextView5"
+          android:layout_marginStart="30dp"
+          android:layout_marginTop="@dimen/space_30"
+          android:layout_toRightOf="@id/shareTodayBestArticle5"
+          app:srcCompat="@drawable/ic_bookmark"
+          app:tint="@color/grey" />
+        <com.mycity4kids.widget.CustomFontTextView
+          android:id="@+id/continueReadingTextView5"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/bodyTextView5"
+          android:layout_alignParentEnd="true"
+          android:layout_marginTop="@dimen/space_30"
+          android:layout_marginEnd="@dimen/space_16"
+          android:layout_marginBottom="@dimen/space_20"
+          android:text="Continue Reading"
+          android:textColor="@color/app_red"
+          android:textSize="18sp"
+          app:fontName="oswald.ttf" />
+
+
+      </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+  </RelativeLayout>
+</ScrollView>

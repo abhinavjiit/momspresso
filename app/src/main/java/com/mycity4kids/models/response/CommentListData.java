@@ -2,9 +2,7 @@ package com.mycity4kids.models.response;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 
 /**
@@ -12,8 +10,9 @@ import java.util.ArrayList;
  */
 
 public class CommentListData implements Parcelable {
+
     @SerializedName("_id")
-    private String _id;
+    private String id;
     @SerializedName("userName")
     private String userName;
     @SerializedName("userId")
@@ -31,14 +30,20 @@ public class CommentListData implements Parcelable {
     @SerializedName("replies")
     private ArrayList<CommentListData> replies;
     @SerializedName("replies_count")
-    private int replies_count;
+    private int repliesCount;
+    @SerializedName("likes_count")
+    private int likeCount;
+    @SerializedName("is_liked")
+    private Boolean isLiked = false;
+    private String reaction;
+
 
     public CommentListData() {
 
     }
 
     protected CommentListData(Parcel in) {
-        _id = in.readString();
+        id = in.readString();
         userName = in.readString();
         userId = in.readString();
         userPic = in.readParcelable(ProfilePic.class.getClassLoader());
@@ -47,7 +52,8 @@ public class CommentListData implements Parcelable {
         createdTime = in.readString();
         message = in.readString();
         replies = in.createTypedArrayList(CommentListData.CREATOR);
-        replies_count = in.readInt();
+        repliesCount = in.readInt();
+        likeCount = in.readInt();
     }
 
     public static final Creator<CommentListData> CREATOR = new Creator<CommentListData>() {
@@ -62,12 +68,12 @@ public class CommentListData implements Parcelable {
         }
     };
 
-    public String get_id() {
-        return _id;
+    public String getId() {
+        return id;
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUserName() {
@@ -88,6 +94,14 @@ public class CommentListData implements Parcelable {
 
     public ProfilePic getUserPic() {
         return userPic;
+    }
+
+    public String getReaction() {
+        return reaction;
+    }
+
+    public void setReaction(String reaction) {
+        this.reaction = reaction;
     }
 
     public void setUserPic(ProfilePic userPic) {
@@ -134,12 +148,28 @@ public class CommentListData implements Parcelable {
         this.replies = replies;
     }
 
-    public int getReplies_count() {
-        return replies_count;
+    public int getRepliesCount() {
+        return repliesCount;
     }
 
-    public void setReplies_count(int replies_count) {
-        this.replies_count = replies_count;
+    public void setRepliesCount(int repliesCount) {
+        this.repliesCount = repliesCount;
+    }
+
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public Boolean getLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(Boolean liked) {
+        isLiked = liked;
     }
 
     @Override
@@ -149,7 +179,7 @@ public class CommentListData implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(_id);
+        dest.writeString(id);
         dest.writeString(userName);
         dest.writeString(userId);
         dest.writeParcelable(userPic, flags);
@@ -158,6 +188,7 @@ public class CommentListData implements Parcelable {
         dest.writeString(createdTime);
         dest.writeString(message);
         dest.writeTypedList(replies);
-        dest.writeInt(replies_count);
+        dest.writeInt(repliesCount);
+        dest.writeInt(likeCount);
     }
 }

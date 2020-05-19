@@ -72,6 +72,7 @@ public interface TopicsCategoryAPI {
             @Query("itemTypes") String itemType
     );
 
+
     @GET("/v1/trending/mixfeed/{start}/{size}")
     Call<MixFeedResponse> getTrendingFeed(@Path("start") int start,
             @Path("size") int size,

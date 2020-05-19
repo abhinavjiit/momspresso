@@ -1,9 +1,7 @@
 package com.mycity4kids.models.response;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
-
 /**
  * Created by hemant on 6/6/18.
  */
@@ -29,4 +27,5 @@ public class CommentListResponse extends BaseResponse {
     public void setCount(int count) {
         this.count = count;
     }
+
 }

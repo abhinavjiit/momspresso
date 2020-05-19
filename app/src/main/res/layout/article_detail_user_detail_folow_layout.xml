@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="#0DE997A8"
+  android:paddingStart="@dimen/space_10"
+  android:paddingTop="@dimen/space_20"
+  android:paddingEnd="@dimen/space_10"
+  android:paddingBottom="@dimen/space_20">
+
+
+  <com.mikhaellopez.circularimageview.CircularImageView
+    android:id="@+id/authorImageViewFollowContainer"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_centerVertical="true"
+    android:src="@drawable/default_commentor_img" />
+
+  <RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:layout_toRightOf="@id/authorImageViewFollowContainer">
+    <com.mycity4kids.widget.CustomFontTextView
+      android:id="@+id/authorNameTextViewFollowContainer"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/space_12"
+      android:textColor="#4A4A4A"
+      android:textSize="18sp"
+      app:fontName="OpenSans-SemiBold.ttf" />
+    <RelativeLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/authorNameTextViewFollowContainer">
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/postsCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_12"
+        android:textSize="12sp" />
+
+      <ImageView
+        android:id="@+id/dot"
+        android:layout_width="5dp"
+        android:layout_height="5dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/space_12"
+        android:layout_toEndOf="@+id/postsCountTextView"
+        android:background="@drawable/update_profile_bg"
+        android:backgroundTint="#979797" />
+
+
+      <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/likeCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_12"
+        android:layout_toRightOf="@id/dot"
+        android:textSize="12sp" />
+    </RelativeLayout>
+  </RelativeLayout>
+
+
+  <com.mycity4kids.widget.ShareButtonWidget
+    android:id="@+id/followTextViewFollowContainer"
+    android:layout_width="125dp"
+    android:layout_height="wrap_content"
+    android:layout_alignParentEnd="true"
+    android:layout_centerVertical="true"
+    android:layout_marginTop="@dimen/space_5"
+    android:layout_marginEnd="@dimen/space_5"
+    android:layout_marginBottom="@dimen/space_5"
+    android:background="@color/white"
+    app:borderColor="@color/app_red"
+    app:borderthickness="1dp"
+    app:radius="5dp"
+    app:shareBgColor="@color/white"
+    app:shareText="FOLLOW"
+    app:shareTextColor="@color/app_red"
+    app:textStyle="bold" />
+</RelativeLayout>

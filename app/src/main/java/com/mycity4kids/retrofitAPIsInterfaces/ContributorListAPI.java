@@ -1,12 +1,8 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
-import com.mycity4kids.models.response.ArticleListingResponse;
-import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.models.response.ContributorListResponse;
-
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.Url;
 
