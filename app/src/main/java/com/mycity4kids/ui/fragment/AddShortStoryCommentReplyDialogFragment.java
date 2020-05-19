@@ -131,24 +131,17 @@ public class AddShortStoryCommentReplyDialogFragment extends DialogFragment impl
             case R.id.postCommentReplyTextView:
                 if (isValid()) {
                     if ("EDIT_COMMENT".equals(actionType)) {
-                        ((ShortStoryFragment) getParentFragment())
-                                .editComment(commentReplyEditText.getText().toString(), commentOrReplyData.get_id(),
-                                        position);
+                        ((ShortStoryFragment) getParentFragment()).editComment(commentReplyEditText.getText().toString(), commentOrReplyData.getId(), position);
+
                     } else if ("EDIT_REPLY".equals(actionType)) {
                         Fragment parentFragment = getParentFragment();
                         if (parentFragment != null) {
                             if (parentFragment instanceof ShortStoryFragment) {
-                                ((ShortStoryFragment) getParentFragment())
-                                        .editReply(commentReplyEditText.getText().toString(),
-                                                commentOrReplyData.getParentCommentId(), commentOrReplyData.get_id());
+                                ((ShortStoryFragment) getParentFragment()).editReply(commentReplyEditText.getText().toString(), commentOrReplyData.getParentCommentId(), commentOrReplyData.getId());
                             } else if (parentFragment instanceof ShortStoryCommentRepliesDialogFragment) {
                                 Fragment parentOfParentFragment = parentFragment.getParentFragment();
-                                if (parentOfParentFragment != null
-                                        && parentOfParentFragment instanceof ShortStoryFragment) {
-                                    ((ShortStoryFragment) parentOfParentFragment)
-                                            .editReply(commentReplyEditText.getText().toString(),
-                                                    commentOrReplyData.getParentCommentId(),
-                                                    commentOrReplyData.get_id());
+                                if (parentOfParentFragment != null && parentOfParentFragment instanceof ShortStoryFragment) {
+                                    ((ShortStoryFragment) parentOfParentFragment).editReply(commentReplyEditText.getText().toString(), commentOrReplyData.getParentCommentId(), commentOrReplyData.getId());
                                 }
                             }
                         }
@@ -157,8 +150,7 @@ public class AddShortStoryCommentReplyDialogFragment extends DialogFragment impl
                             ((ShortStoryFragment) getParentFragment())
                                     .addComment(commentReplyEditText.getText().toString());
                         } else {
-                            ((ShortStoryFragment) getParentFragment())
-                                    .addReply(commentReplyEditText.getText().toString(), commentOrReplyData.get_id());
+                            ((ShortStoryFragment) getParentFragment()).addReply(commentReplyEditText.getText().toString(), commentOrReplyData.getId());
                         }
                     }
 

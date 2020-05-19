@@ -3,8 +3,6 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 import com.mycity4kids.models.request.SubscriptionUpdateRequest;
 import com.mycity4kids.models.response.SubscriptionSettingsResponse;
 
-import java.util.HashMap;
-
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;

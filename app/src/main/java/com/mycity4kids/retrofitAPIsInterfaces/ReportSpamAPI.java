@@ -1,8 +1,6 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.request.ReportSpamRequest;
-import com.mycity4kids.models.request.VlogsEventRequest;
-import com.mycity4kids.ui.activity.ReportSpamActivity;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

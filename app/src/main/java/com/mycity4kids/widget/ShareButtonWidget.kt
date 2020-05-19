@@ -92,6 +92,9 @@ class ShareButtonWidget : CardView {
         shareTextView.text = shareText
         shareTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize.toFloat())
         shareTextView.setTypeface(null, textStyle)
+        if (shareImage == null) {
+            shareImageView.visibility = View.GONE
+        }
         shareTextView.gravity = gravity
         shareTextView.setTextColor(textColor)
         shareImageView.setImageDrawable(shareImage)

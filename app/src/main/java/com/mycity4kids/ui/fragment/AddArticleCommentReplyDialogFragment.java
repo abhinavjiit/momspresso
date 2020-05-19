@@ -132,23 +132,15 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
             case R.id.postCommentReplyTextView:
                 if (isValid()) {
                     if ("EDIT_COMMENT".equals(actionType)) {
-
-                        ((ArticleCommentsFragment) getParentFragment())
-                                .editComment(commentReplyEditText.getText().toString(), commentOrReplyData.get_id(),
-                                        position);
+                        ((ArticleCommentsFragment) getParentFragment()).editComment(commentReplyEditText.getText().toString(), commentOrReplyData.getId(), position);
                     } else if ("EDIT_REPLY".equals(actionType)) {
                         Fragment fragment = getParentFragment();
                         if (fragment != null && fragment instanceof ArticleCommentsFragment) {
-                            ((ArticleCommentsFragment) getParentFragment())
-                                    .editReply(commentReplyEditText.getText().toString(),
-                                            commentOrReplyData.getParentCommentId(), commentOrReplyData.get_id());
+                            ((ArticleCommentsFragment) getParentFragment()).editReply(commentReplyEditText.getText().toString(), commentOrReplyData.getParentCommentId(), commentOrReplyData.getId());
                         } else if (fragment != null && fragment instanceof ArticleCommentRepliesDialogFragment) {
                             Fragment parentOfParentFragment = fragment.getParentFragment();
-                            if (parentOfParentFragment != null
-                                    && parentOfParentFragment instanceof ArticleCommentsFragment) {
-                                ((ArticleCommentsFragment) parentOfParentFragment)
-                                        .editReply(commentReplyEditText.getText().toString(),
-                                                commentOrReplyData.getParentCommentId(), commentOrReplyData.get_id());
+                            if (parentOfParentFragment != null && parentOfParentFragment instanceof ArticleCommentsFragment) {
+                                ((ArticleCommentsFragment) parentOfParentFragment).editReply(commentReplyEditText.getText().toString(), commentOrReplyData.getParentCommentId(), commentOrReplyData.getId());
                             }
                         }
 
@@ -158,8 +150,7 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
                                     .addComments(commentReplyEditText.getText().toString());
 
                         } else {
-                            ((ArticleCommentsFragment) getParentFragment())
-                                    .addReply(commentReplyEditText.getText().toString(), commentOrReplyData.get_id());
+                            ((ArticleCommentsFragment) getParentFragment()).addReply(commentReplyEditText.getText().toString(), commentOrReplyData.getId());
                         }
                     }
                     dismiss();

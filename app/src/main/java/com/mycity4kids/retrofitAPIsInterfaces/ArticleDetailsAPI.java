@@ -17,6 +17,7 @@ import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
 import com.mycity4kids.models.response.CommentListResponse;
 import com.mycity4kids.models.response.CrownDataResponse;
 import com.mycity4kids.models.response.FBCommentResponse;
+import com.mycity4kids.models.response.LikeReactionModel;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ViewCountResponse;
 import okhttp3.ResponseBody;
@@ -69,6 +70,11 @@ public interface ArticleDetailsAPI {
             @Query("type") String type,
             @Query("commentId") String parentCommentId,
             @Query("replyId") String paginationReplyId);
+
+    @POST("/v1/reactions/comment/{comment_id}/")
+    Call<ResponseBody> likeDislikeComment(@Path("comment_id") String comment_id,
+            @Body LikeReactionModel commentListData);
+
 
     @POST("v3/comments/")
     Call<CommentListResponse> addCommentOrReply(@Body AddEditCommentOrReplyRequest body);

@@ -1,6 +1,5 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
-import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.response.ImageUploadResponse;
 
 import okhttp3.MultipartBody;
@@ -19,7 +18,8 @@ public interface ImageUploadAPI {
     @POST("v1/uploadImage/")
     Call<ImageUploadResponse> uploadImage(
             @Part("type") RequestBody imageType,
-            @Part("file\";filename=\"pp.png\" ") RequestBody image);
+            @Part("file\";filename=\"pp.png\" ")
+                    RequestBody image);
 
     @Multipart
     @POST("v1/uploadImage/")

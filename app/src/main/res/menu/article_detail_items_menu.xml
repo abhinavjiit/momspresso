@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  <item
+    android:id="@+id/copyLink"
+    android:actionMenuTextColor="@color/app_red"
+    android:title="COPY LINK" />
+  <item
+    android:id="@+id/addCollection"
+    android:actionMenuTextColor="@color/app_red"
+    android:title="ADD TO COLLECTION" />
+  <item
+    android:id="@+id/share"
+    android:actionMenuTextColor="@color/app_red"
+    android:title="SHARE" />
+
+</menu>

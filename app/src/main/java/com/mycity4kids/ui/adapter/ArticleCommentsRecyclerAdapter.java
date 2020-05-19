@@ -54,9 +54,7 @@ public class ArticleCommentsRecyclerAdapter extends
             commentsViewHolder.replyCountTextView.setVisibility(View.GONE);
         } else {
             commentsViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
-            commentsViewHolder.replyCountTextView.setText(
-                    mContext.getString(R.string.short_s_view_replies) + "(" + commentList.get(position)
-                            .getReplies_count() + ")");
+            commentsViewHolder.replyCountTextView.setText(mContext.getString(R.string.short_s_view_replies) + "(" + commentList.get(position).getRepliesCount() + ")");
         }
         try {
             Picasso.get().load(commentList.get(position).getUserPic().getClientAppMin())

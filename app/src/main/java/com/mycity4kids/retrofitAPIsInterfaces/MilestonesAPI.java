@@ -1,6 +1,5 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
-import com.mycity4kids.models.response.BadgeListResponse;
 import com.mycity4kids.profile.MilestonesResponse;
 
 import retrofit2.Call;
