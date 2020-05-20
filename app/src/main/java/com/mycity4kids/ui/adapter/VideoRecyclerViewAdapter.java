@@ -13,6 +13,7 @@ import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +63,8 @@ import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
+import q.rorbin.badgeview.Badge;
+import q.rorbin.badgeview.QBadgeView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -83,6 +86,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     private int start = 0;
     private String challengeId;
     private int end = 0;
+    private Badge badge;
 
     //    private ArrayList<VlogsListingAndDetailResult> vlogsListingAndDetailResults;
     private ArrayList<Object> vlogsListingAndDetailResults;
@@ -358,6 +362,9 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             } catch (Exception e) {
                 userImage.setImageResource(R.drawable.default_blogger_profile_img);
             }
+            if (Integer.parseInt(responseData.getComment_count()) > 0) {
+                showHideNotificationCenterMark(true, viewHolder);
+            }
             try {
                 commentCount.setText(AppUtils.withSuffix(Long.parseLong(responseData.getComment_count())));
             } catch (Exception e) {
@@ -586,6 +593,38 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             }
         }
     }
+
+
+    public void showHideNotificationCenterMark(boolean flag, ViewHolder viewHolder) {
+        if (flag) {
+            addBadgeAt(3, "1", viewHolder);
+        } else {
+            addBadgeAt(3, "0", viewHolder);
+        }
+    }
+
+    private Badge addBadgeAt(int position, String number, ViewHolder viewHolder) {
+        if (badge != null) {
+            badge.setBadgeText("");
+            if (number.equals("0")) {
+                badge.hide(false);
+            }
+            return badge;
+        }
+        // add badge
+        badge = new QBadgeView(context)
+                .setBadgeText("")
+                .setBadgeBackgroundColor(context.getResources().getColor(R.color.app_red))
+                .setBadgePadding(5, true)
+                .setBadgeGravity(Gravity.TOP | Gravity.END)
+                .setGravityOffset(25, 12, true)
+                .bindTarget(viewHolder.comment);
+        if (number.equals("0")) {
+            badge.hide(false);
+        }
+        return badge;
+    }
+
 
     public class ChallengeCardHolder extends BaseViewHolder implements View.OnClickListener {
 

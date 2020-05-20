@@ -155,7 +155,9 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
         closeEditorImageView.setOnClickListener(this);
 
         for (Map.Entry<String, String> entry : postData.getMediaUrls().entrySet()) {
-            images.add(entry.getValue());
+            if (!entry.getKey().equalsIgnoreCase("audio")) {
+                images.add(entry.getValue());
+            }
         }
 
         for (int i = 0; i < images.size(); i++) {
