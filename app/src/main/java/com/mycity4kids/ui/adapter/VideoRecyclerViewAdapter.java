@@ -53,8 +53,10 @@ import com.mycity4kids.profile.UserProfileActivity;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.BaseViewHolder;
+import com.mycity4kids.ui.activity.CategoryVideosListingActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.fragment.AddCollectionAndCollectionItemDialogFragment;
+import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.squareup.picasso.Picasso;
@@ -79,6 +81,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     private VideoFeedRecyclerViewClick videoFeedRecyclerViewClick;
     FragmentManager fm;
     private int start = 0;
+    private String challengeId;
     private int end = 0;
 
     //    private ArrayList<VlogsListingAndDetailResult> vlogsListingAndDetailResults;
@@ -254,7 +257,9 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        if ((vlogsListingAndDetailResults.get(position)).getClass().getSimpleName().equals("VlogsListingAndDetailResult") && ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position)).getItemType() == 1) {
+        if ((vlogsListingAndDetailResults.get(position)).getClass().getSimpleName()
+                .equals("VlogsListingAndDetailResult")
+                && ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position)).getItemType() == 1) {
             return VIEW_TYPE_CAROUSAL;
         } else if (position == 5) {
             return VIEW_TYPE_CHALLENGE;
@@ -582,7 +587,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         }
     }
 
-    public class ChallengeCardHolder extends BaseViewHolder {
+    public class ChallengeCardHolder extends BaseViewHolder implements View.OnClickListener {
 
         TextView textViewTitle;
         TextView challengeHandle;
@@ -595,6 +600,8 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         ImageView threeDot;
         ImageView imgBookmark;
         View parent;
+        TextView participate;
+        TextView seeMoreChallenge;
 
 
         public ChallengeCardHolder(View itemView) {
@@ -609,7 +616,12 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             likeCount = itemView.findViewById(R.id.viewsLike);
             threeDot = itemView.findViewById(R.id.three_dot);
             imgBookmark = itemView.findViewById(R.id.bookmark);
+            participate = itemView.findViewById(R.id.participate_textview);
+            seeMoreChallenge = itemView.findViewById(R.id.seeMoreChallenge);
             parent = itemView;
+
+            participate.setOnClickListener(this);
+            seeMoreChallenge.setOnClickListener(this);
         }
 
         @Override
@@ -618,7 +630,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             parent.setTag(this);
 
             Topics responseData = ((Topics) vlogsListingAndDetailResults.get(position));
-
+            challengeId = responseData.getId();
             textViewTitle.setText(responseData.getExtraData().get(0).getChallenge().getDesc());
             makeTextViewResizable(textViewTitle, 2, " ..See More", true,
                     responseData.getTitle());
@@ -681,6 +693,23 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
 
         }
 
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.participate_textview:
+                    Intent intent = new Intent(context, NewVideoChallengeActivity.class);
+                    intent.putExtra(Constants.CHALLENGE_ID, challengeId);
+                    context.startActivity(intent);
+                    break;
+
+                case R.id.seeMoreChallenge:
+                    Intent vlogsIntent = new Intent(context, CategoryVideosListingActivity.class);
+                    vlogsIntent.putExtra("categoryId", "" + AppConstants.VIDEO_CHALLENGE_ID);
+                    context.startActivity(vlogsIntent);
+                    break;
+                default:
+            }
+        }
     }
 
     public class FollowFollowingCarousal extends BaseViewHolder implements View.OnClickListener {

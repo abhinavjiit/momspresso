@@ -1522,7 +1522,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 replyCount2.setText("Reply(" + fbCommentsList.get(1).getReplies().size() + ")");
             }
         }
->>>>>>>Stashed changes
     }
 
     private Callback<ResponseBody> torcaiTopAdResponseCallback = new Callback<ResponseBody>() {
