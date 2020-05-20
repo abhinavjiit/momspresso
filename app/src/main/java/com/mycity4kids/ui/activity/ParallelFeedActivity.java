@@ -36,6 +36,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
@@ -62,6 +63,7 @@ import com.mycity4kids.utils.DividerItemDecoration;
 import com.mycity4kids.utils.EndlessScrollListener;
 import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.utils.StringUtils;
+import com.mycity4kids.vlogs.VlogsCategoryWiseChallengesResponse;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -111,6 +113,9 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private boolean isFromPause = false;
     private ConstraintLayout root;
     private int bookMarkPosition;
+
+    private ArrayList<Topics> categoryWiseChallengeList = new ArrayList<>();
+    private ArrayList<Object> mergedList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,15 +247,19 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                         dataList.addAll(0, dataListHeader);
                         finalList = dataList;
                         finalList.add(new VlogsListingAndDetailResult(1));
-                        setRecycler();
+                        mergedList.addAll(finalList);
+                        getChallenges();
+//                        setRecycler();
                     } else {
                         finalList.addAll(dataList);
+                        mergedList.addAll(finalList);
                         if (dataList.size() > 10) {
                             finalList.add(new VlogsListingAndDetailResult(1));
                         }
                     }
-                    recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);
-                    videoRecyclerViewAdapter.updateList(finalList);
+//                    recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);
+                    recyclerViewFeed.setMergedList(ParallelFeedActivity.this, mergedList);
+                    videoRecyclerViewAdapter.mergedList(mergedList);
                 } else {
                     showToast(getString(R.string.server_went_wrong));
                 }
@@ -339,13 +348,13 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             Utils.pushGenericEvent(this, "CTA_Unfollow_Vlog", userDynamoId, "ParallelFeedActivity");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followApi.unfollowUserV2(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
-            videoRecyclerViewAdapter.setListUpdate(updateFollowPos, finalList);
+            videoRecyclerViewAdapter.setListUpdate(updateFollowPos, mergedList);
         } else {
             finalList.get(updateFollowPos).setFollowed(true);
             Utils.pushGenericEvent(this, "CTA_Follow_Vlog", userDynamoId, "ParallelFeedActivity");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followApi.followUserV2(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
-            videoRecyclerViewAdapter.setListUpdate(updateFollowPos, finalList);
+            videoRecyclerViewAdapter.setListUpdate(updateFollowPos, mergedList);
         }
     }
 
@@ -784,5 +793,54 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             menuPopupHelper.setForceShowIcon(true);
             menuPopupHelper.show();
         }
+    }
+
+    private void getChallenges() {
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            removeProgressDialog();
+            return;
+        }
+        Retrofit retrofit = BaseApplication.getInstance().getStagingRetrofit();
+        VlogsListingAndDetailsAPI vlogsListingAndDetailsApi = retrofit.create(VlogsListingAndDetailsAPI.class);
+        Call<VlogsCategoryWiseChallengesResponse> callRecentVideoArticles = vlogsListingAndDetailsApi
+                .getSingleChallenge(detailData.getCategory_id());
+        callRecentVideoArticles.enqueue(vlogChallengeResponseCallBack);
+    }
+
+    private Callback<VlogsCategoryWiseChallengesResponse> vlogChallengeResponseCallBack =
+            new Callback<VlogsCategoryWiseChallengesResponse>() {
+                @Override
+                public void onResponse(Call<VlogsCategoryWiseChallengesResponse> call,
+                        retrofit2.Response<VlogsCategoryWiseChallengesResponse> response) {
+                    if (null == response.body()) {
+                        NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                        FirebaseCrashlytics.getInstance().recordException(nee);
+                        return;
+                    }
+                    if (response.isSuccessful()) {
+                        try {
+                            VlogsCategoryWiseChallengesResponse responseData = response.body();
+                            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                                processChallengesData(responseData.getData().getResult());
+                            }
+                        } catch (Exception e) {
+                            FirebaseCrashlytics.getInstance().recordException(e);
+                            Log.d("MC4kException", Log.getStackTraceString(e));
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<VlogsCategoryWiseChallengesResponse> call, Throwable t) {
+
+                }
+            };
+
+    private void processChallengesData(ArrayList<Topics> catWiseChallengeList) {
+        if (categoryWiseChallengeList != null) {
+            categoryWiseChallengeList.clear();
+        }
+        mergedList.add(5, catWiseChallengeList.get(0));
+        setRecycler();
     }
 }

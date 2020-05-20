@@ -42,6 +42,7 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.MomVlogersDetailResponse;
@@ -69,8 +70,10 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     private static final int VIEW_TYPE_EMPTY = 0;
     private static final int VIEW_TYPE_NORMAL = 1;
     private static final int VIEW_TYPE_CAROUSAL = 2;
+    private static final int VIEW_TYPE_CHALLENGE = 3;
     private Context context;
     private ViewHolder viewHolder;
+    private ChallengeCardHolder challengeCardHolder;
     private String likeStatus;
     private String userDynamoId;
     private VideoFeedRecyclerViewClick videoFeedRecyclerViewClick;
@@ -78,7 +81,10 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     private int start = 0;
     private int end = 0;
 
-    private ArrayList<VlogsListingAndDetailResult> vlogsListingAndDetailResults;
+    //    private ArrayList<VlogsListingAndDetailResult> vlogsListingAndDetailResults;
+    private ArrayList<Object> vlogsListingAndDetailResults;
+
+    private ArrayList<Topics> categoryWiseChallengeList = new ArrayList<>();
 
     public VideoRecyclerViewAdapter(VideoFeedRecyclerViewClick videoFeedRecyclerViewClick, Context context,
             FragmentManager fm) {
@@ -88,13 +94,22 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         userDynamoId = SharedPrefUtils.getUserDetailModel(context).getDynamoId();
     }
 
-    public void setListUpdate(int updatePos, ArrayList<VlogsListingAndDetailResult> infoList) {
+    public void setListUpdate(int updatePos, ArrayList<Object> infoList) {
         vlogsListingAndDetailResults = infoList;
         notifyItemChanged(updatePos, viewHolder.followText);
     }
 
-    public void updateList(ArrayList<VlogsListingAndDetailResult> infoList) {
+    public void updateList(ArrayList<Object> infoList) {
         vlogsListingAndDetailResults = infoList;
+    }
+
+    public void mergedList(ArrayList<Object> infoList) {
+        vlogsListingAndDetailResults = infoList;
+    }
+
+    public void setVideoChallengeInfo(ArrayList<Topics> categoryWiseChallengeList) {
+        this.categoryWiseChallengeList = categoryWiseChallengeList;
+
     }
 
     @NonNull
@@ -110,6 +125,9 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             case VIEW_TYPE_CAROUSAL:
                 return new FollowFollowingCarousal(LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.mom_vlog_follow_following_carousal, parent, false));
+            case VIEW_TYPE_CHALLENGE:
+                return new ChallengeCardHolder(
+                        LayoutInflater.from(parent.getContext()).inflate(R.layout.vlog_challenge_card, parent, false));
             default:
                 return null;
         }
@@ -126,11 +144,18 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         if (holder instanceof ViewHolder) {
             viewHolder = (ViewHolder) holder;
             holder.onBind(position);
+        } else if (holder instanceof ChallengeCardHolder) {
+
+            challengeCardHolder = (ChallengeCardHolder) holder;
+            holder.onBind(position);
+
         } else if (holder instanceof FollowFollowingCarousal) {
 
-            if (!vlogsListingAndDetailResults.get(position).isCarouselRequestRunning() && !vlogsListingAndDetailResults
-                    .get(position).isResponseReceived()) {
-                vlogsListingAndDetailResults.get(position).setCarouselRequestRunning(true);
+            if (!((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position)).isCarouselRequestRunning()
+                    && !((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position))
+                    .isResponseReceived()) {
+                ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position))
+                        .setCarouselRequestRunning(true);
                 ((FollowFollowingCarousal) holder).shimmerLayout.startShimmerAnimation();
                 ((FollowFollowingCarousal) holder).shimmerLayout.setVisibility(View.VISIBLE);
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
@@ -161,17 +186,23 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                                             );
                                         }
 
-                                        vlogsListingAndDetailResults.get(position).setCarouselRequestRunning(true);
-                                        vlogsListingAndDetailResults.get(position).setResponseReceived(true);
+                                        ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position))
+                                                .setCarouselRequestRunning(true);
+                                        ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position))
+                                                .setResponseReceived(true);
 
                                     } else {
-                                        vlogsListingAndDetailResults.get(position).setCarouselRequestRunning(false);
-                                        vlogsListingAndDetailResults.get(position).setResponseReceived(true);
+                                        ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position))
+                                                .setCarouselRequestRunning(false);
+                                        ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position))
+                                                .setResponseReceived(true);
                                     }
 
                                 } catch (Exception e) {
-                                    vlogsListingAndDetailResults.get(position).setCarouselRequestRunning(false);
-                                    vlogsListingAndDetailResults.get(position).setResponseReceived(false);
+                                    ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position))
+                                            .setCarouselRequestRunning(false);
+                                    ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position))
+                                            .setResponseReceived(false);
                                     FirebaseCrashlytics.getInstance().recordException(e);
                                     Log.d("MC4kException", Log.getStackTraceString(e));
                                 }
@@ -186,18 +217,25 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 );
 
 
-            } else if (vlogsListingAndDetailResults.get(position).isCarouselRequestRunning()
-                    && !vlogsListingAndDetailResults.get(position).isResponseReceived()) {
-                Log.d("TAG", vlogsListingAndDetailResults.get(position).isCarouselRequestRunning() + " .........."
-                        + vlogsListingAndDetailResults.get(position).isResponseReceived()
+            } else if (((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position))
+                    .isCarouselRequestRunning()
+                    && !((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position))
+                    .isResponseReceived()) {
+                Log.d("TAG", ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position))
+                        .isCarouselRequestRunning() + " .........."
+                        + ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position))
+                        .isResponseReceived()
                 );
             } else {
 
-                if (null != vlogsListingAndDetailResults.get(position).getCarouselVideoList()
-                        && !vlogsListingAndDetailResults.get(position).getCarouselVideoList().isEmpty()) {
+                if (null != ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position))
+                        .getCarouselVideoList()
+                        && !((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position))
+                        .getCarouselVideoList().isEmpty()) {
                     populateCarouselFollowFollowing(
                             (FollowFollowingCarousal) holder,
-                            vlogsListingAndDetailResults.get(position).getCarouselVideoList()
+                            ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position))
+                                    .getCarouselVideoList()
                     );
                 }
 
@@ -216,8 +254,10 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        if (vlogsListingAndDetailResults.get(position).getItemType() == 1) {
+        if ((vlogsListingAndDetailResults.get(position)).getClass().getSimpleName().equals("VlogsListingAndDetailResult") && ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position)).getItemType() == 1) {
             return VIEW_TYPE_CAROUSAL;
+        } else if (position == 5) {
+            return VIEW_TYPE_CHALLENGE;
         } else {
             if (vlogsListingAndDetailResults != null && vlogsListingAndDetailResults.size() > 0) {
                 return VIEW_TYPE_NORMAL;
@@ -290,7 +330,8 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             super.onBind(position);
             parent.setTag(this);
 
-            VlogsListingAndDetailResult responseData = vlogsListingAndDetailResults.get(position);
+            VlogsListingAndDetailResult responseData = ((VlogsListingAndDetailResult) vlogsListingAndDetailResults
+                    .get(position));
 
             if (responseData.getIs_liked() != null && responseData.getIs_liked().equals("1")) {
                 heart.setImageResource(R.drawable.ic_likevideofilled);
@@ -345,7 +386,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             heart.setOnClickListener(view -> {
                 if (responseData.getIs_liked() != null && responseData.getIs_liked().equals("1")) {
                     likeStatus = "0";
-                    vlogsListingAndDetailResults.get(position).setIs_liked(likeStatus);
+                    ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position)).setIs_liked(likeStatus);
                     notifyItemChanged(position, this);
                     ((ParallelFeedActivity) context)
                             .recommendUnrecommentArticleApi(responseData.getId(), likeStatus, position);
@@ -355,7 +396,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                             String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
                 } else {
                     likeStatus = "1";
-                    vlogsListingAndDetailResults.get(position).setIs_liked(likeStatus);
+                    ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position)).setIs_liked(likeStatus);
                     notifyItemChanged(position, this);
                     ((ParallelFeedActivity) context)
                             .recommendUnrecommentArticleApi(responseData.getId(), likeStatus, position);
@@ -396,7 +437,9 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                     AddCollectionAndCollectionItemDialogFragment addCollectionAndCollectionitemDialogFragment =
                             new AddCollectionAndCollectionItemDialogFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("articleId", vlogsListingAndDetailResults.get(getAdapterPosition()).getId());
+                    bundle.putString("articleId",
+                            ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                                    .getId());
                     bundle.putString("type", AppConstants.VIDEO_COLLECTION_TYPE);
                     addCollectionAndCollectionitemDialogFragment.setArguments(bundle);
                     addCollectionAndCollectionitemDialogFragment.show(fm, "collectionAdd");
@@ -539,6 +582,107 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         }
     }
 
+    public class ChallengeCardHolder extends BaseViewHolder {
+
+        TextView textViewTitle;
+        TextView challengeHandle;
+        TextView followText;
+        TextView likeCount;
+        public RelativeLayout videoCell;
+        public ImageView coverImageView;
+        public ProgressBar progressBar;
+        RelativeLayout videoLayout;
+        ImageView threeDot;
+        ImageView imgBookmark;
+        View parent;
+
+
+        public ChallengeCardHolder(View itemView) {
+            super(itemView);
+            videoCell = itemView.findViewById(R.id.video_cell);
+            textViewTitle = itemView.findViewById(R.id.textViewTitle);
+            challengeHandle = itemView.findViewById(R.id.challengeHandle);
+            videoLayout = itemView.findViewById(R.id.video_layout);
+            coverImageView = itemView.findViewById(R.id.cover);
+            progressBar = itemView.findViewById(R.id.progressBar);
+            followText = itemView.findViewById(R.id.follow_textview);
+            likeCount = itemView.findViewById(R.id.viewsLike);
+            threeDot = itemView.findViewById(R.id.three_dot);
+            imgBookmark = itemView.findViewById(R.id.bookmark);
+            parent = itemView;
+        }
+
+        @Override
+        public void onBind(int position) {
+            super.onBind(position);
+            parent.setTag(this);
+
+            Topics responseData = ((Topics) vlogsListingAndDetailResults.get(position));
+
+            textViewTitle.setText(responseData.getExtraData().get(0).getChallenge().getDesc());
+            makeTextViewResizable(textViewTitle, 2, " ..See More", true,
+                    responseData.getTitle());
+            challengeHandle.setText(responseData.getDisplay_name());
+
+            imgBookmark
+                    .setOnClickListener(view -> videoFeedRecyclerViewClick.onClick(position, view));
+
+            /*threeDot.setOnClickListener(view -> {
+                if (responseData.getIs_bookmark() != null) {
+                    PopupWindow popupWindow = popupDisplay(responseData.getIs_bookmark());
+                    popupWindow.showAsDropDown(threeDot, -40, 18);
+                }
+            });*/
+
+            if (StringUtils
+                    .isNullOrEmpty(responseData.getExtraData().get(0).getChallenge().getImageUrl())) {
+                Glide.with(context).asBitmap().load(R.drawable.default_article)
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap bitmap,
+                                    @Nullable Transition<? super Bitmap> transition) {
+                                int w = bitmap.getWidth();
+                                int h = bitmap.getHeight();
+                                Log.e("width and height", w + " * " + h);
+
+                                float ratio = ((float) h / (float) w);
+                                videoLayout.getLayoutParams().height = Math
+                                        .round(ratio * context.getResources().getDisplayMetrics().widthPixels);
+                                videoLayout.getLayoutParams().width = Math
+                                        .round(context.getResources().getDisplayMetrics().widthPixels);
+                                coverImageView.setImageBitmap(bitmap);
+                            }
+                        });
+            } else {
+                Glide.with(context)
+                        .asBitmap()
+                        .load(responseData.getExtraData().get(0).getChallenge().getImageUrl())
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap bitmap,
+                                    Transition<? super Bitmap> transition) {
+                                int w = bitmap.getWidth();
+                                int h = bitmap.getHeight();
+                                Log.e("width and height", w + " * " + h);
+
+                                float ratio = ((float) h / (float) w);
+                                videoLayout.getLayoutParams().height = Math
+                                        .round(ratio * context.getResources().getDisplayMetrics().widthPixels);
+                                videoLayout.getLayoutParams().width = Math
+                                        .round(context.getResources().getDisplayMetrics().widthPixels);
+
+                                coverImageView.setImageBitmap(bitmap);
+                            }
+                        });
+            }
+        }
+
+        protected void clear() {
+
+        }
+
+    }
+
     public class FollowFollowingCarousal extends BaseViewHolder implements View.OnClickListener {
 
         ShimmerFrameLayout shimmerLayout;
@@ -673,17 +817,20 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.authorFollowTextView1:
-                    if (vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(0)
+                    if (((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                            .getCarouselVideoList().get(0)
                             .getFollowing()) {
                         unFollowApiCall(
-                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(0)
+                                ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                                        .getCarouselVideoList().get(0)
                                         .getDynamoId(),
                                 getAdapterPosition(),
                                 0,
                                 authorFollowTextView1);
                     } else {
                         followApiCall(
-                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(0)
+                                ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                                        .getCarouselVideoList().get(0)
                                         .getDynamoId(),
                                 getAdapterPosition(),
                                 0,
@@ -691,17 +838,20 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                     }
                     break;
                 case R.id.authorFollowTextView2:
-                    if (vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(1)
+                    if (((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                            .getCarouselVideoList().get(1)
                             .getFollowing()) {
                         unFollowApiCall(
-                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(1)
+                                ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                                        .getCarouselVideoList().get(1)
                                         .getDynamoId(),
                                 getAdapterPosition(),
                                 1,
                                 authorFollowTextView2);
                     } else {
                         followApiCall(
-                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(1)
+                                ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                                        .getCarouselVideoList().get(1)
                                         .getDynamoId(),
                                 getAdapterPosition(),
                                 1,
@@ -709,17 +859,20 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                     }
                     break;
                 case R.id.authorFollowTextView3:
-                    if (vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(2)
+                    if (((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                            .getCarouselVideoList().get(2)
                             .getFollowing()) {
                         unFollowApiCall(
-                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(2)
+                                ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                                        .getCarouselVideoList().get(2)
                                         .getDynamoId(),
                                 getAdapterPosition(),
                                 2,
                                 authorFollowTextView3);
                     } else {
                         followApiCall(
-                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(2)
+                                ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                                        .getCarouselVideoList().get(2)
                                         .getDynamoId(),
                                 getAdapterPosition(),
                                 2,
@@ -727,17 +880,20 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                     }
                     break;
                 case R.id.authorFollowTextView4:
-                    if (vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(3)
+                    if (((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                            .getCarouselVideoList().get(3)
                             .getFollowing()) {
                         unFollowApiCall(
-                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(3)
+                                ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                                        .getCarouselVideoList().get(3)
                                         .getDynamoId(),
                                 getAdapterPosition(),
                                 3,
                                 authorFollowTextView4);
                     } else {
                         followApiCall(
-                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(3)
+                                ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                                        .getCarouselVideoList().get(3)
                                         .getDynamoId(),
                                 getAdapterPosition(),
                                 3,
@@ -745,17 +901,20 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                     }
                     break;
                 case R.id.authorFollowTextView5:
-                    if (vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(4)
+                    if (((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                            .getCarouselVideoList().get(4)
                             .getFollowing()) {
                         unFollowApiCall(
-                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(4)
+                                ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                                        .getCarouselVideoList().get(4)
                                         .getDynamoId(),
                                 getAdapterPosition(),
                                 4,
                                 authorFollowTextView5);
                     } else {
                         followApiCall(
-                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(4)
+                                ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                                        .getCarouselVideoList().get(4)
                                         .getDynamoId(),
                                 getAdapterPosition(),
                                 4,
@@ -763,17 +922,20 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                     }
                     break;
                 case R.id.authorFollowTextView6:
-                    if (vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(5)
+                    if (((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                            .getCarouselVideoList().get(5)
                             .getFollowing()) {
                         unFollowApiCall(
-                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(5)
+                                ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                                        .getCarouselVideoList().get(5)
                                         .getDynamoId(),
                                 getAdapterPosition(),
                                 5,
                                 authorFollowTextView6);
                     } else {
                         followApiCall(
-                                vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(5)
+                                ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                                        .getCarouselVideoList().get(5)
                                         .getDynamoId(),
                                 getAdapterPosition(),
                                 5,
@@ -783,7 +945,8 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 case R.id.carosalContainer1:
                     Intent intent1 = new Intent(context, UserProfileActivity.class);
                     intent1.putExtra(Constants.USER_ID,
-                            vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(0)
+                            ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                                    .getCarouselVideoList().get(0)
                                     .getDynamoId());
                     context.startActivity(intent1);
                     break;
@@ -791,35 +954,40 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
 
                     Intent intent2 = new Intent(context, UserProfileActivity.class);
                     intent2.putExtra(Constants.USER_ID,
-                            vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(1)
+                            ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                                    .getCarouselVideoList().get(1)
                                     .getDynamoId());
                     context.startActivity(intent2);
                     break;
                 case R.id.carosalContainer3:
                     Intent intent3 = new Intent(context, UserProfileActivity.class);
                     intent3.putExtra(Constants.USER_ID,
-                            vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(2)
+                            ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                                    .getCarouselVideoList().get(2)
                                     .getDynamoId());
                     context.startActivity(intent3);
                     break;
                 case R.id.carosalContainer4:
                     Intent intent4 = new Intent(context, UserProfileActivity.class);
                     intent4.putExtra(Constants.USER_ID,
-                            vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(3)
+                            ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                                    .getCarouselVideoList().get(3)
                                     .getDynamoId());
                     context.startActivity(intent4);
                     break;
                 case R.id.carosalContainer5:
                     Intent intent5 = new Intent(context, UserProfileActivity.class);
                     intent5.putExtra(Constants.USER_ID,
-                            vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(4)
+                            ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                                    .getCarouselVideoList().get(4)
                                     .getDynamoId());
                     context.startActivity(intent5);
                     break;
                 case R.id.carosalContainer6:
                     Intent intent6 = new Intent(context, UserProfileActivity.class);
                     intent6.putExtra(Constants.USER_ID,
-                            vlogsListingAndDetailResults.get(getAdapterPosition()).getCarouselVideoList().get(5)
+                            ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(getAdapterPosition()))
+                                    .getCarouselVideoList().get(5)
                                     .getDynamoId());
                     context.startActivity(intent6);
                     break;
@@ -834,7 +1002,8 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             int index,
             TextView followFollowingTextView) {
 
-        vlogsListingAndDetailResults.get(position).getCarouselVideoList().get(index).setFollowing(false);
+        ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position)).getCarouselVideoList().get(index)
+                .setFollowing(false);
         GradientDrawable myGrad = (GradientDrawable) followFollowingTextView.getBackground();
         myGrad.setStroke(2, ContextCompat.getColor(context, R.color.app_red));
         followFollowingTextView.setTextColor(ContextCompat.getColor(context, R.color.white));
@@ -867,7 +1036,8 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             int position,
             int index,
             TextView followFollowingTextView) {
-        vlogsListingAndDetailResults.get(position).getCarouselVideoList().get(index).setFollowing(true);
+        ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position)).getCarouselVideoList().get(index)
+                .setFollowing(true);
         GradientDrawable myGrad = (GradientDrawable) followFollowingTextView.getBackground();
         myGrad.setStroke(2, ContextCompat.getColor(context, R.color.color_BABABA));
         followFollowingTextView.setTextColor(ContextCompat.getColor(context, R.color.color_BABABA));
@@ -896,7 +1066,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     private void processVlogersData(FollowFollowingCarousal holder, ArrayList<UserDetailResult> dataList,
             int position) {
         if (null != dataList && !dataList.isEmpty()) {
-            vlogsListingAndDetailResults.get(position).setCarouselVideoList(dataList);
+            ((VlogsListingAndDetailResult) vlogsListingAndDetailResults.get(position)).setCarouselVideoList(dataList);
             populateCarouselFollowFollowing(holder, dataList);
         }
     }
