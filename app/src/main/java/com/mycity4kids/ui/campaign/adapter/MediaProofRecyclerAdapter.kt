@@ -19,6 +19,7 @@ class MediaProofRecyclerAdapter(
     private val mOnClickListener: View.OnClickListener
     private var campaignProofResponse: List<CampaignProofResponse> = mediaLists
     private var clickListener = context as ClickListener
+    private var hasVideo: Boolean = false
 
     init {
         mOnClickListener = View.OnClickListener { v ->
@@ -27,7 +28,7 @@ class MediaProofRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.campaign_image_proof_sreenshots, parent, false)
+            .inflate(R.layout.campaign_image_proof_sreenshots, parent, false)
         return ViewHolder(view)
     }
 
@@ -38,23 +39,41 @@ class MediaProofRecyclerAdapter(
                 val item = campaignProofResponse.get(position)
                 if (item.isTemplate) {
                     holder.relativeParent.setOnClickListener {
-                        clickListener.onCellClick()
+                        clickListener.onCellClick(hasVideo)
                     }
 
                     holder.imageScreenshot.setImageDrawable(context.resources.getDrawable(R.drawable.ic_add_proof))
                     holder.imageEdit.visibility = View.GONE
                 } else {
-                    Picasso.get().load(item.url)
-                            .placeholder(R.drawable.ic_add_proof).error(R.drawable.ic_add_proof).into(holder.imageScreenshot)
+                    if (item.url!!.contains("video")) {
+                        hasVideo = true
+                        Picasso.get().load(R.drawable.play)
+                            .placeholder(R.drawable.ic_add_proof).error(R.drawable.ic_add_proof).into(
+                                holder.imageScreenshot
+                            )
+                    } else {
+                        Picasso.get().load(item.url)
+                            .placeholder(R.drawable.ic_add_proof).error(R.drawable.ic_add_proof).into(
+                                holder.imageScreenshot
+                            )
+                    }
                     if (item.proofStatus == 1 || item.proofStatus == 0) {
                         holder.imageEdit.visibility = View.VISIBLE
                     } else if (item.proofStatus == 2) {
-                        holder.imageAcceptDeleteProof.setImageDrawable(context.context!!.resources.getDrawable(R.drawable.ic_delete_cross))
+                        holder.imageAcceptDeleteProof.setImageDrawable(
+                            context.context!!.resources.getDrawable(
+                                R.drawable.ic_delete_cross
+                            )
+                        )
                         holder.imageEdit.visibility = View.VISIBLE
                         holder.imageAcceptedRejected.setText("Rejected")
                         holder.imageAcceptedRejected.setTextColor(context.resources.getColor(R.color.campaign_rejected))
                     } else if (item.proofStatus == 3) {
-                        holder.imageAcceptDeleteProof.setImageDrawable(context.context!!.resources.getDrawable(R.drawable.ic_accepted))
+                        holder.imageAcceptDeleteProof.setImageDrawable(
+                            context.context!!.resources.getDrawable(
+                                R.drawable.ic_accepted
+                            )
+                        )
                         holder.imageEdit.visibility = View.GONE
                         holder.imageAcceptedRejected.setText("Approved")
                         holder.imageAcceptedRejected.setTextColor(context.resources.getColor(R.color.campaign_approved_rejected))
@@ -62,6 +81,9 @@ class MediaProofRecyclerAdapter(
                     }
 
                     holder.imageEdit.setOnClickListener {
+                        if (campaignProofResponse.get(holder.adapterPosition).url!!.contains("video")){
+                            hasVideo = false
+                        }
                         clickListener.onProofDelete(holder.adapterPosition)
                     }
 
@@ -75,12 +97,12 @@ class MediaProofRecyclerAdapter(
                 }
             } else {
                 holder.relativeParent.setOnClickListener {
-                    clickListener.onCellClick()
+                    clickListener.onCellClick(hasVideo)
                 }
             }
         } else {
             holder.relativeParent.setOnClickListener {
-                clickListener.onCellClick()
+                clickListener.onCellClick(hasVideo)
             }
         }
     }
@@ -96,7 +118,7 @@ class MediaProofRecyclerAdapter(
     }
 
     interface ClickListener {
-        fun onCellClick()
+        fun onCellClick(hasVideo: Boolean)
         fun onProofDelete(cellIndex: Int)
     }
 }

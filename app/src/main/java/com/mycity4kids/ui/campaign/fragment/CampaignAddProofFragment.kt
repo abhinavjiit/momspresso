@@ -45,14 +45,15 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import retrofit2.Call
+import retrofit2.Callback
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.Date
-import retrofit2.Call
-import retrofit2.Callback
 
 const val SELECT_IMAGE = 1005
+const val SELECT_VIDEO = 1006
 
 class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickListener,
     MediaProofRecyclerAdapter.ClickListener {
@@ -80,6 +81,10 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 notifyUrlAdapter()
             }
         }
+    }
+
+    override fun onCellClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onUrlProofDelete(cellIndex: Int) {
@@ -144,11 +149,13 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         }
     }
 
-    override fun onCellClick() {
-        val intent = Intent()
-        intent.setType("image/*")
-        intent.setAction(Intent.ACTION_PICK)
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_IMAGE)
+    override fun onCellClick(hasVideo: Boolean) {
+        chooseMediaTypeContainer.visibility = View.VISIBLE
+        if (hasVideo || hasVideos){
+            chooseVideoTextView.visibility = View.GONE
+        } else {
+            chooseVideoTextView.visibility = View.VISIBLE
+        }
     }
 
     override fun onProofDelete(cellIndex: Int) {
@@ -162,6 +169,9 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             if (!campaignImageProofList.isNullOrEmpty() && cellIndex < campaignImageProofList.size && !campaignImageProofList.get(
                     cellIndex
                 ).url.isNullOrEmpty()) {
+                /*if (campaignImageProofList.get(cellIndex).url!!.contains("video")){
+                    hasVideo = false
+                }*/
                 deleteProof(campaignImageProofList.get(cellIndex).id!!, urlType = 0)
             }
         }.setPositiveButton(R.string.new_cancel) { dialog, which ->
@@ -202,6 +212,11 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     private lateinit var headerTextViewContainer: RelativeLayout
     private lateinit var headerTextViewContainer1: RelativeLayout
     private lateinit var preproofApprovalTextView: TextView
+    private lateinit var chooseMediaTypeContainer: RelativeLayout
+    private lateinit var chooseVideoTextView: TextView
+    private lateinit var chooseImageTextView: TextView
+    private lateinit var cancelTextView: TextView
+    private var hasVideos: Boolean = false
 
     companion object {
         @JvmStatic
@@ -267,6 +282,10 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         linearInstruction = view.findViewById(R.id.linearInstruction)
         textAddUrlProof = view.findViewById(R.id.textAddUrlProof)
         preproofApprovalTextView = view.findViewById(R.id.preproofapprovalText)
+        chooseMediaTypeContainer = view.findViewById(R.id.chooseMediaTypeContainer)
+        chooseImageTextView = view.findViewById(R.id.chooseImageTextView)
+        chooseVideoTextView = view.findViewById(R.id.chooseVideoTextView)
+        cancelTextView = view.findViewById(R.id.cancelTextView)
         textAddUrlProof.setOnClickListener {
             var isEmpty = false
             for (i in 0..campaignUrlProofList.size - 1) {
@@ -297,6 +316,26 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                     Toast.LENGTH_SHORT
                 ).show()
             }
+        }
+
+        chooseImageTextView.setOnClickListener {
+            val intent = Intent()
+            intent.setType("image/*")
+            intent.setAction(Intent.ACTION_PICK)
+            startActivityForResult(intent, SELECT_IMAGE)
+            chooseMediaTypeContainer.visibility = View.GONE
+        }
+
+        chooseVideoTextView.setOnClickListener {
+            val intent = Intent()
+            intent.setType("video/mp4")
+            intent.setAction(Intent.ACTION_PICK)
+            startActivityForResult(intent, SELECT_VIDEO)
+            chooseMediaTypeContainer.visibility = View.GONE
+        }
+
+        cancelTextView.setOnClickListener {
+            chooseMediaTypeContainer.visibility = View.GONE
         }
 
         back = view.findViewById(R.id.back)
@@ -836,6 +875,50 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                                     campaign_id = campaignId,
                                     url_type = 0
                                 )
+                                postProofToServer(proofPostModel, urlType = 0)
+                            }
+                            Log.e("fcm ", "file uploaded succesfully")
+                            removeProgressDialog()
+                        }?.addOnProgressListener {
+                            Log.e("fcm ", "file uploaded succesfully")
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                Toast.makeText(activity, "Canceled", Toast.LENGTH_SHORT).show()
+            }
+        } else if (requestCode == SELECT_VIDEO) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    try {
+                        val storage =
+                            FirebaseStorage.getInstance("gs://api-project-3577377239.appspot.com")
+                        var file = File(data.data?.path); // create path from uri
+                        /*  var split = file.getPath().split(":");//split the path.
+                          var path = split[1];*/
+                        val storageRef = storage.reference
+                        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+                        val riversRef = storageRef.child(
+                            "user/" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId +
+                                "/media/video/" + file + "_" + timeStamp
+                        )
+                        val uploadTask = data.data?.let { riversRef.putFile(it) }
+                        Log.e("file path ", riversRef.path)
+                        showProgressDialog("")
+                        uploadTask?.addOnFailureListener {
+                            Log.e("fcm ", it.message)
+                            removeProgressDialog()
+                        }?.addOnSuccessListener {
+                            riversRef.downloadUrl.addOnSuccessListener {
+                                Log.e("uploaded path ", it.toString())
+                                var proofPostModel = ProofPostModel(
+                                    url = it.toString(),
+                                    campaign_id = campaignId,
+                                    url_type = 0
+                                )
+                                hasVideos = true
                                 postProofToServer(proofPostModel, urlType = 0)
                             }
                             Log.e("fcm ", "file uploaded succesfully")

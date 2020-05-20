@@ -43,6 +43,9 @@ public interface VlogsListingAndDetailsAPI {
     @GET("/v2/categories/video/challenges")
     Call<VlogsCategoryWiseChallengesResponse> getVlogsCategoryWiseChallenges();
 
+    @GET("/v2/categories/category/challenges/")
+    Call<VlogsCategoryWiseChallengesResponse> getSingleChallenge(@Query("id") ArrayList<String> id );
+
     @GET("/v2/videos/{videoId}")
     Call<VlogsDetailResponse> getVlogDetail(@Path("videoId") String videoId);
 

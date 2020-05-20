@@ -45,6 +45,7 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.mycity4kids.R;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.VideoRecyclerViewAdapter;
@@ -70,6 +71,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     private Context context;
     private String uriString;
     private MediaSource videoSource;
+    private ArrayList<Object> mergedInfoList = new ArrayList<>();
 
 
     /**
@@ -106,6 +108,12 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     public void setVideoInfoList(Context context, ArrayList<VlogsListingAndDetailResult> videoInfoList) {
         this.context = context;
         this.videoInfoList = videoInfoList;
+
+    }
+
+    public void setMergedList(Context context, ArrayList<Object> mergedInfoList) {
+        this.context = context;
+        this.mergedInfoList = mergedInfoList;
 
     }
 
@@ -170,49 +178,101 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         if (child == null) {
             return;
         }
+        VideoRecyclerViewAdapter.ViewHolder holder = null;
+        VideoRecyclerViewAdapter.ChallengeCardHolder holder1 = null;
+        if (mergedInfoList.get(targetPosition).getClass().getSimpleName().equals("Topics")) {
+            holder1 = (VideoRecyclerViewAdapter.ChallengeCardHolder) child.getTag();
+            if (holder1 == null) {
+                playPosition = -1;
+                return;
+            }
+            videoCell = holder1.videoCell;
+            coverImage = holder1.coverImageView;
+            progressBar = holder1.progressBar;
+            frameLayout = holder1.itemView.findViewById(R.id.video_layout);
+        } else {
+            holder = (VideoRecyclerViewAdapter.ViewHolder) child.getTag();
+            if (holder == null) {
+                playPosition = -1;
+                return;
+            }
 
-        VideoRecyclerViewAdapter.ViewHolder holder = (VideoRecyclerViewAdapter.ViewHolder) child.getTag();
-        if (holder == null) {
-            playPosition = -1;
-            return;
+            videoCell = holder.videoCell;
+            coverImage = holder.coverImageView;
+            progressBar = holder.progressBar;
+            frameLayout = holder.itemView.findViewById(R.id.video_layout);
         }
-        videoCell = holder.videoCell;
-        coverImage = holder.coverImageView;
-        progressBar = holder.progressBar;
-        frameLayout = holder.itemView.findViewById(R.id.video_layout);
-        Glide.with(appContext)
-                .asBitmap()
-                .load(videoInfoList.get(targetPosition).getThumbnail())
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap bitmap,
-                            Transition<? super Bitmap> transition) {
-                        int w = bitmap.getWidth();
-                        int h = bitmap.getHeight();
-                        Log.e("width and height", w + " * " + h);
-                        float ratio = ((float) h / (float) w);
-                        frameLayout.getLayoutParams().height = Math
-                                .round(ratio * appContext.getResources().getDisplayMetrics().widthPixels);
-                        frameLayout.getLayoutParams().width = Math
-                                .round(appContext.getResources().getDisplayMetrics().widthPixels);
+        if (mergedInfoList.get(targetPosition).getClass().getSimpleName().equals("Topics")) {
+            Glide.with(appContext)
+                    .asBitmap()
+                    .load(((Topics) mergedInfoList.get(targetPosition)).getExtraData().get(0).getChallenge()
+                            .getImageUrl())
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap bitmap,
+                                Transition<? super Bitmap> transition) {
+                            int w = bitmap.getWidth();
+                            int h = bitmap.getHeight();
+                            Log.e("width and height", w + " * " + h);
+                            float ratio = ((float) h / (float) w);
+                            frameLayout.getLayoutParams().height = Math
+                                    .round(ratio * appContext.getResources().getDisplayMetrics().widthPixels);
+                            frameLayout.getLayoutParams().width = Math
+                                    .round(appContext.getResources().getDisplayMetrics().widthPixels);
 
-                        Log.e("from ratio",
-                                w + "   " + h + "   " + frameLayout.getLayoutParams().height + " * " + frameLayout
-                                        .getLayoutParams().width);
-                    }
-                });
+                            Log.e("from ratio",
+                                    w + "   " + h + "   " + frameLayout.getLayoutParams().height + " * " + frameLayout
+                                            .getLayoutParams().width);
+                        }
+                    });
+        } else {
+            Glide.with(appContext)
+                    .asBitmap()
+                    .load(((VlogsListingAndDetailResult) mergedInfoList.get(targetPosition)).getThumbnail())
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap bitmap,
+                                Transition<? super Bitmap> transition) {
+                            int w = bitmap.getWidth();
+                            int h = bitmap.getHeight();
+                            Log.e("width and height", w + " * " + h);
+                            float ratio = ((float) h / (float) w);
+                            frameLayout.getLayoutParams().height = Math
+                                    .round(ratio * appContext.getResources().getDisplayMetrics().widthPixels);
+                            frameLayout.getLayoutParams().width = Math
+                                    .round(appContext.getResources().getDisplayMetrics().widthPixels);
+
+                            Log.e("from ratio",
+                                    w + "   " + h + "   " + frameLayout.getLayoutParams().height + " * " + frameLayout
+                                            .getLayoutParams().width);
+                        }
+                    });
+        }
 
         frameLayout.addView(videoSurfaceView);
 
         addedVideo = true;
-        rowParent = holder.itemView;
+        if (mergedInfoList.get(targetPosition).getClass().getSimpleName().equals("Topics")) {
+            if (holder1 != null) {
+                rowParent = holder1.itemView;
+            }
+        } else {
+            if (holder != null) {
+                rowParent = holder.itemView;
+            }
+        }
         videoSurfaceView.requestFocus();
         // Bind the player to the view.
         videoSurfaceView.setPlayer(player);
 
         // Measures bandwidth during playback. Can be null if not required.
         DefaultBandwidthMeter defaultBandwidthMeter = new DefaultBandwidthMeter();
-        uriString = videoInfoList.get(targetPosition).getUrl();
+        if (mergedInfoList.get(targetPosition).getClass().getSimpleName().equals("Topics")) {
+            uriString = ((Topics) mergedInfoList.get(targetPosition)).getExtraData().get(0).getChallenge()
+                    .getVideoUrl();
+        } else {
+            uriString = ((VlogsListingAndDetailResult) mergedInfoList.get(targetPosition)).getUrl();
+        }
         if (uriString != null) {
             String userAgent = Util.getUserAgent(appContext, appContext.getApplicationInfo().packageName);
             DefaultHttpDataSourceFactory httpDataSourceFactory = new DefaultHttpDataSourceFactory(userAgent, null,
@@ -225,7 +285,13 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             // Prepare the player with the source.
             player.prepare(videoSource);
             player.setPlayWhenReady(true);
-            ((ParallelFeedActivity) context).hitUpdateViewCountApi(videoInfoList.get(targetPosition).getId());
+            if (mergedInfoList.get(targetPosition).getClass().getSimpleName().equals("Topics")) {
+//                ((ParallelFeedActivity) context).hitUpdateViewCountApi(
+//                        ((Topics) mergedInfoList.get(targetPosition)).getId());
+            } else {
+                ((ParallelFeedActivity) context).hitUpdateViewCountApi(
+                        ((VlogsListingAndDetailResult) mergedInfoList.get(targetPosition)).getId());
+            }
             ((ParallelFeedActivity) context).pushMomVlogViewEvent();
         }
     }
@@ -302,7 +368,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-                    if (playPosition < videoInfoList.size() - 1) {
+                    if (playPosition < mergedInfoList.size() - 1) {
                         playVideo(false);
                     }
                 }
@@ -364,7 +430,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                         break;
                     case Player.STATE_ENDED:
                         player.seekTo(0);
-                        if (playPosition < videoInfoList.size() - 1) {
+                        if (playPosition < mergedInfoList.size() - 1) {
                             recyclerView.smoothScrollToPosition(playPosition + 1);
                             playVideo(true);
                         }
