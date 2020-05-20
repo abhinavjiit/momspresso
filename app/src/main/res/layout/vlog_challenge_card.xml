@@ -19,8 +19,8 @@
       android:id="@+id/challenge"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_toEndOf="@+id/user_image"
       android:layout_alignParentTop="true"
+      android:layout_toEndOf="@+id/user_image"
       android:text="CHALLENGE"
       android:textColor="@color/color_D63C55"
       android:textSize="14sp"
@@ -130,9 +130,25 @@
     android:textStyle="bold"
     app:fontName="oswald_regular.ttf" />
 
+  <com.mycity4kids.widget.CustomFontTextView
+    android:id="@+id/seeMoreChallenge"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/textViewTitle"
+    android:background="@color/color_2A2A2A"
+    android:gravity="center"
+    android:paddingTop="@dimen/space_10"
+    android:paddingBottom="@dimen/space_10"
+    android:text="@string/see_more_challenge"
+    android:textColor="@color/white"
+    android:textSize="12sp"
+    android:textStyle="bold"
+    app:fontName="oswald_regular.ttf" />
+
   <View
     android:layout_width="match_parent"
     android:layout_height="16dp"
-    android:layout_below="@id/textViewTitle"
+    android:layout_below="@id/seeMoreChallenge"
+    android:layout_marginTop="@dimen/space_8"
     android:background="@color/black_color" />
 </RelativeLayout>
