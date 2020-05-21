@@ -37,10 +37,13 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
+import com.mycity4kids.models.collectionsModels.TutorialCollectionsListModel;
+import com.mycity4kids.models.collectionsModels.TutorialCollectionsModel;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
+import com.mycity4kids.models.response.BaseResponseGeneric;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.VlogsDetailResponse;
@@ -79,6 +82,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private static final String STATE_RESUME_WINDOW = "resumeWindow";
     private static final String STATE_RESUME_POSITION = "resumePosition";
     private static final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
+    private static final int PAGINATION_SIZE = 10;
 
     private VlogsListingAndDetailResult detailData;
     private String videoId;
@@ -113,9 +117,8 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private boolean isFromPause = false;
     private ConstraintLayout root;
     private int bookMarkPosition;
-
-    private ArrayList<Topics> categoryWiseChallengeList = new ArrayList<>();
-    private ArrayList<Object> mergedList = new ArrayList<>();
+    private String collectionId;
+    private boolean isLastPageReached = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +136,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             streamUrl = bundle.getString(Constants.STREAM_URL);
+            collectionId = bundle.getString(AppConstants.COLLECTION_ID);
             videoId = bundle.getString(Constants.VIDEO_ID);//"videos-67496bfa-b77d-466f-9d18-94e0f98f17c6"
             authorId = bundle.getString(Constants.AUTHOR_ID, "");
             if (bundle.getBoolean("fromNotification")) {
@@ -215,10 +219,19 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         if (detailData.getCategory_id() != null && !detailData.getCategory_id().isEmpty()) {
             taggedCategories = detailData.getCategory_id().get(0);
         }
-        endIndex = startIndex + 10;
-        Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsApi
-                .getVlogsList(startIndex, endIndex, 0, 3, taggedCategories);
-        callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
+        if (StringUtils.isNullOrEmpty(collectionId)) {
+            endIndex = startIndex + 10;
+            Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsApi
+                    .getVlogsList(startIndex, endIndex, 0, 3, taggedCategories);
+            callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
+        } else {
+            if (startIndex != 0) {
+                startIndex = startIndex + PAGINATION_SIZE - 1;
+            }
+            Call<BaseResponseGeneric<TutorialCollectionsListModel>> callAuthorRecentcall = vlogsListingAndDetailsApi
+                    .getTutorialCollectionItems(collectionId, startIndex, PAGINATION_SIZE);
+            callAuthorRecentcall.enqueue(collectionVlogsResponseCallback);
+        }
     }
 
     public void hitUpdateViewCountApi(String videoId) {
@@ -247,19 +260,16 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                         dataList.addAll(0, dataListHeader);
                         finalList = dataList;
                         finalList.add(new VlogsListingAndDetailResult(1));
-                        mergedList.addAll(finalList);
                         getChallenges();
-//                        setRecycler();
+                        setRecycler();
                     } else {
                         finalList.addAll(dataList);
-                        mergedList.addAll(finalList);
                         if (dataList.size() > 10) {
                             finalList.add(new VlogsListingAndDetailResult(1));
                         }
                     }
-//                    recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);
-                    recyclerViewFeed.setMergedList(ParallelFeedActivity.this, mergedList);
-                    videoRecyclerViewAdapter.mergedList(mergedList);
+                    recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);
+                    videoRecyclerViewAdapter.updateList(finalList);
                 } else {
                     showToast(getString(R.string.server_went_wrong));
                 }
@@ -276,6 +286,71 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         }
     };
 
+    private Callback<BaseResponseGeneric<TutorialCollectionsListModel>> collectionVlogsResponseCallback =
+            new Callback<BaseResponseGeneric<TutorialCollectionsListModel>>() {
+                @Override
+                public void onResponse(Call<BaseResponseGeneric<TutorialCollectionsListModel>> call,
+                        retrofit2.Response<BaseResponseGeneric<TutorialCollectionsListModel>> response) {
+                    try {
+                        BaseResponseGeneric<TutorialCollectionsListModel> responseData = response.body();
+                        if (response.isSuccessful()) {
+                            ArrayList<VlogsListingAndDetailResult> vlogList = convertCollectionModetToVideoModel(
+                                    responseData.getData().getResult().getCollectionItems());
+                            if (vlogList == null || vlogList.size() == 0 || vlogList.size() < PAGINATION_SIZE) {
+                                isLastPageReached = true;
+                            }
+                            dataList = convertCollectionModetToVideoModel(
+                                    responseData.getData().getResult().getCollectionItems());
+
+                            if (dataList == null) {
+                                return;
+                            }
+                            for (int i = 0; i < dataList.size(); i++) {
+                                if (dataList.get(i).getId().equals(videoId)) {
+                                    dataList.remove(i);
+                                    break;
+                                }
+                            }
+
+                            if (!fromLoadMore) {
+                                dataList.addAll(0, dataListHeader);
+                                finalList = dataList;
+                                finalList.add(new VlogsListingAndDetailResult(1));
+                                getChallenges();
+                            } else {
+                                finalList.addAll(dataList);
+                                if (dataList.size() > 10) {
+                                    finalList.add(new VlogsListingAndDetailResult(1));
+                                }
+                            }
+                            recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);
+                            videoRecyclerViewAdapter.updateList(finalList);
+                        } else {
+                            showToast(getString(R.string.server_went_wrong));
+                        }
+                    } catch (Exception e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                        showToast(getString(R.string.went_wrong));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<BaseResponseGeneric<TutorialCollectionsListModel>> call, Throwable t) {
+                    handleExceptions(t);
+                }
+            };
+
+    private ArrayList<VlogsListingAndDetailResult> convertCollectionModetToVideoModel(
+            ArrayList<TutorialCollectionsModel> collectionItems) {
+        ArrayList<VlogsListingAndDetailResult> arrayList = new ArrayList<>();
+        for (int i = 0; i < collectionItems.size(); i++) {
+            VlogsListingAndDetailResult vlogsListingAndDetailResult = new VlogsListingAndDetailResult();
+            arrayList.add(collectionItems.get(i).getItem_info());
+        }
+        return arrayList;
+    }
+
     private void setRecycler() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ParallelFeedActivity.this,
                 RecyclerView.VERTICAL, false);
@@ -285,19 +360,16 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 fromLoadMore = true;
-                hitRelatedArticleApi(endIndex + 1);
+                if (!isLastPageReached) {
+                    hitRelatedArticleApi(endIndex + 1);
+                }
             }
         });
         recyclerViewFeed.addItemDecoration(new DividerItemDecoration(dividerDrawable));
         recyclerViewFeed.setItemAnimator(new DefaultItemAnimator());
         recyclerViewFeed.setAdapter(videoRecyclerViewAdapter);
         if (firstTime) {
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    recyclerViewFeed.playVideo(false);
-                }
-            });
+            new Handler(Looper.getMainLooper()).post(() -> recyclerViewFeed.playVideo(false));
             firstTime = false;
         }
     }
@@ -348,13 +420,13 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             Utils.pushGenericEvent(this, "CTA_Unfollow_Vlog", userDynamoId, "ParallelFeedActivity");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followApi.unfollowUserV2(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
-            videoRecyclerViewAdapter.setListUpdate(updateFollowPos, mergedList);
+            videoRecyclerViewAdapter.setListUpdate(updateFollowPos, finalList);
         } else {
             finalList.get(updateFollowPos).setFollowed(true);
             Utils.pushGenericEvent(this, "CTA_Follow_Vlog", userDynamoId, "ParallelFeedActivity");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followApi.followUserV2(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
-            videoRecyclerViewAdapter.setListUpdate(updateFollowPos, mergedList);
+            videoRecyclerViewAdapter.setListUpdate(updateFollowPos, finalList);
         }
     }
 
@@ -800,7 +872,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             removeProgressDialog();
             return;
         }
-        Retrofit retrofit = BaseApplication.getInstance().getStagingRetrofit();
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI vlogsListingAndDetailsApi = retrofit.create(VlogsListingAndDetailsAPI.class);
         Call<VlogsCategoryWiseChallengesResponse> callRecentVideoArticles = vlogsListingAndDetailsApi
                 .getSingleChallenge(detailData.getCategory_id());
@@ -837,10 +909,11 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             };
 
     private void processChallengesData(ArrayList<Topics> catWiseChallengeList) {
-        if (categoryWiseChallengeList != null) {
-            categoryWiseChallengeList.clear();
+        if (finalList.size() > 5) {
+            VlogsListingAndDetailResult item = new VlogsListingAndDetailResult(2);
+            item.setChallengeInfo(catWiseChallengeList.get(0));
+            finalList.add(5, item);
         }
-        mergedList.add(5, catWiseChallengeList.get(0));
         setRecycler();
     }
 }

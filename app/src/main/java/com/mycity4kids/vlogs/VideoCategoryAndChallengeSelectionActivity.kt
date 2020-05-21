@@ -27,6 +27,7 @@ import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.Topics
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI
+import com.mycity4kids.ui.activity.ContentCreationTutorialListingActivity
 import com.mycity4kids.ui.activity.VideoTrimmerActivity
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity
@@ -40,7 +41,7 @@ import retrofit2.Response
 
 class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
     VideoCategoriesSelectionAdapter.RecyclerViewClickListener,
-    VideoChallengeSelectionHorizontalAdapter.RecyclerViewClickListener {
+    VideoChallengeSelectionHorizontalAdapter.RecyclerViewClickListener, View.OnClickListener {
 
     private val REQUEST_CAMERA_PERMISSION = 1
     private val REQUEST_GALLERY_PERMISSION = 2
@@ -59,6 +60,8 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.video_category_challenge_selection_activity)
+
+        vlogTutorialImageView.setOnClickListener(this)
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -475,5 +478,13 @@ class VideoCategoryAndChallengeSelectionActivity : BaseActivity(),
             }
         }
         return true
+    }
+
+    override fun onClick(view: View?) {
+        if (view?.id == R.id.vlogTutorialImageView) {
+            val intent = Intent(this, ContentCreationTutorialListingActivity::class.java)
+            intent.putExtra(AppConstants.COLLECTION_ID, AppConstants.MOM_VLOG_TUTORIAL_COLLECTION)
+            startActivity(intent)
+        }
     }
 }

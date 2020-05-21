@@ -192,6 +192,7 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 Intent intent = new Intent(ArticleModerationOrShareActivity.this, DashboardActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("showInviteDialog", true);
                 startActivity(intent);
                 finish();
             } else {

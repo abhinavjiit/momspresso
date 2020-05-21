@@ -37,7 +37,7 @@ data class MixFeedResult(
     @SerializedName("approved_by")
     val approved_by: String = "",
     @SerializedName("articleCount")
-    val articleCount: Int = -1,
+    val articleCount: Int = 0,
     @SerializedName("author")
     val author: Author? = null,
     @SerializedName("blogTitle", alternate = ["blog_title_slug"])
@@ -57,9 +57,9 @@ data class MixFeedResult(
     @SerializedName("commentUri")
     val commentUri: String = "",
     @SerializedName("comment_count")
-    var comment_count: Int = -1,
+    var comment_count: Int = 0,
     @SerializedName("commentsCount")
-    val commentsCount: Int = -1,
+    val commentsCount: Int = 0,
     @SerializedName("contentType")
     val contentType: String = "",
     @SerializedName("createdTime")
@@ -99,9 +99,9 @@ data class MixFeedResult(
     @SerializedName("lang")
     val lang: Any = "",
     @SerializedName("like_count")
-    var like_count: Int = -1,
+    var like_count: Int = 0,
     @SerializedName("likesCount")
-    var likesCount: Int = -1,
+    var likesCount: Int = 0,
     @SerializedName("old_video_id")
     val old_video_id: String = "",
     @SerializedName("orientation")
@@ -123,7 +123,7 @@ data class MixFeedResult(
     @SerializedName("thumbnail")
     val thumbnail: String = "",
     @SerializedName("thumbnail_milliseconds")
-    val thumbnail_milliseconds: Int = -1,
+    val thumbnail_milliseconds: Int = 0,
     @SerializedName("title")
     val title: String = "",
     @SerializedName("titleSlug")
@@ -151,7 +151,7 @@ data class MixFeedResult(
     @SerializedName("videoUrl")
     val videoUrl: String = "",
     @SerializedName("view_count")
-    var view_count: Int = -1,
+    var view_count: Int = 0,
     @SerializedName("winner")
     val winner: Any? = -1,
     @SerializedName("itemType")

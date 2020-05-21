@@ -18,25 +18,28 @@
     app:theme="@style/ToolbarTheme"
     app:titleTextAppearance="@style/ToolbarTheme.Title" />
 
-  <androidx.constraintlayout.widget.ConstraintLayout
+  <LinearLayout
     android:id="@+id/filterContentContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_below="@+id/toolbar"
-    android:padding="10dp">
+    android:background="#F9F9F9"
+    android:paddingTop="10dp"
+    android:paddingBottom="6dp">
 
     <com.mycity4kids.widget.MomspressoButtonWidget
       android:id="@+id/articleFilterTextView"
-      android:layout_width="0dp"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="10dp"
-      android:layout_marginEnd="10dp"
+      android:layout_marginEnd="4dp"
       android:clickable="true"
       android:focusable="true"
-      android:paddingTop="10dp"
-      android:paddingBottom="10dp"
-      android:text="Article"
-      android:textStyle="bold"
+      android:paddingStart="12dp"
+      android:paddingTop="8dp"
+      android:paddingEnd="12dp"
+      android:paddingBottom="8dp"
+      android:text="@string/groups.sections.blogs"
       app:fb_borderColor="@color/app_red"
       app:fb_borderWidth="1dp"
       app:fb_defaultColor="@color/white_color"
@@ -44,49 +47,21 @@
       app:fb_disabledTextColor="@color/app_grey"
       app:fb_radius="30dp"
       app:fb_textColor="@color/app_red"
-      app:fb_textSize="14sp"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toStartOf="@+id/storyFilterTextView"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
-
-    <com.mycity4kids.widget.MomspressoButtonWidget
-      android:id="@+id/storyFilterTextView"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="10dp"
-      android:layout_marginEnd="10dp"
-      android:clickable="true"
-      android:focusable="true"
-      android:paddingTop="10dp"
-      android:paddingBottom="10dp"
-      android:text="Story"
-      android:textStyle="bold"
-      app:fb_borderColor="@color/app_red"
-      app:fb_borderWidth="1dp"
-      app:fb_defaultColor="@color/white_color"
-      app:fb_disabledColor="@color/white_color"
-      app:fb_disabledTextColor="@color/app_grey"
-      app:fb_radius="30dp"
-      app:fb_textColor="@color/app_red"
-      app:fb_textSize="14sp"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toStartOf="@+id/vlogsFilterTextView"
-      app:layout_constraintStart_toEndOf="@+id/articleFilterTextView"
-      app:layout_constraintTop_toTopOf="parent" />
+      app:fb_textSize="13sp" />
 
     <com.mycity4kids.widget.MomspressoButtonWidget
       android:id="@+id/vlogsFilterTextView"
-      android:layout_width="0dp"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginStart="10dp"
-      android:layout_marginEnd="10dp"
+      android:layout_marginStart="4dp"
+      android:layout_marginEnd="4dp"
       android:clickable="true"
       android:focusable="true"
-      android:paddingTop="10dp"
-      android:paddingBottom="10dp"
-      android:text="Vlogs"
-      android:textStyle="bold"
+      android:paddingStart="12dp"
+      android:paddingTop="8dp"
+      android:paddingEnd="12dp"
+      android:paddingBottom="8dp"
+      android:text="@string/myprofile.section.videos_label"
       app:fb_borderColor="@color/app_red"
       app:fb_borderWidth="1dp"
       app:fb_defaultColor="@color/white_color"
@@ -94,12 +69,30 @@
       app:fb_disabledTextColor="@color/app_grey"
       app:fb_radius="30dp"
       app:fb_textColor="@color/app_red"
-      app:fb_textSize="14sp"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toEndOf="@+id/storyFilterTextView"
-      app:layout_constraintTop_toTopOf="parent" />
-  </androidx.constraintlayout.widget.ConstraintLayout>
+      app:fb_textSize="13sp" />
+
+    <com.mycity4kids.widget.MomspressoButtonWidget
+      android:id="@+id/storyFilterTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="4dp"
+      android:layout_marginEnd="4dp"
+      android:clickable="true"
+      android:focusable="true"
+      android:paddingStart="12dp"
+      android:paddingTop="8dp"
+      android:paddingEnd="12dp"
+      android:paddingBottom="8dp"
+      android:text="@string/myprofile.section.short_story_label"
+      app:fb_borderColor="@color/app_red"
+      app:fb_borderWidth="1dp"
+      app:fb_defaultColor="@color/white_color"
+      app:fb_disabledColor="@color/white_color"
+      app:fb_disabledTextColor="@color/app_grey"
+      app:fb_radius="30dp"
+      app:fb_textColor="@color/app_red"
+      app:fb_textSize="13sp" />
+  </LinearLayout>
 
   <com.facebook.shimmer.ShimmerFrameLayout
     android:id="@+id/shimmer1"

@@ -1,10 +1,9 @@
 package com.mycity4kids.retrofitAPIsInterfaces
 
-import com.mycity4kids.models.ExploreTopicsModel
-import com.mycity4kids.models.Topics
 import com.mycity4kids.models.collectionsModels.AddCollectionRequestModel
 import com.mycity4kids.models.collectionsModels.FeaturedOnModel
 import com.mycity4kids.models.collectionsModels.FollowCollectionRequestModel
+import com.mycity4kids.models.collectionsModels.TutorialCollectionsListModel
 import com.mycity4kids.models.collectionsModels.UpdateCollectionRequestModel
 import com.mycity4kids.models.collectionsModels.UserCollectionsListModel
 import com.mycity4kids.models.response.BaseResponseGeneric
@@ -13,7 +12,6 @@ import com.mycity4kids.models.response.MixFeedResponse
 import io.reactivex.Observable
 import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -42,6 +40,13 @@ interface CollectionsAPI {
         @Query("start") start: Int,
         @Query("offset") offset: Int
     ): Observable<BaseResponseGeneric<UserCollectionsListModel>>
+
+    @GET("/v1/collections/{collectionId}")
+    fun getTutorialCollectionItems(
+        @Path("collectionId") collectionId: String,
+        @Query("start") start: Int,
+        @Query("offset") offset: Int
+    ): Observable<BaseResponseGeneric<TutorialCollectionsListModel>>
 
     @POST("/v1/collections/")
     fun editCollection(@Body updateCollection: UpdateCollectionRequestModel): Observable<BaseResponseGeneric<AddCollectionRequestModel>>
@@ -80,20 +85,6 @@ interface CollectionsAPI {
         @Query("offset") offset: Int
     ): Observable<BaseResponseGeneric<UserCollectionsListModel>>
 
-    // api.momspresso.com/v1/collectionItem/addItems/
     @POST("/v1/collectionItem/addItems/")
     fun addMultipleCollectionItem(@Body multipleCollectionItems: ArrayList<UpdateCollectionRequestModel>): Call<BaseResponseGeneric<AddCollectionRequestModel>>
-
-    @GET("/v2/categories")
-    suspend fun getShortStoryTopicsAsync(
-        @Query("id") id: String,
-        @Query("public") isPublic: String
-    ): Response<ArrayList<ExploreTopicsModel>>
-
-    @GET("/v2/categories")
-    suspend fun getShortStoryChallengesAsync(
-        @Query("id") id: String,
-        @Query("isActive") isActive: String,
-        @Query("public") isPublic: String
-    ): Response<ArrayList<Topics>>
 }

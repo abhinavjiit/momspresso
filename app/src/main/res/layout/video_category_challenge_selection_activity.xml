@@ -34,6 +34,14 @@
         android:textSize="20sp"
         app:fontName="oswald_regular.ttf" />
 
+      <ImageView
+        android:id="@+id/vlogTutorialImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:padding="10dp"
+        android:src="@drawable/ic_lightbulb" />
     </RelativeLayout>
   </androidx.appcompat.widget.Toolbar>
   <FrameLayout
