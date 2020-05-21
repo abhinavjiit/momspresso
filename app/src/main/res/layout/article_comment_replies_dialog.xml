@@ -37,6 +37,13 @@
     android:background="#f0f0f0"
     android:elevation="5dp">
 
+    <com.mikhaellopez.circularimageview.CircularImageView
+      android:id="@+id/userImageView"
+      android:layout_width="34dp"
+      android:layout_height="34dp"
+      android:layout_centerVertical="true"
+      android:layout_marginStart="@dimen/space_10"
+      android:src="@drawable/default_commentor_img" />
 
     <RelativeLayout
       android:id="@+id/addCommentFAB"
@@ -45,9 +52,11 @@
       android:layout_centerVertical="true"
       android:layout_marginLeft="10dp"
       android:layout_marginRight="10dp"
+      android:layout_toEndOf="@id/userImageView"
       android:background="@drawable/rectangular_border"
       android:gravity="center_vertical"
       android:visibility="visible">
+
 
       <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/typeHere"
@@ -57,7 +66,7 @@
         android:layout_marginLeft="@dimen/space_10"
         android:gravity="center_vertical"
         android:padding="12dp"
-        android:text="@string/group_comment_start_type_here_text"
+        android:text="Write a comment"
         android:textColor="#a1a4a8"
         android:textSize="18sp"
         android:visibility="visible"
@@ -95,6 +104,45 @@
            android:paddingBottom="5dp"
            android:src="@drawable/ic_add_image" />-->
 
+      <com.mycity4kids.widget.MomspressoButtonWidget
+        android:id="@+id/disableStatePostTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/space_10"
+        android:paddingStart="@dimen/space_20"
+        android:paddingTop="@dimen/space_10"
+        android:paddingEnd="@dimen/space_20"
+        android:paddingBottom="@dimen/space_10"
+        android:text="Post"
+        android:textStyle="bold"
+        app:fb_borderColor="#D8D8D8"
+        app:fb_borderWidth="1dp"
+        app:fb_defaultColor="@color/white_color"
+        app:fb_radius="@dimen/space_30"
+        app:fb_textColor="#D8D8D8"
+        app:fb_textSize="14sp" />
+      <com.mycity4kids.widget.MomspressoButtonWidget
+        android:id="@+id/enableStatePostTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/space_10"
+        android:paddingStart="@dimen/space_20"
+        android:paddingTop="@dimen/space_10"
+        android:paddingEnd="@dimen/space_20"
+        android:paddingBottom="@dimen/space_10"
+        android:text="Post"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:fb_borderColor="@color/app_red"
+        app:fb_borderWidth="1dp"
+        app:fb_defaultColor="@color/app_red"
+        app:fb_radius="@dimen/space_30"
+        app:fb_textColor="@color/white"
+        app:fb_textSize="14sp" />
 
     </RelativeLayout>
 

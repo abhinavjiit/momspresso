@@ -1,12 +1,15 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
@@ -64,9 +67,26 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
         if (holder instanceof CommentsViewHolder) {
             CommentsViewHolder commentsViewHolder = (CommentsViewHolder) holder;
             commentsViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserName());
-            commentsViewHolder.commentDataTextView.setText(repliesList.get(position).getMessage());
-            commentsViewHolder.commentDateTextView.setText(DateTimeUtils
+            //  commentsViewHolder.commentDataTextView.setText(repliesList.get(position).getMessage());
+            commentsViewHolder.commentDataTextView.setText((Html
+                    .fromHtml(
+                            "<b>" + "<font color=\"#D54058\">" + repliesList.get(position).getUserName() + "</font>"
+                                    + "</b>"
+                                    + " "
+                                    + "<font color=\"#4A4A4A\">" + repliesList.get(position).getMessage()
+                                    + "</font>")));
+            commentsViewHolder.DateTextView.setText(DateTimeUtils
                     .getDateFromNanoMilliTimestamp(Long.parseLong(repliesList.get(position).getCreatedTime())));
+            if (repliesList.get(position).getReplies() == null || repliesList.get(position).getReplies().isEmpty()
+                    || repliesList.get(position).getRepliesCount() == 0) {
+                commentsViewHolder.replyCommentTextView.setText(mContext.getString(R.string.reply));
+        } else {
+            commentsViewHolder.replyCommentTextView.setText(
+                    mContext.getString(R.string.reply) + "(" + repliesList.get(position)
+                            .getRepliesCount() + ")");
+        }
+            //  commentsViewHolder.commentDateTextView.setText(DateTimeUtils
+            //   .getDateFromNanoMilliTimestamp(Long.parseLong(repliesList.get(position).getCreatedTime())));
             try {
                 Picasso.get().load(repliesList.get(position).getUserPic().getClientAppMin())
                         .placeholder(R.drawable.default_commentor_img).into((commentsViewHolder.commentorImageView));
@@ -75,10 +95,33 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 Picasso.get().load(R.drawable.default_commentor_img).into(commentsViewHolder.commentorImageView);
             }
+
+            if (repliesList.get(position).getLiked()) {
+                Drawable myDrawable = ContextCompat
+                        .getDrawable(commentsViewHolder.likeTextView.getContext(), R.drawable.ic_like);
+                commentsViewHolder.likeTextView.setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+            } else {
+                Drawable myDrawable = ContextCompat
+                        .getDrawable(commentsViewHolder.likeTextView.getContext(), R.drawable.ic_like_grey);
+                commentsViewHolder.likeTextView.setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+            }
+            if (repliesList.get(position).getLikeCount() <= 0) {
+                commentsViewHolder.likeTextView.setText("");
+
+            } else {
+                commentsViewHolder.likeTextView.setText(repliesList.get(position).getLikeCount() + "");
+
+            }
         } else {
             RepliesViewHolder repliesViewHolder = (RepliesViewHolder) holder;
+            repliesViewHolder.commentDataTextView.setText((Html
+                    .fromHtml(
+                            "<b>" + "<font color=\"#D54058\">" + repliesList.get(position).getUserName() + "</font>"
+                                    + "</b>"
+                                    + " "
+                                    + "<font color=\"#4A4A4A\">" + repliesList.get(position).getMessage()
+                                    + "</font>")));
             repliesViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserName());
-            repliesViewHolder.commentDataTextView.setText(repliesList.get(position).getMessage());
             repliesViewHolder.commentDateTextView.setText(DateTimeUtils
                     .getDateFromNanoMilliTimestamp(Long.parseLong(repliesList.get(position).getCreatedTime())));
             try {
@@ -88,6 +131,22 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
                 FirebaseCrashlytics.getInstance().recordException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 Picasso.get().load(R.drawable.default_commentor_img).into(repliesViewHolder.commentorImageView);
+            }
+            if (repliesList.get(position).getLiked()) {
+                Drawable myDrawable = ContextCompat
+                        .getDrawable(repliesViewHolder.likeTextView.getContext(), R.drawable.ic_like);
+                repliesViewHolder.likeTextView.setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+            } else {
+                Drawable myDrawable = ContextCompat
+                        .getDrawable(repliesViewHolder.likeTextView.getContext(), R.drawable.ic_like_grey);
+                repliesViewHolder.likeTextView.setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+            }
+            if (repliesList.get(position).getLikeCount() <= 0) {
+                repliesViewHolder.likeTextView.setText("");
+
+            } else {
+                repliesViewHolder.likeTextView.setText(repliesList.get(position).getLikeCount() + "");
+
             }
         }
     }
@@ -101,6 +160,8 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
         TextView replyCommentTextView;
         TextView commentDateTextView;
         TextView replyCountTextView;
+        TextView DateTextView;
+        TextView likeTextView;
 
         CommentsViewHolder(View view) {
             super(view);
@@ -110,8 +171,13 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
             replyCommentTextView = (TextView) view.findViewById(R.id.replyCommentTextView);
             commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
             replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
-            replyCommentTextView.setVisibility(View.GONE);
+            commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
+            likeTextView = (TextView) view.findViewById(R.id.likeTextView);
+            replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
+            DateTextView = (TextView) view.findViewById(R.id.DateTextView);
 
+            replyCommentTextView.setVisibility(View.GONE);
+            likeTextView.setOnClickListener(this);
             view.setOnLongClickListener(this);
         }
 
@@ -134,14 +200,21 @@ public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<Recycler
         TextView commentorUsernameTextView;
         TextView commentDataTextView;
         TextView commentDateTextView;
+        TextView DateTextView;
+        TextView likeTextView;
+        TextView replyCommentTextView;
 
         RepliesViewHolder(View view) {
             super(view);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
+            DateTextView = (TextView) view.findViewById(R.id.DateTextView);
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
             commentDataTextView = (TextView) view.findViewById(R.id.commentDataTextView);
             commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
+            likeTextView = (TextView) view.findViewById(R.id.likeTextView);
+            replyCommentTextView = (TextView) view.findViewById(R.id.replyCommentTextView);
 
+            likeTextView.setOnClickListener(this);
             view.setOnLongClickListener(this);
         }
 

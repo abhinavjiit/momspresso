@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,14 +27,20 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.models.response.CommentListResponse;
+import com.mycity4kids.models.response.LikeReactionModel;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.ui.adapter.CommentRepliesRecyclerAdapter;
+import com.mycity4kids.utils.ToastUtils;
 import java.util.ArrayList;
 import java.util.List;
+import okhttp3.ResponseBody;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class ArticleCommentRepliesDialogFragment extends DialogFragment implements View.OnClickListener,
@@ -137,7 +144,8 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
     private void getCommentReplies() {
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-        Call<CommentListResponse> call = articleDetailsAPI.getArticleCommentReplies(data.getPostId(), "reply", data.getId(), paginationReplyId);
+        Call<CommentListResponse> call = articleDetailsAPI
+                .getArticleCommentReplies(data.getPostId(), "reply", data.getId(), paginationReplyId);
         call.enqueue(articleCommentRepliesCallback);
     }
 
@@ -240,7 +248,33 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
 
     @Override
     public void onRecyclerItemClick(View view, int position) {
+        if (view.getId() == R.id.likeTextView) {
+            if (repliesList.get(position).getLiked()) {
+                repliesList.get(position).setLiked(false);
+                LikeReactionModel commentListData = new LikeReactionModel();
+                commentListData.setReaction("like");
+                commentListData.setStatus("0");
+                repliesList.get(position).setLikeCount(repliesList.get(position).getLikeCount() - 1);
+                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
+                Call<ResponseBody> call = articleDetailsAPI
+                        .likeDislikeComment(repliesList.get(position).getId(), commentListData);
+                call.enqueue(likeDisLikeCommentCallback);
 
+            } else {
+                repliesList.get(position).setLiked(true);
+                LikeReactionModel commentListData = new LikeReactionModel();
+                commentListData.setReaction("like");
+                commentListData.setStatus("1");
+                repliesList.get(position).setLikeCount(repliesList.get(position).getLikeCount() + 1);
+                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
+                Call<ResponseBody> call = articleDetailsAPI
+                        .likeDislikeComment(repliesList.get(position).getId(), commentListData);
+                call.enqueue(likeDisLikeCommentCallback);
+            }
+            commentRepliesRecyclerAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -280,7 +314,12 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.openAddReplyDialog: {
-                ((ArticleCommentsFragment) getParentFragment()).openAddCommentReplyDialog(data);
+                Fragment parentFragment = getParentFragment();
+                if (parentFragment instanceof ArticleCommentsFragment) {
+                    ((ArticleCommentsFragment) getParentFragment()).openAddCommentReplyDialog(data);
+                } else if (parentFragment instanceof ArticleDetailsFragment) {
+                    ((ArticleDetailsFragment) getParentFragment()).openAddCommentReplyDialog(data);
+                }
             }
             break;
         }
@@ -346,5 +385,37 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
         //reportContentDialogFragment.setTargetFragment(this, 0);
         reportContentDialogFragment.show(fm, "Report Content");
     }
+
+    private Callback<ResponseBody> likeDisLikeCommentCallback = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
+                if (isAdded()) {
+                    ToastUtils.showToast(getActivity(), getResources().getString(R.string.server_went_wrong));
+                }
+                return;
+            }
+            try {
+                String resData = new String(response.body().bytes());
+                JSONObject jsonObject = new JSONObject(resData);
+                if (jsonObject.getJSONObject("status").toString().equals(Constants.SUCCESS) && jsonObject
+                        .getJSONObject("code").toString().equals("200")) {
+                }
+            } catch (Exception e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+
+
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+    };
 
 }

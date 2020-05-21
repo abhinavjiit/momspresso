@@ -1,6 +1,8 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -134,15 +136,25 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
                 SSCommentViewHolder ssCommentViewHolder = (SSCommentViewHolder) holder;
                 ssCommentViewHolder.commentorUsernameTextView
                         .setText(datalist.get(position).getSsComment().getUserName());
-                ssCommentViewHolder.commentDataTextView.setText(datalist.get(position).getSsComment().getMessage());
-                ssCommentViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(
+                //   ssCommentViewHolder.commentDataTextView.setText(datalist.get(position).getSsComment().getMessage());
+                ssCommentViewHolder.commentDataTextView.setText((Html
+                        .fromHtml(
+                                "<b>" + "<font color=\"#D54058\">" + datalist.get(position).getSsComment().getUserName()
+                                        + "</font>"
+                                        + "</b>"
+                                        + " "
+                                        + "<font color=\"#4A4A4A\">" + datalist.get(position).getSsComment()
+                                        .getMessage()
+                                        + "</font>")));
+                ssCommentViewHolder.DateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(
                         Long.parseLong(datalist.get(position).getSsComment().getCreatedTime())));
                 if (datalist.get(position).getSsComment().getReplies() == null || datalist.get(position).getSsComment()
-                        .getReplies().isEmpty()) {
-                    ssCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
+                        .getReplies().isEmpty() || datalist.get(position).getSsComment().getRepliesCount() == 0) {
+                    ssCommentViewHolder.replyCommentTextView.setText(mContext.getString(R.string.reply));
                 } else {
-                    ssCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
-                    ssCommentViewHolder.replyCountTextView.setText(mContext.getString(R.string.short_s_view_replies) + "(" + datalist.get(position).getSsComment().getRepliesCount() + ")");
+                    ssCommentViewHolder.replyCommentTextView.setText(
+                            mContext.getString(R.string.reply) + "(" + datalist.get(position).getSsComment()
+                                    .getRepliesCount() + ")");
                 }
                 try {
                     Picasso.get().load(datalist.get(position).getSsComment().getUserPic().getClientAppMin())
@@ -152,6 +164,24 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
                     FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                     Picasso.get().load(R.drawable.default_commentor_img).into(ssCommentViewHolder.commentorImageView);
+                }
+                if (datalist.get(position).getSsComment().getLiked()) {
+                    Drawable myDrawable = ContextCompat
+                            .getDrawable(ssCommentViewHolder.likeTextView.getContext(), R.drawable.ic_like);
+                    ssCommentViewHolder.likeTextView
+                            .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+                } else {
+                    Drawable myDrawable = ContextCompat
+                            .getDrawable(ssCommentViewHolder.likeTextView.getContext(), R.drawable.ic_like_grey);
+                    ssCommentViewHolder.likeTextView
+                            .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+                }
+                if (datalist.get(position).getSsComment().getLikeCount() <= 0) {
+                    ssCommentViewHolder.likeTextView.setText("");
+
+                } else {
+                    ssCommentViewHolder.likeTextView.setText(datalist.get(position).getSsComment().getLikeCount() + "");
+
                 }
             }
         } catch (Exception e) {
@@ -227,6 +257,8 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
         TextView commentDateTextView;
         TextView replyCountTextView;
         View underlineView;
+        TextView DateTextView;
+        TextView likeTextView;
 
         SSCommentViewHolder(View view, RecyclerViewClickListener listener) {
             super(view);
@@ -236,11 +268,12 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
             replyCommentTextView = (TextView) view.findViewById(R.id.replyCommentTextView);
             commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
             replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
+            DateTextView = (TextView) view.findViewById(R.id.DateTextView);
+            likeTextView = (TextView) view.findViewById(R.id.likeTextView);
 
             view.setOnLongClickListener(this);
             replyCommentTextView.setOnClickListener(this);
-            replyCountTextView.setOnClickListener(this);
-
+            likeTextView.setOnClickListener(this);
             underlineView = view.findViewById(R.id.underlineView);
         }
 

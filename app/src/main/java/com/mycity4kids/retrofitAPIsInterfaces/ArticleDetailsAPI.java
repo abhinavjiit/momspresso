@@ -71,7 +71,7 @@ public interface ArticleDetailsAPI {
             @Query("commentId") String parentCommentId,
             @Query("replyId") String paginationReplyId);
 
-    @POST("/v1/reactions/comment/{comment_id}/")
+    @PUT("/v1/reactions/comment/{comment_id}/")
     Call<ResponseBody> likeDislikeComment(@Path("comment_id") String comment_id,
             @Body LikeReactionModel commentListData);
 
