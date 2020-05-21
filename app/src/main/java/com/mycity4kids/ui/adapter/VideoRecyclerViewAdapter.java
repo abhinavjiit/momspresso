@@ -636,8 +636,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         public ImageView coverImageView;
         public ProgressBar progressBar;
         RelativeLayout videoLayout;
-        ImageView threeDot;
-        ImageView imgBookmark;
         View parent;
         TextView participate;
         TextView seeMoreChallenge;
@@ -653,8 +651,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             progressBar = itemView.findViewById(R.id.progressBar);
             followText = itemView.findViewById(R.id.follow_textview);
             likeCount = itemView.findViewById(R.id.viewsLike);
-            threeDot = itemView.findViewById(R.id.three_dot);
-            imgBookmark = itemView.findViewById(R.id.bookmark);
             participate = itemView.findViewById(R.id.participate_textview);
             seeMoreChallenge = itemView.findViewById(R.id.seeMoreChallenge);
             parent = itemView;
@@ -674,16 +670,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             makeTextViewResizable(textViewTitle, 2, " ..See More", true,
                     responseData.getTitle());
             challengeHandle.setText(responseData.getDisplay_name());
-
-            imgBookmark
-                    .setOnClickListener(view -> videoFeedRecyclerViewClick.onClick(position, view));
-
-            /*threeDot.setOnClickListener(view -> {
-                if (responseData.getIs_bookmark() != null) {
-                    PopupWindow popupWindow = popupDisplay(responseData.getIs_bookmark());
-                    popupWindow.showAsDropDown(threeDot, -40, 18);
-                }
-            });*/
 
             if (StringUtils
                     .isNullOrEmpty(responseData.getExtraData().get(0).getChallenge().getImageUrl())) {
