@@ -53,6 +53,7 @@ import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.models.response.CommentListResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.LanguageConfigModel;
+import com.mycity4kids.models.response.LikeReactionModel;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResult;
@@ -83,8 +84,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import okhttp3.ResponseBody;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
@@ -611,6 +614,33 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onClick(View view, int position, View whatsappShare) {
         switch (view.getId()) {
+            case R.id.likeTextView:
+                if (consolidatedList.get(position).getSsComment().getLiked()) {
+                    consolidatedList.get(position).getSsComment().setLiked(false);
+                    LikeReactionModel commentListData = new LikeReactionModel();
+                    commentListData.setReaction("like");
+                    commentListData.setStatus("0");
+                    consolidatedList.get(position).getSsComment().setLikeCount(consolidatedList.get(position).getSsComment().getLikeCount() - 1);
+                    Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                    ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
+                    Call<ResponseBody> call = articleDetailsAPI
+                            .likeDislikeComment(consolidatedList.get(position).getSsComment().getId(), commentListData);
+                    call.enqueue(likeDisLikeCommentCallback);
+
+                } else {
+                    consolidatedList.get(position).getSsComment().setLiked(true);
+                    LikeReactionModel commentListData = new LikeReactionModel();
+                    commentListData.setReaction("like");
+                    commentListData.setStatus("1");
+                    consolidatedList.get(position).getSsComment().setLikeCount(consolidatedList.get(position).getSsComment().getLikeCount() + 1);
+                    Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                    ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
+                    Call<ResponseBody> call = articleDetailsAPI
+                            .likeDislikeComment(consolidatedList.get(position).getSsComment().getId(), commentListData);
+                    call.enqueue(likeDisLikeCommentCallback);
+                }
+                adapter.notifyDataSetChanged();
+                break;
             case R.id.menuItem:
                 chooseMenuOptionsItem(view, position);
                 break;
@@ -627,7 +657,20 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             }
             break;
             case R.id.replyCommentTextView: {
-                openAddCommentReplyDialog(consolidatedList.get(position).getSsComment());
+                if (consolidatedList.get(position).getSsComment().getRepliesCount() == 0) {
+                    openAddCommentReplyDialog(consolidatedList.get(position).getSsComment());
+                }
+                else {
+                    shortStoryCommentRepliesDialogFragment = new ShortStoryCommentRepliesDialogFragment();
+                    Bundle args = new Bundle();
+                    args.putParcelable("commentReplies", consolidatedList.get(position).getSsComment());
+                    args.putInt("totalRepliesCount", consolidatedList.get(position).getSsComment().getRepliesCount());
+                    args.putInt("position", position);
+                    shortStoryCommentRepliesDialogFragment.setArguments(args);
+                    shortStoryCommentRepliesDialogFragment.setCancelable(true);
+                    FragmentManager fm = getChildFragmentManager();
+                    shortStoryCommentRepliesDialogFragment.show(fm, "View Replies");
+                }
             }
             break;
             case R.id.replyCountTextView: {
@@ -697,6 +740,39 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 break;
         }
     }
+
+
+    private Callback<ResponseBody> likeDisLikeCommentCallback = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
+                if (isAdded()) {
+                    ToastUtils.showToast(getActivity(), getResources().getString(R.string.server_went_wrong));
+                }
+                return;
+            }
+            try {
+                String resData = new String(response.body().bytes());
+                JSONObject jsonObject = new JSONObject(resData);
+                if (jsonObject.getJSONObject("status").toString().equals(Constants.SUCCESS) && jsonObject
+                        .getJSONObject("code").toString().equals("200")) {
+                }
+            } catch (Exception e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+
+
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+    };
 
     private void filterTags(ArrayList<Map<String, String>> tagObjectList) {
         ArrayList<String> tagList = new ArrayList<>();

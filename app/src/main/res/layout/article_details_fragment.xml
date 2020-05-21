@@ -460,7 +460,7 @@
           </RelativeLayout>
 
 
-          <com.mycity4kids.widget.ShareButtonWidget
+          <com.mycity4kids.widget.MomspressoButtonWidget
             android:id="@+id/followTextViewFollowContainer"
             android:layout_width="125dp"
             android:layout_height="wrap_content"
@@ -469,15 +469,19 @@
             android:layout_marginTop="@dimen/space_5"
             android:layout_marginEnd="@dimen/space_5"
             android:layout_marginBottom="@dimen/space_5"
+            android:padding="@dimen/space_10"
             android:elevation="0dp"
+            android:text="FOLLOW"
+            app:fb_borderColor="@color/app_red"
+            app:fb_borderWidth="1dp"
+            app:fb_defaultColor="@color/white_color"
+            app:fb_radius="@dimen/space_30"
+            app:fb_textColor="@color/app_red"
+            app:fb_textSize="14sp"
             app:borderColor="@color/app_red"
             app:borderthickness="1dp"
             app:elevation="0dp"
             app:gravity="center"
-            app:radius="5dp"
-            app:shareBgColor="@color/white"
-            app:shareText="FOLLOW"
-            app:shareTextColor="@color/app_red"
             app:textStyle="bold" />
         </RelativeLayout>
 

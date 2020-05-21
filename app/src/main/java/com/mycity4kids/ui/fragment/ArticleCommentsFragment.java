@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.fragment.app.FragmentManager;
@@ -28,16 +29,21 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest;
 import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.models.response.CommentListResponse;
+import com.mycity4kids.models.response.LikeReactionModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.ui.adapter.ArticleCommentsRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.utils.ToastUtils;
+import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
+import okhttp3.ResponseBody;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
@@ -76,6 +82,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     private ArticleCommentRepliesDialogFragment articleCommentRepliesDialogFragment;
     private TextView noCommentsTextView;
     private String sourceType;
+    private ImageView userImageView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,6 +90,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
 
         final View rootView = inflater.inflate(R.layout.article_comment_replies_dialog, container,
                 false);
+        userImageView = rootView.findViewById(R.id.userImageView);
         addCommentFab = (RelativeLayout) rootView.findViewById(R.id.addCommentFAB);
         commentsRecyclerView = (RecyclerView) rootView.findViewById(R.id.commentsRecyclerView);
         noCommentsTextView = (TextView) rootView.findViewById(R.id.noCommentsTextView);
@@ -131,7 +139,8 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 }
             }
         });
-
+        Picasso.get().load(SharedPrefUtils.getProfileImgUrl(getActivity()))
+                .error(R.drawable.default_commentor_img).into(userImageView);
         return rootView;
     }
 
@@ -695,6 +704,33 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     @Override
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
+            case R.id.likeTextView:
+                if (commentsList.get(position).getLiked()) {
+                    commentsList.get(position).setLiked(false);
+                    LikeReactionModel commentListData = new LikeReactionModel();
+                    commentListData.setReaction("like");
+                    commentListData.setStatus("0");
+                    commentsList.get(position).setLikeCount(commentsList.get(position).getLikeCount() - 1);
+                    Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                    ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
+                    Call<ResponseBody> call = articleDetailsAPI
+                            .likeDislikeComment(commentsList.get(position).getId(), commentListData);
+                    call.enqueue(likeDisLikeCommentCallback);
+
+                } else {
+                    commentsList.get(position).setLiked(true);
+                    LikeReactionModel commentListData = new LikeReactionModel();
+                    commentListData.setReaction("like");
+                    commentListData.setStatus("1");
+                    commentsList.get(position).setLikeCount(commentsList.get(position).getLikeCount() + 1);
+                    Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                    ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
+                    Call<ResponseBody> call = articleDetailsAPI
+                            .likeDislikeComment(commentsList.get(position).getId(), commentListData);
+                    call.enqueue(likeDisLikeCommentCallback);
+                }
+                articleCommentsRecyclerAdapter.notifyDataSetChanged();
+                break;
             case R.id.commentRootLayout: {
                 Bundle args = new Bundle();
                 args.putInt("position", position);
@@ -708,25 +744,57 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             }
             break;
             case R.id.replyCommentTextView: {
-                openAddCommentReplyDialog(commentsList.get(position));
-            }
-            break;
-            case R.id.replyCountTextView: {
-                articleCommentRepliesDialogFragment = new ArticleCommentRepliesDialogFragment();
-                Bundle _args = new Bundle();
-                _args.putParcelable("commentReplies", commentsList.get(position));
-                _args.putInt("totalRepliesCount", commentsList.get(position).getRepliesCount());
-                _args.putInt("position", position);
-                articleCommentRepliesDialogFragment.setArguments(_args);
-                articleCommentRepliesDialogFragment.setCancelable(true);
-                FragmentManager fm = getChildFragmentManager();
-                articleCommentRepliesDialogFragment.show(fm, "View Replies");
+                if (commentsList.get(position).getRepliesCount() == 0) {
+                    openAddCommentReplyDialog(commentsList.get(position));
+                } else {
+                    articleCommentRepliesDialogFragment = new ArticleCommentRepliesDialogFragment();
+                    Bundle _args = new Bundle();
+                    _args.putParcelable("commentReplies", commentsList.get(position));
+                    _args.putInt("totalRepliesCount", commentsList.get(position).getRepliesCount());
+                    _args.putInt("position", position);
+                    articleCommentRepliesDialogFragment.setArguments(_args);
+                    articleCommentRepliesDialogFragment.setCancelable(true);
+                    FragmentManager fm = getChildFragmentManager();
+                    articleCommentRepliesDialogFragment.show(fm, "View Replies");
+                }
             }
             break;
             default:
                 break;
         }
     }
+
+    private Callback<ResponseBody> likeDisLikeCommentCallback = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                FirebaseCrashlytics.getInstance().recordException(nee);
+                if (isAdded()) {
+                    ToastUtils.showToast(getActivity(), getResources().getString(R.string.server_went_wrong));
+                }
+                return;
+            }
+            try {
+                String resData = new String(response.body().bytes());
+                JSONObject jsonObject = new JSONObject(resData);
+                if (jsonObject.getJSONObject("status").toString().equals(Constants.SUCCESS) && jsonObject
+                        .getJSONObject("code").toString().equals("200")) {
+                }
+            } catch (Exception e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+
+
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable e) {
+            FirebaseCrashlytics.getInstance().recordException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+    };
 
     void openAddCommentReplyDialog(CommentListData commentData) {
         Bundle args = new Bundle();

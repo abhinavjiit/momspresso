@@ -122,6 +122,7 @@ import com.mycity4kids.utils.GroupIdCategoryMap;
 import com.mycity4kids.utils.StringUtils;
 import com.mycity4kids.utils.ToastUtils;
 import com.mycity4kids.widget.CustomFontTextView;
+import com.mycity4kids.widget.MomspressoButtonWidget;
 import com.mycity4kids.widget.RelatedArticlesView;
 import com.mycity4kids.widget.ShareButtonWidget;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerUtils;
@@ -256,7 +257,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private TextView authorName;
     private ImageView authorImageViewFollowContainer;
     private TextView authorNameTextViewFollowContainer;
-    private ShareButtonWidget followTextViewFollowContainer;
+    private MomspressoButtonWidget followTextViewFollowContainer;
     private TextView postsCountTextView;
     private TextView likeCountTextView;
     private RelativeLayout userFollowViewContainer;
@@ -1245,7 +1246,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 likeCount1.setText("");
 
             } else {
-                likeCount1.setText(commentsList.get(0).getLikeCount());
+                likeCount1.setText(commentsList.get(0).getLikeCount() + "");
 
             }
             if (commentsList.get(0).getRepliesCount() == 0) {
@@ -1255,7 +1256,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
 
         } else if (commentsList.size() == 2) {
-            viewMoreTextView.setVisibility(View.GONE);
+            viewMoreTextView.setVisibility(View.VISIBLE);
             try {
                 Picasso.get().load(commentsList.get(0).getUserPic().getClientApp())
                         .error(R.drawable.default_commentor_img).into(commentatorImageView1);
@@ -1292,7 +1293,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 likeCount1.setText("");
 
             } else {
-                likeCount1.setText(commentsList.get(0).getLikeCount());
+                likeCount1.setText(commentsList.get(0).getLikeCount() + "");
 
             }
 
@@ -1324,7 +1325,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (commentsList.get(1).getLikeCount() == 0) {
                 likeCount2.setText("");
             } else {
-                likeCount2.setText(commentsList.get(0).getLikeCount());
+                likeCount2.setText(commentsList.get(0).getLikeCount() + "");
             }
             if (commentsList.get(1).getRepliesCount() == 0) {
                 replyCount2.setText("Reply");
@@ -1409,7 +1410,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
         }
     }
-
 
     private void showFbComments(List<CommentsData> fbCommentsList) {
         likeCount1.setVisibility(View.GONE);
@@ -2305,10 +2305,22 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         if (!isFollowing && !userDynamoId.equals(articleId)) {
                             setValuesInFollowPopUp();
                         }
+                        Drawable drawable = ContextCompat
+                                .getDrawable(likeArticleTextView.getContext(), R.drawable.ic_recommended);
+                        drawable.setColorFilter(
+                                ContextCompat.getColor(likeArticleTextView.getContext(), R.color.app_red),
+                                PorterDuff.Mode.SRC_IN);
+                        likeArticleTextView.setImageDrawable(drawable);
                         recommendUnrecommendArticleApi("1");
                         Utils.pushLikeArticleEvent(getActivity(), "DetailArticleScreen",
                                 userDynamoId + "", articleId, authorId + "~" + author);
                     } else {
+                        Drawable drawable = ContextCompat
+                                .getDrawable(likeArticleTextView.getContext(), R.drawable.ic_recommend);
+                        drawable.setColorFilter(
+                                ContextCompat.getColor(likeArticleTextView.getContext(), R.color.app_red),
+                                PorterDuff.Mode.SRC_IN);
+                        likeArticleTextView.setImageDrawable(drawable);
                         recommendStatus = 0;
                         recommendUnrecommendArticleApi("0");
                         Utils.pushUnlikeArticleEvent(getActivity(), "DetailArticleScreen",
@@ -2508,6 +2520,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                     PorterDuff.Mode.SRC_IN);
                     likeCount1
                             .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+                    likeCount1.setText(commentsList.get(0).getLikeCount() + 1 + "");
+                    commentsList.get(0).setLikeCount(commentsList.get(0).getLikeCount() + 1);
                 } catch (NullPointerException e) {
                     FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("NullPointerException", Log.getStackTraceString(e));
@@ -2521,6 +2535,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                     PorterDuff.Mode.SRC_IN);
                     likeCount2
                             .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+                    likeCount2.setText(commentsList.get(1).getLikeCount() + 1 + "");
+                    commentsList.get(1).setLikeCount(commentsList.get(1).getLikeCount() + 1);
                 } catch (NullPointerException e) {
                     FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("NullPointerException", Log.getStackTraceString(e));
@@ -2528,7 +2544,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
             commentsList.get(index).setLiked(true);
             LikeReactionModel commentListData = new LikeReactionModel();
-            commentListData.setReaction("wow");
+            commentListData.setReaction("like");
+            commentListData.setStatus("1");
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
             Call<ResponseBody> call = articleDetailsAPI
@@ -2545,6 +2562,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                     PorterDuff.Mode.SRC_IN);
                     likeCount1
                             .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+                    if (commentsList.get(0).getLikeCount() - 1 != 0) {
+                        likeCount1.setText(commentsList.get(0).getLikeCount() - 1 + "");
+                    } else {
+                        likeCount1.setText("");
+                    }
+                    commentsList.get(0).setLikeCount(commentsList.get(0).getLikeCount() - 1);
+
                 } catch (NullPointerException e) {
                     FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("NullPointerException", Log.getStackTraceString(e));
@@ -2559,6 +2583,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                     PorterDuff.Mode.SRC_IN);
                     likeCount2
                             .setCompoundDrawablesWithIntrinsicBounds(myDrawable, null, null, null);
+                    if (commentsList.get(1).getLikeCount() - 1 != 0) {
+                        likeCount2.setText(commentsList.get(1).getLikeCount() - 1 + "");
+                    } else {
+                        likeCount2.setText("");
+                    }
+                    commentsList.get(1).setLikeCount(commentsList.get(1).getLikeCount() - 1);
+
                 } catch (NullPointerException e) {
                     FirebaseCrashlytics.getInstance().recordException(e);
                     Log.d("NullPointerException", Log.getStackTraceString(e));
@@ -2566,7 +2597,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
             commentsList.get(index).setLiked(false);
             LikeReactionModel commentListData = new LikeReactionModel();
-            commentListData.setReaction("angry");
+            commentListData.setReaction("like");
+            commentListData.setStatus("0");
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
             Call<ResponseBody> call = articleDetailsAPI
@@ -2708,7 +2740,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         popupMenu.show();
     }
 
-    private void openAddCommentReplyDialog(CommentListData cData) {
+    void openAddCommentReplyDialog(CommentListData cData) {
         AddArticleCommentReplyDialogFragment addArticleCommentReplyDialogFragment = new AddArticleCommentReplyDialogFragment();
         FragmentManager fm = getChildFragmentManager();
         Bundle _args = new Bundle();
@@ -4107,15 +4139,16 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         }
                         if (userDynamoId.equals(authorId)) {
                             followClick.setVisibility(View.INVISIBLE);
+                            userFollowView.setVisibility(View.GONE);
                         } else {
                             if (!responseData.getData().getResult().getIsFollowed()) {
-                                followClick.setEnabled(true);
-                                followClick.setText(
+                                followTextViewFollowContainer.setEnabled(true);
+                                followTextViewFollowContainer.setText(
                                         AppUtils.getString(getActivity(), R.string.ad_follow_author));
                                 isFollowing = false;
                             } else {
-                                followClick.setEnabled(true);
-                                followClick.setText(
+                                followTextViewFollowContainer.setEnabled(true);
+                                followTextViewFollowContainer.setText(
                                         AppUtils.getString(getActivity(), R.string.ad_following_author));
                                 isFollowing = true;
                             }
